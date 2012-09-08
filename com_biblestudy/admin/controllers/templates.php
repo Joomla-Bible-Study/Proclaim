@@ -35,7 +35,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         return $model;
     }
 
-     /**
+    /**
      * Import Template
      *
      * @return boolean
@@ -48,8 +48,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             set_time_limit(300);
         }
 
-        $result = false; 
-        $userfile = JRequest::getVar('template_import', null, 'files', 'array'); 
+        $result = false;
+        $userfile = JRequest::getVar('template_import', null, 'files', 'array');
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_CMN_UPLOADS_NOT_ENABLED'));
@@ -70,14 +70,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         }
 
         // Build the appropriate paths
-        $config = JFactory::getConfig();
+        $config = JFactory::getConfig(); // not sure if this is needed.
         $tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
 
         $tmp_src = $userfile['tmp_name'];
 
         // Move uploaded file
         jimport('joomla.filesystem.file');
-        $uploaded = move_uploaded_file($tmp_src, $tmp_dest);
+        move_uploaded_file($tmp_src, $tmp_dest); // declaring move not as a vareble not needed.
 
         $db = JFactory::getDBO();
 
@@ -87,263 +87,125 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             // No queries to process
             return 0;
         }
-        //get all of the items in the db
-        $query = 'SELECT filename FROM #__bsms_styles WHERE published = 1';
-        $db->setQuery($query);
-        $styles = $db->loadObjectList(); 
-        //Get all templates
-        $query = 'SELECT title FROM #__bsms_templates WHERE published = 1';
-        $db->setQuery($query);
-        $temps = $db->loadObjectList();
-        //Get all template files
-        $query = 'SELECT filename FROM #__bsms_templatecode WHERE published = 1';
-        $db->setQuery($query);
-        $codes = $db->loadObjectList();
-        
+//        //get all of the items in the db
+//        $query = 'SELECT filename FROM #__bsms_styles WHERE published = 1';
+//        $db->setQuery($query);
+//        $styles = $db->loadObjectList();
+//        //Get all templates
+//        $query = 'SELECT title FROM #__bsms_templates WHERE published = 1';
+//        $db->setQuery($query);
+//        $temps = $db->loadObjectList();
+//        //Get all template files
+//        $query = 'SELECT filename FROM #__bsms_templatecode WHERE published = 1';
+//        $db->setQuery($query);
+//        $codes = $db->loadObjectList();
+
         foreach ($queries as $querie) {
             $querie = trim($querie);
             if (substr_count($querie, 'INSERT')) {
-                if ($querie != '' && $querie{0} != '#') :
+                if ($querie != '' && $querie{0} != '#') {
                     //check for duplicate names and change
-                    foreach ($styles as $style)
-                    {
-                    if ($style->filename != '')    
-                        {
-                            if (substr_count ($querie, '#__bsms_styles') && substr_count($querie,$style->filename))
-                            {
-                                $querie = str_replace($style->filename,$style->filename.'_copy',$querie);
-                                $result = $this->performDB($querie);
-                                $query = 'SELECT filename from #__bsms_styles ORDER BY id DESC LIMIT 1';
-                                $db->setQuery($query);
-                                $data = $db->loadObject();
-                                $css = '"css":"'.$data->filename.'"';
-                                $css = $data->filename;
-                            }
-                        }
-                    }
-                     
-                     foreach ($codes as $code)
-                    {
-                         if ($code->filename != '')
-                         {
-                            if (substr_count ($querie, '#__bsms_templatecode') && substr_count($querie,$code->filename))
-                            {
-                                $querie = str_replace($code->filename,$code->filename.'_copy',$querie);
-                                $result = $this->performDB($querie);
-                                $query = 'SELECT filename, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
-                                $db->setQuery($query);
-                                $data = $db->loadObject();
-                                $type = $data->type;
-                                switch ($type) {
-                                    case 1:
-                                        //sermonlist
-                                      //  $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
-                                        $sermonstemplate = $data->filename;
-                                        break;
-
-                                    case 2:
-                                        //sermon
-                                      //  $sermontemplate = '"sermontemplate":'.$data->filename.'"';
-                                        $sermontemplate = $data->filename;
-                                        break;
-
-                                    case 3:
-                                        //teachers
-                                       // $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
-                                        $teacherstemplate = $data->filename;
-                                        break;
-
-                                    case 4:
-                                        //teacher
-                                      //  $teachertemplate = '"teachertemplate":'.$data->filename.'"';
-                                        $teachertemplate = $data->filename;
-                                        break;
-
-                                    case 5:
-                                        //serieslist
-                                       // $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
-                                        $seriesdisplays = $data->filename;
-                                        break;
-
-                                    case 6:
-                                        //series
-                                       // $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
-                                        $seriesdisplay = $data->filename;
-                                        break;
-                                    case 7:
-                                        //module
-                                      //  $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
-                                        $moduletemplate = $data->filename;
-                                        break;
-                                }
-                            }
-                         }
-                    } 
-                    
-                    foreach ($temps as $temp)
-                    {
-                         if ($temp->title != '')
-                         {
-                            if (substr_count ($querie, '#__bsms_templates') && substr_count($querie,$temp->title))
-                            {
-                                $querie = str_replace($temp->title,$temp->title.'_copy',$querie);
-                                $result = $this->performDB($querie);
-                                $query = 'SELECT id, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
-                                $db->setQuery($query);
-                                $data = $db->loadObject();
-                                JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                                $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-                                try {
-                                    $table->load($data->id);
-                                } catch (Exception $e) {
-                                    echo 'Caught exception: ', $e->getMessage(), "\n";
-                                }
-                                //need to adjust the params and write back
-                                $registry = new JRegistry();
-                                $registry->loadJSON($table->params);
-                                $params = $registry;
-                                $params->set('sermonstemplate', $sermonstemplate);
-                                $params->set('sermontemplate', $sermontemplte);
-                                $params->set('teacherstemplate', $teacherstemplate);
-                                $params->set('teachertemplate', $teachertemplate);
-                                $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
-                                $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
-                                $params->set('moduletemplate', $moduletemplate);
-                                //Now write the params back into the $table array and store.
-                                $registry = new JRegistry();
-                                $registry->loadArray($params);
-                                $table->params = (string) $registry;
-                                if (!$table->store()) 
-                                    {
-                                    $this->setError($db->getErrorMsg());
-                                    }
-                            }
-                         }
-                    }
-                  
-                endif;
-                $typecss = substr_count($querie, '#__bsms_styles');
-                $typefile = substr_count($querie, '#__bsms_templatecode');
-                $typetemplate = substr_count($querie, '#__bsms_templates');
-                if ($typecss) {
-                    
-                    $query = 'SELECT id from #__bsms_styles ORDER BY id DESC LIMIT 1';
-                    $db->setQuery($query);
-                    $data = $db->loadObject();
-                    JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                    $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
-                    if ($data->id) {
-                        $cssid = $data->filename;
-                        
-                        try {
-                            $table->load($data->id);
-                        } catch (Exception $e) {
-                            echo 'Caught exception: ', $e->getMessage(), "\n";
-                        }
-                        if (!$table->store()) {
-                            $this->setError($db->getErrorMsg());
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
-                        }
-                    }
-                }
-                if ($typefile) {
-                    $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
-                    $db->setQuery($query);
-                    $data = $db->loadObject();
-                    JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                    $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
-                    if ($data->id) {
-                        switch ($data->type) {
+                    if (substr_count($querie, '#__bsms_styles')) {
+                        $this->performDB($querie);
+                        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+                        $querie1 = "UPDATE `#__bsms_styles` SET `filename` = '" . $data->filename . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $this->performDB($querie1);
+                    } elseif (substr_count($querie, '#__bsms_templatecode')) {
+                        $this->performDB($querie);
+                        $query = 'SELECT filename, id, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+                        $querie2 = "UPDATE #__bsms_templatecode SET `filename` = '" . $data->filename . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $this->performDB($querie2);
+                        $type = $data->type;
+                        switch ($type) {
                             case 1:
                                 //sermonlist
-                                $sermonstemplate = $data->filename;
+                                //  $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
+                                $sermonstemplate = $data->id;
                                 break;
 
                             case 2:
                                 //sermon
-                                $sermontemplate = $data->filename;
+                                //  $sermontemplate = '"sermontemplate":'.$data->filename.'"';
+                                $sermontemplate = $data->id;
                                 break;
 
                             case 3:
                                 //teachers
-                                $teacherstemplate = $data->filename;
+                                // $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
+                                $teacherstemplate = $data->id;
                                 break;
 
                             case 4:
                                 //teacher
-                                $teachertemplate = $data->filename;
+                                //  $teachertemplate = '"teachertemplate":'.$data->filename.'"';
+                                $teachertemplate = $data->id;
                                 break;
 
                             case 5:
                                 //serieslist
-                                $seriesdisplaystemplate = $data->filename;
+                                // $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
+                                $seriesdisplays = $data->id;
                                 break;
 
                             case 6:
                                 //series
-                                $seriesdisplaytemplate = $data->filename;
+                                // $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
+                                $seriesdisplay = $data->id;
                                 break;
                             case 7:
                                 //module
-                                $moduletemplate = $data->filename;
+                                //  $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
+                                $moduletemplate = $data->id;
                                 break;
                         }
+                    } elseif (substr_count($querie, '#__bsms_templates')) {
+                        $query = 'SELECT filename from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+                        $css = $data->filename . ".css";
+                        dump($css, 'css');
+                        $this->performDB($querie);
+                        $query = 'SELECT id, title, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+                        $querie3 = "UPDATE #__bsms_templates SET`title` = '" . $data->title . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $this->performDB($querie3);
+                        dump($data->id, 'id');
+                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                        $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
                         try {
                             $table->load($data->id);
                         } catch (Exception $e) {
                             echo 'Caught exception: ', $e->getMessage(), "\n";
                         }
+                        //need to adjust the params and write back
+                        $registry = new JRegistry();
+                        $registry->loadJSON($table->params);
+                        $params = $registry;
+                        $params->set('css', $css);
+                        $params->set('sermonstemplate', $sermonstemplate);
+                        $params->set('sermontemplate', $sermontemplte);
+                        $params->set('teacherstemplate', $teacherstemplate);
+                        $params->set('teachertemplate', $teachertemplate);
+                        $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
+                        $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
+                        $params->set('moduletemplate', $moduletemplate);
+                        dump($params->toString(), 'params');
+                        //Now write the params back into the $table array and store.
+                        $table->params = (string) $params->toString();
                         if (!$table->store()) {
                             $this->setError($db->getErrorMsg());
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
-                        }
-                    }
-                }
-                if ($typetemplate) {
-                    $query = 'SELECT id from #__bsms_templates ORDER BY id DESC LIMIT 1';
-                    $db->setQuery($query);
-                    $data = $db->loadObject();
-                    JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                    $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-                    if ($data->id) {
-                        try {
-                            $table->load($data->id);
-                            $registry = new JRegistry();
-                            $registry->loadArray($table->params);
-                            if (!empty($sermonstemplate)):
-                                $registry->set('sermonstemplate', $sermonstemplate);
-                            endif;
-                            if (!empty($sermontemplate)):
-                                $registry->set('sermontemplate', $sermontemplate);
-                            endif;
-                            if (!empty($teachertemplate)):
-                                $registry->set('teachertemplate', $teachertemplate);
-                            endif;
-                            if (!empty($teacherstemplate)):
-                                $registry->set('teacherstemplate', $teacherstemplate);
-                            endif;
-                            if (!empty($seriesdisplaystemplate)):
-                                $registry->set('seriesdisplaystemplate', $seriesdisplaystemplate);
-                            endif;
-                            if (!empty($seriesdisplaytemplate)):
-                                $registry->set('seriesdisplaytemplate', $seriesdisplaytemplate);
-                            endif;
-                            $registry->set('css', $cssid);
-                            $data->params = $registry->toString();
-                            $table->bind($data->id);
-                        } catch (Exception $e) {
-                            echo 'Caught exception: ', $e->getMessage(), "\n";
-                        }
-                        if (!$table->store()) {
-                            $this->setError($db->getErrorMsg());
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                         }
                     }
                 }
             }
         }
         $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
-        $this->setRedirect('index.php?option=com_biblestudy&view=templates',$message);
+        $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
     }
 
     /**
@@ -448,7 +310,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         $objects .= "\n-- --------------------------------------------------------\n\n";
         return $objects;
     }
-    
+
     /**
      * Get Template Settings
      *
@@ -473,57 +335,56 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         ';
         return $templatereturn;
     }
- function performDB($query)
- {
-     $db = JFactory::getDBO();
-     $db->setQuery($query);
-     if (!$db->query())
-     {
-         JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
-         return false;
-     }
-     return true;
- }
- 
- function getTemplateType($type)
- {
-     if ($data->id) {
-        switch ($type) {
-            case 1:
-                //sermonlist
-                $return = 'sermonstemplate';
-                break;
 
-            case 2:
-                //sermon
-                $return = 'sermontemplate';
-                break;
-
-            case 3:
-                //teachers
-                $return = 'teacherstemplate';
-                break;
-
-            case 4:
-                //teacher
-                $return = 'teachertemplate';
-                break;
-
-            case 5:
-                //serieslist
-                $return = 'seriesdisplaystemplate';
-                break;
-
-            case 6:
-                //series
-                $return = 'seriesdisplaytemplate';
-                break;
-            case 7:
-                //module
-                $moduletemplate = $data->filename;
-                break;
+    function performDB($query) {
+        $db = JFactory::getDBO();
+        $db->setQuery($query);
+        if (!$db->query()) {
+            JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
+            return false;
         }
-        return $return;
-     }
- }
+        return true;
+    }
+
+    function getTemplateType($type) {
+        if ($data->id) {
+            switch ($type) {
+                case 1:
+                    //sermonlist
+                    $return = 'sermonstemplate';
+                    break;
+
+                case 2:
+                    //sermon
+                    $return = 'sermontemplate';
+                    break;
+
+                case 3:
+                    //teachers
+                    $return = 'teacherstemplate';
+                    break;
+
+                case 4:
+                    //teacher
+                    $return = 'teachertemplate';
+                    break;
+
+                case 5:
+                    //serieslist
+                    $return = 'seriesdisplaystemplate';
+                    break;
+
+                case 6:
+                    //series
+                    $return = 'seriesdisplaytemplate';
+                    break;
+                case 7:
+                    //module
+                    $moduletemplate = $data->filename; // FixeMe look like this is not right.
+                    break;
+            }
+            return $return;
+        }
+    }
+
 }
