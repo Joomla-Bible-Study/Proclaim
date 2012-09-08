@@ -210,7 +210,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                                 $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
                                 $params->set('moduletemplate', $moduletemplate);
                                 //Now write the params back into the $table array and store.
-                                
+                                $registry = new JRegistry();
+                                $registry->loadArray($params);
+                                $table->params = (string) $registry;
+                                if (!$table->store()) 
+                                    {
+                                    $this->setError($db->getErrorMsg());
+                                    }
                             }
                          }
                     }
