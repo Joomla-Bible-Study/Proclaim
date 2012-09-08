@@ -84,7 +84,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             // No queries to process
             return 0;
         }
-        $tc = 0;
         foreach ($queries as $querie) {
             $querie = trim($querie);
             if (substr_count($querie, 'INSERT')) {
@@ -123,6 +122,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $querie2 = "UPDATE #__bsms_templatecode SET `filename` = '" . $data->filename . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie2);
 
+                        $tc++;
+
                         // Store new Recorde so it can be seen.
                         JTable::addIncludePath(JPATH_COMPONENT . '/tables');
                         $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
@@ -142,7 +143,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $data = $db->loadObject();
                         $querie3 = "UPDATE #__bsms_templates SET`title` = '" . $data->title . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie3);
-                        $tc++;
                     }
                 }
             }
@@ -153,7 +153,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         $db->setQuery($query);
         $data = $db->loadObject();
         $css = $data->filename . ".css";
-
+        
         //Get new  record insert to change name
         $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT ' . $tc;
         $db->setQuery($query);
