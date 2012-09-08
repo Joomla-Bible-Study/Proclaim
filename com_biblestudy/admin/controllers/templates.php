@@ -149,36 +149,36 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         switch ($type) {
                             case 1:
                                 //sermonlist
-                                $sermonstemplate = $data->id;
+                                $sermonstemplate = $data->filename;
                                 break;
 
                             case 2:
                                 //sermon
-                                $sermontemplate = $data->id;
+                                $sermontemplate = $data->filename;
                                 break;
 
                             case 3:
                                 //teachers
-                                $teacherstemplate = $data->id;
+                                $teacherstemplate = $data->filename;
                                 break;
 
                             case 4:
                                 //teacher
-                                $teachertemplate = $data->id;
+                                $teachertemplate = $data->filename;
                                 break;
 
                             case 5:
                                 //serieslist
-                                $seriesdisplaystemplate = $data->id;
+                                $seriesdisplaystemplate = $data->filename;
                                 break;
 
                             case 6:
                                 //series
-                                $seriesdisplaytemplate = $data->id;
+                                $seriesdisplaytemplate = $data->filename;
                                 break;
                             case 7:
                                 //module
-                                $moduletemplate = $data->id;
+                                $moduletemplate = $data->filename;
                                 break;
                         }
 
