@@ -123,6 +123,27 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $querie2 = "UPDATE #__bsms_templatecode SET `filename` = '" . $data->filename . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie2);
 
+                        // Store new Recorde so it can be seen.
+                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                        $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
+                        try {
+                            $table->load($data->id);
+                            $table->store();
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ', $e->getMessage(), "\n";
+                        }
+                    } elseif (substr_count($querie, '#__bsms_templates')) {
+                        // Get Last Style record
+                        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+                        $css = $data->filename . ".css";
+
+                        //Get new  record insert to change name
+                        $query = 'SELECT id, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                        $db->setQuery($query);
+                        $data = $db->loadObject();
+
                         // Preload varebles for templates
                         $type = $data->type;
                         switch ($type) {
@@ -160,22 +181,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                                 $moduletemplate = $data->id;
                                 break;
                         }
-
-                        // Store new Recorde so it can be seen.
-                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                        $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
-                        try {
-                            $table->load($data->id);
-                            $table->store();
-                        } catch (Exception $e) {
-                            echo 'Caught exception: ', $e->getMessage(), "\n";
-                        }
-                    } elseif (substr_count($querie, '#__bsms_templates')) {
-                        // Get Last Style record
-                        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
-                        $db->setQuery($query);
-                        $data = $db->loadObject();
-                        $css = $data->filename . ".css";
 
                         // Start to insert new Record
                         $this->performDB($querie);
@@ -369,7 +374,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
 
     /**
      * Return Template Type
-     * 
+     *
      * @param string $type
      * @return string
      */
