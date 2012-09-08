@@ -140,7 +140,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $css = $data->filename . ".css";
 
                         //Get new  record insert to change name
-                        $query = 'SELECT id, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                        $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
                         $db->setQuery($query);
                         $data = $db->loadObject();
 
