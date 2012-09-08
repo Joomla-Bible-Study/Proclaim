@@ -169,12 +169,12 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
 
                             case 5:
                                 //serieslist
-                                $seriesdisplays = $data->id;
+                                $seriesdisplaystemplate = $data->id;
                                 break;
 
                             case 6:
                                 //series
-                                $seriesdisplay = $data->id;
+                                $seriesdisplaytemplate = $data->id;
                                 break;
                             case 7:
                                 //module
@@ -207,7 +207,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $params = $registry;
                         $params->set('css', $css);
                         $params->set('sermonstemplate', $sermonstemplate);
-                        $params->set('sermontemplate', $sermontemplte);
+                        $params->set('sermontemplate', $sermontemplate);
                         $params->set('teacherstemplate', $teacherstemplate);
                         $params->set('teachertemplate', $teachertemplate);
                         $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
