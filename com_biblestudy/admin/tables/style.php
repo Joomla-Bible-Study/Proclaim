@@ -119,12 +119,10 @@ class TableStyle extends JTable {
         $filename = $this->filename . '.css';
         $filecontent = $this->stylecode;
         $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filename;
-        if (!$return = JFile::write($file, $filecontent)) {
+        if (!JFile::write($file, $filecontent)) {
             $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
             return false;
         }
-
-
         return parent::store($updateNulls);
     }
 
@@ -145,14 +143,17 @@ class TableStyle extends JTable {
         $ftp = JClientHelper::getCredentials('ftp');
         $filename = $this->filename . '.css';
         $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filename;
-        if (!$delete = JFile::delete($file)) {
-            $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
-            return false;
-        }
+        if (JFile::exists($file)):
+            if (!JFile::delete($file)) {
+                $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
+                return false;
+            }
+        endif;
         if ($this->filename == 'biblestudy') {
             $this->setError(JText::_('JBS_STYLE_CANNOT_DELETE_DEFAULT'));
             return false;
         }
+
         return parent::delete($pk);
     }
 

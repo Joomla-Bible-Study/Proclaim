@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
-require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
+//require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
 jimport('joomla.application.component.controlleradmin');
 
@@ -48,7 +48,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             set_time_limit(300);
         }
 
-        $result = false;
         $userfile = JRequest::getVar('template_import', null, 'files', 'array');
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
@@ -70,35 +69,22 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         }
 
         // Build the appropriate paths
-        $config = JFactory::getConfig(); // not sure if this is needed.
         $tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
 
         $tmp_src = $userfile['tmp_name'];
 
         // Move uploaded file
         jimport('joomla.filesystem.file');
-        move_uploaded_file($tmp_src, $tmp_dest); // declaring move not as a vareble not needed.
+        move_uploaded_file($tmp_src, $tmp_dest);
 
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $queries = $db->splitSql($query); //dump($query,'query: '); dump($queries,'queries: ');
+        $queries = $db->splitSql($query);
         if (count($queries) == 0) {
             // No queries to process
             return 0;
         }
-//        //get all of the items in the db
-//        $query = 'SELECT filename FROM #__bsms_styles WHERE published = 1';
-//        $db->setQuery($query);
-//        $styles = $db->loadObjectList();
-//        //Get all templates
-//        $query = 'SELECT title FROM #__bsms_templates WHERE published = 1';
-//        $db->setQuery($query);
-//        $temps = $db->loadObjectList();
-//        //Get all template files
-//        $query = 'SELECT filename FROM #__bsms_templatecode WHERE published = 1';
-//        $db->setQuery($query);
-//        $codes = $db->loadObjectList();
 
         foreach ($queries as $querie) {
             $querie = trim($querie);
@@ -106,75 +92,103 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                 if ($querie != '' && $querie{0} != '#') {
                     //check for duplicate names and change
                     if (substr_count($querie, '#__bsms_styles')) {
+
+                        // Start to insert new Record
                         $this->performDB($querie);
+
+                        //Get new  record insert to change name
                         $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
                         $db->setQuery($query);
                         $data = $db->loadObject();
-                        $querie1 = "UPDATE `#__bsms_styles` SET `filename` = '" . $data->filename . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $querie1 = "UPDATE `#__bsms_styles` SET `filename` = '" . $data->filename . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie1);
+
+                        // Store new Recorde so it can be seen.
+                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
+                        try {
+                            $table->load($data->id);
+                            $table->store();
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ', $e->getMessage(), "\n";
+                        }
                     } elseif (substr_count($querie, '#__bsms_templatecode')) {
+
+                        // Start to insert new Record
                         $this->performDB($querie);
+
+                        //Get new  record insert to change name
                         $query = 'SELECT filename, id, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
                         $db->setQuery($query);
                         $data = $db->loadObject();
-                        $querie2 = "UPDATE #__bsms_templatecode SET `filename` = '" . $data->filename . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $querie2 = "UPDATE #__bsms_templatecode SET `filename` = '" . $data->filename . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie2);
+
+                        // Preload varebles for templates
                         $type = $data->type;
                         switch ($type) {
                             case 1:
                                 //sermonlist
-                                //  $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
                                 $sermonstemplate = $data->id;
                                 break;
 
                             case 2:
                                 //sermon
-                                //  $sermontemplate = '"sermontemplate":'.$data->filename.'"';
                                 $sermontemplate = $data->id;
                                 break;
 
                             case 3:
                                 //teachers
-                                // $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
                                 $teacherstemplate = $data->id;
                                 break;
 
                             case 4:
                                 //teacher
-                                //  $teachertemplate = '"teachertemplate":'.$data->filename.'"';
                                 $teachertemplate = $data->id;
                                 break;
 
                             case 5:
                                 //serieslist
-                                // $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
                                 $seriesdisplays = $data->id;
                                 break;
 
                             case 6:
                                 //series
-                                // $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
                                 $seriesdisplay = $data->id;
                                 break;
                             case 7:
                                 //module
-                                //  $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
                                 $moduletemplate = $data->id;
                                 break;
                         }
+
+                        // Store new Recorde so it can be seen.
+                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                        $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
+                        try {
+                            $table->load($data->id);
+                            $table->store();
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ', $e->getMessage(), "\n";
+                        }
                     } elseif (substr_count($querie, '#__bsms_templates')) {
-                        $query = 'SELECT filename from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                        // Get Last Style record
+                        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
                         $db->setQuery($query);
                         $data = $db->loadObject();
                         $css = $data->filename . ".css";
-                        dump($css, 'css');
+
+                        // Start to insert new Record
                         $this->performDB($querie);
+
+                        //Get new  record insert to change name
                         $query = 'SELECT id, title, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
                         $db->setQuery($query);
                         $data = $db->loadObject();
-                        $querie3 = "UPDATE #__bsms_templates SET`title` = '" . $data->title . "_copy' WHERE `id` = '" . $data->id . "'";
+                        $querie3 = "UPDATE #__bsms_templates SET`title` = '" . $data->title . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie3);
-                        dump($data->id, 'id');
+
+                        // Load Table Data.
                         JTable::addIncludePath(JPATH_COMPONENT . '/tables');
                         $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
                         try {
@@ -182,7 +196,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         } catch (Exception $e) {
                             echo 'Caught exception: ', $e->getMessage(), "\n";
                         }
-                        //need to adjust the params and write back
+
+                        //Need to adjust the params and write back
                         $registry = new JRegistry();
                         $registry->loadJSON($table->params);
                         $params = $registry;
@@ -194,7 +209,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
                         $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
                         $params->set('moduletemplate', $moduletemplate);
-                        dump($params->toString(), 'params');
+
                         //Now write the params back into the $table array and store.
                         $table->params = (string) $params->toString();
                         if (!$table->store()) {
@@ -246,21 +261,28 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      * Get Exported Template Settings
      *
      * @param object $result
-     * @param object $data
      * @return string
      */
-    private function getExportSetting($result, $data) {
+    private function getExportSetting($result) {
+        // Export must be in this order: css, template files, template.
         $registry = new JRegistry;
         $registry->loadJSON($result->params);
         $params = $registry;
         $db = JFactory::getDBO();
         $objects = '';
-        $objects = "--\n-- Template Table\n--\n";
-        //Create the main template insert
-        $objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->getEscaped($result->type) . "',";
-        $objects .= "\n`params` = '" . $db->getEscaped($result->params) . "',";
-        $objects .= "\n`title` = '" . $db->getEscaped($result->title) . "',";
-        $objects .= "\n`text` = '" . $db->getEscaped($result->text) . "';";
+        $css = $params->get('css');
+        $css = substr($css, 0, -4);
+        if ($css) {
+            $objects .= "\n\n--\n-- CSS Style Code\n--\n";
+            $query2 = $db->getQuery(true);
+            $query2->select('style.*');
+            $query2->from('#__bsms_styles AS style');
+            $query2->where('style.filename = "' . $css . '"');
+            $db->setQuery($query2);
+            $db->query();
+            $cssresult = $db->loadObject();
+            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->getEscaped($cssresult->filename) . "',\n`stylecode` = '" . $db->getEscaped($cssresult->stylecode) . "';\n";
+        }
 
         //Get the individual template files
         $sermons = $params->get('sermonstemplate');
@@ -293,20 +315,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             $objects .= "\n--\n-- SeriesDisplay\n--";
             $objects .= $this->getTemplate($seriesdisplay);
         }
-        $css = $params->get('css');
-        $length = strlen($css);
-        $css = substr($css, 0, -4);
-        if ($css) {
-            $objects .= "\n\n--\n-- CSS Style Code\n--\n";
-            $query2 = $db->getQuery(true);
-            $query2->select('style.*');
-            $query2->from('#__bsms_styles AS style');
-            $query2->where('style.filename = "' . $css . '"');
-            $db->setQuery($query2);
-            $db->query();
-            $cssresult = $db->loadObject();
-            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->getEscaped($cssresult->filename) . "',\n`stylecode` = '" . $db->getEscaped($cssresult->stylecode) . "';\n";
-        }
+
+        $objects = "--\n-- Template Table\n--\n";
+        //Create the main template insert
+        $objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->getEscaped($result->type) . "',";
+        $objects .= "\n`params` = '" . $db->getEscaped($result->params) . "',";
+        $objects .= "\n`title` = '" . $db->getEscaped($result->title) . "',";
+        $objects .= "\n`text` = '" . $db->getEscaped($result->text) . "';";
+
         $objects .= "\n-- --------------------------------------------------------\n\n";
         return $objects;
     }

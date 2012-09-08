@@ -121,7 +121,6 @@ class Com_BiblestudyInstallerScript {
 
         $db = JFactory::getDBO();
         $db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
-        $db->query();
         $admin = $db->loadObject();
 
         $drop_tables = $admin->drop_tables;

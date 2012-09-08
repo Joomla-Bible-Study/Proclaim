@@ -48,8 +48,8 @@ class BiblestudyViewTemplates extends JView {
      * @since   11.1
      */
     public function display($tpl = null) {
-        
-        
+
+
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
@@ -61,10 +61,10 @@ class BiblestudyViewTemplates extends JView {
 
         // Set the toolbar
         $this->addToolbar();
-        $bar = & JToolBar::getInstance('toolbar');
+        $bar = JToolBar::getInstance('toolbar');
         $url = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=default_export');
         $bar->appendButton('Link','export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
-        
+
         // Display the template
         parent::display($tpl);
 
