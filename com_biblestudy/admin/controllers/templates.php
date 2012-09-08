@@ -137,40 +137,43 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                                 switch ($type) {
                                     case 1:
                                         //sermonlist
-                                        $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
+                                      //  $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
                                         $sermonstemplate = $data->filename;
                                         break;
 
                                     case 2:
                                         //sermon
-                                        $sermontemplate = '"sermontemplate":'.$data->filename.'"';
+                                      //  $sermontemplate = '"sermontemplate":'.$data->filename.'"';
                                         $sermontemplate = $data->filename;
                                         break;
 
                                     case 3:
                                         //teachers
-                                        $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
+                                       // $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
                                         $teacherstemplate = $data->filename;
                                         break;
 
                                     case 4:
                                         //teacher
-                                        $teachertemplate = '"teachertemplate":'.$data->filename.'"';
+                                      //  $teachertemplate = '"teachertemplate":'.$data->filename.'"';
                                         $teachertemplate = $data->filename;
                                         break;
 
                                     case 5:
                                         //serieslist
-                                        $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
+                                       // $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
+                                        $seriesdisplays = $data->filename;
                                         break;
 
                                     case 6:
                                         //series
-                                        $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
+                                       // $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
+                                        $seriesdisplay = $data->filename;
                                         break;
                                     case 7:
                                         //module
-                                        $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
+                                      //  $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
+                                        $moduletemplate = $data->filename;
                                         break;
                                 }
                             }
