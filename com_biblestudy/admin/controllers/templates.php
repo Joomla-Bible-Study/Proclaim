@@ -372,51 +372,5 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         return true;
     }
 
-    /**
-     * Return Template Type
-     *
-     * @param string $type
-     * @return string
-     */
-    function getTemplateType($type) {
-        if ($data->id) {
-            switch ($type) {
-                case 1:
-                    //sermonlist
-                    $return = 'sermonstemplate';
-                    break;
-
-                case 2:
-                    //sermon
-                    $return = 'sermontemplate';
-                    break;
-
-                case 3:
-                    //teachers
-                    $return = 'teacherstemplate';
-                    break;
-
-                case 4:
-                    //teacher
-                    $return = 'teachertemplate';
-                    break;
-
-                case 5:
-                    //serieslist
-                    $return = 'seriesdisplaystemplate';
-                    break;
-
-                case 6:
-                    //series
-                    $return = 'seriesdisplaytemplate';
-                    break;
-                case 7:
-                    //module
-                    $moduletemplate = $data->filename; // FixeMe look like this is not right.
-                    break;
-            }
-            return $return;
-        }
-    }
-
+   
 }
