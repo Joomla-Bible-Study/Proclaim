@@ -84,7 +84,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             // No queries to process
             return 0;
         }
-
+        $tc = 0;
         foreach ($queries as $querie) {
             $querie = trim($querie);
             if (substr_count($querie, 'INSERT')) {
@@ -133,55 +133,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                             echo 'Caught exception: ', $e->getMessage(), "\n";
                         }
                     } elseif (substr_count($querie, '#__bsms_templates')) {
-                        // Get Last Style record
-                        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
-                        $db->setQuery($query);
-                        $data = $db->loadObject();
-                        $css = $data->filename . ".css";
-
-                        //Get new  record insert to change name
-                        $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
-                        $db->setQuery($query);
-                        $data = $db->loadObject();
-
-                        // Preload varebles for templates
-                        $type = $data->type;
-                        switch ($type) {
-                            case 1:
-                                //sermonlist
-                                $sermonstemplate = $data->filename;
-                                break;
-
-                            case 2:
-                                //sermon
-                                $sermontemplate = $data->filename;
-                                break;
-
-                            case 3:
-                                //teachers
-                                $teacherstemplate = $data->filename;
-                                break;
-
-                            case 4:
-                                //teacher
-                                $teachertemplate = $data->filename;
-                                break;
-
-                            case 5:
-                                //serieslist
-                                $seriesdisplaystemplate = $data->filename;
-                                break;
-
-                            case 6:
-                                //series
-                                $seriesdisplaytemplate = $data->filename;
-                                break;
-                            case 7:
-                                //module
-                                $moduletemplate = $data->filename;
-                                break;
-                        }
-
                         // Start to insert new Record
                         $this->performDB($querie);
 
@@ -191,37 +142,95 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         $data = $db->loadObject();
                         $querie3 = "UPDATE #__bsms_templates SET`title` = '" . $data->title . "_copy" . $data->id . "' WHERE `id` = '" . $data->id . "'";
                         $this->performDB($querie3);
-
-                        // Load Table Data.
-                        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                        $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-                        try {
-                            $table->load($data->id);
-                        } catch (Exception $e) {
-                            echo 'Caught exception: ', $e->getMessage(), "\n";
-                        }
-
-                        //Need to adjust the params and write back
-                        $registry = new JRegistry();
-                        $registry->loadJSON($table->params);
-                        $params = $registry;
-                        $params->set('css', $css);
-                        $params->set('sermonstemplate', $sermonstemplate);
-                        $params->set('sermontemplate', $sermontemplate);
-                        $params->set('teacherstemplate', $teacherstemplate);
-                        $params->set('teachertemplate', $teachertemplate);
-                        $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
-                        $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
-                        $params->set('moduletemplate', $moduletemplate);
-
-                        //Now write the params back into the $table array and store.
-                        $table->params = (string) $params->toString();
-                        if (!$table->store()) {
-                            $this->setError($db->getErrorMsg());
-                        }
+                        $tc++;
                     }
                 }
             }
+        }
+
+        // Get Last Style record
+        $query = 'SELECT filename, id from #__bsms_styles ORDER BY id DESC LIMIT 1';
+        $db->setQuery($query);
+        $data = $db->loadObject();
+        $css = $data->filename . ".css";
+
+        //Get new  record insert to change name
+        $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT ' . $tc;
+        $db->setQuery($query);
+        $data = $db->loadObjectlist();
+        foreach ($data AS $tpcode):
+
+            // Preload varebles for templates
+            $type = $tpcode->type;
+            switch ($type) {
+                case 1:
+                    //sermonlist
+                    $sermonstemplate = $tpcode->filename;
+                    break;
+
+                case 2:
+                    //sermon
+                    $sermontemplate = $tpcode->filename;
+                    break;
+
+                case 3:
+                    //teachers
+                    $teacherstemplate = $tpcode->filename;
+                    break;
+
+                case 4:
+                    //teacher
+                    $teachertemplate = $tpcode->filename;
+                    break;
+
+                case 5:
+                    //serieslist
+                    $seriesdisplaystemplate = $tpcode->filename;
+                    break;
+
+                case 6:
+                    //series
+                    $seriesdisplaytemplate = $tpcode->filename;
+                    break;
+                case 7:
+                    //module
+                    $moduletemplate = $tpcode->filename;
+                    break;
+            }
+
+        endforeach;
+
+        //Get new  record insert to change name
+        $query = 'SELECT id, title, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
+        $db->setQuery($query);
+        $data = $db->loadObject();
+
+        // Load Table Data.
+        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+        $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+        try {
+            $table->load($data->id);
+        } catch (Exception $e) {
+            echo 'Caught exception: ', $e->getMessage(), "\n";
+        }
+
+        //Need to adjust the params and write back
+        $registry = new JRegistry();
+        $registry->loadJSON($table->params);
+        $params = $registry;
+        $params->set('css', $css);
+        $params->set('sermonstemplate', $sermonstemplate);
+        $params->set('sermontemplate', $sermontemplate);
+        $params->set('teacherstemplate', $teacherstemplate);
+        $params->set('teachertemplate', $teachertemplate);
+        $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
+        $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
+        $params->set('moduletemplate', $moduletemplate);
+
+        //Now write the params back into the $table array and store.
+        $table->params = (string) $params->toString();
+        if (!$table->store()) {
+            $this->setError($db->getErrorMsg());
         }
         $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
         $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
@@ -372,5 +381,4 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         return true;
     }
 
-   
 }
