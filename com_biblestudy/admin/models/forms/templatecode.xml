@@ -6,7 +6,7 @@
 		<option value="0">JBS_CMN_NO</option>
 		<option value="1">JBS_CMN_YES</option>
 	</field>
-        <field name="type" type="list" label="JBS_TPLCODE_TYPE" description="JBS_TPLCODE_DESC" required="true" class="inputbox" default="1">
+        <field name="type" type="list" label="JBS_TPLCODE_TYPE" description="JBS_TPLCODE_DESC" class="inputbox" default="1">
             <option value="1">JBS_TPLCODE_SERMONLIST</option>
             <option value="2">JBS_TPLCODE_SERMON</option>
             <option value="3">JBS_TPLCODE_TEACHERS</option>
