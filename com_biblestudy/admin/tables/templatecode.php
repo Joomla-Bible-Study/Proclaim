@@ -117,7 +117,7 @@ class TableTemplatecode extends JTable {
             return false;
         }
 
-        //write the css file
+        //write the file
         jimport('joomla.client.helper');
         jimport('joomla.filesystem.file');
         $templatetype = $this->type;
@@ -160,7 +160,7 @@ class TableTemplatecode extends JTable {
         $requiredtext = "defined('_JEXEC') or die;";
         $required = substr_count($filecontent, $requiredtext);
         if (!$required) {
-            $filecontent = $requiredtext . $filecotent;
+            $filecontent = $requiredtext . $filecontent;
         }
         if (!$return = JFile::write($file, $filecontent)) {
             $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
