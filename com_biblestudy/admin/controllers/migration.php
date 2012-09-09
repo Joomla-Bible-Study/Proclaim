@@ -14,6 +14,7 @@ jimport('joomla.html.parameter');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.restore.php');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.migrate.php');
+JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 
 /**
  * JBS Export Migration Controller
@@ -131,32 +132,31 @@ class BiblestudyControllerMigration extends JController {
             $import = new JBSImport();
             $result = $import->importdb($parent);
         }
-        if ($result || $copysuccess)
-            {
-                $migrate = new JBSMigrate();
-                $migration = $migrate->migrate();
-                $messages = JText::_('JBS_CMN_NO_ERROR_MESSAGES_AVAILABLE');
-                if (!empty($migration))
-                {$messages = implode('<br>', $migration); }
-                //Final step is to fix assets
-                $this->fixAssets();
-                if ($migration)
-                    {
-                        $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . $messages, 'message');
-                        JRequest::setVar('migrationdone', '1', 'get');
-                    }
-                else
-                    {
-                        //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $messages . '', 'message');
-                        JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
-                    }
+        if ($result || $copysuccess) {
+            $migrate = new JBSMigrate();
+            $migration = $migrate->migrate();
+            $messages = JText::_('JBS_CMN_NO_ERROR_MESSAGES_AVAILABLE');
+            if (!empty($migration)) {
+                $messages = implode('<br>', $migration);
+            }
+            //Final step is to fix assets
+            $this->fixAssets();
+            $installer = new Com_BiblestudyInstallerScript();
+            $installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
+            $installer->fixMenus();
+            $installer->fixImagePaths();
+            if ($migration) {
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . $messages, 'message');
                 JRequest::setVar('migrationdone', '1', 'get');
+            } else {
+                //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $messages . '', 'message');
+                JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
             }
-        else
-            {
-                //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $messages . '', 'message');
-                JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
-            }
+            JRequest::setVar('migrationdone', '1', 'get');
+        } else {
+            //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $messages . '', 'message');
+            JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
+        }
         $this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
     }
 
