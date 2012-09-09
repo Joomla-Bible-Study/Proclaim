@@ -266,11 +266,23 @@ class jbs700Install {
             }
         }
 
+        $query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_ASCENDING' WHERE `id` = '1'";
+        $msg = $this->performdb($query);
+        if (!$msg) {
+            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
+        } else {
+            $messages[] = $msg;
+        }
 
-//Get all the study records
+        $query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_DESCENDING' WHERE `id` = '2'";
+        $msg = $this->performdb($query);
+        if (!$msg) {
+            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
+        } else {
+            $messages[] = $msg;
+        }
 
-
-        $query = 'DROP TABLE #__bsms_books';
+        $query = 'DROP TABLE IF EXISTS #__bsms_books';
         $msg = $this->performdb($query);
         if (!$msg) {
             $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
@@ -466,7 +478,7 @@ class jbs700Install {
         $db = JFactory::getDBO();
         $results = false;
         $db->setQuery($query);
-        if ($db->getErrorNum() != 0) {
+        if (!$db->execute()) {
             $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
             $results .= $db->stderr(true);
             $results .= "</font>";
