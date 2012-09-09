@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_order` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(15) DEFAULT '',
   `text` varchar(50) DEFAULT '',
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
@@ -443,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `filename` text NOT NULL,
   `stylecode` longtext NOT NULL,
@@ -508,7 +508,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `type` tinyint(3) NOT NULL,
   `filename` text NOT NULL,
