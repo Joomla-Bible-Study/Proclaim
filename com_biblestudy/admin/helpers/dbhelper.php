@@ -26,12 +26,10 @@ class jbsDBhelper {
         $db = JFactory::getDBO();
         $fields = $db->getTableColumns($table, 'false');
         if ($fields) {
-            foreach ($fields as $key => $value) {
-                if (substr_count($key, $field)) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if (array_key_exists($field, $fields) === TRUE) {
+                return true;
+            } else {
+                return false;
             }
         }
     }
