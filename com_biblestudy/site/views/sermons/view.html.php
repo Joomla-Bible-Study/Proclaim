@@ -248,6 +248,8 @@ class BiblestudyViewSermons extends JView {
         if ($params->get('use_go_button', 0) == 0) {
             $go = 'onchange="this.form.submit()"';
         }
+        else {$go = null;}
+        
         //Build go button
         $this->page->gobutton = '<span id="gobutton"><input type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '" /></span>';
 

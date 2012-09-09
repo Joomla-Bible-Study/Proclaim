@@ -36,7 +36,6 @@ class JBSPagebuilder {
      * @return string
      */
     function buildPage($item, $params, $admin_params) {
-
         $images = new jbsImages();
         //media files image, links, download
         $mids = $item->mids;
