@@ -129,4 +129,36 @@ class BiblestudyModelTemplatecode extends JModelAdmin {
         return $item;
     }
 
+    public function findType($type)
+    {
+        switch ($type) {
+                case 1:
+                    $type='sermonlist';
+                    break;
+
+                case 2:
+                    $type='sermondisplay';
+                     break;
+
+                case 3:
+                    $type='teachers list';
+                    break;
+
+                case 4:
+                    $type='teacher dislpay';
+                    break;
+
+                case 5:
+                    $type='serieslist';
+                    break;
+
+                case 6:
+                    $type='series display';
+                    break;
+                case 7:
+                    $type='module';
+                    break;
+            }
+            return $type;
+    }
 }

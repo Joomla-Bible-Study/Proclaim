@@ -65,6 +65,8 @@ class biblestudyViewTemplatecode extends JView {
             $file = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'defaulttemplatecode.php';
             $this->defaultcode = JFile::read($file);
         }
+        $this->type = null;
+        if ($item->id){$this->type = $this->findType($item->type);}
         $this->item = $item;
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'templatecode');

@@ -26,7 +26,9 @@ defined('_JEXEC') or die;
                 <li>
                     <?php echo $this->form->getLabel('type'); ?>
 
-                    <?php echo $this->form->getInput('type'); ?></li>
+                    <?php 
+                        if ($this->type){echo $this->type;}
+                        else {echo $this->form->getInput('type');} ?></li>
                 <li>
                     <?php echo $this->form->getLabel('templatecode'); ?>
                 </li>
