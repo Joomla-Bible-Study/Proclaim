@@ -384,6 +384,16 @@ class jbs700Install {
             $messages[] = $msg;
         }
 
+
+        //Fix timeset primary key
+        $query = "ALTER TABLE `#__bsms_timeset` DROP INDEX  `timeset` , ADD PRIMARY KEY (  `timeset` )";
+        $msg = $this->performdb($query);
+        if (!$msg) {
+            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
+        } else {
+            $messages[] = $msg;
+        }
+
         //Fix studies params
         $query = "SELECT `id`, `params` FROM #__bsms_studies";
         $db->setQuery($query);
@@ -464,7 +474,6 @@ class jbs700Install {
             }
         }
         $fresult = array('build' => '700', 'messages' => $messages);
-
         return $fresult;
     }
 
