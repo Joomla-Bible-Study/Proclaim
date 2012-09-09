@@ -60,7 +60,6 @@ class jbs700Install {
             array('table' => '#__bsms_series', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
             array('table' => '#__bsms_servers', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
             array('table' => '#__bsms_share', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-            array('table' => '#__bsms_comments', 'field' => 'show_level', 'type' => 'ADD', 'command' => "varchar(100) NOT NULL DEFAULT '0'"),
             array('table' => '#__bsms_comments', 'field' => 'study_id', 'type' => 'MODIFY', 'command' => "int(11) NOT NULL DEFAULT '0'"),
             array('table' => '#__bsms_comments', 'field' => 'user_id', 'type' => 'MODIFY', 'command' => "int(11) NOT NULL DEFAULT '0'"),
             array('table' => '#__bsms_comments', 'field' => 'full_name', 'type' => 'MODIFY', 'command' => "varchar(50) NOT NULL DEFAULT ''"),
