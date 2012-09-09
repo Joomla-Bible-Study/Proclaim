@@ -6,6 +6,7 @@
     <!-- set global properties for this build -->
     <property name="src" location="src"/>
     <property name="build" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/"/>
+    <property name="test" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Testing/"/>
     <property name="dist"  location="dist"/>
     <target name="reset">
         <echo message="Reset back to Dev State" />
@@ -13,6 +14,7 @@
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
+        <symlink link="${test}/test" resource="${build}/com_biblestudy/admin/view/test"/>
     </target>
     <target name="clean">
         <echo message="Cleaning directories" />

@@ -232,21 +232,23 @@ class JBS710Update {
             border: 1px solid grey;
             padding: 1em;
             }
-            .image {
+            .podcastsubscribe .image {
+            float: left;
+            padding-right: 5px;
             display: inline;
             }
-            .image .text {
+            .podcastsubscribe .image .text {
             display:inline;
             position:relative;
             right:50px;
             bottom:-10px;
             }
-            .prow {
+            .podcastsubscribe .prow {
               display: table-row;
              width:auto;
               clear:both;
             }
-            .pcell {
+            .podcastsubscribe .pcell {
               display: table-cell;
               float:left;/*fix for  buggy browsers*/
                 }
