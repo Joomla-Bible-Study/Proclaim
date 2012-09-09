@@ -65,12 +65,20 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
         case 5:
             $elementid->id = 'title';
             $elementid->headertext = JText::_('JBS_CMN_TITLE');
-            $elementid->element = $row->studytitle;
+            if (isset($row->studytitle)):
+                $elementid->element = $row->studytitle;
+            else:
+                $elementid->element = '';
+            endif;
             break;
         case 6:
             $elementid->id = 'studyintro';
             $elementid->headertext = JText::_('JBS_CMN_INTRODUCTION');
-            $elementid->element = $row->studyintro;
+            if (isset($row->studyintro)):
+                $elementid->element = $row->studyintro;
+            else:
+                $elementid->element = '';
+            endif;
             break;
         case 7:
             $elementid->id = 'teacher';

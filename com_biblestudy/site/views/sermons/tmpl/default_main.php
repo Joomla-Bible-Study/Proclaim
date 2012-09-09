@@ -124,10 +124,11 @@ $listingcall = JView::loadHelper('listing');
     <div class="clr"></div>
     <table id="bslisttable" cellspacing="0">
         <?php
-        // @todo $headerCall seams not to be used?
-        $headerCall = JView::loadHelper('header');
-        $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
-        echo $header;
+        if (isset($this->items['0'])):
+            JView::loadHelper('header');
+            $header = getHeader($this->items['0'], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
+            echo $header;
+        endif;
         ?>
         <tbody>
 

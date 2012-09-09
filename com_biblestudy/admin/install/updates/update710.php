@@ -42,7 +42,6 @@ class JBS710Update {
 
                 $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
                 $db->setQuery($query);
-                $db->query();
                 $result = $db->loadObject();
                 if ($result) {
                     $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $oldcss . '" WHERE `id` = ' . $result->id;
@@ -56,7 +55,6 @@ class JBS710Update {
                 //No css or backup found so we get the default and write a file with it to the new location
                 $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
                 $db->setQuery($query);
-                $db->query();
                 $result = $db->loadObject();
                 $newcss = $result->stylecode;
                 if ($result) {
@@ -277,13 +275,12 @@ class JBS710Update {
             ';
         $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
         $db->setQuery($query);
-        $db->query();
         $result = $db->loadObject();
         $oldcss = $result->stylecode;
         $newcss = $new710css . ' ' . $oldcss;
         $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
         if (!JFile::write($dest, $newcss)) {
             return false;
         }

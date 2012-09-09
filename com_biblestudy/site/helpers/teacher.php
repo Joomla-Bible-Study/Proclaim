@@ -20,7 +20,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  * @return string
  */
 function getTeacher($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -43,7 +43,7 @@ function getTeacher($params, $id, $admin_params) {
         return $teacher;
     }
     foreach ($teacherids as $teachers) {
-        $database = & JFactory::getDBO();
+        $database = JFactory::getDBO();
         $query = 'SELECT * FROM #__bsms_teachers' .
                 '  WHERE id = ' . $teachers;
         $database->setQuery($query);
@@ -86,7 +86,7 @@ function getTeacher($params, $id, $admin_params) {
  * @return string
  */
 function getTeacherLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -118,7 +118,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     $teacher = "\n" . '<table id="landing_table" width="100%">';
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where a.list_show = 1 and a.published = 1 order by a.ordering, a.teachername ' . $order;
 
     $db->setQuery($query);
@@ -339,7 +339,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template) {
     if ($nolimit == 1) {
         $limit = '';
     }
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = ' . $id;
     $db->setQuery($query);
     $allrows = $db->loadObjectList();
