@@ -129,9 +129,11 @@ class BiblestudyModelTemplatecode extends JModelAdmin {
         return $item;
     }
 
-    public function findType($type)
+    public function getType()
     {
-        switch ($type) {
+        $item = $this->getItem();
+        $type2 = $item->type;
+        switch ($type2) {
                 case 1:
                     $type='sermonlist';
                     break;

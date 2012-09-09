@@ -66,7 +66,7 @@ class biblestudyViewTemplatecode extends JView {
             $this->defaultcode = JFile::read($file);
         }
         $this->type = null;
-        if ($item->id){$this->type = $this->findType($item->type);}
+        if ($item->id){$this->type = $this->get('Type');}
         $this->item = $item;
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'templatecode');
