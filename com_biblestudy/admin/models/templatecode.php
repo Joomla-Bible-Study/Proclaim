@@ -129,38 +129,45 @@ class BiblestudyModelTemplatecode extends JModelAdmin {
         return $item;
     }
 
-    public function getType()
-    {
+    /**
+     * Get Type Language String
+     * @return string|Null
+     */
+    public function getType() {
         $item = $this->getItem();
         $type2 = $item->type;
         switch ($type2) {
-                case 1:
-                    $type='sermonlist';
-                    break;
+            case 1:
+                $type = JText::_('JBS_TPLCODE_SERMONLIST');
+                break;
 
-                case 2:
-                    $type='sermondisplay';
-                     break;
+            case 2:
+                $type = JText::_('JBS_TPLCODE_SERMON');
+                break;
 
-                case 3:
-                    $type='teachers list';
-                    break;
+            case 3:
+                $type = JText::_('JBS_TPLCODE_TEACHERS');
+                break;
 
-                case 4:
-                    $type='teacher dislpay';
-                    break;
+            case 4:
+                $type = JText::_('JBS_TPLCODE_TEACHER');
+                break;
 
-                case 5:
-                    $type='serieslist';
-                    break;
+            case 5:
+                $type = JText::_('JBS_TPLCODE_SERIESDISPLAYS');
+                break;
 
-                case 6:
-                    $type='series display';
-                    break;
-                case 7:
-                    $type='module';
-                    break;
-            }
-            return $type;
+            case 6:
+                $type = JText::_('JBS_TPLCODE_SERIESDISPLAY');
+                break;
+            case 7:
+                $type = JText::_('JBS_TPLCODE_MODULE');
+                break;
+            case NULL:
+                $type = Null;
+                break;
+        }
+        return $type;
     }
+
 }

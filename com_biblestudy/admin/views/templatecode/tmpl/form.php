@@ -16,6 +16,10 @@ defined('_JEXEC') or die;
                 <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+
+                    <?php echo $this->form->getInput('id'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('published'); ?>
 
                     <?php echo $this->form->getInput('published'); ?></li>
@@ -26,9 +30,12 @@ defined('_JEXEC') or die;
                 <li>
                     <?php echo $this->form->getLabel('type'); ?>
 
-                    <?php 
-                        if ($this->type){echo $this->type; }
-                        else {echo $this->form->getInput('type');} ?></li>
+                    <?php
+                    if ($this->item->id == 0) {
+                        echo $this->form->getInput('type');
+                    } else {
+                        ?><label id="jform_type-lbl" for="jform_type" style="clear: none"><?php echo $this->type ?></label>
+                    <?php } ?></li>
                 <li>
                     <?php echo $this->form->getLabel('templatecode'); ?>
                 </li>
