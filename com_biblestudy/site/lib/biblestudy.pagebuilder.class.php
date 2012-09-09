@@ -93,7 +93,7 @@ class JBSPagebuilder {
             $item->thumb = '';
         endif;
         if ($item->image || $item->thumb) {
-            $teacherimage = $images->getTeacherImage($item->image, $item->thumb);
+            $image = $images->getTeacherImage($item->image, $item->thumb);
             $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
         } else {
             $page->teacherimage = '';
