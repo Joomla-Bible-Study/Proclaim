@@ -52,8 +52,12 @@ class jbsMedia {
 
         //Here we get a list of the media ids associated with the study we got from $row
 
-        $mediaids = $this->getMediaRows($row->id);
-        $rowcount = count($mediaids); // echo $rowcount; return true;
+        $mediaids = $this->getMediaRows($row->id); 
+        if (!$mediaids){
+            $table = null;
+            return $table;
+        }
+        $rowcount = count($mediaids); 
         if ($rowcount < 1) {
             $table = null;
             return $table;
@@ -124,7 +128,7 @@ class jbsMedia {
         $table .= '</tr>';
 
         // This is the last part of the table where we see if we need to display the filesize
-        if ($params->get('show_filesize') > 0) {
+        if ($params->get('show_filesize') > 0 && isset($media)){
             $table .= '<tr>';
             foreach ($mediaids as $media) {
                 switch ($params->get('show_filesize')) {
