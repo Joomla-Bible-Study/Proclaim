@@ -178,7 +178,6 @@ class BiblestudyModelSermons extends JModelList {
 
         $query->group('study.id');
 
-        //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
         $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
         $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
@@ -415,9 +414,8 @@ class BiblestudyModelSermons extends JModelList {
         $topic = $this->getState('filter.topic');
         if (!empty($topic))
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
-        //  $query->where('study.topics_id = ' . (int) $topic);
-        // Filter by language
 
+        // Filter by language
         $language = $params->get('language', '*');
         if ($this->getState('filter.languages')) {
             $query->where('study.language  LIKE "' . $this->getState('filter.languages') . '"');
@@ -494,12 +492,21 @@ class BiblestudyModelSermons extends JModelList {
      * @since 7.0
      */
     public function getBooks() {
+
+        $template = $this->getTemplate();
+        // Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($template->params);
+        $params = $registry;
+
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
         $query->select('book.booknumber AS value, book.bookname AS text, book.id');
         $query->from('#__bsms_books AS book');
-        $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
+        if ($params->get('booklist') == 1):
+            $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
+        endif;
         $query->group('book.id');
         $query->order('book.booknumber');
 
