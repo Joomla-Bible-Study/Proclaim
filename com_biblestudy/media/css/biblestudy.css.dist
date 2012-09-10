@@ -157,7 +157,7 @@
 .podcastsubscribe{
     clear:both;
     display:table;
-    width:auto;
+    width:100%;
     background-color:#eee;
     border-radius: 15px 15px 15px 15px;
     border: 1px solid grey;
@@ -181,7 +181,12 @@
 }
 .podcastsubscribe .pcell {
     display: table-cell;
-    float:left;/*fix for  buggy browsers*/
+    float:left;
+    background-color:#e3e2e2;
+    border-radius: 15px 15px 15px 15px;
+    border: 1px solid grey;
+    padding: 1em;
+    margin-right: 5px;
 }
 .podcastheader h3{
     display:table-header;

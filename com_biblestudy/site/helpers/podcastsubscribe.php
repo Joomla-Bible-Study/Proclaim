@@ -79,7 +79,7 @@ class podcastSubscribe {
         $subscribe = '';
         if (!empty($podcast->podcast_image_subscribe)):
             $image = podcastSubscribe::buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-            $link = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a></div>';
+            $link = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
             $subscribe .= $link;
         endif;
         if (empty($podcast->podcast_subscribe_desc)):
@@ -100,7 +100,7 @@ class podcastSubscribe {
         $subscribe = '';
         if (!empty($podcast->alternateimage)):
             $image = podcastSubscribe::buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $link = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div>';
+            $link = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
             $subscribe .= $link;
         endif;
         $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div>';
