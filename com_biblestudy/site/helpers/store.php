@@ -18,8 +18,8 @@ defined('_JEXEC') or die;
  */
 function getStore($params, $row) {
 
-    $mainframe = & JFactory::getApplication();
-    $database = & JFactory::getDBO();
+    $mainframe = JFactory::getApplication();
+    $database = JFactory::getDBO();
     $query = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
             . ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
                         FROM #__bsms_studies AS s

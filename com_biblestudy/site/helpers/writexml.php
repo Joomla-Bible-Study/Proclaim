@@ -23,18 +23,18 @@ function writeXML() {
     include_once($path1 . 'helper.php');
     include_once($path1 . 'scripture.php');
     $admin_params = getAdminsettings();
-    $config = & JFactory::getConfig();
+    $config = JFactory::getConfig();
     $lb_abspath = JPATH_SITE;
     $lb_mailfrom = $config->getValue('config.mailfrom');
     $lb_fromname = $config->getValue('config.fromname');
     $lb_livesite = JURI::root();
 
     $Body = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> ' . $lb_fromname;
-    $params = &JComponentHelper::getParams('com_biblestudy');
+    $params = JComponentHelper::getParams('com_biblestudy');
     jimport('joomla.utilities.date');
     $year = '(' . date('Y') . ')';
     $date = date('r');
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'SELECT id, title FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
     $db->setQuery($query);
     $podid = $db->loadObjectList();
@@ -259,7 +259,7 @@ function writeXML() {
             jimport('joomla.filesystem.file');
             JClientHelper::setCredentialsFromRequest('ftp');
             $ftp = JClientHelper::getCredentials('ftp');
-            $client = & JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+            $client = JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
             $file = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
             $files[] = $file;
             // Try to make the template file writeable

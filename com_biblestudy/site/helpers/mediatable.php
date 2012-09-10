@@ -26,9 +26,9 @@ function getMediatable($params, $row, $admin_params) {
     if (!$row->id) {
         return FALSE;
     }
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
-    $database = & JFactory::getDBO();
+    $database = JFactory::getDBO();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'filesize.php');
     include_once($path1 . 'filepath.php');
@@ -36,7 +36,6 @@ function getMediatable($params, $row, $admin_params) {
     include_once($path1 . 'image.php');
     include_once ($path1 . 'helper.php');
     $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-    $database->query();
     $admin = $database->loadObjectList();
 
     $d_image = ($admin[0]->params->default_download_image ? '/' . $admin[0]->params->default_download_image : '/download.png');
@@ -333,9 +332,8 @@ function getMediaRows($study_id) {
             . ' LEFT JOIN #_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)'
             . ' WHERE #_bsms_mediafiles.study_id = ' . $study_id . ' AND #_bsms_mediafiles.published = 1 ORDER BY ordering ASC, #_bsms_mediafiles.mime_type ASC;';
 
-    $database = & JFactory::getDBO();
+    $database = JFactory::getDBO();
     $database->setQuery($query);
-    $database->query();
     $mediaRows = $database->loadObjectList();
     return $mediaRows;
 }

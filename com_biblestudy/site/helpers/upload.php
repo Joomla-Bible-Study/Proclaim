@@ -409,7 +409,7 @@ class JBSUpload {
      */
     public function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0) {
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
-        $filepath = & JTable::getInstance('Server', 'Table');
+        $filepath = JTable::getInstance('Server', 'Table');
         $filepath->load($serverid);
         $folderpath = JTable::getInstance('Folder', 'Table');
         $folderpath->load($folderid);
