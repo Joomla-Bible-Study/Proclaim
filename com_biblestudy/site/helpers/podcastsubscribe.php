@@ -53,10 +53,11 @@ class podcastSubscribe {
                         break;
 
                     case 4:
-                        $subscribe .= '<div class="pcell">';
+                        $subscribe .= '<div class="pcell"><div class="fltlft">';
                         $subscribe .= podcastSubscribe::buildStanderdPodcast($podcast);
+                        $subscribe .= '</div><div class="fltlft">';
                         $subscribe .= podcastSubscribe::buildStanderdPodcast($podcast);
-                        $subscribe .= '</div>';
+                        $subscribe .= '</div></div>';
                         break;
                 }
             }
