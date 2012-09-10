@@ -68,149 +68,149 @@ class JBS710Update {
         $new710css = '
 /* New Teacher Codes */
 #bsm_teachertable_list .bsm_teachername
-  {
+{
     font-weight: bold;
     font-size: 14px;
     color: #000000;
     white-space:nowrap;
 
-  }
+}
 #bsm_teachertable_list
-  {
-  margin: 0;
-   border-collapse:separate;
-  }
+{
+    margin: 0;
+    border-collapse:separate;
+}
 #bsm_teachertable_list td {
-  text-align:left;
-  padding:0 5px 0 5px;
-  border:none;
+    text-align:left;
+    padding:0 5px 0 5px;
+    border:none;
 }
 #bsm_teachertable_list .titlerow
-  {
+{
     border-bottom: thick;
-  }
+}
 #bsm_teachertable_list .title
-  {
+{
     font-size:18px;
     font-weight:bold;
     border-bottom: 3px solid #999999;
     padding: 4px 0px 4px 4px;
-  }
+}
 #bsm_teachertable_list .bsm_separator
-  {
-  border-bottom: 1px solid #999999;
-  }
+{
+    border-bottom: 1px solid #999999;
+}
 
 .bsm_teacherthumbnail_list
-  {
+{
 
-  }
+}
 #bsm_teachertable_list .bsm_teacheremail
-  {
+{
     font-weight:normal;
     font-size: 11px;
-  }
+}
 #bsm_teachertable_list .bsm_teacherwebsite
-  {
+{
     font-weight:normal;
     font-size: 11px;
-  }
+}
 #bsm_teachertable_list .bsm_teacherphone
-  {
+{
     font-weight:normal;
     font-size: 11px;
-  }
+}
 #bsm_teachertable_list .bsm_short
-  {
+{
     padding: 8px 4px 4px;
-  }
+}
 #bsm_teachertable .bsm_studiestitlerow {
-  background-color: #666;
+    background-color: #666;
 }
 #bsm_teachertable_list .bsm_titletitle
-  {
+{
     font-weight:bold;
     color:#FFFFFF;
-  }
+}
 #bsm_teachertable_list .bsm_titlescripture
-  {
+{
     font-weight:bold;
     color:#FFFFFF;
-  }
+}
 #bsm_teachertable_list .bsm_titledate
-  {
+{
     font-weight:bold;
     color:#FFFFFF;
-  }
+}
 #bsm_teachertable_list .bsm_teacherlong
 {
-  padding: 8px 4px 4px;
-  border-bottom: 1px solid #999999;
+    padding: 8px 4px 4px;
+    border-bottom: 1px solid #999999;
 }
 #bsm_teachertable_list tr.bsodd {
-  background-color:#FFFFFF;
-  border-bottom: 1px solid #999999;
+    background-color:#FFFFFF;
+    border-bottom: 1px solid #999999;
 }
 #bsm_teachertable_list tr.bseven {
-  background-color:#FFFFF0;
-  border-bottom: 1px solid #999999;
+    background-color:#FFFFF0;
+    border-bottom: 1px solid #999999;
 }
 
 #bsm_teachertable_list .lastrow td {
-  border-bottom:1px solid grey;
-  padding-bottom:7px;
-  padding-top:7px;
+    border-bottom:1px solid grey;
+    padding-bottom:7px;
+    padding-top:7px;
 }
 #bsm_teachertable_list .bsm_teacherfooter
-  {
+{
     border-top: 1px solid #999999;
     padding: 4px 1px 1px 4px;
-  }
+}
 /* New Teacher Details Codes */
 
 #bsm_teachertable .teacheraddress{
-text-align:left;
+    text-align:left;
 }
 
 #bsm_teachertable .teacherwebsite{
-text-align:left;}
+    text-align:left;}
 
 #bsm_teachertable .teacherfacebook{
-text-align:left;
+    text-align:left;
 }
 
 #bsm_teachertable .bsm_teachertwitter{
-text-align:left;
+    text-align:left;
 }
 
 #bsm_teachertable .bsm_teacherblog{
-text-align:left;
+    text-align:left;
 }
 
 #bsm_teachertable .bsm_teacherlink1{
-text-align:left;
+    text-align:left;
 }
 
 
 /* New Landing Page CSS */
 
 .landingtable {
-clear:both;
-width:auto;
-display:table;
+    clear:both;
+    width:auto;
+    display:table;
 
 }
 
 .landingrow {
-display:inline;
-padding: 1em;
+    display:inline;
+    padding: 1em;
 }
 .landingcell {
-display:table-cell;
+    display:table-cell;
 }
 
 .landinglink a{
-display:inline;
+    display:inline;
 }
 
 /* Terms of use or donate display settings */
@@ -258,24 +258,30 @@ display:inline;
 .podcastheader h3{
     display:table-header;
     text-align:center;
-}/* Listing Page Items */
-
-#subscribelinks {
-
 }
+
 .podcastheader{
     font-weight: bold;
 }
-
 
 .podcastlinks{
     display: inline;
 
 }
 
+.fltlft {
+  float:left;
+  padding-right: 5px;
+}
+
+/* Listing Page Items */
+#subscribelinks {
+
+}
+
 div.listingfooter ul li {
-float: left;
-list-style: none outside none;
+    float: left;
+    list-style: none outside none;
 }
 
 ';

@@ -1,4 +1,3 @@
-
 /* New Teacher Codes */
 #bsm_teachertable_list .bsm_teachername
 {
@@ -191,17 +190,24 @@
 .podcastheader h3{
     display:table-header;
     text-align:center;
-}/* Listing Page Items */
-#subscribelinks {
-
 }
+
 .podcastheader{
     font-weight: bold;
 }
 
-
 .podcastlinks{
     display: inline;
+
+}
+
+.fltlft {
+  float:left;
+  padding-right: 5px;
+}
+
+/* Listing Page Items */
+#subscribelinks {
 
 }
 
