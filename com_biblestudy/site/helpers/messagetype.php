@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getMessageTypesLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -57,12 +57,10 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
-    }
+    //$t = JRequest::getVar('t', 1, 'get', 'int');
 
 
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype order by a.message_type ' . $order;
     if ($language != '*' && $language) {
         $query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype where b.language LIKE "' . $language . '" order by a.message_type ' . $order;

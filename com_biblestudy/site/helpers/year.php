@@ -56,7 +56,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     $year = "\n" . '<table id="landing_table" width="100%">';
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct year(studydate) as theYear from #__bsms_studies order by year(studydate) ' . $order;
     if ($language != '*' && $language) {
         $query = 'select distinct year(studydate) as theYear from #__bsms_studies WHERE language LIKE "' . $language . '" order by year(studydate) ' . $order;
@@ -98,7 +98,6 @@ function getYearsLandingPage($params, $id, $admin_params) {
 
         $year .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_year=' . $b->theYear . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_book=0&filter_messagetype=0&t=' . $template . '">';
 
-        $year .= $numRows;
         $year .= $b->theYear;
 
         $year .='</a>';

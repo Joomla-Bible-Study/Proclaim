@@ -435,7 +435,7 @@ function getSeriesstudies($id, $params, $admin_params, $template) {
  * @return string
  */
 function getSeriesLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -473,7 +473,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id ORDER BY a.series_text ' . $order;
     if ($language != '*' && $language) {
         $query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id WHERE a.language LIKE "' . $language . '" ORDER BY a.series_text ' . $order;
@@ -537,7 +537,6 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                     $series .= '<a href="index.php?option=com_biblestudy&view=seriesdisplay&id=' . $b->id . '&t=' . $template . '">';
                 }
 
-                $series .= $numRows;
                 $series .= $b->series_text;
 
                 $series .='</a>';

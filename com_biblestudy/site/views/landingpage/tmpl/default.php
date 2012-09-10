@@ -28,7 +28,6 @@ $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
 include_once($path1 . 'image.php');
 $d_path1 = 'media/com_biblestudy/images';
 
-
 $listingcall = JView::loadHelper('listing');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
@@ -37,9 +36,7 @@ $listingcall = JView::loadHelper('listing');
             <h1 class="componentheading">
                 <?php
                 if ($this->params->get('show_page_image') > 0) {
-                    if ($this->main->path == NULL) {
-
-                    } else {
+                    if (isset($this->main->path)) {
                         ?>
                         <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
                         <?php

@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getTopicsLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -30,9 +30,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if (!$limit) {
         $limit = 10000;
     }
-    if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
-    }
+    $t = JRequest::getVar('t', 1, 'get', 'int');
     $JSite = new JSite();
     $menu = $JSite->getMenu();
     $item = $menu->getActive();

@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getBooksLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -57,7 +57,7 @@ function getBooksLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     $book = "\n" . '<table id="landing_table" width=100%>';
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber ' . $order;
     if ($language != '*' && $language) {
         $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber where b.language LIKE "' . $language . '" order by a.booknumber ' . $order;
@@ -98,9 +98,7 @@ function getBooksLandingPage($params, $id, $admin_params) {
         }
         $book .= "\n\t\t" . '<td id="landing_td">';
         $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
-        ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 
-        $book .= $numRows;
         $book .= JText::sprintf($b->bookname);
 
         $book .='</a>';

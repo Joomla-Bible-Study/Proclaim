@@ -26,6 +26,7 @@ function getTeacher($params, $id, $admin_params) {
     include_once($path1 . 'image.php');
     $teacher = null;
     $teacherid = null;
+    $teacherids = new stdClass();
     $t = $params->get('teachertemplateid');
     if (!$t) {
         $t = JRequest::getVar('t', 1, 'get', 'int');
@@ -35,7 +36,7 @@ function getTeacher($params, $id, $admin_params) {
         $teacherid = $params->get('listteachers');
         $teacherids = explode(",", $params->get('listteachers'));
     }
-    if ($viewtype == 'sermon') {
+    if ($viewtype == 'sermon' && $id) {
         $teacherids->id = $id;
     }
     $teacher = '<table id = "teacher"><tr>';

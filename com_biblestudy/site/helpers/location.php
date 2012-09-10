@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getLocationsLandingPage($params, $id, $admin_params) {
-    $mainframe = & JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -56,12 +56,10 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
-    }
+    //$t = JRequest::getVar('t', 1, 'get', 'int');
 
 
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id where a.published = 1 order by a.location_text ' . $order;
     if ($language != '*' && $language) {
         $query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id WHERE a.published = 1 and a.language LIKE "' . $language . '" order by a.location_text ' . $order;

@@ -118,8 +118,8 @@ class biblestudyViewLandingpage extends JView {
         //Get the main study list image
         $images = new jbsImages();
         $main = $images->mainStudyImage();
-
-        $this->assignRef('request_url', $uri->toString());
+        $Uri_toString = $uri->toString();
+        $this->assignRef('request_url', $Uri_toString);
         $this->assignRef('params', $params);
         parent::display($tpl);
     }
