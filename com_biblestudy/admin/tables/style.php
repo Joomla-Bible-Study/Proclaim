@@ -137,6 +137,10 @@ class TableStyle extends JTable {
      * @since   11.1
      */
     public function delete($pk = null) {
+        if ($this->filename == 'biblestudy') {
+            $this->setError(JText::_('JBS_STYLE_CANNOT_DELETE_DEFAULT'));
+            return false;
+        }
         jimport('joomla.client.helper');
         jimport('joomla.filesystem.file');
         JClientHelper::setCredentialsFromRequest('ftp');
@@ -149,10 +153,6 @@ class TableStyle extends JTable {
                 return false;
             }
         endif;
-        if ($this->filename == 'biblestudy') {
-            $this->setError(JText::_('JBS_STYLE_CANNOT_DELETE_DEFAULT'));
-            return false;
-        }
 
         return parent::delete($pk);
     }
