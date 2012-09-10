@@ -125,6 +125,7 @@ class BiblestudyViewSeriesdisplays extends JView {
         $this->items = $items;
         $total = $this->get('Total');
         $pagination = $this->get('Pagination');
+        $this->page = new stdClass();
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter = $pagination->getPagesCounter();
         $series = $this->get('Series');
@@ -146,9 +147,9 @@ class BiblestudyViewSeriesdisplays extends JView {
         $types3[] = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
         $types3 = array_merge($types3, $series);
         $this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series");
-
+        $uri_tostring = $uri->toString();
         $this->assignRef('lists', $lists);
-        $this->assignRef('request_url', $uri->toString());
+        $this->assignRef('request_url', $uri_tostring);
         $this->assignRef('params', $params);
         parent::display($tpl);
     }
