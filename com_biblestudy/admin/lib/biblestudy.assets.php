@@ -24,7 +24,13 @@ class fixJBSAssets {
      */
     public function fixassets() {
         $db = JFactory::getDBO();
-        @set_time_limit(300);
+
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
 
         //Remove all old assets_id exept the parent_id
         $query = "SELECT id FROM `#__assets` WHERE name='com_biblestudy'";
@@ -40,7 +46,6 @@ class fixJBSAssets {
         $objects = fixJBSAssets::getObjects();
         $msg = array();
         foreach ($objects as $object) {
-            @set_time_limit(300);
             $query = 'SELECT id FROM ' . $object['name'];
             $db->setQuery($query);
             $datarows = $db->loadObjectList();

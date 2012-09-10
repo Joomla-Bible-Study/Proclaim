@@ -30,7 +30,12 @@ class jbs700Install {
         //Alter some tables
         $msg = '';
 
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
 
         $dbhelper = new jbsDBhelper();
         //alter the admin table
@@ -55,7 +60,7 @@ class jbs700Install {
             array('table' => '#__bsms_mediafiles', 'field' => 'popup', 'type' => 'ADD', 'command' => 'INT( 2 ) NULL DEFAULT NULL'),
             array('table' => '#__bsms_mediafiles', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
             array('table' => '#__bsms_order', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-            array('table' => '#__bsms_order', 'field' => 'text', 'type' => 'MODIFY', 'command' => 'VARCHAR(50) DEFAULT NULL'),
+            array('table' => '#__bsms_order', 'field' => 'text', 'type' => 'MODIFY', 'command' => "VARCHAR(50) DEFAULT ''"),
             array('table' => '#__bsms_search', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
             array('table' => '#__bsms_series', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
             array('table' => '#__bsms_servers', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
