@@ -43,8 +43,12 @@ class jbsMedia {
         $registry = new JRegistry;
         $registry->loadJSON($admin->params);
         $admin->params = $registry->toArray();
-
-        $d_image = ($admin->params['default_download_image'] ? $admin->params['default_download_image'] : 'download.png' );
+        if (isset($admin->params['default_download_image'])) {
+            $admin_d_image = $admin->params['default_download_image'];
+        } else {
+            $admin_d_image = null;
+        }
+        $d_image = ($admin_d_image ? $admin_d_image : 'download.png' );
 
         $download_tmp = $images->getMediaImage($d_image, $media = NULL);
         $download_image = $download_tmp->path;
@@ -52,12 +56,12 @@ class jbsMedia {
 
         //Here we get a list of the media ids associated with the study we got from $row
 
-        $mediaids = $this->getMediaRows($row->id); 
-        if (!$mediaids){
+        $mediaids = $this->getMediaRows($row->id);
+        if (!$mediaids) {
             $table = null;
             return $table;
         }
-        $rowcount = count($mediaids); 
+        $rowcount = count($mediaids);
         if ($rowcount < 1) {
             $table = null;
             return $table;
@@ -128,7 +132,7 @@ class jbsMedia {
         $table .= '</tr>';
 
         // This is the last part of the table where we see if we need to display the filesize
-        if ($params->get('show_filesize') > 0 && isset($media)){
+        if ($params->get('show_filesize') > 0 && isset($media)) {
             $table .= '<tr>';
             foreach ($mediaids as $media) {
                 switch ($params->get('show_filesize')) {
