@@ -27,9 +27,7 @@ if ($url) {
             <h1 class="componentheading">
                 <?php
                 if ($this->params->get('show_page_image_series') > 0) {
-                    ?>
-                    <img src="<?php echo JURI::base() . $this->page->main->path; ?>" alt="<?php echo $this->page->main->path; ?>" width="<?php echo $this->page->main->width; ?>" height="<?php echo $this->page->main->height; ?>" />
-                    <?php
+                    echo $this->page->main;
                     //End of column for logo
                 }
                 ?>
