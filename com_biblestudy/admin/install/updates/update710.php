@@ -295,9 +295,6 @@ div.listingfooter ul li {
             JBS710Update::reloadtable($result);
             return TRUE;
         } else {
-            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
-            $db->setQuery($query);
-            $result = $db->loadObject();
             $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy","' . $db->escape($newCSS) . '",0)';
             $db->setQuery($query);
             if (!$db->execute()) {
@@ -305,12 +302,20 @@ div.listingfooter ul li {
 
                 return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
             }
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
             JBS710Update::reloadtable($result);
             return TRUE;
         }
         //end if no new css file
     }
 
+    /**
+     * Set table store()
+     * @param object $result
+     * @return boolean
+     */
     private static function reloadtable($result) {
         $db = JFactory::getDBO();
         // Store new Recorde so it can be seen.
