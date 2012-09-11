@@ -28,14 +28,13 @@ class JBS710Update {
         //Check to see if there is an existing css
         $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        //There is no existing css so let us check for a backup
+        $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         if (!JFile::exists($dest)) {
             //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
             if (JFile::exists($src)) {
                 $oldcss = JFile::read($src);
-            }
-            //There is no existing css so let us check for a backup
-            $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-            if (JFile::exists($backup)) {
+            } elseif (JFile::exists($backup)) {
                 $oldcss = JFile::read($backup);
             }
             if ($oldcss) {
@@ -46,21 +45,11 @@ class JBS710Update {
                 if ($result) {
                     $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $oldcss . '" WHERE `id` = ' . $result->id;
                     $db->setQuery($query);
-                    $db->query();
-                    if (!JFile::write($dest, $oldcss)) {
-                        return false;
-                    }
-                }
-            } else {
-                //No css or backup found so we get the default and write a file with it to the new location
-                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
-                $db->setQuery($query);
-                $result = $db->loadObject();
-                $newcss = $result->stylecode;
-                if ($result) {
-                    if (!JFile::write($dest, $newcss)) {
-                        return false;
-                    }
+                    $db->execute();
+                } else {
+                    $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy",' . $oldcss . ',0)';
+                    $db->setQuery($query);
+                    $db->execute();
                 }
             }
         } //end if no new css file
@@ -293,12 +282,17 @@ div.listingfooter ul li {
         $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
         $db->setQuery($query);
         $db->execute();
-        if (!JFile::write($dest, $newcss)) {
-            return false;
+
+        // Store new Recorde so it can be seen.
+        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
+        try {
+            $table->load($result->id);
+            $table->store();
+        } catch (Exception $e) {
+            JError::raiseWarning(1,'Caught exception: '. $e->getMessage());
         }
         return TRUE;
     }
-
-
 
 }
