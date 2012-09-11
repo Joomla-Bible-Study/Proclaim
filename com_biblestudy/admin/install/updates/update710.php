@@ -23,38 +23,45 @@ class JBS710Update {
      */
     public function update710() {
         $db = JFactory::getDBO();
-        $oldcss = '';
+        $oldcss = FALSE;
         jimport('joomla.filesystem.file');
         //Check to see if there is an existing css
         $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-        $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         //There is no existing css so let us check for a backup
         $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-        if (!JFile::exists($dest)) {
-            //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
-            if (JFile::exists($src)) {
-                $oldcss = JFile::read($src);
-            } elseif (JFile::exists($backup)) {
-                $oldcss = JFile::read($backup);
-            }
-            if ($oldcss) {
-
-                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+        $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
+        $default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
+        //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
+        if (JFile::exists($src)) {
+            $oldcss = JFile::read($src);
+        } elseif (JFile::exists($backup)) {
+            $oldcss = JFile::read($backup);
+        } else {
+            $newCSS = JFile::read($default);
+        }
+        if ($oldcss) {
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            if ($result) {
+                $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($oldcss) . '" WHERE `id` = ' . $result->id;
                 $db->setQuery($query);
-                $result = $db->loadObject();
-                if ($result) {
-                    $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($oldcss) . '" WHERE `id` = ' . $result->id;
-                    $db->setQuery($query);
-                    $db->execute();
-                } else {
-                    $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy",' . $db->escape($oldcss) . ',0)';
-                    $db->setQuery($query);
-                    $db->execute();
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                }
+            } else {
+                $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy","' . $db->escape($oldcss) . '",0)';
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
                 }
             }
-        } //end if no new css file
-        //Add CSS to the file
-        $new710css = '
+            //Add CSS to the file
+            $new710css = '
 /* New Teacher Codes */
 #bsm_teachertable_list .bsm_teachername
 {
@@ -274,15 +281,39 @@ div.listingfooter ul li {
 }
 
 ';
-        $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
-        $db->setQuery($query);
-        $result = $db->loadObject();
-        $oldcss = $result->stylecode;
-        $newcss = $db->escape($new710css) . ' ' . $oldcss;
-        $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
-        $db->setQuery($query);
-        $db->execute();
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            $oldcss = $result->stylecode;
+            $newcss = $db->escape($new710css) . ' ' . $oldcss;
+            $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
+                return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+            }
+            JBS710Update::reloadtable($result);
+            return TRUE;
+        } else {
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy","' . $db->escape($newCSS) . '",0)';
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+            }
+            JBS710Update::reloadtable($result);
+            return TRUE;
+        }
+        //end if no new css file
+    }
+
+    private static function reloadtable($result) {
+        $db = JFactory::getDBO();
         // Store new Recorde so it can be seen.
         JTable::addIncludePath(JPATH_COMPONENT . '/tables');
         $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
@@ -290,7 +321,7 @@ div.listingfooter ul li {
             $table->load($result->id);
             $table->store();
         } catch (Exception $e) {
-            JError::raiseWarning(1,'Caught exception: '. $e->getMessage());
+            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
         }
         return TRUE;
     }
