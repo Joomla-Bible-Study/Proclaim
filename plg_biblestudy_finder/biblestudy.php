@@ -234,12 +234,19 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         // Trigger the onContentPrepare event.
         $item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
         $item->body = FinderIndexerHelper::prepareContent($item->body, $item->params);
-        //$item->title = $item->studytitle;
+
         // Build the necessary route and path information.
         $item->url = $this->getURL($item->id, $this->extension, $this->layout);
         $item->route = BiblestudyHelperRoute::getArticleRoute($item->id);
         $item->path = FinderIndexerHelper::getContentPath($item->route);
-        $item->state = $this->translateState($item->state);
+
+        // Get the menu title if it exists.
+        $title = $this->getItemMenuTitle($item->url);
+
+        // Adjust the title if necessary.
+        if (!empty($title) && $this->params->get('use_menu_title', true)) {
+            $item->title = $title;
+        }
         /*
          * Add the meta-data processing instructions based on the newsfeeds
          * configuration parameters.
@@ -254,11 +261,13 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
+//
+        // Translate the state. Articles should only be published if the category is published.
+        $item->state = $this->translateState($item->state);
+
         // Add the type taxonomy data.
         $item->addTaxonomy('Type', 'Sermon');
 
-        // Add the category taxonomy data.
-        //	$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
         // Add the language taxonomy data.
         $item->addTaxonomy('Language', $item->language);
 
@@ -314,7 +323,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
     protected function getListQuery($sql = null) {
         $db = JFactory::getDbo();
         // Check if we can use the supplied SQL query.
-        $sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
+        $sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);
         $sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
         $sql->select('a.published AS state, a.studydate AS start_date, a.user_id');
         $sql->select('a.language');
