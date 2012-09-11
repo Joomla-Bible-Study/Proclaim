@@ -41,7 +41,7 @@ class BiblestudyModelTemplate extends JModelAdmin {
      * @return boolean
      */
     public function store($data = null, $tmpl = null) {
-        $row = & $this->getTable();
+        $row = $this->getTable();
         //@todo Clean this up
         if (!isset($data)) {
             $data = JRequest::get('post');
@@ -73,7 +73,7 @@ class BiblestudyModelTemplate extends JModelAdmin {
      */
     public function copy($cid) {
         foreach ($cid as $id) {
-            $tmplCurr = & JTable::getInstance('template', 'Table');
+            $tmplCurr = JTable::getInstance('template', 'Table');
 
             $tmplCurr->load($id);
             $tmplCurr->id = null;
