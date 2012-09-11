@@ -43,11 +43,11 @@ class JBS710Update {
                 $db->setQuery($query);
                 $result = $db->loadObject();
                 if ($result) {
-                    $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $oldcss . '" WHERE `id` = ' . $result->id;
+                    $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($oldcss) . '" WHERE `id` = ' . $result->id;
                     $db->setQuery($query);
                     $db->execute();
                 } else {
-                    $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy",' . $oldcss . ',0)';
+                    $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy",' . $db->escape($oldcss) . ',0)';
                     $db->setQuery($query);
                     $db->execute();
                 }
@@ -278,7 +278,7 @@ div.listingfooter ul li {
         $db->setQuery($query);
         $result = $db->loadObject();
         $oldcss = $result->stylecode;
-        $newcss = $new710css . ' ' . $oldcss;
+        $newcss = $db->escape($new710css) . ' ' . $oldcss;
         $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
         $db->setQuery($query);
         $db->execute();
