@@ -306,6 +306,7 @@ div.listingfooter ul li {
             $db->setQuery($query);
             $result = $db->loadObject();
             JBS710Update::reloadtable($result);
+            JError::raiseWarning(1, 'No CSS files where found so loaded default css info');
             return TRUE;
         }
         //end if no new css file
