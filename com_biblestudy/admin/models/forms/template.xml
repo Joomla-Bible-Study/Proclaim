@@ -1574,5 +1574,5 @@
 	<field name="asset_id" type="hidden" filter="unset" />
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
-		section="templateedit" validate="rules" />
+		section="template" validate="rules" />
 </form>
