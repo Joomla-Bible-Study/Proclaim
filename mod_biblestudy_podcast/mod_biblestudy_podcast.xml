@@ -2,12 +2,12 @@
 <extension type="module" version="2.5" method="upgrade" client="site">
     <name>mod_biblestudy_podcast</name>
     <author>Joomla Bible Study Team</author>
-    <creationDate>September 1, 2012</creationDate>
+    <creationDate>Sep 14, 2012</creationDate>
     <copyright>(C) 2007-2012 Joomla Bible Study</copyright>
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.1.0</version>
+    <version>7.1.0-b1</version>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>

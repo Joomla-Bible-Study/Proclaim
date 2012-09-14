@@ -2,11 +2,11 @@
 <extension version="2.5" type="plugin" group="system" method="upgrade">
     <name>PLG_JBSPODCAST</name>
     <author>Joomla Bible Study Team</author>
-    <creationDate>June 3, 2012</creationDate>
+    <creationDate>Sep 14, 2012</creationDate>
     <copyright>This component is released under the GNU/GPL License</copyright>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.1.1</version>
+    <version>7.1.1-b1</version>
     <description>PLG_JBSPODCAST_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
