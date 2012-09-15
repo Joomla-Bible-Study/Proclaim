@@ -10,7 +10,7 @@ ALTER TABLE `#__bsms_admin` ADD `debug` TINYINT( 3 ) NOT NULL DEFAULT '0';
 --
 -- Books
 --
-ALTER TABLE `#__bsms_books` MODIFY `published` tinyint(3) NOT NULL DEFAULT '0';
+ALTER TABLE `#__bsms_books` MODIFY `published` tinyint(3) NOT NULL DEFAULT '1';
 
 --
 -- Comments Table
@@ -129,7 +129,7 @@ ALTER TABLE `#__bsms_studytopics` ADD INDEX `idx_topic` ( `topic_id` );
 --
 DROP TABLE IF EXISTS `#__bsms_styles`;
 CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `filename` text NOT NULL,
   `stylecode` longtext NOT NULL,
@@ -165,7 +165,7 @@ UPDATE `#__bsms_teachers` SET `language` = '*' WHERE `#__bsms_teachers`.`languag
 -- new table for TemplateCode
 DROP TABLE IF EXISTS `#__bsms_templatecode`;
 CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `type` tinyint(3) NOT NULL,
   `filename` text NOT NULL,

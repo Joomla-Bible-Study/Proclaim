@@ -45,7 +45,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 -- Books
 --
 ALTER TABLE `#__bsms_books` ADD INDEX `idx_state` ( `published` ),
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Comments
@@ -63,7 +63,7 @@ ALTER TABLE `#__bsms_folders` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_folders` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Locations
@@ -72,7 +72,7 @@ ALTER TABLE `#__bsms_locations` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_locations` ADD INDEX `idx_access` ( `access` );
 ALTER TABLE `#__bsms_locations` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Media
@@ -82,7 +82,7 @@ ALTER TABLE `#__bsms_media` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.';
 ALTER TABLE `#__bsms_media` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Mediafiles
@@ -91,7 +91,7 @@ ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Message Type
@@ -102,7 +102,7 @@ ALTER TABLE `#__bsms_message_type` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFA
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.';
 ALTER TABLE `#__bsms_message_type` ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' AFTER `message_type`,
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- MIME Type
@@ -112,7 +112,7 @@ ALTER TABLE `#__bsms_mimetype` ADD INDEX `idx_access` ( `access` );
 ALTER TABLE `#__bsms_mimetype` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Order
@@ -125,7 +125,7 @@ ALTER TABLE `#__bsms_podcast` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_podcast`ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Search
@@ -140,7 +140,7 @@ ALTER TABLE `#__bsms_series`ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8
 ALTER TABLE `#__bsms_series`ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Servers
@@ -149,7 +149,7 @@ ALTER TABLE `#__bsms_servers` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_servers`ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Share
@@ -191,7 +191,7 @@ ALTER TABLE `#__bsms_teachers` ADD INDEX `idx_access` ( `access` );
 ALTER TABLE `#__bsms_teachers` MODIFY `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0';
+MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1';
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' AFTER `teachername`,
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --

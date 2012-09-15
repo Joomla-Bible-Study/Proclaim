@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_books` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bookname` varchar(250) DEFAULT NULL,
   `booknumber` int(5) DEFAULT NULL,
-  `published` tinyint(3) NOT NULL DEFAULT '0',
+  `published` tinyint(3) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
 ) DEFAULT CHARSET=utf8;
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `location_text` varchar(250) DEFAULT NULL,
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) DEFAULT NULL,
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `landing_show` int(3),
@@ -443,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `filename` text NOT NULL,
   `stylecode` longtext NOT NULL,
@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `ordering` int(11) NOT NULL DEFAULT '0',
   `catid` int(3) DEFAULT '1',
   `list_show` tinyint(1) NOT NULL DEFAULT '1',
-  `published` tinyint(3) NOT NULL DEFAULT '0',
+  `published` tinyint(3) NOT NULL DEFAULT '1',
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Teachers.',

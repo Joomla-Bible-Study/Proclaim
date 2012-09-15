@@ -27,9 +27,9 @@ class jbsDBhelper {
         $fields = $db->getTableColumns($table, 'false');
         if ($fields) {
             if (array_key_exists($field, $fields) === TRUE) {
-                return true;
+                return TRUE;
             } else {
-                return false;
+                return FALSE;
             }
         }
     }
@@ -80,7 +80,7 @@ class jbsDBhelper {
                     if (!$table || !$field) {
                         break;
                     }
-                    if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
+                    if (jbsDBhelper::checkTables($table, $field) === TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
@@ -113,7 +113,7 @@ class jbsDBhelper {
         if (!$db->execute()) {
             return $db->stderr(true);
         } else {
-            return true;
+            return TRUE;
         }
     }
 
