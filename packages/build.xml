@@ -12,9 +12,10 @@
         <echo message="Reset back to Dev State" />
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
+        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
-        <symlink link="${test}/test" resource="${build}/com_biblestudy/admin/view/test"/>
+        <symlink link="${build}/com_biblestudy/admin/views" resource="${test}/test"/>
     </target>
     <target name="clean">
         <echo message="Cleaning directories" />
@@ -32,6 +33,7 @@
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
         <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
+        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <echo message="Building package" />
         <mkdir dir="packages" />
         <zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
