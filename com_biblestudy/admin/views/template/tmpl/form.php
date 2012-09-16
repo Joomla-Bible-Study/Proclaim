@@ -8,6 +8,12 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.keepalive');
+
 ?>
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <?php echo JHtml::_('tabs.start','com_biblestudy_template_' . $this->item->id, array('useCookie' => 1)); ?>
@@ -336,7 +342,7 @@ defined('_JEXEC') or die;
             </fieldset>
         </div>
     </div>
-   
+
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'admin-system-defaults'); ?>
     <div class="clr"></div>
