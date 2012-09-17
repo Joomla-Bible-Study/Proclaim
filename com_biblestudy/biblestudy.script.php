@@ -485,6 +485,34 @@ class Com_BiblestudyInstallerScript {
                 }
             }
         }
+        $query = $db->getQuery(true);
+        $query->select('*')
+                ->from('#__bsms_share');
+        $db->setQuery($query);
+        $datas = $db->loadObjectList();
+        foreach ($datas as $data) {
+            // Load Table Data.
+            JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+            $table = JTable::getInstance('Share', 'Table', array('dbo' => $db));
+            try {
+                $table->load($data->id);
+            } catch (Exception $e) {
+                echo 'Caught exception: ', $e->getMessage(), "\n";
+            }
+
+            //Need to adjust the params and write back
+            $registry = new JRegistry();
+            $registry->loadJSON($table->params);
+            $params = $registry;
+            $shareimage = $params->get('shareimage');
+            $shareimage = str_replace('components', 'media', $shareimage);
+            $params->set('shareimage', $shareimage);
+            //Now write the params back into the $table array and store.
+            $table->params = (string) $params->toString();
+            if (!$table->store()) {
+                $this->setError($db->getErrorMsg());
+            }
+        }
     }
 
 }
