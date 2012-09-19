@@ -295,7 +295,7 @@ div.listingfooter ul li {
             JBS710Update::reloadtable($result);
             return TRUE;
         } else {
-            $query = 'INSERT INTO #__bsms_styles (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES (1,1,"biblestudy","' . $db->escape($newCSS) . '",0)';
+            $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
             $db->setQuery($query);
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
