@@ -64,12 +64,12 @@ class JBSPagebuilder {
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
-        if ($item->topics_text && substr_count($item->topics_text, ',')) {
-            $topics = explode(',', $item->topic_text);
+        if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0)) {
+            $topics = explode(',', $item->topics_text);
             foreach ($topics as $key => $value) {
                 $topics[$key] = JText::_($value);
             }
-            //  $page->topics = implode(', ', $topics);
+            $page->topics = implode(', ', $topics);
         } else {
             $page->topics = JText::_($item->topics_text);
         }
