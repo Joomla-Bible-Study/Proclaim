@@ -24,10 +24,12 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 
 //load the css
 $document = JFactory::getDocument();
-$url = $templateparams->get('css', 'biblestudy.css');
-if ($url) {
-    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $url);
-}
+$css = $templateparams->get('css');
+if ($css <= 0):
+    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+else:
+    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+endif;
 //run the podcast subscription
 $podcast = new podcastSubscribe();
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));

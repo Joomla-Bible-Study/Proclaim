@@ -187,8 +187,12 @@ class BiblestudyViewSermons extends JView {
         $document = JFactory::getDocument();
 
         JHTML::_('behavior.mootools');
-        $css = $params->get('css', 'biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        $css = $params->get('css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         //Import Scripts
@@ -249,7 +253,7 @@ class BiblestudyViewSermons extends JView {
             $go = 'onchange="this.form.submit()"';
         }
         else {$go = null;}
-        
+
         //Build go button
         $this->page->gobutton = '<span id="gobutton"><input type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '" /></span>';
 

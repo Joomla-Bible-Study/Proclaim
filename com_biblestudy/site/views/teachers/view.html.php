@@ -96,8 +96,12 @@ class BiblestudyViewTeachers extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
-        $css = $params->get('css', 'biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        $css = $params->get('css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
         $images = new jbsImages();
         // Get data from the model
         $items = $this->get('Items');

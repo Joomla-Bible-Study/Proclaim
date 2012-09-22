@@ -70,10 +70,12 @@ class BiblestudyViewSermon extends JView {
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-        $url = $params->get('css', 'biblestudy.css');
-        if ($url) {
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $url);
-        }
+        $css = $params->get('css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
         $dispatcher = JDispatcher::getInstance();

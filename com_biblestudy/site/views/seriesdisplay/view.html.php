@@ -93,8 +93,12 @@ class BiblestudyViewSeriesdisplay extends JView {
         $registry = new JRegistry;
         $registry->loadJSON($a_params[0]->params);
         $this->admin_params = $registry;
-        $css = $params->get('css', 'biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        $css = $params->get('css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
 
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES)) . ':' . $items->id;
         $itemparams = $mainframe->getPageParameters();

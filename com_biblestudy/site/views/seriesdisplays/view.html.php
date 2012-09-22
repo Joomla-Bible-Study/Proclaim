@@ -75,8 +75,12 @@ class BiblestudyViewSeriesdisplays extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        $css = $params->get('css', 'biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        $css = $params->get('css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
 
 
         //Import Scripts

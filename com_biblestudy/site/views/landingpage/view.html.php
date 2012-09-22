@@ -40,7 +40,7 @@ class biblestudyViewLandingpage extends JView {
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();
@@ -62,7 +62,7 @@ class biblestudyViewLandingpage extends JView {
         } elseif (!$itemparams->get('metadesc')) {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
-        $model = $this->getModel();
+        //$model = $this->getModel();
 
         $t = JRequest::getInt('t', 'get', 1);
         if (!$t) {
@@ -84,8 +84,7 @@ class biblestudyViewLandingpage extends JView {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        $css = $params->get('css', 'biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        $css = $params->get('css');
 
         //Import Scripts
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
@@ -93,6 +92,11 @@ class biblestudyViewLandingpage extends JView {
 
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
+        if ($css <= 0):
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        else:
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+        endif;
 
         $url = $params->get('stylesheet');
         if ($url) {

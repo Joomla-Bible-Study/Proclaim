@@ -61,7 +61,7 @@ class biblestudyViewStyle extends JView {
             jimport('joomla.filesystem.file');
             JClientHelper::setCredentialsFromRequest('ftp');
             //$ftp = JClientHelper::getCredentials('ftp');
-            $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
+            $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
             $this->defaultstyle = JFile::read($file);
         }
         $this->item = $item;
