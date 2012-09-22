@@ -17,15 +17,20 @@ if (!$t) {
 $admin_params = $this->admin_params;
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <table id="bsm_teachertable_list" cellspacing="0">
+    <table id="bsm_teachertable_list" cellspacing="0" >
         <tbody>
-            <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></td></tr>
-            <tr><td>
+            <tr class="titlerow">
+                <td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <?php
                     $class1 = 'bsodd';
                     $class2 = 'bseven';
                     $oddeven = $class1;
-                    foreach ($this->items as $item) {
+                foreach ($this->items as $item) 
+                    {
                         if ($item->title) {
                             $teacherdisplay = $item->teachername . ' - ' . $item->title;
                         } else {
@@ -37,19 +42,30 @@ $admin_params = $this->admin_params;
                             $oddeven = $class1;
                         }
                         ?>
-                <tr class="<?php echo $oddeven; ?> lastrow">
-                    <td class="bsm_teacherthumbnail_list" ><?php if ($item->thumb || $item->teacher_thumbnail) { ?>
-               <?php echo $item->image; } ?>
+                    
+                        <tr class="<?php echo $oddeven; ?> ">
+                            <td class="bsm_teacherthumbnail_list" ><?php if ($item->thumb || $item->teacher_thumbnail) { ?>
+                                <?php echo $item->image; } ?>
+                            </td>
+                            <td class="bsm_teachername">
+                                <table id="bsm_teachertable_list" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" class="bsm_short">
+                                            <?php echo $item->short; ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    
+            <?php } //end of foreach ?>
             </td>
-            <td class="bsm_teachername">
-                <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
-            </td>
-            <td align="left" class="bsm_short">
-                <?php echo $item->short; ?>
-            </td>
-            </tr>
-        <?php } //end of foreach ?>
-        </td></tr>
+         </tr>
         </tbody>
     </table>
     <div class="listingfooter" >
