@@ -192,11 +192,18 @@ class JBSPagebuilder {
         $JSite = new JSite();
         $menu = $JSite->getMenu();
         $item = $menu->getActive();
-        $language = $item->language;
-        if ($language == '*' || !$language) {
+        //@todo need to redo this.
+        if ($item) {
+            $language = $item->language;
+            dump($language);
+            if ($language == '*' || !$language) {
+                $langlink = '';
+            } elseif ($language != '*') {
+                $langlink = '&filter.languages=' . $language;
+            }
+        } else {
+            $language = '*';
             $langlink = '';
-        } elseif ($language != '*') {
-            $langlink = '&filter.languages=' . $language;
         }
 
         $db = JFactory::getDBO();
