@@ -118,6 +118,7 @@ class JBS710Update {
 #bsm_teachertable_list .bsm_short
 {
     padding: 8px 4px 4px;
+    font-weight:normal;
 }
 #bsm_teachertable .bsm_studiestitlerow {
     background-color: #666;
