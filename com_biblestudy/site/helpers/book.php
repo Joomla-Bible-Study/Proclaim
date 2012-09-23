@@ -14,18 +14,13 @@ defined('_JEXEC') or die;
  * Get Books for Landing Page.
  *
  * @param array $params
- * @param int $id
- * @param array $admin_params
  * @return string
  */
-function getBooksLandingPage($params, $id, $admin_params) {
-    $mainframe = JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+function getBooksLandingPage($params) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
     include_once($path1 . 'helper.php');
     $book = null;
-    $teacherid = null;
     $template = $params->get('studieslisttemplateid');
     $limit = $params->get('landingbookslimit');
     if (!$limit) {
@@ -58,10 +53,19 @@ function getBooksLandingPage($params, $id, $admin_params) {
     }
     $book = "\n" . '<table id="landing_table" width=100%>';
     $db = JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber ' . $order;
+    // Compute view access permissions.
+    $user = JFactory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
+
+    $query = $db->getQuery(true);
+    $query->select('distinct a.*')
+            ->from('#__bsms_books a')
+            ->select('b.access AS access')
+            ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber');
     if ($language != '*' && $language) {
-        $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber where b.language LIKE "' . $language . '" order by a.booknumber ' . $order;
+        $query->where('b.language LIKE "' . $language . '"');
     }
+    $query->order('a.booknumber ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
@@ -71,44 +75,45 @@ function getBooksLandingPage($params, $id, $admin_params) {
     $book .= "\n\t" . '<tr>';
     $showdiv = 0;
     foreach ($tresult as &$b) {
+        if (in_array($b->access, $groups) === TRUE) {
+            if ($t >= $limit) {
+                if ($showdiv < 1) {
+                    if ($i == 1) {
+                        $book .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                        $book .= "\n\t" . '</tr>';
+                    };
+                    if ($i == 2) {
+                        $book .= "\n\t\t" . '<td  id="landing_td"></td>';
+                        $book .= "\n\t" . '</tr>';
+                    };
 
-        if ($t >= $limit) {
-            if ($showdiv < 1) {
-                if ($i == 1) {
-                    $book .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-                    $book .= "\n\t" . '</tr>';
-                };
-                if ($i == 2) {
-                    $book .= "\n\t\t" . '<td  id="landing_td"></td>';
-                    $book .= "\n\t" . '</tr>';
-                };
 
+                    $book .= "\n" . '</table>';
+                    $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
+                    $book .= "\n" . '<table width = "100%" id="landing_table">';
 
-                $book .= "\n" . '</table>';
-                $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
-                $book .= "\n" . '<table width = "100%" id="landing_table">';
-
-                $i = 0;
-                $showdiv = 1;
+                    $i = 0;
+                    $showdiv = 1;
+                }
             }
-        }
 
-        if ($i == 0) {
-            $book .= "\n\t" . '<tr>';
-        }
-        $book .= "\n\t\t" . '<td id="landing_td">';
-        $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+            if ($i == 0) {
+                $book .= "\n\t" . '<tr>';
+            }
+            $book .= "\n\t\t" . '<td id="landing_td">';
+            $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
 
-        $book .= JText::sprintf($b->bookname);
+            $book .= JText::sprintf($b->bookname);
 
-        $book .='</a>';
+            $book .='</a>';
 
-        $book .= '</td>';
-        $i++;
-        $t++;
-        if ($i == 3) {
-            $book .= "\n\t" . '</tr>';
-            $i = 0;
+            $book .= '</td>';
+            $i++;
+            $t++;
+            if ($i == 3) {
+                $book .= "\n\t" . '</tr>';
+                $i = 0;
+            }
         }
     }
     if ($i == 1) {
