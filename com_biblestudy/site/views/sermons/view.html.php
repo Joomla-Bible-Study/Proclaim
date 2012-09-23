@@ -67,6 +67,7 @@ class BiblestudyViewSermons extends JView {
         if ($pagelinks !== ''):
             $this->pagelinks = $pagelinks;
         endif;
+        
         $this->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
         $this->assignRef('pagination', $pagination);
         //Load the Admin settings and params from the template
