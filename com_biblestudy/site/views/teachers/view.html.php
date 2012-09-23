@@ -97,7 +97,7 @@ class BiblestudyViewTeachers extends JView {
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
         $css = $params->get('css');
-        if ($css <= 0):
+        if (!$css):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);

@@ -187,8 +187,8 @@ class BiblestudyViewSermons extends JView {
         $document = JFactory::getDocument();
 
         JHTML::_('behavior.mootools');
-        $css = $params->get('css');
-        if ($css <= 0):
+        $css = $params->get('css'); 
+        if (!$css ):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
