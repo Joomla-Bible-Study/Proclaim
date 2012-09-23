@@ -455,6 +455,14 @@ div.listingfooter ul li {
     color:grey;
     font-weight:bold;
 }
+
+#bsmsmoduletable .series {
+    white-space:nowrap;
+    font-size:1em;
+    color:grey;
+    font-weight:bold;
+}
+
 #bsmsdetailstable .scripture1 {
     white-space:nowrap;
     color:#c02121;
