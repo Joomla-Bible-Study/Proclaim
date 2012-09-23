@@ -9,6 +9,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+//@todo dos not include from core controller need to look into why it is thinking it is apart of the com_content controller
+require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -17,6 +19,7 @@ include_once($path1 . 'duration.php');
 include_once($path1 . 'date.php');
 include_once($path1 . 'filesize.php');
 include_once($path1 . 'image.php');
+include_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'translated.php');
 jimport('joomla.html.parameter');
 
 /**
@@ -36,6 +39,7 @@ class JBSPagebuilder {
      * @return string
      */
     function buildPage($item, $params, $admin_params) {
+        $item->tp_id = '1';
         $images = new jbsImages();
         //media files image, links, download
         $mids = $item->mids;
@@ -64,6 +68,8 @@ class JBSPagebuilder {
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
+        //@todo need to look at whey i have to do this hear.
+        $item->topics_text = getConcatTopicItemTranslated($item);
         if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0)) {
             $topics = explode(',', $item->topics_text);
             foreach ($topics as $key => $value) {

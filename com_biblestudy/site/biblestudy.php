@@ -19,7 +19,7 @@ require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_
 /**
  * Bible Study Core Difines
  */
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 
 // Require the base controller
 jimport("joomla.application.component.controller");

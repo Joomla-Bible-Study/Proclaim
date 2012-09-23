@@ -50,8 +50,16 @@ foreach ($items AS $item) {
     $item->scripture1 = $pelements->scripture1;
     $item->scripture2 = $pelements->scripture2;
     $item->media = $pelements->media;
+    if(isset($pelements->duration)):
     $item->duration = $pelements->duration;
-    $item->studydate = $pelements->studydate;
+    else:
+        $item->duration = null;
+    endif;
+    if (isset($pelements->studydate)):
+        $item->studydate = $pelements->studydate;
+    else:
+        $item->studydate = null;
+    endif;
     $item->topics = $pelements->topics;
     if (isset($pelements->study_thumbnail)):
         $item->study_thumbnail = $pelements->study_thumbnail;

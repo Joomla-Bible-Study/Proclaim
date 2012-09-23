@@ -37,20 +37,6 @@ class BiblestudyModelTopics extends JModelList {
     }
 
     /**
-     * Get Stored ID
-     * @param string $id   A prefix for the store id
-     * @return string      A store id
-     * @since 7.0
-     */
-    protected function getStoreId($id = '') {
-
-        // Compile the store id.
-        $id .= ':' . $this->getState('filter.published');
-
-        return parent::getStoreId($id);
-    }
-
-    /**
      * Populate State
      * @param string $ordering
      * @param string $direction
@@ -62,11 +48,28 @@ class BiblestudyModelTopics extends JModelList {
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
         parent::populateState('topic.topic_text', 'ASC');
+    }
+
+    /**
+     * Get Stored ID
+     * @param string $id   A prefix for the store id
+     * @return string      A store id
+     * @since 7.0
+     */
+    protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.published');
+
+        return parent::getStoreId($id);
     }
 
     /**
@@ -83,6 +86,17 @@ class BiblestudyModelTopics extends JModelList {
                         'list.select', 'topic.id, topic.topic_text, topic.published, topic.params AS topic_params'));
         $query->from('#__bsms_topics AS topic');
 
+
+        // Filter by search in title.
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where('topic.id = ' . (int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%' . $db->escape($search, true) . '%');
+                $query->where('(topic.topic_text LIKE ' . $search . ')');
+            }
+        }
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {

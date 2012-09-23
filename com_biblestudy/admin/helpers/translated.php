@@ -88,7 +88,6 @@ function getConcatTopicItemTranslated($topicItem) {
                     . 'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
             $db->setQuery($query);
             $results = $db->loadObjectList();
-
             $output = '';
             $count = count($results);
             for ($i = 0; $i < $count; $i++) {
