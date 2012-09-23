@@ -67,8 +67,6 @@ class JBS710Update {
     font-weight: bold;
     font-size: 14px;
     color: #000000;
-    white-space:nowrap;
-
 }
 #bsm_teachertable_list
 {

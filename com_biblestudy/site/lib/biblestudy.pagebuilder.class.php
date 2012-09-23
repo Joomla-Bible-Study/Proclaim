@@ -201,7 +201,6 @@ class JBSPagebuilder {
         //@todo need to redo this.
         if ($item) {
             $language = $item->language;
-            dump($language);
             if ($language == '*' || !$language) {
                 $langlink = '';
             } elseif ($language != '*') {
