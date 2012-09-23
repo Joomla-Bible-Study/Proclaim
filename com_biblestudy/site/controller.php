@@ -75,8 +75,8 @@ class biblestudyController extends JController {
         $option = JRequest::getCmd('option');
 
         $model = $this->getModel('sermon');
-        $JSite = new JSite();
-        $menu = $JSite->getMenu();
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
         $item = $menu->getActive();
         $params = $mainframe->getPageParameters();
         $t = $params->get('t');
@@ -137,8 +137,7 @@ class biblestudyController extends JController {
         $mainframe = JFactory::getApplication();
         $menuitemid = JRequest::getInt('Itemid');
         if ($menuitemid) {
-            $JSite = new JSite();
-            $menu = $JSite->getMenu();
+            $menu = $mainframe->getMenu();
             $menuparams = $menu->getParams($menuitemid);
         }
         $comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');

@@ -26,8 +26,8 @@ function getBooksLandingPage($params) {
     if (!$limit) {
         $limit = 10000;
     }
-    $JSite = new JSite();
-    $menu = $JSite->getMenu();
+    $app = JFactory::getApplication();
+    $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

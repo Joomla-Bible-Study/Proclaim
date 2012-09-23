@@ -289,8 +289,8 @@ function getseriesElementnumber($subcustom) {
  * @return string
  */
 function getSeriesstudiesDBO($id, $params, $limit = '') {
-    $menu = $JSite = new JSite();
-    $menu = $JSite->getMenu();
+    $app = JFactory::getApplication();
+    $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);
@@ -448,8 +448,8 @@ function getSeriesLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $seriesuselimit = $params->get('landingseriesuselimit', 0);
-    $menu = $JSite = new JSite();
-    $menu = $JSite->getMenu();
+    $app = JFactory::getApplication();
+    $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

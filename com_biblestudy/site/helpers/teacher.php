@@ -99,8 +99,8 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     $template = $params->get('teachertemplateid', 1);
     $limit = $params->get('landingteacherslimit', 10000);
     $teacheruselimit = $params->get('landingteachersuselimit', 0);
-    $JSite = new JSite();
-    $menu = $JSite->getMenu();
+    $app = JFactory::getApplication();
+    $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

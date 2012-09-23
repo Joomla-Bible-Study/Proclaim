@@ -26,6 +26,31 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
      */
     protected $_context = 'com_biblestudy.seriesdisplay';
 
+
+    /**
+     * Template
+     * @var array
+     */
+    var $_template;
+
+    /**
+     * Admin
+     * @var array
+     */
+    var $_admin;
+
+
+    /**
+     * Constructor
+     *
+     * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+     *
+     * @since   11.1
+     */
+    function __construct($config = array()) {
+        parent::__construct($config);
+    }
+
     /**
      * Method to auto-populate the model state.
      *

@@ -195,8 +195,8 @@ class JBSPagebuilder {
      * @return object
      */
     function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
-        $JSite = new JSite();
-        $menu = $JSite->getMenu();
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
         $item = $menu->getActive();
         //@todo need to redo this.
         if ($item) {

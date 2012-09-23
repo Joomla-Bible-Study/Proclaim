@@ -31,8 +31,8 @@ function getTopicsLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $t = JRequest::getVar('t', 1, 'get', 'int');
-    $JSite = new JSite();
-    $menu = $JSite->getMenu();
+    $app = JFactory::getApplication();
+    $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

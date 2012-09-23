@@ -112,8 +112,8 @@ class BiblestudyViewTeachers extends JView {
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
             $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
         }
-        $JSite = new JSite();
-        $menu = $JSite->getMenu();
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
 
         $pagination = $this->get('Pagination');
         $this->page = new stdClass();

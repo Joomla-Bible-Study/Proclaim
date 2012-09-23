@@ -236,8 +236,8 @@ class BiblestudyViewSermons extends JView {
         $this->assignRef('pagination', $pagination);
         $this->assignRef('order', $this->orders);
         $this->assignRef('topic', $this->topics);
-        $JSite = new JSite();
-        $menu = $JSite->getMenu();
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
         $item = $menu->getActive();
         $images = new jbsImages();
         $main = $images->mainStudyImage();
@@ -251,8 +251,9 @@ class BiblestudyViewSermons extends JView {
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button', 0) == 0) {
             $go = 'onchange="this.form.submit()"';
+        } else {
+            $go = null;
         }
-        else {$go = null;}
 
         //Build go button
         $this->page->gobutton = '<span id="gobutton"><input type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '" /></span>';

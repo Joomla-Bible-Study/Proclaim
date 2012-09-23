@@ -21,8 +21,7 @@ class BiblestudyControllerSeriesdisplay extends JController {
      * constructor (registers additional tasks to methods)
      * @return void
      */
-    function __construct() {
-
+    public function __construct() {
         parent::__construct();
     }
 

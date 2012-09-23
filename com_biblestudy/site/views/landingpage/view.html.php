@@ -115,8 +115,8 @@ class biblestudyViewLandingpage extends JView {
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
         $adminrows = new JBSAdmin();
-        $JSite = new JSite();
-        $menu = $JSite->getMenu();
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
         $item = $menu->getActive();
 
         //Get the main study list image
