@@ -153,8 +153,12 @@ if (!$studieslisttemplateid) {
                             <tr>
                                 <td>
                                     <?php
+                                    foreach ($this->teacherstudies as $row):
+
+                                    endforeach;
+
                                     $headerCall = JView::loadHelper('header');
-                                    $header = getHeader($this->teacherstudies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
+                                    $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
                                     echo $header;
                                     $class1 = 'bsodd';
                                     $class2 = 'bseven';
@@ -165,6 +169,7 @@ if (!$studieslisttemplateid) {
                                         } else {
                                             $oddeven = $class1;
                                         }
+                                        dump($row, 'row at teacher');
                                         $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
 
                                         echo $studies;

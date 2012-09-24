@@ -42,6 +42,7 @@ class BiblestudyModelMessages extends JModelList {
                 'series_text', 'series.series_text',
                 'hits', 'study.hits',
                 'plays', 'mediafile.plays',
+                'access', 'series.access', 'access_level',
                 'downloads', 'mediafile.downloads'
             );
         }
@@ -172,11 +173,12 @@ class BiblestudyModelMessages extends JModelList {
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
+        $user = JFactory::getUser();
 
         $query->select(
                 $this->getState(
                         'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.language'));
+                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.language, study.access'));
         $query->from('#__bsms_studies AS study');
 
         // Join over the language
@@ -203,6 +205,12 @@ class BiblestudyModelMessages extends JModelList {
         $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('study.access IN (' . $groups . ')');
+        }
 
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');

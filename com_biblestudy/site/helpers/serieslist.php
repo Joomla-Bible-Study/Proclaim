@@ -448,8 +448,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $seriesuselimit = $params->get('landingseriesuselimit', 0);
-    $app = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);
@@ -474,10 +473,16 @@ function getSeriesLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     $db = JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id ORDER BY a.series_text ' . $order;
+
+    $query = $db->getQuery(true);
+    $query->select('distinct a.*')
+            ->from('#__bsms_series a')
+            ->select('b.access AS study_access')
+            ->innerJoin('#__bsms_studies b on a.id = b.series_id');
     if ($language != '*' && $language) {
-        $query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id WHERE a.language LIKE "' . $language . '" ORDER BY a.series_text ' . $order;
+        $query->where = 'a.language LIKE "' . $language . '"';
     }
+    $query->order('a.series_text ' . $order);
     $db->setQuery($query);
 
     $items = $db->loadObjectList();
@@ -490,7 +495,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     for ($i = 0; $i < $count; $i++) {
 
         if ($items[$i]->access > 1) {
-            if (!in_array($items[$i]->access, $groups)) {
+            if (!in_array($items[$i]->access, $groups) && !in_array($items[$i]->study_access, $groups)) {
                 unset($items[$i]);
             }
         }

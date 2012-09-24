@@ -24,20 +24,26 @@ function getScripture($params, $row, $esv, $scripturerow) {
     if (!isset($row->id)) {
         return;
     }
-    if ($scripturerow == 2) {
+    if (!isset($row->booknumber)):
+        $row->booknumber = 0;
+    endif;
+    if (!isset($row->booknumber2)):
+        $row->booknumber2 = 0;
+    endif;
+    if ($scripturerow == 2 && $row->booknumber2 >= 1) {
         $booknumber = $row->booknumber2;
         $ch_b = $row->chapter_begin2;
         $ch_e = $row->chapter_end2;
         $v_b = $row->verse_begin2;
         $v_e = $row->verse_end2;
-    } else {
+    } elseif ($scripturerow == 1 && isset($row->booknumber) >= 1) {
         $booknumber = $row->booknumber;
         $ch_b = $row->chapter_begin;
         $ch_e = $row->chapter_end;
         $v_b = $row->verse_begin;
         $v_e = $row->verse_end;
     }
-    if (!$booknumber) {
+    if (!isset($booknumber)) {
         $scripture = '';
         return $scripture;
     }

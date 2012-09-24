@@ -151,7 +151,7 @@ class BiblestudyModelSermons extends JModelList {
         $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
         //Join over Series
-        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
+        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription, series.access as series_access');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
         //Join over Books
@@ -182,6 +182,7 @@ class BiblestudyModelSermons extends JModelList {
         $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
         //filter only for authorized view
+        $query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
         $query->where('study.access IN (' . $groups . ')');
 
         //select only published studies
@@ -543,12 +544,18 @@ class BiblestudyModelSermons extends JModelList {
      */
     public function getSeries() {
         $db = $this->getDbo();
+        $user = JFactory::getUser();
+        $groups = implode(',', $user->getAuthorisedViewLevels());
+
         $query = $db->getQuery(true);
 
-        $query->select('series.id AS value, series.series_text AS text');
+        $query->select('series.id AS value, series.series_text AS text, series.access');
         $query->from('#__bsms_series AS series');
         $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
         $query->group('series.id');
+
+        //filter only for authorized view
+        $query->where('series.access IN (' . $groups . ')');
         $query->order('series.series_text');
 
         $db->setQuery($query->__toString());

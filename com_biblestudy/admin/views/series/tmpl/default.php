@@ -9,7 +9,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 
@@ -43,6 +43,9 @@ $saveOrder = $listOrder == 'series.ordering';
                 </th>
                 <th width="98%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+                </th>
+                <th width="10%">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
                 </th>
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
@@ -78,6 +81,9 @@ $saveOrder = $listOrder == 'series.ordering';
                         <p class="smallsub">
                             <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
                     </td>
+				<td class="center">
+					<?php echo $this->escape($item->access_level); ?>
+				</td>
                     <td class="center">
                         <?php if ($item->language == '*'): ?>
                             <?php echo JText::alt('JALL', 'language'); ?>

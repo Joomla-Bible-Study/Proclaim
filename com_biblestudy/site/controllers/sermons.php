@@ -35,13 +35,6 @@ class BiblestudyControllerSermons extends JController {
     }
 
     /**
-     * Display function
-     */
-    public function display() {
-        parent::display();
-    }
-
-    /**
      * Download?
      */
     public function download() {

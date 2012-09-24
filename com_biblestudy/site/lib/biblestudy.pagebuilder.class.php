@@ -60,7 +60,7 @@ class JBSPagebuilder {
         //scripture 2
         $esv = 0;
         $scripturerow = 2;
-        if (isset($item->chapter_begin2)) {
+        if (isset($item->chapter_begin2) && $item->booknumber2 >= 1) {
             $page->scripture2 = getScripture($params, $item, $esv, $scripturerow);
         } else {
             $page->scripture2 = '';
@@ -212,11 +212,18 @@ class JBSPagebuilder {
         }
 
         $db = JFactory::getDBO();
+
+        // Compute view access permissions.
+        $user = JFactory::getUser();
+        //$groups = $user->getAuthorisedViewLevels();
+        $groups = implode(',', $user->getAuthorisedViewLevels());
+
         $query = $db->getQuery(true);
         $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
-		        study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-		        study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
+		        study.teacher_id, study.secondary_reference, study.booknumber2, study.chapter_begin2, study.verse_begin2, study.chapter_end2,
+                        study.verse_end2, study.location_id, study.media_hours, study.media_minutes, study.media_seconds, study.series_id,
+                        study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
                         study.user_id, study.studynumber, CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\',
                         study.id, study.alias) ELSE study.id END as slug ');
         $query->from('#__bsms_studies AS study');
@@ -230,7 +237,7 @@ class JBSPagebuilder {
         $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
         //Join over Series
-        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
+        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription, series.access');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
         //Join over Books
@@ -275,28 +282,13 @@ class JBSPagebuilder {
         if (!$limit) {
             $limit = 10;
         }
+
+        //filter only for authorized view
+        $query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
+        $query->where('study.access IN (' . $groups . ')');
+
         $db->setQuery($query, 0, $limit);
         $studies = $db->loadObjectList();
-        foreach ($studies as $study) {
-            $pelements = $this->buildPage($study, $params, $admin_params);
-            $study->scripture1 = $pelements->scripture1;
-            $study->scripture2 = $pelements->scripture2;
-            $study->media = $pelements->media;
-            $study->duration = $pelements->duration;
-            $study->studydate = $pelements->studydate;
-            $study->topics = $pelements->topics;
-            if (isset($pelements->study_thumbnail)):
-                $study->study_thumbnail = $pelements->study_thumbnail;
-            else:
-                $study->study_thumbnail = '';
-            endif;
-            if (isset($pelements->series_thumbnail)):
-                $study->series_thumbnail = $pelements->series_thumbnail;
-            else:
-                $study->series_thumbnail = '';
-            endif;
-            $study->detailslink = $pelements->detailslink;
-        }
 
         return $studies;
     }
