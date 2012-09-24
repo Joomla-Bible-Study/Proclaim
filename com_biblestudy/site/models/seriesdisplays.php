@@ -64,7 +64,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $registry->loadJSON($template_params->params);
         $t_params = $registry;
         $app = JFactory::getApplication('site');
-        $params = $app->getParams();
+        $params = $app->getParams(); 
         $menuparams = new JRegistry;
 
         if ($menu = $app->getMenu()->getActive()) {
@@ -79,7 +79,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $query->where($where);
 
         // Filter by language
-        $language = $params->get('language', '*');
+        $language = $params->get('language', '*'); 
         if ($this->getState('filter.language') || $language != '*') {
             $query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
@@ -188,7 +188,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
 
         if ($continue > 0) {
             $where = $where . ' AND ( ' . $where2 . ')';
-        }
+        } 
         return $where;
     }
 
@@ -202,14 +202,29 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('series.id AS value, series.series_text AS text');
+        $query->select('series.id AS value, series.series_text AS text, series.access');
         $query->from('#__bsms_series AS series');
         $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
         $query->group('series.id');
         $query->order('series.series_text');
 
         $db->setQuery($query->__toString());
-        return $db->loadObjectList();
+        $items = $db->loadObjectList();
+        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups = $user->getAuthorisedViewLevels();
+        $count = count($items);
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
+
+                if ($items[$i]->access > 1) {
+                    if (!in_array($items[$i]->access, $groups)) {
+                        unset($items[$i]);
+                    }
+                }
+            }
+        } 
+        return $items;
     }
 
 }
