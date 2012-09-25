@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
  */
 function getMessageTypesLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -32,19 +33,23 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
-    $app = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
+    if (isset($item->prams)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $language = $db->quote($m_params->get('language'));
+        $menu_order = $m_params->get('messagetypes_order');
+    } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+        $menu_order = null;
+    }
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
         $langlink = '&filter.languages=' . $language;
     }
-    $menu_order = $m_params->get('messagetypes_order');
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -57,19 +62,25 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    //$t = JRequest::getVar('t', 1, 'get', 'int');
+    // Compute view access permissions.
+    $user = JFactory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
 
 
-    $db = JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype order by a.message_type ' . $order;
+    $query = $db->getQuery(true);
+    $query->select('distinct a.*')
+            ->from('#__bsms_message_type a')
+            ->select('b.access AS study_access')
+            ->innerJoin('#__bsms_studies b on a.id = b.messagetype');
     if ($language != '*' && $language) {
-        $query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype where b.language LIKE "' . $language . '" order by a.message_type ' . $order;
+        $query->where('b.language in (' . $language . ')');
     }
+    $query->order('a.message_type ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
     foreach ($tresult as $key => $value) {
-        if (!$value->landing_show) {
+        if (!$value->landing_show && !in_array($value->access, $groups)) {
             unset($tresult[$key]);
         }
     }

@@ -17,6 +17,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getBooksLandingPage($params) {
+    $db = JFactory::getDBO();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
     include_once($path1 . 'helper.php');
@@ -30,15 +31,20 @@ function getBooksLandingPage($params) {
     $menu = $app->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
+    if (isset($item->prams)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $language = $db->quote($m_params->get('language'));
+        $menu_order = $m_params->get('books_order');
+    } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+        $menu_order = null;
+    }
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
         $langlink = '&filter.languages=' . $language;
     }
-    $menu_order = $m_params->get('books_order');
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -51,8 +57,6 @@ function getBooksLandingPage($params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    $book = "\n" . '<table id="landing_table" width=100%>';
-    $db = JFactory::getDBO();
     // Compute view access permissions.
     $user = JFactory::getUser();
     $groups = $user->getAuthorisedViewLevels();
@@ -63,7 +67,7 @@ function getBooksLandingPage($params) {
             ->select('b.access AS access')
             ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber');
     if ($language != '*' && $language) {
-        $query->where('b.language LIKE "' . $language . '"');
+        $query->where('b.language in (' . $language . ')');
     }
     $query->order('a.booknumber ' . $order);
     $db->setQuery($query);
@@ -72,10 +76,11 @@ function getBooksLandingPage($params) {
     $t = 0;
     $i = 0;
 
+    $book = "\n" . '<table id="landing_table" width=100%>';
     $book .= "\n\t" . '<tr>';
     $showdiv = 0;
     foreach ($tresult as &$b) {
-        if (in_array($b->access, $groups) === TRUE) {
+        if (in_array($b->access, $groups)) {
             if ($t >= $limit) {
                 if ($showdiv < 1) {
                     if ($i == 1) {

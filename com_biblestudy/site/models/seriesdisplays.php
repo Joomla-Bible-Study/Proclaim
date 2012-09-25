@@ -43,12 +43,24 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
+        $params = $app->getParams();
+        $this->setState('params', $params);
+        $user = JFactory::getUser();
+
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
         $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
         $this->setState('filter.series', $series);
         $this->setState('filter.language', $app->getLanguageFilter());
-        parent::populateState('study.studydate', 'DESC');
+
+        // process show_noauth parameter
+        if (!$params->get('show_noauth')) {
+            $this->setState('filter.access', true);
+        } else {
+            $this->setState('filter.access', false);
+        }
+
+        $this->setState('layout', JRequest::getCmd('layout'));
     }
 
     /**
@@ -64,7 +76,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $registry->loadJSON($template_params->params);
         $t_params = $registry;
         $app = JFactory::getApplication('site');
-        $params = $app->getParams(); 
+        $params = $app->getParams();
         $menuparams = new JRegistry;
 
         if ($menu = $app->getMenu()->getActive()) {
@@ -79,7 +91,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $query->where($where);
 
         // Filter by language
-        $language = $params->get('language', '*'); 
+        $language = $params->get('language', '*');
         if ($this->getState('filter.language') || $language != '*') {
             $query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
@@ -188,7 +200,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
 
         if ($continue > 0) {
             $where = $where . ' AND ( ' . $where2 . ')';
-        } 
+        }
         return $where;
     }
 
@@ -223,7 +235,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
                     }
                 }
             }
-        } 
+        }
         return $items;
     }
 

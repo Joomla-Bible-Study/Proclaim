@@ -71,7 +71,7 @@ class BiblestudyViewSermon extends JView {
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $css = $params->get('css');
-        if (!$css):
+        if ($css <= "-1"):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);

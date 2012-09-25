@@ -25,7 +25,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 //load the css
 $document = JFactory::getDocument();
 $css = $templateparams->get('css');
-if ($css <= 0):
+if ($css <= "-1"):
     $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 else:
     $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);

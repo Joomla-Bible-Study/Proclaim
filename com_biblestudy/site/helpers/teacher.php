@@ -88,6 +88,7 @@ function getTeacher($params, $id, $admin_params) {
  */
 function getTeacherLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -99,13 +100,16 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     $template = $params->get('teachertemplateid', 1);
     $limit = $params->get('landingteacherslimit', 10000);
     $teacheruselimit = $params->get('landingteachersuselimit', 0);
-    $app = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $menu_order = $m_params->get('teachers_order');
+    if (isset($item->params)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $menu_order = $m_params->get('teachers_order');
+    } else {
+        $menu_order = null;
+    }
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -118,9 +122,17 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    $teacher = "\n" . '<table id="landing_table" width="100%">';
-    $db = JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where a.list_show = 1 and a.published = 1 order by a.ordering, a.teachername ' . $order;
+    // Compute view access permissions.
+    $user = JFactory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
+
+    $query = $db->getQuery(true);
+    $query->select('distinct a.*')
+            ->from('#__bsms_teachers a')
+            ->select('b.access AS study_access')
+            ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
+            ->where('a.list_show = 1 and a.published = 1')
+            ->order('a.ordering, a.teachername ' . $order);
 
     $db->setQuery($query);
 
@@ -128,11 +140,12 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     $t = 0;
     $i = 0;
 
+    $teacher = "\n" . '<table id="landing_table" width="100%">';
     $teacher .= "\n\t" . '<tr>';
     $showdiv = 0;
     //Unset those teachers that are not supposed to be on the landing page
     foreach ($tresult as $key => $value) {
-        if (!$value->landing_show) {
+        if (!$value->landing_show && !in_array($value->access, $groups)) {
             unset($tresult[$key]);
         }
     }

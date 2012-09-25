@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
  */
 function getTopicsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -31,19 +32,23 @@ function getTopicsLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $t = JRequest::getVar('t', 1, 'get', 'int');
-    $app = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
+    if (isset($item->prams)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $language = $db->quote($m_params->get('language'));
+        $menu_order = $m_params->get('topics_order');
+    } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+        $menu_order = null;
+    }
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
         $langlink = '&filter.languages=' . $language;
     }
-    $menu_order = $m_params->get('topics_order');
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -56,17 +61,19 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    $topic = "\n" . '<table id="landing_table" width=100%>';
-    $db = JFactory::getDBO();
+    // Compute view access permissions.
+    $user = JFactory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
+
     $query = $db->getQuery('true');
-    $query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
+    $query->select('DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
     $query->from('#__bsms_studies');
     $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id');
     $query->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id');
     $query->where('#__bsms_topics.published = 1');
     $query->order('#__bsms_topics.topic_text ' . $order);
-    if ($language != '*') {
-        $query->where('#__bsms_studies.language LIKE "' . $language . '"');
+    if ($language != '*' && $language) {
+        $query->where('#__bsms_studies.language in (' . $language . ')');
     }
 
     $db->setQuery($query);
@@ -75,47 +82,49 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $t = 0;
     $i = 0;
 
+    $topic = "\n" . '<table id="landing_table" width=100%>';
     $topic .= "\n\t" . '<tr>';
     $showdiv = 0;
     foreach ($tresult as &$b) {
+        if (in_array($b->access, $groups)) {
+            if ($t >= $limit) {
+                if ($showdiv < 1) {
+                    if ($i == 1) {
+                        $topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                        $topic .= "\n\t" . '</tr>';
+                    };
+                    if ($i == 2) {
+                        $topic .= "\n\t\t" . '<td  id="landing_td"></td>';
+                        $topic .= "\n\t" . '</tr>';
+                    };
 
-        if ($t >= $limit) {
-            if ($showdiv < 1) {
-                if ($i == 1) {
-                    $topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-                    $topic .= "\n\t" . '</tr>';
-                };
-                if ($i == 2) {
-                    $topic .= "\n\t\t" . '<td  id="landing_td"></td>';
-                    $topic .= "\n\t" . '</tr>';
-                };
 
+                    $topic .= "\n" . '</table>';
+                    $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
+                    $topic .= "\n" . '<table width = "100%" id="landing_table">';
 
-                $topic .= "\n" . '</table>';
-                $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-                $topic .= "\n" . '<table width = "100%" id="landing_table">';
-
-                $i = 0;
-                $showdiv = 1;
+                    $i = 0;
+                    $showdiv = 1;
+                }
             }
-        }
 
-        if ($i == 0) {
-            $topic .= "\n\t" . '<tr>';
-        }
-        $topic .= "\n\t\t" . '<td id="landing_td">';
-        $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic=' . $b->id . '&filter_teacher=0' . $langlink . '&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+            if ($i == 0) {
+                $topic .= "\n\t" . '<tr>';
+            }
+            $topic .= "\n\t\t" . '<td id="landing_td">';
+            $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic=' . $b->id . '&filter_teacher=0' . $langlink . '&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
 
-        $topic .= getTopicItemTranslated($b);
+            $topic .= getTopicItemTranslated($b);
 
-        $topic .='</a>';
+            $topic .='</a>';
 
-        $topic .= '</td>';
-        $i++;
-        $t++;
-        if ($i == 3) {
-            $topic .= "\n\t" . '</tr>';
-            $i = 0;
+            $topic .= '</td>';
+            $i++;
+            $t++;
+            if ($i == 3) {
+                $topic .= "\n\t" . '</tr>';
+                $i = 0;
+            }
         }
     }
     if ($i == 1) {

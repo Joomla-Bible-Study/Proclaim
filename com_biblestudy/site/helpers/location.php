@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
  */
 function getLocationsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -31,19 +32,16 @@ function getLocationsLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $locationuselimit = $params->get('landinglocationsuselimit', 0);
-    $app = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
-    if ($language == '*' || !$language) {
-        $langlink = '';
-    } elseif ($language != '*') {
-        $langlink = '&filter.languages=' . $language;
+    if (isset($item->prams)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $menu_order = $m_params->get('locations_order');
+    } else {
+        $menu_order = null;
     }
-    $menu_order = $m_params->get('locations_order');
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -56,19 +54,22 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    //$t = JRequest::getVar('t', 1, 'get', 'int');
+    // Compute view access permissions.
+    $user = JFactory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
 
-
-    $db = JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id where a.published = 1 order by a.location_text ' . $order;
-    if ($language != '*' && $language) {
-        $query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id WHERE a.published = 1 and a.language LIKE "' . $language . '" order by a.location_text ' . $order;
-    }
+    $query = $db->getQuery(true);
+    $query->select('distinct a.*')
+            ->from('#__bsms_locations a')
+            ->select('b.access AS study_access')
+            ->innerJoin('#__bsms_studies b on a.id = b.location_id')
+            ->where('a.published = 1')
+            ->order('a.location_text ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
     foreach ($tresult as $key => $value) {
-        if (!$value->landing_show) {
+        if (!$value->landing_show && !in_array($value->study_access, $groups)) {
             unset($tresult[$key]);
         }
     }
@@ -105,7 +106,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                     $location .= "\n\t" . '<tr>';
                 }
                 $location .= "\n\t\t" . '<td id="landing_td">';
-                $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location=' . $b->id . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+                $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location=' . $b->id . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
 
                 $location .= $b->location_text;
 

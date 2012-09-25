@@ -94,7 +94,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         $registry->loadJSON($a_params[0]->params);
         $this->admin_params = $registry;
         $css = $params->get('css');
-        if (!$css):
+        if ($css <= "-1"):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);

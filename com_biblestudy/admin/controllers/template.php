@@ -10,7 +10,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
-require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -68,7 +67,7 @@ class BiblestudyControllerTemplate extends JControllerForm {
         $this->setRedirect('index.php?option=com_biblestudy&view=templates');
     }
 
-  
+
     /**
      * Get Template Settings
      *
@@ -94,6 +93,6 @@ class BiblestudyControllerTemplate extends JControllerForm {
         return $templatereturn;
     }
 
-   
+
 
 }

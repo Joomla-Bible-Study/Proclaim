@@ -82,7 +82,7 @@ class BiblestudyViewTeacher extends JView {
         $params = $registry;
 
         $css = $params->get('css');
-        if (!$css):
+        if ($css <= "-1"):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);

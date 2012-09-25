@@ -436,6 +436,7 @@ function getSeriesstudies($id, $params, $admin_params, $template) {
  */
 function getSeriesLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -451,15 +452,20 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
+    if (isset($item->prams)) {
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $language = $db->quote($m_params->get('language'));
+        $menu_order = $m_params->get('series_order');
+    } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+        $menu_order = null;
+    }
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
         $langlink = '&filter.languages=' . $language;
     }
-    $menu_order = $m_params->get('series_order');
     if ($menu_order) {
         switch ($menu_order) {
             case 2:
@@ -472,7 +478,6 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    $db = JFactory::getDBO();
 
     $query = $db->getQuery(true);
     $query->select('distinct a.*')
@@ -480,7 +485,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
             ->select('b.access AS study_access')
             ->innerJoin('#__bsms_studies b on a.id = b.series_id');
     if ($language != '*' && $language) {
-        $query->where = 'a.language LIKE "' . $language . '"';
+        $query->where('a.language in (' . $language . ')');
     }
     $query->order('a.series_text ' . $order);
     $db->setQuery($query);
