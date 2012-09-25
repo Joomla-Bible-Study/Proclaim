@@ -63,7 +63,7 @@ function getTeacher($params, $id, $admin_params) {
 
         $teacher .= '<tr><td>';
         if ($params->get('teacherlink') > 0) {
-            $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&amp;id=' . $tresult->id . '&t=' . $t) . '">';
+            $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
         }
         $teacher .= $tresult->teachername;
         if ($params->get('teacherlink') > 0) {
@@ -89,6 +89,7 @@ function getTeacher($params, $id, $admin_params) {
 function getTeacherLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
+    $user = JFactory::getUser();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'image.php');
@@ -123,32 +124,28 @@ function getTeacherLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     // Compute view access permissions.
-    $user = JFactory::getUser();
-    $groups = $user->getAuthorisedViewLevels();
+    $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery(true);
     $query->select('distinct a.*')
             ->from('#__bsms_teachers a')
-            ->select('b.access AS study_access')
+            ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
             ->where('a.list_show = 1 and a.published = 1')
+            ->where('b.access IN (' . $groups . ')')
+            ->where('a.landing_show > 0')
             ->order('a.ordering, a.teachername ' . $order);
 
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
+    $count = count($tresult);
     $t = 0;
     $i = 0;
+    $c = 0;
 
-    $teacher = "\n" . '<table id="landing_table" width="100%">';
-    $teacher .= "\n\t" . '<tr>';
+    $teacher = "\n" . '<table class="landing_table" width="100%"><tr>';
     $showdiv = 0;
-    //Unset those teachers that are not supposed to be on the landing page
-    foreach ($tresult as $key => $value) {
-        if (!$value->landing_show && !in_array($value->access, $groups)) {
-            unset($tresult[$key]);
-        }
-    }
     switch ($teacheruselimit) {
         case 0:
             foreach ($tresult as $b) {
@@ -157,33 +154,29 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                 if ($t >= $limit) {
                     if ($showdiv < 1) {
                         if ($i == 1) {
-                            $teacher .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                            $teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
                             $teacher .= "\n\t" . '</tr>';
                         };
                         if ($i == 2) {
-                            $teacher .= "\n\t\t" . '<td  id="landing_td"></td>';
+                            $teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
                             $teacher .= "\n\t" . '</tr>';
                         };
 
                         $teacher .= "\n" . '</table>';
-                        $teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
-                        $teacher .= "\n" . '<table width = "100%" id="landing_table">';
+                        $teacher .= "\n\t" . '<div class="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
+                        $teacher .= "\n" . '<table width = "100%" class="landing_table">';
 
                         $i = 0;
                         $showdiv = 1;
                     }
                 }
-
-                if ($i == 0) {
-                    $teacher .= "\n\t" . '<tr>';
-                }
-                $teacher .= "\n\t\t" . '<td id="landing_td">';
+                $teacher .= "\n\t\t" . '<td class="landing_td">';
 
                 if ($params->get('linkto') == 0) {
-                    $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $template) . '&filter_teacher=' . $b->id . '&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+                    $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                 } else {
 
-                    $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $b->id . '&t=' . $template) . '">';
+                    $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . '&t=' . $template) . '">';
                 };
                 $teacher .= $b->teachername;
 
@@ -192,26 +185,30 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                 $teacher .= '</td>';
                 $i++;
                 $t++;
-                if ($i == 3) {
+                $c++;
+                if ($i == 3 && $count != $c) {
+                    $teacher .= "\n\t" . '</tr><tr>';
+                    $i = 0;
+                } elseif($i == 3) {
                     $teacher .= "\n\t" . '</tr>';
                     $i = 0;
                 }
             }
             if ($i == 1) {
-                $teacher .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                $teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
             };
             if ($i == 2) {
-                $teacher .= "\n\t\t" . '<td  id="landing_td"></td>';
+                $teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
             };
 
-            $teacher .= "\n" . '</table>' . "\n";
+            $teacher .= "\n" . '</tr></table>' . "\n";
 
             if ($showdiv == 1) {
 
                 $teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
                 $showdiv = 2;
             }
-            $teacher .= '<div id="landing_separator"></div>';
+            $teacher .= '<div class="landing_separator"></div>';
 
             $teacher .= '</div>';
             break;
@@ -223,10 +220,10 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                 if ($b->landing_show == 1) {
                     $teacher .= '<div class="landingrow">';
                     if ($params->get('linkto') == 0) {
-                        $teacher .= '<div class="landingcell" ><a class="landinglink="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $template) . '&filter_teacher=' . $b->id . '&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+                        $teacher .= '<div class="landingcell"><a class="landinglink="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                     } else {
 
-                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $b->id . '&t=' . $template) . '">';
+                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
                     };
                     $teacher .= $b->teachername;
 
@@ -239,10 +236,10 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                 if ($b->landing_show == 2) {
                     $teacher .= '<div class="landingrow">';
                     if ($params->get('linkto') == 0) {
-                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $template) . '&filter_teacher=' . $b->id . '&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                     } else {
 
-                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $b->id . '&t=' . $template) . '">';
+                        $teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
                     };
                     $teacher .= $b->teachername;
 
@@ -251,7 +248,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
             }
 
             $teacher .= '</div>';
-            $teacher .= '<div id="landing_separator"></div>';
+            $teacher .= '<div class="landing_separator"></div>';
             break;
     }
 
@@ -287,7 +284,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template) {
     $label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
     $label = str_replace('{{short}}', $row->short, $label);
     $label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
-    $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id=' . $row->id . '&t=' . $template), $label);
+    $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id=' . $row->id . '&amp;t=' . $template), $label);
     return $label;
 }
 
@@ -323,7 +320,7 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params) {
     $label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
     $label = str_replace('{{short}}', $row->short, $label);
     $label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
-    // $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id='.$row->id .'&t='.$template), $label);
+    // $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id='.$row->id .'&amp;t='.$template), $label);
     return $label;
 }
 

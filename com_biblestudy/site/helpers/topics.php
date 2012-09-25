@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
  */
 function getTopicsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -47,7 +48,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
-        $langlink = '&filter.languages=' . $language;
+        $langlink = '&amp;filter.languages=' . $language;
     }
     if ($menu_order) {
         switch ($menu_order) {
@@ -62,8 +63,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     // Compute view access permissions.
-    $user = JFactory::getUser();
-    $groups = $user->getAuthorisedViewLevels();
+    $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery('true');
     $query->select('DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
@@ -75,73 +75,73 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if ($language != '*' && $language) {
         $query->where('#__bsms_studies.language in (' . $language . ')');
     }
+    $query->where('#__bsms_studies.access IN (' . $groups . ')');
 
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
+    $count = count($tresult);
     $t = 0;
     $i = 0;
+    $c = 0;
 
-    $topic = "\n" . '<table id="landing_table" width=100%>';
-    $topic .= "\n\t" . '<tr>';
+    $topic = "\n" . '<table class="landing_table" width="100%"><tr>';
     $showdiv = 0;
     foreach ($tresult as &$b) {
-        if (in_array($b->access, $groups)) {
-            if ($t >= $limit) {
-                if ($showdiv < 1) {
-                    if ($i == 1) {
-                        $topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-                        $topic .= "\n\t" . '</tr>';
-                    };
-                    if ($i == 2) {
-                        $topic .= "\n\t\t" . '<td  id="landing_td"></td>';
-                        $topic .= "\n\t" . '</tr>';
-                    };
+        if ($t >= $limit) {
+            if ($showdiv < 1) {
+                if ($i == 1) {
+                    $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+                    $topic .= "\n\t" . '</tr>';
+                };
+                if ($i == 2) {
+                    $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
+                    $topic .= "\n\t" . '</tr>';
+                };
 
 
-                    $topic .= "\n" . '</table>';
-                    $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-                    $topic .= "\n" . '<table width = "100%" id="landing_table">';
+                $topic .= "\n" . '</table>';
+                $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
+                $topic .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
-                    $i = 0;
-                    $showdiv = 1;
-                }
-            }
-
-            if ($i == 0) {
-                $topic .= "\n\t" . '<tr>';
-            }
-            $topic .= "\n\t\t" . '<td id="landing_td">';
-            $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic=' . $b->id . '&filter_teacher=0' . $langlink . '&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
-
-            $topic .= getTopicItemTranslated($b);
-
-            $topic .='</a>';
-
-            $topic .= '</td>';
-            $i++;
-            $t++;
-            if ($i == 3) {
-                $topic .= "\n\t" . '</tr>';
                 $i = 0;
+                $showdiv = 1;
             }
+        }
+        $topic .= "\n\t\t" . '<td class="landing_td">';
+        $topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0' . $langlink . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+
+        $topic .= getTopicItemTranslated($b);
+
+        $topic .='</a>';
+
+        $topic .= '</td>';
+        $i++;
+        $t++;
+        $c++;
+        if ($i == 3 && $count != $c) {
+            $topic .= "\n\t" . '</tr><tr>';
+            $i = 0;
+        } elseif ($i == 3) {
+            $topic .= "\n\t" . '</tr>';
+            $i = 0;
         }
     }
     if ($i == 1) {
-        $topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+        $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
     };
     if ($i == 2) {
-        $topic .= "\n\t\t" . '<td  id="landing_td"></td>';
+        $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
     };
 
-    $topic .= "\n" . '</table>' . "\n";
+    $topic .= "\n" . '</tr></table>' . "\n";
 
     if ($showdiv == 1) {
 
         $topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
         $showdiv = 2;
     }
-    $topic .= '<div id="landing_separator"></div>';
+    $topic .= '<div class="landing_separator"></div>';
 
     return $topic;
 }

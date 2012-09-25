@@ -302,7 +302,7 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
-        $langlink = '&filter.languages=' . $language;
+        $langlink = '&amp;filter.languages=' . $language;
     }
     $db = JFactory::getDBO();
     $query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
@@ -436,6 +436,7 @@ function getSeriesstudies($id, $params, $admin_params, $template) {
  */
 function getSeriesLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -464,7 +465,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
-        $langlink = '&filter.languages=' . $language;
+        $langlink = '&amp;filter.languages=' . $language;
     }
     if ($menu_order) {
         switch ($menu_order) {
@@ -478,39 +479,31 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
+    // Compute view access permissions.
+    $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery(true);
     $query->select('distinct a.*')
             ->from('#__bsms_series a')
-            ->select('b.access AS study_access')
+            ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.series_id');
     if ($language != '*' && $language) {
         $query->where('a.language in (' . $language . ')');
     }
+    $query->where('b.access IN (' . $groups . ')');
     $query->order('a.series_text ' . $order);
     $db->setQuery($query);
 
     $items = $db->loadObjectList();
-    //check permissions for this view by running through the records and removing those the user doesn't have permission to see
-    $user = JFactory::getUser();
-    $groups = $user->getAuthorisedViewLevels();
-
     $count = count($items);
 
-    for ($i = 0; $i < $count; $i++) {
-
-        if ($items[$i]->access > 1) {
-            if (!in_array($items[$i]->access, $groups) && !in_array($items[$i]->study_access, $groups)) {
-                unset($items[$i]);
-            }
-        }
-    }
     switch ($seriesuselimit) {
         case 0:
-            $series = "\n" . '<table id="landing_table" width=100%>';
+            $series = "\n" . '<table class="landing_table" width="100%" >';
 
             $t = 0;
             $i = 0;
+            $c = 0;
 
             $series .= "\n\t" . '<tr>';
             $showdiv = 0;
@@ -519,32 +512,28 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 if ($t >= $limit) {
                     if ($showdiv < 1) {
                         if ($i == 1) {
-                            $series .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                            $series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
                             $series .= "\n\t" . '</tr>';
                         };
                         if ($i == 2) {
-                            $series .= "\n\t\t" . '<td  id="landing_td"></td>';
+                            $series .= "\n\t\t" . '<td  class="landing_td"></td>';
                             $series .= "\n\t" . '</tr>';
                         };
 
                         $series .= "\n" . '</table>';
                         $series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
-                        $series .= "\n" . '<table width = "100%" id="landing_table">';
+                        $series .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
                         $i = 0;
                         $showdiv = 1;
                     }
                 }
-
-                if ($i == 0) {
-                    $series .= "\n\t" . '<tr>';
-                }
-                $series .= "\n\t\t" . '<td id="landing_td">';
+                $series .= "\n\t\t" . '<td class="landing_td">';
 
                 if ($params->get('series_linkto') == '0') {
-                    $series .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_series=' . $b->id . '&filter_book=0&filter_teacher=0' . $langlink . '&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+                    $series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                 } else {
-                    $series .= '<a href="index.php?option=com_biblestudy&view=seriesdisplay&id=' . $b->id . '&t=' . $template . '">';
+                    $series .= '<a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                 }
 
                 $series .= $b->series_text;
@@ -555,16 +544,20 @@ function getSeriesLandingPage($params, $id, $admin_params) {
 
                 $i++;
                 $t++;
-                if ($i == 3) {
+                $c++;
+                if ($i == 3 && $count != $c) {
+                    $series .= "\n\t" . '</tr><tr>';
+                    $i = 0;
+                } elseif($i == 3) {
                     $series .= "\n\t" . '</tr>';
                     $i = 0;
                 }
             }
             if ($i == 1) {
-                $series .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                $series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
             };
             if ($i == 2) {
-                $series .= "\n\t\t" . '<td  id="landing_td"></td>';
+                $series .= "\n\t\t" . '<td  class="landing_td"></td>';
             };
 
             $series .= "\n" . '</table>' . "\n";
@@ -573,7 +566,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 $series .= "\n\t" . '</div> <!-- close show/hide series div-->';
                 $showdiv = 2;
             }
-            $series .= '<div id="landing_separator"></div>';
+            $series .= '<div class="landing_separator"></div>';
 
             break;
 
@@ -583,9 +576,9 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 if ($b->landing_show == 1) {
                     $series .= '<div class="landingrow">';
                     if ($params->get('series_linkto') == '0') {
-                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&view=sermons&filter_series=' . $b->id . '&filter_book=0&filter_teacher=0' . $langlink . '&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                     } else {
-                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&view=seriesdisplay&id=' . $b->id . '&t=' . $template . '">';
+                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                     }
 
                     $series .= $numRows;
@@ -600,9 +593,9 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 if ($b->landing_show == 2) {
                     $series .= '<div class="landingrow">';
                     if ($params->get('series_linkto') == '0') {
-                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&view=sermons&filter_series=' . $b->id . '&filter_book=0&filter_teacher=0' . $langlink . '&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                     } else {
-                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&view=seriesdisplay&id=' . $b->id . '&t=' . $template . '">';
+                        $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                     }
 
                     $series .= $numRows;
@@ -645,7 +638,7 @@ function getSerieslistExp($row, $params, $admin_params, $template) {
     $label = str_replace('{{title}}', $row->series_text, $label);
     $label = str_replace('{{description}}', $row->description, $label);
     $label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />', $label);
-    $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdisplay&t=' . $template . '&id=' . $row->id, $label);
+    $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
 
     return $label;
 }
@@ -771,6 +764,6 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template) {
  * @deprecated since version 7.1.0
  */
 function getSeriesFooter($template, $id) {
-    $seriesfooter = '<tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $id . '&t=' . $template) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
+    $seriesfooter = '<tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $id . '&amp;t=' . $template) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
     return $seriesfooter;
 }

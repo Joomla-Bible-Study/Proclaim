@@ -57,8 +57,8 @@ $listingcall = JView::loadHelper('listing');
         if ($params->get('show' . $showIt) == 1) {
             //Wrap each in a DIV...
             ?>
-            <div id="landing_item">
-                <div id="landing_title">
+            <div id="landing_item<?php echo $i; ?>">
+                <div id="landing_title<?php echo $i; ?>">
                     <?php
                     echo $params->get($showIt . 'label');
                     echo "\n";
@@ -125,7 +125,7 @@ $listingcall = JView::loadHelper('listing');
                     $images = new jbsImages();
                     $showhide_tmp = $images->getShowHide();
 
-                    $showhideall = "      <div id='showhide'>";
+                    $showhideall = "<div id='showhide".$i."'>";
 
                     $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
                     $labellink = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
@@ -133,14 +133,14 @@ $listingcall = JView::loadHelper('listing');
                     switch ($params->get('landing_hide', 0)) {
                         case 0:         // image only
                             $showhideall .= $buttonlink;
-                            $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '">';
+                            $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
                             $showhideall .= ' '; // spacer
                             $showhideall .= "\n\t" . '</a>';
                             break;
 
                         case 1:         // image and label
                             $showhideall .= $buttonlink;
-                            $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '">';
+                            $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
                             $showhideall .= ' '; // spacer
                             $showhideall .= "\n\t" . '</a>';
                             $showhideall .= $labellink;
@@ -159,7 +159,7 @@ $listingcall = JView::loadHelper('listing');
                     echo $showhideall;
                 }
                 ?>
-                <div id="landinglist">
+                <div id="landinglist<?php echo $i; ?>">
                     <?php
                     if ($heading) {
                         echo $heading;
