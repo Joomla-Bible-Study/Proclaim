@@ -60,10 +60,10 @@ class BiblestudyViewSermons extends JView {
         $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
-        $items = $this->get('Items');
+        $items = $this->get('Items'); 
         $this->limitstart = JRequest::getVar('start', 'int');
-        $pagination = $this->get('Pagination');
-        $pagelinks = $pagination->getPagesLinks();
+        $pagination = $this->get('Pagination'); 
+        $pagelinks = $pagination->getPagesLinks(); 
         if ($pagelinks !== ''):
             $this->pagelinks = $pagelinks;
         endif;

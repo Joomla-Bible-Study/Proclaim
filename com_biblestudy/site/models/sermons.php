@@ -417,11 +417,11 @@ class BiblestudyModelSermons extends JModelList {
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
 
         // Filter by language
-        $language = $params->get('language', '*');
+        $language = $params->get('language', '*'); 
         if ($this->getState('filter.languages')) {
             $query->where('study.language  LIKE "' . $this->getState('filter.languages') . '"');
         } elseif ($this->getState('filter.language') || $language != '*') {
-            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')'); 
         }
 
         //Order by order filter

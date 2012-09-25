@@ -151,6 +151,9 @@ $listingcall = JView::loadHelper('listing');
         </tbody></table>
     <div class="listingfooter pagination" >
         <?php
+        if ($this->params->get('show_pagination') == 2) {
+                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+            }
         echo $this->pagination->getPageslinks();
         ?>
     </div> <!--end of bsfooter div-->
