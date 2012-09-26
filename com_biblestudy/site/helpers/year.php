@@ -61,21 +61,21 @@ function getYearsLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    // Compute view access permissions.
+// Compute view access permissions.
     $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery(true);
     $query->select('distinct year(studydate) as theYear')
             ->from('#__bsms_studies');
-//The filtering of studies for language will occur when they click on a link. This causes the query to fail  
-//  if ($language != '*' && $language) {
-   //     $query->where('language in (' . $language . ')');
-   // }
+//The filtering of studies for language will occur when they click on a link. This causes the query to fail
+    if ($language != '*' && $language) {
+        $query->where('language in (' . $language . ')');
+    }
     $query->where('access IN (' . $groups . ')')
             ->order('year(studydate) ' . $order);
     $db->setQuery($query);
 
-    $tresult = $db->loadObjectList(); 
+    $tresult = $db->loadObjectList();
     $count = count($tresult);
     $t = 0;
     $i = 0;
@@ -120,7 +120,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
                 $year .= "\n\t" . '</tr>';
                 $i = 0;
             }
-       
+        }
         if ($i == 1) {
             $year .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
         };

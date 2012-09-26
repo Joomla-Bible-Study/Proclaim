@@ -134,11 +134,11 @@ JView::loadHelper('listing');
                 </div> <!-- end div id="landing_title" -->
                 <div id="landinglist<?php echo $i; ?>">
                     <?php
-                    if (isset($heading)) {
-                        echo $heading;
-                    }
                     if (isset($showhideall)) {
                         echo $showhideall;
+                    }
+                    if (isset($heading)) {
+                        echo $heading;
                     }
                     ?>
                 </div> <!-- end div id="landinglist"<?php echo $i; ?> -->
