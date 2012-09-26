@@ -32,15 +32,13 @@ class BiblestudyModelTeachers extends JModelList {
         $JSite = new JSite();
         $menu = $JSite->getMenu();
         $item = $menu->getActive();
-        $language = $item->language;
+        $language = $db->quote($item->language) . ',' . $db->quote('*');
         $query = $db->getQuery(true);
         $query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
         $query->from('#__bsms_teachers as teachers');
         $query->select('s.id as sid');
         $query->join('LEFT', '#__bsms_studies as s on teachers.id = s.teacher_id');
-        if ($this->getState('filter.language') || $language != '*') {
-            $query->where('teachers.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
-        }
+        $query->where('teachers.language in (' . $language . ')');
         $query->where('teachers.published = 1 AND teachers.list_show = 1');
         $query->order('teachers.teachername, teachers.ordering ASC');
         $query->group('teachers.id');

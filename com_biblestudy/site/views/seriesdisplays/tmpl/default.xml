@@ -25,25 +25,21 @@
     </fields>
     <fields name="params">
         <fieldset name="basic"
-               label="JBS_MNU_SERIES_LIST_LAYOUT" >
-            <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-            description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
-                <option value="*">JALL</option>
-            </field>
+                  label="JBS_MNU_SERIES_LIST_LAYOUT" >
             <field name ="metakey"
-            type="text"
-            class="inputbox"
-            size="50"
-            label="JBS_STY_METAKEYWORDS"
-            description="JBS_STY_METAKEYWORDS_DESC" />
+                   type="text"
+                   class="inputbox"
+                   size="50"
+                   label="JBS_STY_METAKEYWORDS"
+                   description="JBS_STY_METAKEYWORDS_DESC" />
 
             <field name = "metadesc"
-            type="textarea"
-            class="inputbox"
-            cols="50"
-            rows="4"
-            label="JBS_STY_METADESCRIPTION"
-            description="JBS_STY_METADESCRIPTION_DESC" />
+                   type="textarea"
+                   class="inputbox"
+                   cols="50"
+                   rows="4"
+                   label="JBS_STY_METADESCRIPTION"
+                   description="JBS_STY_METADESCRIPTION_DESC" />
         </fieldset>
     </fields>
 </metadata>

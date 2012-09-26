@@ -9,46 +9,42 @@
     <fields name="request">
         <fieldset name="request">
             <field name="t" type="sql"
-                description="JBS_MNU_SELECT_TEMPLATE_DESC"
-                label="JBS_MNU_SELECT_TEMPLATE"
-                default="1"
-                query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-                key_field="id"
-                value_field="title"
-                required="true"
+                   description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                   label="JBS_MNU_SELECT_TEMPLATE"
+                   default="1"
+                   query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                   key_field="id"
+                   value_field="title"
+                   required="true"
             />
         </fieldset>
     </fields>
     <fields name="params">
         <fieldset name="basic"
-             label="JBS_MNU_STUDIES_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >
+                  label="JBS_MNU_STUDIES_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >
 
             <field name ="metakey"
-                 type="text"
-                 class="inputbox"
-                 size="50"
-                 label="JBS_STY_METAKEYWORDS"
-                 description="JBS_STY_METAKEYWORDS_DESC" />
+                   type="text"
+                   class="inputbox"
+                   size="50"
+                   label="JBS_STY_METAKEYWORDS"
+                   description="JBS_STY_METAKEYWORDS_DESC" />
 
             <field name = "metadesc"
-                 type="textarea"
-                 class="inputbox"
-                 cols="50"
-                 rows="4"
-                 label="JBS_STY_METADESCRIPTION"
-                 description="JBS_STY_METADESCRIPTION_DESC" />
+                   type="textarea"
+                   class="inputbox"
+                   cols="50"
+                   rows="4"
+                   label="JBS_STY_METADESCRIPTION"
+                   description="JBS_STY_METADESCRIPTION_DESC" />
 
             <field name="order"
-                        type="list"
-                        label="JBS_CMN_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="1">
+                   type="list"
+                   label="JBS_CMN_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="1">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-                    description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
-                <option value="*">JALL</option>
             </field>
             <field name="mteacher_id"
                    type="teacherlist"
@@ -56,7 +52,7 @@
                    description="JBS_CMN_FILTERS_DESC"
                    multiple="true"
                    default="-1"
-                   >
+            >
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mseries_id"
@@ -104,13 +100,13 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="years"
-                        type="sql"
-                        default="-1"
-                        label="JBS_CMN_FILTERS_YEARS"
-                        description="JBS_CMN_FILTERS_DESC"
-                        multiple="true"
-                        query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
-                        key_field="date" value_field="date">
+                   type="sql"
+                   default="-1"
+                   label="JBS_CMN_FILTERS_YEARS"
+                   description="JBS_CMN_FILTERS_DESC"
+                   multiple="true"
+                   query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
+                   key_field="date" value_field="date">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
 

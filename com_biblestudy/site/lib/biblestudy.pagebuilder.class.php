@@ -196,22 +196,18 @@ class JBSPagebuilder {
      */
     function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
         $app = JFactory::getApplication();
+        $db = JFactory::getDBO();
         $menu = $app->getMenu();
         $item = $menu->getActive();
-        //@todo need to redo this.
         if ($item) {
-            $language = $item->language;
-            if ($language == '*' || !$language) {
-                $langlink = '';
-            } elseif ($language != '*') {
+            $language = $db->quote($item->language) . ',' . $db->quote('*');
+            if ($language != '*') {
                 $langlink = '&filter.languages=' . $language;
             }
         } else {
-            $language = '*';
+            $language = $db->quote('*');
             $langlink = '';
         }
-
-        $db = JFactory::getDBO();
 
         // Compute view access permissions.
         $user = JFactory::getUser();
@@ -272,9 +268,7 @@ class JBSPagebuilder {
         $query->join('LEFT', '#__bsms_mediafiles as media ON study.id = media.study_id');
         $query->where('study.published = 1');
         $query->where($wherefield . ' = ' . $whereitem);
-        if ($language != '*') {
-            $query->where('study.language LIKE "' . $language . '"');
-        }
+        $query->where('study.language in (' . $language . ')');
         if (!$order) {
             $order = 'DESC';
         }
