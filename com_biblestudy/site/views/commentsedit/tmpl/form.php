@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
             <?php echo JText::_('JCANCEL') ?>
         </button>
     </div>
-    <div class="width-100 fltlft">
+    <div class="width-100 fltlft" style="display:inline">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <table border="0" width="100%" cellspacing="2" cellpadding="2">

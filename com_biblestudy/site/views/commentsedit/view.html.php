@@ -50,10 +50,10 @@ class biblestudyViewcommentsedit extends JView {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
+        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');

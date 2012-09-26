@@ -11,8 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-include_once($path1 . 'image.php');
+
 jimport('joomla.application.component.view');
 
 /**
@@ -53,10 +52,9 @@ class BiblestudyViewTeachers extends JView {
     public function display($tpl = null) {
 
         //Load the Admin settings and params from the template
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $this->loadHelper('params');
+        JView::loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-
+        JView::loadHelper('image');
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
