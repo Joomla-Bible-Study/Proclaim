@@ -140,7 +140,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
         }
         $topic .= '<div class="landing_separator"></div>';
     else:
-        $topic = '';
+        $topic = '<div class="landing_separator"></div>';
     endif;
     return $topic;
 }

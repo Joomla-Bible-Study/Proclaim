@@ -175,7 +175,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
             break;
     }
     else:
-        $messagetype  = '';
+        $messagetype  = '<div class="landing_separator"></div>';
     endif;
     return $messagetype;
 }

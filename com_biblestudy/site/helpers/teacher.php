@@ -250,7 +250,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                 break;
         }
     else:
-        $teacher = '';
+        $teacher = '<div class="landing_separator"></div>';
     endif;
     return $teacher;
 }

@@ -170,7 +170,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                 break;
         }
     else:
-        $location = '';
+        $location = '<div class="landing_separator"></div>';
     endif;
     return $location;
 }

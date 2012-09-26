@@ -1121,16 +1121,16 @@ div.listingfooter ul li {
     font-weight:bold;
 }
 /* Landing Page Items */
-#landinglist {
+.landinglist {
 
 }
-#landing_label {
+.landing_label {
 
 }
-#landing_item {
+.landing_item {
 
 }
-#landing_title {
+.landing_title {
     font-family:arial;
     font-size:16px;
     font-weight:bold;
@@ -1150,15 +1150,15 @@ div.listingfooter ul li {
     vertical-align:bottom;
 }
 
-#landing_table {
+.landing_table {
 
 }
 
-#landing_td {
+.landing_td {
     width: 33%;
 }
 
-#landing_separator {
+.landing_separator {
     height:15px;
 }
 /* Popup Window Items */

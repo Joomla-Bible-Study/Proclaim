@@ -134,7 +134,7 @@ function getBooksLandingPage($params) {
         }
         $book .= '<div class="landing_separator"></div>';
     else:
-        $book = '';
+        $book = '<div class="landing_separator"></div>';
     endif;
 
     return $book;

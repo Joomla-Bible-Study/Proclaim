@@ -589,7 +589,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 break;
         }
     else:
-        $series = '';
+        $series = '<div class="landing_separator"></div>';
     endif;
     return $series;
 }
