@@ -139,17 +139,20 @@ class BiblestudyControllerMigration extends JController {
             if (!empty($migration)) {
                 $messages = implode('<br>', $migration);
             }
-            //Final step is to fix assets
-            $this->fixAssets();
-            $installer = new Com_BiblestudyInstallerScript();
-            $installer->fixImagePaths();
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . $messages, 'message');
+                //Final step is to fix assets
+                $this->fixAssets();
+                $installer = new Com_BiblestudyInstallerScript();
+                $installer->deleteUnexistingFiles();
+                $installer->fixMenus();
+                $installer->fixImagePaths();
+                $installer->fixemptyaccess();
+                $installer->fixemptylanguage();
                 JRequest::setVar('migrationdone', '1', 'get');
-            } else {;
+            } else {
                 JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
             }
-            JRequest::setVar('migrationdone', '1', 'get');
         } else {
             JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
         }

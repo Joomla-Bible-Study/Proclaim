@@ -160,6 +160,8 @@ class Com_BiblestudyInstallerScript {
         $this->deleteUnexistingFiles();
         $this->fixMenus();
         $this->fixImagePaths();
+        $this->fixemptyaccess();
+        $this->fixemptylanguage();
     }
 
     /**
@@ -523,7 +525,26 @@ class Com_BiblestudyInstallerScript {
      * @todo need to compleat
      */
     public function fixemptylanguage() {
-
+        //tables to fix
+        $tables = array(
+            array('table' => '#__bsms_comments'),
+            array('table' => '#__bsms_mediafiles'),
+            array('table' => '#__bsms_series'),
+            array('table' => '#__bsms_studies'),
+            array('table' => '#__bsms_teachers'),
+        );
+        //correct blank records
+        foreach ($tables as $table):
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->update($table['table'])
+                    ->set("`language` = '*'")
+                    ->where("`language` = ''");
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+            }
+        endforeach;
     }
 
     /**
@@ -532,7 +553,42 @@ class Com_BiblestudyInstallerScript {
      * @todo need to compleat
      */
     public function fixemptyaccess() {
-
+        //tables to fix
+        $tables = array(
+            array('table' => '#__bsms_admin'),
+            array('table' => '#__bsms_mediafiles'),
+            array('table' => '#__bsms_message_type'),
+            array('table' => '#__bsms_mimetype'),
+            array('table' => '#__bsms_order'),
+            array('table' => '#__bsms_podcast'),
+            array('table' => '#__bsms_series'),
+            array('table' => '#__bsms_servers'),
+            array('table' => '#__bsms_share'),
+            array('table' => '#__bsms_studies'),
+            array('table' => '#__bsms_studytopics'),
+            array('table' => '#__bsms_teachers'),
+            array('table' => '#__bsms_templates'),
+            array('table' => '#__bsms_topics'),
+        );
+        //Get Public id
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__viewlevels')
+                ->where("`title` = 'Public'");
+        $db->setQuery($query);
+        $id = $db->loadResult();
+        //correct blank or not set records
+        foreach ($tables as $table):
+            $query = $db->getQuery(true);
+            $query->update($table['table'])
+                    ->set('`access` = ' . $id)
+                    ->where("(`access` = '0' or `access` = '')");
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+            }
+        endforeach;
     }
 
 }
