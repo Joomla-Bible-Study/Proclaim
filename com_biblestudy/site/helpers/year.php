@@ -38,7 +38,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
     if (isset($item->params)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $db->quote($m_params->get('language'));
+        $language = $db->quote($item->language) . ',' . $db->quote('*');
         $menu_order = $m_params->get('years_order');
     } else {
         $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
@@ -66,12 +66,9 @@ function getYearsLandingPage($params, $id, $admin_params) {
 
     $query = $db->getQuery(true);
     $query->select('distinct year(studydate) as theYear')
-            ->from('#__bsms_studies');
-//The filtering of studies for language will occur when they click on a link. This causes the query to fail
-    if ($language != '*' && $language) {
-        $query->where('language in (' . $language . ')');
-    }
-    $query->where('access IN (' . $groups . ')')
+            ->from('#__bsms_studies')
+            ->where('language in (' . $language . ')')
+            ->where('access IN (' . $groups . ')')
             ->order('year(studydate) ' . $order);
     $db->setQuery($query);
 
@@ -79,6 +76,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
     $count = count($tresult);
     $t = 0;
     $i = 0;
+    
     if ($count > 0):
         $year = "\n" . '<table class="landing_table" width="100%"><tr>';
         $showdiv = 0;

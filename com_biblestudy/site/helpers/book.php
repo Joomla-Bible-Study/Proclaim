@@ -35,7 +35,7 @@ function getBooksLandingPage($params) {
     if (isset($item->prams)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $db->quote($m_params->get('language'));
+        $language = $db->quote($item->language). ',' . $db->quote('*');
         $menu_order = $m_params->get('books_order');
     } else {
         $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
@@ -65,12 +65,10 @@ function getBooksLandingPage($params) {
     $query->select('distinct a.*')
             ->from('#__bsms_books a')
             ->select('b.access AS access')
-            ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber');
-    if ($language != '*' && $language) {
-        $query->where('b.language in (' . $language . ')');
-    }
-    $query->where('b.access IN (' . $groups . ')');
-    $query->order('a.booknumber ' . $order);
+            ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
+            ->where('b.language in (' . $language . ')')
+            ->where('b.access IN (' . $groups . ')')
+            ->order('a.booknumber ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();

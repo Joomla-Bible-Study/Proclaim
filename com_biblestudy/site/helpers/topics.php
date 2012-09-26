@@ -39,7 +39,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if (isset($item->prams)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $db->quote($m_params->get('language'));
+        $language = $db->quote($item->language) . ',' . $db->quote('*');
         $menu_order = $m_params->get('topics_order');
     } else {
         $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
@@ -66,16 +66,14 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery('true');
-    $query->select('DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
-    $query->from('#__bsms_studies');
-    $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id');
-    $query->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id');
-    $query->where('#__bsms_topics.published = 1');
-    $query->order('#__bsms_topics.topic_text ' . $order);
-    if ($language != '*' && $language) {
-        $query->where('#__bsms_studies.language in (' . $language . ')');
-    }
-    $query->where('#__bsms_studies.access IN (' . $groups . ')');
+    $query->select('DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
+            ->from('#__bsms_studies')
+            ->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
+            ->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
+            ->where('#__bsms_topics.published = 1')
+            ->order('#__bsms_topics.topic_text ' . $order)
+            ->where('#__bsms_studies.language in (' . $language . ')')
+            ->where('#__bsms_studies.access IN (' . $groups . ')');
 
     $db->setQuery($query);
 

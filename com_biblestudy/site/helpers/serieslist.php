@@ -291,21 +291,19 @@ function getseriesElementnumber($subcustom) {
  */
 function getSeriesstudiesDBO($id, $params, $limit = '') {
     $app = JFactory::getApplication();
+    $db = JFactory::getDBO();
+    $user = JFactory::getUser();
     $menu = $app->getMenu();
     $item = $menu->getActive();
-    $registry = new JRegistry;
-    $registry->loadJSON($item->params);
-    $m_params = $registry;
-    $language = $m_params->get('language');
-    if (!$language) {
-        $language = ($item->language);
-    }
+    $language = $db->quote($item->language) . ',' . $db->quote('*');
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
         $langlink = '&amp;filter.languages=' . $language;
     }
-    $db = JFactory::getDBO();
+    // Compute view access permissions.
+    $groups = implode(',', $user->getAuthorisedViewLevels());
+
     $query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
             . ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
             . ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -320,30 +318,13 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
             . ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
             . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
             . ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)';
-    if ($language) {
-        $query .= ' WHERE s.series_id = ' . $id . ' AND s.published = 1 AND s.language LIKE "' . $language . '"';
-    } else {
-        $query .= ' WHERE s.series_id = ' . $id . ' AND s.published = 1';
-    }
+    $query .= ' WHERE s.series_id = ' . $id . ' AND s.published = 1 AND s.language in (' . $language . ') AND s.access IN (' . $groups . ')';
     $query .= ' GROUP BY s.id';
     $query .= ' ORDER BY ' . $params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'DESC');
     $query .= $limit;
     $db->setQuery($query);
     $results = $db->loadObjectList();
     $items = $results;
-
-    //check permissions for this view by running through the records and removing those the user doesn't have permission to see
-    $user = JFactory::getUser();
-    $groups = $user->getAuthorisedViewLevels();
-    $count = count($items);
-
-    for ($i = 0; $i < $count; $i++) {
-        if ($items[$i]->access > 1) {
-            if (!in_array($items[$i]->access, $groups)) {
-                unset($items[$i]);
-            }
-        }
-    }
     foreach ($items as $item) {
         // concat topic_text and concat topic_params do not fit, so translate individually
         $topics_text = getConcatTopicItemTranslated($item);
@@ -457,7 +438,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     if (isset($item->prams)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $db->quote($m_params->get('language'));
+        $language = $db->quote($item->language) . ',' . $db->quote('*');
         $menu_order = $m_params->get('series_order');
     } else {
         $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
@@ -487,12 +468,10 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $query->select('distinct a.*')
             ->from('#__bsms_series a')
             ->select('b.access')
-            ->innerJoin('#__bsms_studies b on a.id = b.series_id');
-    if ($language != '*' && $language) {
-        $query->where('a.language in (' . $language . ')');
-    }
-    $query->where('b.access IN (' . $groups . ')');
-    $query->order('a.series_text ' . $order);
+            ->innerJoin('#__bsms_studies b on a.id = b.series_id')
+            ->where('a.language in (' . $language . ')')
+            ->where('b.access IN (' . $groups . ')')
+            ->order('a.series_text ' . $order);
     $db->setQuery($query);
 
     $items = $db->loadObjectList();

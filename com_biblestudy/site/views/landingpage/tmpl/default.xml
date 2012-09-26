@@ -1,110 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="JBS_MNU_LANDING_PAGE_LAYOUT">
-		<message>
+    <layout title="JBS_MNU_LANDING_PAGE_LAYOUT">
+        <message>
 			<![CDATA[JBS_MNU_LANDING_PAGE_LAYOUT_DESC]]>
-		</message>
-	</layout>
-	<state>
-		<name>JBS_MNU_LANDING_PAGE_LAYOUT</name>
-		<params addpath="/components/com_biblestudy/elements">
-			<param name="type" type="hidden" default="landingpage" />
-			<param name="templatemenuid" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
+        </message>
+    </layout>
+    <state>
+        <name>JBS_MNU_LANDING_PAGE_LAYOUT</name>
+        <params addpath="/components/com_biblestudy/elements">
+            <param name="type" type="hidden" default="landingpage" />
+            <param name="templatemenuid" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
         </params>
-	</state>
-     <fields name="request">
+    </state>
+    <fields name="request">
         <fieldset name="request">
             <field name="t" type="sql"
-                description="JBS_MNU_SELECT_TEMPLATE_DESC"
-                label="JBS_MNU_SELECT_TEMPLATE"
-                default="1"
-                query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-                key_field="id"
-                value_field="title"
-                required="true"
+                   description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                   label="JBS_MNU_SELECT_TEMPLATE"
+                   default="1"
+                   query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                   key_field="id"
+                   value_field="title"
+                   required="true"
             />
-            
+
         </fieldset>
-     </fields>
-      <fields name="params">
-     <fieldset name="basic" 
-     label="JBS_MNU_LANDING_PAGE_LAYOUT" >
-         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
-        <option value="*">JALL</option>
-    </field>
-    
-       <field name="series_order"
-                        type="list"
-                        label="JBS_CMN_SERIES_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="2">
+    </fields>
+    <fields name="params">
+        <fieldset name="basic"
+               label="JBS_MNU_LANDING_PAGE_LAYOUT" >
+            <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+                description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+                <option value="*">JALL</option>
+            </field>
+
+            <field name="series_order"
+              type="list"
+              label="JBS_CMN_SERIES_ORDERING"
+              description="JBS_CMN_ORDERING_DESC"
+              default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="books_order"
-                        type="list"
-                        label="JBS_CMN_BOOKS_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="2">
+                   type="list"
+                   label="JBS_CMN_BOOKS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="teachers_order"
-                        type="list"
-                        label="JBS_CMN_TEACHERS_ORDERING"
-                        description="JBS_CMN_TEACHER_ORDERING_DESC"
-                        default="2">
+                   type="list"
+                   label="JBS_CMN_TEACHERS_ORDERING"
+                   description="JBS_CMN_TEACHER_ORDERING_DESC"
+                   default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="years_order"
-                        type="list"
-                        label="JBS_CMN_YEARS_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="1">
+                   type="list"
+                   label="JBS_CMN_YEARS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="1">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="topics_order"
-                        type="list"
-                        label="JBS_CMN_TOPICS_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="2">
+                   type="list"
+                   label="JBS_CMN_TOPICS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="locations_order"
-                        type="list"
-                        label="JBS_CMN_LOCATIONS_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="2">
+                   type="list"
+                   label="JBS_CMN_LOCATIONS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="messagetypes_order"
-                        type="list"
-                        label="JBS_CMN_MESSAGETYPES_ORDERING"
-                        description="JBS_CMN_ORDERING_DESC"
-                        default="2">
+                   type="list"
+                   label="JBS_CMN_MESSAGETYPES_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
-     <field name ="metakey" 
-     type="text" 
-     class="inputbox" 
-     size="50" 
-     label="JBS_STY_METAKEYWORDS" 
-     description="JBS_STY_METAKEYWORDS_DESC" />
-     
-     <field name = "metadesc" 
-     type="textarea" 
-     class="inputbox" 
-     cols="50" 
-     rows="4" 
-     label="JBS_STY_METADESCRIPTION" 
-     description="JBS_STY_METADESCRIPTION_DESC" />
-     </fieldset>
-     </fields>
+            <field name ="metakey"
+            type="text"
+            class="inputbox"
+            size="50"
+            label="JBS_STY_METAKEYWORDS"
+            description="JBS_STY_METAKEYWORDS_DESC" />
+
+            <field name = "metadesc"
+            type="textarea"
+            class="inputbox"
+            cols="50"
+            rows="4"
+            label="JBS_STY_METADESCRIPTION"
+            description="JBS_STY_METADESCRIPTION_DESC" />
+        </fieldset>
+    </fields>
 </metadata>
