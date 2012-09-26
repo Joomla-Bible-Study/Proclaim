@@ -20,10 +20,11 @@ defined('_JEXEC') or die;
 function getYearsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
+    $user = JFactory::getUser();
     $option = JRequest::getCmd('option');
-    $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-    include_once($path1 . 'image.php');
-    include_once($path1 . 'helper.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
+    $JView->loadHelper('helper');
     $year = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid');
@@ -46,7 +47,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
-        $langlink = '&filter.languages=' . $language;
+        $langlink = '&amp;filter.languages=' . $language;
     }
     if ($menu_order) {
         switch ($menu_order) {
@@ -60,7 +61,9 @@ function getYearsLandingPage($params, $id, $admin_params) {
     } else {
         $order = $params->get('landing_default_order', 'ASC');
     }
-    
+    // Compute view access permissions.
+    $groups = implode(',', $user->getAuthorisedViewLevels());
+
     $query = $db->getQuery(true);
     $query->select('distinct year(studydate) as theYear')
             ->from('#__bsms_studies');
@@ -68,45 +71,40 @@ function getYearsLandingPage($params, $id, $admin_params) {
 //  if ($language != '*' && $language) {
    //     $query->where('language in (' . $language . ')');
    // }
-    $query->order('year(studydate) ' . $order);
+    $query->where('access IN (' . $groups . ')')
+            ->order('year(studydate) ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList(); 
+    $count = count($tresult);
     $t = 0;
     $i = 0;
-
-    $year = "\n" . '<table id="landing_table" width="100%">';
-    $year .= "\n\t" . '<tr>';
-    $showdiv = 0;
-    
-    foreach ($tresult as &$b) {
-       
+    if ($count > 0):
+        $year = "\n" . '<table class="landing_table" width="100%"><tr>';
+        $showdiv = 0;
+        foreach ($tresult as &$b) {
             if ($t >= $limit) {
                 if ($showdiv < 1) {
                     if ($i == 1) {
-                        $year .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+                        $year .= "\n\t\t" . '<td class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
                         $year .= "\n\t" . '</tr>';
                     };
                     if ($i == 2) {
-                        $year .= "\n\t\t" . '<td  id="landing_td"></td>';
+                        $year .= "\n\t\t" . '<td  class="landing_td"></td>';
                         $year .= "\n\t" . '</tr>';
                     };
 
                     $year .= "\n" . '</table>';
                     $year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
-                    $year .= "\n" . '<table width = "100%" id="landing_table">';
+                    $year .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
                     $i = 0;
                     $showdiv = 1;
                 }
             }
+            $year .= "\n\t\t" . '<td class="landing_td">';
 
-            if ($i == 0) {
-                $year .= "\n\t" . '<tr>';
-            }
-            $year .= "\n\t\t" . '<td id="landing_td">';
-
-            $year .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_year=' . $b->theYear . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_book=0&filter_messagetype=0&t=' . $template . '">';
+            $year .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $b->theYear . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_book=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
             $year .= $b->theYear;
 
@@ -115,27 +113,31 @@ function getYearsLandingPage($params, $id, $admin_params) {
             $year .= '</td>';
             $i++;
             $t++;
-            if ($i == 3) {
+            if ($i == 3 && $t != $limit && $t != $count) {
+                $year .= "\n\t" . '</tr><tr>';
+                $i = 0;
+            } elseif ($i == 3 || $t == $count || $t == $limit) {
                 $year .= "\n\t" . '</tr>';
                 $i = 0;
             }
        
-    }
-    if ($i == 1) {
-        $year .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-    };
-    if ($i == 2) {
-        $year .= "\n\t\t" . '<td  id="landing_td"></td>';
-    };
+        if ($i == 1) {
+            $year .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+        };
+        if ($i == 2) {
+            $year .= "\n\t\t" . '<td  class="landing_td"></td>';
+        };
 
-    $year .= "\n" . '</table>' . "\n";
+        $year .= "\n" . '</table>' . "\n";
 
-    if ($showdiv == 1) {
+        if ($showdiv == 1) {
 
-        $year .= "\n\t" . '</div> <!-- close show/hide years div-->';
-        $showdiv = 2;
-    }
-    $year .= '<div id="landing_separator"></div>';
-
+            $year .= "\n\t" . '</div> <!-- close show/hide years div-->';
+            $showdiv = 2;
+        }
+        $year .= '<div class="landing_separator"></div>';
+    else:
+        $year = '';
+    endif;
     return $year;
 }

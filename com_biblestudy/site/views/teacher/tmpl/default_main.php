@@ -169,7 +169,6 @@ if (!$studieslisttemplateid) {
                                         } else {
                                             $oddeven = $class1;
                                         }
-                                        dump($row, 'row at teacher');
                                         $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
 
                                         echo $studies;

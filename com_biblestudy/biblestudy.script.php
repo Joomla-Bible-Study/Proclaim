@@ -250,6 +250,8 @@ class Com_BiblestudyInstallerScript {
             '/administrator/components/com_biblestudy/Snoopy.class.php',
             '/administrator/components/com_biblestudy/admin.biblestudy.php',
             '/components/com_biblestudy/helpers/updatesef.php',
+            '/components/com_biblestudy/helpers/image.php',
+            '/components/com_biblestudy/helpers/helper.php',
             '/components/com_biblestudy/views/messages/tmpl/modal16.php',
             '/components/com_biblestudy/controllers/teacherlist.php',
             '/components/com_biblestudy/controllers/teacherdisplay.php',
@@ -513,6 +515,24 @@ class Com_BiblestudyInstallerScript {
                 $this->setError($db->getErrorMsg());
             }
         }
+    }
+
+    /**
+     * Funciton to find empty language field and set them to "*"
+     * @since 7.1.0
+     * @todo need to compleat
+     */
+    public function fixemptylanguage() {
+
+    }
+
+    /**
+     * Function to Find empty access in the db and set them to Public
+     * @since 7.1.0
+     * @todo need to compleat
+     */
+    public function fixemptyaccess() {
+
     }
 
 }

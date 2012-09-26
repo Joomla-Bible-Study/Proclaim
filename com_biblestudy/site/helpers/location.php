@@ -19,11 +19,12 @@ defined('_JEXEC') or die;
  */
 function getLocationsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
+    $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
-    $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-    include_once($path1 . 'image.php');
-    include_once($path1 . 'helper.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
+    $JView->loadHelper('helper');
     $location = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid', 1);
@@ -55,8 +56,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
         $order = $params->get('landing_default_order', 'ASC');
     }
     // Compute view access permissions.
-    $user = JFactory::getUser();
-    $groups = $user->getAuthorisedViewLevels();
+    $groups = implode(',', $user->getAuthorisedViewLevels());
 
     $query = $db->getQuery(true);
     $query->select('distinct a.*')
@@ -64,110 +64,113 @@ function getLocationsLandingPage($params, $id, $admin_params) {
             ->select('b.access AS study_access')
             ->innerJoin('#__bsms_studies b on a.id = b.location_id')
             ->where('a.published = 1')
+            ->where('b.access IN (' . $groups . ')')
+            ->where('a.landing_show > 0')
             ->order('a.location_text ' . $order);
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
-    foreach ($tresult as $key => $value) {
-        if (!$value->landing_show && !in_array($value->study_access, $groups)) {
-            unset($tresult[$key]);
-        }
-    }
+    $count = count($tresult);
+    if ($count > 0):
+        switch ($locationuselimit) {
+            case 0:
+                $t = 0;
+                $i = 0;
 
-    switch ($locationuselimit) {
-        case 0:
-            $t = 0;
-            $i = 0;
-            $location = "\n" . '<table id="landing_table" width=100%>';
-            $location .= "\n\t" . '<tr>';
-            $showdiv = 0;
-            foreach ($tresult as $b) {
+                $location = "\n" . '<table class="landing_table" width="100%"><tr>';
+                $showdiv = 0;
+                foreach ($tresult as $b) {
 
-                if ($t >= $limit) {
-                    if ($showdiv < 1) {
-                        if ($i == 1) {
-                            $location .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-                            $location .= "\n\t" . '</tr>';
-                        };
-                        if ($i == 2) {
-                            $location .= "\n\t\t" . '<td  id="landing_td"></td>';
-                            $location .= "\n\t" . '</tr>';
-                        };
+                    if ($t >= $limit) {
+                        if ($showdiv < 1) {
+                            if ($i == 1) {
+                                $location .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+                                $location .= "\n\t" . '</tr>';
+                            };
+                            if ($i == 2) {
+                                $location .= "\n\t\t" . '<td  class="landing_td"></td>';
+                                $location .= "\n\t" . '</tr>';
+                            };
 
-                        $location .= "\n" . '</table>';
-                        $location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
-                        $location .= "\n" . '<table width = "100%" id="landing_table">';
+                            $location .= "\n" . '</table>';
+                            $location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
+                            $location .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
+                            $i = 0;
+                            $showdiv = 1;
+                        }
+                    }
+                    if ($i == 0) {
+                        $location .= "\n\t" . '<tr>';
+                    }
+                    $location .= "\n\t\t" . '<td class="landing_td">';
+                    $location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+
+                    $location .= $b->location_text;
+
+                    $location .='</a>';
+
+                    $location .= '</td>';
+                    $i++;
+                    $t++;
+                    if ($i == 3 && $t != $limit && $t != $count) {
+                        $location .= "\n\t" . '</tr><tr>';
                         $i = 0;
-                        $showdiv = 1;
+                    } elseif ($i == 3 || $t == $count || $t == $limit) {
+                        $location .= "\n\t" . '</tr>';
+                        $i = 0;
                     }
                 }
-                if ($i == 0) {
-                    $location .= "\n\t" . '<tr>';
+                if ($i == 1) {
+                    $location .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+                };
+                if ($i == 2) {
+                    $location .= "\n\t\t" . '<td  class="landing_td"></td>';
+                };
+
+                $location .= "\n" . '</table>' . "\n";
+
+                if ($showdiv == 1) {
+
+                    $location .= "\n\t" . '</div> <!-- close show/hide locations div-->';
+                    $showdiv = 2;
                 }
-                $location .= "\n\t\t" . '<td id="landing_td">';
-                $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location=' . $b->id . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+                $location .= '<div class="landing_separator"></div>';
+                break;
 
-                $location .= $b->location_text;
+            case 1:
 
-                $location .='</a>';
+                $location = '<div class="landingtable" style="display:inline;">';
 
-                $location .= '</td>';
-                $i++;
-                $t++;
-                if ($i == 3) {
-                    $location .= "\n\t" . '</tr>';
-                    $i = 0;
+                foreach ($tresult as $b) {
+                    if ($b->landing_show == 1) {
+                        $location .= '<div class="landingrow">';
+                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                        $location .= $b->location_text;
+                        $location .='</a></div>';
+                        $location .= '</div>';
+                    }
                 }
-            }
-            if ($i == 1) {
-                $location .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-            };
-            if ($i == 2) {
-                $location .= "\n\t\t" . '<td  id="landing_td"></td>';
-            };
 
-            $location .= "\n" . '</table>' . "\n";
+                $location .= '</div>';
+                $location .= '<div id="showhidelocations" style="display:none;">';
 
-            if ($showdiv == 1) {
-
-                $location .= "\n\t" . '</div> <!-- close show/hide locations div-->';
-                $showdiv = 2;
-            }
-            $location .= '<div id="landing_separator"></div>';
-            break;
-
-        case 1:
-
-            $location = '<div class="landingtable" style="display:inline;">';
-
-            foreach ($tresult as $b) {
-                if ($b->landing_show == 1) {
-                    $location .= '<div class="landingrow">';
-                    $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&view=sermons&filter_location=' . $b->id . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
-                    $location .= $b->location_text;
-                    $location .='</div></a>';
-                    $location .= '</div>';
+                foreach ($tresult as $b) {
+                    if ($b->landing_show == 2) {
+                        $location .= '<div class="landingrow">';
+                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                        $location .= $b->location_text;
+                        $location .='</a></div>';
+                        $location .= '</div>';
+                    }
                 }
-            }
 
-            $location .= '</div>';
-            $location .= '<div id="showhidelocations" style="display:none;">';
-
-            foreach ($tresult as $b) {
-                if ($b->landing_show == 2) {
-                    $location .= '<div class="landingrow">';
-                    $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&view=sermons&filter_location=' . $b->id . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
-                    $location .= $b->location_text;
-                    $location .='</div></a>';
-                    $location .= '</div>';
-                }
-            }
-
-            $location .= '</div>';
-            $location .= '<div id="landing_separator"></div>';
-            break;
-    }
-
+                $location .= '</div>';
+                $location .= '<div class="landing_separator"></div>';
+                break;
+        }
+    else:
+        $location = '';
+    endif;
     return $location;
 }

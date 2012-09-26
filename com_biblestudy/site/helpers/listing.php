@@ -29,7 +29,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    include_once($path1 . 'helper.php');
+    include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'helper.php');
 
     //Here we test to see if this is a sermon or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
     $view = JRequest::getVar('view', 'get');
@@ -747,7 +747,8 @@ function getListingExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'media.php');
     include_once($path1 . 'mediatable.php');
     include_once($path1 . 'duration.php');
-    include_once($path1 . 'image.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
     $label = $params->get('templatecode');
@@ -797,7 +798,8 @@ function getStudyExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'share.php');
     include_once($path1 . 'date.php');
     include_once($path1 . 'duration.php');
-    include_once($path1 . 'image.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
     $label = $params->get('study_detailtemplate');

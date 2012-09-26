@@ -19,9 +19,9 @@ defined('_JEXEC') or die;
 function getBooksLandingPage($params) {
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
-    $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-    include_once($path1 . 'image.php');
-    include_once($path1 . 'helper.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
+    $JView->loadHelper('helper');
     $book = null;
     $template = $params->get('studieslisttemplateid');
     $limit = $params->get('landingbookslimit');
@@ -77,65 +77,67 @@ function getBooksLandingPage($params) {
     $count = count($tresult);
     $t = 0;
     $i = 0;
-    $c = 0;
 
-    $book = "\n" . '<table class="landing_table" width="100%" ><tr>';
-    $showdiv = 0;
-    foreach ($tresult as &$b) {
-        if ($t >= $limit) {
-            if ($showdiv < 1) {
-                if ($i == 1) {
-                    $book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-                    $book .= "\n\t" . '</tr>';
-                };
-                if ($i == 2) {
-                    $book .= "\n\t\t" . '<td  class="landing_td"></td>';
-                    $book .= "\n\t" . '</tr>';
-                };
+    if ($count > 0):
+        $book = "\n" . '<table class="landing_table" width="100%" ><tr>';
+        $showdiv = 0;
+        foreach ($tresult as &$b) {
+            if ($t >= $limit) {
+                if ($showdiv < 1) {
+                    if ($i == 1) {
+                        $book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+                        $book .= "\n\t" . '</tr>';
+                    };
+                    if ($i == 2) {
+                        $book .= "\n\t\t" . '<td  class="landing_td"></td>';
+                        $book .= "\n\t" . '</tr>';
+                    };
 
 
-                $book .= "\n" . '</table>';
-                $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
-                $book .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+                    $book .= "\n" . '</table>';
+                    $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
+                    $book .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
+                    $i = 0;
+                    $showdiv = 1;
+                }
+            }
+            $book .= "\n\t\t" . '<td class="landing_td">';
+            $book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+
+            $book .= JText::sprintf($b->bookname);
+
+            $book .='</a>';
+
+            $book .= '</td>';
+            $i++;
+            $t++;
+            if ($i == 3 && $t != $limit && $t != $count) {
+                $book .= "\n\t" . '</tr><tr>';
                 $i = 0;
-                $showdiv = 1;
+            } elseif ($i == 3 || $t == $count || $t == $limit) {
+                $book .= "\n\t" . '</tr>';
+                $i = 0;
             }
         }
-        $book .= "\n\t\t" . '<td class="landing_td">';
-        $book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+        if ($i == 1) {
+            $book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+        };
+        if ($i == 2) {
+            $book .= "\n\t\t" . '<td  class="landing_td"></td>';
+        };
 
-        $book .= JText::sprintf($b->bookname);
+        $book .= "\n" . '</table>' . "\n";
 
-        $book .='</a>';
+        if ($showdiv == 1) {
 
-        $book .= '</td>';
-        $i++;
-        $t++;
-        $c++;
-        if ($i == 3 && $count != $c) {
-            $book .= "\n\t" . '</tr><tr>';
-            $i = 0;
-        } elseif($i == 3) {
-            $book .= "\n\t" . '</tr>';
-            $i = 0;
+            $book .= "\n\t" . '</div> <!-- close show/hide books div-->';
+            $showdiv = 2;
         }
-    }
-    if ($i == 1) {
-        $book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-    };
-    if ($i == 2) {
-        $book .= "\n\t\t" . '<td  class="landing_td"></td>';
-    };
-
-    $book .= "\n" . '</tr></table>' . "\n";
-
-    if ($showdiv == 1) {
-
-        $book .= "\n\t" . '</div> <!-- close show/hide books div-->';
-        $showdiv = 2;
-    }
-    $book .= '<div class="landing_separator"></div>';
+        $book .= '<div class="landing_separator"></div>';
+    else:
+        $book = '';
+    endif;
 
     return $book;
 }

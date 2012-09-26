@@ -180,14 +180,13 @@ class BiblestudyViewSermons extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'image.php');
+        JView::loadHelper('image');
 
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
 
         JHTML::_('behavior.mootools');
-        $css = $params->get('css'); 
+        $css = $params->get('css');
         if ($css <= "-1" ):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:

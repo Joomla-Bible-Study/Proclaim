@@ -17,7 +17,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'teacher.php');
 include_once($path1 . 'listing.php');
-include_once($path1 . 'image.php');
+
 jimport('joomla.application.component.view');
 
 /**
@@ -41,7 +41,7 @@ class BiblestudyViewTeacher extends JView {
 
         $mainframe = JFactory::getApplication();
         $pagebuilder = new JBSPagebuilder();
-
+        JView::loadHelper('image');
         $document = JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
@@ -97,8 +97,8 @@ class BiblestudyViewTeacher extends JView {
         }
         $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
         $largeimage = $images->getTeacherImage($item->image, $item->teacher_image);
-        $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '">';
-        $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '">';
+        $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+        $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
         //Check to see if com_contact used instead
         if ($item->contact) {
             require_once '/components/com_contact/models/contact.php';
@@ -109,7 +109,7 @@ class BiblestudyViewTeacher extends JView {
             $item->teachername = $this->contact->name;
             $item->email = $this->contact->email_to;
             $largeimage = $images->getImagePath($this->contact->image);
-            $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '">';
+            $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
             $item->information = $this->contact->misc;
             $item->phone = $this->contact->telephone;
             $cregistry = new JRegistry();

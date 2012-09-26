@@ -34,7 +34,8 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    include_once($path1 . 'image.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
 
     $db = JFactory::getDBO();
     switch ($rowid) {

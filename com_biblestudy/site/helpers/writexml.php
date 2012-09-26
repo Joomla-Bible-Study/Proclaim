@@ -20,7 +20,7 @@ function writeXML() {
     $files = array();
     $path1 = JPATH_SITE . '/components/com_biblestudy/helpers/';
     include_once($path1 . 'custom.php');
-    include_once($path1 . 'helper.php');
+    include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'helper.php');
     include_once($path1 . 'scripture.php');
     $admin_params = getAdminsettings();
     $config = JFactory::getConfig();

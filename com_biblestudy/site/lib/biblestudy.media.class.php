@@ -32,7 +32,7 @@ class jbsMedia {
 
         $template = JRequest::getInt('t', '1', 'get');
         $images = new jbsImages();
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once ($path1 . 'helper.php');
 
         //Here we get the administration row from the comnponent, and determine the download image to use

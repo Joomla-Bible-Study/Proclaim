@@ -18,8 +18,8 @@ include_once($path1 . 'scripture.php');
 include_once($path1 . 'duration.php');
 include_once($path1 . 'date.php');
 include_once($path1 . 'filesize.php');
-include_once($path1 . 'image.php');
-include_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'translated.php');
+include_once(BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'image.php');
+include_once(BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'translated.php');
 jimport('joomla.html.parameter');
 
 /**
@@ -81,13 +81,13 @@ class JBSPagebuilder {
         }
         if ($item->thumbnailm) {
             $image = $images->getStudyThumbnail($item->thumbnailm);
-            $page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->studytitle . '">';
+            $page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->studytitle . '" />';
         } else {
             $page->study_thumbnail = '';
         }
         if ($item->series_thumbnail) {
             $image = $images->getSeriesThumbnail($item->series_thumbnail);
-            $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
+            $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '" />';
         } else {
             $page->series_thumnail = '';
         }
@@ -100,7 +100,7 @@ class JBSPagebuilder {
         endif;
         if ($item->image || $item->thumb) {
             $image = $images->getTeacherImage($item->image, $item->thumb);
-            $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
+            $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '" />';
         } else {
             $page->teacherimage = '';
         }

@@ -22,9 +22,9 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
-    $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-    include_once($path1 . 'image.php');
-    include_once($path1 . 'helper.php');
+    $JView = new JView();
+    $JView->loadHelper('image');
+    $JView->loadHelper('helper');
     $topic = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid');
@@ -83,65 +83,66 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $count = count($tresult);
     $t = 0;
     $i = 0;
-    $c = 0;
 
-    $topic = "\n" . '<table class="landing_table" width="100%"><tr>';
-    $showdiv = 0;
-    foreach ($tresult as &$b) {
-        if ($t >= $limit) {
-            if ($showdiv < 1) {
-                if ($i == 1) {
-                    $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-                    $topic .= "\n\t" . '</tr>';
-                };
-                if ($i == 2) {
-                    $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
-                    $topic .= "\n\t" . '</tr>';
-                };
+    if ($count > 0):
+        $topic = "\n" . '<table class="landing_table" width="100%"><tr>';
+        $showdiv = 0;
+        foreach ($tresult as &$b) {
+            if ($t >= $limit) {
+                if ($showdiv < 1) {
+                    if ($i == 1) {
+                        $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+                        $topic .= "\n\t" . '</tr>';
+                    };
+                    if ($i == 2) {
+                        $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
+                        $topic .= "\n\t" . '</tr>';
+                    };
 
 
-                $topic .= "\n" . '</table>';
-                $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-                $topic .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+                    $topic .= "\n" . '</table>';
+                    $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
+                    $topic .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
+                    $i = 0;
+                    $showdiv = 1;
+                }
+            }
+            $topic .= "\n\t\t" . '<td class="landing_td">';
+            $topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0' . $langlink . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+
+            $topic .= getTopicItemTranslated($b);
+
+            $topic .='</a>';
+
+            $topic .= '</td>';
+            $i++;
+            $t++;
+            if ($i == 3 && $t != $limit && $t != $count) {
+                $topic .= "\n\t" . '</tr><tr>';
                 $i = 0;
-                $showdiv = 1;
+            } elseif ($i == 3 || $t == $count || $t == $limit) {
+                $topic .= "\n\t" . '</tr>';
+                $i = 0;
             }
         }
-        $topic .= "\n\t\t" . '<td class="landing_td">';
-        $topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0' . $langlink . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+        if ($i == 1) {
+            $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+        };
+        if ($i == 2) {
+            $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
+        };
 
-        $topic .= getTopicItemTranslated($b);
+        $topic .= "\n" . '</table>' . "\n";
 
-        $topic .='</a>';
+        if ($showdiv == 1) {
 
-        $topic .= '</td>';
-        $i++;
-        $t++;
-        $c++;
-        if ($i == 3 && $count != $c) {
-            $topic .= "\n\t" . '</tr><tr>';
-            $i = 0;
-        } elseif ($i == 3) {
-            $topic .= "\n\t" . '</tr>';
-            $i = 0;
+            $topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
+            $showdiv = 2;
         }
-    }
-    if ($i == 1) {
-        $topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-    };
-    if ($i == 2) {
-        $topic .= "\n\t\t" . '<td  class="landing_td"></td>';
-    };
-
-    $topic .= "\n" . '</tr></table>' . "\n";
-
-    if ($showdiv == 1) {
-
-        $topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
-        $showdiv = 2;
-    }
-    $topic .= '<div class="landing_separator"></div>';
-
+        $topic .= '<div class="landing_separator"></div>';
+    else:
+        $topic = '';
+    endif;
     return $topic;
 }

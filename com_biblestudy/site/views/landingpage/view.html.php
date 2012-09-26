@@ -35,8 +35,7 @@ class biblestudyViewLandingpage extends JView {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'image.php');
+        JView::loadHelper('image');
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
@@ -84,6 +83,9 @@ class biblestudyViewLandingpage extends JView {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
+        JView::loadHelper('helper');
+        $showhide = getShowhide();
+        $document->addScriptDeclaration($showhide);
         $css = $params->get('css');
 
         //Import Scripts

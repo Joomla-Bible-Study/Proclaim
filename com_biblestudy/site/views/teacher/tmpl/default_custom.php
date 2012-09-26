@@ -19,7 +19,6 @@ $admin_params = $this->admin_params;
 $params = $this->params;
 
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-include_once($path1 . 'image.php');
 include_once($path1 . 'teacher.php');
 
 $t = JRequest::getVar('t', 1, 'get', 'int');
