@@ -10,8 +10,12 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 // import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
+
+// Import library dependencies for CSS Fix
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Style Model class
@@ -140,6 +144,31 @@ class BiblestudyModelStyle extends JModelAdmin {
     protected function cleanCache($group = null, $client_id = 0) {
         parent::cleanCache('com_biblestudy');
         parent::cleanCache('mod_biblestudy');
+    }
+
+    public function fixcss($pks) {
+        // Sanitize the ids.
+        $pks = (array) $pks;
+        JArrayHelper::toInteger($pks);
+
+        if (empty($pks)) {
+            $this->setError(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
+            return false;
+        }
+        try {
+            foreach ($pks AS $id):
+                $parent = FALSE;
+                $filename = null;
+                jbsDBhelper::fixupcss($filename, $parent, null, $id);
+            endforeach;
+        } catch (Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
 }

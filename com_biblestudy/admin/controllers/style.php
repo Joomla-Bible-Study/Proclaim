@@ -20,15 +20,4 @@ jimport('joomla.application.component.controllerform');
  */
 class BiblestudyControllerStyle extends JControllerForm {
 
-    /**
-     * Tries to fix css renaming.
-     *
-     * @since	7.1.0
-     */
-    public function fixcss() {
-        $model = $this->getModel('styles');
-        $model->fixcss();
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=styles', false));
-    }
-
 }

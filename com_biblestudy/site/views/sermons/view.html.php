@@ -60,18 +60,17 @@ class BiblestudyViewSermons extends JView {
         $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
-        $items = $this->get('Items'); 
+        $items = $this->get('Items');
         $this->limitstart = JRequest::getVar('start', 'int');
-        $pagination = $this->get('Pagination'); 
-        $pagelinks = $pagination->getPagesLinks(); 
+        $pagination = $this->get('Pagination');
+        $pagelinks = $pagination->getPagesLinks();
         if ($pagelinks !== ''):
             $this->pagelinks = $pagelinks;
         endif;
         $this->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
         $this->assignRef('pagination', $pagination);
         //Load the Admin settings and params from the template
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $this->loadHelper('params');
+        JView::loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
         $admin_parameters = $this->get('Admin');
@@ -181,9 +180,6 @@ class BiblestudyViewSermons extends JView {
         }
 
         JView::loadHelper('image');
-
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $document = JFactory::getDocument();
 
         JHTML::_('behavior.mootools');
         $css = $params->get('css');

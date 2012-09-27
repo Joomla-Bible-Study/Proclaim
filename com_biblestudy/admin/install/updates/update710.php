@@ -10,6 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
 /**
  * Update for 7.1.0 class
  * @package BibleStudy.Admin
@@ -279,7 +281,12 @@ div.listingfooter ul li {
 }
 
 ';
-            return JBS710Update::fixupcss('biblestudy', true, $new710css);
+            if (jbsDBhelper::fixupcss('biblestudy', true, $new710css, null)) {
+                JBS710Update::reloadtable($result);
+                return TRUE;
+            } else {
+                return FALSE;
+            }
         } else {
             $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
             $db->setQuery($query);
@@ -313,45 +320,6 @@ div.listingfooter ul li {
             $table->store();
         } catch (Exception $e) {
             JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
-        }
-        return TRUE;
-    }
-
-    /**
-     *
-     */
-    public static function fixupcss($filename, $parent, $newcss, $id) {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('*')
-                ->from('#__bsms_styles');
-        if ($filename) {
-            $query->where('`filename` = "' . $filename . '"');
-        } else {
-            $query->where('`id` = "' . $id . '"');
-        }
-        $db->setQuery($query);
-        $result = $db->loadObject();
-        $oldcss = $result->stylecode;
-        $oldcss = str_replace("#bslisttable", ".bslisttable", $oldcss);
-        if ($parent || $newcss) {
-            $newcss = $db->escape($newcss) . ' ' . $oldcss;
-        } else {
-            $newcss = $oldcss;
-        }
-        $query = $db->getQuery(true);
-        $query->update('#__bsms_styles')
-                ->set('stylecode="' . $newcss . '"')
-                ->where('`filename` = "' . $filename . '"');
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
-
-            return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
-        }
-        JBS710Update::reloadtable($result);
-        if (!$parent) {
-            JError::raiseNotice(1, JText::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename);
         }
         return TRUE;
     }

@@ -19,7 +19,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewStyles extends JView {
+class BiblestudyViewStyles extends JViewLegacy {
 
     /**
      * Execute and display a template script.
@@ -86,7 +86,7 @@ class BiblestudyViewStyles extends JView {
 
         if ($this->canDo->get('core.edit')) {
             JToolBarHelper::divider();
-            JToolBarHelper::custom('style.fixcss', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
+            JToolBarHelper::custom('styles.fixcss', 'refresh', 'refresh', 'JBS_STY_CSS_FIX', true);
         }
     }
 
