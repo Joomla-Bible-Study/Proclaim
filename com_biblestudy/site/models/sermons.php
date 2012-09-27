@@ -50,6 +50,7 @@ class BiblestudyModelSermons extends JModelList {
                 'mediafile.downloads',
                 'study.chapter_begin',
                 'study.language',
+                'study.location_id',
                 'study.chapter_end'
             );
         }
@@ -105,6 +106,9 @@ class BiblestudyModelSermons extends JModelList {
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
 
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
+        
         $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
         $this->setState('filter.languages', $languages);
         /**
@@ -416,6 +420,11 @@ class BiblestudyModelSermons extends JModelList {
         if (!empty($topic))
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
 
+        //Filter by location
+        $location = $this->getState('filter.location');
+        if (!empty($locations))
+            $query->where('study.location_id = ' . (int)$location);
+        
         // Filter by language
         $language = $params->get('language', '*');
         if ($this->getState('filter.languages')) {
