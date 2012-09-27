@@ -59,52 +59,8 @@ class JBS710Update {
                     return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
                 }
             }
-            JBS710Update::fixupcss('biblestudy');
-            return TRUE;
-        } else {
-            $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
-            $db->setQuery($query);
-            if (!$db->execute()) {
-                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
-
-                return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
-            }
-            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
-            $db->setQuery($query);
-            $result = $db->loadObject();
-            JBS710Update::reloadtable($result);
-            JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
-            return TRUE;
-        }
-        //end if no new css file
-    }
-
-    /**
-     * Set table store()
-     * @param object $result
-     * @return boolean
-     */
-    private static function reloadtable($result) {
-        $db = JFactory::getDBO();
-        // Store new Recorde so it can be seen.
-        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
-        try {
-            $table->load($result->id);
-            $table->store();
-        } catch (Exception $e) {
-            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
-        }
-        return TRUE;
-    }
-
-    /**
-     *
-     */
-    public static function fixupcss($filename) {
-        $db = JFactory::getDBO();
-        //Add CSS to the file
-        $new710css = '
+            //Add CSS to the file
+            $new710css = '
 /* New Teacher Codes */
 #bsm_teachertable_list .bsm_teachername
 {
@@ -323,15 +279,66 @@ div.listingfooter ul li {
 }
 
 ';
+            return JBS710Update::fixupcss('biblestudy', true, $new710css);
+        } else {
+            $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+            }
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            JBS710Update::reloadtable($result);
+            JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
+            return TRUE;
+        }
+        //end if no new css file
+    }
+
+    /**
+     * Set table store()
+     * @param object $result
+     * @return boolean
+     */
+    private static function reloadtable($result) {
+        $db = JFactory::getDBO();
+        // Store new Recorde so it can be seen.
+        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
+        try {
+            $table->load($result->id);
+            $table->store();
+        } catch (Exception $e) {
+            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
+        }
+        return TRUE;
+    }
+
+    /**
+     *
+     */
+    public static function fixupcss($filename, $parent, $newcss, $id) {
+        $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__bsms_styles')
-                ->where('`filename` = "' . $filename . '"');
+                ->from('#__bsms_styles');
+        if ($filename) {
+            $query->where('`filename` = "' . $filename . '"');
+        } else {
+            $query->where('`id` = "' . $id . '"');
+        }
         $db->setQuery($query);
         $result = $db->loadObject();
         $oldcss = $result->stylecode;
         $oldcss = str_replace("#bslisttable", ".bslisttable", $oldcss);
-        $newcss = $db->escape($new710css) . ' ' . $oldcss;
+        if ($parent || $newcss) {
+            $newcss = $db->escape($newcss) . ' ' . $oldcss;
+        } else {
+            $newcss = $oldcss;
+        }
         $query = $db->getQuery(true);
         $query->update('#__bsms_styles')
                 ->set('stylecode="' . $newcss . '"')
@@ -343,6 +350,9 @@ div.listingfooter ul li {
             return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
         }
         JBS710Update::reloadtable($result);
+        if (!$parent) {
+            JError::raiseNotice(1, JText::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename);
+        }
         return TRUE;
     }
 

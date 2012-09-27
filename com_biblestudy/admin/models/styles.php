@@ -10,6 +10,9 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+// Import library dependencies for CSS Fix
+JLoader::register('JBS710Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/update710.php');
+
 jimport('joomla.application.component.modellist');
 
 /**
@@ -80,6 +83,21 @@ class BiblestudyModelStyles extends JModelList {
         }
 
         return $query;
+    }
+
+    /**
+     * Fix css
+     * @return boolean if it fixed.
+     * @since 7.1.0
+     */
+    public function fixcss() {
+        /*
+         * need to find a way to put this pull css file to fix.
+         */
+        $id = null;
+        $filename = 'biblestudy';
+        $parent = FALSE;
+        JBS710Update::fixupcss($filename, $parent , null , $id);
     }
 
 }

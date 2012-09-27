@@ -82,6 +82,12 @@ class BiblestudyViewStyles extends JView {
         } elseif ($this->canDo->get('core.edit.state')) {
             JToolBarHelper::trash('styles.trash');
         }
+
+
+        if ($this->canDo->get('core.edit')) {
+            JToolBarHelper::divider();
+            JToolBarHelper::custom('style.fixcss', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
+        }
     }
 
     /**
