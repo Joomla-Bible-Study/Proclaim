@@ -58,7 +58,7 @@ if (!$teacher->teacher_image) {
         $image = getImage($i_path);
     }
     ?>
-    <table id="bslisttable" cellspacing="0">
+    <table class="bslisttable" cellspacing="0">
         <?php
         $listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
         echo $listing;

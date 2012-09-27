@@ -232,153 +232,153 @@ div.listingfooter ul li {
 #bsdropdownmenu {
     margin-bottom: 10px;
 }
-#bslisttable {
+.bslisttable {
     margin: 0;
     border-collapse:separate;
 }
-#bslisttable th, #bslisttable td {
+.bslisttable th, .bslisttable td {
     text-align:left;
     padding:0 5px 0 5px;
     border:none;
 }
-#bslisttable .row1col1,
-#bslisttable .row2col1,
-#bslisttable .row3col1,
-#bslisttable .row4col1 {
+.bslisttable .row1col1,
+.bslisttable .row2col1,
+.bslisttable .row3col1,
+.bslisttable .row4col1 {
     border-left: grey 2px solid;
 }
-#bslisttable .lastcol {
+.bslisttable .lastcol {
     border-right: grey 2px solid;
 }
-#bslisttable .lastrow td {
+.bslisttable .lastrow td {
     border-bottom:2px solid grey;
     padding-bottom:7px;
 }
-#bslisttable th {
+.bslisttable th {
     background-color:#707070;
     font-weight:bold;
     color:white;
 
 }
-#bslisttable th.row1col1,
-#bslisttable th.row1col2,
-#bslisttable th.row1col3,
-#bslisttable th.row1col4 {
+.bslisttable th.row1col1,
+.bslisttable th.row1col2,
+.bslisttable th.row1col3,
+.bslisttable th.row1col4 {
     border-top: grey 2px solid;
     padding-top:3px;
 }
-#bslisttable th.firstrow {
+.bslisttable th.firstrow {
     border-bottom: grey 2px solid;
 }
-#bslisttable tr.lastrow th {
+.bslisttable tr.lastrow th {
     border-bottom:2px solid grey;
     padding-bottom:3px;
 }
 
-#bslisttable tr.bsodd td {
+.bslisttable tr.bsodd td {
     background-color:#FFFFFF;
 }
-#bslisttable tr.bseven td {
+.bslisttable tr.bseven td {
     background-color:#FFFFF0;
 }
 
-#bslisttable .date {
+.bslisttable .date {
     white-space:nowrap;
     font-size:1.2em;
     color:grey;
     font-weight:bold;
 }
-#bslisttable .scripture1 {
+.bslisttable .scripture1 {
     white-space:nowrap;
     color:#c02121;
     font-weight:bold;
 }
-#bslisttable .scripture2 {
+.bslisttable .scripture2 {
     white-space:nowrap;
     color:#c02121;
     font-weight:bold;
 }
-#bslisttable .title {
+.bslisttable .title {
     font-size:1.2em;
     color:#707070;
     font-weight:bold;
 }
-#bslisttable .series_text {
+.bslisttable .series_text {
     white-space:nowrap;
     color:grey;
 }
-#bslisttable .duration {
+.bslisttable .duration {
     white-space:nowrap;
     font-style:italic;
 }
-#bslisttable .studyintro {
+.bslisttable .studyintro {
 
 }
-#bslisttable .teacher {
+.bslisttable .teacher {
     white-space:nowrap;
 }
-#bslisttable .location_text {
+.bslisttable .location_text {
     white-space:nowrap;
 }
-#bslisttable .topic_text {
+.bslisttable .topic_text {
     white-space:nowrap;
 }
-#bslisttable .message_type {
+.bslisttable .message_type {
     white-space:nowrap;
 }
-#bslisttable .jbsmedia {
+.bslisttable .jbsmedia {
     white-space:nowrap;
 }
-#bslisttable .store {
+.bslisttable .store {
     white-space:nowrap;
 }
-#bslisttable .details-text {
+.bslisttable .details-text {
     white-space:nowrap;
 }
-#bslisttable .details-pdf {
+.bslisttable .details-pdf {
     white-space:nowrap;
 }
-#bslisttable .details-text-pdf {
+.bslisttable .details-text-pdf {
     white-space:nowrap;
 }
-#bslisttable .detailstable td {
+.bslisttable .detailstable td {
     border: none;
     padding: 0 2px 0 0;
 }
-#bslisttable .secondary_reference {
+.bslisttable .secondary_reference {
     white-space:nowrap;
 }
-#bslisttable .teacher-title-name {
+.bslisttable .teacher-title-name {
     white-space:nowrap;
 }
-#bslisttable .submitted {
+.bslisttable .submitted {
     white-space:nowrap;
 }
-#bslisttable .hits {
+.bslisttable .hits {
     white-space:nowrap;
 }
-#bslisttable .studynumber {
+.bslisttable .studynumber {
     white-space:nowrap;
 }
-#bslisttable .filesize {
+.bslisttable .filesize {
     white-space:nowrap;
 }
-#bslisttable .custom {
+.bslisttable .custom {
     white-space:nowrap;
 }
 /* change form .commentshead to #commentshead */
-#bslisttable #commentshead {
+.bslisttable #commentshead {
     font-size: 2em;
     font-weight:bold;
 }
-#bslisttable .thumbnail {
+.bslisttable .thumbnail {
     white-space:nowrap;
 }
-#bslisttable .mediatable td {
+.bslisttable .mediatable td {
     border: none;
     padding: 0 6px 0 0;
 }
-#bslisttable .mediatable span.bsfilesize {
+.bslisttable .mediatable span.bsfilesize {
     font-size:0.6em;
     position:relative; bottom: 7px;
 }

@@ -121,7 +121,7 @@ $listingcall = JView::loadHelper('listing');
         </div><!--dropdownmenu-->
     </fieldset>
     <div class="clr"></div>
-    <table id="bslisttable" cellspacing="0">
+    <table class="bslisttable" cellspacing="0">
         <thead>
         <?php
         if (isset($this->items['0'])):

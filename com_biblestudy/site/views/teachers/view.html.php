@@ -90,7 +90,7 @@ class BiblestudyViewTeachers extends JView {
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-
+//
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
@@ -106,12 +106,10 @@ class BiblestudyViewTeachers extends JView {
 
         foreach ($items as $i => $item) {
             $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-            $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . ' alt="' . $item->teachername . '" />';
+            $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $item->teachername . '" />';
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
             $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
         }
-        $app = JFactory::getApplication();
-        $menu = $app->getMenu();
 
         $pagination = $this->get('Pagination');
         $this->page = new stdClass();

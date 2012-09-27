@@ -27,7 +27,7 @@ if (!$t) {
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
             <?php
             echo getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
-            ?> <table id="bslisttable" cellspacing="0"> <?php
+            ?> <table class="bslisttable" cellspacing="0"> <?php
         $studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
         echo $listing;
         echo $studies;

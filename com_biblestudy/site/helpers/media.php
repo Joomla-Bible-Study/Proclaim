@@ -76,13 +76,13 @@ function getInternalPlayer($media, $params, $admin_params) {
 
     $player_width = $params->get('player_width', 290);
     $media1_link =
-            '<script language="JavaScript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
+            '<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
 		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/player.swf" id="audioplayer' . $row_count . '" height="24" width="' . $params->get('player_width', 290) . '">
-		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/player.swf">
-		    <param name="FlashVars" value="playerID=audioplayer' . $row_count . '&amp;soundFile=' . $path1 . '">
-		    <param name="quality" value="high">
-		    <param name="menu" value="false">
-		    <param name="wmode" value="transparent">
+		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/player.swf" />
+		    <param name="FlashVars" value="playerID=audioplayer' . $row_count . '&soundFile=' . $path1 . '" />
+		    <param name="quality" value="high" />
+		    <param name="menu" value="false" />
+		    <param name="wmode" value="transparent" />
 		    </object> ';
 
     return $media1_link;
@@ -143,9 +143,9 @@ function getDownloadLink($media, $params, $admin_params) {
 
         $out = '';
         if ($compat_mode == 0) {
-            $out .='<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=sermons&controller=sermons&task=download">';
+            $out .='<a href="index.php?option=com_biblestudy&amp;id=' . $media->id . '&amp;view=sermons&amp;controller=sermons&amp;task=download">';
         } else {
-            $out .='<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
+            $out .='<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
         }
 
         $out .= '<img src="' . $d_path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
@@ -264,7 +264,7 @@ function getTypeIcon($media, $params, $admin_params) {
  */
 function getPDF($row, $params, $admin_params) {
     //PDF View
-    $url = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
+    $url = 'index.php?option=com_biblestudy&amp;view=sermon&amp;id=' . $row->id . '&amp;format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
     $text = JHTML::_('image.site', 'pdf24.png', '/media/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), 'border=0');
     $attribs['title'] = JText::_('JBS_MED_PDF');

@@ -37,7 +37,7 @@ switch ($this->params->get('link_comments', 0)) {
             break;
     }
     ?>
-    <div id="commentstable" ><table id="bslisttable" cellspacing="0" border="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
+    <div id="commentstable" ><table class="bslisttable" cellspacing="0" border="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
                         <?php echo JText::_('JBS_CMN_COMMENTS'); ?>
                     </th></tr></thead>
             <?php
@@ -145,7 +145,7 @@ switch ($this->params->get('link_comments', 0)) {
                                 if ($this->params->get('use_captcha') > 0) {
                                     // Begin captcha
                                     ?>
-                                    <script type="text/javascript">
+                                    <script language="javascript" type="text/javascript">
                                         var RecaptchaOptions = {
                                             theme : 'white'
                                         };

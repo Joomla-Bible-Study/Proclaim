@@ -515,13 +515,13 @@ class jbsMedia {
             case 7: //Legacy internal player
                 switch ($player->type) {
                     case 2:
-                        $playercode = '<script language="JavaScript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
+                        $playercode = '<script type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
         		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id . '" border="0" height="24" width="' . $player->playerwidth . '">
-        		<param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf">
-        		<param name="FlashVars" value="playerID=' . $media->id . '&amp;amp;soundFile=' . $path . '">
-        		<param name="quality" value="high">
-        		<param name="menu" value="false">
-        		<param name="wmode" value="transparent">
+        		<param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" />
+        		<param name="FlashVars" value="playerID=' . $media->id . '&amp;amp;soundFile=' . $path . '" />
+        		<param name="quality" value="high" />
+        		<param name="menu" value="false" />
+        		<param name="wmode" value="transparent" />
         		</object>
                 ';
                         return $playercode;

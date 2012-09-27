@@ -26,7 +26,7 @@ $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 //Errors when using local swfobject.js file.  IE 6 doesn't work
 // If this is a direct new window then all we need to do is perform hitPlay and close this window
 if ($close == 1) {
-    echo JHTML::_('content.prepare', '<script language=javascript>window.close();</script>');
+    echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 }
 
 
@@ -111,7 +111,7 @@ if ($itemparams->get('autostart') == 1) {
     $footertext = '';
 
     // Need to add in template
-    ?><body bgcolor='<?php echo $params->get('popupbackground', 'black') ?>'>
+    ?><body style="background-color:<?php echo $params->get('popupbackground', 'black') ?>">
         <?php
         $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
 
@@ -142,7 +142,7 @@ if ($itemparams->get('autostart') == 1) {
                        width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' style="padding: 10px">
                     <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?></video>
             </div>
-            <script type='text/javascript'>
+            <script language="javascript" type="text/javascript">
                 jwplayer('placeholder').setup({
                     flashplayer: '<?php echo JURI::base() ?>media/com_biblestudy/player/player.swf',
                     autostart:'<?php echo $autostart ?>'
@@ -172,13 +172,13 @@ if ($itemparams->get('autostart') == 1) {
         //Legacy Player (since JBS 6.2.2)
         if ($player == 7) {
             ?>
-            <script language="JavaScript" src="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/audio-player.js"></script>
+            <script language="javascript" type="text/javascript" src="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/audio-player.js"></script>
             <object type="application/x-shockwave-flash" data="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf" id="audioplayer<?php echo $media->id ?>" height="24" width="<?php echo $playerwidth ?>">
-                <param name="movie" value="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf">
-                <param name="FlashVars" value="playerID=<?php echo $media->id ?>&soundFile=<?php echo $path1 ?>">
-                <param name="quality" value="high">
-                <param name="menu" value="false">
-                <param name="wmode" value="transparent">
+                <param name="movie" value="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf" />
+                <param name="FlashVars" value="playerID=<?php echo $media->id ?>&amp;soundFile=<?php echo $path1 ?>" />
+                <param name="quality" value="high" />
+                <param name="menu" value="false" />
+                <param name="wmode" value="transparent" />
             </object>
             <?php
         }
@@ -186,7 +186,6 @@ if ($itemparams->get('autostart') == 1) {
             echo $media->mediacode;
         }
         ?>
-
         <?php // Footer     ?>
 </div>
 <div class="popupfooter">

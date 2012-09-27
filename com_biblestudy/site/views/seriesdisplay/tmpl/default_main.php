@@ -38,7 +38,7 @@ if (!$t) {
                         break;
 
                     case 1:
-                        ?></tbody></table> <table id="bslisttable" cellspacing="0"><tr><td><?php
+                        ?></tbody></table> <table class="bslisttable" cellspacing="0"><tr><td><?php
                 $headerCall = JView::loadHelper('header');
                 $header = getHeader($this->seriesstudies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
                 echo $header;
