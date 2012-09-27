@@ -66,9 +66,9 @@ $studytitle = str_replace($badchars, ' ', $media->studytitle);
 $studyintro = str_replace($badchars, ' ', $media->studyintro);
 $images = new jbsImages();
 $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
-$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '">';
+$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '" />';
 $image = $images->getTeacherThumbnail($media->teacher_thumbnail, $media->thumb);
-$this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $media->teachername . '">';
+$this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $media->teachername . '" />';
 $path1 = $media->spath . $media->fpath . $media->filename;
 if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
     $path1 = 'http://' . $path1;
@@ -139,7 +139,7 @@ if ($itemparams->get('autostart') == 1) {
             <div class='playeralign'>
                 <video height="<?php echo $playerheight; ?>"
                        poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
-                       width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' sytle="padding: 10px">
+                       width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' style="padding: 10px">
                     <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?></video>
             </div>
             <script type='text/javascript'>

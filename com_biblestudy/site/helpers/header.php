@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @return string
  */
 function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule) {
-    if(!$row){
+    if (!$row) {
         return;
     }
     //$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
@@ -155,16 +155,16 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
     }
 
     if ($nh) {
-        $listing = '<thead><tr>';
+        $listing = '<tr>';
         while ($columns > 0) {
             $listing .= '<th class="firstrow"></th>';
             $columns = $columns - 1;
         }
-        $listing .= '</tr></thead>';
+        $listing .= '</tr>';
     } else {
         //here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
         $lastrow = 0;
-        $listing = '<thead><tr';
+        $listing = '<tr';
         if ($rows == 1) {
             $listing .= ' class = "lastrow"';
         }
@@ -412,9 +412,7 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
             }
             $listing .= getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
         }
-        $listing .= '</tr>
-	';
-        $listing .= '</thead>';
+        $listing .= '</tr>';
     }//end of if else for $nh
     return $listing;
 }
@@ -434,7 +432,7 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
  * @return string
  */
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template) {
-    $headercell = '<th id="';
+    $headercell = '<th ';
     $elementid = new stdClass();
     if ($rowid == '20') {
         $elementid->headertext = JText::_('JBS_CMN_MEDIA');
@@ -442,13 +440,11 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
     } else {
         $elementid = getElementid($rowid, $row, $params, $admin_params, $template);
     }
-
+    //dump($rowid, 'elementid');
     if (!isset($elementid->id)) {
-        $headercell .= 'customhead';
-    } else {
-        $headercell .= $elementid->id . 'head';
+        //$headercell .= 'customhead';
     }
-    $headercell .= '" class="' . $rowcolid;
+    $headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
     if ($lastcol == 1) {
         $headercell .= ' lastcol';
     }

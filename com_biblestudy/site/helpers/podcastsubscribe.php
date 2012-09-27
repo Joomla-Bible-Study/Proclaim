@@ -145,7 +145,7 @@ class podcastSubscribe {
     public static function buildPodcastImage($podcastimagefromdb = 'null', $words = 'null') {
         $images = new jbsImages();
         $image = $images->getMediaImage($podcastimagefromdb);
-        $podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $words . '" title="' . $words . '">';
+        $podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $words . '" title="' . $words . '" />';
 
         return $podcastimage;
     }

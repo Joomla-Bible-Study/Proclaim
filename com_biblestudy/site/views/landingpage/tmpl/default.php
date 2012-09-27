@@ -21,13 +21,13 @@ JView::loadHelper('listing');
             if ($this->params->get('show_page_image') > 0) {
                 if (isset($this->main->path)) {
                     ?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
+                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
                     <?php
                     //End of column for logo
                 }
             }
             if ($this->params->get('show_page_title') > 0) {
-                //echo $this->params->get('page_title');
+                echo $this->params->get('page_title');
             }
             //echo "\n";
             ?>

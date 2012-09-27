@@ -93,6 +93,6 @@ function getTitle($params, $row, $admin_params, $template) {
         }
         $title .= '</td></tr>';
     } // end of if title2
-    $title .= '</table>';
+    $title .= '</tbody></table>';
     return $title;
 }

@@ -37,7 +37,7 @@ $listingcall = JView::loadHelper('listing');
             <?php
             if ($this->params->get('show_page_image') > 0) {
                 ?>
-                <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" alt="Bible Study" />
+                <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
                 <?php
                 //End of column for logo
             }
@@ -50,8 +50,7 @@ $listingcall = JView::loadHelper('listing');
         </h1>
         <?php
         if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-            // @todo $teacher_call look like it is not used?
-            $teacher_call = JView::loadHelper('teacher');
+            JView::loadHelper('teacher');
             $teacher = getTeacher($params, $id = null, $this->admin_params);
             if ($teacher) {
                 echo $teacher;
@@ -70,7 +69,7 @@ $listingcall = JView::loadHelper('listing');
         </p>
     </div>
     <fieldset id="filter-bar">
-        <div id="filter-select fltrt">
+        <div class="filter-select fltrt">
             <?php
             if ($this->params->get('use_go_button') > 0) {
                 echo $this->page->gobutton;
@@ -123,6 +122,7 @@ $listingcall = JView::loadHelper('listing');
     </fieldset>
     <div class="clr"></div>
     <table id="bslisttable" cellspacing="0">
+        <thead>
         <?php
         if (isset($this->items['0'])):
             JView::loadHelper('header');
@@ -130,6 +130,7 @@ $listingcall = JView::loadHelper('listing');
             echo $header;
         endif;
         ?>
+        </thead>
         <tbody>
 
             <?php

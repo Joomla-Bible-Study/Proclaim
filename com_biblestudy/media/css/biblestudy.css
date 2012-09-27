@@ -366,7 +366,8 @@ div.listingfooter ul li {
 #bslisttable .custom {
     white-space:nowrap;
 }
-#bslisttable .commentshead {
+/* change form .commentshead to #commentshead */
+#bslisttable #commentshead {
     font-size: 2em;
     font-weight:bold;
 }
@@ -723,7 +724,8 @@ div.listingfooter ul li {
 #bsmsmoduletable .custom {
     white-space:nowrap;
 }
-#bsmsmoduletable .commentshead {
+/* change form .commentshead to #commentshead */
+#bsmsmoduletable #commentshead {
     font-size: 2em;
     font-weight:bold;
 }
@@ -928,7 +930,8 @@ div.listingfooter ul li {
 #seriesstudytable .custom {
     white-space:nowrap;
 }
-#seriesstudytable .commentshead {
+/* change form .commentshead to #commentshead */
+#seriesstudytable #commentshead {
     font-size: 2em;
     font-weight:bold;
 }

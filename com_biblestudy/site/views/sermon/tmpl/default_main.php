@@ -79,47 +79,45 @@ $sharecall = JView::loadHelper('share');
             ?>
         </thead>
         <tbody>
-
-            <?php
-            if ($this->params->get('list_items_view') == 1) {
-                echo '<tr class="bseven"><td class="media">';
-                require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-                $media = new jbsMedia();
-                $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
-                echo $listing;
-                echo '</td></tr>';
+            <?php if ($this->params->get('list_items_view') == 1) { ?> <!-- Media table listing view -->
+                        <?php
+                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+                        $media = new jbsMedia();
+                        $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
+                        echo $listing;
+                        ?>
+                <?php
             }
             if ($params->get('list_items_view') == 0) {
-                echo '<tr class="bseven"><td class="media">';
-                $oddeven = 'bsodd';
-                $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-                echo $listing;
-                echo '</td></tr>';
-            }
-            ?>
+                ?><!-- List items view -->
+                        <?php
+                        $oddeven = 'bsodd';
+                        $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+                        echo $listing;
+                        ?>
+    <?php } ?>
         </tbody>
     </table>
     <?php
     echo $this->passage;
-    ?></td></tr><tr><td><?php
     if ($this->params->get('show_scripture_link') > 0) {
         ?>
-            <div sytle="width:80%">
-                <?php echo $this->article->studytext; ?>
-            </div>
-            <?php
-        } else {
-            echo $this->study->studytext;
-        }
-        ?>
+        <div style="width:80%">
+        <?php echo $this->article->studytext; ?>
+        </div>
         <?php
-        if ($this->params->get('showrelated') == 2) {
-            echo $this->related;
-        }
-        ?>
-        <?php
-        if ($this->params->get('showpodcastsubscribedetails') == 2) {
-            echo $this->subscribe;
-        }
-        ?>
+    } else {
+        echo $this->study->studytext;
+    }
+    ?>
+    <?php
+    if ($this->params->get('showrelated') == 2) {
+        echo $this->related;
+    }
+    ?>
+    <?php
+    if ($this->params->get('showpodcastsubscribedetails') == 2) {
+        echo $this->subscribe;
+    }
+    ?>
 </div>

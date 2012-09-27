@@ -101,11 +101,9 @@ class showScripture {
      * @return string
      */
     function getLink($row, $reference) {
-        $passage = '<div class = passage>';
-        //$passage .= '<a href="#" onclick="';
+        $passage = '<div class="passage">';
         $passage .= '<a href="' . $this->link . '"';
         $passage .=" onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;";
-        // $rel = "{handler: 'iframe', size: {x: 800, y: 500}}";
         $passage .= '">' . JText::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '</a>';
         $passage .= '</div>';
         return $passage;
@@ -142,7 +140,7 @@ class showScripture {
      * @return string
      */
     function getBiblegateway($reference, $version) {
-        $link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
+        $link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&amp;version=" . $version . ";&amp;interface=print";
         return $link;
     }
 

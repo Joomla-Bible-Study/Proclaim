@@ -106,10 +106,10 @@ class BiblestudyViewSeriesdisplays extends JView {
         foreach ($items AS $item) {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
             $seriesimage = $images->getSeriesThumbnail($item->series_thumbnail);
-            $item->image = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '">';
+            $item->image = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
             $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
             $teacherimage = $images->getTeacherImage($item->thumb, $image2 = null);
-            $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="' . $teacherimage->width . '">';
+            $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="' . $teacherimage->width . '" alt="" />';
         }
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
@@ -142,7 +142,7 @@ class BiblestudyViewSeriesdisplays extends JView {
 
         //Get the main study list image
         $mainimage = $images->mainStudyImage();
-        $this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '">';
+        $this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '" alt="" />';
 
         $this->assignRef('main', $main);
 

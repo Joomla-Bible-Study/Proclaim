@@ -30,7 +30,7 @@ $listingcall = JView::loadHelper('serieslist');
                 <?php
                 if ($this->params->get('show_page_image_series') > 0) {
                     ?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
+                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('series_title') ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
                     <?php
                     //End of column for logo
                 }

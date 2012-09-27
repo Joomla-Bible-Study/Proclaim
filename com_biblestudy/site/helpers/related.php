@@ -192,7 +192,7 @@ class relatedStudies {
         }
         $related .= '</select>';
 
-        $relatedlinks = '<div class="related"><form >' . $related . '</form></div>';
+        $relatedlinks = '<div class="related"><form action="#">' . $related . '</form></div>';
         return $relatedlinks;
     }
 

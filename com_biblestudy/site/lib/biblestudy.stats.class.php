@@ -75,7 +75,7 @@ class jbStats {
             else
                 $total = $result->added;
             $selectvalue = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
-            $selectdisplay = '<strong>' . $name . '</strong> - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
+            $selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
             $final2 = array('score' => $total, 'select' => $selectvalue, 'display' => $selectdisplay);
             $final[] = $final2;
         }

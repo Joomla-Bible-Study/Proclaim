@@ -152,7 +152,7 @@ function getMediatable($params, $row, $admin_params) {
 
                 if ($params->get('direct_internal', 0) == 1) {
                     $media1_link =
-                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=" . $Itemid . "&template=" . $template . "&mediaid=" . $media->id . "', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid=" . $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 
 
                     if ($type == 0) {
@@ -165,7 +165,7 @@ function getMediatable($params, $row, $admin_params) {
                             . '" height="' . $height . '" border="0" /></a>';
                 }
 
-                $media1_link .= '<a href="' . $path1 . '" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid=' . $media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' . $media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
+                $media1_link .= '<a href="' . $path1 . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' . $media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' . $media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
 
                 break;
 
@@ -173,7 +173,7 @@ function getMediatable($params, $row, $admin_params) {
 
                 if ($type == 1) {
                     $media1_link =
-                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=2&view=popup&Itemid=" . $Itemid . "&template=" . $template . "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=2&amp;view=popup&amp;Itemid=" . $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
                 } else {
                     $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
                 }
@@ -211,11 +211,11 @@ function getMediatable($params, $row, $admin_params) {
             $height = $download_tmp->height;
 
             if ($compat_mode == 0) {
-                $downloadlink = '<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=sermons&controller=sermons&task=download">';
+                $downloadlink = '<a href="index.php?option=com_biblestudy&amp;id=' . $media->id . '&amp;view=sermons&amp;controller=sermons&amp;task=download">';
             } else {
-                $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
+                $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
             }
-            $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+            $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '"   alt"' . $media->malttext . '"  /></a>';
         }
         switch ($link_type) {
             case 0:
@@ -271,10 +271,10 @@ function getMediatable($params, $row, $admin_params) {
  * @return string
  */
 function getDocman($media, $width, $height, $src, $duration, $filesize) {
-    $docman = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id . '"
+    $docman = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
             . '" alt="' . $media->malttext . ' ' . $duration . ' ' . $filesize . '" width="' . $width
-            . '" height="' . $height . '" border="0" /></a>';
+            . '" height="' . $height . '" border="0"  alt"' . $media->malttext . '" /></a>';
 
 
     return $docman;
@@ -289,9 +289,9 @@ function getDocman($media, $width, $height, $src, $duration, $filesize) {
  * @return string
  */
 function getArticle($media, $width, $height, $src) {
-    $article = '<a href="index.php?option=com_content&view=article&id=' . $media->article_id . '"
+    $article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-            . '" height="' . $height . '" border="0" /></a>';
+            . '" height="' . $height . '" border="0"  alt"' . $media->malttext . '" /></a>';
 
     return $article;
 }
@@ -307,9 +307,9 @@ function getArticle($media, $width, $height, $src) {
  */
 function getVirtuemart($media, $width, $height, $src, $params) {
 
-    $vm = '<a href="index.php?option=com_virtuemart&page=shop.product_details&flypage=' . $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id . '"
+    $vm = '<a href="index.php?option=com_virtuemart&amp;page=shop.product_details&amp;flypage=' . $params->get('store_page', 'flypage.tpl') . '&amp;product_id=' . $media->virtueMart_id . '"
 		alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-            . '" height="' . $height . '" border="0" /></a>';
+            . '" height="' . $height . '" border="0"  alt"' . $media->malttext . '" /></a>';
 
     return $vm;
 }
