@@ -585,7 +585,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                 }
 
                 $series .= '</div>';
-                $series .= '<div id="landing_separator"></div>';
+                $series .= '<div class="landing_separator"></div>';
                 break;
         }
     else:
