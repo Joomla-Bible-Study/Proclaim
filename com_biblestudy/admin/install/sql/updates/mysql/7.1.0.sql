@@ -26,7 +26,7 @@ UPDATE `#__bsms_comments` SET `language` = '*' WHERE `#__bsms_comments`.`languag
 --
 -- Locations Table
 --
-ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` int(3);
+ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` int(3) DEFAULT '1';
 
 --
 -- Media Table
@@ -47,7 +47,7 @@ UPDATE `#__bsms_mediafiles` SET `language` = '*' WHERE `#__bsms_mediafiles`.`lan
 --
 -- Message Type Table
 --
-ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT NULL;
+ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 
 --
 -- MimType Table
@@ -84,7 +84,7 @@ ALTER TABLE `#__bsms_series` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 
 
 UPDATE `#__bsms_series` SET `language` = '*' WHERE `#__bsms_series`.`language` = '';
 
-ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3) DEFAULT NULL;
+ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 
 --
 -- Servers Table
@@ -154,7 +154,7 @@ ALTER TABLE `#__bsms_teachers` ADD COLUMN `link3` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `linklabel3` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `contact` int(11);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `address` mediumtext NOT NULL;
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `landing_show` int(3) DEFAULT NULL;
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `landing_show` int(3) DEFAULT '1';
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `address1` mediumtext NOT NULL;
 UPDATE `#__bsms_teachers` SET `language` = '*' WHERE `#__bsms_teachers`.`language` = '';
 
