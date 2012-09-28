@@ -276,13 +276,12 @@ class JBS710Update {
 }
 
 div.listingfooter ul li {
-    float: left;
     list-style: none outside none;
 }
 
 ';
             if (jbsDBhelper::fixupcss('biblestudy', true, $new710css, null)) {
-                JBS710Update::reloadtable($result);
+                jbsDBhelper::reloadtable($result, 'Style');
                 return TRUE;
             } else {
                 return FALSE;
@@ -298,30 +297,11 @@ div.listingfooter ul li {
             $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
             $db->setQuery($query);
             $result = $db->loadObject();
-            JBS710Update::reloadtable($result);
+            jbsDBhelper::reloadtable($result, 'Style');
             JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
             return TRUE;
         }
         //end if no new css file
-    }
-
-    /**
-     * Set table store()
-     * @param object $result
-     * @return boolean
-     */
-    private static function reloadtable($result) {
-        $db = JFactory::getDBO();
-        // Store new Recorde so it can be seen.
-        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
-        try {
-            $table->load($result->id);
-            $table->store();
-        } catch (Exception $e) {
-            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
-        }
-        return TRUE;
     }
 
 }

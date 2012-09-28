@@ -200,8 +200,8 @@
 }
 
 .fltlft {
-  float:left;
-  padding-right: 5px;
+    float:left;
+    padding-right: 5px;
 }
 
 /* Listing Page Items */
@@ -210,7 +210,6 @@
 }
 
 div.listingfooter ul li {
-    float: left;
     list-style: none outside none;
 }
 
@@ -366,8 +365,7 @@ div.listingfooter ul li {
 .bslisttable .custom {
     white-space:nowrap;
 }
-/* change form .commentshead to #commentshead */
-.bslisttable #commentshead {
+.bslisttable .commentshead {
     font-size: 2em;
     font-weight:bold;
 }
@@ -456,14 +454,6 @@ div.listingfooter ul li {
     color:grey;
     font-weight:bold;
 }
-
-#bsmsmoduletable .series {
-    white-space:nowrap;
-    font-size:1em;
-    color:grey;
-    font-weight:bold;
-}
-
 #bsmsdetailstable .scripture1 {
     white-space:nowrap;
     color:#c02121;
@@ -724,8 +714,7 @@ div.listingfooter ul li {
 #bsmsmoduletable .custom {
     white-space:nowrap;
 }
-/* change form .commentshead to #commentshead */
-#bsmsmoduletable #commentshead {
+#bsmsmoduletable .commentshead {
     font-size: 2em;
     font-weight:bold;
 }
@@ -930,8 +919,7 @@ div.listingfooter ul li {
 #seriesstudytable .custom {
     white-space:nowrap;
 }
-/* change form .commentshead to #commentshead */
-#seriesstudytable #commentshead {
+#seriesstudytable .commentshead {
     font-size: 2em;
     font-weight:bold;
 }
@@ -1127,7 +1115,7 @@ div.listingfooter ul li {
 .landinglist {
 
 }
-.landing_label {
+#landing_label {
 
 }
 .landing_item {
@@ -1157,7 +1145,7 @@ div.listingfooter ul li {
 
 }
 
-.landing_td {
+#landing_td {
     width: 33%;
 }
 
@@ -1206,4 +1194,5 @@ p.popupfooter {
 }
 
 #recaptcha_widget_div {
-    position:static !important;}
+    position:static !important;
+}

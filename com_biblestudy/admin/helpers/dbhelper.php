@@ -202,6 +202,8 @@ class jbsDBhelper {
      * @since 7.1.0
      */
     public static function fixupcss($filename, $parent, $newcss, $id) {
+
+        /* Start by getting exesting Style */
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*')
@@ -214,23 +216,58 @@ class jbsDBhelper {
         $db->setQuery($query);
         $result = $db->loadObject();
         $oldcss = $result->stylecode;
-        $oldcss = str_replace("#bslisttable", ".bslisttable", $oldcss);
+
+        /* Now the arrays of changes that need to be done. */
+        $oldlines = array(".bsm_teachertable_list", "#bslisttable", "#bslisttable", "#landing_table", "#landing_separator", "#landing_item", "#landing_title", "#landinglist");
+        $newlines = array("#bsm_teachertable_list", ".bslisttable", ".bslisttable", ".landing_table", ".landing_separator", ".landing_item", ".landing_title", ".landinglist");
+        $oldcss = str_replace($oldlines, $newlines, $oldcss);
+
+        /* now see if we are adding newcss to the db css */
         if ($parent || $newcss) {
             $newcss = $db->escape($newcss) . ' ' . $oldcss;
         } else {
             $newcss = $oldcss;
         }
+
+        /* no apply the new css back to the table */
         $query = $db->getQuery(true);
         $query->update('#__bsms_styles')
-                ->set('stylecode="' . $newcss . '"')
-                ->where('`filename` = "' . $filename . '"');
+                ->set('stylecode="' . $newcss . '"');
+        if ($filename) {
+            $query->where('`filename` = "' . $filename . '"');
+        } else {
+            $query->where('`id` = "' . $id . '"');
+        }
         $db->setQuery($query);
         if (!$db->execute()) {
             JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
             return FALSE;
         }
+
+        /* If we are not coming from the upgrade scripts we update the table and let them know what was updated. */
         if (!$parent) {
+            jbsDBhelper::reloadtable($result, 'Style');
             JError::raiseNotice(1, JText::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename);
+        }
+        return TRUE;
+    }
+
+    /**
+     * Set table store()
+     * @param object $result Objectlist that we will get the id from.
+     * @param string $table Table to be reloaded.
+     * @return boolean
+     */
+    public static function reloadtable($result, $table) {
+        $db = JFactory::getDBO();
+        // Store new Recorde so it can be seen.
+        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
+        try {
+            $table->load($result->id);
+            $table->store();
+        } catch (Exception $e) {
+            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
         }
         return TRUE;
     }

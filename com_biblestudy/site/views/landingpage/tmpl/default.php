@@ -125,14 +125,14 @@ JView::loadHelper('listing');
             }
             ?>
             <!-- Wrap each in a DIV... -->
-            <div id="landing_item<?php echo $i; ?>">
-                <div id="landing_title<?php echo $i; ?>">
+            <div class="landing_item">
+                <div class="landing_title">
                     <?php
                     echo $params->get($showIt . 'label');
                     echo "\n";
                     ?>
                 </div> <!-- end div id="landing_title" -->
-                <div id="landinglist<?php echo $i; ?>">
+                <div class="landinglist">
                     <?php
                     if (isset($showhideall)) {
                         echo $showhideall;
@@ -141,8 +141,8 @@ JView::loadHelper('listing');
                         echo $heading;
                     }
                     ?>
-                </div> <!-- end div id="landinglist"<?php echo $i; ?> -->
-            </div><!-- end div id="landing_item"<?php echo $i; ?> -->
+                </div> <!-- end div class="landinglist" -->
+            </div><!-- end div class="landing_item" -->
             <?php
         }
     } // End Loop for the landing items

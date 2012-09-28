@@ -163,7 +163,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                             };
 
                             $teacher .= "\n" . '</table>';
-                            $teacher .= "\n\t" . '<div class="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
+                            $teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
                             $teacher .= "\n" . '<table width = "100%" class="landing_table"><tr>';
 
                             $i = 0;
