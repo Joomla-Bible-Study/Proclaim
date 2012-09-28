@@ -92,7 +92,7 @@ class jbStats {
         check_dberror("Unable to load messages.");
         $top_studies = null;
         foreach ($results as $result) {
-            $top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&view=message&task=edit&layout=form&cid[]=' . $result->id . '">' . $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+            $top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&task=message.edit&id=' . $result->id . '">' . $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
         }
         return $top_studies;
     }
@@ -159,7 +159,7 @@ class jbStats {
             $top_studies = JText::_('JBS_CPL_NO_INFORMATION');
         } else {
             foreach ($results as $result) {
-                $top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&view=message&task=edit&layout=form&cid[]=' . $result->id . '">' . $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+                $top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&task=message.edit&id=' . $result->id . '">' . $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
             }
         }
         return $top_studies;
@@ -187,7 +187,7 @@ class jbStats {
         check_dberror("Unable to load messages.");
         $top_studies = null;
         foreach ($results as $result) {
-            $top_studies .= $result->downloads . ' - <a href="index.php?option=com_biblestudy&view=message&task=edit&layout=form&cid[]=' . $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
+            $top_studies .= $result->downloads . ' - <a href="index.php?option=com_biblestudy&task=message.edit&d=' . $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
         }
         return $top_studies;
     }
@@ -208,7 +208,7 @@ class jbStats {
             $top_studies = JText::_('JBS_CPL_NO_INFORMATION');
         } else {
             foreach ($results as $result) {
-                $top_studies .= $result->downloads . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&view=message&task=edit&layout=form&cid[]=' . $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
+                $top_studies .= $result->downloads . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&task=message.edit&id=' . $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
             }
         }
         return $top_studies;
@@ -246,7 +246,7 @@ class jbStats {
             }
             else
                 $total = $result->added;
-            $link = ' <a href="index.php?option=com_biblestudy&view=message&task=edit&layout=form&cid[]=' . $hits->id . '">' . $hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
+            $link = ' <a href="index.php?option=com_biblestudy&task=message.edit&id=' . $hits->id . '">' . $hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
             $final2 = array('total' => $total, 'link' => $link);
             $final[] = $final2;
         }
