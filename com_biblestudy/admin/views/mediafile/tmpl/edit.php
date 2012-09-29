@@ -152,13 +152,14 @@ if (JRequest::getWord('layout') == 'modal') {
 
                 <?php
                 echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
-                if (JRequest::getWord('layout', '') == 'modal') {
+                ?></legend>
+            <?php if (JRequest::getWord('layout', '') == 'modal') {
                     ?> <div class="fltrt">
                         <button type="button" onclick="submitbutton('mediafile.save');  ">
                             <?php echo JText::_('JSAVE'); ?></button>
                         <button type="button" onclick="window.parent.SqueezeBox.close();  ">
                             <?php echo JText::_('JCANCEL'); ?></button>
-                    </div> <?php } ?></legend>
+                    </div> <?php } ?>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('id'); ?>
