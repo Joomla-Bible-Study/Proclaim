@@ -15,6 +15,7 @@ include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.resto
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.migrate.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * JBS Export Migration Controller
@@ -40,7 +41,7 @@ class BiblestudyControllerMigration extends JController {
         $oldprefix = JRequest::getInt('oldprefix', '', 'post');
         $run = 0;
         $run = JRequest::getInt('run', '', 'get');
-        $import = JRequest::getVar('file', '', 'post');
+        //$import = JRequest::getVar('file', '', 'post');
 
         if ($task == 'export' && ($run == 1 || $run == 2)) {
             $export = new JBSExport();
@@ -90,10 +91,6 @@ class BiblestudyControllerMigration extends JController {
         $result = $import->importdb($parent);
         if ($result === true) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
-        } elseif ($result === false) {
-
-        } else {
-            $application->enqueueMessage('' . $result . '');
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
@@ -105,11 +102,8 @@ class BiblestudyControllerMigration extends JController {
      * @param boolean $cachable
      * @param boolean $urlparams Description
      */
-    public function doimport($parent, $cachable = false, $urlparams = false) {
+    public function doimport($parent = true, $cachable = false, $urlparams = false) {
         $copysuccess = false;
-        if ($parent !== FALSE):
-            $parent = TRUE;
-        endif;
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
@@ -119,14 +113,11 @@ class BiblestudyControllerMigration extends JController {
         $oldprefix = JRequest::getWord('oldprefix', '', 'post');
 
         if ($oldprefix) {
-            $tablescopied = $this->copyTables($oldprefix);
-            //if error
-            //check for empty array - if not, print results
-            if (empty($tablescopied)) {
+            if ($this->copyTables($oldprefix)) {
                 $copysuccess = 1;
             } else {
+                JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
                 $copysuccess = false;
-                print_r($tablescopied);
             }
         } else {
             $import = new JBSImport();
@@ -135,12 +126,8 @@ class BiblestudyControllerMigration extends JController {
         if ($result || $copysuccess) {
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
-            $messages = JText::_('JBS_CMN_NO_ERROR_MESSAGES_AVAILABLE');
-            if (!empty($migration)) {
-                $messages = implode('<br>', $migration);
-            }
             if ($migration) {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . $messages, 'message');
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
                 //Final step is to fix assets
                 $this->fixAssets();
                 $installer = new Com_BiblestudyInstallerScript();
@@ -153,32 +140,8 @@ class BiblestudyControllerMigration extends JController {
             } else {
                 JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
             }
-        } else {
-            JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
         }
         $this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
-    }
-
-    /**
-     * Perform DB check
-     *
-     * @param array $query
-     * @return string|boolean
-     */
-    public function performdb($query) {
-        $db = JFactory::getDBO();
-        $results = false;
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() != 0) {
-            $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-            $results .= $db->stderr(true);
-            $results .= "</font>";
-            return $results;
-        } else {
-            $results = false;
-            return $results;
-        }
     }
 
     /**
@@ -190,7 +153,6 @@ class BiblestudyControllerMigration extends JController {
     public function copyTables($oldprefix) {
         //create table tablename_new like tablename; -> this will copy the structure...
         //insert into tablename_new select * from tablename; -> this would copy all the data
-        $results = array();
         $db = JFactory::getDBO();
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
@@ -200,25 +162,21 @@ class BiblestudyControllerMigration extends JController {
                 $oldlength = strlen($oldprefix);
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename = $prefix . $newsubtablename;
-                $results = array();
                 $query = 'DROP TABLE IF EXISTS ' . $newtablename;
-                $result = $this->performdb($query);
-                if ($result) {
-                    $results[] = $result;
+                if (!jbsDBhelper::performdb($query)) {
+                    return FALSE;
                 }
                 $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
-                $result = $this->performdb($query);
-                if ($result) {
-                    $results[] = $result;
+                if (!jbsDBhelper::performdb($query)) {
+                    return FALSE;
                 }
                 $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
-                $result = $this->performdb($query);
-                if ($result) {
-                    $results[] = $result;
+                if (!jbsDBhelper::performdb($query)) {
+                    return FALSE;
                 }
             }
         }
-        return $results;
+        return TRUE;
     }
 
     /**

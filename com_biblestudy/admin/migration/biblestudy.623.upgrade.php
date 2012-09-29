@@ -9,6 +9,8 @@
  * */
 defined('_JEXEC') or die;
 
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
 /**
  * Upgrade class for 6.2.3
  * @package BibleStudy.Admin
@@ -22,17 +24,9 @@ class jbs623Install {
      */
     function upgrade623() {
 
-        $messages = array();
         $db = JFactory::getDBO();
-        $before = 0;
-        $after = 0;
-        //First we find out how many rows have the internal_popup set to 0
-        $query = "SELECT count(`id`) FROM #__bsms_mediafiles WHERE `params` LIKE '%internal_popup=0%' GROUP BY id";
-        $db->setQuery($query);
-        $db->query();
-        $before = $db->loadResult();
 
-        //Now we adjust those rows that have internal_popup set to 0 and we change it to 2
+        //We adjust those rows that have internal_popup set to 0 and we change it to 2
         $query = 'SELECT id, params FROM #__bsms_mediafiles';
         $db->setQuery($query);
         $db->query();
@@ -45,49 +39,25 @@ class jbs623Install {
                     $newparams = str_replace('internal_popup=0', 'internal_popup=2', $oldparams);
                     $query = "UPDATE #__bsms_mediafiles SET `params` = '" . $newparams . "' WHERE id = " . $result->id;
                     $db->setQuery($query);
-                    $db->query();
+                    if (!$db->query()) {
+                        JError::raiseWarning(1, "Build 623: " . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                        return FALSE;
+                    }
                 }
             }
         }
 
         $query = "INSERT INTO #__bsms_version SET `version` = '6.2.3', `installdate`='2010-11-03', `build`='623', `versionname`='1Samuel', `versiondate`='2010-11-03'";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 623: ")) {
+            return FALSE;
         }
+
         $query = "INSERT INTO #__bsms_version SET `version` = '6.2.4', `installdate`='2010-11-09', `build`='623', `versionname`='2Samuel', `versiondate`='2010-11-09'";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 623: ")) {
+            return FALSE;
         }
-        $results = array('build' => '623', 'messages' => $messages);
 
-        return $results;
-    }
-
-    /**
-     * Perform DB Query
-     * @param string $query
-     * @return string|boolean
-     */
-    function performdb($query) {
-        $db = JFactory::getDBO();
-        $results = false;
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() != 0) {
-            $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-            $results .= $db->stderr(true);
-            $results .= "</font>";
-            return $results;
-        } else {
-            $results = false;
-            return $results;
-        }
+        return TRUE;
     }
 
 }

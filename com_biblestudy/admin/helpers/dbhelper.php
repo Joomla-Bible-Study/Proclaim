@@ -38,11 +38,10 @@ class jbsDBhelper {
      * Alters a table
      * @desc command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY tables.
      * @param array tables is an array of tables, fields, type of query and optional command line
+     * @param string Where the query is coming from for msg
      * @return boolean
      */
-    public function alterDB($tables) {
-        $msg = array();
-        $result = null;
+    public function alterDB($tables, $from = NULL) {
         foreach ($tables as $t) {
             $type = strtolower($t['type']);
             $command = $t['command'];
@@ -56,9 +55,8 @@ class jbsDBhelper {
                     //check the field to see if it exists first
                     if (jbsDBhelper::checkTables($table, $field) === TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
-                        $result = jbsDBhelper::performDB($query);
-                        if ($result) {
-                            $msg[] = $result;
+                        if (!jbsDBhelper::performDB($query, $from)) {
+                            return FALSE;
                         }
                     }
                     break;
@@ -69,9 +67,8 @@ class jbsDBhelper {
                     }
                     if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` ADD `' . $field . '` ' . $command;
-                        $result = jbsDBhelper::performDB($query);
-                        if ($result) {
-                            $msg[] = $result;
+                        if (!jbsDBhelper::performDB($query, $from)) {
+                            return FALSE;
                         }
                     }
                     break;
@@ -82,36 +79,31 @@ class jbsDBhelper {
                     }
                     if (jbsDBhelper::checkTables($table, $field) === TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
-                        $result = jbsDBhelper::performDB($query);
-                        if ($result) {
-                            $msg[] = $result;
+                        if (!jbsDBhelper::performDB($query, $from)) {
+                            return FALSE;
                         }
                     }
                     break;
             }
         }
-        if (!empty($msg)) {
-            return $msg;
-        } elseif ($msg === FALSE) {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
+        return TRUE;
     }
 
     /**
      * performs a database query
      * @param $query is a Joomla ready query
+     * @param string $from Where the sorce of the query comes from
      * @return boolean true if success, or error string if failed
      */
-    public static function performDB($query) {
+    public static function performDB($query, $from = NULL) {
         if (!$query) {
             return false;
         }
         $db = JFactory::getDbo();
         $db->setQuery($query);
         if (!$db->execute()) {
-            return $db->stderr(true);
+            JError::raiseWarning(1, $from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+            return FALSE;
         } else {
             return TRUE;
         }
@@ -161,21 +153,16 @@ class jbsDBhelper {
      * @since 7.1.0
      */
     public static function getinstallstate() {
-        $result = FALSE;
         $db = JFactory::getDBO();
-        $table = '#__bsms_admin';
-        $field = 'id';
-        if (jbsDBhelper::checkTables($table, $field) === TRUE):
-            $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
-            $results = $db->loadObject();
-            // Convert parameter fields to objects.
-            $registry = new JRegistry;
-            $registry->loadJSON($results->installstate);
-            if ($registry->get('jbsname')):
-                $result = $registry;
-            endif;
-        endif;
-        return $result;
+        $query = $db->getQuery(TRUE);
+        $query->select('*')
+                ->from('#__bsms_admin');
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+        if(isset($results[0]->installstate)){
+            return $results[0]->installstate;
+        }
+        return FALSE;
     }
 
     /**
@@ -185,8 +172,7 @@ class jbsDBhelper {
      */
     public static function setinstallstate() {
         $query = 'UPDATE #__bsms_admin SET installstate = NULL WHERE id = 1';
-        $result = jbsDBhelper::performDB($query);
-        if ($result) {
+        if (!jbsDBhelper::performDB($query, null)) {
             return FALSE;
         } else {
             return TRUE;
@@ -214,7 +200,7 @@ class jbsDBhelper {
             $query->where('`id` = "' . $id . '"');
         }
         $db->setQuery($query);
-        $result = $db->loadObject();
+        return $db->loadObject();
         $oldcss = $result->stylecode;
 
         /* Now the arrays of changes that need to be done. */

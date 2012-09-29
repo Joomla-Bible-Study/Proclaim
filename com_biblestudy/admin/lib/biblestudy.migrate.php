@@ -21,7 +21,6 @@ class JBSMigrate {
      * @return boolean
      */
     function migrate() {
-        $message = array();
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
 
@@ -106,7 +105,10 @@ class JBSMigrate {
                       PRIMARY KEY (`id`)
                     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
                 $db->setQuery($query);
-                $db->execute();
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                    return FALSE;
+                }
             }
             $update = $prefix . 'bsms_update';
             $jbsexists2 = substr_count($table, $update);
@@ -117,9 +119,13 @@ class JBSMigrate {
                         PRIMARY KEY (id)
                         ) DEFAULT CHARSET=utf8";
                 $db->setQuery($query);
-                $db->execute();
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                    return FALSE;
+                }
             }
         }
+
         //Now we run a switch case on the versiontype and run an install routine accordingly
         // @todo need to rewright this like we do the sql update on allupdate.php but for now will work it this way.
         switch ($versiontype) {
@@ -132,24 +138,44 @@ class JBSMigrate {
                 $version = $updates->version;
                 switch ($version):
                     case '7.0.1':
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                     case '7.0.1.1':
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                     case '7.0.2':
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                     case '7.0.3':
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                     case '7.0.4':
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                 endswitch;
                 break;
@@ -161,52 +187,114 @@ class JBSMigrate {
                 $version = $db->loadObject();
                 switch ($version->build) {
                     case '700':
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '624':
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '623':
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '622':
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '615':
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '614':
-                        $message[] = $this->update614();
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update614()) {
+                            return FALSE;
+                        }
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                     case NULL:
                         JError::raiseNotice('SOME_ERROR_CODE', 'Bad DB Upload');
@@ -231,39 +319,84 @@ class JBSMigrate {
                         break;
 
                     case '608':
-
-                        $message[] = $this->update611();
-                        $message[] = $this->update613();
-                        $message[] = $this->update614();
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update611()) {
+                            return FALSE;
+                        }
+                        if (!$this->update613()) {
+                            return FALSE;
+                        }
+                        if (!$this->update614()) {
+                            return FALSE;
+                        }
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '611':
-
-                        $message[] = $this->update613();
-                        $message[] = $this->update614();
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update613()) {
+                            return FALSE;
+                        }
+                        if (!$this->update614()) {
+                            return FALSE;
+                        }
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
 
                     case '613':
-
-                        $message[] = $this->update614();
-                        $message[] = $this->update622();
-                        $message[] = $this->update623();
-                        $message[] = $this->update700();
-                        $message[] = $this->update701();
-                        $message[] = $this->allupdate();
-                        $message[] = $this->update710();
+                        if (!$this->update614()) {
+                            return FALSE;
+                        }
+                        if (!$this->update622()) {
+                            return FALSE;
+                        }
+                        if (!$this->update623()) {
+                            return FALSE;
+                        }
+                        if (!$this->update700()) {
+                            return FALSE;
+                        }
+                        if (!$this->update701()) {
+                            return FALSE;
+                        }
+                        if (!$this->allupdate()) {
+                            return FALSE;
+                        }
+                        if (!$this->update710()) {
+                            return FALSE;
+                        }
                         break;
                 }
                 break;
@@ -274,9 +407,7 @@ class JBSMigrate {
                 return false;
                 break;
         }
-        $jbsmessages = $message;
-        JRequest::setVar('jbsmessages', $jbsmessages, 'get', 'array');
-        return $jbsmessages;
+        return TRUE;
     }
 
     /**
@@ -286,8 +417,10 @@ class JBSMigrate {
     function update611() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
         $install = new jbs611Install();
-        $message = $install->upgrade611();
-        return $message;
+        if (!$install->upgrade611()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -297,8 +430,10 @@ class JBSMigrate {
     function update613() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
         $install = new jbs613Install();
-        $message = $install->upgrade613();
-        return $message;
+        if (!$install->upgrade613()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -308,8 +443,10 @@ class JBSMigrate {
     function update614() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
         $install = new jbs614Install();
-        $message = $install->upgrade614();
-        return $message;
+        if (!$install->upgrade614()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -319,8 +456,10 @@ class JBSMigrate {
     function update622() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
         $install = new jbs622Install();
-        $message = $install->upgrade622();
-        return $message;
+        if (!$install->upgrade622()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -330,8 +469,10 @@ class JBSMigrate {
     function update623() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
         $install = new jbs623Install();
-        $message = $install->upgrade623();
-        return $message;
+        if (!$install->upgrade623()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -341,8 +482,10 @@ class JBSMigrate {
     function update700() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
         $install = new jbs700Install();
-        $message = $install->upgrade700();
-        return $message;
+        if (!$install->upgrade700()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -352,8 +495,10 @@ class JBSMigrate {
     function update701() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
         $install = new updatejbs701();
-        $message = $install->do701update();
-        return $message;
+        if (!$install->do701update()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -363,16 +508,10 @@ class JBSMigrate {
     function update710() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
         $migrate = new JBS710Update();
-        $update710php = $migrate->update710();
-        if (!$update710php) {
-            $errors[] = 'Problem with 7.1.0 update';
+        if (!$migrate->update710()) {
+            return FALSE;
         }
-
-        if (!empty($errors)) {
-            return $errors;
-        } else {
-            return true;
-        }
+        return TRUE;
     }
 
     /**
@@ -382,8 +521,10 @@ class JBSMigrate {
     function allupdate() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
         $install = new updatejbsALL();
-        $message = $install->doALLupdate();
-        return $message;
+        if (!$install->doALLupdate()) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
@@ -403,9 +544,14 @@ class JBSMigrate {
                             ON DUPLICATE KEY UPDATE version= '7.0.1.1';
                             ";
                 $db->setQuery($query);
-                $db->execute();
+                if (!$db->execute()) {
+                    JError::raiseWarning('1', JText::_('JBS_CMN_OPERATION_FAILED'));
+                    return FALSE;
+                }
             endif;
         endforeach;
+
+        return TRUE;
     }
 
 }

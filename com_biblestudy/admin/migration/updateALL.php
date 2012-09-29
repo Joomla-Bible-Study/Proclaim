@@ -49,12 +49,16 @@ class updatejbsALL {
             $db->setQuery($query);
             $updates = $db->loadResultArray();
             $update = end($updates);
-            /* Set new Schema Version */
-            $this->setSchemaVersion($update, $eid);
+            if ($update):
+                /* Set new Schema Version */
+                $this->setSchemaVersion($update, $eid);
+            else:
+                $value = '7.0.0';
+            endif;
+
             if (version_compare($value, $update) <= 0) {
                 unset($files[$i]);
             } elseif ($files) {
-
                 // Get file contents
                 $buffer = file_get_contents($path . '/' . $value . '.sql');
 
@@ -62,7 +66,7 @@ class updatejbsALL {
                 if ($buffer === false) {
                     JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
 
-                    return JText::_('JBS_INS_ERROR_SQL_READBUFFER');
+                    return FALSE;
                 }
 
                 // Create an array of queries from the sql file
@@ -83,14 +87,14 @@ class updatejbsALL {
                         if (!$db->execute()) {
                             JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-                            return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                            return FALSE;
                         }
                     }
                 }
             } else {
                 JError::raiseWarning(1, JText::_('JBS_INS_NO_UPDATE_SQL_FILES'));
 
-                return JText::_('JBS_INS_NO_UPDATE_SQL_FILES');
+                return FALSE;
             }
             /* Find Last updated Version in Update table */
             $query = $db->getQuery(true);
@@ -99,8 +103,12 @@ class updatejbsALL {
             $db->setQuery($query);
             $updates = $db->loadResultArray();
             $update = end($updates);
-            /* Set new Schema Version */
-            $this->setSchemaVersion($update, $eid);
+            if ($update) {
+                /* Set new Schema Version */
+                $this->setSchemaVersion($update, $eid);
+            } else {
+                JError::raiseWarning('1', 'no update table');
+            };
         }
         return TRUE;
     }

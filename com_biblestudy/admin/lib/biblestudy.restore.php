@@ -88,9 +88,7 @@ class JBSImport {
             JError::raiseWarning('1', JText::_('WARNINSTALLUPLOADERROR'));
             return false;
         }
-
         // Build the appropriate paths
-        $config = JFactory::getConfig();
         $tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
 
         $tmp_src = $userfile['tmp_name'];
@@ -99,7 +97,10 @@ class JBSImport {
         jimport('joomla.filesystem.file');
         if (JFile::exists($tmp_src)):
             if (!JFile::exists($tmp_dest)):
-                $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
+                $uploaded = move_uploaded_file($tmp_src, $tmp_dest);
+            else:
+                JFile::delete($tmp_dest);
+                $uploaded = move_uploaded_file($tmp_src, $tmp_dest);
             endif;
         endif;
 
@@ -116,7 +117,7 @@ class JBSImport {
      * @param boolean $parent To tell if coming from migration
      * @return boolean If db installed corectrly.
      */
-    protected static function installdb($tmp_src, $parent) {
+    protected static function installdb($tmp_src, $parent = TRUE) {
         jimport('joomla.filesystem.file');
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -129,12 +130,12 @@ class JBSImport {
 
         $query = file_get_contents($tmp_src);
         $exists = JFile::exists($tmp_src);
-        
+
         // Graceful exit and rollback if read not successful
         if ($query === false) {
             JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
 
-            return JText::_('JBS_INS_ERROR_SQL_READBUFFER');
+            return FALSE;
         }
         // Check if sql file is for Joomla! Bible Studys
         $isold = substr_count($query, '#__bsms_admin_genesis');
@@ -146,12 +147,16 @@ class JBSImport {
         elseif ($isnot === 0):
             JError::raiseWarning('403', JText::_('JBS_IBM_NOT_DB'));
             return false;
+        elseif (($iscernt !== 0) && ($parent === TRUE)): //
+            JError::raiseWarning('403', JText::_('JBS_IBM_MIGRATE_NOT_OLD_DB'));
+            return false;
         elseif (($iscernt === 0) && ($parent !== TRUE)): // Way to check to see if file came from restore and is current.
             JError::raiseWarning('403', JText::_('JBS_IBM_NOT_CURENT_DB'));
             return false;
         else:
             //first we need to drop the existing JBS tables
             $objects = JBSImport::getObjects();
+
             foreach ($objects as $object) {
                 $dropquery = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
                 $db->setQuery($dropquery);
@@ -174,7 +179,7 @@ class JBSImport {
                     if (!$db->execute()) {
                         JError::raiseWarning(1, JText::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true)));
 
-                        return JText::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true));
+                        return FALSE;
                     }
                 }
             }

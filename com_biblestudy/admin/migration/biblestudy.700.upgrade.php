@@ -9,8 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
-require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
-require_once(BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'dbhelper.php');
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Upgrade class for 7.0.0
@@ -25,10 +24,6 @@ class jbs700Install {
      */
     function upgrade700() {
         $db = JFactory::getDBO();
-        $messages = array();
-
-        //Alter some tables
-        $msg = '';
 
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -39,7 +34,6 @@ class jbs700Install {
 
         $dbhelper = new jbsDBhelper();
         //alter the admin table
-
         $tables = array(
             array('table' => '#__bsms_admin', 'field' => 'main', 'type' => 'DROP', 'command' => ''),
             array('table' => '#__bsms_admin', 'field' => 'podcast', 'type' => 'DROP', 'command' => ''),
@@ -146,88 +140,141 @@ class jbs700Install {
             array('table' => '#__bsms_studies', 'field' => 'media6_show', 'type' => 'DROP', 'command' => "tinyint(1) DEFAULT '0'"),
         );
 
-        $admin = $dbhelper->alterDB($tables);
-        if (!empty($admin)) {
-            $messages[] = $admin;
+        if (!$dbhelper->alterDB($tables, "Build 700: ")) {
+            return FALSE;
         }
-
+        
         /* Start of Adding Assets and Access Columns */
         $table = '#__bsms_admin';
-        $msg[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
+
         if ($dbhelper->checkTables($table, 'drop_tables') == 'true') {
             $query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1';
-            $messages[] = $this->performdb($query);
+            if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                return FALSE;
+            }
         }
 
         $table = '#__bsms_comments';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_folders';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_locations';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_media';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_mediafiles';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
+
         $table = '#__bsms_message_type';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_mimetype';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         // was not in 7.0.2 will be added in sql 7.1.0.sql under allupdate.php (#__bsms_order)
 
         $table = '#__bsms_podcast';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_series';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_servers';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_share';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_studies';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_studytopics';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_teachers';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_templates';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
 
         $table = '#__bsms_topics';
-        $messages[] = $this->addAssetColumn($table);
+        if (!$this->addAssetColumn($table)) {
+            return FALSE;
+        }
         /* End of Adding Assets and Access Columns */
 
         /* Fix Mimtype Flash from old plyers */
         $query = "UPDATE `#__bsms_mimetype` SET `id` = '15', `mimetype` = 'video/x-flv .flv', `mimetext` = ' Flash Video FLV', `published` = '1', `asset_id` = '3900', `access` = '0' WHERE `#__bsms_mimetype`.`id` = '15'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
 
         /* Update Show levels */
         $query = "UPDATE `#__bsms_studies` SET `access` = '1' WHERE `show_level` = '0'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '18'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '19'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '20'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '22'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '23'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
         $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '24'";
-        $messages[] = $this->performdb($query);
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
+        }
 
         /* Perform Mediafiles players. */
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
@@ -247,16 +294,22 @@ class jbs700Install {
                         $player = 3;
                     }
                     $query = "UPDATE #__bsms_mediafiles SET `player` = '$player' WHERE `id` = $result->id LIMIT 1";
-                    $messages[] = $this->performdb($query);
+                    if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                        return FALSE;
+                    }
                 }
                 if ($popup) {
                     $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
-                    $messages[] = $this->performdb($query);
+                    if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                        return FALSE;
+                    }
                 }
                 if ($podcasts) {
                     $podcasts = str_replace('|', ',', $podcasts);
                     $query = "UPDATE #__bsms_mediafiles SET `podcast_id` = '$podcasts' WHERE `id` = $result->id LIMIT 1";
-                    $messages[] = $this->performdb($query);
+                    if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                        return FALSE;
+                    }
                 }
                 //Update the params to json
                 $registry = new JRegistry;
@@ -267,32 +320,25 @@ class jbs700Install {
 
 
                 $query = "UPDATE #__bsms_mediafiles SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
-                $messages[] = $this->performdb($query);
+                if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                    return FALSE;
+                }
             }
         }
 
         $query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_ASCENDING' WHERE `id` = '1'";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
 
         $query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_DESCENDING' WHERE `id` = '2'";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
 
         $query = 'DROP TABLE IF EXISTS #__bsms_books';
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
 
         $query = "CREATE TABLE IF NOT EXISTS `#__bsms_books` (
@@ -302,11 +348,8 @@ class jbs700Install {
 					  `published` tinyint(1) NOT NULL DEFAULT '1',
 					  PRIMARY KEY (`id`)
 					) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
 
         $query = "INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`) VALUES
@@ -383,21 +426,14 @@ class jbs700Install {
 				 (71, 'JBS_BBK_WISDOM', 171, 1),
 				 (72, 'JBS_BBK_SIRACH', 172, 1),
 				 (73, 'JBS_BBK_BARUCH', 173, 1)";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
-
 
         //Fix timeset primary key
         $query = "ALTER TABLE `#__bsms_timeset` DROP INDEX  `timeset` , ADD PRIMARY KEY (  `timeset` )";
-        $msg = $this->performdb($query);
-        if (!$msg) {
-            $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
-        } else {
-            $messages[] = $msg;
+        if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+            return FALSE;
         }
 
         //Fix studies params
@@ -414,9 +450,8 @@ class jbs700Install {
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
                 $query = "UPDATE #__bsms_studies SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
-                $msg = $this->performdb($query);
-                if ($msg) {
-                    $messages[] = $msg;
+                if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                    return FALSE;
                 }
             }
         }
@@ -430,9 +465,8 @@ class jbs700Install {
                 $topic = $result->topic_text;
                 $topic = 'JBS_TOP_' . strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));  // replace all non a-Z 0-9 by '_'
                 $query = "UPDATE #__bsms_topics SET `topic_text` = '$topic' WHERE `id` = $result->id";
-                $msg = $this->performdb($query);
-                if ($msg) {
-                    $messages[] = $msg;
+                if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                    return FALSE;
                 }
             }
         }
@@ -451,9 +485,8 @@ class jbs700Install {
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
                 $query = "UPDATE #__bsms_share SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
-                $msg = $this->performdb($query);
-                if ($msg) {
-                    $messages[] = $msg;
+                if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                    return FALSE;
                 }
             }
         }
@@ -473,34 +506,12 @@ class jbs700Install {
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
                 $query = "UPDATE #__bsms_templates SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
-                $msg = $this->performdb($query);
-                if ($msg) {
-                    $messages[] = $msg;
+                if (!jbsDBhelper::performdb($query, "Build 700: ")) {
+                    return FALSE;
                 }
             }
         }
-        $fresult = array('build' => '700', 'messages' => $messages);
-        return $fresult;
-    }
-
-    /**
-     * Perform DB Query
-     * @param string $query
-     * @return string|boolean
-     */
-    protected function performdb($query) {
-        $db = JFactory::getDBO();
-        $results = false;
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-            $results .= $db->stderr(true);
-            $results .= "</font>";
-            return $results;
-        } else {
-            $results = false;
-            return $results;
-        }
+        return TRUE;
     }
 
     /**
@@ -509,23 +520,23 @@ class jbs700Install {
      * @return objects
      */
     protected function addAssetColumn($table) {
-        $msg = array();
         $dbhelper = new jbsDBhelper();
+        if (!$table) {
+            return FALSE;
+        }
         if (jbsDBhelper::checkTables($table, 'asset_id') !== TRUE) {
             $array = array(array('table' => $table, 'field' => 'asset_id', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.'"));
-            $alteradmin = $dbhelper->alterDB($array);
-            if ($alteradmin !== TRUE) {
-                $msg[] = $alteradmin;
+            if (!$dbhelper->alterDB($array, "Build 700 : ")) {
+                return FALSE;
             }
         }
         if (jbsDBhelper::checkTables($table, 'access') !== TRUE) {
             $array = array(array('table' => $table, 'field' => 'access', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '0'"));
-            $alteradmin = $dbhelper->alterDB($array);
-            if ($alteradmin !== TRUE) {
-                $msg[] = $alteradmin;
+            if (!$dbhelper->alterDB($array, "Build 700 : ")) {
+                return FALSE;
             }
         }
-        return $msg;
+        return TRUE;
     }
 
 }
