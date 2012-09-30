@@ -27,11 +27,11 @@ if (!defined('JBSMIGRATION_JVERSION')) {
 if (JBSMIGRATION_JVERSION == '15') {
 // Require the base controller
 
-    require_once( JPATH_COMPONENT . DS . 'controller.php' );
+    require_once( JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'controller.php' );
 
 // Require specific controller if requested
     if ($controller = JRequest::getWord('controller')) {
-        $path = JPATH_COMPONENT . DS . $controller . '.php';
+        $path = JPATH_COMPONENT . DIRECTORY_SEPARATOR . $controller . '.php';
         if (file_exists($path)) {
             require_once $path;
         } else {

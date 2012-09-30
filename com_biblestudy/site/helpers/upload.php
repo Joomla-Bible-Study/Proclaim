@@ -408,7 +408,7 @@ class JBSUpload {
      * @return	array
      */
     public function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0) {
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables');
         $filepath = JTable::getInstance('Server', 'Table');
         $filepath->load($serverid);
         $folderpath = JTable::getInstance('Folder', 'Table');
@@ -455,7 +455,7 @@ class JBSUpload {
         if ($filename->type == 2) {
             $filename->path = $folder . '/' . $filename->file;
         } else {
-            $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;
+            $filename->path = JPATH_SITE . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename->file;
             //   $filename->path =  $folder . '/' . $filename->file;
         }
 
