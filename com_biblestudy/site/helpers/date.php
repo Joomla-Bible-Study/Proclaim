@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @param string $studydate
  * @return string
  */
-public static function getstudyDate($params, $studydate) {
+function getstudyDate($params, $studydate) {
     switch ($params->get('date_format')) {
         case 0:
             $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_0'));
