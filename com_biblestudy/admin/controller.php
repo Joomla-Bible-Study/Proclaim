@@ -16,7 +16,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 }
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
-require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'dbhelper.php');
+require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -43,7 +43,6 @@ class BiblestudyController extends JController {
         $db = JFactory::getDBO();
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->execute();
-
         require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
         BiblestudyHelper::addSubmenu(JRequest::getCmd('view', 'cpanel'));
 

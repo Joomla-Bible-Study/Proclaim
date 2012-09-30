@@ -6,7 +6,8 @@
     <!-- set global properties for this build -->
     <property name="src" location="src"/>
     <property name="build" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/"/>
-    <property name="test" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Testing/"/>
+    <property name="src.test" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Testing/test"/>
+    <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
     <property name="dist"  location="dist"/>
     <target name="reset">
         <echo message="Reset back to Dev State" />
@@ -15,7 +16,9 @@
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
-        <symlink link="${build}/com_biblestudy/admin/views" resource="${test}/test"/>
+        <copy todir="${dest.dir}" >
+            <fileset dir="${src.dir}" includes="**"/>
+        </copy>
     </target>
     <target name="clean">
         <echo message="Cleaning directories" />
@@ -33,6 +36,7 @@
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
         <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
+        <copy dest="${test}/test" src="${build}/com_biblestudy/admin/views/test" includes="**/*"/>
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <echo message="Building package" />
         <mkdir dir="packages" />
