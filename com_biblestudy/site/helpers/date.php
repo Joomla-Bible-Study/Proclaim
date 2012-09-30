@@ -59,5 +59,4 @@ function getstudyDate($params, $studydate) {
     }
 
     return $date;
-
 }
