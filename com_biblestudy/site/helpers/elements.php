@@ -99,7 +99,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
         case 10:
             $elementid->id = 'date';
             $elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
-            $elementid->element = getstudyDate($params, $row->studydate);
+            $elementid->element = $row->studydate;
             break;
         case 11:
             $elementid->id = 'submitted';
