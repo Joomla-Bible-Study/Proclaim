@@ -16,8 +16,9 @@
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
-        <copy todir="${dest.dir}" >
-            <fileset dir="${src.dir}" includes="**"/>
+        <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css" resource="${build}/com_biblestudy/media/css/biblestudy.css"/>
+        <copy todir="${dest.test}" >
+            <fileset dir="${src.test}" includes="**"/>
         </copy>
     </target>
     <target name="clean">
@@ -36,7 +37,10 @@
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
         <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
-        <copy dest="${test}/test" src="${build}/com_biblestudy/admin/views/test" includes="**/*"/>
+        <echo message="Move test files back to Testing folder" />
+        <copy todir="${src.test}" >
+            <fileset dir="${dest.test}" includes="**"/>
+        </copy>
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
         <echo message="Building package" />
         <mkdir dir="packages" />

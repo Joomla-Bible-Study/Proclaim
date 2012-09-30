@@ -16,46 +16,48 @@ defined('_JEXEC') or die;
  * @param string $studydate
  * @return string
  */
-function getstudyDate($params, $studydate) {
+public static function getstudyDate($params, $studydate) {
     switch ($params->get('date_format')) {
         case 0:
-            $date = date('M j, Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_0'));
             break;
         case 1:
-            $date = date('M j', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_1'));
             break;
         case 2:
-            $date = date('n/j/Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_2'));
             break;
         case 3:
-            $date = date('n/j', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_3'));
             break;
         case 4:
-            $date = date('l, F j, Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_4'));
             break;
         case 5:
-            $date = date('F j, Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_5'));
             break;
         case 6:
-            $date = date('j F Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_6'));
             break;
         case 7:
-            $date = date('j/n/Y', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_7'));
             break;
         case 8:
             $date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
             break;
         case 9:
-            $date = date('Y/M/D', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_9'));
             break;
         default:
-            $date = date('n/j', strtotime($studydate));
+            $date = JHTML::_('date', $studydate, JText::_('JBS_DATE_FORMAT_DEFAULT'));
             break;
     }
 
     $customDate = $params->get('custom_date_format');
     if ($customDate != '') {
-        $date = date($customDate, strtotime($studydate));
+        $date = JHTML::_('date', $studydate, $customDate);
     }
+
     return $date;
+
 }

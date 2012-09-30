@@ -265,4 +265,54 @@ class jbsDBhelper {
         return TRUE;
     }
 
+    /**
+     * Reset Database back to defaults
+     * @return boolean|int
+     */
+    public static function resetdb() {
+        $db = JFactory::getDBO();
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+        $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql';
+
+        $files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
+        $files = array_reverse($files, true);
+        foreach ($files as $value) {
+                // Get file contents
+            $buffer = file_get_contents($path . '/' . $value . '.sql');
+
+            // Graceful exit and rollback if read not successful
+            if ($buffer === false) {
+                JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
+
+                return FALSE;
+            }
+
+            // Create an array of queries from the sql file
+            $queries = $db->splitSql($buffer);
+
+            if (count($queries) == 0) {
+                // No queries to process
+                return 0;
+            }
+
+            // Process each query in the $queries array (split out of sql file).
+            foreach ($queries as $query) {
+                $query = trim($query);
+
+                if ($query != '' && $query{0} != '#') {
+                    $db->setQuery($query);
+
+                    if (!$db->execute()) {
+                        JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                        return FALSE;
+                    }
+                }
+            }
+        }
+        JError::raiseNotice(1, JText::_('JBS_INS_RESETDB'));
+        return TRUE;
+    }
+
 }

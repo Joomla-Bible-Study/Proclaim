@@ -65,9 +65,8 @@ class BiblestudyControllerMigration extends JController {
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
                 JRequest::setVar('migrationdone', '1', 'get');
-                $errors = JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
+                JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
             } else {
-                //$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration);
                 JError::raiseWarning('403', JText::_('JBS_CMN_OPERATION_FAILED'));
             }
         }
@@ -137,7 +136,10 @@ class BiblestudyControllerMigration extends JController {
                 $installer->fixemptyaccess();
                 $installer->fixemptylanguage();
                 JRequest::setVar('migrationdone', '1', 'get');
+            } elseif (!$copysuccess) {
+                jbsDBhelper::resetdb();
             } else {
+                jbsDBhelper::resetdb();
                 JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
             }
         }
