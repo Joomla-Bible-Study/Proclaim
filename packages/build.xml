@@ -31,6 +31,8 @@
         <delete file="packages/plg_biblestudy_podcast.zip" />
         <delete file="packages/plg_biblestudy_backup.zip" />
         <delete file="pkg_biblestudy.zip" />
+        <delete file="xmap/plg_xmap_jbs.zip" />
+        <delete file="j1.5/com_jbsmigration.zip" />
     </target>
     <target name="build">
         <echo message="Remove Dev files" />
@@ -51,11 +53,17 @@
         <zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search" />
         <zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast" />
         <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup" />
+        <zip destfile="xmap/plg_xmap_jbs.zip" basedir="../xmap_JBS/" />
+        <zip destfile="j1.5/com_jbsmigration.zip" basedir="../jbsmigration/" />
+        <zip destfile="joomsef_extension/joomlsef_com_biblestudy.zip" basedir="../joomsef_extension/" />
         <zip destfile="pkg_biblestudy.zip">
             <fileset dir=".">
                 <include name="packages/**" />
                 <include name="pkg_biblestudy_package.xml" />
             </fileset>
         </zip>
+        <copy todir="${dest.test}" >
+            <fileset dir="${src.test}" includes="**"/>
+        </copy>
     </target>
 </project>

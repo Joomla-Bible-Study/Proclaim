@@ -10,7 +10,7 @@
     <author>Joomla Bible Study Team</author>
     <copyright>(C) 2007 - 2012 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>7.1.0-b1</version>
+    <version>7.1.0</version>
     <creationDate>Sep 14, 2012</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -121,8 +121,8 @@
     <!-- Tables -->
     <!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
     <tables>
-        <table>#__alpha_install</table>
-        <table type="optional">#__alpha_update</table>
+        <table>#__bsms_admin</table>
+        <table type="optional">#__bsms_update</table>
     </tables>
 
     <!--  Dependencies -->

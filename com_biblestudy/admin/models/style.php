@@ -146,6 +146,11 @@ class BiblestudyModelStyle extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
+    /**
+     * Fix the css nameing of ID and Class
+     * @param array $pks
+     * @return boolean
+     */
     public function fixcss($pks) {
         // Sanitize the ids.
         $pks = (array) $pks;

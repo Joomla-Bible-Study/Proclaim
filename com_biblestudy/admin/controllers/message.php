@@ -57,13 +57,4 @@ class BiblestudyControllerMessage extends JControllerForm {
         }
     }
 
-    /**
-     * Topics not sure what this dos???
-     * @todo may need to be removed before relices
-     * @deprecated since version 7.1.0
-     */
-    function topics() {
-        die('test');
-    }
-
 }

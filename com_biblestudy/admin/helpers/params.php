@@ -14,10 +14,7 @@ jimport('joomla.application.component.helper');
 jimport('joomla.application.component.model');
 
 /**
- * //Eugen
- * @todo remove file in version 1.7+
- * This class may not be required
- *
+ * This is for Retreving Admin and Template db
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
