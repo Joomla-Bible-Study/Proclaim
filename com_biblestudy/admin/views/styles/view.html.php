@@ -86,7 +86,7 @@ class BiblestudyViewStyles extends JViewLegacy {
 
         if ($this->canDo->get('core.edit')) {
             JToolBarHelper::divider();
-            JToolBarHelper::custom('styles.fixcss', 'refresh', 'refresh', 'JBS_STY_CSS_FIX', true);
+            JToolBarHelper::custom('styles.fixcss', 'refresh', 'refresh', 'JBS_STYLE_CSS_FIX', true);
         }
     }
 
