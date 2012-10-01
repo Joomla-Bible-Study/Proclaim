@@ -69,7 +69,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
             ->order('a.location_text ' . $order);
     $db->setQuery($query);
 
-    $tresult = $db->loadObjectList();
+    $tresult = $db->loadObjectList(); 
     $count = count($tresult);
     if ($count > 0):
         switch ($locationuselimit) {

@@ -77,7 +77,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
             ->order('a.message_type ' . $order);
     $db->setQuery($query);
 
-    $tresult = $db->loadObjectList();
+    $tresult = $db->loadObjectList(); 
     $count = count($tresult);
     $t = 0;
     $i = 0;
