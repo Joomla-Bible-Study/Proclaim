@@ -163,7 +163,6 @@ class Com_BiblestudyInstallerScript {
     function update($parent) {
         $this->deleteUnexistingFiles();
         $this->fixMenus();
-        //$this->fixImagePaths();
         $this->fixemptyaccess();
         $this->fixemptylanguage();
     }
