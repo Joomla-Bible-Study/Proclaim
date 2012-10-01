@@ -219,11 +219,12 @@ class TableTemplatecode extends JTable {
                 break;
         }
 
-        if (!$delete = JFile::delete($file)) {
-            $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
-            return false;
+        if(JFile::exists($file)){
+            if (!JFile::delete($file)) {
+                $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
+                return false;
+            }
         }
-
 
         return parent::delete($pk);
     }
