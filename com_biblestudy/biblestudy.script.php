@@ -163,7 +163,7 @@ class Com_BiblestudyInstallerScript {
     function update($parent) {
         $this->deleteUnexistingFiles();
         $this->fixMenus();
-        $this->fixImagePaths();
+        //$this->fixImagePaths();
         $this->fixemptyaccess();
         $this->fixemptylanguage();
     }
@@ -174,6 +174,7 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      */
     function postflight($type, $parent) {
+        $this->fixImagePaths();
         //Set the #__schemas version_id to the correct number for error from 7.0.0
         $db = JFactory::getDBO();
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
