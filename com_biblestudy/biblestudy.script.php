@@ -501,7 +501,7 @@ class Com_BiblestudyInstallerScript {
         $datas = $db->loadObjectList();
         foreach ($datas as $data) {
             // Load Table Data.
-            JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+            JTable::addIncludePath(JPATH_ADMINISTRATOR . 'components/com_biblestudy/tables');
             $table = JTable::getInstance('Share', 'Table', array('dbo' => $db));
             try {
                 $table->load($data->id);
