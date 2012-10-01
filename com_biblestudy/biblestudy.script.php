@@ -22,7 +22,7 @@ class Com_BiblestudyInstallerScript {
      * The release value to be displayed and check against throughout this file.
      * @var string
      */
-    private $release = '7.1.0-b2';
+    private $release = '7.1.0';
 
     /**
      * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
@@ -96,17 +96,21 @@ class Com_BiblestudyInstallerScript {
      */
     function install($parent) {
         $db = JFactory::getDBO();
-        $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
-        $queries = $db->splitSql($query);
-        foreach ($queries as $querie) {
-            $querie = trim($querie);
-            $db->setQuery($querie);
-            $db->execute();
-        }
-        require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
-        $fresh = new JBSFreshInstall();
-        if (!$fresh->installCSS()) {
-            JError::raiseWarning(1, JText::_('JBS_INS_FAILURE'));
+        $query = "SELECT id FROM #__bsms_amdin";
+        $db->setQuery($querie);
+        if (!$db->loadResult()) {
+            $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
+            $queries = $db->splitSql($query);
+            foreach ($queries as $querie) {
+                $querie = trim($querie);
+                $db->setQuery($querie);
+                $db->execute();
+            }
+            require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
+            $fresh = new JBSFreshInstall();
+            if (!$fresh->installCSS()) {
+                JError::raiseWarning(1, JText::_('JBS_INS_FAILURE'));
+            }
         }
     }
 
