@@ -44,6 +44,8 @@ class modBiblestudyHelper {
         $items = $params->get('locations', 1);
 
         $db = JFactory::getDbo();
+        $db->setQuery('SET SQL_BIG_SELECTS=1');
+        $db->query();
         $query = $db->getQuery(true);
         $teacher = $params->get('teacher_id');
         $topic = $params->get('topic_id');
