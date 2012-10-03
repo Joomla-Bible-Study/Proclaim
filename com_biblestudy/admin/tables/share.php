@@ -119,7 +119,7 @@ class TableShare extends JTable {
      *
      * @param object Database connector object
      */
-    function Tableshare(& $db) {
+    function TableShare(& $db) {
         parent::__construct('#__bsms_share', 'id', $db);
     }
 

@@ -1,5 +1,4 @@
-<?php
-
+xz<?php
 /**
  * Bible Study Component
  * @package BibleStudy.Admin
@@ -78,16 +77,6 @@ class Com_BiblestudyInstallerScript {
             Jerror::raiseWarning(null, 'Cannot install com_biblestudy in a Joomla release prior to ' . $this->minimum_joomla_release);
             return false;
         }
-
-        // abort if the component being installed is not newer than the currently installed version
-        if ($type == 'update') {
-            $oldRelease = $this->getParam('version');
-            $rel = $oldRelease . ' to ' . $this->release;
-            if (version_compare($this->release, $oldRelease, 'le')) {
-                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
-                return false;
-            }
-        }
     }
 
     /**
@@ -163,6 +152,7 @@ class Com_BiblestudyInstallerScript {
     function update($parent) {
         $this->deleteUnexistingFiles();
         $this->fixMenus();
+        $this->fixImagePaths();
         $this->fixemptyaccess();
         $this->fixemptylanguage();
     }
@@ -173,7 +163,6 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      */
     function postflight($type, $parent) {
-        $this->fixImagePaths();
         //Set the #__schemas version_id to the correct number for error from 7.0.0
         $db = JFactory::getDBO();
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
@@ -186,7 +175,9 @@ class Com_BiblestudyInstallerScript {
             if ($jbsversion == '20100101') {
                 $query = 'UPDATE #__schemas SET version_id = "' . $this->release . '" WHERE extension_id = ' . $extensionid;
                 $db->setQuery($query);
-                $db->execute();
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+                }
             }
         }
 
@@ -199,7 +190,9 @@ class Com_BiblestudyInstallerScript {
         // Set installstate
         $query1 = "UPDATE `#__bsms_admin` SET installstate = '{\"release\":\"" . $this->release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type . "\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
         $db->setQuery($query1);
-        $db->execute();
+        if (!$db->execute()) {
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+        }
 
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
@@ -237,7 +230,9 @@ class Com_BiblestudyInstallerScript {
             $db->setQuery('UPDATE #__extensions SET params = ' .
                     $db->quote($paramsString) .
                     ' WHERE name = "com_biblestudy"');
-            $db->execute();
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+            }
         }
     }
 
@@ -500,26 +495,22 @@ class Com_BiblestudyInstallerScript {
         $db->setQuery($query);
         $datas = $db->loadObjectList();
         foreach ($datas as $data) {
-            // Load Table Data.
-            JTable::addIncludePath(JPATH_ADMINISTRATOR . 'components/com_biblestudy/tables');
-            $table = JTable::getInstance('Share', 'Table', array('dbo' => $db));
-            try {
-                $table->load($data->id);
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage(), "\n";
-            }
-
             //Need to adjust the params and write back
             $registry = new JRegistry();
-            $registry->loadJSON($table->params);
+            $registry->loadJSON($data->params);
             $params = $registry;
             $shareimage = $params->get('shareimage');
             $shareimage = str_replace('components', 'media', $shareimage);
             $params->set('shareimage', $shareimage);
             //Now write the params back into the $table array and store.
-            $table->params = (string) $params->toString();
-            if (!$table->store()) {
-                $this->setError($db->getErrorMsg());
+            $data->params = (string) $params->toString();
+            $qeery = $db->getQuery(true);
+            $qeery->update('#__bsms_share')
+                    ->set('`params` =' . $data->params)
+                    ->where('id = ' . $data->id);
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
             }
         }
     }

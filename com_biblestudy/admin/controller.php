@@ -24,7 +24,7 @@ jimport('joomla.application.component.controller');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyController extends JController {
+class BiblestudyController extends JControllerLegacy {
 
     /**
      * Default view var.

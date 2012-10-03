@@ -160,14 +160,10 @@ class jbsDBhelper {
         $db->setQuery($query);
         $results = $db->loadObjectList();
         if (isset($results[0]->installstate)) {
-            $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
-            $results = $db->loadObject();
-            if (isset($results->installstae)) {
                 // Convert parameter fields to objects.
                 $registry = new JRegistry;
-                $registry->loadJSON($results->installstate);
+                $registry->loadJSON($results{0}->installstate);
                 return $registry;
-            }
         }
         return FALSE;
     }
