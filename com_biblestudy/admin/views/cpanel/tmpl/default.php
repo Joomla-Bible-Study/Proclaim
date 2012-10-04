@@ -44,7 +44,7 @@ if ($msg) {
     </div>
 </div>
 
-<div class="fltrt" style="width: 87%">
+<div class="fltrt" style="width: 85%">
     <div class="fbwelcome">
         <h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
         <p><?php echo JText::_('JBS_CPL_INTRO') . ' - <a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">' . JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">' . JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
