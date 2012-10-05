@@ -306,7 +306,7 @@ div.listingfooter ul li {
                 return TRUE;
             }
         }
-        return ture;
+        return true;
         //end if no new css file
     }
 
