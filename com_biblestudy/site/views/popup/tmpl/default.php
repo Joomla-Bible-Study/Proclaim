@@ -75,9 +75,9 @@ if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
 }
 $playerwidth = $params->get('player_width');
 $playerheight = $params->get('player_height');
-if ($itemparams->get('playerheight') < 55) {
+if ($itemparams->get('playerheight') < 55 && $itemparams->get('playerheight')) {
     $playerheight = 55;
-} else {
+} elseif ($itemparams->get('playerheight')) {
     $playerheight = $itemparams->get('playerheight');
 }
 if ($itemparams->get('playerwidth')) {
@@ -112,17 +112,17 @@ if ($itemparams->get('autostart') == 1) {
 
     // Need to add in template
     ?><body style="background-color:<?php echo $params->get('popupbackground', 'black') ?>">
-        <?php
-        $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+    <?php
+    $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
 
-        if ($itemparams->get('itempopuptitle')) {
-            $headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);
-        }
-        $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
-        if ($itemparams->get('itempopupfooter')) {
-            $footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);
-        }
-        ?>
+    if ($itemparams->get('itempopuptitle')) {
+        $headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);
+    }
+    $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
+    if ($itemparams->get('itempopupfooter')) {
+        $footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);
+    }
+    ?>
         <div class="popuptitle"><p class="popuptitle"><?php echo $headertext ?>
             </p>
         </div>
@@ -136,7 +136,7 @@ if ($itemparams->get('autostart') == 1) {
         if ($itemparams->get('player') == 1 || $player == 1) {
             ?>
 
-            <div class='playeralign'>
+            <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $playerwidth + 1; ?>px" >
                 <video height="<?php echo $playerheight; ?>"
                        poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
                        width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' style="padding: 10px">
