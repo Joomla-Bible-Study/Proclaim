@@ -1,4 +1,4 @@
-xz<?php
+<?php
 /**
  * Bible Study Component
  * @package BibleStudy.Admin
