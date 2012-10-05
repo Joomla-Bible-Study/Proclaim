@@ -109,8 +109,6 @@
                    key_field="date" value_field="date">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-
         </fieldset>
-
     </fields>
 </metadata>

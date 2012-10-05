@@ -10,6 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
+JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 
 /**
  * JView class for Install
@@ -37,6 +38,11 @@ class biblestudyViewInstall extends JView {
         // install systems
         $this->installscripts();
         $this->installsetup();
+
+
+        // Remove old files
+        $installer = new Com_BiblestudyInstallerScript();
+        $installer->deleteUnexistingFiles();
 
         $this->addToolbar();
 
