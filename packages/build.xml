@@ -15,6 +15,7 @@
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
+        <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
         <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css" resource="${build}/com_biblestudy/media/css/biblestudy.css"/>
