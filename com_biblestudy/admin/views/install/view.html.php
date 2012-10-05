@@ -86,9 +86,7 @@ class biblestudyViewInstall extends JView {
         $update = new updatejbs701();
         $update701 = $update->do701update();
         if (!$update701) {
-            $update701msg = JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2');
-        } else {
-            $msg[] = null;
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2'));
         }
 
         //Check for presence of css or backup or other things for upgrade to 7.1.0
@@ -96,9 +94,9 @@ class biblestudyViewInstall extends JView {
         $JBS710Update = new JBS710Update();
         $JBS710 = $JBS710Update->update710();
         if (!$JBS710) {
-            $msg[] = '<br />' . JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1');
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1'));
         }
-        return $msg;
+        return true;
     }
 
     /**

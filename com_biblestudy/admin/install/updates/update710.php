@@ -287,20 +287,26 @@ div.listingfooter ul li {
                 return FALSE;
             }
         } else {
-            $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
-            $db->setQuery($query);
-            if (!$db->execute()) {
-                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
-
-                return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
-            }
             $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
             $db->setQuery($query);
             $result = $db->loadObject();
-            jbsDBhelper::reloadtable($result, 'Style');
-            JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
-            return TRUE;
+            if (!$result) {
+                $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                }
+                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+                $db->setQuery($query);
+                $result = $db->loadObject();
+                jbsDBhelper::reloadtable($result, 'Style');
+                JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
+                return TRUE;
+            }
         }
+        return ture;
         //end if no new css file
     }
 
