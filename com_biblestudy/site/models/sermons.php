@@ -242,7 +242,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters as $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.teacher_id = ' . (int) $filter);
                         }
                     }
@@ -263,7 +263,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.location_id = ' . (int) $filter);
                         }
                     }
@@ -286,7 +286,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.booknumber = ' . (int) $filter);
                         }
                     }
@@ -306,7 +306,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.series_id = ' . (int) $filter);
                         }
                     }
@@ -326,7 +326,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.topics_id = ' . (int) $filter);
                         }
                     }
@@ -346,7 +346,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('study.messagetype = ' . (int) $filter);
                         }
                     }
@@ -366,7 +366,7 @@ class BiblestudyModelSermons extends JModelList {
                     $query->where($subquery);
                 } else {
                     foreach ($filters AS $filter) {
-                        if ($filter != -1) {
+                        if ($filter >= 1) {
                             $query->where('YEAR(study.studydate) = ' . (int) $filter);
                         }
                     }
@@ -397,22 +397,22 @@ class BiblestudyModelSermons extends JModelList {
 
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');
-        if (!empty($teacher))
+        if ($teacher >= 1)
             $query->where('study.teacher_id = ' . (int) $teacher);
 
         //Filter by series
         $series = $this->getState('filter.series');
-        if (!empty($series))
+        if ($series >= 1)
             $query->where('study.series_id = ' . (int) $series);
 
         //Filter by message type
         $messageType = $this->getState('filter.messageType');
-        if (!empty($messageType))
+        if ($messageType >= 1)
             $query->where('study.messageType = ' . (int) $messageType);
 
         //Filter by Year
         $year = $this->getState('filter.year');
-        if (!empty($year))
+        if ($year >= 1)
             $query->where('YEAR(study.studydate) = ' . (int) $year);
 
         //Filter by topic
@@ -422,7 +422,7 @@ class BiblestudyModelSermons extends JModelList {
 
         //Filter by location
         $location = $this->getState('filter.location');
-        if (!empty($locations))
+        if ($locations >= 1)
             $query->where('study.location_id = ' . (int)$location);
 
         // Filter by language
