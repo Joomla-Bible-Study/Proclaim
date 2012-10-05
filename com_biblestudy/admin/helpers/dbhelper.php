@@ -160,10 +160,12 @@ class jbsDBhelper {
         $db->setQuery($query);
         $results = $db->loadObjectList();
         if (isset($results[0]->installstate)) {
+            if(!empty($results[0]->installstate)){
                 // Convert parameter fields to objects.
                 $registry = new JRegistry;
                 $registry->loadJSON($results{0}->installstate);
                 return $registry;
+            }
         }
         return FALSE;
     }
@@ -250,7 +252,7 @@ class jbsDBhelper {
     public static function reloadtable($result, $table) {
         $db = JFactory::getDBO();
         // Store new Recorde so it can be seen.
-        JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
         $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
         try {
             $table->load($result->id);
@@ -280,7 +282,6 @@ class jbsDBhelper {
             // Graceful exit and rollback if read not successful
             if ($buffer === false) {
                 JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
-
                 return FALSE;
             }
 

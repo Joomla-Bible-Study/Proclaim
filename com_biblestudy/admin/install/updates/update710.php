@@ -28,11 +28,12 @@ class JBS710Update {
         $oldcss = FALSE;
         jimport('joomla.filesystem.file');
         //Check to see if there is an existing css
-        $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        $src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
         //There is no existing css so let us check for a backup
         $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
+        dump(JFile::exists($src), 'file exists');
         if (JFile::exists($src)) {
             $oldcss = JFile::read($src);
         } elseif (JFile::exists($backup)) {
@@ -45,6 +46,7 @@ class JBS710Update {
             $db->setQuery($query);
             $result = $db->loadObject();
             if ($result) {
+                echo 'oldcss update';
                 $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($oldcss) . '" WHERE `id` = ' . $result->id;
                 $db->setQuery($query);
                 if (!$db->execute()) {
@@ -53,6 +55,7 @@ class JBS710Update {
                     return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
                 }
             } else {
+                echo 'oldcss insert';
                 $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($oldcss) . '",0)';
                 $db->setQuery($query);
                 if (!$db->execute()) {
@@ -281,6 +284,9 @@ div.listingfooter ul li {
 
 ';
             if (jbsDBhelper::fixupcss('biblestudy', true, $new710css, null)) {
+                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+                $db->setQuery($query);
+                $result = $db->loadObject();
                 jbsDBhelper::reloadtable($result, 'Style');
                 return TRUE;
             } else {

@@ -42,7 +42,7 @@ class biblestudyViewInstall extends JView {
 
         // Remove old files
         $installer = new Com_BiblestudyInstallerScript();
-        $installer->deleteUnexistingFiles();
+        // $installer->deleteUnexistingFiles();
 
         $this->addToolbar();
 
