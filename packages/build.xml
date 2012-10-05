@@ -9,6 +9,7 @@
     <property name="src.test" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Testing/test"/>
     <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
     <property name="dist"  location="dist"/>
+    <property name="version" location="7.1.0"/>
     <target name="reset">
         <echo message="Reset back to Dev State" />
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
