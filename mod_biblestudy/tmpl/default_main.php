@@ -21,8 +21,9 @@ $ismodule = 1;
     <table id="bsmsmoduletable" cellspacing="0">
         <?php
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
+        $path2 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/';
         include_once($path1 . 'header.php');
-        include_once($path1 . 'helper.php');
+        include_once($path2 . 'helper.php');
         include_once($path1 . 'listing.php');
         $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
         echo $header;
