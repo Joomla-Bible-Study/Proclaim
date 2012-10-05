@@ -13,7 +13,7 @@
     <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
     <license>GNU/GPL</license>
     <version>2.2.0</version>
-    <creationDate>Sep 14, 2012</creationDate>
+    <creationDate>Oct 05, 2012</creationDate>
     <description>COM_JBSMIGRATION_DESCRIPTION</description>
     <scriptfile>script.php</scriptfile>
     <!-- Public front end files -->

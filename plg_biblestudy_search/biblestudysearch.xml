@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="search" method="upgrade">
     <name>PLG_BIBLESTUDY_SEARCH</name>
-    <creationDate>Sep 14, 2012</creationDate>
+    <creationDate>Oct 05, 2012</creationDate>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>

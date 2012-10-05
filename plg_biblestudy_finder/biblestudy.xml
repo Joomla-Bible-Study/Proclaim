@@ -2,7 +2,7 @@
 <extension version="2.5" type="plugin" group="finder" method="upgrade">
     <name>PLG_FINDER_BIBLESTUDY</name>
     <author>Joomla Bible Study</author>
-    <creationDate>Sep 14, 2012</creationDate>
+    <creationDate>Oct 05, 2012</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <copyright>(C) 2007 - 2012 Joomla Bible Study All rights reserved.</copyright>
