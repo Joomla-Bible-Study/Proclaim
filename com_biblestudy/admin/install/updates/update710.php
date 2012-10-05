@@ -64,6 +64,8 @@ class JBS710Update {
                     return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
                 }
             }
+            $src = JPATH_SITE.'/media/biblestudy.css';
+            if (JFile::exists($src)){JFile::delete($src);}
             //Add CSS to the file
             $new710css = '
 /* New Teacher Codes */
@@ -312,8 +314,7 @@ div.listingfooter ul li {
                 return TRUE;
             }
         }
-        $src = JPATH_SITE.'/media/biblestudy.css';
-        if (JFile::exists($src)){JFile::delete($src);}
+        
         return true;
         //end if no new css file
     }
