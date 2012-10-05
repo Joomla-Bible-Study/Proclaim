@@ -28,7 +28,7 @@ class JBS710Update {
         $oldcss = FALSE;
         jimport('joomla.filesystem.file');
         //Check to see if there is an existing css
-        $src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
+        $src = JPATH_SITE . '/media/biblestudy.css';
         //There is no existing css so let us check for a backup
         $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
@@ -312,6 +312,8 @@ div.listingfooter ul li {
                 return TRUE;
             }
         }
+        $src = JPATH_SITE.'/media/biblestudy.css';
+        if (JFile::exists($src)){JFile::delete($src);}
         return true;
         //end if no new css file
     }

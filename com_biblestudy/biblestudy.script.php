@@ -77,6 +77,12 @@ class Com_BiblestudyInstallerScript {
             Jerror::raiseWarning(null, 'Cannot install com_biblestudy in a Joomla release prior to ' . $this->minimum_joomla_release);
             return false;
         }
+        //copy the css file over to another location
+        $src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
+        if (JFile::exists($src)) 
+        {
+            $copycss = JFile::copy($src,JPATH_SITE.'/media/biblestudy.css');
+        }
     }
 
     /**
