@@ -150,7 +150,6 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      */
     function update($parent) {
-        $this->deleteUnexistingFiles();
         $this->fixMenus();
         $this->fixImagePaths();
         $this->fixemptyaccess();
@@ -193,6 +192,9 @@ class Com_BiblestudyInstallerScript {
         if (!$db->execute()) {
             JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
         }
+        
+        // Remove old files
+        $this->deleteUnexistingFiles();
 
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
