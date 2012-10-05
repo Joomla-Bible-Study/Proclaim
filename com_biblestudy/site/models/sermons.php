@@ -422,7 +422,7 @@ class BiblestudyModelSermons extends JModelList {
 
         //Filter by location
         $location = $this->getState('filter.location');
-        if ($locations >= 1)
+        if ($location >= 1)
             $query->where('study.location_id = ' . (int)$location);
 
         // Filter by language

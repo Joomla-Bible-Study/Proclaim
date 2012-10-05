@@ -38,12 +38,12 @@ function getFilepath($id3, $idfield, $mime) {
         if (!preg_match('@^(?:http://)?([^/]+)@i', $filepath)) {
             $filepath = 'http://' . $filepath;
         }
+    } elseif (isset($filepathresults->docMan_id)) {
+        $filepath = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $filepathresults->docMan_id . '"';
     } else {
         $filepath = '';
     }
-    $filepath = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $filepathresults->docMan_id . '"';
-
-    $filepathresults->virtueMart_id;
-    $filepathresults->article_id;
+    //$filepathresults->virtueMart_id;
+    //$filepathresults->article_id;
     return $filepath;
 }
