@@ -35,7 +35,7 @@ function getFilepath($id3, $idfield, $mime) {
     if ($filepathresults) {
         $filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
         //Check url for "http://" prefix, and add it if it doesn't exist
-        if (!eregi('http://', $filepath)) {
+        if (!preg_match('@^(?:http://)?([^/]+)@i', $filepath)) {
             $filepath = 'http://' . $filepath;
         }
     } else {
