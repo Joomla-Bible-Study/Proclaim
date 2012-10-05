@@ -33,7 +33,7 @@ class JBS710Update {
         $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
-        dump(JFile::exists($src), 'file exists');
+        //dump(JFile::exists($src), 'file exists');
         if (JFile::exists($src)) {
             $oldcss = JFile::read($src);
         } elseif (JFile::exists($backup)) {
