@@ -160,7 +160,7 @@ class jbsDBhelper {
         $db->setQuery($query);
         $results = $db->loadObjectList();
         if (isset($results[0]->installstate)) {
-            if(!empty($results[0]->installstate)){
+            if (!empty($results[0]->installstate)) {
                 // Convert parameter fields to objects.
                 $registry = new JRegistry;
                 $registry->loadJSON($results{0}->installstate);
@@ -205,7 +205,7 @@ class jbsDBhelper {
             $query->where('`id` = "' . $id . '"');
         }
         $db->setQuery($query);
-        return $db->loadObject();
+        $result = $db->loadObject();
         $oldcss = $result->stylecode;
 
         /* Now the arrays of changes that need to be done. */
@@ -276,7 +276,7 @@ class jbsDBhelper {
         $files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
         $files = array_reverse($files, true);
         foreach ($files as $value) {
-                // Get file contents
+            // Get file contents
             $buffer = file_get_contents($path . '/' . $value . '.sql');
 
             // Graceful exit and rollback if read not successful

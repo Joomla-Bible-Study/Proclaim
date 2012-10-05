@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bible Study Component
  * @package BibleStudy.Admin
@@ -79,9 +80,8 @@ class Com_BiblestudyInstallerScript {
         }
         //copy the css file over to another location
         $src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
-        if (JFile::exists($src)) 
-        {
-            $copycss = JFile::copy($src,JPATH_SITE.'/media/biblestudy.css');
+        if (JFile::exists($src)) {
+            JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
         }
     }
 
