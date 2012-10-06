@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Single Series Layout">
+		<message>
+			<![CDATA[Create a link to a single series]]>
+		</message>
+	</layout>
+	<state>
+		<name>Single Series Layout</name>
+		<description>Choose a single series to link to</description>
+		<url addpath="/administrator/components/com_biblestudy/elements">
+			<param name="id" type="series" default="" label="Select a Series" description="The series to link to" />
+		</url>
+		<params addpath="/components/com_biblestudy/elements">
+			<param name="type" type="hidden" default="" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this item" description="Choose a template defined in admin/templates tab for this item" />
+		</params>	
+	</state>
+</metadata>
+

@@ -1,0 +1,320 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>JoomlaBibleStudy » \Com_BiblestudyInstallerScript</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">53</span>
+</li>
+<li>fixme 
+                <span class="label label-info">4</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">12</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#deleteUnexistingFiles" title="deleteUnexistingFiles :: Remove Old Files and Folders"><span class="description">Remove Old Files and Folders</span><pre>deleteUnexistingFiles()</pre></a></li>
+<li class="method public "><a href="#fixImagePaths" title="fixImagePaths :: Fix Image paths"><span class="description">Fix Image paths</span><pre>fixImagePaths()</pre></a></li>
+<li class="method public "><a href="#fixMenus" title="fixMenus :: Fix Menus"><span class="description">Fix Menus</span><pre>fixMenus()</pre></a></li>
+<li class="method public "><a href="#fixemptyaccess" title="fixemptyaccess :: Function to Find empty access in the db and set them to Public"><span class="description">Function to Find empty access in the db and set them to Public</span><pre>fixemptyaccess()</pre></a></li>
+<li class="method public "><a href="#fixemptylanguage" title='fixemptylanguage :: Funciton to find empty language field and set them to "*"'><span class="description">Funciton to find empty language field and set them to "*"</span><pre>fixemptylanguage()</pre></a></li>
+<li class="method public "><a href="#getParam" title="getParam :: get a variable from the manifest file (actually, from the manifest cache)."><span class="description">get a variable from the manifest file (actually, from the manifest cache).</span><pre>getParam()</pre></a></li>
+<li class="method public "><a href="#install" title="install :: Install"><span class="description">Install</span><pre>install()</pre></a></li>
+<li class="method public "><a href="#postflight" title="postflight :: Post Flight"><span class="description">Post Flight</span><pre>postflight()</pre></a></li>
+<li class="method public "><a href="#preflight" title="preflight :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>preflight()</pre></a></li>
+<li class="method public "><a href="#setParams" title="setParams :: sets parameter values in the component's row of the extension table"><span class="description">sets parameter values in the component's row of the extension table</span><pre>setParams()</pre></a></li>
+<li class="method public "><a href="#uninstall" title="uninstall :: Uninstall"><span class="description">Uninstall</span><pre>uninstall()</pre></a></li>
+<li class="method public "><a href="#update" title="update :: Update"><span class="description">Update</span><pre>update()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header protected">» Protected</li>
+<li class="property protected "><a href="#%24_biblestudy_extension" title="$_biblestudy_extension :: The component's name"><span class="description">The component's name</span><pre>$_biblestudy_extension</pre></a></li>
+<li class="nav-header private">» Private</li>
+<li class="property private "><a href="#%24minimum_joomla_release" title="$minimum_joomla_release :: Find mimimum required joomla version for this extension."><span class="description">Find mimimum required joomla version for this extension.</span><pre>$minimum_joomla_release</pre></a></li>
+<li class="property private "><a href="#%24release" title="$release :: The release value to be displayed and check against throughout this file."><span class="description">The release value to be displayed and check against throughout this file.</span><pre>$release</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CCom_BiblestudyInstallerScript" id="\Com_BiblestudyInstallerScript"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Com_BiblestudyInstallerScript.html">Com_BiblestudyInstallerScript</a>
+</li>
+</ul>
+<div href="../classes/Com_BiblestudyInstallerScript.html" class="element class">
+<p class="short_description">BibleStudy Install Script</p>
+<div class="details">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="deleteUnexistingFiles" id="deleteUnexistingFiles"></a><div class="element clickable method public deleteUnexistingFiles" data-toggle="collapse" data-target=".deleteUnexistingFiles .collapse">
+<h2>Remove Old Files and Folders</h2>
+<pre>deleteUnexistingFiles() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+</div></div>
+</div>
+<a name="fixImagePaths" id="fixImagePaths"></a><div class="element clickable method public fixImagePaths" data-toggle="collapse" data-target=".fixImagePaths .collapse">
+<h2>Fix Image paths</h2>
+<pre>fixImagePaths() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+</div></div>
+</div>
+<a name="fixMenus" id="fixMenus"></a><div class="element clickable method public fixMenus" data-toggle="collapse" data-target=".fixMenus .collapse">
+<h2>Fix Menus</h2>
+<pre>fixMenus() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+</div></div>
+</div>
+<a name="fixemptyaccess" id="fixemptyaccess"></a><div class="element clickable method public fixemptyaccess" data-toggle="collapse" data-target=".fixemptyaccess .collapse">
+<h2>Function to Find empty access in the db and set them to Public</h2>
+<pre>fixemptyaccess() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr>
+<tr>
+<th>todo</th>
+<td>need to compleat</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a name="fixemptylanguage" id="fixemptylanguage"></a><div class="element clickable method public fixemptylanguage" data-toggle="collapse" data-target=".fixemptylanguage .collapse">
+<h2>Funciton to find empty language field and set them to "*"</h2>
+<pre>fixemptylanguage() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr>
+<tr>
+<th>todo</th>
+<td>need to compleat</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a name="getParam" id="getParam"></a><div class="element clickable method public getParam" data-toggle="collapse" data-target=".getParam .collapse">
+<h2>get a variable from the manifest file (actually, from the manifest cache).</h2>
+<pre>getParam(string $name) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="install" id="install"></a><div class="element clickable method public install" data-toggle="collapse" data-target=".install .collapse">
+<h2>Install</h2>
+<pre>install(string $parent) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="postflight" id="postflight"></a><div class="element clickable method public postflight" data-toggle="collapse" data-target=".postflight .collapse">
+<h2>Post Flight</h2>
+<pre>postflight(string $type, string $parent) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="preflight" id="preflight"></a><div class="element clickable method public preflight" data-toggle="collapse" data-target=".preflight .collapse">
+<h2>$parent is the class calling this method.</h2>
+<pre>preflight(string $type, string $parent) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>$type is the type of change (install, update or discover_install, not uninstall).
+preflight runs before anything else and while the extracted files are in the uploaded temp folder.
+If preflight returns false, Joomla will abort the update and undo everything already done.</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="setParams" id="setParams"></a><div class="element clickable method public setParams" data-toggle="collapse" data-target=".setParams .collapse">
+<h2>sets parameter values in the component's row of the extension table</h2>
+<pre>setParams(array $param_array) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param_array</h4>
+<code>array</code>
+</div>
+</div></div>
+</div>
+<a name="uninstall" id="uninstall"></a><div class="element clickable method public uninstall" data-toggle="collapse" data-target=".uninstall .collapse">
+<h2>Uninstall</h2>
+<pre>uninstall(string $parent) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="update" id="update"></a><div class="element clickable method public update" data-toggle="collapse" data-target=".update .collapse">
+<h2>Update</h2>
+<pre>update(string $parent) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24_biblestudy_extension" id="$_biblestudy_extension"> </a><div class="element clickable property protected $_biblestudy_extension" data-toggle="collapse" data-target=".$_biblestudy_extension .collapse">
+<h2>The component's name</h2>
+<pre>$_biblestudy_extension </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>@var string</p></p></div></div>
+</div>
+<a name="%24minimum_joomla_release" id="$minimum_joomla_release"> </a><div class="element clickable property private $minimum_joomla_release" data-toggle="collapse" data-target=".$minimum_joomla_release .collapse">
+<h2>Find mimimum required joomla version for this extension.</h2>
+<pre>$minimum_joomla_release : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>It will be read from the version attribute (install tag) in the manifest file</p></p></div></div>
+</div>
+<a name="%24release" id="$release"> </a><div class="element clickable property private $release" data-toggle="collapse" data-target=".$release .collapse">
+<h2>The release value to be displayed and check against throughout this file.</h2>
+<pre>$release : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-09-30T22:07:16-05:00.<br></footer></div>
+</div>
+</body>
+</html>

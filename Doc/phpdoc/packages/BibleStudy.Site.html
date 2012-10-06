@@ -1,0 +1,2783 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>JoomlaBibleStudy » BibleStudy\Site</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">53</span>
+</li>
+<li>fixme 
+                <span class="label label-info">4</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">12</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-map-marker"></i> Packages</li>
+<li>
+<a href="../packages/BibleStudy.Site.html" title="Site"><i class="icon-folder-open"></i>Site</a><ul class="nav nav-list nav-packages">
+<li>
+<a href="../packages/BibleStudy.Site.Form.html" title="Form"><i class="icon-folder-open"></i>Form</a><ul class="nav nav-list nav-packages"></ul>
+</li>
+<li>
+<span class="empty-package"><i class="icon-folder-close"></i>sh404SEF</span><ul class="nav nav-list nav-packages"><li>
+<span class="empty-package"><i class="icon-folder-close"></i>BibleStudy</span><ul class="nav nav-list nav-packages"></ul>
+</li></ul>
+</li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-function"></i> Functions</li>
+<li class="function  "><a href="#biblestudyBuildRoute" title="biblestudyBuildRoute :: BibleStudy Build Route"><span class="description">BibleStudy Build Route</span><pre>biblestudyBuildRoute</pre></a></li>
+<li class="function  "><a href="#biblestudyParseRoute" title="biblestudyParseRoute :: BibleStudy Parse Route"><span class="description">BibleStudy Parse Route</span><pre>biblestudyParseRoute</pre></a></li>
+<li class="function  "><a href="#biblestudy_error" title="biblestudy_error :: BibleStudy Error"><span class="description">BibleStudy Error</span><pre>biblestudy_error</pre></a></li>
+<li class="function  "><a href="#binsha1" title="binsha1 :: BinSha1"><span class="description">BinSha1</span><pre>binsha1</pre></a></li>
+<li class="function  "><a href="#check_dberror" title="check_dberror :: Check DB Error"><span class="description">Check DB Error</span><pre>check_dberror</pre></a></li>
+<li class="function  "><a href="#check_dbwarning" title="check_dbwarning :: Chech DB Warning"><span class="description">Chech DB Warning</span><pre>check_dbwarning</pre></a></li>
+<li class="function  "><a href="#debug_assert_callback" title="debug_assert_callback :: Default assert call back funtion
+If certain things fail hard we MUST know about it"><span class="description">Default assert call back funtion
+If certain things fail hard we MUST know about it</span><pre>debug_assert_callback</pre></a></li>
+<li class="function  "><a href="#debug_callstackinfo" title="debug_callstackinfo :: Show the callstack to this point in a decent format"><span class="description">Show the callstack to this point in a decent format</span><pre>debug_callstackinfo</pre></a></li>
+<li class="function  "><a href="#debug_vars" title="debug_vars :: Little helper to created a formated output of variables"><span class="description">Little helper to created a formated output of variables</span><pre>debug_vars</pre></a></li>
+<li class="function  "><a href="#ftp_chmod" title="ftp_chmod :: FTP Chmod"><span class="description">FTP Chmod</span><pre>ftp_chmod</pre></a></li>
+<li class="function  "><a href="#getArticle" title="getArticle :: Get Article"><span class="description">Get Article</span><pre>getArticle</pre></a></li>
+<li class="function  "><a href="#getBooksLandingPage" title="getBooksLandingPage :: Get Books for Landing Page."><span class="description">Get Books for Landing Page.</span><pre>getBooksLandingPage</pre></a></li>
+<li class="function  "><a href="#getCell" title="getCell :: Get Cell"><span class="description">Get Cell</span><pre>getCell</pre></a></li>
+<li class="function  "><a href="#getCustom" title="getCustom :: Get Custom page"><span class="description">Get Custom page</span><pre>getCustom</pre></a></li>
+<li class="function  "><a href="#getCustomhead" title="getCustomhead :: Get CustomHead"><span class="description">Get CustomHead</span><pre>getCustomhead</pre></a></li>
+<li class="function  "><a href="#getDocman" title="getDocman :: Get Docman"><span class="description">Get Docman</span><pre>getDocman</pre></a></li>
+<li class="function  "><a href="#getDownloadLink" title="getDownloadLink :: Get Download Link"><span class="description">Get Download Link</span><pre>getDownloadLink</pre></a></li>
+<li class="function  "><a href="#getDuration" title="getDuration :: Get Duration"><span class="description">Get Duration</span><pre>getDuration</pre></a></li>
+<li class="function  "><a href="#getEditlink" title="getEditlink :: Get Edit Link"><span class="description">Get Edit Link</span><pre>getEditlink</pre></a></li>
+<li class="function  "><a href="#getEditlisting" title="getEditlisting :: Get Edit Listing"><span class="description">Get Edit Listing</span><pre>getEditlisting</pre></a></li>
+<li class="function  "><a href="#getElementid" title="getElementid :: Get Elementid"><span class="description">Get Elementid</span><pre>getElementid</pre></a></li>
+<li class="function  "><a href="#getElementnumber" title="getElementnumber :: Get Element Number."><span class="description">Get Element Number.</span><pre>getElementnumber</pre></a></li>
+<li class="function  "><a href="#getFilepath" title="getFilepath :: Get File Path"><span class="description">Get File Path</span><pre>getFilepath</pre></a></li>
+<li class="function  "><a href="#getFilesize" title="getFilesize :: Function to get File Size"><span class="description">Function to get File Size</span><pre>getFilesize</pre></a></li>
+<li class="function  "><a href="#getHeader" title="getHeader :: Get Header"><span class="description">Get Header</span><pre>getHeader</pre></a></li>
+<li class="function  "><a href="#getHeadercell" title="getHeadercell :: Get Heder Cell"><span class="description">Get Heder Cell</span><pre>getHeadercell</pre></a></li>
+<li class="function  "><a href="#getInternalPlayer" title="getInternalPlayer :: Get Internal Player"><span class="description">Get Internal Player</span><pre>getInternalPlayer</pre></a></li>
+<li class="function  "><a href="#getLink" title="getLink :: Get Link"><span class="description">Get Link</span><pre>getLink</pre></a></li>
+<li class="function  "><a href="#getListing" title="getListing :: Get listing"><span class="description">Get listing</span><pre>getListing</pre></a></li>
+<li class="function  "><a href="#getListingExp" title="getListingExp :: Get Listing Exp"><span class="description">Get Listing Exp</span><pre>getListingExp</pre></a></li>
+<li class="function  "><a href="#getLocationsLandingPage" title="getLocationsLandingPage :: Get Locations for Landing Page"><span class="description">Get Locations for Landing Page</span><pre>getLocationsLandingPage</pre></a></li>
+<li class="function  "><a href="#getMedia" title="getMedia :: Get Media"><span class="description">Get Media</span><pre>getMedia</pre></a></li>
+<li class="function  "><a href="#getMediaFile" title="getMediaFile :: Get Media File"><span class="description">Get Media File</span><pre>getMediaFile</pre></a></li>
+<li class="function  "><a href="#getMediaForList" title="getMediaForList :: Get Media For List"><span class="description">Get Media For List</span><pre>getMediaForList</pre></a></li>
+<li class="function  "><a href="#getMediaRows" title="getMediaRows :: Get MediaRows"><span class="description">Get MediaRows</span><pre>getMediaRows</pre></a></li>
+<li class="function  "><a href="#getMediatable" title="getMediatable :: Get MediaTable"><span class="description">Get MediaTable</span><pre>getMediatable</pre></a></li>
+<li class="function  "><a href="#getMessageTypesLandingPage" title="getMessageTypesLandingPage :: Get MessageType for Landing Page"><span class="description">Get MessageType for Landing Page</span><pre>getMessageTypesLandingPage</pre></a></li>
+<li class="function  "><a href="#getPDF" title="getPDF :: Get PDF"><span class="description">Get PDF</span><pre>getPDF</pre></a></li>
+<li class="function  "><a href="#getPassage" title="getPassage :: Get Passage"><span class="description">Get Passage</span><pre>getPassage</pre></a></li>
+<li class="function  "><a href="#getScripture" title="getScripture :: Get Scripture"><span class="description">Get Scripture</span><pre>getScripture</pre></a></li>
+<li class="function  "><a href="#getSeriesDetailsExp" title="getSeriesDetailsExp :: Get Series Details EXP"><span class="description">Get Series Details EXP</span><pre>getSeriesDetailsExp</pre></a></li>
+<li class="function  "><a href="#getSeriesFooter" title="getSeriesFooter :: Get Series Footer"><span class="description">Get Series Footer</span><pre>getSeriesFooter</pre></a></li>
+<li class="function  "><a href="#getSeriesLandingPage" title="getSeriesLandingPage :: Get Series for LandingPage"><span class="description">Get Series for LandingPage</span><pre>getSeriesLandingPage</pre></a></li>
+<li class="function  "><a href="#getSerieslink" title="getSerieslink :: Get SeriesLink"><span class="description">Get SeriesLink</span><pre>getSerieslink</pre></a></li>
+<li class="function  "><a href="#getSerieslist" title="getSerieslist :: Get SeriesList"><span class="description">Get SeriesList</span><pre>getSerieslist</pre></a></li>
+<li class="function  "><a href="#getSerieslistExp" title="getSerieslistExp :: Get Serieslist Exp"><span class="description">Get Serieslist Exp</span><pre>getSerieslistExp</pre></a></li>
+<li class="function  "><a href="#getSeriesstudies" title="getSeriesstudies :: Get SeriesStudies"><span class="description">Get SeriesStudies</span><pre>getSeriesstudies</pre></a></li>
+<li class="function  "><a href="#getSeriesstudiesDBO" title="getSeriesstudiesDBO :: Get SeriesStudies DBO"><span class="description">Get SeriesStudies DBO</span><pre>getSeriesstudiesDBO</pre></a></li>
+<li class="function  "><a href="#getSeriesstudiesExp" title="getSeriesstudiesExp :: Get Series Studies Exp"><span class="description">Get Series Studies Exp</span><pre>getSeriesstudiesExp</pre></a></li>
+<li class="function  "><a href="#getShare" title="getShare :: Share Helper file"><span class="description">Share Helper file</span><pre>getShare</pre></a></li>
+<li class="function  "><a href="#getStore" title="getStore :: Get Store"><span class="description">Get Store</span><pre>getStore</pre></a></li>
+<li class="function  "><a href="#getStudiesedit" title="getStudiesedit :: Get StudiesEdit"><span class="description">Get StudiesEdit</span><pre>getStudiesedit</pre></a></li>
+<li class="function  "><a href="#getStudieslink" title="getStudieslink :: Get StudiesLink"><span class="description">Get StudiesLink</span><pre>getStudieslink</pre></a></li>
+<li class="function  "><a href="#getStudyExp" title="getStudyExp :: Get Study Exp"><span class="description">Get Study Exp</span><pre>getStudyExp</pre></a></li>
+<li class="function  "><a href="#getTeacher" title="getTeacher :: Get Teacher"><span class="description">Get Teacher</span><pre>getTeacher</pre></a></li>
+<li class="function  "><a href="#getTeacherDetailsExp" title="getTeacherDetailsExp :: Get Teacher Details Exp"><span class="description">Get Teacher Details Exp</span><pre>getTeacherDetailsExp</pre></a></li>
+<li class="function  "><a href="#getTeacherLandingPage" title="getTeacherLandingPage :: Get Teacher for LandingPage"><span class="description">Get Teacher for LandingPage</span><pre>getTeacherLandingPage</pre></a></li>
+<li class="function  "><a href="#getTeacherListExp" title="getTeacherListExp :: Get TeacherList Exp"><span class="description">Get TeacherList Exp</span><pre>getTeacherListExp</pre></a></li>
+<li class="function  "><a href="#getTeacherStudiesExp" title="getTeacherStudiesExp :: Get Teacher Studies Exp"><span class="description">Get Teacher Studies Exp</span><pre>getTeacherStudiesExp</pre></a></li>
+<li class="function  "><a href="#getTextlink" title="getTextlink :: Get Textlink"><span class="description">Get Textlink</span><pre>getTextlink</pre></a></li>
+<li class="function  "><a href="#getTitle" title="getTitle :: Get Title"><span class="description">Get Title</span><pre>getTitle</pre></a></li>
+<li class="function  "><a href="#getTopicsLandingPage" title="getTopicsLandingPage :: Get Topics for LandingPage"><span class="description">Get Topics for LandingPage</span><pre>getTopicsLandingPage</pre></a></li>
+<li class="function  "><a href="#getTypeIcon" title="getTypeIcon :: Get Type Icon"><span class="description">Get Type Icon</span><pre>getTypeIcon</pre></a></li>
+<li class="function  "><a href="#getVirtuemart" title="getVirtuemart :: Get Virtuart"><span class="description">Get Virtuart</span><pre>getVirtuemart</pre></a></li>
+<li class="function  "><a href="#getYearsLandingPage" title="getYearsLandingPage :: Get Years for Landing Page"><span class="description">Get Years for Landing Page</span><pre>getYearsLandingPage</pre></a></li>
+<li class="function  "><a href="#getseriesElementnumber" title="getseriesElementnumber :: Get Series ElementNumber"><span class="description">Get Series ElementNumber</span><pre>getseriesElementnumber</pre></a></li>
+<li class="function  "><a href="#getstudyDate" title="getstudyDate :: Get StudyDate"><span class="description">Get StudyDate</span><pre>getstudyDate</pre></a></li>
+<li class="function  "><a href="#make_bitly_url" title="make_bitly_url :: make a URL small"><span class="description">make a URL small</span><pre>make_bitly_url</pre></a></li>
+<li class="function  "><a href="#seriesGetcustom" title="seriesGetcustom :: Series Get Custom"><span class="description">Series Get Custom</span><pre>seriesGetcustom</pre></a></li>
+<li class="function  "><a href="#seriesGetelement" title="seriesGetelement :: Series Get Element"><span class="description">Series Get Element</span><pre>seriesGetelement</pre></a></li>
+<li class="function  "><a href="#trigger_dberror" title="trigger_dberror :: Production error handling"><span class="description">Production error handling</span><pre>trigger_dberror</pre></a></li>
+<li class="function  "><a href="#trigger_dbwarning" title="trigger_dbwarning :: Trigger DB Warning"><span class="description">Trigger DB Warning</span><pre>trigger_dbwarning</pre></a></li>
+<li class="function  "><a href="#writeXML" title="writeXML :: Write XML"><span class="description">Write XML</span><pre>writeXML</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-class"></i> Classes</li>
+<li><a href="#biblestudyController" title="Controller for Core BibleStudy">biblestudyController</a></li>
+<li><a href="#biblestudyControllerCommentsEdit" title="Controller class for CommentsEdit">biblestudyControllerCommentsEdit</a></li>
+<li><a href="#biblestudyControllerCommentsList" title="Controller for CommentsList">biblestudyControllerCommentsList</a></li>
+<li><a href="#biblestudyControllermediafile" title="Controller class for MediaFile">biblestudyControllermediafile</a></li>
+<li><a href="#biblestudyControllerMediafiles" title="Controller for MediaFiles">biblestudyControllerMediafiles</a></li>
+<li><a href="#biblestudyControllermessage" title="Controller class for Message">biblestudyControllermessage</a></li>
+<li><a href="#biblestudyControllerMessages" title="Controller class for Messages">biblestudyControllerMessages</a></li>
+<li><a href="#BiblestudyControllerSeriesdisplay" title="Controller for Seriesdisplay">BiblestudyControllerSeriesdisplay</a></li>
+<li><a href="#BiblestudyControllerSeriesdisplays" title="Controller for SeriesDisplay">BiblestudyControllerSeriesdisplays</a></li>
+<li><a href="#BiblestudyControllerSermon" title="studies Edit Controller">BiblestudyControllerSermon</a></li>
+<li><a href="#BiblestudyControllerSermons" title="Controller class for Sermons">BiblestudyControllerSermons</a></li>
+<li><a href="#BiblestudyControllerTeacher" title="Controller class for Teacher">BiblestudyControllerTeacher</a></li>
+<li><a href="#BiblestudyControllerTeachers" title="Controller class for Teachers">BiblestudyControllerTeachers</a></li>
+<li><a href="#showScripture" title="Scripture Show class.">showScripture</a></li>
+<li><a href="#JHtmlIcon" title="Content Component HTML Helper">JHtmlIcon</a></li>
+<li><a href="#BsmHelper" title="//Eugen
+This class may not be required">BsmHelper</a></li>
+<li><a href="#podcastSubscribe" title="A helper to return buttons for podcast subscriptions">podcastSubscribe</a></li>
+<li><a href="#relatedStudies" title="helper to get related studies to the current one">relatedStudies</a></li>
+<li><a href="#BiblestudyHelperRoute" title="Biblestudy Component Route Helper">BiblestudyHelperRoute</a></li>
+<li><a href="#biblestudyHelperToolbar" title="Helper class for Toolbar">biblestudyHelperToolbar</a></li>
+<li><a href="#JBSUpload" title="JBS Upload class">JBSUpload</a></li>
+<li><a href="#JBSAdmin" title="BibleStudy Admin Class">JBSAdmin</a></li>
+<li><a href="#Dump_File" title="BibleStudy Download Class">Dump_File</a></li>
+<li><a href="#jbsImages" title="BibleStudy images class">jbsImages</a></li>
+<li><a href="#JBSListing" title="BibleStudy listing class">JBSListing</a></li>
+<li><a href="#jbsMedia" title="Joomla! Bible Study Media class.">jbsMedia</a></li>
+<li><a href="#JBSPagebuilder" title="Class to build page elements in use by custom template files">JBSPagebuilder</a></li>
+<li><a href="#JBSPodcast" title="BibleStudy Podcast Class">JBSPodcast</a></li>
+<li><a href="#jbStats" title="BibleStudy Stats Class">jbStats</a></li>
+<li><a href="#biblestudyModelcommentsedit" title="Model class for CommentsEdit">biblestudyModelcommentsedit</a></li>
+<li><a href="#biblestudyModelcommentslist" title="Model class for CommentsList">biblestudyModelcommentslist</a></li>
+<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
+<li><a href="#JFormFieldModal_Article" title="Supports a modal article picker.">JFormFieldModal_Article</a></li>
+<li><a href="#JFormFieldModal_Study" title="Field Modal class for Sutdy">JFormFieldModal_Study</a></li>
+<li><a href="#JFormFieldModal_studydetails" title="Supports a modal study picker.">JFormFieldModal_studydetails</a></li>
+<li><a href="#JFormFieldTopicslist" title="Topics List Form Field class for the Joomla Bible Study component
+Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
+<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a></li>
+<li><a href="#biblestudyModellandingpage" title="Model class for LandingPage">biblestudyModellandingpage</a></li>
+<li><a href="#BiblestudyModelMediafile" title="Model class for MediaFile">BiblestudyModelMediafile</a></li>
+<li><a href="#biblestudyModelmediafiles" title="Model class for MediaFiles">biblestudyModelmediafiles</a></li>
+<li><a href="#biblestudyModelmediaplayer" title="Model class for MediaPlayer">biblestudyModelmediaplayer</a></li>
+<li><a href="#biblestudyModelmessage" title="Model class for Message">biblestudyModelmessage</a></li>
+<li><a href="#biblestudyModelMessages" title="Model class for Messages">biblestudyModelMessages</a></li>
+<li><a href="#BiblestudyModelSeriesdisplay" title="Model class for SeriesDisplay">BiblestudyModelSeriesdisplay</a></li>
+<li><a href="#BiblestudyModelSeriesdisplays" title="Model class for SeriesDisplays">BiblestudyModelSeriesdisplays</a></li>
+<li><a href="#BiblestudyModelSermon" title="Model class for Sermon">BiblestudyModelSermon</a></li>
+<li><a href="#BiblestudyModelSermons" title="Model class for Sermons">BiblestudyModelSermons</a></li>
+<li><a href="#BiblestudyModelTeacher" title="Model class for Teacher">BiblestudyModelTeacher</a></li>
+<li><a href="#BiblestudyModelTeachers" title="Model class for Teachers">BiblestudyModelTeachers</a></li>
+<li><a href="#Tablecommentsedit" title="Table class for CommentsEdit">Tablecommentsedit</a></li>
+<li><a href="#TableMediafile" title="Table class for MediaFile">TableMediafile</a></li>
+<li><a href="#Tablestudydetails" title="Table class for StudyDetails">Tablestudydetails</a></li>
+<li><a href="#Tableteacherdisplay" title="Table Class for TeacherDisplay">Tableteacherdisplay</a></li>
+<li><a href="#biblestudyViewcommentsedit" title="View class for CommentsEdit">biblestudyViewcommentsedit</a></li>
+<li><a href="#biblestudyViewcommentslist" title="Comment list view class">biblestudyViewcommentslist</a></li>
+<li><a href="#biblestudyViewLandingpage" title="Landing page list view class">biblestudyViewLandingpage</a></li>
+<li><a href="#biblestudyViewmediafile" title="View class for MediaFile">biblestudyViewmediafile</a></li>
+<li><a href="#biblestudyViewmediafiles" title="View class for MediaFiles">biblestudyViewmediafiles</a></li>
+<li><a href="#biblestudyViewmessage" title="View class for Message">biblestudyViewmessage</a></li>
+<li><a href="#biblestudyViewmessages" title="View class for Messages">biblestudyViewmessages</a></li>
+<li><a href="#biblestudyViewpopup" title="View class for Popup">biblestudyViewpopup</a></li>
+<li><a href="#BiblestudyViewSeriesdisplay" title="View class for SeriesDisplay">BiblestudyViewSeriesdisplay</a></li>
+<li><a href="#BiblestudyViewSeriesdisplays" title="View class for SeriesDisplays">BiblestudyViewSeriesdisplays</a></li>
+<li><a href="#BiblestudyViewSermon" title="View class for Sermon">BiblestudyViewSermon</a></li>
+<li><a href="#BiblestudyViewSermons" title="View for Sermons class">BiblestudyViewSermons</a></li>
+<li><a href="#BiblestudyViewTeacher" title="View class for Teacher">BiblestudyViewTeacher</a></li>
+<li><a href="#BiblestudyViewTeachers" title="View class for Teachers">BiblestudyViewTeachers</a></li>
+<li><a href="#biblestudyViewterms" title="View class for Terms">biblestudyViewterms</a></li>
+<li class="nav-header">
+<i class="icon-custom icon-constant"></i> Constants</li>
+<li class="constant  "><a href="#BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_COMPONENT_RELPATH" title="BIBLESTUDY_COMPONENT_RELPATH :: "><span class="description">BIBLESTUDY_COMPONENT_RELPATH</span><pre>BIBLESTUDY_COMPONENT_RELPATH</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_DB_MISSING_COLUMN" title="BIBLESTUDY_DB_MISSING_COLUMN :: "><span class="description">BIBLESTUDY_DB_MISSING_COLUMN</span><pre>BIBLESTUDY_DB_MISSING_COLUMN</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_FILE_INSTALL" title="BIBLESTUDY_FILE_INSTALL :: "><span class="description">BIBLESTUDY_FILE_INSTALL</span><pre>BIBLESTUDY_FILE_INSTALL</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_LANGUAGE_DEFAULT" title="BIBLESTUDY_LANGUAGE_DEFAULT :: "><span class="description">BIBLESTUDY_LANGUAGE_DEFAULT</span><pre>BIBLESTUDY_LANGUAGE_DEFAULT</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH" title="BIBLESTUDY_PATH :: "><span class="description">BIBLESTUDY_PATH</span><pre>BIBLESTUDY_PATH</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN" title="BIBLESTUDY_PATH_ADMIN :: "><span class="description">BIBLESTUDY_PATH_ADMIN</span><pre>BIBLESTUDY_PATH_ADMIN</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN_HELPERS" title="BIBLESTUDY_PATH_ADMIN_HELPERS :: "><span class="description">BIBLESTUDY_PATH_ADMIN_HELPERS</span><pre>BIBLESTUDY_PATH_ADMIN_HELPERS</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN_IMAGES" title="BIBLESTUDY_PATH_ADMIN_IMAGES :: "><span class="description">BIBLESTUDY_PATH_ADMIN_IMAGES</span><pre>BIBLESTUDY_PATH_ADMIN_IMAGES</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN_INSTALL" title="BIBLESTUDY_PATH_ADMIN_INSTALL :: "><span class="description">BIBLESTUDY_PATH_ADMIN_INSTALL</span><pre>BIBLESTUDY_PATH_ADMIN_INSTALL</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN_LANGUAGE" title="BIBLESTUDY_PATH_ADMIN_LANGUAGE :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LANGUAGE</span><pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LIB</span><pre>BIBLESTUDY_PATH_ADMIN_LIB</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_LIB" title="BIBLESTUDY_PATH_LIB :: "><span class="description">BIBLESTUDY_PATH_LIB</span><pre>BIBLESTUDY_PATH_LIB</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_PATH_TEMPLATE_DEFAULT" title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_ROOT_PATH" title="BIBLESTUDY_ROOT_PATH :: "><span class="description">BIBLESTUDY_ROOT_PATH</span><pre>BIBLESTUDY_ROOT_PATH</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_ROOT_PATH_ADMIN" title="BIBLESTUDY_ROOT_PATH_ADMIN :: "><span class="description">BIBLESTUDY_ROOT_PATH_ADMIN</span><pre>BIBLESTUDY_ROOT_PATH_ADMIN</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_SECONDS_IN_HOUR" title="BIBLESTUDY_SECONDS_IN_HOUR :: "><span class="description">BIBLESTUDY_SECONDS_IN_HOUR</span><pre>BIBLESTUDY_SECONDS_IN_HOUR</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_SECONDS_IN_YEAR" title="BIBLESTUDY_SECONDS_IN_YEAR :: "><span class="description">BIBLESTUDY_SECONDS_IN_YEAR</span><pre>BIBLESTUDY_SECONDS_IN_YEAR</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_TEMPLATE_DEFAULT" title="BIBLESTUDY_TEMPLATE_DEFAULT :: "><span class="description">BIBLESTUDY_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_TEMPLATE_DEFAULT</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_VERSION" title="BIBLESTUDY_VERSION :: "><span class="description">BIBLESTUDY_VERSION</span><pre>BIBLESTUDY_VERSION</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_VERSION_BUILD" title="BIBLESTUDY_VERSION_BUILD :: "><span class="description">BIBLESTUDY_VERSION_BUILD</span><pre>BIBLESTUDY_VERSION_BUILD</pre></a></li>
+<li class="constant  "><a href="#BIBLESTUDY_VERSION_DATE" title="BIBLESTUDY_VERSION_DATE :: "><span class="description">BIBLESTUDY_VERSION_DATE</span><pre>BIBLESTUDY_VERSION_DATE</pre></a></li>
+<li class="constant  "><a href="#JSTART" title="JSTART :: "><span class="description">JSTART</span><pre>JSTART</pre></a></li>
+<li class="constant  "><a href="#JSTOP" title="JSTOP :: "><span class="description">JSTOP</span><pre>JSTOP</pre></a></li>
+<li class="constant  "><a href="#VMLANG" title="VMLANG :: "><span class="description">VMLANG</span><pre>VMLANG</pre></a></li>
+</ul>
+</div>
+<div class="span8 package-contents">
+<ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<span class="divider">\</span><li class="active"><a href="../packages/BibleStudy.Site.html">Site</a></li>
+</ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-function"></i> Functions</h3>
+<a name="biblestudyBuildRoute" id="biblestudyBuildRoute"></a><div class="element clickable function  biblestudyBuildRoute" data-toggle="collapse" data-target=".biblestudyBuildRoute .collapse">
+<h2>BibleStudy Build Route</h2>
+<pre>biblestudyBuildRoute(array $query) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$query</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="biblestudyParseRoute" id="biblestudyParseRoute"></a><div class="element clickable function  biblestudyParseRoute" data-toggle="collapse" data-target=".biblestudyParseRoute .collapse">
+<h2>BibleStudy Parse Route</h2>
+<pre>biblestudyParseRoute(object $segments) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$segments</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="biblestudy_error" id="biblestudy_error"></a><div class="element clickable function  biblestudy_error" data-toggle="collapse" data-target=".biblestudy_error .collapse">
+<h2>BibleStudy Error</h2>
+<pre>biblestudy_error(string $message, string $level, string $back) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$message</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$level</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$back</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="binsha1" id="binsha1"></a><div class="element clickable function  binsha1" data-toggle="collapse" data-target=".binsha1 .collapse">
+<h2>BinSha1</h2>
+<pre>binsha1(string $d) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$d</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="check_dberror" id="check_dberror"></a><div class="element clickable function  check_dberror" data-toggle="collapse" data-target=".check_dberror .collapse">
+<h2>Check DB Error</h2>
+<pre>check_dberror(string $text, string $back) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$text</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$back</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="check_dbwarning" id="check_dbwarning"></a><div class="element clickable function  check_dbwarning" data-toggle="collapse" data-target=".check_dbwarning .collapse">
+<h2>Chech DB Warning</h2>
+<pre>check_dbwarning(string $text) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$text</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="debug_assert_callback" id="debug_assert_callback"></a><div class="element clickable function  debug_assert_callback" data-toggle="collapse" data-target=".debug_assert_callback .collapse">
+<h2>Default assert call back funtion
+If certain things fail hard we MUST know about it</h2>
+<pre>debug_assert_callback(\type $script, \type $line, \type $message) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$script</h4>
+<code>\type</code>
+</div>
+<div class="subelement argument">
+<h4>$line</h4>
+<code>\type</code>
+</div>
+<div class="subelement argument">
+<h4>$message</h4>
+<code>\type</code>
+</div>
+</div></div>
+</div>
+<a name="debug_callstackinfo" id="debug_callstackinfo"></a><div class="element clickable function  debug_callstackinfo" data-toggle="collapse" data-target=".debug_callstackinfo .collapse">
+<h2>Show the callstack to this point in a decent format</h2>
+<pre>debug_callstackinfo(string $back) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$back</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="debug_vars" id="debug_vars"></a><div class="element clickable function  debug_vars" data-toggle="collapse" data-target=".debug_vars .collapse">
+<h2>Little helper to created a formated output of variables</h2>
+<pre>debug_vars(string $varlist) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$varlist</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="ftp_chmod" id="ftp_chmod"></a><div class="element clickable function  ftp_chmod" data-toggle="collapse" data-target=".ftp_chmod .collapse">
+<h2>FTP Chmod</h2>
+<pre>ftp_chmod(string $ftp_stream, string $mode, array $filename) : \bolean | boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$ftp_stream</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$mode</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$filename</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\bolean</code><code>boolean</code>
+</div>
+</div></div>
+</div>
+<a name="getArticle" id="getArticle"></a><div class="element clickable function  getArticle" data-toggle="collapse" data-target=".getArticle .collapse">
+<h2>Get Article</h2>
+<pre>getArticle(string $media, int $width, int $height, string $src) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getBooksLandingPage" id="getBooksLandingPage"></a><div class="element clickable function  getBooksLandingPage" data-toggle="collapse" data-target=".getBooksLandingPage .collapse">
+<h2>Get Books for Landing Page.</h2>
+<pre>getBooksLandingPage(array $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getCell" id="getCell"></a><div class="element clickable function  getCell" data-toggle="collapse" data-target=".getCell .collapse">
+<h2>Get Cell</h2>
+<pre>getCell(int $elementid, string $element, int $rowcolid, string $colspan, string $rowspan, string $lastcol, string $islink, string $id3, int $tid, string $smenu, string $tmenu, string $entry_access, string $allow_entry, object $params, object $admin_params, string $row, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$elementid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$element</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$rowcolid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$colspan</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$rowspan</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$lastcol</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$id3</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$tid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$smenu</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$tmenu</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$entry_access</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$allow_entry</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getCustom" id="getCustom"></a><div class="element clickable function  getCustom" data-toggle="collapse" data-target=".getCustom .collapse">
+<h2>Get Custom page</h2>
+<pre>getCustom(int $rowid, string $custom, string $row, array $params, array $admin_params, array $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$custom</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getCustomhead" id="getCustomhead"></a><div class="element clickable function  getCustomhead" data-toggle="collapse" data-target=".getCustomhead .collapse">
+<h2>Get CustomHead</h2>
+<pre>getCustomhead(int $rowcolid, object $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowcolid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getDocman" id="getDocman"></a><div class="element clickable function  getDocman" data-toggle="collapse" data-target=".getDocman .collapse">
+<h2>Get Docman</h2>
+<pre>getDocman(string $media, int $width, int $height, string $src, string $duration, int $filesize) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$duration</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$filesize</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getDownloadLink" id="getDownloadLink"></a><div class="element clickable function  getDownloadLink" data-toggle="collapse" data-target=".getDownloadLink .collapse">
+<h2>Get Download Link</h2>
+<pre>getDownloadLink(object $media, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getDuration" id="getDuration"></a><div class="element clickable function  getDuration" data-toggle="collapse" data-target=".getDuration .collapse">
+<h2>Get Duration</h2>
+<pre>getDuration(string $params, string $row) : null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a name="getEditlink" id="getEditlink"></a><div class="element clickable function  getEditlink" data-toggle="collapse" data-target=".getEditlink .collapse">
+<h2>Get Edit Link</h2>
+<pre>getEditlink(\type $id, \type $params) : null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>\type</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\type</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a name="getEditlisting" id="getEditlisting"></a><div class="element clickable function  getEditlisting" data-toggle="collapse" data-target=".getEditlisting .collapse">
+<h2>Get Edit Listing</h2>
+<pre>getEditlisting(object $admin_params, object $params) : string | null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code><code>null</code>
+</div>
+</div></div>
+</div>
+<a name="getElementid" id="getElementid"></a><div class="element clickable function  getElementid" data-toggle="collapse" data-target=".getElementid .collapse">
+<h2>Get Elementid</h2>
+<pre>getElementid(string $rowid, string $row, array $params, array $admin_params, array $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowid</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getElementnumber" id="getElementnumber"></a><div class="element clickable function  getElementnumber" data-toggle="collapse" data-target=".getElementnumber .collapse">
+<h2>Get Element Number.</h2>
+<pre>getElementnumber(int $rowid) : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowid</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a name="getFilepath" id="getFilepath"></a><div class="element clickable function  getFilepath" data-toggle="collapse" data-target=".getFilepath .collapse">
+<h2>Get File Path</h2>
+<pre>getFilepath(string $id3, string $idfield, string $mime) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id3</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$idfield</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$mime</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getFilesize" id="getFilesize"></a><div class="element clickable function  getFilesize" data-toggle="collapse" data-target=".getFilesize .collapse">
+<h2>Function to get File Size</h2>
+<pre>getFilesize(string $file_size) : null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$file_size</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a name="getHeader" id="getHeader"></a><div class="element clickable function  getHeader" data-toggle="collapse" data-target=".getHeader .collapse">
+<h2>Get Header</h2>
+<pre>getHeader(object $row, object $params, object $admin_params, object $template, int $showheader, int $ismodule) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$showheader</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$ismodule</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getHeadercell" id="getHeadercell"></a><div class="element clickable function  getHeadercell" data-toggle="collapse" data-target=".getHeadercell .collapse">
+<h2>Get Heder Cell</h2>
+<pre>getHeadercell(int $rowid, object $row, object $params, int $lastcol, int $colspan, int $rowspan, int $rowcolid, string $nh, object $admin_params, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$lastcol</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$colspan</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$rowspan</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$rowcolid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$nh</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getInternalPlayer" id="getInternalPlayer"></a><div class="element clickable function  getInternalPlayer" data-toggle="collapse" data-target=".getInternalPlayer .collapse">
+<h2>Get Internal Player</h2>
+<pre>getInternalPlayer(object $media, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getLink" id="getLink"></a><div class="element clickable function  getLink" data-toggle="collapse" data-target=".getLink .collapse">
+<h2>Get Link</h2>
+<pre>getLink(string $islink, string $id3, int $tid, string $smenu, string $tmenu, object $params, object $admin_params, object $row, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$id3</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$tid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$smenu</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$tmenu</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getListing" id="getListing"></a><div class="element clickable function  getListing" data-toggle="collapse" data-target=".getListing .collapse">
+<h2>Get listing</h2>
+<pre>getListing(object $row, object $params, string $oddeven, object $admin_params, object $template, string $ismodule) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$oddeven</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$ismodule</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getListingExp" id="getListingExp"></a><div class="element clickable function  getListingExp" data-toggle="collapse" data-target=".getListingExp .collapse">
+<h2>Get Listing Exp</h2>
+<pre>getListingExp(object $row, object $params, object $admin_params, object $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getLocationsLandingPage" id="getLocationsLandingPage"></a><div class="element clickable function  getLocationsLandingPage" data-toggle="collapse" data-target=".getLocationsLandingPage .collapse">
+<h2>Get Locations for Landing Page</h2>
+<pre>getLocationsLandingPage(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getMedia" id="getMedia"></a><div class="element clickable function  getMedia" data-toggle="collapse" data-target=".getMedia .collapse">
+<h2>Get Media</h2>
+<pre>getMedia(int $id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getMediaFile" id="getMediaFile"></a><div class="element clickable function  getMediaFile" data-toggle="collapse" data-target=".getMediaFile .collapse">
+<h2>Get Media File</h2>
+<pre>getMediaFile(object $media, object $params, Object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>Object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getMediaForList" id="getMediaForList"></a><div class="element clickable function  getMediaForList" data-toggle="collapse" data-target=".getMediaForList .collapse">
+<h2>Get Media For List</h2>
+<pre>getMediaForList(object $row, object $params, object $admin_params) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>since version 7.0.4</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+</div></div>
+</div>
+<a name="getMediaRows" id="getMediaRows"></a><div class="element clickable function  getMediaRows" data-toggle="collapse" data-target=".getMediaRows .collapse">
+<h2>Get MediaRows</h2>
+<pre>getMediaRows(int $study_id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$study_id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getMediatable" id="getMediatable"></a><div class="element clickable function  getMediatable" data-toggle="collapse" data-target=".getMediatable .collapse">
+<h2>Get MediaTable</h2>
+<pre>getMediatable(array $params, array $row, array $admin_params) : boolean | null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a name="getMessageTypesLandingPage" id="getMessageTypesLandingPage"></a><div class="element clickable function  getMessageTypesLandingPage" data-toggle="collapse" data-target=".getMessageTypesLandingPage .collapse">
+<h2>Get MessageType for Landing Page</h2>
+<pre>getMessageTypesLandingPage(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getPDF" id="getPDF"></a><div class="element clickable function  getPDF" data-toggle="collapse" data-target=".getPDF .collapse">
+<h2>Get PDF</h2>
+<pre>getPDF(\objcet $row, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>\objcet</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getPassage" id="getPassage"></a><div class="element clickable function  getPassage" data-toggle="collapse" data-target=".getPassage .collapse">
+<h2>Get Passage</h2>
+<pre>getPassage(object $params, object $row) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getScripture" id="getScripture"></a><div class="element clickable function  getScripture" data-toggle="collapse" data-target=".getScripture .collapse">
+<h2>Get Scripture</h2>
+<pre>getScripture(object $params, object $row, string $esv, string $scripturerow) : \strings</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$esv</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$scripturerow</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>\strings</code></div>
+</div></div>
+</div>
+<a name="getSeriesDetailsExp" id="getSeriesDetailsExp"></a><div class="element clickable function  getSeriesDetailsExp" data-toggle="collapse" data-target=".getSeriesDetailsExp .collapse">
+<h2>Get Series Details EXP</h2>
+<pre>getSeriesDetailsExp(object $row, object $params, object $admin_params, object $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getSeriesFooter" id="getSeriesFooter"></a><div class="element clickable function  getSeriesFooter" data-toggle="collapse" data-target=".getSeriesFooter .collapse">
+<h2>Get Series Footer</h2>
+<pre>getSeriesFooter(object $template, int $id) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>since version 7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSeriesLandingPage" id="getSeriesLandingPage"></a><div class="element clickable function  getSeriesLandingPage" data-toggle="collapse" data-target=".getSeriesLandingPage .collapse">
+<h2>Get Series for LandingPage</h2>
+<pre>getSeriesLandingPage(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSerieslink" id="getSerieslink"></a><div class="element clickable function  getSerieslink" data-toggle="collapse" data-target=".getSerieslink .collapse">
+<h2>Get SeriesLink</h2>
+<pre>getSerieslink(string $islink, object $row, string $element, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$element</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSerieslist" id="getSerieslist"></a><div class="element clickable function  getSerieslist" data-toggle="collapse" data-target=".getSerieslist .collapse">
+<h2>Get SeriesList</h2>
+<pre>getSerieslist(object $row, object $params, string $oddeven, object $admin_params, object $template, string $view) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$oddeven</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$view</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSerieslistExp" id="getSerieslistExp"></a><div class="element clickable function  getSerieslistExp" data-toggle="collapse" data-target=".getSerieslistExp .collapse">
+<h2>Get Serieslist Exp</h2>
+<pre>getSerieslistExp(object $row, object $params, object $admin_params, object $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getSeriesstudies" id="getSeriesstudies"></a><div class="element clickable function  getSeriesstudies" data-toggle="collapse" data-target=".getSeriesstudies .collapse">
+<h2>Get SeriesStudies</h2>
+<pre>getSeriesstudies(int $id, object $params, object $admin_params, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSeriesstudiesDBO" id="getSeriesstudiesDBO"></a><div class="element clickable function  getSeriesstudiesDBO" data-toggle="collapse" data-target=".getSeriesstudiesDBO .collapse">
+<h2>Get SeriesStudies DBO</h2>
+<pre>getSeriesstudiesDBO(int $id, object $params, string $limit) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$limit</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getSeriesstudiesExp" id="getSeriesstudiesExp"></a><div class="element clickable function  getSeriesstudiesExp" data-toggle="collapse" data-target=".getSeriesstudiesExp .collapse">
+<h2>Get Series Studies Exp</h2>
+<pre>getSeriesstudiesExp(int $id, object $params, object $admin_params, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getShare" id="getShare"></a><div class="element clickable function  getShare" data-toggle="collapse" data-target=".getShare .collapse">
+<h2>Share Helper file</h2>
+<pre>getShare(string $link, object $row, object $params, object $admin_params) : null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$link</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a name="getStore" id="getStore"></a><div class="element clickable function  getStore" data-toggle="collapse" data-target=".getStore .collapse">
+<h2>Get Store</h2>
+<pre>getStore(object $params, object $row) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getStudiesedit" id="getStudiesedit"></a><div class="element clickable function  getStudiesedit" data-toggle="collapse" data-target=".getStudiesedit .collapse">
+<h2>Get StudiesEdit</h2>
+<pre>getStudiesedit(object $row, object $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getStudieslink" id="getStudieslink"></a><div class="element clickable function  getStudieslink" data-toggle="collapse" data-target=".getStudieslink .collapse">
+<h2>Get StudiesLink</h2>
+<pre>getStudieslink(string $islink, object $row, object $element, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$element</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getStudyExp" id="getStudyExp"></a><div class="element clickable function  getStudyExp" data-toggle="collapse" data-target=".getStudyExp .collapse">
+<h2>Get Study Exp</h2>
+<pre>getStudyExp(object $row, object $params, object $admin_params, object $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getTeacher" id="getTeacher"></a><div class="element clickable function  getTeacher" data-toggle="collapse" data-target=".getTeacher .collapse">
+<h2>Get Teacher</h2>
+<pre>getTeacher(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTeacherDetailsExp" id="getTeacherDetailsExp"></a><div class="element clickable function  getTeacherDetailsExp" data-toggle="collapse" data-target=".getTeacherDetailsExp .collapse">
+<h2>Get Teacher Details Exp</h2>
+<pre>getTeacherDetailsExp(object $row, object $params, object $template, object $admin_params) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getTeacherLandingPage" id="getTeacherLandingPage"></a><div class="element clickable function  getTeacherLandingPage" data-toggle="collapse" data-target=".getTeacherLandingPage .collapse">
+<h2>Get Teacher for LandingPage</h2>
+<pre>getTeacherLandingPage(\objcet $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\objcet</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTeacherListExp" id="getTeacherListExp"></a><div class="element clickable function  getTeacherListExp" data-toggle="collapse" data-target=".getTeacherListExp .collapse">
+<h2>Get TeacherList Exp</h2>
+<pre>getTeacherListExp(object $row, object $params, string $oddeven, object $admin_params, object $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$oddeven</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getTeacherStudiesExp" id="getTeacherStudiesExp"></a><div class="element clickable function  getTeacherStudiesExp" data-toggle="collapse" data-target=".getTeacherStudiesExp .collapse">
+<h2>Get Teacher Studies Exp</h2>
+<pre>getTeacherStudiesExp(int $id, object $params, object $admin_params, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTextlink" id="getTextlink"></a><div class="element clickable function  getTextlink" data-toggle="collapse" data-target=".getTextlink .collapse">
+<h2>Get Textlink</h2>
+<pre>getTextlink(object $params, object $row, string $textorpdf, object $admin_params, string $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$textorpdf</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTitle" id="getTitle"></a><div class="element clickable function  getTitle" data-toggle="collapse" data-target=".getTitle .collapse">
+<h2>Get Title</h2>
+<pre>getTitle(object $params, object $row, object $admin_params, object $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTopicsLandingPage" id="getTopicsLandingPage"></a><div class="element clickable function  getTopicsLandingPage" data-toggle="collapse" data-target=".getTopicsLandingPage .collapse">
+<h2>Get Topics for LandingPage</h2>
+<pre>getTopicsLandingPage(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getTypeIcon" id="getTypeIcon"></a><div class="element clickable function  getTypeIcon" data-toggle="collapse" data-target=".getTypeIcon .collapse">
+<h2>Get Type Icon</h2>
+<pre>getTypeIcon(object $media, object $params, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getVirtuemart" id="getVirtuemart"></a><div class="element clickable function  getVirtuemart" data-toggle="collapse" data-target=".getVirtuemart .collapse">
+<h2>Get Virtuart</h2>
+<pre>getVirtuemart(string $media, int $width, int $height, string $src, string $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getYearsLandingPage" id="getYearsLandingPage"></a><div class="element clickable function  getYearsLandingPage" data-toggle="collapse" data-target=".getYearsLandingPage .collapse">
+<h2>Get Years for Landing Page</h2>
+<pre>getYearsLandingPage(object $params, int $id, object $admin_params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getseriesElementnumber" id="getseriesElementnumber"></a><div class="element clickable function  getseriesElementnumber" data-toggle="collapse" data-target=".getseriesElementnumber .collapse">
+<h2>Get Series ElementNumber</h2>
+<pre>getseriesElementnumber(string $subcustom) : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$subcustom</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a name="getstudyDate" id="getstudyDate"></a><div class="element clickable function  getstudyDate" data-toggle="collapse" data-target=".getstudyDate .collapse">
+<h2>Get StudyDate</h2>
+<pre>getstudyDate(object $params, string $studydate) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$studydate</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="make_bitly_url" id="make_bitly_url"></a><div class="element clickable function  make_bitly_url" data-toggle="collapse" data-target=".make_bitly_url .collapse">
+<h2>make a URL small</h2>
+<pre>make_bitly_url(string $url, string $login, string $appkey, string $format, string $version) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$url</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$login</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$appkey</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$format</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$version</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="seriesGetcustom" id="seriesGetcustom"></a><div class="element clickable function  seriesGetcustom" data-toggle="collapse" data-target=".seriesGetcustom .collapse">
+<h2>Series Get Custom</h2>
+<pre>seriesGetcustom(string $r, object $row, object $customelement, string $custom, string $islink, object $admin_params, object $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$r</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$customelement</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$custom</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="seriesGetelement" id="seriesGetelement"></a><div class="element clickable function  seriesGetelement" data-toggle="collapse" data-target=".seriesGetelement .collapse">
+<h2>Series Get Element</h2>
+<pre>seriesGetelement(string $r, object $row, int $listelementid, string $custom, string $islink, object $admin_params, object $params, string $view) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$r</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$listelementid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$custom</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code>
+</div>
+<div class="subelement argument">
+<h4>$view</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="trigger_dberror" id="trigger_dberror"></a><div class="element clickable function  trigger_dberror" data-toggle="collapse" data-target=".trigger_dberror .collapse">
+<h2>Production error handling</h2>
+<pre>trigger_dberror(\type $text, \type $back) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$text</h4>
+<code>\type</code>
+</div>
+<div class="subelement argument">
+<h4>$back</h4>
+<code>\type</code>
+</div>
+</div></div>
+</div>
+<a name="trigger_dbwarning" id="trigger_dbwarning"></a><div class="element clickable function  trigger_dbwarning" data-toggle="collapse" data-target=".trigger_dbwarning .collapse">
+<h2>Trigger DB Warning</h2>
+<pre>trigger_dbwarning(string $text) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$text</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a name="writeXML" id="writeXML"></a><div class="element clickable function  writeXML" data-toggle="collapse" data-target=".writeXML .collapse">
+<h2>Write XML</h2>
+<pre>writeXML() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<a name="BiblestudyControllerSeriesdisplay" id="BiblestudyControllerSeriesdisplay"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerSeriesdisplay.html">
+<h1>BiblestudyControllerSeriesdisplay<a href="../classes/BiblestudyControllerSeriesdisplay.html">¶</a>
+</h1>
+<p class="short_description">Controller for Seriesdisplay</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerSeriesdisplay.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyControllerSeriesdisplays" id="BiblestudyControllerSeriesdisplays"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerSeriesdisplays.html">
+<h1>BiblestudyControllerSeriesdisplays<a href="../classes/BiblestudyControllerSeriesdisplays.html">¶</a>
+</h1>
+<p class="short_description">Controller for SeriesDisplay</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerSeriesdisplays.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyControllerSermon" id="BiblestudyControllerSermon"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerSermon.html">
+<h1>BiblestudyControllerSermon<a href="../classes/BiblestudyControllerSermon.html">¶</a>
+</h1>
+<p class="short_description">studies Edit Controller</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerSermon.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyControllerSermons" id="BiblestudyControllerSermons"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerSermons.html">
+<h1>BiblestudyControllerSermons<a href="../classes/BiblestudyControllerSermons.html">¶</a>
+</h1>
+<p class="short_description">Controller class for Sermons</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerSermons.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyControllerTeacher" id="BiblestudyControllerTeacher"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerTeacher.html">
+<h1>BiblestudyControllerTeacher<a href="../classes/BiblestudyControllerTeacher.html">¶</a>
+</h1>
+<p class="short_description">Controller class for Teacher</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerTeacher.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyControllerTeachers" id="BiblestudyControllerTeachers"></a><div class="element ajax clickable class" href="../classes/BiblestudyControllerTeachers.html">
+<h1>BiblestudyControllerTeachers<a href="../classes/BiblestudyControllerTeachers.html">¶</a>
+</h1>
+<p class="short_description">Controller class for Teachers</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerTeachers.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyHelperRoute" id="BiblestudyHelperRoute"></a><div class="element ajax clickable class" href="../classes/BiblestudyHelperRoute.html">
+<h1>BiblestudyHelperRoute<a href="../classes/BiblestudyHelperRoute.html">¶</a>
+</h1>
+<p class="short_description">Biblestudy Component Route Helper</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyHelperRoute.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelMediafile" id="BiblestudyModelMediafile"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelMediafile.html">
+<h1>BiblestudyModelMediafile<a href="../classes/BiblestudyModelMediafile.html">¶</a>
+</h1>
+<p class="short_description">Model class for MediaFile</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelMediafile.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelSeriesdisplay" id="BiblestudyModelSeriesdisplay"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelSeriesdisplay.html">
+<h1>BiblestudyModelSeriesdisplay<a href="../classes/BiblestudyModelSeriesdisplay.html">¶</a>
+</h1>
+<p class="short_description">Model class for SeriesDisplay</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelSeriesdisplay.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelSeriesdisplays" id="BiblestudyModelSeriesdisplays"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelSeriesdisplays.html">
+<h1>BiblestudyModelSeriesdisplays<a href="../classes/BiblestudyModelSeriesdisplays.html">¶</a>
+</h1>
+<p class="short_description">Model class for SeriesDisplays</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelSeriesdisplays.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelSermon" id="BiblestudyModelSermon"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelSermon.html">
+<h1>BiblestudyModelSermon<a href="../classes/BiblestudyModelSermon.html">¶</a>
+</h1>
+<p class="short_description">Model class for Sermon</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelSermon.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelSermons" id="BiblestudyModelSermons"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelSermons.html">
+<h1>BiblestudyModelSermons<a href="../classes/BiblestudyModelSermons.html">¶</a>
+</h1>
+<p class="short_description">Model class for Sermons</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelSermons.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelTeacher" id="BiblestudyModelTeacher"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelTeacher.html">
+<h1>BiblestudyModelTeacher<a href="../classes/BiblestudyModelTeacher.html">¶</a>
+</h1>
+<p class="short_description">Model class for Teacher</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelTeacher.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyModelTeachers" id="BiblestudyModelTeachers"></a><div class="element ajax clickable class" href="../classes/BiblestudyModelTeachers.html">
+<h1>BiblestudyModelTeachers<a href="../classes/BiblestudyModelTeachers.html">¶</a>
+</h1>
+<p class="short_description">Model class for Teachers</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyModelTeachers.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewSeriesdisplay" id="BiblestudyViewSeriesdisplay"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewSeriesdisplay.html">
+<h1>BiblestudyViewSeriesdisplay<a href="../classes/BiblestudyViewSeriesdisplay.html">¶</a>
+</h1>
+<p class="short_description">View class for SeriesDisplay</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewSeriesdisplay.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewSeriesdisplays" id="BiblestudyViewSeriesdisplays"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewSeriesdisplays.html">
+<h1>BiblestudyViewSeriesdisplays<a href="../classes/BiblestudyViewSeriesdisplays.html">¶</a>
+</h1>
+<p class="short_description">View class for SeriesDisplays</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewSeriesdisplays.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewSermon" id="BiblestudyViewSermon"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewSermon.html">
+<h1>BiblestudyViewSermon<a href="../classes/BiblestudyViewSermon.html">¶</a>
+</h1>
+<p class="short_description">View class for Sermon</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewSermon.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewSermons" id="BiblestudyViewSermons"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewSermons.html">
+<h1>BiblestudyViewSermons<a href="../classes/BiblestudyViewSermons.html">¶</a>
+</h1>
+<p class="short_description">View for Sermons class</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewSermons.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewTeacher" id="BiblestudyViewTeacher"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewTeacher.html">
+<h1>BiblestudyViewTeacher<a href="../classes/BiblestudyViewTeacher.html">¶</a>
+</h1>
+<p class="short_description">View class for Teacher</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewTeacher.html" class="more">« More »</a>
+</div>
+<a name="BiblestudyViewTeachers" id="BiblestudyViewTeachers"></a><div class="element ajax clickable class" href="../classes/BiblestudyViewTeachers.html">
+<h1>BiblestudyViewTeachers<a href="../classes/BiblestudyViewTeachers.html">¶</a>
+</h1>
+<p class="short_description">View class for Teachers</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyViewTeachers.html" class="more">« More »</a>
+</div>
+<a name="BsmHelper" id="BsmHelper"></a><div class="element ajax clickable class" href="../classes/BsmHelper.html">
+<h1>BsmHelper<a href="../classes/BsmHelper.html">¶</a>
+</h1>
+<p class="short_description">//Eugen
+This class may not be required</p>
+<div class="details collapse"></div>
+<a href="../classes/BsmHelper.html" class="more">« More »</a>
+</div>
+<a name="Dump_File" id="Dump_File"></a><div class="element ajax clickable class" href="../classes/Dump_File.html">
+<h1>Dump_File<a href="../classes/Dump_File.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy Download Class</p>
+<div class="details collapse"></div>
+<a href="../classes/Dump_File.html" class="more">« More »</a>
+</div>
+<a name="JBSAdmin" id="JBSAdmin"></a><div class="element ajax clickable class" href="../classes/JBSAdmin.html">
+<h1>JBSAdmin<a href="../classes/JBSAdmin.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy Admin Class</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSAdmin.html" class="more">« More »</a>
+</div>
+<a name="JBSListing" id="JBSListing"></a><div class="element ajax clickable class" href="../classes/JBSListing.html">
+<h1>JBSListing<a href="../classes/JBSListing.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy listing class</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSListing.html" class="more">« More »</a>
+</div>
+<a name="JBSPagebuilder" id="JBSPagebuilder"></a><div class="element ajax clickable class" href="../classes/JBSPagebuilder.html">
+<h1>JBSPagebuilder<a href="../classes/JBSPagebuilder.html">¶</a>
+</h1>
+<p class="short_description">Class to build page elements in use by custom template files</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSPagebuilder.html" class="more">« More »</a>
+</div>
+<a name="JBSPodcast" id="JBSPodcast"></a><div class="element ajax clickable class" href="../classes/JBSPodcast.html">
+<h1>JBSPodcast<a href="../classes/JBSPodcast.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy Podcast Class</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSPodcast.html" class="more">« More »</a>
+</div>
+<a name="JBSUpload" id="JBSUpload"></a><div class="element ajax clickable class" href="../classes/JBSUpload.html">
+<h1>JBSUpload<a href="../classes/JBSUpload.html">¶</a>
+</h1>
+<p class="short_description">JBS Upload class</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSUpload.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldDocman" id="JFormFieldDocman"></a><div class="element ajax clickable class" href="../classes/JFormFieldDocman.html">
+<h1>JFormFieldDocman<a href="../classes/JFormFieldDocman.html">¶</a>
+</h1>
+<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldDocman.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldModal_Article" id="JFormFieldModal_Article"></a><div class="element ajax clickable class" href="../classes/JFormFieldModal_Article.html">
+<h1>JFormFieldModal_Article<a href="../classes/JFormFieldModal_Article.html">¶</a>
+</h1>
+<p class="short_description">Supports a modal article picker.</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldModal_Article.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldModal_Study" id="JFormFieldModal_Study"></a><div class="element ajax clickable class" href="../classes/JFormFieldModal_Study.html">
+<h1>JFormFieldModal_Study<a href="../classes/JFormFieldModal_Study.html">¶</a>
+</h1>
+<p class="short_description">Field Modal class for Sutdy</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldModal_Study.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldModal_studydetails" id="JFormFieldModal_studydetails"></a><div class="element ajax clickable class" href="../classes/JFormFieldModal_studydetails.html">
+<h1>JFormFieldModal_studydetails<a href="../classes/JFormFieldModal_studydetails.html">¶</a>
+</h1>
+<p class="short_description">Supports a modal study picker.</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldModal_studydetails.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldTopicslist" id="JFormFieldTopicslist"></a><div class="element ajax clickable class" href="../classes/JFormFieldTopicslist.html">
+<h1>JFormFieldTopicslist<a href="../classes/JFormFieldTopicslist.html">¶</a>
+</h1>
+<p class="short_description">Topics List Form Field class for the Joomla Bible Study component
+Displays a topics list of ALL published topics</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldTopicslist.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldVirtuemart" id="JFormFieldVirtuemart"></a><div class="element ajax clickable class" href="../classes/JFormFieldVirtuemart.html">
+<h1>JFormFieldVirtuemart<a href="../classes/JFormFieldVirtuemart.html">¶</a>
+</h1>
+<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldVirtuemart.html" class="more">« More »</a>
+</div>
+<a name="JHtmlIcon" id="JHtmlIcon"></a><div class="element ajax clickable class" href="../classes/JHtmlIcon.html">
+<h1>JHtmlIcon<a href="../classes/JHtmlIcon.html">¶</a>
+</h1>
+<p class="short_description">Content Component HTML Helper</p>
+<div class="details collapse"></div>
+<a href="../classes/JHtmlIcon.html" class="more">« More »</a>
+</div>
+<a name="TableMediafile" id="TableMediafile"></a><div class="element ajax clickable class" href="../classes/TableMediafile.html">
+<h1>TableMediafile<a href="../classes/TableMediafile.html">¶</a>
+</h1>
+<p class="short_description">Table class for MediaFile</p>
+<div class="details collapse"></div>
+<a href="../classes/TableMediafile.html" class="more">« More »</a>
+</div>
+<a name="Tablecommentsedit" id="Tablecommentsedit"></a><div class="element ajax clickable class" href="../classes/Tablecommentsedit.html">
+<h1>Tablecommentsedit<a href="../classes/Tablecommentsedit.html">¶</a>
+</h1>
+<p class="short_description">Table class for CommentsEdit</p>
+<div class="details collapse"></div>
+<a href="../classes/Tablecommentsedit.html" class="more">« More »</a>
+</div>
+<a name="Tablestudydetails" id="Tablestudydetails"></a><div class="element ajax clickable class" href="../classes/Tablestudydetails.html">
+<h1>Tablestudydetails<a href="../classes/Tablestudydetails.html">¶</a>
+</h1>
+<p class="short_description">Table class for StudyDetails</p>
+<div class="details collapse"></div>
+<a href="../classes/Tablestudydetails.html" class="more">« More »</a>
+</div>
+<a name="Tableteacherdisplay" id="Tableteacherdisplay"></a><div class="element ajax clickable class" href="../classes/Tableteacherdisplay.html">
+<h1>Tableteacherdisplay<a href="../classes/Tableteacherdisplay.html">¶</a>
+</h1>
+<p class="short_description">Table Class for TeacherDisplay</p>
+<div class="details collapse"></div>
+<a href="../classes/Tableteacherdisplay.html" class="more">« More »</a>
+</div>
+<a name="biblestudyController" id="biblestudyController"></a><div class="element ajax clickable class" href="../classes/biblestudyController.html">
+<h1>biblestudyController<a href="../classes/biblestudyController.html">¶</a>
+</h1>
+<p class="short_description">Controller for Core BibleStudy</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyController.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllerCommentsEdit" id="biblestudyControllerCommentsEdit"></a><div class="element ajax clickable class" href="../classes/biblestudyControllerCommentsEdit.html">
+<h1>biblestudyControllerCommentsEdit<a href="../classes/biblestudyControllerCommentsEdit.html">¶</a>
+</h1>
+<p class="short_description">Controller class for CommentsEdit</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllerCommentsEdit.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllerCommentsList" id="biblestudyControllerCommentsList"></a><div class="element ajax clickable class" href="../classes/biblestudyControllerCommentsList.html">
+<h1>biblestudyControllerCommentsList<a href="../classes/biblestudyControllerCommentsList.html">¶</a>
+</h1>
+<p class="short_description">Controller for CommentsList</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllerCommentsList.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllerMediafiles" id="biblestudyControllerMediafiles"></a><div class="element ajax clickable class" href="../classes/biblestudyControllerMediafiles.html">
+<h1>biblestudyControllerMediafiles<a href="../classes/biblestudyControllerMediafiles.html">¶</a>
+</h1>
+<p class="short_description">Controller for MediaFiles</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllerMediafiles.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllerMessages" id="biblestudyControllerMessages"></a><div class="element ajax clickable class" href="../classes/biblestudyControllerMessages.html">
+<h1>biblestudyControllerMessages<a href="../classes/biblestudyControllerMessages.html">¶</a>
+</h1>
+<p class="short_description">Controller class for Messages</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllerMessages.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllermediafile" id="biblestudyControllermediafile"></a><div class="element ajax clickable class" href="../classes/biblestudyControllermediafile.html">
+<h1>biblestudyControllermediafile<a href="../classes/biblestudyControllermediafile.html">¶</a>
+</h1>
+<p class="short_description">Controller class for MediaFile</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllermediafile.html" class="more">« More »</a>
+</div>
+<a name="biblestudyControllermessage" id="biblestudyControllermessage"></a><div class="element ajax clickable class" href="../classes/biblestudyControllermessage.html">
+<h1>biblestudyControllermessage<a href="../classes/biblestudyControllermessage.html">¶</a>
+</h1>
+<p class="short_description">Controller class for Message</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyControllermessage.html" class="more">« More »</a>
+</div>
+<a name="biblestudyHelperToolbar" id="biblestudyHelperToolbar"></a><div class="element ajax clickable class" href="../classes/biblestudyHelperToolbar.html">
+<h1>biblestudyHelperToolbar<a href="../classes/biblestudyHelperToolbar.html">¶</a>
+</h1>
+<p class="short_description">Helper class for Toolbar</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyHelperToolbar.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelMessages" id="biblestudyModelMessages"></a><div class="element ajax clickable class" href="../classes/biblestudyModelMessages.html">
+<h1>biblestudyModelMessages<a href="../classes/biblestudyModelMessages.html">¶</a>
+</h1>
+<p class="short_description">Model class for Messages</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelMessages.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelcommentsedit" id="biblestudyModelcommentsedit"></a><div class="element ajax clickable class" href="../classes/biblestudyModelcommentsedit.html">
+<h1>biblestudyModelcommentsedit<a href="../classes/biblestudyModelcommentsedit.html">¶</a>
+</h1>
+<p class="short_description">Model class for CommentsEdit</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelcommentsedit.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelcommentslist" id="biblestudyModelcommentslist"></a><div class="element ajax clickable class" href="../classes/biblestudyModelcommentslist.html">
+<h1>biblestudyModelcommentslist<a href="../classes/biblestudyModelcommentslist.html">¶</a>
+</h1>
+<p class="short_description">Model class for CommentsList</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelcommentslist.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModellandingpage" id="biblestudyModellandingpage"></a><div class="element ajax clickable class" href="../classes/biblestudyModellandingpage.html">
+<h1>biblestudyModellandingpage<a href="../classes/biblestudyModellandingpage.html">¶</a>
+</h1>
+<p class="short_description">Model class for LandingPage</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModellandingpage.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelmediafiles" id="biblestudyModelmediafiles"></a><div class="element ajax clickable class" href="../classes/biblestudyModelmediafiles.html">
+<h1>biblestudyModelmediafiles<a href="../classes/biblestudyModelmediafiles.html">¶</a>
+</h1>
+<p class="short_description">Model class for MediaFiles</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelmediafiles.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelmediaplayer" id="biblestudyModelmediaplayer"></a><div class="element ajax clickable class" href="../classes/biblestudyModelmediaplayer.html">
+<h1>biblestudyModelmediaplayer<a href="../classes/biblestudyModelmediaplayer.html">¶</a>
+</h1>
+<p class="short_description">Model class for MediaPlayer</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelmediaplayer.html" class="more">« More »</a>
+</div>
+<a name="biblestudyModelmessage" id="biblestudyModelmessage"></a><div class="element ajax clickable class" href="../classes/biblestudyModelmessage.html">
+<h1>biblestudyModelmessage<a href="../classes/biblestudyModelmessage.html">¶</a>
+</h1>
+<p class="short_description">Model class for Message</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyModelmessage.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewLandingpage" id="biblestudyViewLandingpage"></a><div class="element ajax clickable class" href="../classes/biblestudyViewLandingpage.html">
+<h1>biblestudyViewLandingpage<a href="../classes/biblestudyViewLandingpage.html">¶</a>
+</h1>
+<p class="short_description">Landing page list view class</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewLandingpage.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewcommentsedit" id="biblestudyViewcommentsedit"></a><div class="element ajax clickable class" href="../classes/biblestudyViewcommentsedit.html">
+<h1>biblestudyViewcommentsedit<a href="../classes/biblestudyViewcommentsedit.html">¶</a>
+</h1>
+<p class="short_description">View class for CommentsEdit</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewcommentsedit.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewcommentslist" id="biblestudyViewcommentslist"></a><div class="element ajax clickable class" href="../classes/biblestudyViewcommentslist.html">
+<h1>biblestudyViewcommentslist<a href="../classes/biblestudyViewcommentslist.html">¶</a>
+</h1>
+<p class="short_description">Comment list view class</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewcommentslist.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewmediafile" id="biblestudyViewmediafile"></a><div class="element ajax clickable class" href="../classes/biblestudyViewmediafile.html">
+<h1>biblestudyViewmediafile<a href="../classes/biblestudyViewmediafile.html">¶</a>
+</h1>
+<p class="short_description">View class for MediaFile</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewmediafile.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewmediafiles" id="biblestudyViewmediafiles"></a><div class="element ajax clickable class" href="../classes/biblestudyViewmediafiles.html">
+<h1>biblestudyViewmediafiles<a href="../classes/biblestudyViewmediafiles.html">¶</a>
+</h1>
+<p class="short_description">View class for MediaFiles</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewmediafiles.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewmessage" id="biblestudyViewmessage"></a><div class="element ajax clickable class" href="../classes/biblestudyViewmessage.html">
+<h1>biblestudyViewmessage<a href="../classes/biblestudyViewmessage.html">¶</a>
+</h1>
+<p class="short_description">View class for Message</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewmessage.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewmessages" id="biblestudyViewmessages"></a><div class="element ajax clickable class" href="../classes/biblestudyViewmessages.html">
+<h1>biblestudyViewmessages<a href="../classes/biblestudyViewmessages.html">¶</a>
+</h1>
+<p class="short_description">View class for Messages</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewmessages.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewpopup" id="biblestudyViewpopup"></a><div class="element ajax clickable class" href="../classes/biblestudyViewpopup.html">
+<h1>biblestudyViewpopup<a href="../classes/biblestudyViewpopup.html">¶</a>
+</h1>
+<p class="short_description">View class for Popup</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewpopup.html" class="more">« More »</a>
+</div>
+<a name="biblestudyViewterms" id="biblestudyViewterms"></a><div class="element ajax clickable class" href="../classes/biblestudyViewterms.html">
+<h1>biblestudyViewterms<a href="../classes/biblestudyViewterms.html">¶</a>
+</h1>
+<p class="short_description">View class for Terms</p>
+<div class="details collapse"></div>
+<a href="../classes/biblestudyViewterms.html" class="more">« More »</a>
+</div>
+<a name="jbStats" id="jbStats"></a><div class="element ajax clickable class" href="../classes/jbStats.html">
+<h1>jbStats<a href="../classes/jbStats.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy Stats Class</p>
+<div class="details collapse"></div>
+<a href="../classes/jbStats.html" class="more">« More »</a>
+</div>
+<a name="jbsImages" id="jbsImages"></a><div class="element ajax clickable class" href="../classes/jbsImages.html">
+<h1>jbsImages<a href="../classes/jbsImages.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy images class</p>
+<div class="details collapse"></div>
+<a href="../classes/jbsImages.html" class="more">« More »</a>
+</div>
+<a name="jbsMedia" id="jbsMedia"></a><div class="element ajax clickable class" href="../classes/jbsMedia.html">
+<h1>jbsMedia<a href="../classes/jbsMedia.html">¶</a>
+</h1>
+<p class="short_description">Joomla! Bible Study Media class.</p>
+<div class="details collapse"></div>
+<a href="../classes/jbsMedia.html" class="more">« More »</a>
+</div>
+<a name="podcastSubscribe" id="podcastSubscribe"></a><div class="element ajax clickable class" href="../classes/podcastSubscribe.html">
+<h1>podcastSubscribe<a href="../classes/podcastSubscribe.html">¶</a>
+</h1>
+<p class="short_description">A helper to return buttons for podcast subscriptions</p>
+<div class="details collapse"></div>
+<a href="../classes/podcastSubscribe.html" class="more">« More »</a>
+</div>
+<a name="relatedStudies" id="relatedStudies"></a><div class="element ajax clickable class" href="../classes/relatedStudies.html">
+<h1>relatedStudies<a href="../classes/relatedStudies.html">¶</a>
+</h1>
+<p class="short_description">helper to get related studies to the current one</p>
+<div class="details collapse"></div>
+<a href="../classes/relatedStudies.html" class="more">« More »</a>
+</div>
+<a name="showScripture" id="showScripture"></a><div class="element ajax clickable class" href="../classes/showScripture.html">
+<h1>showScripture<a href="../classes/showScripture.html">¶</a>
+</h1>
+<p class="short_description">Scripture Show class.</p>
+<div class="details collapse"></div>
+<a href="../classes/showScripture.html" class="more">« More »</a>
+</div>
+<h3>
+<i class="icon-custom icon-constant"></i> Constants</h3>
+<a name="BIBLESTUDY_COMPONENT_NAME" id="BIBLESTUDY_COMPONENT_NAME"> </a><div class="element clickable constant  BIBLESTUDY_COMPONENT_NAME" data-toggle="collapse" data-target=".BIBLESTUDY_COMPONENT_NAME .collapse">
+<h2>BIBLESTUDY_COMPONENT_NAME</h2>
+<pre>BIBLESTUDY_COMPONENT_NAME </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_COMPONENT_RELPATH" id="BIBLESTUDY_COMPONENT_RELPATH"> </a><div class="element clickable constant  BIBLESTUDY_COMPONENT_RELPATH" data-toggle="collapse" data-target=".BIBLESTUDY_COMPONENT_RELPATH .collapse">
+<h2>BIBLESTUDY_COMPONENT_RELPATH</h2>
+<pre>BIBLESTUDY_COMPONENT_RELPATH </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_DB_MISSING_COLUMN" id="BIBLESTUDY_DB_MISSING_COLUMN"> </a><div class="element clickable constant  BIBLESTUDY_DB_MISSING_COLUMN" data-toggle="collapse" data-target=".BIBLESTUDY_DB_MISSING_COLUMN .collapse">
+<h2>BIBLESTUDY_DB_MISSING_COLUMN</h2>
+<pre>BIBLESTUDY_DB_MISSING_COLUMN </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_FILE_INSTALL" id="BIBLESTUDY_FILE_INSTALL"> </a><div class="element clickable constant  BIBLESTUDY_FILE_INSTALL" data-toggle="collapse" data-target=".BIBLESTUDY_FILE_INSTALL .collapse">
+<h2>BIBLESTUDY_FILE_INSTALL</h2>
+<pre>BIBLESTUDY_FILE_INSTALL </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_LANGUAGE_DEFAULT" id="BIBLESTUDY_LANGUAGE_DEFAULT"> </a><div class="element clickable constant  BIBLESTUDY_LANGUAGE_DEFAULT" data-toggle="collapse" data-target=".BIBLESTUDY_LANGUAGE_DEFAULT .collapse">
+<h2>BIBLESTUDY_LANGUAGE_DEFAULT</h2>
+<pre>BIBLESTUDY_LANGUAGE_DEFAULT </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH" id="BIBLESTUDY_PATH"> </a><div class="element clickable constant  BIBLESTUDY_PATH" data-toggle="collapse" data-target=".BIBLESTUDY_PATH .collapse">
+<h2>BIBLESTUDY_PATH</h2>
+<pre>BIBLESTUDY_PATH </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN" id="BIBLESTUDY_PATH_ADMIN"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN</h2>
+<pre>BIBLESTUDY_PATH_ADMIN </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN_HELPERS" id="BIBLESTUDY_PATH_ADMIN_HELPERS"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN_HELPERS" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN_HELPERS .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN_HELPERS</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_HELPERS </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN_IMAGES" id="BIBLESTUDY_PATH_ADMIN_IMAGES"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN_IMAGES" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN_IMAGES .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN_IMAGES</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_IMAGES </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN_INSTALL" id="BIBLESTUDY_PATH_ADMIN_INSTALL"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN_INSTALL" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN_INSTALL .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN_INSTALL</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_INSTALL </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN_LANGUAGE" id="BIBLESTUDY_PATH_ADMIN_LANGUAGE"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN_LANGUAGE" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN_LANGUAGE .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN_LANGUAGE</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_ADMIN_LIB" id="BIBLESTUDY_PATH_ADMIN_LIB"> </a><div class="element clickable constant  BIBLESTUDY_PATH_ADMIN_LIB" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_ADMIN_LIB .collapse">
+<h2>BIBLESTUDY_PATH_ADMIN_LIB</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_LIB </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_LIB" id="BIBLESTUDY_PATH_LIB"> </a><div class="element clickable constant  BIBLESTUDY_PATH_LIB" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_LIB .collapse">
+<h2>BIBLESTUDY_PATH_LIB</h2>
+<pre>BIBLESTUDY_PATH_LIB </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_TEMPLATE" id="BIBLESTUDY_PATH_TEMPLATE"> </a><div class="element clickable constant  BIBLESTUDY_PATH_TEMPLATE" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_TEMPLATE .collapse">
+<h2>BIBLESTUDY_PATH_TEMPLATE</h2>
+<pre>BIBLESTUDY_PATH_TEMPLATE </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_PATH_TEMPLATE_DEFAULT" id="BIBLESTUDY_PATH_TEMPLATE_DEFAULT"> </a><div class="element clickable constant  BIBLESTUDY_PATH_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".BIBLESTUDY_PATH_TEMPLATE_DEFAULT .collapse">
+<h2>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</h2>
+<pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_ROOT_PATH" id="BIBLESTUDY_ROOT_PATH"> </a><div class="element clickable constant  BIBLESTUDY_ROOT_PATH" data-toggle="collapse" data-target=".BIBLESTUDY_ROOT_PATH .collapse">
+<h2>BIBLESTUDY_ROOT_PATH</h2>
+<pre>BIBLESTUDY_ROOT_PATH </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_ROOT_PATH_ADMIN" id="BIBLESTUDY_ROOT_PATH_ADMIN"> </a><div class="element clickable constant  BIBLESTUDY_ROOT_PATH_ADMIN" data-toggle="collapse" data-target=".BIBLESTUDY_ROOT_PATH_ADMIN .collapse">
+<h2>BIBLESTUDY_ROOT_PATH_ADMIN</h2>
+<pre>BIBLESTUDY_ROOT_PATH_ADMIN </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_SECONDS_IN_HOUR" id="BIBLESTUDY_SECONDS_IN_HOUR"> </a><div class="element clickable constant  BIBLESTUDY_SECONDS_IN_HOUR" data-toggle="collapse" data-target=".BIBLESTUDY_SECONDS_IN_HOUR .collapse">
+<h2>BIBLESTUDY_SECONDS_IN_HOUR</h2>
+<pre>BIBLESTUDY_SECONDS_IN_HOUR </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_SECONDS_IN_YEAR" id="BIBLESTUDY_SECONDS_IN_YEAR"> </a><div class="element clickable constant  BIBLESTUDY_SECONDS_IN_YEAR" data-toggle="collapse" data-target=".BIBLESTUDY_SECONDS_IN_YEAR .collapse">
+<h2>BIBLESTUDY_SECONDS_IN_YEAR</h2>
+<pre>BIBLESTUDY_SECONDS_IN_YEAR </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_TEMPLATE_DEFAULT" id="BIBLESTUDY_TEMPLATE_DEFAULT"> </a><div class="element clickable constant  BIBLESTUDY_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".BIBLESTUDY_TEMPLATE_DEFAULT .collapse">
+<h2>BIBLESTUDY_TEMPLATE_DEFAULT</h2>
+<pre>BIBLESTUDY_TEMPLATE_DEFAULT </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_VERSION" id="BIBLESTUDY_VERSION"> </a><div class="element clickable constant  BIBLESTUDY_VERSION" data-toggle="collapse" data-target=".BIBLESTUDY_VERSION .collapse">
+<h2>BIBLESTUDY_VERSION</h2>
+<pre>BIBLESTUDY_VERSION </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_VERSION_BUILD" id="BIBLESTUDY_VERSION_BUILD"> </a><div class="element clickable constant  BIBLESTUDY_VERSION_BUILD" data-toggle="collapse" data-target=".BIBLESTUDY_VERSION_BUILD .collapse">
+<h2>BIBLESTUDY_VERSION_BUILD</h2>
+<pre>BIBLESTUDY_VERSION_BUILD </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="BIBLESTUDY_VERSION_DATE" id="BIBLESTUDY_VERSION_DATE"> </a><div class="element clickable constant  BIBLESTUDY_VERSION_DATE" data-toggle="collapse" data-target=".BIBLESTUDY_VERSION_DATE .collapse">
+<h2>BIBLESTUDY_VERSION_DATE</h2>
+<pre>BIBLESTUDY_VERSION_DATE </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="JSTART" id="JSTART"> </a><div class="element clickable constant  JSTART" data-toggle="collapse" data-target=".JSTART .collapse">
+<h2>JSTART</h2>
+<pre>JSTART </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="JSTOP" id="JSTOP"> </a><div class="element clickable constant  JSTOP" data-toggle="collapse" data-target=".JSTOP .collapse">
+<h2>JSTOP</h2>
+<pre>JSTOP </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="VMLANG" id="VMLANG"> </a><div class="element clickable constant  VMLANG" data-toggle="collapse" data-target=".VMLANG .collapse">
+<h2>VMLANG</h2>
+<pre>VMLANG </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<span class="divider">\</span><li><a href="../packages/BibleStudy.Site.html">Site</a></li>
+<span class="divider">\</span><li class="active"><a href="../packages/BibleStudy.Site.Form.html">Form</a></li>
+</ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<a name="JFormFieldFilesize" id="JFormFieldFilesize"></a><div class="element ajax clickable class" href="../classes/JFormFieldFilesize.html">
+<h1>JFormFieldFilesize<a href="../classes/JFormFieldFilesize.html">¶</a>
+</h1>
+<p class="short_description">Form Field class for the Joomla Framework.</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldFilesize.html" class="more">« More »</a>
+</div>
+<a name="JFormFieldTopics" id="JFormFieldTopics"></a><div class="element ajax clickable class" href="../classes/JFormFieldTopics.html">
+<h1>JFormFieldTopics<a href="../classes/JFormFieldTopics.html">¶</a>
+</h1>
+<p class="short_description">Form Field class for the Joomla Framework.</p>
+<div class="details collapse"></div>
+<a href="../classes/JFormFieldTopics.html" class="more">« More »</a>
+</div>
+</div>
+<ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<span class="divider">\</span><li><a href="../packages/BibleStudy.Site.html">Site</a></li>
+<span class="divider">\</span><li class="active"><a href="../packages/BibleStudy.Site.sh404SEF.html">sh404SEF</a></li>
+</ul>
+<div class="package-indent"></div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-09-30T22:07:08-05:00.<br></footer></div>
+</div>
+</body>
+</html>
