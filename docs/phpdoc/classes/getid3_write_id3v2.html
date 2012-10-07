@@ -1,0 +1,659 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>JoomlaBibleStudy » \getid3_write_id3v2</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStude.html"><i class="icon-folder-open"></i> BibleStude</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+<li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">897</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">32</span>
+</li>
+<li>fixme 
+                <span class="label label-info">1</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">11</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#GenerateID3v2FrameData" title="GenerateID3v2FrameData :: "><span class="description">GenerateID3v2FrameData()
+        </span><pre>GenerateID3v2FrameData()</pre></a></li>
+<li class="method public "><a href="#GenerateID3v2FrameFlags" title="GenerateID3v2FrameFlags :: "><span class="description">GenerateID3v2FrameFlags()
+        </span><pre>GenerateID3v2FrameFlags()</pre></a></li>
+<li class="method public "><a href="#GenerateID3v2Tag" title="GenerateID3v2Tag :: "><span class="description">GenerateID3v2Tag()
+        </span><pre>GenerateID3v2Tag()</pre></a></li>
+<li class="method public "><a href="#GenerateID3v2TagFlags" title="GenerateID3v2TagFlags :: "><span class="description">GenerateID3v2TagFlags()
+        </span><pre>GenerateID3v2TagFlags()</pre></a></li>
+<li class="method public "><a href="#ID3v2FrameFlagsLookupFileAlter" title="ID3v2FrameFlagsLookupFileAlter :: "><span class="description">ID3v2FrameFlagsLookupFileAlter()
+        </span><pre>ID3v2FrameFlagsLookupFileAlter()</pre></a></li>
+<li class="method public "><a href="#ID3v2FrameFlagsLookupTagAlter" title="ID3v2FrameFlagsLookupTagAlter :: "><span class="description">ID3v2FrameFlagsLookupTagAlter()
+        </span><pre>ID3v2FrameFlagsLookupTagAlter()</pre></a></li>
+<li class="method public "><a href="#ID3v2FrameIsAllowed" title="ID3v2FrameIsAllowed :: "><span class="description">ID3v2FrameIsAllowed()
+        </span><pre>ID3v2FrameIsAllowed()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidAPICimageformat" title="ID3v2IsValidAPICimageformat :: "><span class="description">ID3v2IsValidAPICimageformat()
+        </span><pre>ID3v2IsValidAPICimageformat()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidAPICpicturetype" title="ID3v2IsValidAPICpicturetype :: "><span class="description">ID3v2IsValidAPICpicturetype()
+        </span><pre>ID3v2IsValidAPICpicturetype()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidCOMRreceivedAs" title="ID3v2IsValidCOMRreceivedAs :: "><span class="description">ID3v2IsValidCOMRreceivedAs()
+        </span><pre>ID3v2IsValidCOMRreceivedAs()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidETCOevent" title="ID3v2IsValidETCOevent :: "><span class="description">ID3v2IsValidETCOevent()
+        </span><pre>ID3v2IsValidETCOevent()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidPriceString" title="ID3v2IsValidPriceString :: "><span class="description">ID3v2IsValidPriceString()
+        </span><pre>ID3v2IsValidPriceString()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidRGADname" title="ID3v2IsValidRGADname :: "><span class="description">ID3v2IsValidRGADname()
+        </span><pre>ID3v2IsValidRGADname()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidRGADoriginator" title="ID3v2IsValidRGADoriginator :: "><span class="description">ID3v2IsValidRGADoriginator()
+        </span><pre>ID3v2IsValidRGADoriginator()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidRVA2channeltype" title="ID3v2IsValidRVA2channeltype :: "><span class="description">ID3v2IsValidRVA2channeltype()
+        </span><pre>ID3v2IsValidRVA2channeltype()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidSYLTtype" title="ID3v2IsValidSYLTtype :: "><span class="description">ID3v2IsValidSYLTtype()
+        </span><pre>ID3v2IsValidSYLTtype()</pre></a></li>
+<li class="method public "><a href="#ID3v2IsValidTextEncoding" title="ID3v2IsValidTextEncoding :: "><span class="description">ID3v2IsValidTextEncoding()
+        </span><pre>ID3v2IsValidTextEncoding()</pre></a></li>
+<li class="method public "><a href="#ID3v2ShortFrameNameLookup" title="ID3v2ShortFrameNameLookup :: "><span class="description">ID3v2ShortFrameNameLookup()
+        </span><pre>ID3v2ShortFrameNameLookup()</pre></a></li>
+<li class="method public "><a href="#IsValidMIMEstring" title="IsValidMIMEstring :: "><span class="description">IsValidMIMEstring()
+        </span><pre>IsValidMIMEstring()</pre></a></li>
+<li class="method public "><a href="#IsValidURL" title="IsValidURL :: "><span class="description">IsValidURL()
+        </span><pre>IsValidURL()</pre></a></li>
+<li class="method public "><a href="#IsWithinBitRange" title="IsWithinBitRange :: "><span class="description">IsWithinBitRange()
+        </span><pre>IsWithinBitRange()</pre></a></li>
+<li class="method public "><a href="#RemoveID3v2" title="RemoveID3v2 :: "><span class="description">RemoveID3v2()
+        </span><pre>RemoveID3v2()</pre></a></li>
+<li class="method public "><a href="#Unsynchronise" title="Unsynchronise :: "><span class="description">Unsynchronise()
+        </span><pre>Unsynchronise()</pre></a></li>
+<li class="method public "><a href="#WriteID3v2" title="WriteID3v2 :: "><span class="description">WriteID3v2()
+        </span><pre>WriteID3v2()</pre></a></li>
+<li class="method public "><a href="#array_join_merge" title="array_join_merge :: "><span class="description">array_join_merge()
+        </span><pre>array_join_merge()</pre></a></li>
+<li class="method public "><a href="#getid3_write_id3v2" title="getid3_write_id3v2 :: "><span class="description">getid3_write_id3v2()
+        </span><pre>getid3_write_id3v2()</pre></a></li>
+<li class="method public "><a href="#is_hash" title="is_hash :: "><span class="description">is_hash()
+        </span><pre>is_hash()</pre></a></li>
+<li class="method public "><a href="#safe_parse_url" title="safe_parse_url :: "><span class="description">safe_parse_url()
+        </span><pre>safe_parse_url()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="property public "><a href="#%24errors" title="$errors :: "><span class="description">$errors</span><pre>$errors</pre></a></li>
+<li class="property public "><a href="#%24filename" title="$filename :: "><span class="description">$filename</span><pre>$filename</pre></a></li>
+<li class="property public "><a href="#%24fread_buffer_size" title="$fread_buffer_size :: "><span class="description">$fread_buffer_size</span><pre>$fread_buffer_size</pre></a></li>
+<li class="property public "><a href="#%24id3v2_default_encodingid" title="$id3v2_default_encodingid :: "><span class="description">$id3v2_default_encodingid</span><pre>$id3v2_default_encodingid</pre></a></li>
+<li class="property public "><a href="#%24id3v2_use_unsynchronisation" title="$id3v2_use_unsynchronisation :: "><span class="description">$id3v2_use_unsynchronisation</span><pre>$id3v2_use_unsynchronisation</pre></a></li>
+<li class="property public "><a href="#%24majorversion" title="$majorversion :: "><span class="description">$majorversion</span><pre>$majorversion</pre></a></li>
+<li class="property public "><a href="#%24merge_existing_data" title="$merge_existing_data :: "><span class="description">$merge_existing_data</span><pre>$merge_existing_data</pre></a></li>
+<li class="property public "><a href="#%24minorversion" title="$minorversion :: "><span class="description">$minorversion</span><pre>$minorversion</pre></a></li>
+<li class="property public "><a href="#%24paddedlength" title="$paddedlength :: "><span class="description">$paddedlength</span><pre>$paddedlength</pre></a></li>
+<li class="property public "><a href="#%24tag_data" title="$tag_data :: "><span class="description">$tag_data</span><pre>$tag_data</pre></a></li>
+<li class="property public "><a href="#%24warnings" title="$warnings :: "><span class="description">$warnings</span><pre>$warnings</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5Cgetid3_write_id3v2" id="\getid3_write_id3v2"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/getid3_write_id3v2.html">getid3_write_id3v2</a>
+</li>
+</ul>
+<div href="../classes/getid3_write_id3v2.html" class="element class"><div class="details">
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="GenerateID3v2FrameData" id="GenerateID3v2FrameData"></a><div class="element clickable method public GenerateID3v2FrameData" data-toggle="collapse" data-target=".GenerateID3v2FrameData .collapse">
+<h2>GenerateID3v2FrameData()
+        </h2>
+<pre>GenerateID3v2FrameData($frame_name, $source_data_array) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$frame_name</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$source_data_array</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="GenerateID3v2FrameFlags" id="GenerateID3v2FrameFlags"></a><div class="element clickable method public GenerateID3v2FrameFlags" data-toggle="collapse" data-target=".GenerateID3v2FrameFlags .collapse">
+<h2>GenerateID3v2FrameFlags()
+        </h2>
+<pre>GenerateID3v2FrameFlags($TagAlter, $FileAlter, $ReadOnly, $Compression, $Encryption, $GroupingIdentity, $Unsynchronisation, $DataLengthIndicator) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$TagAlter</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$FileAlter</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$ReadOnly</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$Compression</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$Encryption</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$GroupingIdentity</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$Unsynchronisation</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$DataLengthIndicator</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="GenerateID3v2Tag" id="GenerateID3v2Tag"></a><div class="element clickable method public GenerateID3v2Tag" data-toggle="collapse" data-target=".GenerateID3v2Tag .collapse">
+<h2>GenerateID3v2Tag()
+        </h2>
+<pre>GenerateID3v2Tag($noerrorsonly) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$noerrorsonly</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="GenerateID3v2TagFlags" id="GenerateID3v2TagFlags"></a><div class="element clickable method public GenerateID3v2TagFlags" data-toggle="collapse" data-target=".GenerateID3v2TagFlags .collapse">
+<h2>GenerateID3v2TagFlags()
+        </h2>
+<pre>GenerateID3v2TagFlags($flags) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$flags</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2FrameFlagsLookupFileAlter" id="ID3v2FrameFlagsLookupFileAlter"></a><div class="element clickable method public ID3v2FrameFlagsLookupFileAlter" data-toggle="collapse" data-target=".ID3v2FrameFlagsLookupFileAlter .collapse">
+<h2>ID3v2FrameFlagsLookupFileAlter()
+        </h2>
+<pre>ID3v2FrameFlagsLookupFileAlter($framename) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$framename</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2FrameFlagsLookupTagAlter" id="ID3v2FrameFlagsLookupTagAlter"></a><div class="element clickable method public ID3v2FrameFlagsLookupTagAlter" data-toggle="collapse" data-target=".ID3v2FrameFlagsLookupTagAlter .collapse">
+<h2>ID3v2FrameFlagsLookupTagAlter()
+        </h2>
+<pre>ID3v2FrameFlagsLookupTagAlter($framename) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$framename</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2FrameIsAllowed" id="ID3v2FrameIsAllowed"></a><div class="element clickable method public ID3v2FrameIsAllowed" data-toggle="collapse" data-target=".ID3v2FrameIsAllowed .collapse">
+<h2>ID3v2FrameIsAllowed()
+        </h2>
+<pre>ID3v2FrameIsAllowed($frame_name, $source_data_array) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$frame_name</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$source_data_array</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidAPICimageformat" id="ID3v2IsValidAPICimageformat"></a><div class="element clickable method public ID3v2IsValidAPICimageformat" data-toggle="collapse" data-target=".ID3v2IsValidAPICimageformat .collapse">
+<h2>ID3v2IsValidAPICimageformat()
+        </h2>
+<pre>ID3v2IsValidAPICimageformat($imageformat) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$imageformat</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidAPICpicturetype" id="ID3v2IsValidAPICpicturetype"></a><div class="element clickable method public ID3v2IsValidAPICpicturetype" data-toggle="collapse" data-target=".ID3v2IsValidAPICpicturetype .collapse">
+<h2>ID3v2IsValidAPICpicturetype()
+        </h2>
+<pre>ID3v2IsValidAPICpicturetype($picturetype) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$picturetype</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidCOMRreceivedAs" id="ID3v2IsValidCOMRreceivedAs"></a><div class="element clickable method public ID3v2IsValidCOMRreceivedAs" data-toggle="collapse" data-target=".ID3v2IsValidCOMRreceivedAs .collapse">
+<h2>ID3v2IsValidCOMRreceivedAs()
+        </h2>
+<pre>ID3v2IsValidCOMRreceivedAs($receivedas) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$receivedas</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidETCOevent" id="ID3v2IsValidETCOevent"></a><div class="element clickable method public ID3v2IsValidETCOevent" data-toggle="collapse" data-target=".ID3v2IsValidETCOevent .collapse">
+<h2>ID3v2IsValidETCOevent()
+        </h2>
+<pre>ID3v2IsValidETCOevent($eventid) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$eventid</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidPriceString" id="ID3v2IsValidPriceString"></a><div class="element clickable method public ID3v2IsValidPriceString" data-toggle="collapse" data-target=".ID3v2IsValidPriceString .collapse">
+<h2>ID3v2IsValidPriceString()
+        </h2>
+<pre>ID3v2IsValidPriceString($pricestring) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pricestring</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidRGADname" id="ID3v2IsValidRGADname"></a><div class="element clickable method public ID3v2IsValidRGADname" data-toggle="collapse" data-target=".ID3v2IsValidRGADname .collapse">
+<h2>ID3v2IsValidRGADname()
+        </h2>
+<pre>ID3v2IsValidRGADname($RGADname) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$RGADname</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidRGADoriginator" id="ID3v2IsValidRGADoriginator"></a><div class="element clickable method public ID3v2IsValidRGADoriginator" data-toggle="collapse" data-target=".ID3v2IsValidRGADoriginator .collapse">
+<h2>ID3v2IsValidRGADoriginator()
+        </h2>
+<pre>ID3v2IsValidRGADoriginator($RGADoriginator) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$RGADoriginator</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidRVA2channeltype" id="ID3v2IsValidRVA2channeltype"></a><div class="element clickable method public ID3v2IsValidRVA2channeltype" data-toggle="collapse" data-target=".ID3v2IsValidRVA2channeltype .collapse">
+<h2>ID3v2IsValidRVA2channeltype()
+        </h2>
+<pre>ID3v2IsValidRVA2channeltype($channeltype) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$channeltype</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidSYLTtype" id="ID3v2IsValidSYLTtype"></a><div class="element clickable method public ID3v2IsValidSYLTtype" data-toggle="collapse" data-target=".ID3v2IsValidSYLTtype .collapse">
+<h2>ID3v2IsValidSYLTtype()
+        </h2>
+<pre>ID3v2IsValidSYLTtype($contenttype) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$contenttype</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2IsValidTextEncoding" id="ID3v2IsValidTextEncoding"></a><div class="element clickable method public ID3v2IsValidTextEncoding" data-toggle="collapse" data-target=".ID3v2IsValidTextEncoding .collapse">
+<h2>ID3v2IsValidTextEncoding()
+        </h2>
+<pre>ID3v2IsValidTextEncoding($textencodingbyte) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$textencodingbyte</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="ID3v2ShortFrameNameLookup" id="ID3v2ShortFrameNameLookup"></a><div class="element clickable method public ID3v2ShortFrameNameLookup" data-toggle="collapse" data-target=".ID3v2ShortFrameNameLookup .collapse">
+<h2>ID3v2ShortFrameNameLookup()
+        </h2>
+<pre>ID3v2ShortFrameNameLookup($majorversion, $long_description) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$majorversion</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$long_description</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="IsValidMIMEstring" id="IsValidMIMEstring"></a><div class="element clickable method public IsValidMIMEstring" data-toggle="collapse" data-target=".IsValidMIMEstring .collapse">
+<h2>IsValidMIMEstring()
+        </h2>
+<pre>IsValidMIMEstring($mimestring) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$mimestring</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="IsValidURL" id="IsValidURL"></a><div class="element clickable method public IsValidURL" data-toggle="collapse" data-target=".IsValidURL .collapse">
+<h2>IsValidURL()
+        </h2>
+<pre>IsValidURL($url, $allowUserPass) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$url</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$allowUserPass</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="IsWithinBitRange" id="IsWithinBitRange"></a><div class="element clickable method public IsWithinBitRange" data-toggle="collapse" data-target=".IsWithinBitRange .collapse">
+<h2>IsWithinBitRange()
+        </h2>
+<pre>IsWithinBitRange($number, $maxbits, $signed) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$number</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$maxbits</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$signed</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="RemoveID3v2" id="RemoveID3v2"></a><div class="element clickable method public RemoveID3v2" data-toggle="collapse" data-target=".RemoveID3v2 .collapse">
+<h2>RemoveID3v2()
+        </h2>
+<pre>RemoveID3v2() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="Unsynchronise" id="Unsynchronise"></a><div class="element clickable method public Unsynchronise" data-toggle="collapse" data-target=".Unsynchronise .collapse">
+<h2>Unsynchronise()
+        </h2>
+<pre>Unsynchronise($data) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="WriteID3v2" id="WriteID3v2"></a><div class="element clickable method public WriteID3v2" data-toggle="collapse" data-target=".WriteID3v2 .collapse">
+<h2>WriteID3v2()
+        </h2>
+<pre>WriteID3v2() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="array_join_merge" id="array_join_merge"></a><div class="element clickable method public array_join_merge" data-toggle="collapse" data-target=".array_join_merge .collapse">
+<h2>array_join_merge()
+        </h2>
+<pre>array_join_merge($arr1, $arr2) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$arr1</h4>
+<code></code>
+</div>
+<div class="subelement argument">
+<h4>$arr2</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="getid3_write_id3v2" id="getid3_write_id3v2"></a><div class="element clickable method public getid3_write_id3v2" data-toggle="collapse" data-target=".getid3_write_id3v2 .collapse">
+<h2>getid3_write_id3v2()
+        </h2>
+<pre>getid3_write_id3v2() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="is_hash" id="is_hash"></a><div class="element clickable method public is_hash" data-toggle="collapse" data-target=".is_hash .collapse">
+<h2>is_hash()
+        </h2>
+<pre>is_hash($var) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$var</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<a name="safe_parse_url" id="safe_parse_url"></a><div class="element clickable method public safe_parse_url" data-toggle="collapse" data-target=".safe_parse_url .collapse">
+<h2>safe_parse_url()
+        </h2>
+<pre>safe_parse_url($url) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$url</h4>
+<code></code>
+</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24errors" id="$errors"> </a><div class="element clickable property public $errors" data-toggle="collapse" data-target=".$errors .collapse">
+<h2>$errors</h2>
+<pre>$errors </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24filename" id="$filename"> </a><div class="element clickable property public $filename" data-toggle="collapse" data-target=".$filename .collapse">
+<h2>$filename</h2>
+<pre>$filename </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24fread_buffer_size" id="$fread_buffer_size"> </a><div class="element clickable property public $fread_buffer_size" data-toggle="collapse" data-target=".$fread_buffer_size .collapse">
+<h2>$fread_buffer_size</h2>
+<pre>$fread_buffer_size </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24id3v2_default_encodingid" id="$id3v2_default_encodingid"> </a><div class="element clickable property public $id3v2_default_encodingid" data-toggle="collapse" data-target=".$id3v2_default_encodingid .collapse">
+<h2>$id3v2_default_encodingid</h2>
+<pre>$id3v2_default_encodingid </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24id3v2_use_unsynchronisation" id="$id3v2_use_unsynchronisation"> </a><div class="element clickable property public $id3v2_use_unsynchronisation" data-toggle="collapse" data-target=".$id3v2_use_unsynchronisation .collapse">
+<h2>$id3v2_use_unsynchronisation</h2>
+<pre>$id3v2_use_unsynchronisation </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24majorversion" id="$majorversion"> </a><div class="element clickable property public $majorversion" data-toggle="collapse" data-target=".$majorversion .collapse">
+<h2>$majorversion</h2>
+<pre>$majorversion </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24merge_existing_data" id="$merge_existing_data"> </a><div class="element clickable property public $merge_existing_data" data-toggle="collapse" data-target=".$merge_existing_data .collapse">
+<h2>$merge_existing_data</h2>
+<pre>$merge_existing_data </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24minorversion" id="$minorversion"> </a><div class="element clickable property public $minorversion" data-toggle="collapse" data-target=".$minorversion .collapse">
+<h2>$minorversion</h2>
+<pre>$minorversion </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24paddedlength" id="$paddedlength"> </a><div class="element clickable property public $paddedlength" data-toggle="collapse" data-target=".$paddedlength .collapse">
+<h2>$paddedlength</h2>
+<pre>$paddedlength </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24tag_data" id="$tag_data"> </a><div class="element clickable property public $tag_data" data-toggle="collapse" data-target=".$tag_data .collapse">
+<h2>$tag_data</h2>
+<pre>$tag_data </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24warnings" id="$warnings"> </a><div class="element clickable property public $warnings" data-toggle="collapse" data-target=".$warnings .collapse">
+<h2>$warnings</h2>
+<pre>$warnings </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div></div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+            generated on 2012-08-11T13:56:31-05:00.<br></footer></div>
+</div>
+</body>
+</html>

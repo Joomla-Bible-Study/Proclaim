@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Studies List Layout">
+		<message>
+                        <![CDATA[Create a link to the main Studies List Page]]>
+		</message>
+	</layout>
+	<state>
+		<name>Studies List Layout</name>
+		<params addpath="/components/com_biblestudy/elements">
+			<param name="type" type="hidden" default="studieslist" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
+   <param name="mteacher_id"
+           type="sqlmultilistx"
+           sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
+           key_field="id"
+           value_field="teachername"
+           default="-1"
+           multiple="multiple"
+           size="10"
+           label="Select one or more teachers"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all teachers">
+      <option value="-1">Show All</option>
+    </param>
+    <param name="mseries_id"
+           type="sqlmultilistx"
+           sql="SELECT #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.published AS srpub, #__bsms_studies.series_id, #__bsms_studies.published AS spub FROM #__bsms_series LEFT JOIN #__bsms_studies ON ( #__bsms_studies.id = #__bsms_series.id ) WHERE #__bsms_series.published = &#39;1&#39;"
+           key_field="sid"
+           value_field="series_text"
+           default="-1"
+           multiple="multiple"
+           size="10"
+           label="Select one or more series"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all series">
+      <option value="-1">Show All</option>
+    </param>
+    <param name="mbooknumber"
+           type="sqlmultilistx"
+           sql="SELECT DISTINCT #__bsms_studies.booknumber AS sbn, #__bsms_studies.published AS spub, #__bsms_books.booknumber AS bbn, #__bsms_books.bookname FROM #__bsms_books LEFT JOIN #__bsms_studies ON (#__bsms_studies.booknumber = #__bsms_books.booknumber) WHERE #__bsms_studies.published = &#39;1&#39; ORDER BY #__bsms_books.booknumber ASC"
+           key_field="sbn"
+           value_field="bookname"
+           default="-1"
+           multiple="multiple"
+           size="10"
+           label="Select one or more books"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all books">
+      <option value="-1">Show All</option>
+    </param>
+    <param name="mtopic_id"
+           type="sqlmultilistx"
+           sql="SELECT DISTINCT #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_studies.topics_id, #__bsms_studytopics.topic_id, #__bsms_studytopics.study_id FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.id = #__bsms_studies.topics_id)"
+           key_field="tid"
+           value_field="topic_text"
+           default="-1"
+           multiple="multiple"
+           size="10"
+           label="Select one or more topics"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all topics">
+      <option value="-1">Show All</option>
+    </param>
+    <param name="mmessagetype"
+           type="sqlmultilistx"
+           sql="SELECT * FROM #__bsms_message_type WHERE published = &#39;1&#39;"
+           key_field="id"
+           value_field="message_type"
+           default="-1"
+           multiple="multiple"
+           size="5"
+           label="Select one or more message types"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all message types">
+      <option value="-1">Show All</option>
+    </param>
+    <param name="mlocations"
+           type="sqlmultilistx"
+           sql="SELECT * FROM #__bsms_locations WHERE published = &#39;1&#39;"
+           key_field="id"
+           value_field="location_text"
+           default="-1"
+           multiple="multiple"
+           size="5"
+           label="Select one or more locations"
+           description="Use Ctrl-click to select more than one item. Select Show All to show all locations">
+      <option value="-1">Show All</option>
+    </param>
+    </params>
+	</state>
+</metadata>
