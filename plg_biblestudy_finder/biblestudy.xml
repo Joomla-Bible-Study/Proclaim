@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="finder" method="upgrade">
     <name>PLG_FINDER_BIBLESTUDY</name>
-    <author>Joomla Bible Study</author>
+    <author>Joomla Bible Study Team</author>
     <creationDate>Oct 05, 2012</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
