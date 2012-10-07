@@ -5,8 +5,8 @@
     </description>
     <!-- set global properties for this build -->
     <property name="src" location="src"/>
-    <property name="build" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/"/>
-    <property name="src.test" location="/Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Testing/test"/>
+    <property name="build" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/"/>
+    <property name="src.test" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/tests/test"/>
     <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
     <property name="dist"  location="dist"/>
     <property name="version" location="7.1.0"/>

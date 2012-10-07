@@ -397,3 +397,7 @@ configuration.php
 index.php
 joomla.xml
 *.txt
+/com_biblestudy/admin/views/test/
+/com_biblestudy/admin/biblestudy.script.php
+/com_biblestudy/admin/biblestudy.xml
+/com_biblestudy/media/css/site/biblestudy.css
