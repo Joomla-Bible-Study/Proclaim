@@ -1,6 +1,8 @@
 .gitignore
 .DS_Store
 .htaccess
+.buildpath
+.project
 administrator/cache/*
 administrator/components/com_admin/*
 administrator/components/com_banners/*
