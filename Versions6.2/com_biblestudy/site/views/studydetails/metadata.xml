@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Single Study View">
+		<message>
+			<![CDATA[Shows an individual study.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Single Study</name>
+		<description>Shows the study details view.</description>
+	</state>
+</metadata>

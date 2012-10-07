@@ -1,0 +1,942 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>JoomlaBibleStudy » \BiblestudyModelMediafile</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">53</span>
+</li>
+<li>fixme 
+                <span class="label label-info">4</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">12</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#getForm" title="getForm :: Get the form data"><span class="description">Get the form data</span><pre>getForm()</pre></a></li>
+<li class="method public "><a href="#move" title="move :: Method to move a mediafile listing"><span class="description">Method to move a mediafile listing</span><pre>move()</pre></a></li>
+<li class="method public "><a href="#save" title="save :: Overrides the JModelAdmin save routine in order to implode the podcast_id"><span class="description">Overrides the JModelAdmin save routine in order to implode the podcast_id</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#saveorder" title="saveorder :: Saves the manually set order of records."><span class="description">Saves the manually set order of records.</span><pre>saveorder()</pre></a></li>
+<li class="nav-header protected">» Protected</li>
+<li class="method protected "><a href="#allowEdit" title="allowEdit :: Method override to check if you can edit an existing record."><span class="description">Method override to check if you can edit an existing record.</span><pre>allowEdit()</pre></a></li>
+<li class="method protected "><a href="#cleanCache" title="cleanCache :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
+<li class="method protected "><a href="#loadFormData" title="loadFormData :: Load Form Data"><span class="description">Load Form Data</span><pre>loadFormData()</pre></a></li>
+<li class="method protected "><a href="#preprocessForm" title="preprocessForm :: Preprocess Form"><span class="description">Preprocess Form</span><pre>preprocessForm()</pre></a></li>
+</ul>
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#delete" title="delete :: Method to delete one or more records."><span class="description">Method to delete one or more records.</span><pre>delete()</pre></a></li>
+<li class="method public "><a href="#getArticleArticles" title="getArticleArticles :: Get Article Articles"><span class="description">Get Article Articles</span><pre>getArticleArticles()</pre></a></li>
+<li class="method public "><a href="#getArticleCategories" title="getArticleCategories :: Get Article Categories"><span class="description">Get Article Categories</span><pre>getArticleCategories()</pre></a></li>
+<li class="method public "><a href="#getArticleItem" title="getArticleItem :: Get Article Item"><span class="description">Get Article Item</span><pre>getArticleItem()</pre></a></li>
+<li class="method public "><a href="#getArticlesItem" title="getArticlesItem :: Get Articles Item"><span class="description">Get Articles Item</span><pre>getArticlesItem()</pre></a></li>
+<li class="method public "><a href="#getArticlesSectionCategories" title="getArticlesSectionCategories :: Get Articles Section Categories"><span class="description">Get Articles Section Categories</span><pre>getArticlesSectionCategories()</pre></a></li>
+<li class="method public "><a href="#getArticlesSections" title="getArticlesSections :: Get Articles Sections"><span class="description">Get Articles Sections</span><pre>getArticlesSections()</pre></a></li>
+<li class="method public "><a href="#getCategoryItems" title="getCategoryItems :: Get Category Items"><span class="description">Get Category Items</span><pre>getCategoryItems()</pre></a></li>
+<li class="method public "><a href="#getData" title="getData :: Get Data"><span class="description">Get Data</span><pre>getData()</pre></a></li>
+<li class="method public "><a href="#getDocManItem" title="getDocManItem :: Get DocMan Item"><span class="description">Get DocMan Item</span><pre>getDocManItem()</pre></a></li>
+<li class="method public "><a href="#getFolders" title="getFolders :: Get Folders"><span class="description">Get Folders</span><pre>getFolders()</pre></a></li>
+<li class="method public "><a href="#getForm" title="getForm :: Abstract method for getting the form from the model."><span class="description">Abstract method for getting the form from the model.</span><pre>getForm()</pre></a></li>
+<li class="method public "><a href="#getLegacyAdmin" title="getLegacyAdmin :: Get Legacy Admin"><span class="description">Get Legacy Admin</span><pre>getLegacyAdmin()</pre></a></li>
+<li class="method public "><a href="#getMediaImages" title="getMediaImages :: Get Media Images"><span class="description">Get Media Images</span><pre>getMediaImages()</pre></a></li>
+<li class="method public "><a href="#getMimeTypes" title="getMimeTypes :: Get MimeTypes"><span class="description">Get MimeTypes</span><pre>getMimeTypes()</pre></a></li>
+<li class="method public "><a href="#getOrdering" title="getOrdering :: Get Ordering"><span class="description">Get Ordering</span><pre>getOrdering()</pre></a></li>
+<li class="method public "><a href="#getPodcasts" title="getPodcasts :: Get Podcasts"><span class="description">Get Podcasts</span><pre>getPodcasts()</pre></a></li>
+<li class="method public "><a href="#getServers" title="getServers :: Get Servers"><span class="description">Get Servers</span><pre>getServers()</pre></a></li>
+<li class="method public "><a href="#getStudies" title="getStudies :: Get Studies"><span class="description">Get Studies</span><pre>getStudies()</pre></a></li>
+<li class="method public "><a href="#getStudy" title="getStudy :: Get Study"><span class="description">Get Study</span><pre>getStudy()</pre></a></li>
+<li class="method public "><a href="#getTable" title="getTable :: Method to get a table object, load it if necessary."><span class="description">Method to get a table object, load it if necessary.</span><pre>getTable()</pre></a></li>
+<li class="method public "><a href="#getVirtueMartItem" title="getVirtueMartItem :: Get VirtueMart Item"><span class="description">Get VirtueMart Item</span><pre>getVirtueMartItem()</pre></a></li>
+<li class="method public "><a href="#getVirtueMartItems" title="getVirtueMartItems :: Get VertueMart Items"><span class="description">Get VertueMart Items</span><pre>getVirtueMartItems()</pre></a></li>
+<li class="method public "><a href="#getdocManCategories" title="getdocManCategories :: Get docMan Categories"><span class="description">Get docMan Categories</span><pre>getdocManCategories()</pre></a></li>
+<li class="method public "><a href="#getdocManCategoryItems" title="getdocManCategoryItems :: Get DocMan Category items"><span class="description">Get DocMan Category items</span><pre>getdocManCategoryItems()</pre></a></li>
+<li class="method public "><a href="#getvirtueMartCategories" title="getvirtueMartCategories :: Get VirtuMart Categories"><span class="description">Get VirtuMart Categories</span><pre>getvirtueMartCategories()</pre></a></li>
+<li class="method public "><a href="#legacyPublish" title="legacyPublish :: Lagacy Publish"><span class="description">Lagacy Publish</span><pre>legacyPublish()</pre></a></li>
+<li class="method public "><a href="#move" title="move :: Method to move a mediafile listing"><span class="description">Method to move a mediafile listing</span><pre>move()</pre></a></li>
+<li class="method public "><a href="#save" title="save :: Overloads the JModelAdmin save routine in order to impload the podcast_id"><span class="description">Overloads the JModelAdmin save routine in order to impload the podcast_id</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#saveorder" title="saveorder :: Saves the manually set order of records."><span class="description">Saves the manually set order of records.</span><pre>saveorder()</pre></a></li>
+<li class="method public "><a href="#setId" title="setId :: Set ID"><span class="description">Set ID</span><pre>setId()</pre></a></li>
+<li class="method public "><a href="#store" title="store :: Method to store a record"><span class="description">Method to store a record</span><pre>store()</pre></a></li>
+<li class="nav-header protected">» Protected</li>
+<li class="method protected "><a href="#allowEdit" title="allowEdit :: Method override to check if you can edit an existing record."><span class="description">Method override to check if you can edit an existing record.</span><pre>allowEdit()</pre></a></li>
+<li class="method protected "><a href="#loadFormData" title="loadFormData :: Method to get the data that should be injected in the form."><span class="description">Method to get the data that should be injected in the form.</span><pre>loadFormData()</pre></a></li>
+<li class="method protected "><a href="#preprocessForm" title="preprocessForm :: Method to allow derived classes to preprocess the form."><span class="description">Method to allow derived classes to preprocess the form.</span><pre>preprocessForm()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="property public "><a href="#%24_admin" title="$_admin :: Admin"><span class="description">Admin</span><pre>$_admin</pre></a></li>
+<li class="property public "><a href="#%24_text_prefix" title="$_text_prefix :: Context"><span class="description">Context</span><pre>$_text_prefix</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CBiblestudyModelMediafile" id="\BiblestudyModelMediafile"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/BiblestudyModelMediafile.html">BiblestudyModelMediafile</a>
+</li>
+</ul>
+<div href="../classes/BiblestudyModelMediafile.html" class="element class">
+<p class="short_description">MediaFile model class</p>
+<div class="details">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="getForm" id="getForm"></a><div class="element clickable method public getForm" data-toggle="collapse" data-target=".getForm .collapse">
+<h2>Get the form data</h2>
+<pre>getForm(array $data, boolean $loadData) : boolean | object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$loadData</h4>
+<code>boolean</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>object</code>
+</div>
+</div></div>
+</div>
+<a name="move" id="move"></a><div class="element clickable method public move" data-toggle="collapse" data-target=".move .collapse">
+<h2>Method to move a mediafile listing</h2>
+<pre>move(string $direction) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>since</th>
+<td>1.5</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$direction</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success</div>
+</div></div>
+</div>
+<a name="save" id="save"></a><div class="element clickable method public save" data-toggle="collapse" data-target=".save .collapse">
+<h2>Overrides the JModelAdmin save routine in order to implode the podcast_id</h2>
+<pre>save(array $data) : \&lt;Boolean&gt;</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\&lt;Boolean&gt;</code>True on sucessfull save</div>
+</div></div>
+</div>
+<a name="saveorder" id="saveorder"></a><div class="element clickable method public saveorder" data-toggle="collapse" data-target=".saveorder .collapse">
+<h2>Saves the manually set order of records.</h2>
+<pre>saveorder(array $pks, array $cid, integer $order) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pks</h4>
+<code>array</code><p>An array of primary key ids.</p></div>
+<div class="subelement argument">
+<h4>$cid</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$order</h4>
+<code>integer</code><p>+1 or -1</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a name="allowEdit" id="allowEdit"></a><div class="element clickable method protected allowEdit" data-toggle="collapse" data-target=".allowEdit .collapse">
+<h2>Method override to check if you can edit an existing record.</h2>
+<pre>allowEdit(array $data, string $key) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>An array of input data.</p></div>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the key for the primary key.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="cleanCache" id="cleanCache"></a><div class="element clickable method protected cleanCache" data-toggle="collapse" data-target=".cleanCache .collapse">
+<h2>Custom clean the cache of com_biblestudy and biblestudy modules</h2>
+<pre>cleanCache(string $group, int $client_id) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$group</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$client_id</h4>
+<code>int</code>
+</div>
+</div></div>
+</div>
+<a name="loadFormData" id="loadFormData"></a><div class="element clickable method protected loadFormData" data-toggle="collapse" data-target=".loadFormData .collapse">
+<h2>Load Form Data</h2>
+<pre>loadFormData() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="preprocessForm" id="preprocessForm"></a><div class="element clickable method protected preprocessForm" data-toggle="collapse" data-target=".preprocessForm .collapse">
+<h2>Preprocess Form</h2>
+<pre>preprocessForm(\JForm $form, array $data, string $group) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$form</h4>
+<code>\JForm</code>
+</div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$group</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+</div>
+</div>
+<a name="%5CBiblestudyModelMediafile" id="\BiblestudyModelMediafile"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/BiblestudyModelMediafile.html">BiblestudyModelMediafile</a>
+</li>
+</ul>
+<div href="../classes/BiblestudyModelMediafile.html" class="element class">
+<p class="short_description">Model class for MediaFile</p>
+<div class="details">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Site.html">BibleStudy.Site</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Constructor.</h2>
+<pre>__construct(array $config) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td>\global\JController</td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$config</h4>
+<code>array</code><p>An optional associative array of configuration settings.</p></div>
+</div></div>
+</div>
+<a name="delete" id="delete"></a><div class="element clickable method public delete" data-toggle="collapse" data-target=".delete .collapse">
+<h2>Method to delete one or more records.</h2>
+<pre>delete(array $pks) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pks</h4>
+<code>array</code><p>&$pks An array of record primary keys.</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True if successful, false if an error occurs.</div>
+</div></div>
+</div>
+<a name="getArticleArticles" id="getArticleArticles"></a><div class="element clickable method public getArticleArticles" data-toggle="collapse" data-target=".getArticleArticles .collapse">
+<h2>Get Article Articles</h2>
+<pre>getArticleArticles(\it $catId) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$catId</h4>
+<code>\it</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getArticleCategories" id="getArticleCategories"></a><div class="element clickable method public getArticleCategories" data-toggle="collapse" data-target=".getArticleCategories .collapse">
+<h2>Get Article Categories</h2>
+<pre>getArticleCategories() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="getArticleItem" id="getArticleItem"></a><div class="element clickable method public getArticleItem" data-toggle="collapse" data-target=".getArticleItem .collapse">
+<h2>Get Article Item</h2>
+<pre>getArticleItem(string $id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getArticlesItem" id="getArticlesItem"></a><div class="element clickable method public getArticlesItem" data-toggle="collapse" data-target=".getArticlesItem .collapse">
+<h2>Get Articles Item</h2>
+<pre>getArticlesItem(int $id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getArticlesSectionCategories" id="getArticlesSectionCategories"></a><div class="element clickable method public getArticlesSectionCategories" data-toggle="collapse" data-target=".getArticlesSectionCategories .collapse">
+<h2>Get Articles Section Categories</h2>
+<pre>getArticlesSectionCategories(int $secId) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$secId</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getArticlesSections" id="getArticlesSections"></a><div class="element clickable method public getArticlesSections" data-toggle="collapse" data-target=".getArticlesSections .collapse">
+<h2>Get Articles Sections</h2>
+<pre>getArticlesSections() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getCategoryItems" id="getCategoryItems"></a><div class="element clickable method public getCategoryItems" data-toggle="collapse" data-target=".getCategoryItems .collapse">
+<h2>Get Category Items</h2>
+<pre>getCategoryItems(int $catId) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$catId</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getData" id="getData"></a><div class="element clickable method public getData" data-toggle="collapse" data-target=".getData .collapse">
+<h2>Get Data</h2>
+<pre>getData() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getDocManItem" id="getDocManItem"></a><div class="element clickable method public getDocManItem" data-toggle="collapse" data-target=".getDocManItem .collapse">
+<h2>Get DocMan Item</h2>
+<pre>getDocManItem(int $id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getFolders" id="getFolders"></a><div class="element clickable method public getFolders" data-toggle="collapse" data-target=".getFolders .collapse">
+<h2>Get Folders</h2>
+<pre>getFolders() : Object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>Object</code></div>
+</div></div>
+</div>
+<a name="getForm" id="getForm"></a><div class="element clickable method public getForm" data-toggle="collapse" data-target=".getForm .collapse">
+<h2>Abstract method for getting the form from the model.</h2>
+<pre>getForm(array $data, boolean $loadData) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>Data for the form.</p></div>
+<div class="subelement argument">
+<h4>$loadData</h4>
+<code>boolean</code><p>True if the form is to load its own data (default case), false if not.</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>A JForm object on success, false on failure</div>
+</div></div>
+</div>
+<a name="getLegacyAdmin" id="getLegacyAdmin"></a><div class="element clickable method public getLegacyAdmin" data-toggle="collapse" data-target=".getLegacyAdmin .collapse">
+<h2>Get Legacy Admin</h2>
+<pre>getLegacyAdmin() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>since version 7.0.4</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getMediaImages" id="getMediaImages"></a><div class="element clickable method public getMediaImages" data-toggle="collapse" data-target=".getMediaImages .collapse">
+<h2>Get Media Images</h2>
+<pre>getMediaImages() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getMimeTypes" id="getMimeTypes"></a><div class="element clickable method public getMimeTypes" data-toggle="collapse" data-target=".getMimeTypes .collapse">
+<h2>Get MimeTypes</h2>
+<pre>getMimeTypes() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getOrdering" id="getOrdering"></a><div class="element clickable method public getOrdering" data-toggle="collapse" data-target=".getOrdering .collapse">
+<h2>Get Ordering</h2>
+<pre>getOrdering() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getPodcasts" id="getPodcasts"></a><div class="element clickable method public getPodcasts" data-toggle="collapse" data-target=".getPodcasts .collapse">
+<h2>Get Podcasts</h2>
+<pre>getPodcasts() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getServers" id="getServers"></a><div class="element clickable method public getServers" data-toggle="collapse" data-target=".getServers .collapse">
+<h2>Get Servers</h2>
+<pre>getServers() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getStudies" id="getStudies"></a><div class="element clickable method public getStudies" data-toggle="collapse" data-target=".getStudies .collapse">
+<h2>Get Studies</h2>
+<pre>getStudies() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getStudy" id="getStudy"></a><div class="element clickable method public getStudy" data-toggle="collapse" data-target=".getStudy .collapse">
+<h2>Get Study</h2>
+<pre>getStudy() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getTable" id="getTable"></a><div class="element clickable method public getTable" data-toggle="collapse" data-target=".getTable .collapse">
+<h2>Method to get a table object, load it if necessary.</h2>
+<pre>getTable(string $name, string $prefix, array $options) : \JTable</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>The table name. Optional.</p></div>
+<div class="subelement argument">
+<h4>$prefix</h4>
+<code>string</code><p>The class prefix. Optional.</p></div>
+<div class="subelement argument">
+<h4>$options</h4>
+<code>array</code><p>Configuration array for model. Optional.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\JTable</code>A JTable object</div>
+</div></div>
+</div>
+<a name="getVirtueMartItem" id="getVirtueMartItem"></a><div class="element clickable method public getVirtueMartItem" data-toggle="collapse" data-target=".getVirtueMartItem .collapse">
+<h2>Get VirtueMart Item</h2>
+<pre>getVirtueMartItem(int $id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getVirtueMartItems" id="getVirtueMartItems"></a><div class="element clickable method public getVirtueMartItems" data-toggle="collapse" data-target=".getVirtueMartItems .collapse">
+<h2>Get VertueMart Items</h2>
+<pre>getVirtueMartItems(int $catId) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$catId</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getdocManCategories" id="getdocManCategories"></a><div class="element clickable method public getdocManCategories" data-toggle="collapse" data-target=".getdocManCategories .collapse">
+<h2>Get docMan Categories</h2>
+<pre>getdocManCategories() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="getdocManCategoryItems" id="getdocManCategoryItems"></a><div class="element clickable method public getdocManCategoryItems" data-toggle="collapse" data-target=".getdocManCategoryItems .collapse">
+<h2>Get DocMan Category items</h2>
+<pre>getdocManCategoryItems(int $catId) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$catId</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getvirtueMartCategories" id="getvirtueMartCategories"></a><div class="element clickable method public getvirtueMartCategories" data-toggle="collapse" data-target=".getvirtueMartCategories .collapse">
+<h2>Get VirtuMart Categories</h2>
+<pre>getvirtueMartCategories() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a name="legacyPublish" id="legacyPublish"></a><div class="element clickable method public legacyPublish" data-toggle="collapse" data-target=".legacyPublish .collapse">
+<h2>Lagacy Publish</h2>
+<pre>legacyPublish(int $cid, int $publish) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>since version 7.0.4</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$cid</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$publish</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="move" id="move"></a><div class="element clickable method public move" data-toggle="collapse" data-target=".move .collapse">
+<h2>Method to move a mediafile listing</h2>
+<pre>move(string $direction) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>since</th>
+<td>1.5</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$direction</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success</div>
+</div></div>
+</div>
+<a name="save" id="save"></a><div class="element clickable method public save" data-toggle="collapse" data-target=".save .collapse">
+<h2>Overloads the JModelAdmin save routine in order to impload the podcast_id</h2>
+<pre>save(array $data) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on sucessfull save</div>
+</div></div>
+</div>
+<a name="saveorder" id="saveorder"></a><div class="element clickable method public saveorder" data-toggle="collapse" data-target=".saveorder .collapse">
+<h2>Saves the manually set order of records.</h2>
+<pre>saveorder(array $cid, array $pks, integer $order) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$cid</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$pks</h4>
+<code>array</code><p>An array of primary key ids.</p></div>
+<div class="subelement argument">
+<h4>$order</h4>
+<code>integer</code><p>+1 or -1</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a name="setId" id="setId"></a><div class="element clickable method public setId" data-toggle="collapse" data-target=".setId .collapse">
+<h2>Set ID</h2>
+<pre>setId(int $id) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code>
+</div>
+</div></div>
+</div>
+<a name="store" id="store"></a><div class="element clickable method public store" data-toggle="collapse" data-target=".store .collapse">
+<h2>Method to store a record</h2>
+<pre>store() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>todo</th>
+<td>Need to check the current order of the studies for that particular
+study, so that it doesn't default to 0, buecause that will break the
+ordering functionality.</td>
+</tr>
+</table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success</div>
+</div></div>
+</div>
+<a name="allowEdit" id="allowEdit"></a><div class="element clickable method protected allowEdit" data-toggle="collapse" data-target=".allowEdit .collapse">
+<h2>Method override to check if you can edit an existing record.</h2>
+<pre>allowEdit(array $data, string $key) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>An array of input data.</p></div>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the key for the primary key.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="loadFormData" id="loadFormData"></a><div class="element clickable method protected loadFormData" data-toggle="collapse" data-target=".loadFormData .collapse">
+<h2>Method to get the data that should be injected in the form.</h2>
+<pre>loadFormData() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>The default data is an empty array.</div>
+</div></div>
+</div>
+<a name="preprocessForm" id="preprocessForm"></a><div class="element clickable method protected preprocessForm" data-toggle="collapse" data-target=".preprocessForm .collapse">
+<h2>Method to allow derived classes to preprocess the form.</h2>
+<pre>preprocessForm(\JForm $form, mixed $data, string $group) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td>\global\JFormField</td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$form</h4>
+<code>\JForm</code><p>A JForm object.</p></div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>mixed</code><p>The data expected for the form.</p></div>
+<div class="subelement argument">
+<h4>$group</h4>
+<code>string</code><p>The name of the plugin group to import (defaults to "content").</p>
+</div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code></th>
+<td>if there is an error in the form event.</td>
+</tr></table>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24_admin" id="$_admin"> </a><div class="element clickable property public $_admin" data-toggle="collapse" data-target=".$_admin .collapse">
+<h2>Admin</h2>
+<pre>$_admin : \type</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24_text_prefix" id="$_text_prefix"> </a><div class="element clickable property public $_text_prefix" data-toggle="collapse" data-target=".$_text_prefix .collapse">
+<h2>Context</h2>
+<pre>$_text_prefix : \type</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-09-30T22:07:17-05:00.<br></footer></div>
+</div>
+</body>
+</html>

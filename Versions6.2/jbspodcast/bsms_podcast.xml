@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="system">
+	<name>System - Bible Study Podcast Publish</name>
+	<author>Tom Fuller</author>
+	<creationDate>January 20, 2010</creationDate>
+	<copyright>This component is released under the GNU/GPL License</copyright>
+	<authorEmail>tomfuller2@gmail.com</authorEmail>
+	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<version>6.1.1</version>
+	<description>When activated this plugin will publish each podcast to
+		your site on a schedule you determine.</description>
+	<files>
+		<filename plugin="bsms_podcast">bsms_podcast.php</filename>
+	</files>
+	<params>
+		<param name="testing" type="radio" default="0" label="Testing"
+			description="Bible Study Podcast Publish creates a file in the media folder with today's date in it so that it knows to only run this script once a day. If Testing is set to Yes then the plugin will not create this file, consequentially forcing this script to run every time the page is reloaded. This is great if you're testing the script on a quiet server, but if you're on a busy server you'll bring it to it's knees, so use with care!   Also note: If you set this to Yes you will have some output at the top of the page to keep you informed of what the plugin is doing.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="xdays" type="text" default="24" size="3"
+			label="Publish every x hours"
+			description="Run Bible Study Podcast Publish every hour after the last run. (Enter 24 for once a day)" />
+		<param name="email" type="list" default="1"
+			label="Send email notification"
+			description="Select Yes to send an email when the podcast has been published.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="recipient" type="text" default="" size="40"
+			label="To Email address"
+			description="Email address to notify. Leave empty to send to the system default email address. Specify multiple addresses by separating them with a comma." />
+		<param name="subject" type="text" default="Bible Study Podcast Publish"
+			size="40" label="Subject" description="" />
+		<param name="body" type="text" default="Podcast(s) published successfully."
+			size="40" label="Body" description="" />
+	</params>
+</install>

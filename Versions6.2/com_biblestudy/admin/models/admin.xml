@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<params>
+		<param name="compat_mode" type="list" default="0"
+			label="Compatibility Mode"
+			description="If you experience problems with files downloading, try using this mode.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="drop_tables" type="list" default="0"
+			label="Drop Tables on Uninstall"
+			description="Drop com_biblestudy database tables on uninstall? Default does NOT drop tables.">
+			<option value="0">Do not drop tables</option>
+			<option value="1">Drop Tables</option>
+		</param>
+		<param name="admin_store" type="list" default="0"
+			label="Show Store in Study Entry Screen" description="Show or Hide store on studielist edit form.">
+			<option value="0">Show</option>
+			<option value="1">Hide</option>
+		</param>
+		<param name="studylistlimit" type="text" size="3"
+			label="Study Limit in MediaFile"
+			description="Limit for number of studies to show in MediaFile Record drop down on admin side - leave blank for all"
+			default="" />
+		<param name="show_location_media" type="list" default="0"
+			label="Show Location with Study on Media drop down"
+			description="Choose Show if you want the location information to show up with the study and date on the drop down in the mediafile edit view on the backend">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="popular_limit" type="text" size="3"
+			label="Limit number of popular study links"
+			description="Set a limit for the number of popular studies to show on the drop down in the studieslist page. Set to show in template" />
+		<param name="character_filter" type="list" default="1"
+			label="Filter characters in filename"
+			description="Set to Filter if you want characters that are not acceptable in a web filename filtered. Set to No to turn off this function">
+			<option value="0">No Filter</option>
+			<option value="1">Filter</option>
+		</param>
+		<param name="format_popular" default="0" type="list"
+			label="Set Items to include in score" description="Decide what items will determine the score of a popular study">
+			<option value="0">Hits + Plays + Downloads</option>
+			<option value="1">Plays + Downloads</option>
+		</param>
+		<param name="socialnetworking" type="list" default="1"
+			label="Use Social Networking Links"
+			description="Show or Hide links for users to post studydetails link on social networking sites (configure on Social Networks tab)">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="sharetype" type="list" default="1"
+			label="Type of Social Media"
+			description="Choose whether to use internal Share or addthis.com social media sharing. If using addthis, no configuration needed.">
+			<option value="0">JBS Sharing</option>
+			<option value="1">AddThis Sharing</option>
+		</param>
+	</params>
+	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
+		<param name="location_id" type="locations" label="Choose a Location"
+			description="Choose a default location to display in the form." />
+		<param name="teacher_id" type="teacher" default=""
+			label="Choose a Teacher" description="Choose a default teacher to display in the form" />
+		<param name="series_id" type="series" default="" label="Series"
+			description="Choose a series to display as default" />
+		<param name="booknumber" type="book" default="" label="Book"
+			description="Choose a Book to display as default" />
+		<param name="topic_id" type="topic" default="" label="Topic"
+			description="Choose a topic to display as default" />
+		<param name="messagetype" type="messagetype" default=""
+			label="Message Type" description="Choose a message type to display as default" />
+	</params>
+	<params group="FILLIN-IMAGES">
+		<param name="series_imagefolder" type="folderlist" hide_none="-1"
+			directory="/images" size="150" label="Series Thumbnail Folder"
+			description="Path from images folder to series images like /images/series. If left blank then /images/stories is assumed." />
+		<param name="media_imagefolder" type="folderlist" hide_none="-1"
+			directory="/images" size="150" label="Media Image Folder"
+			description="Path from images folder to media images like /images/media. If left blank then /components/com_biblestudy/images is assumed." />
+		<param name="teachers_imagefolder" type="folderlist" hide_none="-1"
+			directory="/images" size="150" label="Teacher Image Folder"
+			description="Path from images folder to teacher images like /images/teachers. If left blank then /images/stories is assumed." />
+		<param name="study_images" type="folderlist" hide_none="-1"
+			directory="/images" size="150" label="Study Thumbnails Image Folder"
+			description="Path from images folder to study thumbnail images like /images/thumbnails. If left blank then /images/stories is assumed." />
+	</params>
+	<params group="FILLIN-MEDIAFILE"
+		addpath="/administrator/components/com_biblestudy/elements">
+		<param name="download" type="list" default="0"
+			label="Default Show Download Button"
+			description="Set to Yes if you wish all mediafile records to automatically have the Show Download button selected.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="target" type="list" default="0" label="Default target type"
+			description="Set to a particular target type as default.">
+			<option value="0">No default</option>
+			<option value="_blank">New Window</option>
+			<option value="_self">Same Window</option>
+			<option value="_parent">Parent Window</option>
+			<option value="_top">Full Body of the Window</option>
+		</param>
+		<param name="server" type="server" label="Default Server"
+			description="Choose a default server from your list." default="" />
+		<param name="path" type="path" label="Default Folder"
+			description="Choose a default folder from your list." default="" />
+		<param name="podcast" type="podcast" label="Default Podcast"
+			description="Choose a default podcast from your list." default="" />
+		<param name="mime" type="mime" label="Default Mime Type"
+			description="Choose a default mime type from your list." default="" />
+	</params>
+	<params group="SUBMISSION">
+		<param name="allow_entry_study" type="list" default="0"
+			label="Allow Front End Submission"
+			description="Allow certain users to enter studes and mediafiles from the front end">
+			<option value="0">No Frontend access</option>
+			<option value="1">Allow Frontend access</option>
+		</param>
+		<param name="entry_access" type="list" default="23"
+			label="Access Front End Submission"
+			description="Enter the level of access required for users to enter study information on the front end">
+			<option value="18">Registered Users</option>
+			<option value="19">Authors</option>
+			<option value="20">Editors</option>
+			<option value="21">Publishers</option>
+			<option value="23">Managers</option>
+			<option value="24">Administrators or superadmin</option>
+		</param>
+		<param name="study_publish" type="list" default="0"
+			label="Auto Publish front end submissions"
+			description="Choose whether studies entered on the front end are automatically published or must be manually published by an admin on the backend">
+			<option value="0">No Auto Publish</option>
+			<option value="1">Auto Publish Studies</option>
+		</param>
+	</params>
+	<params group="ALLVIDEOSRELOADED">
+		<param name="itemidlinktype" type="list" default="0" label="AVR Itemid"
+			description="If you experience problems with AVR, try using one of these settings">
+			<option value="0">Don't add an Itemid</option>
+			<option value="1">Try to find an Itemid from the menu</option>
+			<option value="2">Use the Itemid from below</option>
+		</param>
+		<param name="itemidlinkview" type="list" default="studieslist"
+			label="Choose type of view for Itemid" description="Pick the type of view to search for an Itemid in the menu">
+			<option value="studieslist">studieslist</option>
+			<option value="studydetails">studydetails</option>
+			<option value="teacherlist">teacherlist</option>
+			<option value="teacherdisplay">teacherdisplay</option>
+			<option value="serieslist">serieslist</option>
+			<option value="seriesdetail">seriesdetail</option>
+		</param>
+		<param name="itemidlinknumber" type="text" default=""
+			label="Itemid to use (set above)" length="4"
+			description="Put in an Itemid for AVR to use and set the choice above" />
+	</params>
+</root>

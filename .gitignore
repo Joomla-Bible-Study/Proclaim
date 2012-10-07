@@ -1,4 +1,5 @@
 .gitignore
+.DS_Store
 .htaccess
 administrator/cache/*
 administrator/components/com_admin/*
