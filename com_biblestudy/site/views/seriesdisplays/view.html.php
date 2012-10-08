@@ -125,7 +125,7 @@ class BiblestudyViewSeriesdisplays extends JView {
                 }
             }
         }
-        $this->items = $items; dump($items);
+        $this->items = $items;
         $total = $this->get('Total');
         $pagination = $this->get('Pagination');
         $this->page = new stdClass();
