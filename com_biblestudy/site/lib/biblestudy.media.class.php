@@ -455,8 +455,8 @@ class jbsMedia {
             case 1: //Internal
                 switch ($player->type) {
                     case 2: //Inline
-                        $playercode = "<video height=" . $playerheight . " poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
-                        width=" . $playerwidth . " id='placeholder'> <source src='" . $path1 . "' /><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
+                        $playercode = "<video height='" . $player->playerheight . "' poster='" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "'
+                        width='" . $player->playerwidth . "' id='placeholder'> <source src='" . $path1 . "' /><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
                                 flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
