@@ -274,6 +274,15 @@ class Com_BiblestudyInstallerScript {
             '/components/com_biblestudy/models/serieslist.php',
             '/components/com_biblestudy/views/mediafile/tmpl/form.php',
             '/components/com_biblestudy/views/mediafile/tmpl/form.xml',
+            '/language/en-GB/en-GB.com_biblestudy.ini',
+            '/language/cs-CZ/cs-CZ.com_biblestudy.ini',
+            '/language/de-DE/de-DE.com_biblestudy.ini',
+            '/language/es-ES/es-ES.com_biblestudy.ini',
+            '/language/hu-HU/hu-HU.com_biblestudy.ini',
+            '/language/nl-NL/nl-NL.com_biblestudy.ini',
+            '/language/no-NO/no-NO.com_biblestudy.ini',
+            '/language/en-GB/en-GB.mod_biblestudy.ini',
+            '/language/en-GB/en-GB.mod_biblestudy.sys.ini',
             '/administrator/components/com_biblestudy/install/biblestudy.assets.php',
             '/administrator/components/com_biblestudy/install/sql/jbs7.0.0.sql',
             '/administrator/components/com_biblestudy/install/sql/updates/mysql/20100101.sql',
@@ -388,16 +397,6 @@ class Com_BiblestudyInstallerScript {
             '/administrator/language/nl-NL/nl-NL.com_biblestudy.ini',
             '/administrator/language/nl-NL/no-NO.com_biblestudy.ini',
             '/administrator/language/no-NO/no-NO.com_biblestudy.sys.ini',
-            '/language/en-GB/en-GB.com_biblestudy.ini',
-            '/language/cs-CZ/cs-CZ.com_biblestudy.ini',
-            '/language/de-DE/de-DE.com_biblestudy.ini',
-            '/language/es-ES/es-ES.com_biblestudy.ini',
-            '/language/hu-HU/hu-HU.com_biblestudy.ini',
-            '/language/nl-NL/nl-NL.com_biblestudy.ini',
-            '/language/no-NO/no-NO.com_biblestudy.ini',
-            '/language/en-GB/en-GB.mod_biblestudy.ini',
-            '/language/en-GB/en-GB.mod_biblestudy.sys.ini',
-
         );
 
         $folders = array(
