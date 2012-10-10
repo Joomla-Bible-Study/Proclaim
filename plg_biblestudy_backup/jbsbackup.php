@@ -55,6 +55,7 @@ class plgSystemjbsbackup extends JPlugin {
         } else {
             $check = $this->checkdays($params);
         }
+
         if ($check) {
             //perform the backup and email and update time and zip file
             $dobackup = $this->doBackup();
@@ -213,7 +214,7 @@ class plgSystemjbsbackup extends JPlugin {
         jimport('joomla.filesystem.file');
 
         //Check for existence of backup file, then attach to email
-        $backupexists = JFile::exists($dobackup['serverfile']);
+        $backupexists = JFile::exists($dobackup);
         if (!$backupexists) {
             $msg = JText::_('PLG_JBSBACKUP_ERROR');
         } else {
@@ -229,8 +230,8 @@ class plgSystemjbsbackup extends JPlugin {
         $Body2 = '';
 
 
-        $Body2 .= '<br><a href="' . JURI::root() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $dobackup['localfilename'] . '">' . $dobackup['localfilename'] . '</a>';
-        $Body2 .= ' - ' . $msg;
+       // $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
+        $Body2 .= $msg;
 
 
         $Body3 = $Body . $Body2;
@@ -243,7 +244,7 @@ class plgSystemjbsbackup extends JPlugin {
             $mail->setSubject($Subject . ' ' . $livesite);
             $mail->setBody($Body3);
             if ($params->get('includedb') == 1) {
-                $mail->addAttachment($dobackup['serverfile']);
+                $mail->addAttachment($dobackup);
             }
             $mail->Send();
         }

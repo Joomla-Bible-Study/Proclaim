@@ -47,7 +47,7 @@ class JBSExport {
                 if (!JFile::write($file, $export)) {
                     return false;
                 }
-                return true;
+                return $file;
                 break;
         }
     }
