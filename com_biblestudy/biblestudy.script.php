@@ -22,7 +22,7 @@ class Com_BiblestudyInstallerScript {
      * The release value to be displayed and check against throughout this file.
      * @var string
      */
-    private $release = '7.1.0';
+    private $release = '7.1.1';
 
     /**
      * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
