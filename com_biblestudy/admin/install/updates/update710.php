@@ -316,27 +316,6 @@ div.listingfooter ul li {
             }
         }
         
-        //need to put a reference to the new css file into the templates
-        $cssfile = JFile::exists(JURI::base().'media/com_biblestudy/css/site/biblestudy.css');
-        //First pull the templates
-        $query = 'SELECT * FROM #__bsms_templates WHERE published = 1';
-        $db->setQuery($query);
-        $templates = $db->loadObjectList();
-        if ($templates & $cssfile)
-        {
-            foreach ($templates as $template)
-            {
-                $registry = new JRegistry;
-                $registry->loadJSON($template->params);
-                $params = $registry;
-                $css = $params->get('css');
-                if (!$css)
-                {
-                    $params->set('css','biblestudy.css');
-                }
-            }
-        }
-
         return FALSE;
         //end if no new css file
     }
