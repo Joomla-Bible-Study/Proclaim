@@ -289,6 +289,7 @@ div.listingfooter ul li {
                 $db->setQuery($query);
                 $result = $db->loadObject();
                 jbsDBhelper::reloadtable($result, 'Style');
+                JBS710Update::setemptytemplates();
                 return TRUE;
             } else {
                 return FALSE;
@@ -309,6 +310,7 @@ div.listingfooter ul li {
                 $db->setQuery($query);
                 $result = $db->loadObject();
                 jbsDBhelper::reloadtable($result, 'Style');
+                JBS710Update::setemptytemplates();
                 JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
                 return TRUE;
             }
@@ -335,8 +337,32 @@ div.listingfooter ul li {
             }
         }
 
-        return true;
+        return FALSE;
         //end if no new css file
+    }
+
+    public static function setemptytemplates() {
+        $db = JFactory::getDBO();
+        $query = 'SELECT id FROM #__bsms_templates';
+        $db->setQuery($query);
+        $result = $db->loadObject();
+        // Store new Recorde so it can be seen.
+        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+        $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+        try {
+            $table->load($result->id);
+            $registry = new JRegistry;
+            $registry->loadJSON($table->params);
+            $css = $registry->get('css');
+            if (empty($css)) {
+                $registry->set('css', 'biblestudy.css');
+            }
+            //Now write the params back into the $table array and store.
+            $table->params = (string) $registry->toString();
+            $table->store();
+        } catch (Exception $e) {
+            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
+        }
     }
 
 }
