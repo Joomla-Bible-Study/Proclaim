@@ -324,23 +324,26 @@ div.listingfooter ul li {
         $db = JFactory::getDBO();
         $query = 'SELECT id FROM #__bsms_templates';
         $db->setQuery($query);
-        $result = $db->loadObject();
-        // Store new Recorde so it can be seen.
-        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-        $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-        try {
-            $table->load($result->id);
-            $registry = new JRegistry;
-            $registry->loadJSON($table->params);
-            $css = $registry->get('css');
-            if (empty($css)) {
-                $registry->set('css', 'biblestudy.css');
+        $results = $db->loadObjectList();
+        foreach ($results as $result)
+        {
+            // Store new Recorde so it can be seen.
+            JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+            $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+            try {
+                $table->load($result->id);
+                $registry = new JRegistry;
+                $registry->loadJSON($table->params);
+                $css = $registry->get('css');
+                if (!$css || $css == '-1') {
+                    $registry->set('css', 'biblestudy.css');
+                }
+                //Now write the params back into the $table array and store.
+                $table->params = (string) $registry->toString();
+                $table->store();
+            } catch (Exception $e) {
+                JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
             }
-            //Now write the params back into the $table array and store.
-            $table->params = (string) $registry->toString();
-            $table->store();
-        } catch (Exception $e) {
-            JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
         }
     }
 
