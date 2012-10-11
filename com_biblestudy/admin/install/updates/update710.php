@@ -316,7 +316,7 @@ div.listingfooter ul li {
             }
         }
         
-        return FALSE;
+        return true;
         //end if no new css file
     }
 
@@ -332,12 +332,13 @@ div.listingfooter ul li {
             $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
             try {
                 $table->load($result->id);
+                $table->store();
+                $table->load($result->id);
                 $registry = new JRegistry;
                 $registry->loadJSON($table->params);
                 $css = $registry->get('css');
-                if (!$css || $css == '-1') {
-                    $registry->set('css', 'biblestudy.css');
-                }
+                $registry->set('css', 'biblestudy.css');
+                
                 //Now write the params back into the $table array and store.
                 $table->params = (string) $registry->toString();
                 $table->store();
