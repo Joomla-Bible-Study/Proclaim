@@ -65,14 +65,12 @@ class showScripture {
      * @param string $reference
      * @return string
      */
-    function getHideShow($row, $reference) {
-        $webpage = Filter::strip_only(file_get_contents($this->link));
-        $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblegateway-print.css');
-        $passage = '<div class="passage">';
-        $passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
+    function getHideShow($row, $reference)
+    {
+        $passage = '<div class = passage>';
+        $passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>'.JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE').'<<</a>';
         $passage .= '<div id="scripture" style="display: none;">';
-        $passage .= $webpage;
+        $passage .= file_get_contents($this->link);
         $passage .= '</div>';
         $passage .= '</div>';
         return $passage;
@@ -85,11 +83,9 @@ class showScripture {
      * @param string $reference
      * @return string
      */
-    function getShow($row, $reference) {
-        $webpage = Filter::strip_only(file_get_contents($this->link));
-        $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblegateway-print.css');
-        $passage = '<div class = "passage">' . $webpage . '</div>';
+    function getShow($row, $reference)
+    {
+        $passage = '<div class = "passage">'.file_get_contents($this->link).'</div>';
         return $passage;
     }
 
@@ -100,11 +96,14 @@ class showScripture {
      * @param type $reference
      * @return string
      */
-    function getLink($row, $reference) {
-        $passage = '<div class="passage">';
-        $passage .= '<a href="' . $this->link . '"';
-        $passage .=" onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;";
-        $passage .= '">' . JText::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '</a>';
+     function getLink($row, $reference)
+    {
+        $passage = '<div class = passage>';
+        //$passage .= '<a href="#" onclick="';
+        $passage .= '<a href="'.$this->link.'"';
+        $passage .=" onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;" ;
+       // $rel = "{handler: 'iframe', size: {x: 800, y: 500}}";
+        $passage .= '">'.JText::_('JBS_STY_CLICK_TO_OPEN_PASSAGE').'</a>';
         $passage .= '</div>';
         return $passage;
     }
@@ -139,8 +138,9 @@ class showScripture {
      * @param string $version
      * @return string
      */
-    function getBiblegateway($reference, $version) {
-        $link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&amp;version=" . $version . ";&amp;interface=print";
+     function getBiblegateway($reference, $version)
+    {
+        $link = "http://classic.biblegateway.com/passage/index.php?search=".$reference.";&version=".$version.";&interface=print";
         return $link;
     }
 

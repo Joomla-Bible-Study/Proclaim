@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 // Version information
-define('BIBLESTUDY_VERSION', '7.1.0');
-define('BIBLESTUDY_VERSION_DATE', '2012-10-05');
-define('BIBLESTUDY_VERSION_BUILD', '3438');
+define('BIBLESTUDY_VERSION', '7.1.1');
+define('BIBLESTUDY_VERSION_DATE', '2012-10-10');
+define('BIBLESTUDY_VERSION_BUILD', '3435');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values

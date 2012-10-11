@@ -76,17 +76,16 @@ class biblestudyViewInstall extends JView {
 
     /**
      * Install Script PostFlight
-     * @param boolean $msg
      * @return string
      * @since 7.1.0
      */
-    protected function installscripts($msg = null) {
+    protected function installscripts() {
         //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
         require_once(BIBLESTUDY_PATH_ADMIN_INSTALL . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update701.php');
         $update = new updatejbs701();
         $update701 = $update->do701update();
         if (!$update701) {
-            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2'));
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', BIBLESTUDY_VERSION));
         }
 
         //Check for presence of css or backup or other things for upgrade to 7.1.0
@@ -94,7 +93,7 @@ class biblestudyViewInstall extends JView {
         $JBS710Update = new JBS710Update();
         $JBS710 = $JBS710Update->update710();
         if (!$JBS710) {
-            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1'));
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', BIBLESTUDY_VERSION));
         }
         return true;
     }
