@@ -455,8 +455,8 @@ class jbsMedia {
             case 1: //Internal
                 switch ($player->type) {
                     case 2: //Inline
-                        $playercode = "<video height='" . $player->playerheight . "' poster='" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "'
-                        width='" . $player->playerwidth . "' id='placeholder'> <source src='" . $path1 . "' /><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
+                        $playercode = "<video height='" . $player->playerheight . "' poster='" . JURI::base() . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "'
+                        width='" . $player->playerwidth . "' id='placeholder'> <source src='" . $path . "' /><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
                                 flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
@@ -518,7 +518,7 @@ class jbsMedia {
                         $playercode = '<script type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
         		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id . '" border="0" height="24" width="' . $player->playerwidth . '">
         		<param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" />
-        		<param name="FlashVars" value="playerID=' . $media->id . '&amp;amp;soundFile=' . $path . '" />
+        		<param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path . '" />
         		<param name="quality" value="high" />
         		<param name="menu" value="false" />
         		<param name="wmode" value="transparent" />
