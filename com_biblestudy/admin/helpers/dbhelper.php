@@ -249,11 +249,11 @@ class jbsDBhelper {
      * @param string $table Table to be reloaded.
      * @return boolean
      */
-    public static function reloadtable($result, $table) {
+    public static function reloadtable($result, $table = 'Style') {
         $db = JFactory::getDBO();
         // Store new Recorde so it can be seen.
         JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-        $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
+        $table = JTable::getInstance($table, 'Table', array('dbo' => $db));
         try {
             $table->load($result->id);
             $table->store();
