@@ -27,7 +27,7 @@
                        label="JBS_MNU_SELECT_TEMPLATE" default="1"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                        key_field="id" value_field="title" required="true" />
-                <field name="moduletemplate" type="sql" label="JBS_TPL_MODULE_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                <field name="moduletemplate" type="sql" label="JBS_TPL_MODULE_TEMPLATE" description="JBS_TPL_MODULE_TEMPLATE_DESC" hide_none="true"
                        query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=7 AND published =1 ORDER BY filename ASC" key_field="filename" value_field="filename">
                     <option value="0">JBS_CMN_USE_DEFAULT</option>
                 </field>
