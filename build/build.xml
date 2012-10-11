@@ -9,7 +9,7 @@
     <property name="src.test" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/tests/test"/>
     <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
     <property name="dist"  location="dist"/>
-    <property name="version" location="7.1.0"/>
+    <property name="comppkgversion" location="7.1.1"/>
     <target name="reset">
         <echo message="Reset back to Dev State" />
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
@@ -35,6 +35,7 @@
         <delete file="pkg_biblestudy.zip" />
         <delete file="xmap/plg_xmap_jbs.zip" />
         <delete file="j1.5/com_jbsmigration.zip" />
+        <delete file="joomsef_extension/joomlsef_com_biblestudy.zip" />
     </target>
     <target name="build">
         <echo message="Remove Dev files" />
