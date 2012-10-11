@@ -51,7 +51,7 @@ class JBS710Update {
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                    return false;
                 }
             } else {
                 $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($oldcss) . '",0)';
@@ -59,7 +59,7 @@ class JBS710Update {
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                    return false;
                 }
             }
             if (JFile::exists($src)) {
@@ -304,7 +304,7 @@ div.listingfooter ul li {
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                    return false;
                 }
                 $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
                 $db->setQuery($query);
@@ -315,7 +315,7 @@ div.listingfooter ul li {
                 return TRUE;
             }
         }
-        
+
         return FALSE;
         //end if no new css file
     }
@@ -325,8 +325,7 @@ div.listingfooter ul li {
         $query = 'SELECT id FROM #__bsms_templates';
         $db->setQuery($query);
         $results = $db->loadObjectList();
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             // Store new Recorde so it can be seen.
             JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
             $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
@@ -343,8 +342,10 @@ div.listingfooter ul li {
                 $table->store();
             } catch (Exception $e) {
                 JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
+                return false;
             }
         }
+        return true;
     }
 
 }
