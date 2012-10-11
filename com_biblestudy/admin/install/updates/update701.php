@@ -36,9 +36,9 @@ class updatejbs701 {
                     $languagetag = 1;
                     $query = 'ALTER TABLE #__bsms_topics CHANGE `languages` `params` varchar(511) NULL';
                     $db->setQuery($query);
-                    $db->query();
-                    $error = $db->getErrorNum();
-                    if ($error) {
+                    if (!$db->execute()) {
+                        JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
                         return false;
                     }
                 } elseif (substr_count($key, 'params')) {
@@ -48,9 +48,9 @@ class updatejbs701 {
             if (!$languagetag && !$paramstag) {
                 $query = 'ALTER TABLE #__bsms_topics ADD `params` varchar(511) NULL';
                 $db->setQuery($query);
-                $db->query();
-                $error = $db->getErrorNum();
-                if ($error) {
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
                     return false;
                 }
             }
@@ -72,23 +72,9 @@ class updatejbs701 {
         $db = JFactory::getDBO();
         $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
         $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() != 0) {
-            return false;
-        }
-        return true;
-    }
+        if (!$db->execute()) {
+            JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-    /**
-     * Perfomr DB Query
-     * @param string $query
-     * @return boolean
-     */
-    function performdb($query) {
-        $db = JFactory::getDBO();
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() != 0) {
             return false;
         }
         return true;
