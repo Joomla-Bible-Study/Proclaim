@@ -117,7 +117,7 @@ class xmap_com_biblestudy {
                     $node->changefreq = $parent->changefreq;
                     $node->type = 'component';
                     $node->menutype = 'mainmenu';
-                    $node->link = 'index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' . $result->theYear;
+                    $node->link = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $result->theYear. '&amp;t=' . $t;
                     $xmap->printNode($node);
                     $xmap->changeLevel(1);
                     $query = 'SELECT id, studytitle, alias, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = ' . $result->theYear;
@@ -150,7 +150,7 @@ class xmap_com_biblestudy {
                     $node->changefreq = $parent->changefreq;
                     $node->type = 'component';
                     $node->menutype = 'mainmenu';
-                    $node->link = 'index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_book=' . $result->booknumber;
+                    $node->link = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $result->booknumber . '&amp;t=' . $t;
                     $xmap->printNode($node);
                     $xmap->changeLevel(1);
                     self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
@@ -178,7 +178,7 @@ class xmap_com_biblestudy {
                     $node->changefreq = $parent->changefreq;
                     $node->type = 'component';
                     $node->menutype = 'mainmenu';
-                    $node->link = 'index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_teacher=' . $result->id;
+                    $node->link = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . $result->id . '&amp;t=' . $t;
                     $xmap->printNode($node);
                     $xmap->changeLevel(1);
                     self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
@@ -209,7 +209,7 @@ class xmap_com_biblestudy {
                     $node->changefreq = $parent->changefreq;
                     $node->type = 'component';
                     $node->menutype = 'mainmenu';
-                    $node->link = 'index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_location =' . $result->id;
+                    $node->link = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location =' . $result->id . '&amp;t=' . $t;
                     $xmap->printNode($node);
                     $xmap->changeLevel(1);
                     self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
@@ -307,7 +307,7 @@ class xmap_com_biblestudy {
         $node->changefreq = $parent->changefreq;
         $node->type = 'component';
         $node->menutype = 'mainmenu';
-        $node->link = 'index.php?option=com_biblestudy&amp;view=studydetails&amp;id=' . $study->id . '&amp;t=' . $t;
+        $node->link = 'index.php?option=com_biblestudy&amp;view=sermon&amp;id=' . $study->id . '&amp;t=' . $t;
         if ($params['description'] == 1) {
             $node->name .= ' - ' . $study->studyintro;
         }
@@ -344,7 +344,7 @@ class xmap_com_biblestudy {
             $node->changefreq = $parent->changefreq;
             $node->type = 'component';
             $node->menutype = 'mainmenu';
-            $node->link = 'index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' . $year->theYear;
+            $node->link = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $year->theYear . '&amp;t=' . $t;
             $xmap->printNode($node);
             $xmap->changeLevel(1);
             $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = ' . $year->theYear . ' and ' . $field . ' = ' . $record;
