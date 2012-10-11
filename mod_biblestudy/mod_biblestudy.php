@@ -75,7 +75,6 @@ foreach ($items AS $item) {
 }
 $list = $items;
 $link_text = $params->get('pagetext', 'More Bible Studies');
-$templatemenuid = $params->get('studielisttemplateid');
 if (!$templatemenuid) {
     $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 }
