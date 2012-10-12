@@ -9,4 +9,4 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-</div><!--End of page container div-->
+
