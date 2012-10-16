@@ -246,6 +246,7 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
     </div>
     <div class="clr"></div>
 </form>
+<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DB'), 'admin-db-settings'); ?>
 <?php echo $this->loadTemplate('assets'); ?>
 <div class="clr"></div>
 <?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_BACKUP'), 'admin-backup-settings'); ?>

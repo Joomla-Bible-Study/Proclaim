@@ -10,8 +10,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DB'), 'admin-db-settings'); ?>
-
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
     <div class="width-100">
         <div class="width-60 fltlft">
