@@ -127,7 +127,7 @@
             <option value="3">JBS_CMN_AVPLUGIN</option>
             <option value="7">JBS_CMN_LEGACY_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
-            <option value="100">JBS_ADM_NO_PLAYER_LISTED</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
         </field>
         <field name="to" type="list" label="">
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
@@ -136,6 +136,7 @@
             <option value="3">JBS_CMN_AVPLUGIN</option>
             <option value="7">JBS_CMN_LEGACY_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
         </field>
         <field name="pFrom" type="list" label="JBS_ADM_CHANGE_POPUP">
             <option value="x">JBS_ADM_SELECT_EXISTING_OPTION</option>

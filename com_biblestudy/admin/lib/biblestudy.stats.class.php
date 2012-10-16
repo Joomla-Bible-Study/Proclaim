@@ -307,6 +307,7 @@ class jbStats {
                 '<br /><strong><a href="http://extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">' . JText::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_avplayer .
                 '<br /><strong>' . JText::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacyplayer .
                 '<br /><strong>' . JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_noplayer .
+                '<br /><strong>' . JText::_('JBS_CMN_GLOBAL') . ': </strong>' . $count_globalplayer .
                 '<br /><strong>' . JText::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embedcode;
         return $mediaplayers;
     }
