@@ -40,7 +40,7 @@ class BiblestudyModelTeachers extends JModelList {
         $query->join('LEFT', '#__bsms_studies as s on teachers.id = s.teacher_id');
         $query->where('teachers.language in (' . $language . ')');
         $query->where('teachers.published = 1 AND teachers.list_show = 1');
-        $query->order('teachers.teachername, teachers.ordering ASC');
+        $query->order('teachers.ordering, teachers.teachername ASC');
         $query->group('teachers.id');
         return $query;
     }
