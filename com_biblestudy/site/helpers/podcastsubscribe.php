@@ -42,21 +42,21 @@ class podcastSubscribe {
 
                     case 2:
                         $subscribe .= '<div class="pcell">';
-                        $subscribe .= podcastSubscribe::buildStanderdPodcast($podcast);
+                        $subscribe .= podcastSubscribe::buildStandardPodcast($podcast);
                         $subscribe .= '</div>';
                         break;
 
                     case 3:
                         $subscribe .= '<div class="pcell">';
-                        $subscribe .= podcastSubscribe::buildAlernatePodcast($podcast);
+                        $subscribe .= podcastSubscribe::buildAlternatePodcast($podcast);
                         $subscribe .= '</div>';
                         break;
 
                     case 4:
                         $subscribe .= '<div class="pcell"><div class="fltlft">';
-                        $subscribe .= podcastSubscribe::buildStanderdPodcast($podcast);
+                        $subscribe .= podcastSubscribe::buildStandardPodcast($podcast);
                         $subscribe .= '</div><div class="fltlft">';
-                        $subscribe .= podcastSubscribe::buildStanderdPodcast($podcast);
+                        $subscribe .= podcastSubscribe::buildAlternatePodcast($podcast);
                         $subscribe .= '</div></div>';
                         break;
                 }
@@ -76,7 +76,7 @@ class podcastSubscribe {
      * @param object $podcast
      * @return string
      */
-    public static function buildStanderdPodcast($podcast) {
+    public static function buildStandardPodcast($podcast) {
         $subscribe = '';
         if (!empty($podcast->podcast_image_subscribe)):
             $image = podcastSubscribe::buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
@@ -97,14 +97,14 @@ class podcastSubscribe {
      * @param object $podcast
      * @return string
      */
-    public static function buildAlernatePodcast($podcast) {
+    public static function buildAlternatePodcast($podcast) {
         $subscribe = '';
         if (!empty($podcast->alternateimage)):
             $image = podcastSubscribe::buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
             $link = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
             $subscribe .= $link;
         endif;
-        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div>';
+        $subscribe .= '<div class="text"><a href="' .  $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
         return $subscribe;
     }
 

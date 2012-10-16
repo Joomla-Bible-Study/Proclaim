@@ -74,7 +74,7 @@
             <menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
             <menu link="option=com_biblestudy&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
             <menu link="option=com_biblestudy&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
-            <menu link="option=com_biblestudy&amp;view=seriesdisplays" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
+            <menu link="option=com_biblestudy&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
             <menu link="option=com_biblestudy&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
             <menu link="option=com_biblestudy&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
             <menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>

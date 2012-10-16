@@ -82,7 +82,7 @@ $linkurl = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templa
 $link = '<a href="' . $linkurl . '">' . $link_text . '</a>';
 $document = JFactory::getDocument();
 $css = $params->get('css', 'biblestudy.css');
-if ($css <= "-1"):
+if (!$css || $css == '-1'):
     $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 else:
     $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
