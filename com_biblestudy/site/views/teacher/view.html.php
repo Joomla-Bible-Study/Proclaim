@@ -101,7 +101,7 @@ class BiblestudyViewTeacher extends JView {
         $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
         //Check to see if com_contact used instead
         if ($item->contact) {
-            require_once JURI::base().'components'. DIRECTORY_SEPARATOR .'com_contact'. DIRECTORY_SEPARATOR .'models'. DIRECTORY_SEPARATOR .'contact.php';
+            require_once (JPATH_ROOT .'components/com_contact/models/contact.php');
             $contactmodel = JModel::getInstance('contact', 'contactModel');
             $this->contact = $contactmodel->getItem($pk = $item->id);
             //Substitute contact info from com_contacts for duplicate fields
