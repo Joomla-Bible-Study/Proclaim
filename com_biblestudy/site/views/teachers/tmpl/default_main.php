@@ -46,7 +46,7 @@ $admin_params = $this->admin_params;
                         } ?>
                     </td>
                     <td class="bsm_teachername">
-                        <table cellspacing="0">Ï
+                        <table cellspacing="0">
                             <tr>
                                 <td>
                                     <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
