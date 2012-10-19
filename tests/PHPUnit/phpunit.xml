@@ -1,0 +1,13 @@
+<phpunit
+	bootstrap="bootstrap.php"
+	colors="false"
+	stopOnFailure="false"
+	testdox="true"
+	verbose="true"
+	backupStaticAttributes="false"
+	backupGlobals="false">
+	<testsuite name="AllTests">
+		<directory>../../../../www/joomla_development/tests/unit/suite</directory>
+	</testsuite>
+
+</phpunit>
