@@ -29,8 +29,7 @@
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
                        label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
             </fieldset>
-            <fieldset
-                name="advanced">
+            <fieldset name="advanced">
                 <field
                     name="layout"
                     type="modulelayout"
@@ -41,13 +40,13 @@
                     name="cache"
                     type="list"
                     default="1"
-                    label="JBS_MNU_FIELD_CACHING_LABEL"
-                    description="JBS_MNU_FIELD_CACHING_DESC">
+                    label="COM_MODULES_FIELD_CACHING_LABEL"
+                    description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option
                         value="1">JGLOBAL_USE_GLOBAL
                     </option>
                     <option
-                        value="0">JBS_MNU_FIELD_VALUE_NOCACHING
+                        value="0">COM_MODULES_FIELD_VALUE_NOCACHING
                     </option>
                 </field>
 
@@ -55,8 +54,8 @@
                     name="cache_time"
                     type="text"
                     default="900"
-                    label="JBS_MNU_FIELD_CACHE_TIME_LABEL"
-                    description="JBS_MNU_FIELD_CACHE_TIME_DESC" />
+                    label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                    description="COM_MODULES_FIELD_CACHE_TIME_LABEL" />
             </fieldset>
         </fields>
     </config>
