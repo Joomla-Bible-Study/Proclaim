@@ -41,19 +41,19 @@ class podcastSubscribe {
                         break;
 
                     case 2:
-                        $subscribe .= '<div class="pcell">';
+                        $subscribe .= '<div class="pcell"><h3>'. $podcast->title .'</h3><div class="clr padding-bottom-5"><hr /></div>';
                         $subscribe .= podcastSubscribe::buildStandardPodcast($podcast);
                         $subscribe .= '</div>';
                         break;
 
                     case 3:
-                        $subscribe .= '<div class="pcell">';
+                        $subscribe .= '<div class="pcell"><h3>'. $podcast->title .'</h3><div class="clr padding-bottom-5"><hr /></div>';
                         $subscribe .= podcastSubscribe::buildAlternatePodcast($podcast);
                         $subscribe .= '</div>';
                         break;
 
                     case 4:
-                        $subscribe .= '<div class="pcell"><div class="fltlft">';
+                        $subscribe .= '<div class="pcell"><h3>'. $podcast->title .'</h3><div class="clr padding-bottom-5"><hr /></div><div class="fltlft">';
                         $subscribe .= podcastSubscribe::buildStandardPodcast($podcast);
                         $subscribe .= '</div><div class="fltlft">';
                         $subscribe .= podcastSubscribe::buildAlternatePodcast($podcast);
