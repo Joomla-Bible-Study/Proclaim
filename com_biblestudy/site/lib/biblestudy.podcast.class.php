@@ -161,7 +161,6 @@ class JBSPodcast {
                                 $query->from('#__bsms_books');
                                 $query->where('booknumber = ' . $episode->booknumber);
                                 $db->setQuery($query);
-                                //$db->query();
                                 $book = $db->loadObject();
                                 $bookname = JText::_($book->bookname);
                                 $title = $bookname . ' ' . $episode->chapter_begin;
