@@ -10,21 +10,16 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-// Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
-    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-}
-
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-jimport('joomla.application.component.controller');
+//jimport('joomla.application.component.legacy');
 
 /**
  * JController for BibleStudy Admin class
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyController extends JControllerLegacy {
+class BiblestudyController extends JControllerlegacy {
 
     /**
      * Default view var.
