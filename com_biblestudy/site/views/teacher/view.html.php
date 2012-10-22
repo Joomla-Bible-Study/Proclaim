@@ -103,7 +103,7 @@ class BiblestudyViewTeacher extends JView {
         if ($item->contact) {
             require_once JPATH_ROOT . DIRECTORY_SEPARATOR .'components'. DIRECTORY_SEPARATOR .'com_contact'. DIRECTORY_SEPARATOR .'models'. DIRECTORY_SEPARATOR .'contact.php';
             $contactmodel = JModel::getInstance('contact', 'contactModel');
-            $this->contact = $contactmodel->getItem($pk = $item->id);
+            $this->contact = $contactmodel->getItem($pk = $item->contact);
             //Substitute contact info from com_contacts for duplicate fields
             $item->title = $this->contact->con_position;
             $item->teachername = $this->contact->name;

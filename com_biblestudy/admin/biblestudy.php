@@ -15,28 +15,13 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
     return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
+require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
 if (JRequest::getCmd('view', '') == 'liveupdate') {
     LiveUpdate::handleRequest();
     return;
 }
 
-require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
-
-// Check for PHP4
-if (defined('PHP_VERSION')) {
-    $version = PHP_VERSION;
-} elseif (function_exists('phpversion')) {
-    $version = phpversion();
-} else {
-    // No version info. I'll lie and hope for the best.
-    $version = '5.0.0';
-}
-
-// Old PHP version detected. EJECT! EJECT! EJECT!
-if (!version_compare($version, '5.0.0', '>=')) {
-    return JError::raise(E_ERROR, 500, 'PHP 4 is not supported by Joomla Bible Study');
-}
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 
 // Register helper class
 JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
@@ -44,10 +29,7 @@ JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.p
 addCSS();
 addJS();
 
-// Include dependencies
-jimport('joomla.application.component.controller');
-
-$controller = JController::getInstance('Biblestudy');
+$controller = JControllerLegacy::getInstance('Biblestudy');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
 

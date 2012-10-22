@@ -79,7 +79,7 @@ class JBSImport {
 
         // If there is no uploaded file, we have a problem...
         if (!is_array($userfile)) {
-            JError::raiseWarning('1', JText::_('No file selected'));
+            JError::raiseWarning('1', JText::_('JBS_CMN_NO_FILE_SELECTED'));
             return false;
         }
 
@@ -115,7 +115,7 @@ class JBSImport {
      * Install DB
      * @param string $tmp_src Temp info
      * @param boolean $parent To tell if coming from migration
-     * @return boolean If db installed corectrly.
+     * @return boolean if db installed correctly.
      */
     protected static function installdb($tmp_src, $parent = TRUE) {
         jimport('joomla.filesystem.file');
