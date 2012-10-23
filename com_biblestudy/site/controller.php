@@ -17,7 +17,7 @@ jimport('joomla.application.component.controller');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyController extends JController {
+class biblestudyController extends JControllerLegacy {
 
     /**
      * Display

@@ -19,7 +19,7 @@ require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate'
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyViewcpanel extends JView {
+class biblestudyViewcpanel extends JViewLegacy {
 
     /**
      * Display

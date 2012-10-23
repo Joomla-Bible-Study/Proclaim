@@ -20,7 +20,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyViewmediafile extends JView {
+class biblestudyViewmediafile extends JViewLegacy {
     /**
      * Form
      * @var array

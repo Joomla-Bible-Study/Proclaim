@@ -19,7 +19,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Admin
  * @since 7.1.0
  */
-class BiblestudyViewTemplatecodes extends JView {
+class BiblestudyViewTemplatecodes extends JViewLegacy {
 
     /**
      * Execute and display a template script.

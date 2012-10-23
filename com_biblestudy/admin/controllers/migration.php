@@ -23,7 +23,7 @@ JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestu
  * @package BibleStudy.Admin
  * @since 7.1.0
  */
-class BiblestudyControllerMigration extends JController {
+class BiblestudyControllerMigration extends JControllerLegacy {
 
     /**
      * Method to display the view

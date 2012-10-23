@@ -16,7 +16,7 @@ jimport('joomla.application.component.controller');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyControllerSeriesdisplays extends JController {
+class BiblestudyControllerSeriesdisplays extends JControllerLegacy {
 
     /**
      * Set the var for mediaCode

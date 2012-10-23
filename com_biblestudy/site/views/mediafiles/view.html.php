@@ -20,7 +20,7 @@ jimport('joomla.html.toolbar');
  * @package     BibleStudy.Site
  * @since       7.0.0
  */
-class biblestudyViewmediafiles extends JView {
+class biblestudyViewmediafiles extends JViewLegacy {
 
     /**
      * Items

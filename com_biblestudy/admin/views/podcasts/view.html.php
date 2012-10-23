@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewPodcasts extends JView {
+class BiblestudyViewPodcasts extends JViewLegacy {
 
     /**
      * Items

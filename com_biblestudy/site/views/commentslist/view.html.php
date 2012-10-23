@@ -19,7 +19,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyViewcommentslist extends JView {
+class biblestudyViewcommentslist extends JViewLegacy {
 
     /**
      * Items

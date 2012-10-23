@@ -16,7 +16,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewMediaimage extends JView {
+class BiblestudyViewMediaimage extends JViewLegacy {
 
     /**
      * Form

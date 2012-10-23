@@ -18,7 +18,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyViewmessages extends JView {
+class biblestudyViewmessages extends JViewLegacy {
 
     /**
      * Items

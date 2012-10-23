@@ -23,7 +23,7 @@ $uri = JFactory::getURI();
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyViewSermon extends JView {
+class BiblestudyViewSermon extends JViewLegacy {
 
     /**
      * Execute and display a template script.

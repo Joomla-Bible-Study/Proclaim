@@ -20,7 +20,7 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyViewSeriesdisplay extends JView {
+class BiblestudyViewSeriesdisplay extends JViewLegacy {
 
     /**
      * State

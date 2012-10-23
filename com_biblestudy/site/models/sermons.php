@@ -109,8 +109,9 @@ class BiblestudyModelSermons extends JModelList {
         $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
         $this->setState('filter.location', $location);
 
-        $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
-        $this->setState('filter.languages', $languages);
+//        $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
+//        $this->setState('filter.languages', $languages);
+
         /**
          * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
          */
@@ -119,6 +120,35 @@ class BiblestudyModelSermons extends JModelList {
         $limitstart = JRequest::getInt('limitstart');
         $value = JRequest::getUInt('start');
         $this->setState('list.start', $value);
+    }
+
+    /**
+     * Method to get a store id based on model configuration state.
+     *
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param	string		$id	A prefix for the store id.
+     *
+     * @return	string		A store id.
+     * @since	1.6
+     */
+    protected function getStoreId($id = '') {
+        // Compile the store id.
+        $id .= ':' . serialize($this->getState('filter.published'));
+        $id .= ':' . $this->getState('filter.studytitle');
+        $id .= ':' . $this->getState('filter.book');
+        $id .= ':' . $this->getState('filter.teacher');
+        $id .= ':' . $this->getState('filter.series');
+        $id .= ':' . $this->getState('filter.messageType');
+        $id .= ':' . $this->getState('filter.year');
+        $id .= ':' . $this->getState('filter.order');
+        $id .= ':' . $this->getState('filter.topic');
+        $id .= ':' . $this->getState('filter.location');
+        $id .= ':' . $this->getState('list.start');
+
+        return parent::getStoreId($id);
     }
 
     /**
@@ -423,14 +453,14 @@ class BiblestudyModelSermons extends JModelList {
         //Filter by location
         $location = $this->getState('filter.location');
         if ($location >= 1)
-            $query->where('study.location_id = ' . (int)$location);
+            $query->where('study.location_id = ' . (int) $location);
 
         // Filter by language
         $language = $params->get('language', '*');
         if ($this->getState('filter.languages')) {
             $query->where('study.language  in (' . $this->getState('filter.languages') . ')');
         } elseif ($this->getState('filter.language') || $language != '*') {
-            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+            $query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
 
         //Order by order filter

@@ -17,7 +17,7 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  * @package BibleStudy.Admin
  * @since 7.1.0
  */
-class biblestudyViewInstall extends JView {
+class biblestudyViewInstall extends JViewLegacy {
 
     /**
      * Display

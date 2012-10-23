@@ -17,7 +17,7 @@ jimport('joomla.application.component.model');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyModelmediaplayer extends JModel {
+class biblestudyModelmediaplayer extends JModelLegacy {
 
     /**
      * Constructor

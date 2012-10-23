@@ -19,7 +19,7 @@ jimport('joomla.i18n.help');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewTeachers extends JView {
+class BiblestudyViewTeachers extends JViewLegacy {
 
     /**
      * Items

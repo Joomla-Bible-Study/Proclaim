@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyControllerSeriesdisplay extends JController {
+class BiblestudyControllerSeriesdisplay extends JControllerLegacy {
 
     /**
      * constructor (registers additional tasks to methods)

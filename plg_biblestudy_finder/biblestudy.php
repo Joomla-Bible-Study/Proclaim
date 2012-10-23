@@ -150,7 +150,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
             }
 
             // Reindex the item
-//			$this->reindex($row->id);
+            $this->reindex($row->id);
         }
 
         return true;
@@ -355,6 +355,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * @return  JDatabaseQuery  A database object.
      *
      * @since   7.1.0
+     * @deprecated since version 7.1.1
      */
     protected function getUpdateQueryByTime($time) {
         // Build an SQL query based on the modified time.

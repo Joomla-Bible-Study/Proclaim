@@ -17,7 +17,7 @@ jimport('joomla.filesystem.file');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyControllerajax extends JController {
+class biblestudyControllerajax extends JControllerLegacy {
 
     /**
      * Returns the number of files in a folder (Recursively)

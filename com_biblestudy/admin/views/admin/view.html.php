@@ -21,7 +21,7 @@ require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewAdmin extends JView {
+class BiblestudyViewAdmin extends JViewLegacy {
 
     /**
      * Form

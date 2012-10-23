@@ -16,7 +16,7 @@ jimport('joomla.application.component.view');
  * @package BibleStudy.Site
  * @since 7.1.0
  */
-class BiblestudyViewLatest extends JView {
+class BiblestudyViewLatest extends JViewLegacy {
 
     /**
      * Execute and display a template script.

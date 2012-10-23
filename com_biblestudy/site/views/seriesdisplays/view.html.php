@@ -19,7 +19,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyViewSeriesdisplays extends JView {
+class BiblestudyViewSeriesdisplays extends JViewLegacy {
 
     /**
      * Execute and display a template script.
