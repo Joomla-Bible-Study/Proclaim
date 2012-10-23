@@ -19,7 +19,7 @@ require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyController extends JControllerlegacy {
+class BiblestudyController extends JController {
 
     /**
      * Default view var.
@@ -168,7 +168,7 @@ class BiblestudyController extends JControllerlegacy {
         $to = $data['params']['to'];
         switch ($from) {
             case '100':
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` IS NULL";
+                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '0' OR `player` = '100' or `player` IS NULL";
                 break;
 
             default:
