@@ -23,6 +23,7 @@ class jbs622Install {
      * @return string
      */
     function upgrade622() {
+        $db = JFactory::getDBO();
         $query = "SELECT `id`, `params` FROM #__bsms_mediafiles WHERE `params` LIKE '%podcast1%'";
         $db->setQuery($query);
         $db->query();
