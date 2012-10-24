@@ -115,7 +115,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                         $location .= "\n\t" . '<tr>';
                     }
                     $location .= "\n\t\t" . '<td class="landing_td">';
-                    $location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                    $location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
                     $location .= $b->location_text;
 
@@ -156,7 +156,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                 foreach ($tresult as $b) {
                     if ($b->landing_show == 1) {
                         $location .= '<div class="landingrow">';
-                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                         $location .= $b->location_text;
                         $location .='</a></div>';
                         $location .= '</div>';
@@ -169,7 +169,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                 foreach ($tresult as $b) {
                     if ($b->landing_show == 2) {
                         $location .= '<div class="landingrow">';
-                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                        $location .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                         $location .= $b->location_text;
                         $location .='</a></div>';
                         $location .= '</div>';

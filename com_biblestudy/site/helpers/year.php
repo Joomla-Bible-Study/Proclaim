@@ -102,7 +102,7 @@ function getYearsLandingPage($params, $id, $admin_params) {
             }
             $year .= "\n\t\t" . '<td class="landing_td">';
 
-            $year .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $b->theYear . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_book=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+            $year .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_book=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
             $year .= $b->theYear;
 

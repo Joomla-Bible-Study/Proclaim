@@ -511,7 +511,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                     $series .= "\n\t\t" . '<td class="landing_td">';
 
                     if ($params->get('series_linkto') == '0') {
-                        $series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                        $series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                     } else {
                         $series .= '<a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                     }
@@ -555,7 +555,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                     if ($b->landing_show == 1) {
                         $series .= '<div class="landingrow">';
                         if ($params->get('series_linkto') == '0') {
-                            $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                            $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' .  '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                         } else {
                             $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                         }
@@ -572,7 +572,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
                     if ($b->landing_show == 2) {
                         $series .= '<div class="landingrow">';
                         if ($params->get('series_linkto') == '0') {
-                            $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . $langlink . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                            $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' .  '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
                         } else {
                             $series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
                         }

@@ -101,7 +101,7 @@ function getBooksLandingPage($params) {
                 }
             }
             $book .= "\n\t\t" . '<td class="landing_td">';
-            $book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+            $book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
             $book .= JText::sprintf($b->bookname);
 

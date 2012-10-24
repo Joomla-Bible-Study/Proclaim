@@ -109,7 +109,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
                 }
                 $messagetype .= "\n\t\t" . '<td class="landing_td">';
 
-                $messagetype .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id . $langlink . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
+                $messagetype .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id .  '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 
                 $messagetype .= $b->message_type;
 
@@ -150,7 +150,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
             foreach ($tresult as $b) {
                 if ($b->landing_show == 1) {
                     $messagetype .= '<div class="landingrow">';
-                    $messagetype .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id . $langlink . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
+                    $messagetype .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
                     $messagetype .= $b->message_type;
                     $messagetype .='</a></div>';
                     $messagetype .= '</div>';
@@ -163,7 +163,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
             foreach ($tresult as $b) {
                 if ($b->landing_show == 2) {
                     $messagetype .= '<div class="landingrow">';
-                    $messagetype .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id . $langlink . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
+                    $messagetype .= '<div class="landingcell"><a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
                     $messagetype .= $b->message_type;
                     $messagetype .='</a></div>';
                     $messagetype .= '</div>';
