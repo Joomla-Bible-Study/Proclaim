@@ -241,7 +241,7 @@ class jbs700Install {
         /* End of Adding Assets and Access Columns */
 
         /* Fix Mimtype Flash from old plyers */
-        $query = "UPDATE `#__bsms_mimetype` SET `id` = '15', `mimetype` = 'video/x-flv .flv', `mimetext` = ' Flash Video FLV', `published` = '1', `asset_id` = '3900', `access` = '0' WHERE `#__bsms_mimetype`.`id` = '15'";
+        $query = "UPDATE `#__bsms_mimetype` SET `id` = '15', `mimetype` = 'video/x-flv .flv', `mimetext` = ' Flash Video FLV', `published` = '1', `asset_id` = '3900', `access` = '1' WHERE `#__bsms_mimetype`.`id` = '15'";
         if (!jbsDBhelper::performdb($query, "Build 700: ")) {
             return FALSE;
         }
@@ -531,7 +531,7 @@ class jbs700Install {
             }
         }
         if (jbsDBhelper::checkTables($table, 'access') !== TRUE) {
-            $array = array(array('table' => $table, 'field' => 'access', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '0'"));
+            $array = array(array('table' => $table, 'field' => 'access', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '1'"));
             if (!$dbhelper->alterDB($array, "Build 700 : ")) {
                 return FALSE;
             }
