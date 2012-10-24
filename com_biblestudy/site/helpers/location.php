@@ -39,9 +39,16 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     if (isset($item->prams)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
+        $language = $db->quote($item->language). ',' . $db->quote('*');
         $menu_order = $m_params->get('locations_order');
     } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
         $menu_order = null;
+    }
+    if ($language == '*' || !$language) {
+        $langlink = '';
+    } elseif ($language != '*') {
+        $langlink = '&amp;filter.languages=' . $item->language;
     }
     if ($menu_order) {
         switch ($menu_order) {
@@ -66,6 +73,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
             ->innerJoin('#__bsms_series s on b.series_id = s.id')
             ->where('b.location_id > 0')
             ->where('a.published = 1')
+            ->where('b.language in (' . $language . ')')
             ->where('b.access IN (' . $groups . ')')
             ->where('s.access IN (' . $groups . ')')
             ->where('a.landing_show > 0')
@@ -107,7 +115,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
                         $location .= "\n\t" . '<tr>';
                     }
                     $location .= "\n\t\t" . '<td class="landing_td">';
-                    $location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+                    $location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location=' . $b->id . $langlink . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
                     $location .= $b->location_text;
 

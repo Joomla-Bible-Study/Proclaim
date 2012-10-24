@@ -107,9 +107,16 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     if (isset($item->params)) {
         $registry->loadJSON($item->params);
         $m_params = $registry;
+        $language = $db->quote($item->language). ',' . $db->quote('*');
         $menu_order = $m_params->get('teachers_order');
     } else {
+        $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
         $menu_order = null;
+    }
+    if ($language == '*' || !$language) {
+        $langlink = '';
+    } elseif ($language != '*') {
+        $langlink = '&amp;filter.languages=' . $item->language;
     }
     if ($menu_order) {
         switch ($menu_order) {
@@ -131,6 +138,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
             ->from('#__bsms_teachers a')
             ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
+            ->where('b.language in (' . $language . ')')
             ->where('a.list_show = 1 and a.published = 1')
             ->where('b.access IN (' . $groups . ')')
             ->where('a.landing_show > 0')
@@ -173,10 +181,10 @@ function getTeacherLandingPage($params, $id, $admin_params) {
                     $teacher .= "\n\t\t" . '<td class="landing_td">';
 
                     if ($params->get('linkto') == 0) {
-                        $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+                        $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                     } else {
 
-                        $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . '&t=' . $template) . '">';
+                        $teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink .'&t=' . $template) . '">';
                     };
                     $teacher .= $b->teachername;
 

@@ -49,7 +49,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
-        $langlink = '&amp;filter.languages=' . $language;
+        $langlink = '&amp;filter.languages=' . $item->language;
     }
     if ($menu_order) {
         switch ($menu_order) {
