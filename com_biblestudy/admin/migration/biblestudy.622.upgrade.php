@@ -32,7 +32,7 @@ class jbs622Install {
             foreach ($results AS $result) {
                 $oldparams = $result->params;
                 $newparams = str_replace('podcast1', 'podcasts', $oldparams);
-                $query = "UPDATE #__bsms_mediafiles SET `params` = '" . $newparams . "' WHERE `id` = " . $result->id;
+                $query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($newparams) . " WHERE `id` = " . (int) $db->quote($result->id);
                 if (!jbsDBhelper::performdb($query, "Build 622: ")) {
                     return FALSE;
                 }

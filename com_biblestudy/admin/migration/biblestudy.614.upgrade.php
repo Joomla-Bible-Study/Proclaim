@@ -76,7 +76,7 @@ class jbs614Install {
                 $podcast = 'podcasts=' . $result->podcast_id . '\n';
                 $params = $result->params;
                 $update = $podcast . ' ' . $params;
-                $query = "UPDATE #__bsms_mediafiles SET `params` = '" . $update . "', `podcast_id`='0' WHERE `id` = " . $result->id;
+                $query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($update) . ", `podcast_id`='0' WHERE `id` = " . (int) $db->quote($result->id);
                 if (!jbsDBhelper::performdb($query, "Build 614: ")) {
                     return FALSE;
                 }

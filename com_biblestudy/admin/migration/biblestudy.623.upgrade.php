@@ -37,7 +37,7 @@ class jbs623Install {
                 if ($isplayertype) {
                     $oldparams = $result->params;
                     $newparams = str_replace('internal_popup=0', 'internal_popup=2', $oldparams);
-                    $query = "UPDATE #__bsms_mediafiles SET `params` = '" . $newparams . "' WHERE id = " . $result->id;
+                    $query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($newparams) . " WHERE id = " . (int) $db->quote($result->id);
                     $db->setQuery($query);
                     if (!$db->query()) {
                         JError::raiseWarning(1, "Build 623: " . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
