@@ -39,7 +39,6 @@ class biblestudyViewLandingpage extends JViewLegacy {
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
-        //$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();

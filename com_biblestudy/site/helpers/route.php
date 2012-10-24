@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
-//jimport('joomla.application.categories');
 
 /**
  * Biblestudy Component Route Helper

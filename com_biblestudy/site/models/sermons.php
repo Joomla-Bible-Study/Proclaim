@@ -100,8 +100,8 @@ class BiblestudyModelSermons extends JModelList {
         $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
         $this->setState('filter.year', $year);
 
-        $order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
-        $this->setState('filter.order', $order);
+        $order = $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders');
+        $this->setState('filter.orders', $order);
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
@@ -109,8 +109,8 @@ class BiblestudyModelSermons extends JModelList {
         $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
         $this->setState('filter.location', $location);
 
-//        $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
-//        $this->setState('filter.languages', $languages);
+        $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
+        $this->setState('filter.languages', $languages);
 
         /**
          * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
@@ -301,8 +301,6 @@ class BiblestudyModelSermons extends JModelList {
             }
             //filter over books
             $filters = $books;
-            // $chb = JRequest::getInt('minChapt', '', 'post');
-            //  $che = JRequest::getInt('maxChapt', '', 'post');
             if ($filters) {
                 if (count($filters) > 1) {
                     $where2 = array();
@@ -473,7 +471,7 @@ class BiblestudyModelSermons extends JModelList {
         } else {
             $order = "DESC";
         }
-        $orderstate = $this->getState('filter.order');
+        $orderstate = $this->getState('filter.orders');
         if (!empty($orderstate))
             $order = $orderstate;
 
