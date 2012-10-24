@@ -143,7 +143,7 @@ class jbs700Install {
         if (!$dbhelper->alterDB($tables, "Build 700: ")) {
             return FALSE;
         }
-        
+
         /* Start of Adding Assets and Access Columns */
         $table = '#__bsms_admin';
         if (!$this->addAssetColumn($table)) {
@@ -293,20 +293,20 @@ class jbs700Install {
                     if ($player == 2) {
                         $player = 3;
                     }
-                    $query = "UPDATE #__bsms_mediafiles SET `player` = '$player' WHERE `id` = $result->id LIMIT 1";
+                    $query = "UPDATE #__bsms_mediafiles SET `player` = '" . $player . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                     if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                         return FALSE;
                     }
                 }
                 if ($popup) {
-                    $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
+                    $query = "UPDATE #__bsms_mediafiles SET `popup` = '" . $popup . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                     if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                         return FALSE;
                     }
                 }
                 if ($podcasts) {
                     $podcasts = str_replace('|', ',', $podcasts);
-                    $query = "UPDATE #__bsms_mediafiles SET `podcast_id` = '$podcasts' WHERE `id` = $result->id LIMIT 1";
+                    $query = "UPDATE #__bsms_mediafiles SET `podcast_id` = '" . $podcasts . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                     if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                         return FALSE;
                     }
@@ -319,7 +319,7 @@ class jbs700Install {
                 $params2 = json_encode($params2);
 
 
-                $query = "UPDATE #__bsms_mediafiles SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+                $query = "UPDATE #__bsms_mediafiles SET `params` = '" . $params2 . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                 if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                     return FALSE;
                 }
@@ -449,7 +449,7 @@ class jbs700Install {
 
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
-                $query = "UPDATE #__bsms_studies SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+                $query = "UPDATE #__bsms_studies SET `params` = '" . $params2 . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                 if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                     return FALSE;
                 }
@@ -464,7 +464,7 @@ class jbs700Install {
             foreach ($results AS $result) {
                 $topic = $result->topic_text;
                 $topic = 'JBS_TOP_' . strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));  // replace all non a-Z 0-9 by '_'
-                $query = "UPDATE #__bsms_topics SET `topic_text` = '$topic' WHERE `id` = $result->id";
+                $query = "UPDATE #__bsms_topics SET `topic_text` = '" . $topic . "' WHERE `id` = '" . $result->id . "'";
                 if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                     return FALSE;
                 }
@@ -484,7 +484,7 @@ class jbs700Install {
 
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
-                $query = "UPDATE #__bsms_share SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+                $query = "UPDATE #__bsms_share SET `params` = '" . $params2 . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                 if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                     return FALSE;
                 }
@@ -505,7 +505,7 @@ class jbs700Install {
 
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
-                $query = "UPDATE #__bsms_templates SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+                $query = "UPDATE #__bsms_templates SET `params` = '" . $params2 . "' WHERE `id` = '" . $result->id . "' LIMIT 1";
                 if (!jbsDBhelper::performdb($query, "Build 700: ")) {
                     return FALSE;
                 }
