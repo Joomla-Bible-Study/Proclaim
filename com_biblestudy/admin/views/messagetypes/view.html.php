@@ -9,7 +9,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.application.component.view');
+
 
 /**
  * View class for Messagetype

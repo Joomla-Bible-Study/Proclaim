@@ -18,7 +18,7 @@ $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
 include_once($path1 . 'teacher.php');
 include_once($path1 . 'listing.php');
 
-jimport('joomla.application.component.view');
+
 
 /**
  * View class for Teacher

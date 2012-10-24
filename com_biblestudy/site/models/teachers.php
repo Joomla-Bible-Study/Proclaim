@@ -32,7 +32,11 @@ class BiblestudyModelTeachers extends JModelList {
         $app = JFactory::getApplication();
         $menu = $app->getMenu();
         $item = $menu->getActive();
-        $language = $db->quote($item->language) . ',' . $db->quote('*');
+        if (isset($item->language)) {
+            $language = $db->quote($item->language) . ',' . $db->quote('*');
+        } else {
+            $language = $db->quote('*');
+        }
         $query = $db->getQuery(true);
         $query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
         $query->from('#__bsms_teachers as teachers');

@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
+
 
 // This is the popup window for the teachings.  We could put anything in this window.
 //TODO Need to Clean this up and rework to be proper Joomla calls bcc

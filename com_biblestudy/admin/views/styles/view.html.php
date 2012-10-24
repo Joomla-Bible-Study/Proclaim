@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 // import Joomla view library
-jimport('joomla.application.component.view');
+
 
 /**
  * View class for Styles
