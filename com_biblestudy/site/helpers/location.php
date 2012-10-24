@@ -63,13 +63,16 @@ function getLocationsLandingPage($params, $id, $admin_params) {
             ->from('#__bsms_locations a')
             ->select('b.access AS study_access')
             ->innerJoin('#__bsms_studies b on a.id = b.location_id')
+            ->innerJoin('#__bsms_series s on b.series_id = s.id')
+            ->where('b.location_id > 0')
             ->where('a.published = 1')
             ->where('b.access IN (' . $groups . ')')
+            ->where('s.access IN (' . $groups . ')')
             ->where('a.landing_show > 0')
             ->order('a.location_text ' . $order);
     $db->setQuery($query);
 
-    $tresult = $db->loadObjectList(); 
+    $tresult = $db->loadObjectList();
     $count = count($tresult);
     if ($count > 0):
         switch ($locationuselimit) {
