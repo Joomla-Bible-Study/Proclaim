@@ -295,7 +295,7 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
     $user = JFactory::getUser();
     $menu = $app->getMenu();
     $item = $menu->getActive();
-    $language = $db->quote($item->language) . ',' . $db->quote('*');
+    $language = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
     if ($language == '*' || !$language) {
         $langlink = '';
     } elseif ($language != '*') {
