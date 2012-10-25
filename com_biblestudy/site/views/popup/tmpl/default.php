@@ -29,7 +29,6 @@ if ($close == 1) {
     echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 }
 
-
 jimport('joomla.application.component.helper');
 
 $getMedia = new jbsMedia();
@@ -37,7 +36,6 @@ $media = $getMedia->getMediaRows2($mediaid);
 $db = JFactory::getDBO();
 $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
 $db->setQuery($query);
-//$db->query();
 $template = $db->loadObject();
 
 // Convert parameter fields to objects.
@@ -45,14 +43,16 @@ $registry = new JRegistry;
 $registry->loadJSON($template->params);
 $params = $registry;
 
+// Convert parameter fields to objects.
+$registry = new JRegistry;
+$registry->loadJSON($media->params);
+$params->merge($registry);
+
 $css = $params->get('css', 'biblestudy.css');
 if ($css != '-1'):
     $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 endif;
-// Convert parameter fields to objects.
-$registry = new JRegistry;
-$registry->loadJSON($media->params);
-$itemparams = $registry;
+
 $saveid = $media->id;
 $media->id = $media->study_id;
 $scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
@@ -62,8 +62,8 @@ $date = getstudyDate($params, $media->studydate);
 $getMedia->hitPlay($mediaid);
 $length = getDuration($params, $media);
 $badchars = array("'", '"');
-$studytitle = str_replace($badchars, ' ', $media->studytitle);
-$studyintro = str_replace($badchars, ' ', $media->studyintro);
+//$studytitle = str_replace($badchars, ' ', $media->studytitle);
+//$studyintro = str_replace($badchars, ' ', $media->studyintro);
 $images = new jbsImages();
 $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
 $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '" />';
@@ -75,20 +75,20 @@ if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
 }
 $playerwidth = $params->get('player_width');
 $playerheight = $params->get('player_height');
-if ($itemparams->get('playerheight') < 55 && $itemparams->get('playerheight')) {
+if ($params->get('playerheight') < 55 && $params->get('playerheight')) {
     $playerheight = 55;
-} elseif ($itemparams->get('playerheight')) {
-    $playerheight = $itemparams->get('playerheight');
+} elseif ($params->get('playerheight')) {
+    $playerheight = $params->get('playerheight');
 }
-if ($itemparams->get('playerwidth')) {
-    $playerwidth = $itemparams->get('playerwidth');
+if ($params->get('playerwidth')) {
+    $playerwidth = $params->get('playerwidth');
 }
 $extraparams = '';
-if ($itemparams->get('playervars')) {
-    $extraparams = $itemparams->get('playervars');
+if ($params->get('playervars')) {
+    $extraparams = $params->get('playervars');
 }
-if ($itemparams->get('altflashvars')) {
-    $flashvars = $itemparams->get('altflashvars');
+if ($params->get('altflashvars')) {
+    $flashvars = $params->get('altflashvars');
 }
 $backcolor = $params->get('backcolor', '0x287585');
 $frontcolor = $params->get('frontcolor', '0xFFFFFF');
@@ -99,9 +99,14 @@ if ($params->get('autostart', 1) == 1) {
 } else {
     $autostart = 'false';
 }
-if ($itemparams->get('autostart') == 1) {
+if ($params->get('playeridlehide')) {
+    $playeridlehide = 'true';
+} else {
+    $playeridlehide = 'false';
+}
+if ($params->get('autostart') == 1) {
     $autostart = 'true';
-} elseif ($itemparams->get('autostart') == 2) {
+} elseif ($params->get('autostart') == 2) {
     $autostart = 'false';
 }
 ?>
@@ -115,12 +120,12 @@ if ($itemparams->get('autostart') == 1) {
     <?php
     $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
 
-    if ($itemparams->get('itempopuptitle')) {
-        $headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);
+    if ($params->get('itempopuptitle')) {
+        $headertext = $this->titles($params->get('itempopuptitle'), $media, $scripture, $date, $length);
     }
     $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
-    if ($itemparams->get('itempopupfooter')) {
-        $footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);
+    if ($params->get('itempopupfooter')) {
+        $footertext = $this->titles($params->get('itempopupfooter'), $media, $scripture, $date, $length);
     }
     ?>
         <div class="popuptitle"><p class="popuptitle"><?php echo $headertext ?>
@@ -128,15 +133,15 @@ if ($itemparams->get('autostart') == 1) {
         </div>
         <?php
         //Here is where we choose whether to use the Internal Viewer or All Videos
-        if ($itemparams->get('player') == 3 || $player == 3 || $itemparams->get('player') == 2 || $player == 2) {
+        if ($params->get('player') == 3 || $player == 3 || $params->get('player') == 2 || $player == 2) {
             $mediacode = $getMedia->getAVmediacode($media->mediacode, $media);
             echo JHTML::_('content.prepare', $mediacode);
         }
 
-        if ($itemparams->get('player') == 1 || $player == 1) {
+        if ($params->get('player') == 1 || $player == 1) {
             ?>
 
-            <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $playerwidth + 1; ?>px" >
+            <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $playerwidth + 1; ?>px;" >
                 <video height="<?php echo $playerheight; ?>"
                        poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
                        width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' style="padding: 10px">
@@ -144,8 +149,14 @@ if ($itemparams->get('autostart') == 1) {
             </div>
             <script language="javascript" type="text/javascript">
                 jwplayer('placeholder').setup({
-                    flashplayer: '<?php echo JURI::base() ?>media/com_biblestudy/player/player.swf',
-                    autostart:'<?php echo $autostart ?>'
+                    'flashplayer': '<?php echo JURI::base() ?>media/com_biblestudy/player/player.swf',
+                    'autostart':'<?php echo $autostart; ?>',
+                    'backcolor':'<?php echo $backcolor; ?>',
+                    'frontcolor':'<?php echo $frontcolor; ?>',
+                    'lightcolor':'<?php echo $lightcolor; ?>',
+                    'screencolor':'<?php echo $screencolor; ?>',
+                    'controlbar.position':'<?php echo $params->get('playerposition'); ?>',
+                    'controlbar.idlehide':'<?php dump($autostart, 'autostart'); echo $playeridlehide; ?>'
                 });
             </script>
 
@@ -155,7 +166,6 @@ if ($itemparams->get('autostart') == 1) {
             //    Attributes - ID, Name
         }
 
-        //TODO:Need to get difference between direct popup and not so can have popup use this script
         if (!$player) {
             ?>
             <div class=\'direct\'>
@@ -186,7 +196,7 @@ if ($itemparams->get('autostart') == 1) {
             echo $media->mediacode;
         }
         ?>
-        <?php // Footer     ?>
+        <?php // Footer      ?>
 </div>
 <div class="popupfooter">
     <p class="popupfooter">
