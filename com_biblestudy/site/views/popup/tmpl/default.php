@@ -6,109 +6,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-$pathh = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-include_once($pathh . 'scripture.php');
-include_once($pathh . 'date.php');
-include_once($pathh . 'duration.php');
-//	$getMedia = new jbsMedia();
-JRequest::setVar('tmpl', 'component');
-$mediaid = JRequest::getInt('mediaid', '', 'get');
-$templateid = JRequest::getInt('t', '1', 'get');
-$close = JRequest::getInt('close', '0', 'get');
-$player = JRequest::getInt('player', '1', 'get');
-
-$document = JFactory::getDocument();
-
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-//Errors when using local swfobject.js file.  IE 6 doesn't work
-// If this is a direct new window then all we need to do is perform hitPlay and close this window
-if ($close == 1) {
-    echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
-}
-
-jimport('joomla.application.component.helper');
-
-$getMedia = new jbsMedia();
-$media = $getMedia->getMediaRows2($mediaid);
-$db = JFactory::getDBO();
-$query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
-$db->setQuery($query);
-$template = $db->loadObject();
-
-// Convert parameter fields to objects.
-$registry = new JRegistry;
-$registry->loadJSON($template->params);
-$params = $registry;
-
-// Convert parameter fields to objects.
-$registry = new JRegistry;
-$registry->loadJSON($media->params);
-$params->merge($registry);
-
-$css = $params->get('css', 'biblestudy.css');
-if ($css != '-1'):
-    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-endif;
-
-$saveid = $media->id;
-$media->id = $media->study_id;
-$scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
-$media->id = $saveid;
-$date = getstudyDate($params, $media->studydate);
-// The popup window call the counter function
-$getMedia->hitPlay($mediaid);
-$length = getDuration($params, $media);
-$badchars = array("'", '"');
-//$studytitle = str_replace($badchars, ' ', $media->studytitle);
-//$studyintro = str_replace($badchars, ' ', $media->studyintro);
-$images = new jbsImages();
-$seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
-$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '" />';
-$image = $images->getTeacherThumbnail($media->teacher_thumbnail, $media->thumb);
-$this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $media->teachername . '" />';
-$path1 = $media->spath . $media->fpath . $media->filename;
-if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
-    $path1 = 'http://' . $path1;
-}
-$playerwidth = $params->get('player_width');
-$playerheight = $params->get('player_height');
-if ($params->get('playerheight') < 55 && $params->get('playerheight')) {
-    $playerheight = 55;
-} elseif ($params->get('playerheight')) {
-    $playerheight = $params->get('playerheight');
-}
-if ($params->get('playerwidth')) {
-    $playerwidth = $params->get('playerwidth');
-}
-$extraparams = '';
-if ($params->get('playervars')) {
-    $extraparams = $params->get('playervars');
-}
-if ($params->get('altflashvars')) {
-    $flashvars = $params->get('altflashvars');
-}
-$backcolor = $params->get('backcolor', '0x287585');
-$frontcolor = $params->get('frontcolor', '0xFFFFFF');
-$lightcolor = $params->get('lightcolor', '0x000000');
-$screencolor = $params->get('screencolor', '0xFFFFFF');
-if ($params->get('autostart', 1) == 1) {
-    $autostart = 'true';
-} else {
-    $autostart = 'false';
-}
-if ($params->get('playeridlehide')) {
-    $playeridlehide = 'true';
-} else {
-    $playeridlehide = 'false';
-}
-if ($params->get('autostart') == 1) {
-    $autostart = 'true';
-} elseif ($params->get('autostart') == 2) {
-    $autostart = 'false';
-}
+//No Direct Access
+defined('_JEXEC') or die;
 ?>
 <div class="popupwindow">
     <?php
@@ -116,16 +15,16 @@ if ($params->get('autostart') == 1) {
     $footertext = '';
 
     // Need to add in template
-    ?><body style="background-color:<?php echo $params->get('popupbackground', 'black') ?>">
+    ?><body style="background-color:<?php echo $this->params->get('popupbackground', 'black') ?>">
     <?php
-    $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+    $headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
 
-    if ($params->get('itempopuptitle')) {
-        $headertext = $this->titles($params->get('itempopuptitle'), $media, $scripture, $date, $length);
+    if ($this->params->get('itempopuptitle')) {
+        $headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
     }
-    $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
-    if ($params->get('itempopupfooter')) {
-        $footertext = $this->titles($params->get('itempopupfooter'), $media, $scripture, $date, $length);
+    $footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
+    if ($this->params->get('itempopupfooter')) {
+        $footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
     }
     ?>
         <div class="popuptitle"><p class="popuptitle"><?php echo $headertext ?>
@@ -133,30 +32,30 @@ if ($params->get('autostart') == 1) {
         </div>
         <?php
         //Here is where we choose whether to use the Internal Viewer or All Videos
-        if ($params->get('player') == 3 || $player == 3 || $params->get('player') == 2 || $player == 2) {
-            $mediacode = $getMedia->getAVmediacode($media->mediacode, $media);
+        if ($this->params->get('player') == 3 || $this->player == 3 || $this->params->get('player') == 2 || $this->player == 2) {
+            $mediacode = $getMedia->getAVmediacode($this->media->mediacode, $this->media);
             echo JHTML::_('content.prepare', $mediacode);
         }
 
-        if ($params->get('player') == 1 || $player == 1) {
+        if ($this->params->get('player') == 1 || $this->player == 1) {
             ?>
 
-            <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $playerwidth + 1; ?>px;" >
-                <video height="<?php echo $playerheight; ?>"
-                       poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
-                       width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' style="padding: 10px">
+            <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $this->playerwidth + 1; ?>px;" >
+                <video height="<?php echo $this->playerheight; ?>"
+                       poster="<?php echo $this->params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
+                       width="<?php echo $this->playerwidth; ?>" id='placeholder'><source src='<?php echo $this->path1; ?>' style="padding: 10px">
                     <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?></video>
             </div>
             <script language="javascript" type="text/javascript">
                 jwplayer('placeholder').setup({
                     'flashplayer': '<?php echo JURI::base() ?>media/com_biblestudy/player/player.swf',
-                    'autostart':'<?php echo $autostart; ?>',
-                    'backcolor':'<?php echo $backcolor; ?>',
-                    'frontcolor':'<?php echo $frontcolor; ?>',
-                    'lightcolor':'<?php echo $lightcolor; ?>',
-                    'screencolor':'<?php echo $screencolor; ?>',
-                    'controlbar.position':'<?php echo $params->get('playerposition'); ?>',
-                    'controlbar.idlehide':'<?php dump($autostart, 'autostart'); echo $playeridlehide; ?>'
+                    'autostart':'<?php echo $this->autostart; ?>',
+                    'backcolor':'<?php echo $this->backcolor; ?>',
+                    'frontcolor':'<?php echo $this->frontcolor; ?>',
+                    'lightcolor':'<?php echo $this->lightcolor; ?>',
+                    'screencolor':'<?php echo $this->screencolor; ?>',
+                    'controlbar.position':'<?php echo $this->params->get('playerposition'); ?>',
+                    'controlbar.idlehide':'<?php echo $this->playeridlehide; ?>'
                 });
             </script>
 
@@ -166,10 +65,10 @@ if ($params->get('autostart') == 1) {
             //    Attributes - ID, Name
         }
 
-        if (!$player) {
+        if (!$this->player) {
             ?>
             <div class=\'direct\'>
-                <iframe src ="<?php echo $path1; ?>" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0">
+                <iframe src ="<?php echo $this->path1; ?>" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0">
                 <p>
                     <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
                 </p>
@@ -180,20 +79,20 @@ if ($params->get('autostart') == 1) {
         }
 
         //Legacy Player (since JBS 6.2.2)
-        if ($player == 7) {
+        if ($this->player == 7) {
             ?>
             <script language="javascript" type="text/javascript" src="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/audio-player.js"></script>
-            <object type="application/x-shockwave-flash" data="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf" id="audioplayer<?php echo $media->id ?>" height="24" width="<?php echo $playerwidth ?>">
+            <object type="application/x-shockwave-flash" data="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf" id="audioplayer<?php echo $this->media->id ?>" height="24" width="<?php echo $this->playerwidth ?>">
                 <param name="movie" value="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf" />
-                <param name="FlashVars" value="playerID=<?php echo $media->id ?>&amp;soundFile=<?php echo $path1 ?>" />
+                <param name="FlashVars" value="playerID=<?php echo $this->media->id ?>&amp;soundFile=<?php echo $this->path1 ?>" />
                 <param name="quality" value="high" />
                 <param name="menu" value="false" />
                 <param name="wmode" value="transparent" />
             </object>
             <?php
         }
-        if ($player == 8) {
-            echo $media->mediacode;
+        if ($this->player == 8) {
+            echo $this->media->mediacode;
         }
         ?>
         <?php // Footer      ?>

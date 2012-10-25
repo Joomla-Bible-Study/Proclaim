@@ -9,7 +9,6 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.html.parameter');
 
 /**
  * BibleStudy images class
@@ -17,25 +16,6 @@ jimport('joomla.html.parameter');
  * @since 7.0.0
  */
 class jbsImages {
-
-    /**
-     * Admin Settings
-     * @todo move to the helper
-     * @return \JRegistry
-     */
-    function adminSettings() {
-        $database = JFactory::getDBO();
-        $database->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
-        $database->query();
-        $compat = $database->loadObject();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($compat->params);
-        $admin_params = $registry;
-
-        return $admin_params;
-    }
 
     /**
      * Get Image Path
