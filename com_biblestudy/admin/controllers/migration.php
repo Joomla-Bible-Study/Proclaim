@@ -41,7 +41,6 @@ class BiblestudyControllerMigration extends JControllerLegacy {
         $oldprefix = JRequest::getInt('oldprefix', '', 'post');
         $run = 0;
         $run = JRequest::getInt('run', '', 'get');
-        //$import = JRequest::getVar('file', '', 'post');
 
         if ($task == 'export' && ($run == 1 || $run == 2)) {
             $export = new JBSExport();
@@ -72,7 +71,7 @@ class BiblestudyControllerMigration extends JControllerLegacy {
         }
 
         if ($task == 'import') {
-            $importjbs = $this->import();
+            $this->import();
         }
         parent::display($tpl);
 
