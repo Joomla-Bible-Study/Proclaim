@@ -54,8 +54,6 @@ class fixJBSAssets {
                 }
                 //if there is a jasset_id but no match to the parent_id then a mismatch has occured
                 if ($parent_id != $result->parent_id && $result->jasset_id) {
-                    var_dump($result);
-                    var_dump($object['assetname']);
                     fixJBSAssets::deleteasset($result);
                     fixJBSAssets::setasset($result, $object['assetname']);
                 }
