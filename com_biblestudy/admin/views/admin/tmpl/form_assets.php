@@ -16,13 +16,12 @@ defined('_JEXEC') or die;
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></legend>
                 <div>
-                    <table ><tr><td >
-                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48" /></a>
-                            </td><td >
-                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.fixAssets"><img src="<?php echo JURI::base() . '..//media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /></a>
-                            </td></tr>
-                        <tr><td align="center"><a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets"><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></a></td><td align="center"><a href="index.php?option=com_biblestudy&view=admin&task=admin.fixAssets"><?php echo JText::_('JBS_ADM_FIX'); ?></a></td></tr>
-                    </table>
+                    <div style="width: 50px; padding: 5px; float: left;">
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&id=1&task=admin.checkassets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48"/><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></a>
+                    </div><div style="width: 50px; padding: 5px; float: left;">
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&id=1&task=admin.fixAssets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /><?php echo JText::_('JBS_ADM_FIX'); ?></a>
+                    </div>
+                    <div style="clear: both"></div>
                     <?php
                     $checkassets2 = JRequest::getVar('checkassets', null, 'get', 'array');
 

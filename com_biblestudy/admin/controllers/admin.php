@@ -10,6 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
+JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
+JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');
+JLoader::register('fixJBSalias', BIBLESTUDY_PATH_ADMIN_HELPERS . '/alias.php');
+
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -64,37 +69,20 @@ class BiblestudyControllerAdmin extends JControllerForm {
     }
 
     /**
-     * Update SEF
-     */
-    function updatesef() {
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'updatesef.php');
-        $update = updateSEF();
-        if ($update) {
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $update);
-        } else {
-            $msg = JText::_('JBS_ADM_UPDATE_SUCCESSFUL');
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
-        }
-    }
-
-    /**
      * Reset Hits
      */
     function resetHits() {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
     /**
@@ -104,16 +92,14 @@ class BiblestudyControllerAdmin extends JControllerForm {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
     /**
@@ -123,44 +109,38 @@ class BiblestudyControllerAdmin extends JControllerForm {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
     /**
      * Change Player Modes
      */
     function changePlayers() {
-
         $db = JFactory::getDBO();
         $msg = null;
         $from = JRequest::getInt('from', '', 'post');
         $to = JRequest::getInt('to', '', 'post');
-
         switch ($from) {
             case '100':
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` IS NULL";
+                $query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($to) . " WHERE `player` IS NULL";
                 break;
 
             default:
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
+                $query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($to) . " WHERE `player` = " . $db->quote($from);
         }
         $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
         } else {
             $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
         }
-
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
@@ -168,20 +148,17 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * Change Media Popup
      */
     function changePopup() {
-
         $db = JFactory::getDBO();
         $msg = null;
         $from = JRequest::getInt('pfrom', '', 'post');
         $to = JRequest::getInt('pto', '', 'post');
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
+        $query = "UPDATE #__bsms_mediafiles SET `popup` = " . $db->quote($to) . " WHERE `popup` = " . $db->quote($from);
         $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
         } else {
             $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
         }
-
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
@@ -189,11 +166,9 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * Check Assets
      */
     function checkassets() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $checkassets = $asset->checkAssets();
         JRequest::setVar('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
-
         parent::display();
     }
 
@@ -201,18 +176,15 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * Fix Assets
      */
     function fixAssets() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $fixassets = $asset->fixAssets();
-        JRequest::setVar('messages', $fixassets, 'get', 'true');
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets', $fixassets);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets');
     }
 
     /**
      * Convert SermonSpeaker to BibleStudy
      */
     function convertSermonSpeaker() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.sermonspeakerconvert.class.php');
         $convert = new JBSconvert();
         $ssconversion = $convert->convertSS();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin', $ssconversion);
@@ -222,7 +194,6 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * Convert PreachIt to BibleStudy
      */
     function convertPreachIt() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.preachitconvert.class.php');
         $convert = new JBSPIconvert();
         $piconversion = $convert->convertPI();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin', $piconversion);
@@ -244,8 +215,6 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * @since 7.1.0
      */
     function aliasUpdate() {
-        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'alias.php');
         $alias = new fixJBSalias();
         $update = $alias->updateAlias();
         $this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
