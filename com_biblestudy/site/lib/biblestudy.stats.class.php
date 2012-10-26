@@ -61,7 +61,7 @@ class jbStats {
         foreach ($items as $result) {
             $db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id,
             #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
-            WHERE #__bsms_mediafiles.study_id = ' . $result->study_id);
+            WHERE #__bsms_mediafiles.study_id = ' . (int) $result->study_id);
             // $db->query();
             $hits = $db->loadObject();
             if (!$hits->studytitle) {
