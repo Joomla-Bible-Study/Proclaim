@@ -76,7 +76,7 @@ class BiblestudyViewSermons extends JViewLegacy {
         $admin_parameters = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($admin_parameters->params);
+        $registry->loadString($admin_parameters->params);
         $this->admin_params = $registry;
 
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -95,13 +95,13 @@ class BiblestudyViewSermons extends JViewLegacy {
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $params = $registry;
 
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($a_params->params);
+        $registry->loadString($a_params->params);
         $this->admin_params = $registry;
         foreach ($items AS $item) {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));

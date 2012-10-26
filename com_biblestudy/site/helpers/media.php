@@ -55,7 +55,7 @@ function getInternalPlayer($media, $params, $admin_params) {
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
-    $registry->loadJSON($media->params);
+    $registry->loadString($media->params);
     $itemparams = $registry;
 
     $Itemid = $params->get('detailstemplateid', 1);
@@ -105,7 +105,7 @@ function getDownloadLink($media, $params, $admin_params) {
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
-    $registry->loadJSON($media->params);
+    $registry->loadString($media->params);
     $itemparams = $registry;
     $Itemid = $params->get('detailstemplateid', 1);
     $images = new jbsImages();
@@ -174,7 +174,7 @@ function getMediaFile($media, $params, $admin_params) {
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
-    $registry->loadJSON($media->params);
+    $registry->loadString($media->params);
     $itemparams = $registry;
     $Itemid = $params->get('detailstemplateid', 1);
 
@@ -230,7 +230,7 @@ function getTypeIcon($media, $params, $admin_params) {
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
-    $registry->loadJSON($media->params);
+    $registry->loadString($media->params);
     $itemparams = $registry;
 
     $Itemid = $params->get('detailstemplateid', 1);

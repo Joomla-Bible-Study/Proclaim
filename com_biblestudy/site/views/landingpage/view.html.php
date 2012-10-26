@@ -46,7 +46,7 @@ class biblestudyViewLandingpage extends JViewLegacy {
         // Convert parameter fields to objects.
         $a_params = $this->get('Admin');
         $registry = new JRegistry;
-        $registry->loadJSON($a_params[0]->params);
+        $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
@@ -71,13 +71,13 @@ class biblestudyViewLandingpage extends JViewLegacy {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadString($template[0]->params);
         $params = $registry;
         $admin = $this->get('Admin');
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($admin[0]->params);
+        $registry->loadString($admin[0]->params);
         $this->admin_params = $registry;
 
         $document = JFactory::getDocument();

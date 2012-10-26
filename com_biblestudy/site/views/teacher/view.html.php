@@ -78,7 +78,7 @@ class BiblestudyViewTeacher extends JViewLegacy {
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadString($template[0]->params);
         $params = $registry;
 
         $css = $params->get('css');
@@ -113,7 +113,7 @@ class BiblestudyViewTeacher extends JViewLegacy {
             $item->information = $this->contact->misc;
             $item->phone = $this->contact->telephone;
             $cregistry = new JRegistry();
-            $cregistry->loadJSON($this->contact->params);
+            $cregistry->loadString($this->contact->params);
             $contact_params = $cregistry;
             $item->facebooklink = $contact_params->get('linka');
             $item->twitterlink = $contact_params->get('linkb');

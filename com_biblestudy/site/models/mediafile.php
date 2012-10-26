@@ -50,7 +50,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($admin[0]->params);
+        $registry->loadString($admin[0]->params);
         $this->admin_params = $registry;
 
         $array = JRequest::getVar('cid', 0, '', 'array');

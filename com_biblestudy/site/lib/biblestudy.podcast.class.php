@@ -100,7 +100,7 @@ class JBSPodcast {
                     $episodes = $this->getEpisodes($podinfo->id, $limit);
                     $registry = new JRegistry;
                     $podinfo->params = '{"show_verses":"1"}';
-                    $registry->loadJSON($podinfo->params);
+                    $registry->loadString($podinfo->params);
                     $params = $registry;
                     $params->set('show_verses', '1');
                     if (!$episodes) {

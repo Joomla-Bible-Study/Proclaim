@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
-require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
+//require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
 
 /**
  * JView class for Cpanel
@@ -38,8 +38,8 @@ class biblestudyViewcpanel extends JViewLegacy {
         $db->setQuery($query);
         $data = $db->loadObject();
         // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($data->manifest_cache);
+        $registry = new JRegistry();
+        $registry->loadString($data->manifest_cache);
         if ($data) {
             $this->version = $registry->get('version');
             $this->versiondate = $registry->get('creationDate');
