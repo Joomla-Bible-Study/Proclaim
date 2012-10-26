@@ -9,7 +9,10 @@
  * @since 7.0.2
  * */
 defined('_JEXEC') or die;
-require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+JLoader::register('jbsDBhelper', BIBLESTUDY_PATH_ADMIN_HELPERS, '/dbhelpser.php');
+
 /**
  * JBS Export class
  * @package BibleStudy.Admin
@@ -25,7 +28,7 @@ class JBSExport {
     public function exportdb($run) {
         $date = date('Y_F_j');
         $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
-        $objects = $this->getObjects();
+        $objects = jbsDBhelper::getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
         }
@@ -33,7 +36,7 @@ class JBSExport {
 
         switch ($run) {
             case 1:
-                $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
+                $file = JPATH_SITE . '/tmp/' . $localfilename;
                 if (!JFile::write($file, $export)) {
                     return false;
                 } else {
@@ -43,7 +46,7 @@ class JBSExport {
                 break;
 
             case 2:
-                $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
+                $file = JPATH_SITE . '/media/com_biblestudy/database/' . $localfilename;
                 if (!JFile::write($file, $export)) {
                     return false;
                 }
@@ -79,13 +82,12 @@ class JBSExport {
         $export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
 
         //Start of Tables
-        $export .= "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
         //Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
         //Create a new table defintion based on the incoming database
-        $query = 'SHOW CREATE TABLE `' . $table . '`';
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
         $db->setQuery($query);
-        $db->query();
         $table_def = $db->loadObject();
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
@@ -93,21 +95,20 @@ class JBSExport {
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
         //Get the table rows and create insert statements from them
-        $query = 'SELECT * FROM ' . $table;
+        $query = 'SELECT * FROM ' . $db->quoteName($table);
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             foreach ($results as $result) {
                 $data = array();
-                $export .= 'INSERT INTO ' . $table . ' SET ';
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
                 foreach ($result as $key => $value) {
                     if ($value === NULL):
-                        $data[] = "`" . $key . "`=NULL";
+                        $data[] = $db->quoteName($key) . "=NULL";
                     else:
-                        $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+                        $data[] = $db->quoteName($key) . "=" . $db->quote($value);
                     endif;
                 }
                 $export .= implode(',', $data);
@@ -207,7 +208,8 @@ class JBSExport {
         /* output the file itself */
         $chunksize = 1 * (1024 * 1024); //you may want to change this
         $bytes_send = 0;
-        if ($file = fopen($file, 'r')) {
+        $file = fopen($file, 'r');
+        if ($file) {
             if (isset($_SERVER['HTTP_RANGE']))
                 fseek($file, $range);
 
@@ -221,33 +223,11 @@ class JBSExport {
                 $bytes_send += strlen($buffer);
             }
             fclose($file);
-        } else
+        } else {
             die('Error - can not open file.');
-
-        die();
-        unlink($file);
-    }
-
-    /**
-     * Get Opjects for tables
-     * @return array
-     */
-    public function getObjects() {
-        $db = JFactory::getDBO();
-        $tables = $db->getTableList();
-        $prefix = $db->getPrefix();
-        $prelength = strlen($prefix);
-        $prefix . $bsms = 'bsms_';
-        $objects = array();
-        foreach ($tables as $table) {
-            if (substr_count($table, $bsms)) {
-                $table = substr_replace($table, '#__', 0, $prelength);
-                $objects[] = array('name' => $table);
-            }
         }
-        return $objects;
+        unlink($file);
+        die();
     }
 
 }
-
-// end of class
