@@ -76,7 +76,7 @@ class jbsImages {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($admin->params);
+        $registry->loadString($admin->params);
         $admin_params = $registry;
 
         if (!$admin_params->get('default_main_image')) {
@@ -255,7 +255,7 @@ class jbsImages {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($admin->params);
+        $registry->loadString($admin->params);
         $admin_params = $registry;
 
         if (!$admin_params->get('default_showHide_image')) {

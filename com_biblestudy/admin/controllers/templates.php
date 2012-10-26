@@ -216,7 +216,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
 
         //Need to adjust the params and write back
         $registry = new JRegistry();
-        $registry->loadJSON($table->params);
+        $registry->loadString($table->params);
         $params = $registry;
         $params->set('css', $css);
         $params->set('sermonstemplate', $sermonstemplate);
@@ -279,7 +279,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
     private function getExportSetting($result) {
         // Export must be in this order: css, template files, template.
         $registry = new JRegistry;
-        $registry->loadJSON($result->params);
+        $registry->loadString($result->params);
         $params = $registry;
         $db = JFactory::getDBO();
         $objects = '';

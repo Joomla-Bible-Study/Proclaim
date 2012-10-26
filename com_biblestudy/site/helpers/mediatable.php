@@ -80,7 +80,7 @@ function getMediatable($params, $row, $admin_params) {
         //Load the parameters
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($media->params);
+        $registry->loadString($media->params);
         $itemparams = $registry;
 
         $Itemid = JRequest::getInt('Itemid', '1', 'get');

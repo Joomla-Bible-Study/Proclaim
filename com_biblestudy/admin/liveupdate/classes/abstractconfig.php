@@ -209,7 +209,7 @@ abstract class LiveUpdateAbstractConfig extends JObject
 		$rawparams = $db->loadResult();
 		if(version_compare(JVERSION, '1.6.0', 'ge')) {
 			$params = new JRegistry();
-			$params->loadJSON($rawparams);
+			$params->loadString($rawparams);
 		} else {
 			$params = new JParameter($rawparams);
 		}

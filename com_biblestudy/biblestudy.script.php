@@ -524,7 +524,7 @@ class Com_BiblestudyInstallerScript {
         foreach ($datas as $data) {
             //Need to adjust the params and write back
             $registry = new JRegistry();
-            $registry->loadJSON($data->params);
+            $registry->loadString($data->params);
             $params = $registry;
             $shareimage = $params->get('shareimage');
             $shareimage = str_replace('components', 'media', $shareimage);

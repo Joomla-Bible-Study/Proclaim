@@ -284,7 +284,7 @@ class jbs700Install {
             //Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
             foreach ($results AS $result) {
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
                 $player = $params->get('player');
                 $popup = $params->get('internal_popup');
@@ -313,7 +313,7 @@ class jbs700Install {
                 }
                 //Update the params to json
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
@@ -444,7 +444,7 @@ class jbs700Install {
             foreach ($results AS $result) {
                 //Update the params to json
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
 
                 $params2 = $params->toObject();
@@ -479,7 +479,7 @@ class jbs700Install {
             foreach ($results AS $result) {
                 //Update the params to json
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
 
                 $params2 = $params->toObject();
@@ -500,7 +500,7 @@ class jbs700Install {
             foreach ($results AS $result) {
                 //Update the params to json
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
 
                 $params2 = $params->toObject();

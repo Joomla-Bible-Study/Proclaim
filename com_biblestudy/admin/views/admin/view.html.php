@@ -52,7 +52,7 @@ class BiblestudyViewAdmin extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        
+
         $language = JFactory::getLanguage();
         $language->load('com_installer');
 
@@ -79,8 +79,8 @@ class BiblestudyViewAdmin extends JViewLegacy {
 
         $this->loadHelper('params');
         $config = JFactory::getConfig();
-        $tmp_dest = $config->getValue('config.tmp_path');
-        $this->assignRef('tmp_dest', $tmp_dest);
+        //$tmp_dest = $config->getValue('config.tmp_path');
+        //$this->assignRef('tmp_dest', $tmp_dest);
 
         $stats = new jbStats();
         $playerstats = $stats->players();

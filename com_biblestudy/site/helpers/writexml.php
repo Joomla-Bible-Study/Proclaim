@@ -106,7 +106,7 @@ function writeXML() {
 
                 // Convert parameter fields to objects.
                 $registry = new JRegistry;
-                $registry->loadJSON($result->params);
+                $registry->loadString($result->params);
                 $params = $registry;
                 $podcasts = $result->podcast_id;
                 $podcasts = explode(',', $result->podcast_id);

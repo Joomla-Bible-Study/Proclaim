@@ -15,11 +15,11 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
     return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-if (JRequest::getCmd('view', '') == 'liveupdate') {
-    LiveUpdate::handleRequest();
-    return;
-}
+//require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
+//if (JRequest::getCmd('view', '') == 'liveupdate') {
+//    LiveUpdate::handleRequest();
+//    return;
+//}
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 

@@ -72,7 +72,7 @@ class biblestudyModellandingpage extends JModelList {
         $query = $db->getQuery(true);
         $template_params = $this->getTemplate();
         $registry = new JRegistry;
-        $registry->loadJSON($template_params->params);
+        $registry->loadString($template_params->params);
         $t_params = $registry;
         // Load the parameters. Merge Global and Menu Item params into new object
         $app = JFactory::getApplication('site');

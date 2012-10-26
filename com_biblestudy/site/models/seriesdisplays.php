@@ -73,7 +73,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $db = $this->getDbo();
         $template_params = $this->getTemplate();
         $registry = new JRegistry;
-        $registry->loadJSON($template_params->params);
+        $registry->loadString($template_params->params);
         $t_params = $registry;
         $app = JFactory::getApplication('site');
         $params = $app->getParams();

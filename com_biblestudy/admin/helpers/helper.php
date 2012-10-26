@@ -21,7 +21,7 @@ function getAdminsettings() {
     $compat = $db->loadObject();
     // Convert parameter fields to objects.
     $registry = new JRegistry;
-    $registry->loadJSON($compat->params);
+    $registry->loadString($compat->params);
     return $registry;
 }
 

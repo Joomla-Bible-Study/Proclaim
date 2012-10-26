@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Message model class
  * @package BibleStudy.Admin
@@ -240,7 +238,7 @@ class BiblestudyModelMessages extends JModelList {
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {
             $query->where('study.published = ' . (int) $published);
-        } else if ($published === '') {
+        } elseif ($published === '') {
             $query->where('(study.published = 0 OR study.published = 1)');
         }
 
@@ -262,9 +260,9 @@ class BiblestudyModelMessages extends JModelList {
         }
 
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $orderCol = $this->state->get('list.ordering', 'a.id');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+        $query->order($db->escape($orderCol . ' ' . $orderDirn));
 
         return $query;
     }
