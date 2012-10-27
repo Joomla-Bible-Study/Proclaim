@@ -12,7 +12,8 @@ defined('_JEXEC') or die;
 
 JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
-//require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
+if (!BIBLESTUDY_CHECKREL)
+    require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
 
 /**
  * JView class for Cpanel
@@ -21,11 +22,16 @@ JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.clas
  */
 class biblestudyViewcpanel extends JViewLegacy {
 
+    protected $state;
+
     /**
      * Display
      * @param string $tpl
      */
     public function display($tpl = null) {
+
+        $this->state = $this->get('State');
+
         JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
         //get version information
         $db = JFactory::getDbo();
@@ -46,6 +52,8 @@ class biblestudyViewcpanel extends JViewLegacy {
         $this->total_messages = jbStats::get_total_messages();
 
         $this->addToolbar();
+        if (BIBLESTUDY_CHECKREL)
+            $this->sidebar = JHtmlSidebar::render();
 
         // Display the template
         parent::display($tpl);
