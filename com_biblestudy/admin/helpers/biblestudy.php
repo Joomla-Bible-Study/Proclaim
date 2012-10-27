@@ -146,63 +146,83 @@ class BibleStudyHelper {
      * @since	1.6
      */
     public static function addSubmenu($vName) {
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=admin.edit&id=1', $vName == 'admin'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=messages', $vName == 'messages'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_biblestudy&view=mediafiles', $vName == 'mediafiles'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_TEACHERS'), 'index.php?option=com_biblestudy&view=teachers', $vName == 'teachers'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_MESSAGE_TYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_FOLDERS'), 'index.php?option=com_biblestudy&view=folders', $vName == 'folders'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'index.php?option=com_biblestudy&view=shares', $vName == 'shares'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
         );
-        JSubMenuHelper::addEntry(
+        BibleStudyHelper::rendermenu(
                 JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
         );
+    }
+
+    /**
+     *  Rendering Menu based on Joomla! Version.
+     * @param object $data
+     */
+    private static function rendermenu($data) {
+        jimport('joomla.version');
+        $version = new JVersion();
+
+        if ($version->RELEASE == '3.0') {
+            $versionName = TRUE;
+        } else {
+            $versionName = FALSE;
+        }
+        if ($versionName) {
+            JHtmlSidebar::addEntry($data);
+        } else {
+            JSubMenuHelper::addEntry($data);
+        }
     }
 
     /**
