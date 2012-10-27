@@ -17,9 +17,9 @@ defined('_JEXEC') or die;
                 <legend><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></legend>
                 <div>
                     <div style="width: 50px; padding: 5px; float: left;">
-                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&id=1&task=admin.checkassets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48"/><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></a>
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.checkassets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48"/><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></a>
                     </div><div style="width: 50px; padding: 5px; float: left;">
-                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&id=1&task=admin.fixAssets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /><?php echo JText::_('JBS_ADM_FIX'); ?></a>
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.fixAssets') ?>"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /><?php echo JText::_('JBS_ADM_FIX'); ?></a>
                     </div>
                     <div style="clear: both"></div>
                     <?php
