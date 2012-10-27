@@ -207,9 +207,11 @@ class BibleStudyHelper {
 
     /**
      *  Rendering Menu based on Joomla! Version.
-     * @param object $data
+     * @param string $data
+     * @param string $url
+     * @param string $vName
      */
-    private static function rendermenu($data) {
+    public static function rendermenu($text, $url, $vName) {
         jimport('joomla.version');
         $version = new JVersion();
 
@@ -219,9 +221,9 @@ class BibleStudyHelper {
             $versionName = FALSE;
         }
         if ($versionName) {
-            JHtmlSidebar::addEntry($data);
+            JHtmlSidebar::addEntry($text, $url, $vName);
         } else {
-            JSubMenuHelper::addEntry($data);
+            JSubMenuHelper::addEntry($text, $url, $vName);
         }
     }
 
