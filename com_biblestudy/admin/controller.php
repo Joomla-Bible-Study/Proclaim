@@ -11,8 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
-require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-//jimport('joomla.application.component.legacy');
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * JController for BibleStudy Admin class
@@ -44,6 +43,7 @@ class BiblestudyController extends JControllerLegacy {
         $view = JRequest::getCmd('view', 'cpanel');
         $layout = JRequest::getCmd('layout', 'default');
         $id = JRequest::getInt('id');
+
         $jbsstate = jbsDBhelper::getinstallstate();
         if ($jbsstate):
             $jbsname = $jbsstate->get('jbsname');
@@ -84,27 +84,20 @@ class BiblestudyController extends JControllerLegacy {
                 JError::raiseNotice('SOME_ERROR_CODE ', 'Fix assets successful');
             }
         }
+
+        jimport('joomla.version');
+        $version = new JVersion();
+
+        if ($version->RELEASE == '3.0') {
+            $versionName = TRUE;
+        } else {
+            $versionName = FALSE;
+        }
+        define('BIBLESTUDY_CHECKREL', $versionName);
+
         parent::display();
 
         return $this;
-    }
-
-    /**
-     * System to Render Tags
-     *
-     * @since 7.0.0
-     */
-    public function AjaxTags() {
-        die();
-    }
-
-    /**
-     * Looks up a topic for the auto-complete. Used by jquery.tag-it.js
-     * @since 7.0.1
-     * @return JSON object containing the results
-     */
-    public function lookup_topic() {
-        die();
     }
 
     /**
@@ -216,12 +209,10 @@ class BiblestudyController extends JControllerLegacy {
      *
      */
     public function writeXMLFile() {
-
         $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
         $podcasts = new JBSPodcast();
         $result = $podcasts->makePodcasts();
-
         $this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
     }
 
@@ -230,57 +221,51 @@ class BiblestudyController extends JControllerLegacy {
      *
      */
     public function resetHits() {
-        $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
     }
 
     /**
      * Resets Donwnloads
      */
     public function resetDownloads() {
-        $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
         if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
     }
 
     /**
      * Resets Plays
      */
     public function resetPlays() {
-        $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
         if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         }
+        $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
     }
 
     /**
@@ -332,7 +317,6 @@ class BiblestudyController extends JControllerLegacy {
         } else {
             $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT  ');
         }
-        //  $podmsg = PIHelperadmin::setpods($row);
         // delete temp file
 
         JBSUpload::deletetempfile($tempfile);
