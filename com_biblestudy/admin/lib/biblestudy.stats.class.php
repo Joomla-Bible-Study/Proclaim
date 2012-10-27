@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'helper.php');
+JLoader::register('jbshelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
 
 /**
  * Bible Study stats support class
@@ -30,7 +30,6 @@ class jbStats {
                 . ' LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)'
                 . ' WHERE m.study_id = ' . $id;
         $db->setQuery($query);
-        $db->query();
         $plays = $db->loadResult();
         return (int) $plays;
     }
@@ -89,7 +88,6 @@ class jbStats {
         $biblestudy_db->setQuery('SELECT * FROM #__bsms_studies WHERE published = 1 ' .
                 'AND hits > 0  ORDER BY hits DESC LIMIT 5');
         $results = $biblestudy_db->loadObjectList();
-        check_dberror("Unable to load messages.");
         $top_studies = null;
         foreach ($results as $result) {
             $top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') . ' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $result->id . '">' . $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
@@ -116,7 +114,6 @@ class jbStats {
         $biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5');
         $results = $biblestudy_db->loadObjectList();
         $results = $biblestudy_db->query();
-        check_dberror("Unable to load books.");
 
         if (count($results) > 0) {
             $ids = implode(',', $results);
@@ -184,7 +181,6 @@ class jbStats {
         $biblestudy_db->setQuery('SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = 1 ' .
                 'AND downloads > 0  ORDER BY downloads DESC LIMIT 5');
         $results = $biblestudy_db->loadObjectList();
-        check_dberror("Unable to load messages.");
         $top_studies = null;
         foreach ($results as $result) {
             $top_studies .= $result->downloads . ' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;d=' . $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
@@ -231,15 +227,13 @@ class jbStats {
     public static function top_score() {
         $final = array();
         $final2 = array();
-        $admin_params = getAdminsettings();
+        $admin_params = jbshelper::getAdminsettings();
         $format = $admin_params->get('format_popular', '0');
         $db = JFactory::getDBO();
         $db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
-        $db->query();
         $results = $db->loadObjectList();
         foreach ($results as $result) {
             $db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_mediafiles.study_id = ' . $result->study_id);
-            $db->query();
             $hits = $db->loadObject();
             if ($format < 1) {
                 $total = $result->added + $hits->hits;
@@ -253,7 +247,7 @@ class jbStats {
         rsort($final);
         array_splice($final, 5);
         $topscoretable = '';
-        foreach ($final as $key => $value) {
+        foreach ($final as $value) {
             foreach ($value as $scores) {
                 $topscoretable .= $scores;
             }
