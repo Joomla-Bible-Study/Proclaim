@@ -20,7 +20,7 @@ if ($msg) {
     <input type="hidden" name="view" value="cpanel" />
 </form>
 <!-- Begin: AdminLeft -->
-<div class="fltlft">
+<div class="span2 left fltlft">
     <div id="fbheader">
         <a href = "index.php?option=com_biblestudy&view=cpanel"><img src = "../media/com_biblestudy/images/logo.png"  border="0" alt = "<?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"/></a>
         <!-- Here is where the version information will go -->
@@ -44,11 +44,12 @@ if ($msg) {
     </div>
 </div>
 
-<div class="fltrt" style="width: 85%">
+<div class="span10 right fltrt width-80">
     <div class="fbwelcome">
         <h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
         <p><?php echo JText::_('JBS_CPL_INTRO') . ' - <a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">' . JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">' . JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
     </div>
+    <?php if (!BIBLESTUDY_CHECKREL) { ?>
     <div style="border:1px solid #ddd; background:#FBFBFB;">
         <h3 style="text-align: center">
             <?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
@@ -105,10 +106,11 @@ if ($msg) {
             <div style = "float:left;">
                 <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=styles" style="text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_STYLES'); ?>"> <img src = "../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a> </div>
             </div>
-            <?php //echo LiveUpdate::getIcon(); ?>
+            <?php echo LiveUpdate::getIcon(); ?>
         </div>
         <div style="clear: both;"></div>
     </div>
+    <?php } ?>
     <div style="clear: both;"></div>
     <!-- BEGIN: STATS -->
     <div class="fbstatscover">

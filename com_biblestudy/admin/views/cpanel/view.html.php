@@ -10,8 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
-require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
+JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
+//require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
 //require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
 
 /**
@@ -26,8 +26,6 @@ class biblestudyViewcpanel extends JViewLegacy {
      * @param string $tpl
      */
     public function display($tpl = null) {
-
-
         JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
         //get version information
         $db = JFactory::getDbo();
