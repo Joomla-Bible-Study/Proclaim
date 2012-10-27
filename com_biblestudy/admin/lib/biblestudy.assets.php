@@ -162,7 +162,7 @@ class fixJBSAssets {
                 return false;
             }
             if (!$table->store()) {
-                $this->setError($db->getErrorMsg());
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
                 return false;
             }
         }
@@ -176,12 +176,14 @@ class fixJBSAssets {
      */
     private static function deleteasset($data) {
         $db = JFactory::getDBO();
-        $query = "DELETE FROM `#__assets` WHERE `parent_id` = " . (int) $db->quote($data->jasset_id);
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
-            return false;
-        }
+        if ($data->jasset_id >= 2):
+            $query = "DELETE FROM `#__assets` WHERE `id` = " . (int) $db->quote($data->jasset_id);
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                return false;
+            }
+        endif;
         return true;
     }
 
