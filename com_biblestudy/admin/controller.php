@@ -85,16 +85,6 @@ class BiblestudyController extends JControllerLegacy {
             }
         }
 
-        jimport('joomla.version');
-        $version = new JVersion();
-
-        if ($version->RELEASE == '3.0') {
-            $versionName = TRUE;
-        } else {
-            $versionName = FALSE;
-        }
-        define('BIBLESTUDY_CHECKREL', $versionName);
-
         parent::display();
 
         return $this;

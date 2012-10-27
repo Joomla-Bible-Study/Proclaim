@@ -23,6 +23,18 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 
+
+jimport('joomla.version');
+$version = new JVersion();
+
+if ($version->RELEASE == '3.0') {
+    $versionName = TRUE;
+} else {
+    $versionName = FALSE;
+}
+define('BIBLESTUDY_CHECKREL', $versionName);
+
+
 // Register helper class
 JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
 
@@ -52,7 +64,7 @@ function addCSS() {
  * @since   7.0
  */
 function addJS() {
-    JHTML::script('media/com_biblestudy/js/jquery.js');
-    JHTML::script('media/com_biblestudy/js/noconflict.js');
-    JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
+    //JHTML::script('media/com_biblestudy/js/jquery.js');
+    //JHTML::script('media/com_biblestudy/js/noconflict.js');
+    //JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
 }

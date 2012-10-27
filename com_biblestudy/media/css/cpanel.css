@@ -19,10 +19,8 @@
     clear: both;
 }
 
-#fbmenu {
-    margin-top: 15px;
-    padding-top: 3px;
-    border-top: 1px solid #ccc;
+.fbmenu {
+    width: 14%;
 }
 
 #fbmenu a {
