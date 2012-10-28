@@ -40,16 +40,14 @@ class BsmHelper extends JComponentHelper {
 
     /**
      * Get Template Params
-     * @param type $isSite
-     * @return type
+     * @return Object
      */
-    public static function getTemplateparams($isSite = false) {
-        if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
+    public static function getTemplateparams() {
         $pk = JRequest::getInt('t', 'get', '1');
-        $template = JModel::getInstance('Templateedit', 'biblestudyModel');
-        $template = $template->getItem($pk);
-        return $template;
+        $db = JFactory::getDBO();
+        $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $pk;
+        $db->setQuery($query);
+        return $db->loadObject();
     }
 
 }

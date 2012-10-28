@@ -33,17 +33,22 @@ class biblestudyViewpopup extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
+        /*
+         * Load Helpers
+         */
         JView::loadHelper('scripture');
         JView::loadHelper('date');
         JView::loadHelper('duration');
+        JView::loadHelper('params');
 
         JRequest::setVar('tmpl', 'component');
         $mediaid = JRequest::getInt('mediaid', '', 'get');
-        $templateid = JRequest::getInt('t', '1', 'get');
         $close = JRequest::getInt('close', '0', 'get');
         $this->player = JRequest::getInt('player', '1', 'get');
 
-// If this is a direct new window then all we need to do is perform hitPlay and close this window
+        /*
+         *  If this is a direct new window then all we need to do is perform hitPlay and close this window
+         */
         if ($close == 1) {
             echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
         }
@@ -57,17 +62,18 @@ class biblestudyViewpopup extends JViewLegacy {
 
         $getMedia = new jbsMedia();
         $this->media = $getMedia->getMediaRows2($mediaid);
-        $db = JFactory::getDBO();
-        $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
-        $db->setQuery($query);
-        $template = $db->loadObject();
+        $template = BsmHelper::getTemplateparams();
 
-// Convert parameter fields to objects.
+        /*
+         *  Convert parameter fields to objects.
+         */
         $registry = new JRegistry;
         $registry->loadString($template->params);
         $this->params = $registry;
 
-// Convert parameter fields to objects.
+        /*
+         *  Convert parameter fields to objects.
+         */
         $registry = new JRegistry;
         $registry->loadString($this->media->params);
         $this->params->merge($registry);
@@ -82,10 +88,12 @@ class biblestudyViewpopup extends JViewLegacy {
         $this->scripture = getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
         $this->media->id = $saveid;
         $this->date = getstudyDate($this->params, $this->media->studydate);
-// The popup window call the counter function
+        /*
+         *  The popup window call the counter function
+         */
         $getMedia->hitPlay($mediaid);
         $this->lenght = getDuration($this->params, $this->media);
-        $badchars = array("'", '"');
+        //$badchars = array("'", '"');
 //$studytitle = str_replace($badchars, ' ', $this->media->studytitle);
 //$studyintro = str_replace($badchars, ' ', $this->media->studyintro);
         $images = new jbsImages();
@@ -132,11 +140,17 @@ class biblestudyViewpopup extends JViewLegacy {
         } elseif ($this->params->get('autostart') == 2) {
             $this->autostart = 'false';
         }
+        $this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
+        if ($this->params->get('itempopuptitle')) {
+            $this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
+        }
+        $this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
+        if ($this->params->get('itempopupfooter')) {
+            $this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
+        }
 
         parent::display($tpl);
     }
-
-//end of display function
 
     /**
      * Set Titles
@@ -147,7 +161,7 @@ class biblestudyViewpopup extends JViewLegacy {
      * @param string $length
      * @return object
      */
-    function titles($text, $media, $scripture, $date, $length) {
+    private function titles($text, $media, $scripture, $date, $length) {
         if (isset($media->teachername)) {
             $text = str_replace('{{teacher}}', $media->teachername, $text);
         }

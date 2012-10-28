@@ -10,24 +10,8 @@
 defined('_JEXEC') or die;
 ?>
 <div class="popupwindow">
-    <?php
-    $headertext = '';
-    $footertext = '';
-
-    // Need to add in template
-    ?><body style="background-color:<?php echo $this->params->get('popupbackground', 'black') ?>">
-    <?php
-    $headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
-
-    if ($this->params->get('itempopuptitle')) {
-        $headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
-    }
-    $footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
-    if ($this->params->get('itempopupfooter')) {
-        $footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
-    }
-    ?>
-        <div class="popuptitle"><p class="popuptitle"><?php echo $headertext ?>
+    <body style="background-color:<?php echo $this->params->get('popupbackground', 'black') ?>">
+        <div class="popuptitle"><p class="popuptitle"><?php echo $this->headertext ?>
             </p>
         </div>
         <?php
@@ -95,11 +79,11 @@ defined('_JEXEC') or die;
             echo $this->media->mediacode;
         }
         ?>
-        <?php // Footer      ?>
+    </body>
 </div>
 <div class="popupfooter">
     <p class="popupfooter">
-        <?php echo $footertext; ?>
+        <?php echo $this->footertext; ?>
     </p>
 </div>
 
