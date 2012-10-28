@@ -79,9 +79,9 @@ class biblestudyViewmessage extends JViewLegacy {
         }
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/ui/jquery-ui.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-ui.core.min.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
