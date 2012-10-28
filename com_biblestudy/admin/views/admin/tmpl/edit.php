@@ -11,8 +11,7 @@ defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
+JHtml::_('behavior.formvalidation');;
 if (BIBLESTUDY_CHECKREL) {
     JHtml::_('formbehavior.chosen', 'select');
 }
@@ -74,7 +73,7 @@ $input = $app->input;
             <div class="tab-content">
 
                 <!-- Begin Tabs -->
-                <div class="tab-pane" id="admin">
+                <div class="tab-pane active" id="admin">
                     <div class="row-fluid">
                         <h4><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h4>
                         <div class="control-group">
@@ -357,7 +356,7 @@ $input = $app->input;
                 }
                 ?>
                 <div class="tab-pane" id="assets">
-                    <?php echo $this->loadTemplate('assets'); ?>
+                    <?php // echo $this->loadTemplate('assets'); ?>
                 </div>
                 <?php
                 if (!BIBLESTUDY_CHECKREL) {
@@ -382,7 +381,7 @@ $input = $app->input;
                     <div class="tab-pane" id="migration">
                         <div class="row-fluid">
                             <h4><?php echo JText::_('JBS_IBM_MIGRATION'); ?></h4>
-                            <?php // echo $this->loadTemplate('migrate'); ?>
+                            <?php //echo $this->loadTemplate('migrate'); ?>
                         </div>
                     </div>
 
