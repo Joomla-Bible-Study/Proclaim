@@ -31,43 +31,35 @@ class fixJBSAssets {
         if (!ini_get('safe_mode')) {
             set_time_limit(300);
         }
-
-        //Remove all old assets_id exept the parent_id
-        $query = "SELECT id FROM `#__assets` WHERE name='com_biblestudy'";
+        //First get the new parent_id
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
-        $object_parent_id = $db->loadResult();
-        if ($object_parent_id):
-            $query = "DELETE FROM `#__assets` WHERE parent_id= " . $object_parent_id;
-            $db->setQuery($query);
-            $db->query();
-        endif;
+        $parent_id = $db->loadResult();
 
-        //Get all of the table names
-        $objects = fixJBSAssets::getObjects();
-        $msg = array();
-        foreach ($objects as $object) {
-            $query = 'SELECT id FROM ' . $object['name'];
-            $db->setQuery($query);
-            $datarows = $db->loadObjectList();
+        //get the names of the JBS tables
+        $objects = fixJBSAssets::getassetObjects();
 
-            if ($datarows) {
-                foreach ($datarows as $data) {
-                    JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-                    $table = JTable::getInstance($object['assetname'], 'Table', array('dbo' => $db));
-                    if ($data->id) {
-                        try {
-                            $table->load($data->id);
-                        } catch (Exception $e) {
-                            echo 'Caught exception: ', $e->getMessage(), "\n";
-                        }
-                        if (!$table->store()) {
-                            $this->setError($db->getErrorMsg());
-                            return false;
-                        }
-                    }
+        //Run through each table
+        foreach ($objects as $object) :
+            //Put the table into the return array
+            //Get the total number of rows and collect the table into a query
+            $query = 'SELECT j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id FROM ' . $db->quoteName($object['name']) . ' as j LEFT JOIN #__assets as a ON (a.id = j.asset_id)';
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            //Now go through each record to test it for asset id
+            foreach ($results as $result) :
+                //if there is no jasset_id it means that this has not been set and should be
+                if (!$result->jasset_id) {
+                    fixJBSAssets::setasset($result, $object['assetname']);
                 }
-            }
-        }
+                //if there is a jasset_id but no match to the parent_id then a mismatch has occured
+                if ($parent_id != $result->parent_id && $result->jasset_id) {
+                    fixJBSAssets::deleteasset($result);
+                    fixJBSAssets::setasset($result, $object['assetname']);
+                }
+            endforeach;
+        endforeach;
+        return true;
     }
 
     /**
@@ -75,23 +67,22 @@ class fixJBSAssets {
      * @return int
      * @todo change to static
      */
-    function checkAssets() {
+    public function checkAssets() {
         $return = array();
         $db = JFactory::getDBO();
         //First get the new parent_id
         $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
-        $db->query();
         $parent_id = $db->loadResult();
 
         //get the names of the JBS tables
-        $objects = $this->getObjects();
+        $objects = fixJBSAssets::getassetObjects();
 
         //Run through each table
         foreach ($objects as $object) {
             //Put the table into the return array
             //Get the total number of rows and collect the table into a query
-            $query = 'SELECT j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id FROM ' . $object['name'] . ' as j LEFT JOIN #__assets as a ON (a.id = j.asset_id)';
+            $query = 'SELECT j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id FROM ' . $db->quoteName($object['name']) . ' as j LEFT JOIN #__assets as a ON (a.id = j.asset_id)';
             $db->setQuery($query);
             $results = $db->loadObjectList();
             $nullrows = 0;
@@ -117,9 +108,12 @@ class fixJBSAssets {
                 'numrows' => $numrows,
                 'nullrows' => $nullrows,
                 'matchrows' => $matchrows,
-                'nomatchrows' => $nomatchrows);
+                'nomatchrows' => $nomatchrows,
+                'parent_id' => $parent_id,
+                'result_parent_id' => $result->parent_id,
+                'id' => $result->jid,
+                'assetid' => $result->jasset_id);
         }
-
         return $return;
     }
 
@@ -127,7 +121,7 @@ class fixJBSAssets {
      * Table list Array.
      * @return array
      */
-    private static function getObjects() {
+    protected static function getassetObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'server', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'folder', 'realname' => 'JBS_CMN_FOLDERS'),
             array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'message', 'realname' => 'JBS_CMN_STUDIES'),
@@ -148,6 +142,49 @@ class fixJBSAssets {
             array('name' => '#__bsms_admin', 'titlefield' => 'id', 'assetname' => 'admin', 'realname' => 'JBS_CMN_ADMINISTRATION')
         );
         return $objects;
+    }
+
+    /**
+     * Set Asset
+     * @param array $data
+     * @param string $assetname
+     * @return boolean
+     */
+    private static function setasset($data, $assetname) {
+        $db = JFactory::getDBO();
+        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+        $table = JTable::getInstance($assetname, 'Table', array('dbo' => $db));
+        if ($data->jid) {
+            try {
+                $table->load($data->jid);
+            } catch (Exception $e) {
+                echo 'Caught exception: ', $e->getMessage(), "\n";
+                return false;
+            }
+            if (!$table->store()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Delete assets
+     * @param array $data
+     * @return boolean
+     */
+    private static function deleteasset($data) {
+        $db = JFactory::getDBO();
+        if ($data->jasset_id >= 2):
+            $query = "DELETE FROM `#__assets` WHERE `id` = " . (int) $db->quote($data->jasset_id);
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                return false;
+            }
+        endif;
+        return true;
     }
 
 }
