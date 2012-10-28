@@ -1,0 +1,31 @@
+/*
+    Document   : biblestudy-j2.5
+    Created on : Oct 27, 2012, 5:47:55 PM
+    Author     : bcordis
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+form .controls label{
+    float: left;
+    clear:none;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+}
+.control-group label {
+    margin-right: 2em;
+}
+form .controls fieldset{
+    border: none;
+}
+fieldset {
+    background-color: white;
+}
+.element-invisible {
+    display: none;
+}
+.modal-footer {
+    float: right;
+    clear: left;
+}

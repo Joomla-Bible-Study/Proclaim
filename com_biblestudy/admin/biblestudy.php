@@ -15,11 +15,11 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
     return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-//require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-//if (JRequest::getCmd('view', '') == 'liveupdate') {
-//    LiveUpdate::handleRequest();
-//    return;
-//}
+require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
+if (JRequest::getCmd('view', '') == 'liveupdate') {
+    LiveUpdate::handleRequest();
+    return;
+}
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 
@@ -55,6 +55,9 @@ function addCSS() {
     JHTML::stylesheet('media/com_biblestudy/css/icons.css');
     if (BibleStudyHelper::debug() === '1'):
         JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
+    endif;
+    if (!BIBLESTUDY_CHECKREL):
+        JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
     endif;
 }
 
