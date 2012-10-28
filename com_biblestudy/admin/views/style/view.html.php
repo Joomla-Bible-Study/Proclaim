@@ -10,8 +10,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-
-
 /**
  * View class for Style
  * @package BibleStudy.Admin
@@ -67,10 +65,13 @@ class biblestudyViewStyle extends JViewLegacy {
         $this->item = $item;
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'style');
-        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
-            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
+
+        // Check for errors.
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+
         // Set the toolbar
         $this->addToolbar();
 
@@ -86,7 +87,7 @@ class biblestudyViewStyle extends JViewLegacy {
      * @since 7.0.0
      */
     protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', true);
+        JFactory::getApplication()->input->set('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         JToolBarHelper::title(JText::_('JBS_CMN_STYLES') . ': <small><small>[' . ($isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT')) . ']</small></small>', 'css.png');
 

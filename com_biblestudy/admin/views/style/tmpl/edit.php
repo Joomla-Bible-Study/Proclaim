@@ -17,56 +17,60 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task)
     {
-        if (task == 'style.cancel' || document.formvalidator.isValid(document.id('source-form'))) {
-<?php echo $this->form->getField('stylecode')->save(); ?>
-                                    Joomla.submitform(task, document.getElementById('source-form'));
-                                } else {
-                                    alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-                                }
-                            }
+        if (task == 'style.cancel' || document.formvalidator.isValid(document.id('style-form'))) {
+            Joomla.submitform(task, document.getElementById('style-form'));
+        }
+    }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="source-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="style-form" class="form-validate form-horizontal" enctype="multipart/form-data">
     <fieldset class="adminform">
-        <legend>
-
-            <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
-        <ul class="adminformlist">
-            <li>
+        <h4><?php echo JText::_('JBS_CMN_DETAILS'); ?></h4>
+        <div class="control-group">
+            <div class="control-label">
                 <?php echo $this->form->getLabel('published'); ?>
-
-                <?php echo $this->form->getInput('published'); ?></li>
-            <li>
+            </div>
+            <div class="controls">
+                <?php echo $this->form->getInput('published'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
                 <?php echo $this->form->getLabel('filename'); ?>
-
-                <?php echo $this->form->getInput('filename'); ?></li>
-            <li>
-                <?php echo $this->form->getLabel('stylecode'); ?></li>
-        </ul>
+            </div>
+            <div class="controls">
+                <?php echo $this->form->getInput('filename'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+                <?php echo $this->form->getLabel('stylecode'); ?>
+            </div>
+        </div>
         <div class="clr"></div>
-        <div class="css-editor">
+        <hr />
+        <div class="editor-border">
             <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
         </div>
+        <div class="clr"></div>
+        <?php if ($this->canDo->get('core.admin')): ?>
+            <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
+
+            <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
+
+            <fieldset class="panelform">
+                <?php echo $this->form->getLabel('rules'); ?>
+                <?php echo $this->form->getInput('rules'); ?>
+            </fieldset>
+
+            <?php echo JHtml::_('sliders.end'); ?>
+        <?php endif; ?>
+
     </fieldset>
-    <div class="clr"></div>
-
-    <?php if ($this->canDo->get('core.admin')): ?>
-        <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
-        <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
-        <fieldset class="panelform">
-            <?php echo $this->form->getLabel('rules'); ?>
-            <?php echo $this->form->getInput('rules'); ?>
-        </fieldset>
-
-        <?php echo JHtml::_('sliders.end'); ?>
-    <?php endif; ?>
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>

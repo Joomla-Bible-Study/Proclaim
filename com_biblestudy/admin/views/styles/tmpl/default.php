@@ -9,74 +9,86 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-JHtml::_('script', 'system/multiselect.js', false, true);
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+if (BIBLESTUDY_CHECKREL) {
+    JHtml::_('bootstrap.tooltip');
+    JHtml::_('dropdown.init');
+    JHtml::_('formbehavior.chosen', 'select');
+}
+JHtml::_('behavior.multiselect');
+
 $user = JFactory::getUser();
-$userId = $user->get('id');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-$canOrder = $user->authorise('core.edit.state');
-$saveOrder = $listOrder == 'location.ordering';
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=styles'); ?>" method="post" name="adminForm" id="adminForm">
-    <fieldset id="filter-bar">
-        <div class="filter-select fltrt">
-
-            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-            </select>
+    <?php if (!empty($this->sidebar)): ?>
+        <div id="j-sidebar-container" class="span2">
+            <?php echo $this->sidebar; ?>
         </div>
-    </fieldset>
-    <div id="editcell">
-        <table class="adminlist">
-            <thead>
-                <tr>
-                    <th width="20"><input type="checkbox" name="toggle" value=""
-                                          onclick="checkAll(<?php echo count($this->items); ?>);" />
-                    </th>
-                    <th width="20" align="center">
-                        <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JBS_STYLE_FILENAME'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JGRID_HEADING_ID'); ?>
-                    </th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="10">
-                        <?php echo $this->pagination->getListFooter(); ?>
-                    </td>
-                </tr>
-            </tfoot>
+        <div id="j-main-container" class="span10">
+        <?php else : ?>
+            <div id="j-main-container">
+            <?php endif; ?>
+            <div id="filter-bar" class="btn-toolbar">
+                <?php if (!BIBLESTUDY_CHECKREL) { ?>
+                    <div class="filter-select fltrt">
 
-            <?php
-            foreach ($this->items as $i => $item) :
-                $link = JRoute::_('index.php?option=com_biblestudy&task=style.edit&id=' . (int) $item->id);
-                ?>
-                <tr class="row<?php echo $i % 2; ?>">
-                    <td width="20">
-                        <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                    </td>
-                    <td width="20" align="center">
-                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'styles.', true, 'cb', '', ''); ?>
-                    </td>
-                    <td>
-                        <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
-                    </td>
-                    <td>
-                        <?php echo $item->id; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="boxchecked" value="0" />
-    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-    <?php echo JHtml::_('form.token'); ?>
+                        <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+                            <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                            <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+                        </select>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="clearfix"> </div>
+
+            <table class="table table-striped adminlist" id="articleList">
+                <thead>
+                    <tr>
+                        <th  width="1%" class="hidden-phone">
+                            <input type="checkbox" name="toggle" value="" onclick="Joomla.checkAll(this)" />
+                        </th>
+                        <th width="1%" style="min-width:55px" class="nowrap center">
+                            <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
+                        </th>
+                        <th>
+                            <?php echo JText::_('JBS_STYLE_FILENAME'); ?>
+                        </th>
+                        <th width="1%" class="nowrap hidden-phone">
+                            <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->items as $i => $item) :
+                        $link = JRoute::_('index.php?option=com_biblestudy&task=style.edit&id=' . (int) $item->id);
+                        ?>
+                        <tr class="row<?php echo $i % 2; ?>">
+                            <td width="20">
+                                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                            </td>
+                            <td width="20" align="center">
+                                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'styles.', true, 'cb', '', ''); ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
+                            </td>
+                            <td>
+                                <?php echo $item->id; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php echo $this->pagination->getListFooter(); ?>
+
+            <input type="hidden" name="task" value="" />
+            <input type="hidden" name="boxchecked" value="0" />
+            <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+            <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+            <?php echo JHtml::_('form.token'); ?>
+        </div>
 </form>
