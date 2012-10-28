@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/2.5/component-install.dtd">
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.0" method="upgrade">
     <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
     if it is a new install or an actual upgrade; Normal installs will
     behave like an install but upgrades will be treated appropriately even
@@ -10,8 +10,8 @@
     <author>Joomla Bible Study Team</author>
     <copyright>(C) 2007 - 2012 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>7.1.2</version>
-    <creationDate>Oct 25, 2012</creationDate>
+    <version>8.0.0</version>
+    <creationDate>Dec 15, 2012</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <description>JBS_INS_XML_DESCRIPTION</description>
