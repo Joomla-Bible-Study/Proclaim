@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/2.5/component-install.dtd">
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.0" method="upgrade">
     <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
     if it is a new install or an actual upgrade; Normal installs will
     behave like an install but upgrades will be treated appropriately even
@@ -70,7 +70,7 @@
         <submenu>
             <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
             <menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png" alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
-            <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
+            <menu link="option=com_biblestudy&amp;extension=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
             <menu link="option=com_biblestudy&amp;extension=com_biblestudy" view="messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
             <menu link="option=com_biblestudy&amp;extension=com_biblestudy" view="mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
             <menu link="option=com_biblestudy&amp;extension=com_biblestudy" view="teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
