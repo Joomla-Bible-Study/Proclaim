@@ -42,7 +42,7 @@ class Dump_File {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $params = $registry;
 
         $protocol = $params->get('protocol', 'http://');

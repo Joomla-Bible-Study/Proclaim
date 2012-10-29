@@ -327,9 +327,9 @@ class BibleStudyHelper {
      * @since 7.1.0
      */
     public static function debug() {
-        include_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
-        $admin_params = BsmHelper::getAdmin(true);
-        return $admin_params->debug;
+        //include_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
+        //$admin_params = BsmHelper::getAdmin();
+        return; //$admin_params->debug;
     }
 
 }

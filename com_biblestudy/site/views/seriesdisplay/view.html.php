@@ -86,12 +86,12 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadString($template[0]->params);
         $params = $registry;
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($a_params[0]->params);
+        $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
         $css = $params->get('css');
         if ($css <= "-1"):
@@ -146,7 +146,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
         if ($plugin) {
             // Convert parameter fields to objects.
             $registry = new JRegistry;
-            $registry->loadJSON($plugin->params);
+            $registry->loadString($plugin->params);
             $st_params = $registry;
             $version = $st_params->get('bible_version');
         }

@@ -58,7 +58,7 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $params = $registry;
         $t = $params->get('teachertemplateid');
         if (!$t) {
@@ -67,7 +67,7 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($a_params[0]->params);
+        $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
         $mainframe = JFactory::getApplication();
         $document = JFactory::getDocument();

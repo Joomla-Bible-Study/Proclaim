@@ -49,18 +49,18 @@ class BiblestudyViewSermon extends JViewLegacy {
         $template = $this->get('template');
 
         $registry = new JRegistry();
-        $registry->loadJSON($template[0]->params);
+        $registry->loadString($template[0]->params);
         $params = $registry;
         $a_params = $this->get('Admin');
         $this->related = $relatedstudies->getRelated($study, $params);
         // Convert parameter fields to objects.
         $registry = new JRegistry();
-        $registry->loadJSON($a_params[0]->params);
+        $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
         //@todo need to move to module bad way to code this.
         // Convert item paremeters into objects
         $registry = new JRegistry;
-        $registry->loadJSON($study->params);
+        $registry->loadString($study->params);
         $itemparams = $registry;
         $adminrows = new JBSAdmin();
         $document = JFactory::getDocument();
@@ -159,7 +159,7 @@ class BiblestudyViewSermon extends JViewLegacy {
             $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
             // Convert parameter fields to objects.
             $registry = new JRegistry;
-            $registry->loadJSON($plugin->params);
+            $registry->loadString($plugin->params);
             $st_params = $registry;
             $version = $st_params->get('bible_version');
             $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";

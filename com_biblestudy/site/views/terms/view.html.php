@@ -44,7 +44,7 @@ class biblestudyViewterms extends JViewLegacy {
         //$db->query();
         $template = $db->loadObject();
         $registry = new JRegistry();
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $params = $registry;
         $termstext = $params->get('terms');
 

@@ -38,8 +38,8 @@ class biblestudyViewcpanel extends JViewLegacy {
         $db->setQuery($query);
         $data = $db->loadObject();
         // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($data->manifest_cache);
+        $registry = new JRegistry();
+        $registry->loadString($data->manifest_cache);
         if ($data) {
             $this->version = $registry->get('version');
             $this->versiondate = $registry->get('creationDate');

@@ -41,7 +41,7 @@ class jbsMedia {
         $db->setQuery('SELECT * FROM #__bsms_admin');
         $admin = $db->loadObject();
         $registry = new JRegistry;
-        $registry->loadJSON($admin->params);
+        $registry->loadString($admin->params);
         $admin->params = $registry->toArray();
         if (isset($admin->params['default_download_image'])) {
             $admin_d_image = $admin->params['default_download_image'];
@@ -76,7 +76,7 @@ class jbsMedia {
             $image = $images->getMediaImage($media->impath, $media->path2);
             // Convert parameter fields to objects.
             $registry = new JRegistry;
-            $registry->loadJSON($media->params);
+            $registry->loadString($media->params);
             $itemparams = $registry;
             //Get the attributes for the player used in this item
             $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media);

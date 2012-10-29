@@ -47,7 +47,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadString($template[0]->params);
         $params = $registry;
         if ($params->get('useexpert_details') > 0) {
             JRequest::setVar('layout', 'custom');
@@ -81,7 +81,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($model->_template[0]->params);
+        $registry->loadString($model->_template[0]->params);
         $params = $registry;
 
         $cap = 1;
@@ -130,7 +130,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($plugin->params);
+        $registry->loadString($plugin->params);
         $slparams = $registry;
 
         $dispatcher = JDispatcher::getInstance();

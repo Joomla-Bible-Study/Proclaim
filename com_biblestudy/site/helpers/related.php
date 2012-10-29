@@ -29,7 +29,7 @@ class relatedStudies {
         $keygo = true;
         $topicsgo = true;
         $registry = new JRegistry();
-        $registry->loadJSON($row->params);
+        $registry->loadString($row->params);
         $params = $registry;
         $keywords = $params->get('metakey');
         $topics = $row->topics_id;
@@ -53,7 +53,7 @@ class relatedStudies {
         $studies = $this->getStudies();
         foreach ($studies as $study) {
             $registry = new JRegistry();
-            $registry->loadJSON($study->params);
+            $registry->loadString($study->params);
             $sparams = $registry;
             $compare = $sparams->get('metakey');
 
