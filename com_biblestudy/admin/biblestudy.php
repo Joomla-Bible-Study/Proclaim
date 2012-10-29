@@ -51,14 +51,17 @@ $controller->redirect();
  * @since   1.7.0
  */
 function addCSS() {
-    JHTML::stylesheet('media/com_biblestudy/css/general.css');
-    JHTML::stylesheet('media/com_biblestudy/css/icons.css');
     if (BibleStudyHelper::debug() === '1'):
         JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
     endif;
     if (!BIBLESTUDY_CHECKREL):
+        JHTML::stylesheet('media/com_biblestudy/css/z2.5.css');
+        JHTML::stylesheet('/media/com_biblestudy/jui/css/bootstrap.css');
+        JHTML::stylesheet('/media/com_biblestudy/jui/css/chosen.css');
         JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
     endif;
+    JHTML::stylesheet('media/com_biblestudy/css/general.css');
+    JHTML::stylesheet('media/com_biblestudy/css/icons.css');
 }
 
 /**
@@ -67,7 +70,12 @@ function addCSS() {
  * @since   7.0
  */
 function addJS() {
-    //JHTML::script('media/com_biblestudy/js/jquery.js');
-    //JHTML::script('media/com_biblestudy/js/noconflict.js');
+    if (!BIBLESTUDY_CHECKREL):
+        JHTML::script('/media/com_biblestudy/jui/js/jquery.js');
+        JHTML::script('/media/com_biblestudy/jui/js/jquery-ui.core.min.js');
+        JHTML::script('/media/com_biblestudy/jui/js/bootstrap.js');
+        JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
+        JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
+    endif;
     //JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
 }

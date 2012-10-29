@@ -17,15 +17,63 @@ form .controls label{
     margin-right: 2em;
 }
 form .controls fieldset{
-    border: none;
 }
 fieldset {
     background-color: white;
 }
 .element-invisible {
-    display: none;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+label, input, button, select, textarea {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 18px;
 }
 .modal-footer {
     float: right;
     clear: left;
+}
+[class^="icon-16"],[class*=" icon-16"] {
+    width: auto;
+    height: 100%;
+}
+[class^="icon-32"],[class*=" icon-32"] {
+    width: 32px;
+    height: 32px;
+    background-position: 0px 0px;
+    display: block;
+}
+
+[class^="icon-48"],[class*=" icon-48"] {
+    width: 48px;
+    height: 48px;
+    background-position: 0px 0px;
+    display: block;
+}
+
+[class*="input-"], .inputbox {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 18px;
+}
+
+#j-main-container .pagination {
+    margin: 0px;
+    float: right;
+}
+#j-main-container .container {
+    width: auto;
+}
+div.pagetitle {
+    width: auto;
 }
