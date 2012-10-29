@@ -77,3 +77,6 @@ label, input, button, select, textarea {
 div.pagetitle {
     width: auto;
 }
+.form-horizontal .control-label {
+ width: auto;
+}

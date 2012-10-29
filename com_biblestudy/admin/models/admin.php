@@ -10,10 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modeladmin');
-
 // Import library dependencies for database
-JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_installer' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'extension.php');
+JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . '/components/com_installer/models/extension.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 
 /**
@@ -169,20 +167,6 @@ class BiblestudyModelAdmin extends JModelAdmin {
             $data = $this->getItem();
 
         return $data;
-    }
-
-    /**
-     * Method override to check if you can edit an existing record.
-     *
-     * @param       array   $data   An array of input data.
-     * @param       string  $key    The name of the key for the primary key.
-     *
-     * @return      boolean
-     * @since       1.6
-     */
-    protected function allowEdit($data = array(), $key = 'id') {
-        // Check specific edit permission then general edit permission.
-        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.admin.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
     /**

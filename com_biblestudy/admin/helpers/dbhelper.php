@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  */
 class jbsDBhelper {
 
+    public static $extension = 'com_biblestudy';
+    
     /**
      * Discover the fields in a table
      * @param string table is the table you are checking

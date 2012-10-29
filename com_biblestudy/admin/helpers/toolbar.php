@@ -19,6 +19,8 @@ jimport('joomla.html.toolbar');
  */
 class biblestudyHelperToolbar extends JObject {
 
+    public static $extension = 'com_biblestudy';
+    
     /**
      * Get Toolbar
      *

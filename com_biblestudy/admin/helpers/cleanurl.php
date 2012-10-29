@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  */
 class Filter {
 
+    public static $extension = 'com_biblestudy';
+    
     const BadTagshtml = '<title><link><mata>';
 
     /**

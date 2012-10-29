@@ -10,8 +10,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-
-
 /**
  * View class for Serie
  * @package BibleStudy.Admin
@@ -60,14 +58,14 @@ class BiblestudyViewSerie extends JViewLegacy {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'serie');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin();
+        $this->admin = BsmHelper::getAdmin();
 
-        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
-            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
+        // Check for errors.
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
             return false;
         }
 
-        $this->setLayout("form");
         // Set the toolbar
         $this->addToolbar();
 

@@ -10,28 +10,30 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.helper');
-jimport('joomla.application.component.model');
-
 /**
  * This is for Retreving Admin and Template db
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BsmHelper extends JComponentHelper {
+class BsmHelper {
+
+    public static $extension = 'com_biblestudy';
 
     /**
      * Gets the settings from Admin
      *
-     * @param   $isSite   Boolean   True if this is called from the frontend
-     * @since   7.0
+     * @return object Return Admin table
      */
-    public static function getAdmin($isSite = false) {
-        if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
-        //$admin = JModel::getInstance('Admin', 'BiblestudyModel');
-        //$admin = $admin->getItem(1);
-
+    public static function getAdmin() {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*')
+                ->from('#__bsms_admin')
+                ->where('id = ' . (int) 1);
+        $db->setQuery($query);
+        $admin = $db->loadObject();
+        $registry = new JRegistry();
+        $admin->params = $registry->loadString($admin->params);
         //Add the current user id
         $user = JFactory::getUser();
         $admin->user_id = $user->id;
@@ -41,15 +43,19 @@ class BsmHelper extends JComponentHelper {
     /**
      * Get Template Params
      *
-     * @param object $isSite
-     * @return object
+     * @return object Retrun active template info
      */
-    public static function getTemplateparams($isSite = false) {
-        if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
+    public static function getTemplateparams() {
+        $db = JFactory::getDbo();
         $pk = JRequest::getInt('t', 'get', '1');
-        $template = JModel::getInstance('Template', 'BiblestudyModel');
-        $template = $template->getItem($pk);
+        $query = $db->getQuery(true);
+        $query->select('*')
+                ->from('#__bams_template')
+                ->where('id = ' . (int) $db->quote($pk));
+        $db->setQuery($query);
+        $template = $db->loadObject();
+        $registry = new JRegistry();
+        $template->params = $registry->loadString($template->params);
         return $template;
     }
 

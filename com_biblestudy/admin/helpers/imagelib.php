@@ -18,7 +18,11 @@ defined('_JEXEC') or die;
  * @since 7.0.0
  */
 class ImageLib {
+
     //public abstract static function resize($img);
+
+    public static $extension = 'com_biblestudy';
+
 }
 
 /**
@@ -28,6 +32,8 @@ class ImageLib {
  * @since   7.0.0
  */
 class ImageMagickLib extends ImageLib {
+
+    public static $extension = 'com_biblestudy';
 
     /**
      * Resize Image
@@ -55,6 +61,8 @@ class ImageMagickLib extends ImageLib {
  * @since   7.0.0
  */
 class GDLib extends ImageLib {
+
+    public static $extension = 'com_biblestudy';
 
     /**
      * Construct System.

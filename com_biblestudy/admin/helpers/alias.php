@@ -17,6 +17,8 @@ defined('_JEXEC') or die;
  */
 class fixJBSalias {
 
+    public static $extension = 'com_biblestudy';
+    
     /**
      * Update Alias
      * @since 7.1.0

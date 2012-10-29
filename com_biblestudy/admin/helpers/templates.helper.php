@@ -18,6 +18,8 @@ defined('_JEXEC') or die;
  */
 class bibleStudyTemplate extends JObject {
 
+    public static $extension = 'com_biblestudy';
+    
     /**
      * Tags
      * @var string

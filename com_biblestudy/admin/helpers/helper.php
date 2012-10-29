@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 class jbshelper {
 
+    public static $extension = 'com_biblestudy';
+    
     /**
      * Get Admin Settings
      * @return \JRegistry

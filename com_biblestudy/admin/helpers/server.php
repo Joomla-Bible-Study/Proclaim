@@ -10,45 +10,51 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-/**
- * Get Server
- *
- * @param type $serverid
- * @return type
- */
-function getServer($serverid) {
-    $mainframe = & JFactory::getApplication();
-    $option = JRequest::getCmd('option');
-    $db = & JFactory::getDBO();
-    $query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
+class jsbServer {
 
-    $db->setQuery($query);
+    public static $extension = 'com_biblestudy';
 
-    $tresult = $db->loadObject();
+    /**
+     * Get Server
+     *
+     * @param type $serverid
+     * @return type
+     */
+    function getServer($serverid) {
+        $mainframe = & JFactory::getApplication();
+        $option = JRequest::getCmd('option');
+        $db = & JFactory::getDBO();
+        $query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
 
-    $i = 0;
+        $db->setQuery($query);
 
-    return $tresult;
-}
+        $tresult = $db->loadObject();
 
-/**
- * Get Folder
- *
- * @param int $folderId
- * @return object
- */
-function getFolder($folderId) {
-    $mainframe = & JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+        $i = 0;
 
-    $db = & JFactory::getDBO();
-    $query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
+        return $tresult;
+    }
 
-    $db->setQuery($query);
+    /**
+     * Get Folder
+     *
+     * @param int $folderId
+     * @return object
+     */
+    function getFolder($folderId) {
+        $mainframe = & JFactory::getApplication();
+        $option = JRequest::getCmd('option');
 
-    $tresult = $db->loadObject();
+        $db = & JFactory::getDBO();
+        $query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
 
-    $i = 0;
+        $db->setQuery($query);
 
-    return $tresult;
+        $tresult = $db->loadObject();
+
+        $i = 0;
+
+        return $tresult;
+    }
+
 }
