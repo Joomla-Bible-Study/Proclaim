@@ -15,7 +15,8 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BsmHelper {
+class BsmHelper
+{
 
     public static $extension = 'com_biblestudy';
 
@@ -24,16 +25,18 @@ class BsmHelper {
      *
      * @return object Return Admin table
      */
-    public static function getAdmin() {
+    public static function getAdmin()
+    {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__bsms_admin')
-                ->where('id = ' . (int) 1);
+            ->from('#__bsms_admin')
+            ->where('id = ' . (int)1);
         $db->setQuery($query);
         $admin = $db->loadObject();
         $registry = new JRegistry();
-        $admin->params = $registry->loadString($admin->params);
+        $registry->loadString($admin->params);
+        $admin->params = $registry;
         //Add the current user id
         $user = JFactory::getUser();
         $admin->user_id = $user->id;
@@ -45,17 +48,19 @@ class BsmHelper {
      *
      * @return object Retrun active template info
      */
-    public static function getTemplateparams() {
+    public static function getTemplateparams()
+    {
         $db = JFactory::getDbo();
         $pk = JRequest::getInt('t', 'get', '1');
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__bams_template')
-                ->where('id = ' . (int) $db->quote($pk));
+            ->from('#__bams_template')
+            ->where('id = ' . (int)$db->quote($pk));
         $db->setQuery($query);
         $template = $db->loadObject();
         $registry = new JRegistry();
-        $template->params = $registry->loadString($template->params);
+        $registry->loadString($template->params);
+        $template->params = $registry;
         return $template;
     }
 
