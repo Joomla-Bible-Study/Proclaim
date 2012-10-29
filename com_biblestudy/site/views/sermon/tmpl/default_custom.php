@@ -8,7 +8,6 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-JHTML::_('behavior.tooltip');
 ?>
 <script type="text/javascript" language="JavaScript">
     function HideContent(d) {

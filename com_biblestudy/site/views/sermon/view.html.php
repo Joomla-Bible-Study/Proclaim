@@ -25,12 +25,6 @@ $uri = JFactory::getURI();
  */
 class BiblestudyViewSermon extends JViewLegacy {
 
-    protected $item;
-    protected $params;
-    protected $print;
-    protected $state;
-    protected $user;
-
     /**
      * Execute and display a template script.
      *
@@ -42,23 +36,15 @@ class BiblestudyViewSermon extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $app = JFactory::getApplication();
-        $user = JFactory::getUser();
-        $userId = $user->get('id');
 
+        $mainframe = JFactory::getApplication();
         $study = $this->get('Item');
-        $this->item = $study;
-        $this->print = $app->input->getBool('print');
-        $this->state = $this->get('State');
-        $this->user = $user;
         $relatedstudies = new relatedStudies();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            JError::raiseWarning(500, implode("\n", $errors));
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
+        $item = $menu->getActive();
 
-            return false;
-        }
 
         $template = $this->get('template');
 
@@ -75,7 +61,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         // Convert item paremeters into objects
         $registry = new JRegistry;
         $registry->loadJSON($study->params);
-        $this->item->params = $registry;
+        $itemparams = $registry;
         $adminrows = new JBSAdmin();
         $document = JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
@@ -90,7 +76,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         else:
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         endif;
-        $pathway = $app->getPathWay();
+        $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
         $dispatcher = JDispatcher::getInstance();
 
@@ -155,6 +141,18 @@ class BiblestudyViewSermon extends JViewLegacy {
             }
         }
 
+        //Prepare meta information (under development)
+        if ($itemparams->get('metakey')) {
+            $document->setMetadata('keywords', $itemparams->get('metakey'));
+        } elseif (!$itemparams->get('metakey')) {
+            $document->setMetadata('keywords', $study->topic_text . ',' . $study->studytitle);
+        }
+
+        if ($itemparams->get('metadesc')) {
+            $document->setDescription($itemparams->get('metadesc'));
+        } elseif (!$itemparams->get('metadesc')) {
+            $document->setDescription($study->studyintro);
+        }
         //Passage link to BibleGateway
         $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
         if ($plugin) {
@@ -213,11 +211,11 @@ class BiblestudyViewSermon extends JViewLegacy {
         $detailslink = htmlspecialchars($u->toString());
         $detailslink = JRoute::_($detailslink);
         $this->assignRef('detailslink', $detailslink);
-        JView::loadHelper('share');
+        $share = JView::loadHelper('share');
         $this->page = new stdClass();
         $this->page->social = getShare($detailslink, $study, $params, $this->admin_params);
-        // XXX not sure why we are adding the helper path???
         JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
+        JHTML::_('behavior.tooltip');
         $this->page->print = JHtml::_('icon.print_popup', $params);
         //End social networking
         // End process prepare content plugins
@@ -227,8 +225,6 @@ class BiblestudyViewSermon extends JViewLegacy {
         $this->assignRef('study', $study);
         $this->assignRef('article', $article);
         $this->assignRef('passage_link', $passage_link);
-
-        $this->_prepareDocument();
 
         parent::display($tpl);
     }
@@ -241,91 +237,6 @@ class BiblestudyViewSermon extends JViewLegacy {
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_CMN_READ_MORE'));
         parent::display($tpl);
-    }
-
-    /**
-     * Prepares the document
-     */
-    protected function _prepareDocument() {
-        $app = JFactory::getApplication();
-        $menus = $app->getMenu();
-        $pathway = $app->getPathway();
-        $title = null;
-
-        // Because the application sets a default page title,
-        // we need to get it from the menu item itself
-        $menu = $menus->getActive();
-        if ($menu) {
-            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-        } else {
-            $this->params->def('page_heading', JText::_('JBS_CMN_SERMON'));
-        }
-
-        $title = $this->params->get('page_title', '');
-
-        $id = (int) @$menu->query['id'];
-
-        // if the menu item does not concern this article
-        if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id)) {
-            // If this is not a single article menu item, set the page title to the article title
-            if ($this->item->studytitle) {
-                $title = $this->item->studytitle;
-            }
-            $path = array(array('title' => $this->item->studytitle, 'link' => ''));
-            $path = array_reverse($path);
-            foreach ($path as $item) {
-                $pathway->addItem($item['title'], $item['link']);
-            }
-        }
-
-        // Check for empty title and add site name if param is set
-        if (empty($title)) {
-            $title = $app->getCfg('sitename');
-        } elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
-            $title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
-        } elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
-            $title = JText::sprintf('JPAGETITLE', $title . ':' . $this->item->studytitle, $app->getCfg('sitename'));
-        }
-        if (empty($title)) {
-            $title = $this->item->studytitle;
-        }
-        $this->document->setTitle($title);
-
-
-        //Prepare meta information (under development)
-        if ($this->item->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->item->params->get('metakey'));
-        } elseif (!$this->item->params->get('metakey') && $this->params->get('menu-meta_keywords')) {
-            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-        }
-
-        if ($this->item->params->get('metadesc')) {
-            $this->document->setDescription($this->item->params->get('metadesc'));
-        } elseif (!$this->item->params->get('metadesc') && $this->params->get('menu-meta_description')) {
-            $this->document->setDescription($this->params->get('menu-meta_description'));
-        }
-
-        if ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
-        }
-
-        //Not ready for j2.5 will work in latter.
-//        $mdata = $this->item->params->get('metadesc')->toArray();
-//        foreach ($mdata as $k => $v) {
-//            if ($v) {
-//                $this->document->setMetadata($k, $v);
-//            }
-//        }
-
-        // If there is a pagebreak heading or title, add it to the page title
-        if (!empty($this->item->page_title)) {
-            $this->item->studytitle = $this->item->studytitle . ' - ' . $this->item->page_title;
-            $this->document->setTitle($this->item->page_title . ' - ' . JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1));
-        }
-
-        if ($this->print) {
-            $this->document->setMetaData('robots', 'noindex, nofollow');
-        }
     }
 
 }

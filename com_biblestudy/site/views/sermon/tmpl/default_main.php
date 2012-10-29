@@ -9,10 +9,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
+
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
-// todo need to find out why we load the core tooltip and are own.
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
 $row = $this->study;
@@ -79,22 +80,22 @@ $sharecall = JView::loadHelper('share');
         </thead>
         <tbody>
             <?php if ($this->params->get('list_items_view') == 1) { ?> <!-- Media table listing view -->
-                <?php
-                require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-                $media = new jbsMedia();
-                $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
-                echo $listing;
-                ?>
+                        <?php
+                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+                        $media = new jbsMedia();
+                        $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
+                        echo $listing;
+                        ?>
                 <?php
             }
             if ($params->get('list_items_view') == 0) {
                 ?><!-- List items view -->
-                <?php
-                $oddeven = 'bsodd';
-                $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-                echo $listing;
-                ?>
-            <?php } ?>
+                        <?php
+                        $oddeven = 'bsodd';
+                        $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+                        echo $listing;
+                        ?>
+    <?php } ?>
         </tbody>
     </table>
     <?php
@@ -102,7 +103,7 @@ $sharecall = JView::loadHelper('share');
     if ($this->params->get('show_scripture_link') > 0) {
         ?>
         <div style="width:80%">
-            <?php echo $this->article->studytext; ?>
+        <?php echo $this->article->studytext; ?>
         </div>
         <?php
     } else {
