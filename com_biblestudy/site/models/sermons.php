@@ -164,7 +164,7 @@ class BiblestudyModelSermons extends JModelList {
         $query = $db->getQuery(true);
         $template_params = $this->getTemplate();
         $registry = new JRegistry;
-        $registry->loadJSON($template_params->params);
+        $registry->loadString($template_params->params);
         $t_params = $registry;
         $query->select(
                 $this->getState(
@@ -534,7 +534,7 @@ class BiblestudyModelSermons extends JModelList {
         $template = $this->getTemplate();
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $params = $registry;
 
         $db = $this->getDbo();

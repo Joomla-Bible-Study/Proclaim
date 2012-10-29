@@ -163,7 +163,7 @@ class jbsDBhelper {
             if (!empty($results[0]->installstate)) {
                 // Convert parameter fields to objects.
                 $registry = new JRegistry;
-                $registry->loadJSON($results{0}->installstate);
+                $registry->loadString($results{0}->installstate);
                 return $registry;
             }
         }

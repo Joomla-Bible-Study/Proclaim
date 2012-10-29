@@ -58,7 +58,7 @@ class JBSAdmin {
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($compat->params);
+        $registry->loadString($compat->params);
         $admin_params = $registry;
 
         return $admin_params;

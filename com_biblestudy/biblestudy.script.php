@@ -22,13 +22,13 @@ class Com_BiblestudyInstallerScript {
      * The release value to be displayed and check against throughout this file.
      * @var string
      */
-    private $release = '7.1.2';
+    private $release = '8.0.0';
 
     /**
      * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
      * @var string
      */
-    private $minimum_joomla_release = '2.5.0';
+    private $minimum_joomla_release = '3.0.0';
 
     /**
      * The component's name
@@ -65,7 +65,7 @@ class Com_BiblestudyInstallerScript {
             $db->setQuery($query);
             $jbsversion = $db->loadResult();
             if ($jbsversion == '20100101') {
-                $query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . $extensionid;
+                $query = 'UPDATE #__schemas SET version_id = "8.0.0" WHERE extension_id = ' . $extensionid;
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -524,7 +524,7 @@ class Com_BiblestudyInstallerScript {
         foreach ($datas as $data) {
             //Need to adjust the params and write back
             $registry = new JRegistry();
-            $registry->loadJSON($data->params);
+            $registry->loadString($data->params);
             $params = $registry;
             $shareimage = $params->get('shareimage');
             $shareimage = str_replace('components', 'media', $shareimage);

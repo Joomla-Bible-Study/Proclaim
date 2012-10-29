@@ -24,7 +24,7 @@ function getTopicItemTranslated($topicItem) {
     if ($topicItem) {
         // first choice: evaluate language strings
         $itemparams = new JRegistry;
-        @$itemparams->loadJSON($topicItem->topic_params);
+        @$itemparams->loadString($topicItem->topic_params);
         $currentLanguage = JFactory::getLanguage()->getTag();
         // first choice: string in current language
         if ($currentLanguage) {

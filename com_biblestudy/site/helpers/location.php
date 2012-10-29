@@ -37,7 +37,7 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     $item = $menu->getActive();
     $registry = new JRegistry;
     if (isset($item->prams)) {
-        $registry->loadJSON($item->params);
+        $registry->loadString($item->params);
         $m_params = $registry;
         $language = $db->quote($item->language). ',' . $db->quote('*');
         $menu_order = $m_params->get('locations_order');

@@ -142,7 +142,7 @@ class JBSPagebuilder {
         foreach ($medias as $media) {
             $link_type = $media->link_type;
             $registry = new JRegistry;
-            $registry->loadJSON($media->params);
+            $registry->loadString($media->params);
             $itemparams = $registry;
             $mediaid = $media->id;
             $image = $images->getMediaImage($media->impath, $media->path2);

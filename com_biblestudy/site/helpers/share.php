@@ -60,7 +60,7 @@ function getShare($link, $row, $params, $admin_params) {
 
             // Convert parameter fields to objects.
             $registry = new JRegistry;
-            $registry->loadJSON($sharerow->params);
+            $registry->loadString($sharerow->params);
             $share_params = $registry;
 
             $image = $share_params->get('shareimage');

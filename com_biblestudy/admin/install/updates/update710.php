@@ -335,7 +335,7 @@ div.listingfooter ul li {
                 $table->store();
                 $table->load($result->id);
                 $registry = new JRegistry;
-                $registry->loadJSON($table->params);
+                $registry->loadString($table->params);
                 $css = $registry->get('css');
                 $registry->set('css', 'biblestudy.css');
                 

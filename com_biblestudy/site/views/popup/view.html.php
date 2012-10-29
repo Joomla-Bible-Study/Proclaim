@@ -68,14 +68,14 @@ class biblestudyViewpopup extends JViewLegacy {
          *  Convert parameter fields to objects.
          */
         $registry = new JRegistry;
-        $registry->loadJSON($template->params);
+        $registry->loadString($template->params);
         $this->params = $registry;
 
         /*
          *  Convert parameter fields to objects.
          */
         $registry = new JRegistry;
-        $registry->loadJSON($this->media->params);
+        $registry->loadString($this->media->params);
         $this->params->merge($registry);
 
         $css = $this->params->get('css', 'biblestudy.css');

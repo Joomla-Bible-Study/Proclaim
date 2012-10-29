@@ -135,7 +135,7 @@ class TableTopic extends JTable {
         if (parent::load($pk, $reset)) {
             // Convert the languages field to a registry.
             $params = new JRegistry;
-            $params->loadJSON($this->params);
+            $params->loadString($this->params);
             $this->params = $params;
             return true;
         } else {
