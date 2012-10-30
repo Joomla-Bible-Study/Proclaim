@@ -17,9 +17,8 @@ form .controls label{
     margin-right: 2em;
 }
 form .controls fieldset{
-}
-fieldset {
-    background-color: white;
+
+	border: none;
 }
 .element-invisible {
     position: absolute;
@@ -80,3 +79,11 @@ div.pagetitle {
 .form-horizontal .control-label {
  width: auto;
 }
+form .btn-group label {
+	font-size: 12px;
+	}
+input, select {
+	font-size: 0.909em;
+	border: none;
+	background: none;
+	}

@@ -111,7 +111,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @access    public
 	 *
-	 * @param boolean $updateNulls
+	 * @param bool|string $updateNulls
 	 *
 	 * @return    boolean    True on success
 	 */
@@ -163,10 +163,10 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Gets the form from the XML file.
 	 *
-	 * @param  <Array> $data
-	 * @param  <Boolean> $loadData
+	 * @param  Array $data
+	 * @param  Boolean $loadData
 	 *
-	 * @return <JForm> Form Object
+	 * @return JForm Form Object
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -313,14 +313,15 @@ class BiblestudyModelAdmin extends JModelAdmin
 			// Delete old row
 			$query = $db->getQuery(true);
 			$query->delete($db->qn('#__schemas'));
-			$query->where($db->qn('extension_id') . ' = ' . (string) $db->q($extensionresult));
+			$query->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
 			$db->setQuery($query);
 			$db->execute();
 
 			// Add new row
 			$query = $db->getQuery(true);
 			$query->insert($db->qn('#__schemas'));
-			$query->set($db->qn('version_id') . '= ' . (string) $db->q($schema));
+			$query->set($db->qn('extension_id') . '= ' . $db->q($extensionresult));
+			$query->set($db->qn('version_id') . '= ' . $db->q($schema));
 			$db->setQuery($query);
 			if ($db->execute()) {
 				$result = $schema;
@@ -427,7 +428,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		if ($db->getErrorNum()) {
 			throw new Exception('Database error - getExtentionId');
 		}
-
 		return $result;
 	}
 
