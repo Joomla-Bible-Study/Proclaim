@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access to this file
+//No Direct Access
 defined('_JEXEC') or die;
 
 JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
