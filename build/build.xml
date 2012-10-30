@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="biblestudy_package" default="build">
-    <description>
-        Build for Joomla Bible Study, Please modify location as you need.
-    </description>
+    <echo description="Build for Joomla Bible Study, Please modify location as you need.">
     <!-- set global properties for this build -->
     <property name="src" location="src"/>
     <property name="build" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/"/>
     <property name="src.test" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/tests/test"/>
     <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
-    <property name="dist"  location="dist"/>
+    <property name="dist" location="dist"/>
     <property name="comppkgversion" location="7.1.1"/>
     <target name="reset">
-        <echo message="Reset back to Dev State" />
-        <delete file="../com_biblestudy/admin/biblestudy.xml" />
-        <delete file="../com_biblestudy/admin/biblestudy.script.php" />
-        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
-        <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
+        <echo message="Reset back to Dev State"/>
+        <delete file="../com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="../com_biblestudy/admin/biblestudy.script.php"/>
+        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true"/>
+        <delete file="../com_biblestudy/media/css/site/biblestudy.css"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
-        <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php" resource="${build}/com_biblestudy/biblestudy.script.php"/>
-        <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css" resource="${build}/com_biblestudy/media/css/biblestudy.css"/>
-        <copy todir="${dest.test}" >
+        <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php"
+                 resource="${build}/com_biblestudy/biblestudy.script.php"/>
+        <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css"
+                 resource="${build}/com_biblestudy/media/css/biblestudy.css"/>
+        <copy todir="${dest.test}">
             <fileset dir="${src.test}" includes="**"/>
         </copy>
     </target>
     <target name="clean">
-        <echo message="Cleaning directories" />
-        <delete file="packages/com_biblestudy.zip" />
-        <delete file="packages/mod_biblestudy.zip" />
-        <delete file="packages/mod_biblestudy_podcast.zip" />
-        <delete file="packages/plg_biblestudy_finder.zip" />
-        <delete file="packages/plg_biblestudy_search.zip" />
-        <delete file="packages/plg_biblestudy_podcast.zip" />
-        <delete file="packages/plg_biblestudy_backup.zip" />
-        <delete file="pkg_biblestudy.zip" />
-        <delete file="xmap/plg_xmap_jbs.zip" />
-        <delete file="j1.5/com_jbsmigration.zip" />
-        <delete file="joomsef_extension/joomlsef_com_biblestudy.zip" />
+        <echo message="Cleaning directories"/>
+        <delete file="packages/com_biblestudy.zip"/>
+        <delete file="packages/mod_biblestudy.zip"/>
+        <delete file="packages/mod_biblestudy_podcast.zip"/>
+        <delete file="packages/plg_biblestudy_finder.zip"/>
+        <delete file="packages/plg_biblestudy_search.zip"/>
+        <delete file="packages/plg_biblestudy_podcast.zip"/>
+        <delete file="packages/plg_biblestudy_backup.zip"/>
+        <delete file="pkg_biblestudy.zip"/>
+        <delete file="xmap/plg_xmap_jbs.zip"/>
+        <delete file="j1.5/com_jbsmigration.zip"/>
+        <delete file="joomsef_extension/joomlsef_com_biblestudy.zip"/>
     </target>
     <target name="build">
-        <echo message="Remove Dev files" />
-        <delete file="../com_biblestudy/admin/biblestudy.xml" />
-        <delete file="../com_biblestudy/admin/biblestudy.script.php" />
-        <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
-        <echo message="Move test files back to Testing folder" />
-        <copy todir="${src.test}" >
+        <echo message="Remove Dev files"/>
+        <delete file="../com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="../com_biblestudy/admin/biblestudy.script.php"/>
+        <delete file="../com_biblestudy/media/css/site/biblestudy.css"/>
+        <echo message="Move test files back to Testing folder"/>
+        <copy todir="${src.test}">
             <fileset dir="${dest.test}" includes="**"/>
         </copy>
-        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true" />
-        <echo message="Building package" />
-        <mkdir dir="packages" />
-        <zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
-        <zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy" />
-        <zip destfile="packages/mod_biblestudy_podcast.zip" basedir="../mod_biblestudy_podcast" />
-        <zip destfile="packages/plg_biblestudy_finder.zip" basedir="../plg_biblestudy_finder" />
-        <zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search" />
-        <zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast" />
-        <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup" />
-        <zip destfile="xmap/plg_xmap_jbs.zip" basedir="../xmap_JBS/" />
-        <zip destfile="j1.5/com_jbsmigration.zip" basedir="../jbsmigration/" />
-        <zip destfile="joomsef_extension/joomlsef_com_biblestudy.zip" basedir="../joomsef_extension/" />
+        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true"/>
+        <echo message="Building package"/>
+        <mkdir dir="packages"/>
+        <zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy"/>
+        <zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy"/>
+        <zip destfile="packages/mod_biblestudy_podcast.zip" basedir="../mod_biblestudy_podcast"/>
+        <zip destfile="packages/plg_biblestudy_finder.zip" basedir="../plg_biblestudy_finder"/>
+        <zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search"/>
+        <zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast"/>
+        <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup"/>
+        <zip destfile="xmap/plg_xmap_jbs.zip" basedir="../xmap_JBS/"/>
+        <zip destfile="j1.5/com_jbsmigration.zip" basedir="../jbsmigration/"/>
+        <zip destfile="joomsef_extension/joomlsef_com_biblestudy.zip" basedir="../joomsef_extension/"/>
         <zip destfile="pkg_biblestudy.zip">
             <fileset dir=".">
-                <include name="packages/**" />
-                <include name="pkg_biblestudy_package.xml" />
+                <include name="packages/**"/>
+                <include name="pkg_biblestudy_package.xml"/>
             </fileset>
         </zip>
-        <copy todir="${dest.test}" >
+        <copy todir="${dest.test}">
             <fileset dir="${src.test}" includes="**"/>
         </copy>
     </target>

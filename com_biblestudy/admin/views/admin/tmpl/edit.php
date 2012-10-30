@@ -36,8 +36,7 @@ $input = $app->input;
 </script>
 <script type="text/javascript">
 	Joomla.submitbutton = function(task) {
-		if (task == 'article.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			<?php //echo $this->form->getField('articletext')->save(); ?>
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
@@ -49,7 +48,6 @@ $input = $app->input;
     <div class="row-fluid">
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
-            <?php if (BIBLESTUDY_CHECKREL) { ?>
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
                     <li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
@@ -57,18 +55,11 @@ $input = $app->input;
                     <li><a href="#assets" data-toggle="tab"><?php echo JText::_('JBS_ADM_DB'); ?></a></li>
                     <li><a href="#backup" data-toggle="tab"><?php echo JText::_('JBS_IBM_BACKUP'); ?></a></li>
                     <?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1) : ?>
-                        <li><a href="#migration" data-toggle="tab"><?php echo JText::_('JBS_IBM_MIGRATE'); ?></a></li>
+                        <li><a href="#migrationsys" data-toggle="tab"><?php echo JText::_('JBS_IBM_MIGRATE'); ?></a></li>
                     <?php endif; ?>
+                    <li><a href="#database" data-toggle="tab"><?php echo JText::_('JBS_ADM_DATABASE'); ?></a></li>
+                    <li><a href="#convert" data-toggle="tab"><?php echo JText::_('JBS_IBM_CONVERT'); ?></a></li>
                 </ul>
-                <?php
-            }
-            if (!BIBLESTUDY_CHECKREL) {
-                echo JHtml::_('tabs.start', 'com_biblestudy_admin_' . $this->item->id, array('useCookie' => 1));
-                ?>
-                <?php
-                echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings');
-            }
-            ?>
 
             <div class="tab-content">
 
@@ -169,13 +160,7 @@ $input = $app->input;
                         </div>
                     </div>
                 </div>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '<div style="clear:both"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults');
-                }
-                ?>
-                <div class="tab-pane active" id="defaults">
+                <div class="tab-pane" id="defaults">
                     <div class="row-fluid">
                         <div class="span6" >
                             <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
@@ -290,14 +275,7 @@ $input = $app->input;
                         </div>
                     </div>
                 </div>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '
-                                            <div class="clr"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings');
-                }
-                ?>
-                <div class="tab-pane active" id="playersettings">
+                <div class="tab-pane" id="playersettings">
                     <div class="row-fluid">
                         <div class="span6">
                             <h4><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></h4>
@@ -349,62 +327,21 @@ $input = $app->input;
                         </div>
                     </div>
                 </div>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '<div class="clr"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DB'), 'admin-db-settings');
-                }
-                ?>
                 <div class="tab-pane" id="assets">
-                    <?php // echo $this->loadTemplate('assets'); ?>
+                    <?php  echo $this->loadTemplate('assets'); ?>
                 </div>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '
-                <div class="clr"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_IBM_BACKUP'), 'admin-backup-settings');
-                }
-                ?>
                 <div class="tab-pane" id="backup">
-                    <div class="row-fluid">
-                        <h4><?php echo JText::_('JBS_IBM_BACKUP'); ?></h4>
-                        <?php //echo $this->loadTemplate('backup'); ?>
-                    </div>
+                        <?php echo $this->loadTemplate('backup'); ?>
                 </div>
                 <?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1) : ?>
-                    <?php
-                    if (!BIBLESTUDY_CHECKREL) {
-                        echo '<div class="clr"></div>';
-                        echo JHtml::_('tabs.panel', JText::_('JBS_IBM_MIGRATE'), 'admin-migrate-settings');
-                    }
-                    ?>
-                    <div class="tab-pane" id="migration">
-                        <div class="row-fluid">
-                            <h4><?php echo JText::_('JBS_IBM_MIGRATION'); ?></h4>
-                            <?php //echo $this->loadTemplate('migrate'); ?>
-                        </div>
+                    <div class="tab-pane" id="migrationsys">
+                            <?php echo $this->loadTemplate('migrate'); ?>
                     </div>
 
                 <?php endif ?>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '<div class="clr"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DATABASE'), 'admin-database');
-                }
-                ?>
                 <div class="tab-pane" id="database">
-                    <div class="row-fluid">
-                        <h4><?php echo JText::_('JBS_ADM_DATABASE'); ?></h4>
-                        <?php //echo $this->loadTemplate('database'); ?>
-                    </div>
+                        <?php echo $this->loadTemplate('database'); ?>
                 </div>
-                <div class="clr"></div>
-                <?php
-                if (!BIBLESTUDY_CHECKREL) {
-                    echo '<div class="clr"></div>';
-                    echo JHtml::_('tabs.panel', JText::_('JBS_IBM_CONVERSION'), 'admin-conversion-settings');
-                }
-                ?>
                 <div class="tab-pane" id="convert">
                     <div class="row-fluid">
                         <h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
@@ -412,7 +349,6 @@ $input = $app->input;
                         <div> <?php echo $this->pi; ?> </div>
                     </div>
                 </div>
-                <div class="clr"></div>
             </div>
         </div>
     </div>

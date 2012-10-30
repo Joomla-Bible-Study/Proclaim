@@ -10,24 +10,10 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-class jbshelper {
+class jbshelper
+{
 
     public static $extension = 'com_biblestudy';
-    
-    /**
-     * Get Admin Settings
-     * @return \JRegistry
-     */
-    static function getAdminsettings() {
-        $db = JFactory::getDBO();
-        $db->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
-        $db->query();
-        $compat = $db->loadObject();
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadString($compat->params);
-        return $registry;
-    }
 
     /**
      * Get tooltip.
@@ -39,7 +25,8 @@ class jbshelper {
      * @param string $template
      * @return string
      */
-    static function getTooltip($rowid, $row, $params, $admin_params, $template) {
+    static function getTooltip($rowid, $row, $params, $admin_params, $template)
+    {
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'elements.php');
 
@@ -73,7 +60,8 @@ class jbshelper {
      *
      * @return string
      */
-    static function getShowhide() {
+    static function getShowhide()
+    {
         $showhide = '
         function HideContent(d) {
         document.getElementById(d).style.display = "none";

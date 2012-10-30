@@ -12,19 +12,22 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php';
+JLoader::register('BsmHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
 
 /**
  * Serie admin model
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyModelSerie extends JModelAdmin {
+class BiblestudyModelSerie extends JModelAdmin
+{
 
     /**
-     * @var		string	The prefix to use with controller messages.
-     * @since	1.6
+     * @var        string    The prefix to use with controller messages.
+     * @since    1.6
      */
     protected $text_prefix = 'COM_BIBLESTUDY';
+
 
     /**
      * Batch copy items to a new category or current.
@@ -35,38 +38,19 @@ class BiblestudyModelSerie extends JModelAdmin {
      *
      * @return  mixed  An array of new IDs on success, boolean false on failure.
      *
-     * @since	11.1
+     * @since    11.1
      */
-    protected function batchCopy($value, $pks, $contexts) {
-        $categoryId = (int) $value;
+    protected function batchCopy($value, $pks, $contexts)
+    {
+        $categoryId = null;
 
         $table = $this->getTable();
         $i = 0;
 
-        // Check that the category exists
-        if ($categoryId) {
-            $categoryTable = JTable::getInstance('Category');
-            if (!$categoryTable->load($categoryId)) {
-                if ($error = $categoryTable->getError()) {
-                    // Fatal error
-                    $this->setError($error);
-                    return false;
-                } else {
-                    $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
-                    return false;
-                }
-            }
-        }
-
-        if (empty($categoryId)) {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
-            return false;
-        }
-
         // Check that the user has create permission for the component
         $extension = JFactory::getApplication()->input->get('option', '');
         $user = JFactory::getUser();
-        if (!$user->authorise('core.create', $extension . '.category.' . $categoryId)) {
+        if (!$user->authorise('core.create', $extension)) {
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
             return false;
         }
@@ -99,14 +83,6 @@ class BiblestudyModelSerie extends JModelAdmin {
             // Reset the ID because we are making a copy
             $table->id = 0;
 
-            // New category ID
-            $table->catid = $categoryId;
-
-            // TODO: Deal with ordering?
-            //$table->ordering	= 1;
-            // Get the featured state
-            $featured = $table->featured;
-
             // Check the row.
             if (!$table->check()) {
                 $this->setError($table->getError());
@@ -125,16 +101,6 @@ class BiblestudyModelSerie extends JModelAdmin {
             // Add the new ID to the array
             $newIds[$i] = $newId;
             $i++;
-
-            // Check if the article was featured and update the #__content_frontpage table
-            if ($featured == 1) {
-                $db = $this->getDbo();
-                $query = $db->getQuery(true);
-                $query->insert($db->quoteName('#__content_frontpage'));
-                $query->values($newId . ', 0');
-                $db->setQuery($query);
-                $db->execute();
-            }
         }
 
         // Clean the cache
@@ -146,35 +112,37 @@ class BiblestudyModelSerie extends JModelAdmin {
     /**
      * Method to test whether a record can be deleted.
      *
-     * @param	object	$record	A record object.
+     * @param    object    $record    A record object.
      *
-     * @return	boolean	True if allowed to delete the record. Defaults to the permission set in the component.
-     * @since	1.6
+     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     * @since    1.6
      */
-    protected function canDelete($record) {
+    protected function canDelete($record)
+    {
         if (!empty($record->id)) {
             if ($record->state != -2) {
                 return;
             }
             $user = JFactory::getUser();
-            return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
+            return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int)$record->id);
         }
     }
 
     /**
      * Method to test whether a record can have its state edited.
      *
-     * @param	object	$record	A record object.
+     * @param    object    $record    A record object.
      *
-     * @return	boolean	True if allowed to change the state of the record. Defaults to the permission set in the component.
-     * @since	1.6
+     * @return    boolean    True if allowed to change the state of the record. Defaults to the permission set in the component.
+     * @since    1.6
      */
-    protected function canEditState($record) {
+    protected function canEditState($record)
+    {
         $user = JFactory::getUser();
 
         // Check for existing article.
         if (!empty($record->id)) {
-            return $user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $record->id);
+            return $user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int)$record->id);
         }
         // Default to component settings if serie known.
         return parent::canEditState('com_biblestudy');
@@ -183,12 +151,13 @@ class BiblestudyModelSerie extends JModelAdmin {
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param	JTable	$table
+     * @param    JTable    $table
      *
-     * @return	void
-     * @since	1.6
+     * @return    void
+     * @since    1.6
      */
-    protected function prepareTable($table) {
+    protected function prepareTable($table)
+    {
         jimport('joomla.filter.output');
         $date = JFactory::getDate();
         $user = JFactory::getUser();
@@ -221,26 +190,28 @@ class BiblestudyModelSerie extends JModelAdmin {
     /**
      * Returns a Table object, always creating it.
      *
-     * @param	type	The table type to instantiate
-     * @param	string	A prefix for the table class name. Optional.
-     * @param	array	Configuration array for model. Optional.
+     * @param    type    The table type to instantiate
+     * @param    string    A prefix for the table class name. Optional.
+     * @param    array    Configuration array for model. Optional.
      *
-     * @return	JTable	A database object
+     * @return    JTable    A database object
      */
-    public function getTable($type = 'Serie', $prefix = 'Table', $config = array()) {
+    public function getTable($type = 'Serie', $prefix = 'Table', $config = array())
+    {
         return JTable::getInstance($type, $prefix, $config);
     }
 
     /**
      * Method to get a single record.
      *
-     * @param	integer	The id of the primary key.
+     * @param    integer    The id of the primary key.
      *
-     * @return	mixed	Object on success, false on failure.
+     * @return    mixed    Object on success, false on failure.
      */
-    public function getItem($pk = null) {
+    public function getItem($pk = null)
+    {
         if ($item = parent::getItem($pk)) {
-
+            $item->admin = BsmHelper::getAdmin();
         }
         return $item;
     }
@@ -254,11 +225,39 @@ class BiblestudyModelSerie extends JModelAdmin {
      * @return  mixed  A JForm object on success, false on failure
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true) {
+    public function getForm($data = array(), $loadData = true)
+    {
         // Get the form.
         $form = $this->loadForm('com_biblestudy.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form)) {
             return false;
+        }
+        $jinput = JFactory::getApplication()->input;
+
+        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+        if ($jinput->get('a_id')) {
+            $id = $jinput->get('a_id', 0);
+        } // The back end uses id so we use that the rest of the time and set it to 0 by default.
+        else {
+            $id = $jinput->get('id', 0);
+        }
+
+        $user = JFactory::getUser();
+
+        // Check for existing article.
+        // Modify the form based on Edit State access controls.
+        if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int)$id))
+            || ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
+        ) {
+            // Disable fields for display.
+            $form->setFieldAttribute('ordering', 'disabled', 'true');
+            $form->setFieldAttribute('published', 'disabled', 'true');
+
+            // Disable fields while saving.
+            // The controller has already verified this is an article you can edit.
+            $form->setFieldAttribute('ordering', 'filter', 'unset');
+            $form->setFieldAttribute('published', 'filter', 'unset');
+
         }
 
         return $form;
@@ -268,37 +267,25 @@ class BiblestudyModelSerie extends JModelAdmin {
      * Get Teacher data
      * @return abject
      */
-    public function getTeacher() {
+    public function getTeacher()
+    {
         if (empty($this->_teacher)) {
             $query = 'SELECT id AS value, teachername AS text'
-                    . ' FROM #__bsms_teachers'
-                    . ' WHERE published = 1';
+                . ' FROM #__bsms_teachers'
+                . ' WHERE published = 1';
             $this->_teacher = $this->_getList($query);
         }
         return $this->_teacher;
     }
 
     /**
-     * Get Admin data
-     * @return abject
-     */
-    public function getAdmin() {
-        if (empty($this->_admin)) {
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_admin = $this->_getList($query);
-        }
-        return $this->_admin;
-    }
-
-    /**
      * Method to store a record
      *
-     * @access	public
-     * @return	boolean	True on success
+     * @access    public
+     * @return    boolean    True on success
      */
-    public function store() {
+    public function store()
+    {
         $row = $this->getTable();
 
         $data = JRequest::get('post');
@@ -332,8 +319,11 @@ class BiblestudyModelSerie extends JModelAdmin {
      *
      * @since   7.0
      */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.serie.data', array());
+    protected function loadFormData()
+    {
+        // Check the session for previously entered form data.
+        $app = JFactory::getApplication();
+        $data = $app->getUserState('com_biblestudy.edit.serie.data', array());
         if (empty($data))
             $data = $this->getItem();
 
@@ -341,16 +331,82 @@ class BiblestudyModelSerie extends JModelAdmin {
     }
 
     /**
+     * Method to save the form data.
+     *
+     * @param    array    The form data.
+     *
+     * @return    boolean    True on success.
+     * @since    1.6
+     */
+    public function save($data)
+    {
+        $app = JFactory::getApplication();
+
+        // Alter the title for save as copy
+        if ($app->input->get('task') == 'save2copy') {
+            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
+            $data['title'] = $title;
+            $data['alias'] = $alias;
+        }
+
+        if (parent::save($data)) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * A protected method to get a set of ordering conditions.
+     *
+     * @param    object    A record object.
+     *
+     * @return    array    An array of conditions to add to add to ordering queries.
+     * @since    1.6
+     */
+    protected function getReorderConditions($table)
+    {
+        /*
+         * @todo need to look at a way to make this work on other to look at the
+         *  id from series do to we are now using it category
+         */
+        $condition = array();
+        //$condition[] = 'catid = '.(int) $table->catid;
+        $condition[] = 'catid = 1';
+        return $condition;
+    }
+
+    /**
+     * Auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @return    void
+     * @since    3.0
+     */
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        // Association content items
+        //$app = JFactory::getApplication();
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+
+    /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
      * @param   string   $group      The cache group
      * @param   integer  $client_id  The ID of the client
      *
      * @return  void
-     * @since	1.6
+     * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0) {
+    protected function cleanCache($group = null, $client_id = 0)
+    {
         parent::cleanCache('com_biblestudy');
         parent::cleanCache('mod_biblestudy');
+        parent::cleanCache('mod_biblestudy_podcast');
     }
 
 }

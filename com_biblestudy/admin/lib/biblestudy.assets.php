@@ -20,9 +20,8 @@ class fixJBSAssets {
     /**
      * Fix Assets function.
      * @return boolean
-     * @todo change to static
      */
-    public function fixassets() {
+    public static function fixassets() {
         $db = JFactory::getDBO();
 
         /**
@@ -64,10 +63,9 @@ class fixJBSAssets {
 
     /**
      * Check Assets
-     * @return int
-     * @todo change to static
+     * @return array
      */
-    public function checkAssets() {
+    public static  function checkAssets() {
         $return = array();
         $db = JFactory::getDBO();
         //First get the new parent_id

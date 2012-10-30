@@ -22,7 +22,8 @@ jimport('joomla.application.component.controllerform');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyControllerAdmin extends JControllerForm {
+class BiblestudyControllerAdmin extends JControllerForm
+{
 
     /**
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
@@ -36,7 +37,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * @return void
      * @param array $config
      */
-    function __construct($config = array()) {
+    function __construct($config = array())
+    {
         parent::__construct($config);
 
         // Register Extra tasks
@@ -47,7 +49,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Tools to change player or pupup
      */
-    function tools() {
+    function tools()
+    {
         $tool = JRequest::getVar('tooltype', '', 'post');
         switch ($tool) {
             case 'players':
@@ -71,7 +74,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Reset Hits
      */
-    function resetHits() {
+    function resetHits()
+    {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0'");
@@ -88,7 +92,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Reset Downloads
      */
-    function resetDownloads() {
+    function resetDownloads()
+    {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0'");
@@ -105,7 +110,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Reset Players
      */
-    function resetPlays() {
+    function resetPlays()
+    {
         $msg = null;
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0'");
@@ -122,7 +128,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Change Player Modes
      */
-    function changePlayers() {
+    function changePlayers()
+    {
         $db = JFactory::getDBO();
         $msg = null;
         $from = JRequest::getInt('from', '', 'post');
@@ -147,7 +154,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Change Media Popup
      */
-    function changePopup() {
+    function changePopup()
+    {
         $db = JFactory::getDBO();
         $msg = null;
         $from = JRequest::getInt('pfrom', '', 'post');
@@ -165,7 +173,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Check Assets
      */
-    function checkassets() {
+    function checkassets()
+    {
         $asset = new fixJBSAssets();
         $checkassets = $asset->checkAssets();
         JRequest::setVar('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
@@ -175,50 +184,55 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * Fix Assets
      */
-    function fixAssets() {
+    function fixAssets()
+    {
         $asset = new fixJBSAssets();
-        $fixassets = $asset->fixAssets();
+        $asset->fixAssets();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.checkassets');
     }
 
     /**
      * Convert SermonSpeaker to BibleStudy
      */
-    function convertSermonSpeaker() {
+    function convertSermonSpeaker()
+    {
         $convert = new JBSconvert();
         $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', $ssconversion);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $ssconversion);
     }
 
     /**
      * Convert PreachIt to BibleStudy
      */
-    function convertPreachIt() {
+    function convertPreachIt()
+    {
         $convert = new JBSPIconvert();
         $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', $piconversion);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $piconversion);
     }
 
     /**
      * Tries to fix missing database updates
      *
-     * @since	7.1.0
+     * @since    7.1.0
      */
-    function fix() {
+    function fix()
+    {
         $model = $this->getModel('admin');
         $model->fix();
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
     }
 
     /**
      * Alias Updates
      * @since 7.1.0
      */
-    function aliasUpdate() {
+    function aliasUpdate()
+    {
         $alias = new fixJBSalias();
         $update = $alias->updateAlias();
         $this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
     }
 
 }

@@ -15,7 +15,8 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewSerie extends JViewLegacy {
+class BiblestudyViewSerie extends JViewLegacy
+{
 
     /**
      * Form
@@ -51,14 +52,12 @@ class BiblestudyViewSerie extends JViewLegacy {
      * @see     fetch()
      * @since   11.1
      */
-    public function display($tpl = null) {
+    public function display($tpl = null)
+    {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'serie');
-        //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
@@ -80,7 +79,8 @@ class BiblestudyViewSerie extends JViewLegacy {
      * Add Toolbar
      * @since 7.0.0
      */
-    protected function addToolbar() {
+    protected function addToolbar()
+    {
         JRequest::setVar('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
@@ -104,9 +104,10 @@ class BiblestudyViewSerie extends JViewLegacy {
     /**
      * Add the page title to browser.
      *
-     * @since	7.1.0
+     * @since    7.1.0
      */
-    protected function setDocument() {
+    protected function setDocument()
+    {
         $isNew = ($this->item->id < 1);
         $document = JFactory::getDocument();
         $document->setTitle($isNew ? JText::_('JBS_TITLE_SERIES_CREATING') : JText::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
