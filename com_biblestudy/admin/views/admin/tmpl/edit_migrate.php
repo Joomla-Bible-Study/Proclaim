@@ -88,5 +88,6 @@ defined('_JEXEC') or die;
     <input type="hidden" name="option" value="com_biblestudy"/>
     <input type="hidden" name="task" value="migration.doimport"/>
     <input type="hidden" name="controller" value="migration"/>
+	<?php echo JHtml::_('form.token'); ?>
 </form>
 

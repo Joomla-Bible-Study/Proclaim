@@ -12,8 +12,7 @@
 defined('_JEXEC') or die;
 ?>
 <div id="installer-database">
-    <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" method="post" name="adminForm"
-          id="adminForm">
+    <form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 		<div id="j-main-container">
 		<?php if ($this->errorCount === 0) : ?>
         <div class="alert alert-info">
@@ -89,6 +88,7 @@ defined('_JEXEC') or die;
             <input type="hidden" name="option" value="com_biblestudy"/>
             <input type="hidden" name="task" value="fix"/>
             <input type="hidden" name="boxchecked" value="0"/>
+			<?php echo JHtml::_('form.token'); ?>
         </div>
     </form>
 </div>

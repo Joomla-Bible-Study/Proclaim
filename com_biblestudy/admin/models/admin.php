@@ -227,7 +227,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fix()
 	{
-		die('fix');
 		if (!$changeSet = $this->getItems()) {
 			return false;
 		}

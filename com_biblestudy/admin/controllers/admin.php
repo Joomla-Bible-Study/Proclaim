@@ -198,7 +198,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     {
         $convert = new JBSconvert();
         $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', $ssconversion);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $ssconversion);
     }
 
     /**
@@ -208,7 +208,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     {
         $convert = new JBSPIconvert();
         $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', $piconversion);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $piconversion);
     }
 
     /**
@@ -218,10 +218,9 @@ class BiblestudyControllerAdmin extends JControllerForm
      */
     function fix()
     {
-	    die('fix');
         $model = $this->getModel('admin');
         $model->fix();
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
     }
 
     /**
@@ -233,7 +232,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         $alias = new fixJBSalias();
         $update = $alias->updateAlias();
         $this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
     }
 
 }

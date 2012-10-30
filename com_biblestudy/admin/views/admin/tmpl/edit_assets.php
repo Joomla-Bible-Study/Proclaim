@@ -87,6 +87,7 @@ defined('_JEXEC') or die;
             <input type="hidden" name="task" value="admin.checkassets"/>
             <input type="hidden" name="controller" value="admin"/>
             <input type="hidden" name="tooltype" value=""/>
+	        <?php echo JHtml::_('form.token'); ?>
         </div>
     </div>
 </form>
