@@ -54,7 +54,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
-	 * @var     Prefix Component decleraion
+	 * @var  string  Prefix Component decleraion
 	 * @access    public
 	 * @return    void
 	 */
@@ -63,7 +63,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Conctruter that retrives the id from the admin section
 	 *
-	 * @var Admin section decleration
+	 * @var string Admin section decleration
 	 */
 	var $_admin;
 
@@ -148,9 +148,9 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param    type      The table type to instantiate
-	 * @param    string    A prefix for the table class name. Optional.
-	 * @param    array     Configuration array for model. Optional.
+	 * @param    string   $type   The table type to instantiate
+	 * @param    string   $prefix A prefix for the table class name. Optional.
+	 * @param    array    $config Configuration array for model. Optional.
 	 *
 	 * @return    JTable    A database object
 	 * @since    1.6
@@ -240,13 +240,15 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
 		$this->fixDefaultTextFilters();
+
+		return true;
 	}
 
 	/**
 	 *
 	 * Gets the changeset object
 	 *
-	 * @return  JSchema  Changeset
+	 * @return string JSchema  Changeset
 	 */
 	public function getItems()
 	{
@@ -256,10 +258,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 			$changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
 		} catch (RuntimeException $e) {
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
-
 			return false;
 		}
-
 		return $changeSet;
 	}
 
@@ -299,7 +299,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixSchemaVersion()
 	{
-		var_dump($this->getSchemaVersion());
 		// Get correct schema version -- last file in array
 		$schema = $this->getCompVersion();
 		$db = JFactory::getDbo();
@@ -314,15 +313,14 @@ class BiblestudyModelAdmin extends JModelAdmin
 			// Delete old row
 			$query = $db->getQuery(true);
 			$query->delete($db->qn('#__schemas'));
-			$query->where($db->qn('extension_id') . ' = ' . (int) $db->q($extensionresult));
+			$query->where($db->qn('extension_id') . ' = ' . (string) $db->q($extensionresult));
 			$db->setQuery($query);
 			$db->execute();
 
 			// Add new row
 			$query = $db->getQuery(true);
 			$query->insert($db->qn('#__schemas'));
-			$query->set($db->qn('extension_id') . '= ' . (int) $db->q($extensionresult));
-			$query->set($db->qn('version_id') . '= ' . $db->q($schema));
+			$query->set($db->qn('version_id') . '= ' . (string) $db->q($schema));
 			$db->setQuery($query);
 			if ($db->execute()) {
 				$result = $schema;
@@ -406,13 +404,15 @@ class BiblestudyModelAdmin extends JModelAdmin
 				return true;
 			}
 		}
+
+		return false;
 	}
 
 	/**
 	 *
 	 * To retreave component extention_id
 	 *
-	 * @return extention_id
+	 * @return string extention_id
 	 * @since 7.1.0
 	 * @throws Exception
 	 */
