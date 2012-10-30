@@ -10,7 +10,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+jimport('joomla.filesystem.folder');
+jimport('joomla.filesystem.file');
 /**
  * BibleStudy Install Script
  * @package BibleStudy.Admin
