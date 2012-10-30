@@ -16,7 +16,8 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class Com_BiblestudyInstallerScript {
+class Com_BiblestudyInstallerScript
+{
 
     /**
      * The release value to be displayed and check against throughout this file.
@@ -32,7 +33,7 @@ class Com_BiblestudyInstallerScript {
 
     /**
      * The component's name
-     *  @var string
+     * @var string
      * */
     protected $_biblestudy_extension = 'com_biblestudy';
 
@@ -45,7 +46,8 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      * @return boolean
      */
-    function preflight($type, $parent) {
+    function preflight($type, $parent)
+    {
         // this component does not work with Joomla releases prior to 1.6
         // abort if the current Joomla release is older
         $jversion = new JVersion();
@@ -61,11 +63,11 @@ class Com_BiblestudyInstallerScript {
         $db->setQuery($query);
         $extensionid = $db->loadResult();
         if ($extensionid) {
-            $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . $extensionid;
+            $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . (int)$db->quote($extensionid);
             $db->setQuery($query);
             $jbsversion = $db->loadResult();
             if ($jbsversion == '20100101') {
-                $query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . $extensionid;
+                $query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . (int)$db->quote($extensionid);
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -82,6 +84,7 @@ class Com_BiblestudyInstallerScript {
         $src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
         if (JFile::exists($src)) {
             JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
+            Exceptions:
         }
     }
 
@@ -89,19 +92,20 @@ class Com_BiblestudyInstallerScript {
      * Install
      * @param string $parent
      */
-    function install($parent) {
+    function install($parent)
+    {
         $db = JFactory::getDBO();
         $query = "SELECT id FROM #__bsms_admin";
-        $db->setQuery($querie);
+        $db->setQuery($query);
         if (!$db->loadResult()) {
-            $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
+            $query = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
             $queries = $db->splitSql($query);
             foreach ($queries as $querie) {
                 $querie = trim($querie);
                 $db->setQuery($querie);
                 $db->execute();
             }
-            require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
+            require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
             $fresh = new JBSFreshInstall();
             if (!$fresh->installCSS()) {
                 JError::raiseWarning(1, JText::_('JBS_INS_FAILURE'));
@@ -113,7 +117,8 @@ class Com_BiblestudyInstallerScript {
      * Uninstall
      * @param string $parent
      */
-    function uninstall($parent) {
+    function uninstall($parent)
+    {
         $admin = null;
 
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
@@ -130,7 +135,7 @@ class Com_BiblestudyInstallerScript {
             $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
             $db->setQuery($query);
             $parent_id = $db->loadResult();
-            $query = "DELETE FROM #__assets WHERE parent_id = " . $parent_id;
+            $query = "DELETE FROM #__assets WHERE parent_id = " . (int)$db->quote($parent_id);
             $db->setQuery($query);
             $db->execute();
             $query = 'DELETE FROM #__assets WHERE name like "%com_biblestudy%" and parent_id < 1';
@@ -155,7 +160,8 @@ class Com_BiblestudyInstallerScript {
      * Update
      * @param string $parent
      */
-    function update($parent) {
+    function update($parent)
+    {
         $this->fixMenus();
         $this->fixImagePaths();
         $this->fixemptyaccess();
@@ -167,18 +173,19 @@ class Com_BiblestudyInstallerScript {
      * @param string $type
      * @param string $parent
      */
-    function postflight($type, $parent) {
+    function postflight($type, $parent)
+    {
         //Set the #__schemas version_id to the correct number for error from 7.0.0
         $db = JFactory::getDBO();
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
         $db->setQuery($query);
         $extensionid = $db->loadResult();
         if ($extensionid) {
-            $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . $extensionid;
+            $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . (int)$db->quote($extensionid);
             $db->setQuery($query);
             $jbsversion = $db->loadResult();
             if ($jbsversion == '20100101') {
-                $query = 'UPDATE #__schemas SET version_id = "' . $this->release . '" WHERE extension_id = ' . $extensionid;
+                $query = 'UPDATE #__schemas SET version_id = ' . $db->quote($this->release) . ' WHERE extension_id = ' . (int)$db->quote($extensionid);
                 $db->setQuery($query);
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -209,7 +216,8 @@ class Com_BiblestudyInstallerScript {
      * @param string $name
      * @return string
      */
-    function getParam($name) {
+    function getParam($name)
+    {
         $db = JFactory::getDbo();
         $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_biblestudy"');
         $manifest = json_decode($db->loadResult(), true);
@@ -220,7 +228,8 @@ class Com_BiblestudyInstallerScript {
      * sets parameter values in the component's row of the extension table
      * @param array $param_array
      */
-    function setParams($param_array) {
+    function setParams($param_array)
+    {
         if (count($param_array) > 0) {
             // read the existing component value(s)
             $db = JFactory::getDbo();
@@ -228,13 +237,13 @@ class Com_BiblestudyInstallerScript {
             $params = json_decode($db->loadResult(), true);
             // add the new variable(s) to the existing one(s)
             foreach ($param_array as $name => $value) {
-                $params[(string) $name] = (string) $value;
+                $params[(string)$name] = (string)$value;
             }
             // store the combined new and existing values back as a JSON string
             $paramsString = json_encode($params);
             $db->setQuery('UPDATE #__extensions SET params = ' .
-                    $db->quote($paramsString) .
-                    ' WHERE name = "com_biblestudy"');
+                $db->quote($paramsString) .
+                ' WHERE name = "com_biblestudy"');
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
             }
@@ -245,7 +254,8 @@ class Com_BiblestudyInstallerScript {
      * Remove Old Files and Folders
      * @since 7.1.0
      */
-    public function deleteUnexistingFiles() {
+    public function deleteUnexistingFiles()
+    {
         $files = array(
             '/media/com_biblestudy/css/biblestudy.css.dist',
             '/images/textfile24.png',
@@ -463,13 +473,14 @@ class Com_BiblestudyInstallerScript {
      * Fix Menus
      * @since 7.1.0
      */
-    public function fixMenus() {
+    public function fixMenus()
+    {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__menu')
-                ->where("`menutype` != 'main'")
-                ->where("`link` LIKE '%com_biblestudy%'");
+            ->from('#__menu')
+            ->where("`menutype` != 'main'")
+            ->where("`link` LIKE '%com_biblestudy%'");
         $db->setQuery($query);
         $menus = $db->loadObjectList();
         if (count($menus) !== 0) :
@@ -482,8 +493,8 @@ class Com_BiblestudyInstallerScript {
                 $menu->link = str_replace('studieslist', 'sermons', $menu->link);
                 $query = $db->getQuery(TRUE);
                 $query->update('#__menu')
-                        ->set("`link` = '" . $db->escape($menu->link) . "'")
-                        ->where('id = ' . $menu->id);
+                    ->set("`link` = " . $db->quote($menu->link))
+                    ->where('id = ' . (int)$db->quote($menu->id));
                 $db->setQuery($query);
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -496,11 +507,12 @@ class Com_BiblestudyInstallerScript {
      * Fix Image paths
      * @since 7.1.0
      */
-    public function fixImagePaths() {
+    public function fixImagePaths()
+    {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__bsms_media');
+            ->from('#__bsms_media');
         $db->setQuery($query);
         $images = $db->loadObjectList();
         foreach ($images as $image) {
@@ -508,8 +520,8 @@ class Com_BiblestudyInstallerScript {
                 $image->media_image_path = str_replace('components', 'media', $image->media_image_path);
                 $query = $db->getQuery(TRUE);
                 $query->update('#__bsms_media')
-                        ->set("`media_image_path` = '" . $db->escape($image->media_image_path) . "'")
-                        ->where('id = ' . $image->id);
+                    ->set("`media_image_path` = " . $db->quote($image->media_image_path))
+                    ->where('id = ' . (int)$db->quote($image->id));
                 $db->setQuery($query);
                 if (!$db->execute()) {
                     JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -518,7 +530,7 @@ class Com_BiblestudyInstallerScript {
         }
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('#__bsms_share');
+            ->from('#__bsms_share');
         $db->setQuery($query);
         $datas = $db->loadObjectList();
         foreach ($datas as $data) {
@@ -530,11 +542,11 @@ class Com_BiblestudyInstallerScript {
             $shareimage = str_replace('components', 'media', $shareimage);
             $params->set('shareimage', $shareimage);
             //Now write the params back into the $table array and store.
-            $data->params = (string) $params->toString();
+            $data->params = (string)$params->toString();
             $qeery = $db->getQuery(true);
             $qeery->update('#__bsms_share')
-                    ->set('`params` =' . $data->params)
-                    ->where('id = ' . $data->id);
+                ->set('`params` =' . $db->quote($data->params))
+                ->where('id = ' . (int)$db->quote($data->id));
             $db->setQuery($query);
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -547,7 +559,8 @@ class Com_BiblestudyInstallerScript {
      * @since 7.1.0
      * @todo need to compleat
      */
-    public function fixemptylanguage() {
+    public function fixemptylanguage()
+    {
         //tables to fix
         $tables = array(
             array('table' => '#__bsms_comments'),
@@ -561,8 +574,8 @@ class Com_BiblestudyInstallerScript {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->update($table['table'])
-                    ->set("`language` = '*'")
-                    ->where("`language` = ''");
+                ->set("`language` = '*'")
+                ->where("`language` = ''");
             $db->setQuery($query);
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -575,7 +588,8 @@ class Com_BiblestudyInstallerScript {
      * @since 7.1.0
      * @todo need to compleat
      */
-    public function fixemptyaccess() {
+    public function fixemptyaccess()
+    {
         //tables to fix
         $tables = array(
             array('table' => '#__bsms_admin'),
@@ -597,16 +611,16 @@ class Com_BiblestudyInstallerScript {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('id')
-                ->from('#__viewlevels')
-                ->where("`title` = 'Public'");
+            ->from('#__viewlevels')
+            ->where("`title` = 'Public'");
         $db->setQuery($query);
         $id = $db->loadResult();
         //correct blank or not set records
         foreach ($tables as $table):
             $query = $db->getQuery(true);
             $query->update($table['table'])
-                    ->set('`access` = ' . $id)
-                    ->where("(`access` = '0' or `access` = '')");
+                ->set('`access` = ' . (int)$db->quote($id))
+                ->where("(`access` = '0' or `access` = '')");
             $db->setQuery($query);
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));

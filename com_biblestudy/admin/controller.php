@@ -5,7 +5,7 @@
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @link    http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -16,9 +16,10 @@ JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestu
 /**
  * JController for BibleStudy Admin class
  * @package BibleStudy.Admin
- * @since 7.0.0
+ * @since   7.0.0
  */
-class BiblestudyController extends JControllerLegacy {
+class BiblestudyController extends JControllerLegacy
+{
 
     /**
      * Default view var.
@@ -31,7 +32,8 @@ class BiblestudyController extends JControllerLegacy {
      * @param boolaen $cachable
      * @param boolean $urlparams
      */
-    public function display($cachable = false, $urlparams = false) {
+    public function display($cachable = false, $urlparams = false)
+    {
 
         //attempt to change mysql for error in large select
         $db = JFactory::getDBO();
@@ -94,11 +96,10 @@ class BiblestudyController extends JControllerLegacy {
      * Get File List
      * @since 7.0.0
      */
-    public function getFileList() {
+    public function getFileList()
+    {
 
-        $serverId = JRequest::getVar('server
-
-        ');
+        $serverId = JRequest::getVar('server');
         $folderId = JRequest::getVar('path');
 
         $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -108,7 +109,7 @@ class BiblestudyController extends JControllerLegacy {
         $folder = getFolder($folderId);
 
         $type = $server->server_type;
-
+        $files = null;
         switch ($type) {
             case 'ftp':
 
@@ -142,7 +143,8 @@ class BiblestudyController extends JControllerLegacy {
      *
      * @return string
      */
-    public function changePlayers() {
+    public function changePlayers()
+    {
 
         $db = JFactory::getDBO();
         $msg = null;
@@ -174,7 +176,8 @@ class BiblestudyController extends JControllerLegacy {
      *
      * @return string
      */
-    public function changePopup() {
+    public function changePopup()
+    {
 
         $db = JFactory::getDBO();
         $msg = null;
@@ -182,7 +185,7 @@ class BiblestudyController extends JControllerLegacy {
         $from = $data['params']['pFrom'];
         $to = $data['params']['pTo'];
 
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
+        $query = 'UPDATE #__bsms_mediafiles SET ' . $db->quoteName('popup') . ' = ' . $db->quote($to) . ' WHERE `popup` = ' . $db->quote($from);
         $db->setQuery($query);
         if (!$db->execute()) {
             $msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
@@ -198,7 +201,8 @@ class BiblestudyController extends JControllerLegacy {
      * Write the XML file
      *
      */
-    public function writeXMLFile() {
+    public function writeXMLFile()
+    {
         $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
         $podcasts = new JBSPodcast();
@@ -210,7 +214,8 @@ class BiblestudyController extends JControllerLegacy {
      * Resets the hits
      *
      */
-    public function resetHits() {
+    public function resetHits()
+    {
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
@@ -227,7 +232,8 @@ class BiblestudyController extends JControllerLegacy {
     /**
      * Resets Donwnloads
      */
-    public function resetDownloads() {
+    public function resetDownloads()
+    {
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
@@ -244,7 +250,8 @@ class BiblestudyController extends JControllerLegacy {
     /**
      * Resets Plays
      */
-    public function resetPlays() {
+    public function resetPlays()
+    {
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
@@ -261,9 +268,10 @@ class BiblestudyController extends JControllerLegacy {
     /**
      * Adds the ability to uploade with flash
      * @since 7.1.0
-     * Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
+     *        Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
      */
-    public function uploadflash() {
+    public function uploadflash()
+    {
 
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
@@ -398,7 +406,8 @@ class BiblestudyController extends JControllerLegacy {
      * Upload function
      *
      */
-    public function upload() {
+    public function upload()
+    {
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
         $uploadmsg = '';
@@ -407,7 +416,7 @@ class BiblestudyController extends JControllerLegacy {
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' .
-                $returnid;
+            $returnid;
         $path = JBSUpload :: getpath($url, '');
         $file = JRequest::getVar('uploadfile', '', 'files', 'array');
         // check filetype allowed
