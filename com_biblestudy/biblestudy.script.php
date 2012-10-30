@@ -557,7 +557,6 @@ class Com_BiblestudyInstallerScript
     /**
      * Funciton to find empty language field and set them to "*"
      * @since 7.1.0
-     * @todo need to compleat
      */
     public function fixemptylanguage()
     {
@@ -586,7 +585,6 @@ class Com_BiblestudyInstallerScript
     /**
      * Function to Find empty access in the db and set them to Public
      * @since 7.1.0
-     * @todo need to compleat
      */
     public function fixemptyaccess()
     {

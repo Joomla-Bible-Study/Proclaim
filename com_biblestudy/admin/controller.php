@@ -34,17 +34,16 @@ class BiblestudyController extends JControllerLegacy
      */
     public function display($cachable = false, $urlparams = false)
     {
-
+        $app = JFactory::getApplication();
         //attempt to change mysql for error in large select
         $db = JFactory::getDBO();
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->execute();
         require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-        BiblestudyHelper::addSubmenu(JRequest::getCmd('view', 'cpanel'));
-
-        $view = JRequest::getCmd('view', 'cpanel');
-        $layout = JRequest::getCmd('layout', 'default');
-        $id = JRequest::getInt('id');
+        BiblestudyHelper::addSubmenu($app->input->getCmd('view', 'cpanel'));
+        $view = $app->input->getCmd('view', 'cpanel');
+        $layout = $app->input->getCmd('layout', 'default');
+        $id = $app->input->getInt('id');
 
         $jbsstate = jbsDBhelper::getinstallstate();
         if ($jbsstate):
@@ -53,12 +52,12 @@ class BiblestudyController extends JControllerLegacy
             jbsDBhelper::setinstallstate();
             $this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
         endif;
-        $type = JRequest::getWord('view');
+        $type = $app->input->getWord('view');
         if (!$type) {
-            JRequest::setVar('view ', 'cpanel');
+            $app->input->set('view ', 'cpanel');
         }
         if ($type == 'admin') {
-            $tool = JRequest::getVar('tooltype', '', 'post');
+            $tool = $app->input->get('tooltype', '', 'post');
             if ($tool) {
                 switch ($tool) {
                     case 'players':
@@ -74,10 +73,10 @@ class BiblestudyController extends JControllerLegacy
             }
         }
 
-        if (JRequest::getCmd('view') == 'study') {
+        if ($app->input->getCmd('view') == 'study') {
             $model = $this->getModel('study');
         }
-        $fixassets = JRequest::getWord('task ', ' ', 'get');
+        $fixassets = $app->input->getWord('task ', ' ', 'get');
         if ($fixassets == 'fixassetid') {
             $dofix = fixJBSAssets::fixassets();
             if (!$dofix) {
@@ -98,9 +97,9 @@ class BiblestudyController extends JControllerLegacy
      */
     public function getFileList()
     {
-
-        $serverId = JRequest::getVar('server');
-        $folderId = JRequest::getVar('path');
+        $app = JFactory::getApplication();
+        $serverId = $app->input->getVar('server');
+        $folderId = $app->input->getVar('path');
 
         $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'server . php');
@@ -112,8 +111,6 @@ class BiblestudyController extends JControllerLegacy
         $files = null;
         switch ($type) {
             case 'ftp':
-
-                //ToDo -
                 $ftp_server = $server->server_path;
                 $conn_id = ftp_connect($ftp_server);
 
@@ -145,10 +142,10 @@ class BiblestudyController extends JControllerLegacy
      */
     public function changePlayers()
     {
-
+        $app = JFactory::getApplication();
         $db = JFactory::getDBO();
         $msg = null;
-        $data = JRequest::getVar('jform', array(), 'post  ', ' array');
+        $data = $app->input->get('jform', array(), 'post  ', ' array');
         $from = $data['params']['from'];
         $to = $data['params']['to'];
         switch ($from) {
@@ -178,10 +175,10 @@ class BiblestudyController extends JControllerLegacy
      */
     public function changePopup()
     {
-
+        $app = JFactory::getApplication();
         $db = JFactory::getDBO();
         $msg = null;
-        $data = JRequest::getVar('jform', array(), 'post', 'array  ');
+        $data = $app->input->get('jform', array(), 'post', 'array  ');
         $from = $data['params']['pFrom'];
         $to = $data['params']['pTo'];
 
@@ -216,7 +213,8 @@ class BiblestudyController extends JControllerLegacy
      */
     public function resetHits()
     {
-        $id = JRequest::getInt('id', 0, 'get');
+        $app = JFactory::getApplication();
+        $id = $app->input->getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         if (!$db->execute()) {
@@ -234,7 +232,8 @@ class BiblestudyController extends JControllerLegacy
      */
     public function resetDownloads()
     {
-        $id = JRequest::getInt('id', 0, 'get');
+        $app = JFactory::getApplication();
+        $id = $app->input->getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
         if (!$db->execute()) {
@@ -252,7 +251,8 @@ class BiblestudyController extends JControllerLegacy
      */
     public function resetPlays()
     {
-        $id = JRequest::getInt('id', 0, 'get');
+        $jinput = new JInput();
+        $id = $jinput->getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
         if (!$db->execute()) {
@@ -272,24 +272,25 @@ class BiblestudyController extends JControllerLegacy
      */
     public function uploadflash()
     {
-
-        JRequest::checktoken() or jexit('Invalid Token');
-        $option = JRequest::getCmd('option');
+        $app = JFactory::getApplication();
+        $app->checkSession() or jexit('Invalid Token');
+        $jinput = $app->input;
+        $option = $jinput->getCmd('option');
         jimport('joomla.filesystem.file');
         //get the server and folder id from the request
-        $serverid = JRequest::getInt('upload_server', '', 'post');
-        $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $serverid = $jinput->getInt('upload_server', '', 'post');
+        $folderid = $jinput->getInt('upload_folder', '', 'post');
         $app = JFactory::getApplication();
         $app->setUserState($option, 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);
-        $form = JRequest::getVar('jform', array(), 'post', 'array  ');
+        $form = $jinput->getArray('jform');
         $returnid = $form['id'];
         // get temp file details
         $temp = JBSUpload::gettempfile();
         $temp_folder = JBSUpload::gettempfolder();
         $tempfile = $temp_folder . $temp;
         // get path and abort if none
-        $layout = JRequest::getWord('layout', '');
+        $layout = $jinput->getWord('layout');
         if ($layout == 'modal') {
             $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
         } else {
@@ -318,7 +319,7 @@ class BiblestudyController extends JControllerLegacy
         // delete temp file
 
         JBSUpload::deletetempfile($tempfile);
-        $mediafileid = JRequest::getInt('id', '', 'post');
+        $mediafileid = $jinput->getInt('id', '', 'post');
         if ($layout == ' modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {
@@ -326,10 +327,11 @@ class BiblestudyController extends JControllerLegacy
         }
     }
 
-//    /**
-//     * Upload Flash System
-//     * @return text
-//     */
+    /**
+     * Upload Flash System
+     * @return text
+     * @todo try this out soon. make the upflash() work.
+     */
 //    function upflash() {
 //        jimport('joomla.filesystem.file');
 //        jimport('joomla.filesystem.folder');
@@ -408,17 +410,19 @@ class BiblestudyController extends JControllerLegacy
      */
     public function upload()
     {
-        JRequest::checktoken() or jexit('Invalid Token');
-        $option = JRequest::getCmd('option');
+        $app = JFactory::getApplication();
+        $app->checkSession() or jexit('Invalid Token');
+        $jinput = $app->input;
+        $option = $jinput->getCmd('option');
         $uploadmsg = '';
-        $serverid = JRequest::getInt('upload_server', '', 'post');
-        $folderid = JRequest::getInt('upload_folder', '', 'post');
-        $form = JRequest::getVar('jform', array(), 'post', 'array');
+        $serverid = $jinput->getInt('upload_server', '', 'post');
+        $folderid = $jinput->getInt('upload_folder', '', 'post');
+        $form = $jinput->getArray('jform');
         $returnid = $form['id'];
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' .
             $returnid;
         $path = JBSUpload :: getpath($url, '');
-        $file = JRequest::getVar('uploadfile', '', 'files', 'array');
+        $file = $jinput->getArray('uploadfile');
         // check filetype allowed
         $allow = JBSUpload::checkfile($file['name']);
         if ($allow) {
@@ -430,12 +434,12 @@ class BiblestudyController extends JControllerLegacy
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
             }
         }
-        $mediafileid = JRequest::getInt('id', '', 'post');
-        $app = JFactory::getApplication();
+        $mediafileid = $jinput->getInt('id', '', 'post');
         $app->setUserState($option . 'fname', $file['name']);
         $app->setUserState($option . 'size', $file['size']);
         $app->setUserState($option . 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);
+        $layout = $jinput->getWord('layout');
         if ($layout == 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {

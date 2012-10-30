@@ -187,7 +187,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     function fixAssets()
     {
         $asset = new fixJBSAssets();
-        $fixassets = $asset->fixAssets();
+        $asset->fixAssets();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.checkassets');
     }
 
@@ -218,6 +218,7 @@ class BiblestudyControllerAdmin extends JControllerForm
      */
     function fix()
     {
+	    die('fix');
         $model = $this->getModel('admin');
         $model->fix();
         $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit$id=1', false));
