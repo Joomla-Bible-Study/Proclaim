@@ -20,6 +20,24 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelFolders extends JModelList {
 
     /**
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
+     */
+    public function __construct($config = array()) {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+                'id', 'folder.id',
+                'folder.published',
+                'foldername', 'folder.foldername',
+                'access', 'folder.access', 'access_level',
+                );
+        }
+
+        parent::__construct($config);
+    }
+
+    /**
      * Method to auto-populate the model state.
      *
      * This method should only be called once per instantiation and is designed
@@ -69,7 +87,8 @@ class BiblestudyModelFolders extends JModelList {
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+       // $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $query->order('folder.id ASC');
         return $query;
     }
 
