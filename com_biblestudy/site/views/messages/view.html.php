@@ -52,7 +52,7 @@ class biblestudyViewmessages extends JViewLegacy {
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-        $this->canDo = BibleStudyHelper::getActions('', 'studiesedit');
+        $this->canDo = JBSMHelper::getActions('', 'studiesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

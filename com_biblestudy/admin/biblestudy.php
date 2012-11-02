@@ -36,7 +36,7 @@ define('BIBLESTUDY_CHECKREL', $versionName);
 
 
 // Register helper class
-JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+JLoader::register('JBSMHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
 
 addCSS();
 addJS();
@@ -51,7 +51,7 @@ $controller->redirect();
  * @since   1.7.0
  */
 function addCSS() {
-    if (BibleStudyHelper::debug() === '1'):
+    if (JBSMHelper::debug() === '1'):
         JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
     endif;
     if (!BIBLESTUDY_CHECKREL):

@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Upgrade class for 6.1.2
@@ -24,7 +24,7 @@ class JBS612Install {
      */
     function upgrade612() {
         $query = "UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
-        if (!jbsDBhelper::performdb($query, "Build 612: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 612: ")) {
             return FALSE;
         }
 

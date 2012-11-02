@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Upgrade class for 6.2.3
@@ -48,12 +48,12 @@ class jbs623Install {
         }
 
         $query = "INSERT INTO #__bsms_version SET `version` = '6.2.3', `installdate`='2010-11-03', `build`='623', `versionname`='1Samuel', `versiondate`='2010-11-03'";
-        if (!jbsDBhelper::performdb($query, "Build 623: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 623: ")) {
             return FALSE;
         }
 
         $query = "INSERT INTO #__bsms_version SET `version` = '6.2.4', `installdate`='2010-11-09', `build`='623', `versionname`='2Samuel', `versiondate`='2010-11-09'";
-        if (!jbsDBhelper::performdb($query, "Build 623: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 623: ")) {
             return FALSE;
         }
 

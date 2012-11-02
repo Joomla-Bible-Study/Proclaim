@@ -57,7 +57,7 @@ class BiblestudyViewShare extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'share');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'share');
         $this->setLayout("form");
         // Set the toolbar
         $this->addToolbar();

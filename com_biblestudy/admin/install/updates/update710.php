@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Update for 7.1.0 class
@@ -284,11 +284,11 @@ div.listingfooter ul li {
 }
 
 ';
-            if (jbsDBhelper::fixupcss('biblestudy', true, $new710css, null)) {
+            if (JBSMDbHelper::fixupcss('biblestudy', true, $new710css, null)) {
                 $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
                 $db->setQuery($query);
                 $result = $db->loadObject();
-                jbsDBhelper::reloadtable($result, 'Style');
+                JBSMDbHelper::reloadtable($result, 'Style');
                 JBS710Update::setemptytemplates();
                 return TRUE;
             } else {
@@ -309,7 +309,7 @@ div.listingfooter ul li {
                 $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
                 $db->setQuery($query);
                 $result = $db->loadObject();
-                jbsDBhelper::reloadtable($result, 'Style');
+                JBSMDbHelper::reloadtable($result, 'Style');
                 JBS710Update::setemptytemplates();
                 JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
                 return TRUE;

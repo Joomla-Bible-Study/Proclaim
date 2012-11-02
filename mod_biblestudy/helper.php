@@ -10,7 +10,7 @@
  * */
 defined('_JEXEC') or die;
 
-if (class_exists('modbiblestudyhelper')) {
+if (class_exists('modJBSMHelper')) {
     return;
 }
 
@@ -20,7 +20,7 @@ if (class_exists('modbiblestudyhelper')) {
  * @subpackage Model.BibleStudy
  * @since 7.1.0
  */
-class modBiblestudyHelper {
+class modJBSMHelper {
 
     /**
      * Template Sistem

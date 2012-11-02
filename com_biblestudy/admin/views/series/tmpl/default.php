@@ -29,7 +29,7 @@ $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'a.ordering';
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_biblestudy&task=series.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    JHtml::_('sortablelist.sortable', 'seriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 $sortFields = $this->getSortFields();
@@ -66,7 +66,7 @@ $sortFields = $this->getSortFields();
                     <button class="btn tip hasTooltip" type="button" onclick="document.id('filter_search').value='';this.form.submit();" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
                 </div>
                 <div class="btn-group pull-right hidden-phone">
-                    <label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+                    <label for="limit" class="element-invisible" id="limit"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
                     <?php echo $this->pagination->getLimitBox(); ?>
                 </div>
                 <div class="btn-group pull-right hidden-phone">
@@ -86,14 +86,14 @@ $sortFields = $this->getSortFields();
                 </div>
                 <?php if (!BIBLESTUDY_CHECKREL): ?>
                     <div class="btn-group pull-right">
-                        <label for="filter_published" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+                        <label for="filter_published" id="filter_published" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
                         <select name="filter_published" class="input-medium" onchange="this.form.submit()">
                             <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                             <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
                         </select>
                     </div>
                     <div class="btn-group pull-right">
-                        <label for="filter_language" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+                        <label for="filter_language" id="filter_language" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
                         <select name="filter_language" class="input-medium" onchange="this.form.submit()">
                             <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
                             <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>

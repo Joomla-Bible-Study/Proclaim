@@ -19,11 +19,11 @@ $document = JFactory::getDocument();
 $document->addScript('media/com_biblestudy/js/tooltip.js');
 $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 $templatemenuid = $params->get('t');
-$template = modBiblestudyHelper::getTemplate($params);
+$template = modJBSMHelper::getTemplate($params);
 
-$admin = modBiblestudyHelper::getAdmin();
+$admin = modJBSMHelper::getAdmin();
 $admin_params = new JRegistry($admin[0]->params);
-$items = modBiblestudyHelper::getLatest($params);
+$items = modJBSMHelper::getLatest($params);
 
 //attempt to change mysql for error in large select
 $db = JFactory::getDBO();

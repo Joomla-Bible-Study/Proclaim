@@ -45,7 +45,7 @@ class biblestudyViewcommentslist extends JViewLegacy {
      * @return boolean
      */
     public function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions('', 'commentsedit');
+        $this->canDo = JBSMHelper::getActions('', 'commentsedit');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');

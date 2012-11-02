@@ -18,7 +18,7 @@ jimport('joomla.html.toolbar');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyHelperToolbar extends JObject {
+class JBSMHelperToolbar extends JObject {
 
     /**
      * Get toolbar

@@ -51,7 +51,7 @@ class BiblestudyViewPodcasts extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = BibleStudyHelper::getActions('', 'podcast');
+        $this->canDo = JBSMHelper::getActions('', 'podcast');
         $this->addToolbar();
 
         // Display the template

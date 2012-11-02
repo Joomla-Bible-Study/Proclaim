@@ -17,7 +17,7 @@ jimport('joomla.html.toolbar');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyHelperToolbar extends JObject {
+class JBSMToolbar extends JObject {
 
     public static $extension = 'com_biblestudy';
     
@@ -25,6 +25,7 @@ class biblestudyHelperToolbar extends JObject {
      * Get Toolbar
      *
      * @return object
+     * @deprecated 7.1.3
      */
     function getToolbar() {
 
@@ -34,7 +35,7 @@ class biblestudyHelperToolbar extends JObject {
         $bar->appendButton('Standard', 'delete', 'Delete Record', 'delete', false);
         $bar->appendButton('Standard', 'publish', 'Publish Record', 'delete', false);
         $bar->appendButton('Standard', 'unpublish', 'Unpublish Record', 'delete', false);
-        $toolview = JRequest::getVar('view');
+        $toolview = JFactory::getApplication()->input->get('view');
         if ($toolview == 'mediafile') {
             $bar->appendButton('Popup', 'upload', 'Upload', "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 600, 400);
         }

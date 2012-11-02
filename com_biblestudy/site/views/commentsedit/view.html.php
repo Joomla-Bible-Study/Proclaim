@@ -53,7 +53,7 @@ class biblestudyViewcommentsedit extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'commentsedit');
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');

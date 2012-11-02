@@ -2,59 +2,65 @@
 
 /**
  * Server Helper
+ *
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @link    http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-class jsbServer {
+class JBSMServer
+{
 
-    public static $extension = 'com_biblestudy';
+	public static $extension = 'com_biblestudy';
 
-    /**
-     * Get Server
-     *
-     * @param type $serverid
-     * @return type
-     */
-    function getServer($serverid) {
-        $mainframe = & JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $db = & JFactory::getDBO();
-        $query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
+	/**
+	 * Get Server
+	 *
+	 * @param type $serverid
+	 *
+	 * @return type
+	 */
+	function getServer($serverid)
+	{
+		$mainframe = & JFactory::getApplication();
+		$option = JRequest::getCmd('option');
+		$db = & JFactory::getDBO();
+		$query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        $tresult = $db->loadObject();
+		$tresult = $db->loadObject();
 
-        $i = 0;
+		$i = 0;
 
-        return $tresult;
-    }
+		return $tresult;
+	}
 
-    /**
-     * Get Folder
-     *
-     * @param int $folderId
-     * @return object
-     */
-    function getFolder($folderId) {
-        $mainframe = & JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+	/**
+	 * Get Folder
+	 *
+	 * @param int $folderId
+	 *
+	 * @return object
+	 */
+	function getFolder($folderId)
+	{
+		$mainframe = & JFactory::getApplication();
+		$option = JRequest::getCmd('option');
 
-        $db = & JFactory::getDBO();
-        $query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
+		$db = & JFactory::getDBO();
+		$query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        $tresult = $db->loadObject();
+		$tresult = $db->loadObject();
 
-        $i = 0;
+		$i = 0;
 
-        return $tresult;
-    }
+		return $tresult;
+	}
 
 }

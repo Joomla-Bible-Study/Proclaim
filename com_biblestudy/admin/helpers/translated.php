@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-class jbsTranslated {
+class JBSMTranslated {
 
     public static $extension = 'com_biblestudy';
 
@@ -23,12 +23,12 @@ class jbsTranslated {
      * @param string $topicItem
      * @return string|NULL
      */
-    function getTopicItemTranslated($topicItem) {
+    static function getTopicItemTranslated($topicItem) {
         //If there is no topic to translate, just return
         if ($topicItem) {
             // first choice: evaluate language strings
             $itemparams = new JRegistry;
-            @$itemparams->loadString($topicItem->topic_params);
+            $itemparams->loadString($topicItem->topic_params);
             $currentLanguage = JFactory::getLanguage()->getTag();
             // first choice: string in current language
             if ($currentLanguage) {
@@ -37,7 +37,7 @@ class jbsTranslated {
                 }
             }
             // second choice: language file
-            $jtextString = @JText::_($topicItem->topic_text);
+            $jtextString = JText::_($topicItem->topic_text);
             if (strncmp($jtextString, 'JBS_TOP_', 8) == 0 || strncmp($jtextString, '??JBS_TOP_', 10) == 0 || strlen($jtextString) == 0 || strcmp($jtextString, '????') == 0) {
                 // third choice: string in default language selected for site
                 $defaultLanguage = JComponentHelper::getParams('com_languages')->get('site');
@@ -62,7 +62,7 @@ class jbsTranslated {
      * @param array $topicItems
      * @return array
      */
-    function getTopicItemsTranslated($topicItems = array()) {
+    static function getTopicItemsTranslated($topicItems = array()) {
         $output = array();
         foreach ($topicItems as $topicItem) {
             $text = getTopicItemTranslated($topicItem);
@@ -81,7 +81,7 @@ class jbsTranslated {
      * @param type $topicItem
      * @return type
      */
-    function getConcatTopicItemTranslated($topicItem) {
+    static function getConcatTopicItemTranslated($topicItem) {
         if ($topicItem) {
             // Check if there should be topics at all to save time
             if ($topicItem->tp_id) {

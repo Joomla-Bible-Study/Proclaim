@@ -2616,8 +2616,8 @@
     </include>
     <class final="false" abstract="false" namespace="global" line="19" package="BibleStudy\Admin">
       <extends/>
-      <name>BibleStudyHelper</name>
-      <full_name>\BibleStudyHelper</full_name>
+      <name>JBSMHelper</name>
+      <full_name>\JBSMHelper</full_name>
       <docblock line="13">
         <description><![CDATA[BibleStudy Helper class]]></description>
         <long-description><![CDATA[]]></long-description>
@@ -2786,8 +2786,8 @@
     </docblock>
     <class final="false" abstract="false" namespace="global" line="17" package="BibleStudy\Admin">
       <extends/>
-      <name>jbsDBhelper</name>
-      <full_name>\jbsDBhelper</full_name>
+      <name>JBSMDbHelper</name>
+      <full_name>\JBSMDbHelper</full_name>
       <docblock line="12">
         <description><![CDATA[Database Helper class for version 7.1.0]]></description>
         <long-description><![CDATA[]]></long-description>
@@ -3532,8 +3532,8 @@ by the template are selected]]></description>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="20" package="BibleStudy\Admin">
       <extends>\JObject</extends>
-      <name>biblestudyHelperToolbar</name>
-      <full_name>\biblestudyHelperToolbar</full_name>
+      <name>JBSMHelperToolbar</name>
+      <full_name>\JBSMHelperToolbar</full_name>
       <docblock line="14">
         <description><![CDATA[Toolbar Helper]]></description>
         <long-description><![CDATA[]]></long-description>
@@ -24148,8 +24148,8 @@ This class may not be required]]></description>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="23" package="BibleStudy\Site">
       <extends/>
-      <name>BiblestudyHelperRoute</name>
-      <full_name>\BiblestudyHelperRoute</full_name>
+      <name>JBSMHelperRoute</name>
+      <full_name>\JBSMHelperRoute</full_name>
       <docblock line="16">
         <description><![CDATA[Biblestudy Component Route Helper]]></description>
         <long-description><![CDATA[]]></long-description>
@@ -25507,8 +25507,8 @@ This class may not be required]]></description>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="21" package="BibleStudy\Site">
       <extends>\JObject</extends>
-      <name>biblestudyHelperToolbar</name>
-      <full_name>\biblestudyHelperToolbar</full_name>
+      <name>JBSMHelperToolbar</name>
+      <full_name>\JBSMHelperToolbar</full_name>
       <docblock line="14">
         <description><![CDATA[Helper class for Toolbar]]></description>
         <long-description><![CDATA[]]></long-description>
@@ -35412,8 +35412,8 @@ uninstall runs before any other action is taken (file removal or database proces
     </include>
     <class final="false" abstract="false" namespace="global" line="23" package="BibleStudy\Model\BibleStudy">
       <extends/>
-      <name>modBiblestudyHelper</name>
-      <full_name>\modBiblestudyHelper</full_name>
+      <name>modJBSMHelper</name>
+      <full_name>\modJBSMHelper</full_name>
       <docblock line="17">
         <description><![CDATA[BibleStudy mod helper]]></description>
         <long-description><![CDATA[]]></long-description>

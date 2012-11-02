@@ -46,7 +46,7 @@ class BiblestudyViewStyles extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions('', 'style');
+        $this->canDo = JBSMHelper::getActions('', 'style');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

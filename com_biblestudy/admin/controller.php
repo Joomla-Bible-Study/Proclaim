@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * JController for BibleStudy Admin class
@@ -40,16 +40,16 @@ class BiblestudyController extends JControllerLegacy
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->execute();
         require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-        BiblestudyHelper::addSubmenu($app->input->getCmd('view', 'cpanel'));
+        JBSMHelper::addSubmenu($app->input->getCmd('view', 'cpanel'));
         $view = $app->input->getCmd('view', 'cpanel');
         $layout = $app->input->getCmd('layout', 'default');
         $id = $app->input->getInt('id');
 
-        $jbsstate = jbsDBhelper::getinstallstate();
+        $jbsstate = JBSMDbHelper::getinstallstate();
         if ($jbsstate):
             $jbsname = $jbsstate->get('jbsname');
             $jbstype = $jbsstate->get('jbstype');
-            jbsDBhelper::setinstallstate();
+            JBSMDbHelper::setinstallstate();
             $this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
         endif;
         $type = $app->input->getWord('view');

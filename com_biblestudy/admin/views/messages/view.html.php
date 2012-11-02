@@ -53,7 +53,7 @@ class BiblestudyViewMessages extends JViewLegacy {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
 
-        $this->canDo = BibleStudyHelper::getActions('', 'message');
+        $this->canDo = JBSMHelper::getActions('', 'message');
         $modelView = $this->getModel();
         $this->items = $modelView->getTranslated($items);
 

@@ -56,7 +56,7 @@ class BiblestudyViewLocation extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'location');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'location');
         if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
             JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
             return false;

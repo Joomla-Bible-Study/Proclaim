@@ -57,7 +57,7 @@ class BiblestudyViewPodcast extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'podcast');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'podcast');
         $this->setLayout("form");
         $this->addToolbar();
 

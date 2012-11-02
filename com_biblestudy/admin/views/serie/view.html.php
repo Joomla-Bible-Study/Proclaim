@@ -54,14 +54,15 @@ class BiblestudyViewSerie extends JViewLegacy
      */
     public function display($tpl = null)
     {
+	    throw new Exception('help', 403);
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'serie');
-
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'serie');
+	     var_dump($this->item);
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
-            JError::raiseError(500, implode("\n", $errors));
+            throw new Exception(implode("\n", $errors), 500);
             return false;
         }
 
@@ -81,7 +82,7 @@ class BiblestudyViewSerie extends JViewLegacy
      */
     protected function addToolbar()
     {
-        JRequest::setVar('hidemainmenu', true);
+	    JFactory::getApplication()->input->set('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'series.png');

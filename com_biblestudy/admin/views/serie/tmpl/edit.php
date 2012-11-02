@@ -138,12 +138,7 @@ $input = $app->input;
                         <?php echo $this->form->getInput('access'); ?>
                     </div>
                 </div>
-                <div class="control-group">
-                    <?php echo $this->form->getLabel('featured'); ?>
-                    <div class="controls">
-                        <?php echo $this->form->getInput('featured'); ?>
-                    </div>
-                </div>
+
                 <div class="control-group">
                     <?php echo $this->form->getLabel('language'); ?>
                     <div class="controls">

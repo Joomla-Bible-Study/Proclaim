@@ -15,7 +15,7 @@ include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.resto
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.migrate.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * JBS Export Migration Controller
@@ -136,9 +136,9 @@ class BiblestudyControllerMigration extends JControllerLegacy {
                 $installer->fixemptylanguage();
                 JRequest::setVar('migrationdone', '1', 'get');
             } elseif (!$copysuccess) {
-                jbsDBhelper::resetdb();
+                JBSMDbHelper::resetdb();
             } else {
-                jbsDBhelper::resetdb();
+                JBSMDbHelper::resetdb();
                 JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
             }
         }
@@ -164,15 +164,15 @@ class BiblestudyControllerMigration extends JControllerLegacy {
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename = $prefix . $newsubtablename;
                 $query = 'DROP TABLE IF EXISTS ' . $newtablename;
-                if (!jbsDBhelper::performdb($query)) {
+                if (!JBSMDbHelper::performdb($query)) {
                     return FALSE;
                 }
                 $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
-                if (!jbsDBhelper::performdb($query)) {
+                if (!JBSMDbHelper::performdb($query)) {
                     return FALSE;
                 }
                 $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
-                if (!jbsDBhelper::performdb($query)) {
+                if (!JBSMDbHelper::performdb($query)) {
                     return FALSE;
                 }
             }

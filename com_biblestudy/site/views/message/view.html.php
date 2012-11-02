@@ -64,14 +64,14 @@ class biblestudyViewmessage extends JViewLegacy {
         $JApplication->setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'message');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'message');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($isSite = true);
 
         $user = JFactory::getUser();
 
 
-        $canDo = BibleStudyHelper::getActions($this->item->id, 'message');
+        $canDo = JBSMHelper::getActions($this->item->id, 'message');
 
         if (!$canDo->get('core.edit')) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));

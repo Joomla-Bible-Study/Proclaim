@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('BsmHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 /**
  * Bible Study stats support class
@@ -241,7 +241,7 @@ class jbStats
     {
         $final = array();
         $final2 = array();
-        $admin_params = BsmHelper::getAdmin();
+        $admin_params = JBSMParams::getAdmin();
         $format = $admin_params->params->get('format_popular', '0');
         $db = JFactory::getDBO();
         $db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');

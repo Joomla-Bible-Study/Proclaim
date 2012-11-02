@@ -693,9 +693,9 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
         case 4 :
             //Case 4 is a details link with tooltip
             if (!$Itemid) {
-                $link = JRoute::_(BiblestudyHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')); //.$addItemid;
+                $link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')); //.$addItemid;
             } else {
-                $link = JRoute::_(BiblestudyHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+                $link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
             }
             $column = getTooltip($row->id, $row, $params, $admin_params, $template);
             $column .= '<a href="' . $link . '">';

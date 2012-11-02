@@ -64,7 +64,7 @@ class biblestudyViewStyle extends JViewLegacy {
         }
         $this->item = $item;
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'style');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'style');
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {

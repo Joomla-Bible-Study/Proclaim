@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 // Import library dependencies for CSS Fix
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Style Model class
@@ -164,7 +164,7 @@ class BiblestudyModelStyle extends JModelAdmin {
             foreach ($pks AS $id):
                 $parent = FALSE;
                 $filename = null;
-                jbsDBhelper::fixupcss($filename, $parent, null, $id);
+                JBSMDbHelper::fixupcss($filename, $parent, null, $id);
             endforeach;
         } catch (Exception $e) {
             $this->setError($e->getMessage());

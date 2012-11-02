@@ -51,7 +51,7 @@ class BiblestudyViewServers extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = BibleStudyHelper::getActions('', 'server');
+        $this->canDo = JBSMHelper::getActions('', 'server');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

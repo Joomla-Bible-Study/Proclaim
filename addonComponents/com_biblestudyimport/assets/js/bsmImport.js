@@ -78,22 +78,15 @@ $j(document).ready(function() {
 	
 	//Start the import
 	$j('#import').click(function() {
-		//$j('#files tr').each(function() {
-			
-			var ttr = $j('#files tr:last');
+
 			var tjson = $j('#files tr:last').find('input').serializeArray();
 			var json = $j(this).find('input').serializeArray();
-			//var tr = $j(this);
 			$j.ajax(
 				{
 					type: "POST",
 					url: "index.php?option=com_biblestudyimport&controller=ajax&format=raw&task=importFile",
 					data: tjson,
 					success: function(response) {
-					//$j('html,body').animate({scrollTop: $j(tr).offset().top}, 1);
-					//$j(tr).find('input').attr('disabled', true);
-					//$j(tr).fadeTo("slow", 0.83);
-					//$j(tr).find('td:eq(1)').html(response);
 					}
 				}
 					

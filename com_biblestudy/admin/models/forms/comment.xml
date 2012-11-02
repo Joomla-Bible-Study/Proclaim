@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <field name="published" type="radio" label="JBS_CMN_PUBLISHED"
-               description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1"
-               required="true">
-        <option value="0">JBS_CMN_NO</option>
-        <option value="1">JBS_CMN_YES</option>
+    <field name="published" type="list" label="JBS_CMN_PUBLISHED"
+           description="JBS_CMN_PUBLISHED_DESC" class="span12 small"
+           filter="intval" size="1" default="1">
+        <option value="1">
+            JPUBLISHED
+        </option>
+        <option value="0">
+            JUNPUBLISHED
+        </option>
+        <option value="2">
+            JARCHIVED
+        </option>
+        <option value="-2">
+            JTRASHED
+        </option>
     </field>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
                description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
@@ -18,8 +28,8 @@
     <field name="full_name" type="text" label="JBS_CMT_FULL_NAME"
                size="30" />
     <field name="user_email" type="text" label="JBS_CMT_EMAIL" size="40" />
-    <field name="comment_text" type="textarea" label="JBS_CMN_COMMENT"
-               rows="10" cols="50" />
+    <field name="comment_text" type="editor" label="JBS_CMN_COMMENT" class="inputbox"
+               rows="10" cols="50" filter="JComponentHelper::filterText"  buttons="true" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
                translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
                section="comment" validate="rules" />

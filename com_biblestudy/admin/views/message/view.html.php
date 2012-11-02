@@ -63,7 +63,7 @@ class BiblestudyViewMessage extends JViewLegacy {
 
         $this->loadHelper('params');
         $this->admin = @BsmHelper::getAdmin();
-        $this->canDo = BibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
+        $this->canDo = JBSMHelper::getActions($type = 'message', $Itemid = $this->item->id);
         $host = JURI::base();
         $document = JFactory::getDocument();
         $document->addScript(JURI::root() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');

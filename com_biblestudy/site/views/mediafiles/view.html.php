@@ -51,7 +51,7 @@ class biblestudyViewmediafiles extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions('', 'mediafilesedit');
+        $this->canDo = JBSMHelper::getActions('', 'mediafilesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

@@ -76,33 +76,6 @@ class TableComment extends JTable {
     }
 
     /**
-     * Method to bind an associative array or object to the JTable instance.This
-     * method only binds properties that are publicly accessible and optionally
-     * takes an array of properties to ignore when binding.
-     *
-     * @param   mixed  $array     An associative array or object to bind to the JTable instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
-     *
-     * @return  boolean  True on success.
-     */
-    public function bind($array, $ignore = '') {
-        if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new JRegistry();
-            $registry->loadArray($array['params']);
-            $array['params'] = (string) $registry;
-        }
-
-
-        // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new JRules($array['rules']);
-            $this->setRules($rules);
-        }
-
-        return parent::bind($array, $ignore);
-    }
-
-    /**
      * Method to compute the default name of the asset.
      * The default name is in the form `table_name.id`
      * where id is the value of the primary key of the table.

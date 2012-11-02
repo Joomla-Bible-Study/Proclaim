@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Upgrade class from 6.1.4
@@ -31,7 +31,7 @@ class jbs614Install {
 				  UNIQUE KEY `id` (`id`),
 				  KEY `id_2` (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
@@ -39,27 +39,27 @@ class jbs614Install {
                 `timeset` VARCHAR(14) ,
                 KEY `timeset` (`timeset`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
         $query = "ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN downloads int(10) DEFAULT 0";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN plays int(10) DEFAULT 0";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
         $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339'";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 
@@ -77,14 +77,14 @@ class jbs614Install {
                 $params = $result->params;
                 $update = $podcast . ' ' . $params;
                 $query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($update) . ", `podcast_id`='0' WHERE `id` = " . (int) $db->quote($result->id);
-                if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+                if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
                     return FALSE;
                 }
             }
         }
 
         $query = "INSERT INTO #__bsms_version SET `version` = '6.2.0', `installdate`='2010-09-06', `build`='614', `versionname`='Deuteronomy', `versiondate`='2010-09-06'";
-        if (!jbsDBhelper::performdb($query, "Build 614: ")) {
+        if (!JBSMDbHelper::performdb($query, "Build 614: ")) {
             return FALSE;
         }
 

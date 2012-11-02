@@ -69,7 +69,7 @@ class biblestudyViewTemplatecode extends JViewLegacy {
         if ($item->id !== 0){$this->type = $this->get('Type');}
         $this->item = $item;
         $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'templatecode');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'templatecode');
         if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
             JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
             return false;

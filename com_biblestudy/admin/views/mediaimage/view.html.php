@@ -66,7 +66,7 @@ class BiblestudyViewMediaimage extends JViewLegacy {
         $directory = '/media/com_biblestudy/images';
         $this->assignRef('directory', $directory);
 
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediaimage');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'mediaimage');
         // Set the toolbar
         $this->addToolbar();
 

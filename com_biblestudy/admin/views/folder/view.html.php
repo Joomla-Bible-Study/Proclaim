@@ -56,12 +56,9 @@ class BibleStudyViewFolder extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'folder');
-        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
-            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
-            return false;
-        }
-        $this->setLayout("form");
+        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'folder');
+        
+        $this->setLayout("edit");
         // Set the toolbar
         $this->addToolbar();
 

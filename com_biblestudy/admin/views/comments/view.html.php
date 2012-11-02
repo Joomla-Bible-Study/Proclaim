@@ -75,7 +75,7 @@ class BiblestudyViewComments extends JViewLegacy {
      * @since 7.0
      */
     protected function addToolbar() {
-        $canDo = BibleStudyHelper::getActions('', 'comment');
+        $canDo = JBSMHelper::getActions('', 'comment');
         JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
         if ($canDo->get('core.create')) {
             JToolBarHelper::addNew('comment.add');
@@ -105,5 +105,23 @@ class BiblestudyViewComments extends JViewLegacy {
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_TITLE_COMMENTS'));
     }
+
+	/**
+	 * Returns an array of fields the table can be sorted by
+	 *
+	 * @return  array  Array containing the field name to sort by as the key and display text as value
+	 *
+	 * @since   3.0
+	 */
+	protected function getSortFields() {
+		return array(
+			'comments.ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'comments.published' => JText::_('JSTATUS'),
+			'comments_test' => JText::_('JBS_CMN_SERIES'),
+			'comments_level' => JText::_('JGRID_HEADING_ACCESS'),
+			'comments.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+			'comments.id' => JText::_('JGRID_HEADING_ID')
+		);
+	}
 
 }

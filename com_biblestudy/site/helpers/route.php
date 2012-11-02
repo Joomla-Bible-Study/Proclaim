@@ -19,7 +19,7 @@ jimport('joomla.application.component.helper');
  * @package BibleStudy.Site
  * @since 7.2
  */
-abstract class BiblestudyHelperRoute {
+abstract class JBSMHelperRoute {
 
     /**
      * Lookup

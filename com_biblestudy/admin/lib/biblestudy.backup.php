@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
-JLoader::register('jbsDBhelper', BIBLESTUDY_PATH_ADMIN_HELPERS, '/dbhelpser.php');
+JLoader::register('JBSMDbHelper', BIBLESTUDY_PATH_ADMIN_HELPERS, '/dbhelpser.php');
 
 /**
  * JBS Export class
@@ -28,7 +28,7 @@ class JBSExport {
     public function exportdb($run) {
         $date = date('Y_F_j');
         $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
-        $objects = jbsDBhelper::getObjects();
+        $objects = JBSMDbHelper::getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
         }

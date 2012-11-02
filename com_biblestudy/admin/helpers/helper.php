@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-class jbshelper
+class JBSMHelper
 {
 
     public static $extension = 'com_biblestudy';
