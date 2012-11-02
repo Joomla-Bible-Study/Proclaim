@@ -12,11 +12,12 @@ defined('_JEXEC') or die;
 
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
-    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
+	return;
 }
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-if (JRequest::getCmd('view', '') == 'liveupdate') {
+if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate') {
     LiveUpdate::handleRequest();
     return;
 }
@@ -42,7 +43,7 @@ addCSS();
 addJS();
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
-$controller->execute(JRequest::getCmd('task'));
+$controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();
 
 /**
@@ -77,5 +78,4 @@ function addJS() {
         JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
         JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
     endif;
-    //JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
 }
