@@ -1,255 +1,342 @@
 <?php
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
-/**
- * Controller for Admin
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
+class biblestudyControlleradmin extends JController {
+	/**
+	 * constructor (registers additional tasks to methods)
+	 * @return void
+	 */
 
-jimport('joomla.application.component.controllerform');
+	function __construct()
+	{
+		parent::__construct();
 
-/**
- * Controller for Admin
- * @package BibleStudy.Admin
- * @since 7.0.0
- */
-class BiblestudyControllerAdmin extends JControllerForm {
 
-    /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
-     *
-     * @since 7.0
-     */
-    protected $view_list = 'cpanel';
+		// Register Extra tasks
+		$this->registerTask( 'add'  , 	'edit' );
+		$this->registerTask( 'apply',    'save');
+	}
 
-    /**
-     * constructor (registers additional tasks to methods)
-     * @return void
-     * @param array $config
-     */
-    function __construct($config = array()) {
-        parent::__construct($config);
+	/**
+	 * display the edit form
+	 * @return void
+	 */
+	function edit()
+	{
+		JRequest::setVar( 'view', 'admin' );
+		JRequest::setVar( 'layout', 'form'  );
+		JRequest::setVar('hidemainmenu', 1);
 
-        // Register Extra tasks
-        $this->registerTask('add', 'edit');
-        $this->registerTask('apply', 'save');
-    }
+		parent::display();
+	}
 
-    /**
-     * Tools to change player or pupup
-     */
-    function tools() {
-        $tool = JRequest::getVar('tooltype', '', 'post');
-        switch ($tool) {
-            case 'players':
-                $player = $this->changePlayers();
-                if (!$player) {
-                    $msg = JText::_('JBS_CMN_OPERATION_FAILED');
-                    $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
-                }
-                break;
+	/**
+	 * save a record (and redirect to main page)
+	 * @return void
+	 */
+	function save()
+	{
+		$model = $this->getModel('admin');
 
-            case 'popups':
-                $popups = $this->changePopup();
-                if (!$popups) {
-                    $msg = JText::_('JBS_CMN_OPERATION_FAILED');
-                    $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
-                }
-                break;
-        }
-    }
+		if ($model->store($post)) {
+			$msg = JText::_( 'Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving' );
+		}
 
-    /**
-     * Update SEF
-     */
-    function updatesef() {
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'updatesef.php');
-        $update = updateSEF();
-        if ($update) {
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $update);
-        } else {
-            $msg = JText::_('JBS_ADM_UPDATE_SUCCESSFUL');
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
-        }
-    }
+		switch ($this->_task) {
+			case 'apply':
+				$msg = JText::_( 'Changes to Admin Settings Updated! (by Apply)' );
+				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+				$link = 'index.php?option=com_biblestudy&view=admin&layout=form';
+				break;
 
-    /**
-     * Reset Hits
-     */
-    function resetHits() {
-        $msg = null;
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_studies SET hits='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        }
-    }
+			case 'save':
+			default:
+				$msg = JText::_( 'Data Saved!' );
+				//$link = 'index.php?option=com_driver';
 
-    /**
-     * Reset Downloads
-     */
-    function resetDownloads() {
-        $msg = null;
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        }
-    }
+				// Check the table in so it can be edited.... we are done with it anyway
+				$link = 'index.php?option=com_biblestudy&view=cpanel';
+				break;
+		}
 
-    /**
-     * Reset Players
-     */
-    function resetPlays() {
-        $msg = null;
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0'");
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-        }
-    }
+		// Check the table in so it can be edited.... we are done with it anyway
+		//	$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+		$this->setRedirect($link, $msg);
+	}
 
-    /**
-     * Change Player Modes
-     */
-    function changePlayers() {
 
-        $db = JFactory::getDBO();
-        $msg = null;
-        $from = JRequest::getInt('from', '', 'post');
-        $to = JRequest::getInt('to', '', 'post');
+	function cancel()
+	{
+		$msg = JText::_( 'Operation Cancelled' );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+	}
 
-        switch ($from) {
-            case '100':
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` IS NULL";
-                break;
+	function updatesef()
+	{
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		include_once($path1.'updatesef.php');
+		$update = updateSEF();
+		if ($update)
+		{
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $update );
+		}
+		else
+		{
+			$msg = JText::_('Update successful. No error messages generated.');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+		}
 
-            default:
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
-        }
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() > 0) {
-            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
-        } else {
-            $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        }
+	}
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-    }
+	function resetHits()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_studies SET hits='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+		{
+			$error = $db->getErrorMsg();
+			$msg = JText::_('An error occured while resetting the hits:').' '.$error;
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+		}
+		else
+		{
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+		}
+	}
+	function resetDownloads()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+		{
+			$error = $db->getErrorMsg();
+			$msg = JText::_('An error occured while resetting the downloads:').' '.$error;
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+		}
+		else
+		{
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+		}
+	}
 
-    /**
-     * Change Media Popup
-     */
-    function changePopup() {
+	function resetPlays()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+		{
+			$error = $db->getErrorMsg();
+			$msg = JText::_('An error occured while resetting the plays:').' '.$error;
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+		}
+		else
+		{
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+		}
+	}
 
-        $db = JFactory::getDBO();
-        $msg = null;
-        $from = JRequest::getInt('pfrom', '', 'post');
-        $to = JRequest::getInt('pto', '', 'post');
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() > 0) {
-            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
-        } else {
-            $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        }
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-    }
+	function changePlayers()
+	{
 
-    /**
-     * Check Assets
-     */
-    function checkassets() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-        $asset = new fixJBSAssets();
-        $checkassets = $asset->checkAssets();
-        JRequest::setVar('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
+		$db = JFactory::getDBO();
+		$msg = null;
+		$from = JRequest::getInt('from','','post');
+		$to = JRequest::getInt('to','','post');
 
-        parent::display();
-    }
+		$errortext = '';
+		$query = 'SELECT * FROM #__bsms_mediafiles';
+		$db->setQuery($query);
+		$db->query();
+		$results = $db->loadObjectList();
+		$add = 0;
+		 
+		foreach ($results AS $result)
+		{
+			 
 
-    /**
-     * Fix Assets
-     */
-    function fixAssets() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-        $asset = new fixJBSAssets();
-        $fixassets = $asset->fixAssets();
-        JRequest::setVar('messages', $fixassets, 'get', 'true');
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets', $fixassets);
-    }
+			$param = new JParameter($result->params);
+			$params = $result->params;
+			$player = $param->get('player');
+			//This should be if there is no player set, option 100 from form
+			if (!$player && $from == '100')
+			{
+				 
+				//If the params field is empty we fill it with blank params plus the internal popup
+				if (!$result->params)
+				{
+					$query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=\npodcasts=-1\n" WHERE `id` = '.$result->id;
+					$db->setQuery($query);
+					$db->query();
+					if ($db->getErrorNum() > 0)
+					{
+						$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+					}
+					else
+					{
+						$msg = JText::_('Operation Successful. No Errors Reported.');
+					}
+				}
+				//If the param field is not empty we check to see what it has in it.
+				if ($result->params)
+				{
+					//This checks to see if the string internal_popup= exists. If so, we replce it. If not, we put it at the begining of the param
+					$ispopup = substr_count($params,'player=');
+					if ($ispopop)
+					{
+						$params = str_replace('player=\n','player='.$to.'\n',$params);
+					}
+					else
+					{
+						$params = 'player='.$to.'\n'.$params;
+					}
+					$query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+					$db->setQuery($query);
+					$db->query();
+					if ($db->getErrorNum() > 0)
+					{
+						$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+					}
+					else
+					{
+						$msg = JText::_('Operation Successful. No Errors Reported.');
+					}
+				}
+			}
+			//This should be if there is a player set and it matches the $from in the post
 
-    /**
-     * Convert SermonSpeaker to BibleStudy
-     */
-    function convertSermonSpeaker() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.sermonspeakerconvert.class.php');
-        $convert = new JBSconvert();
-        $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $ssconversion);
-    }
+			if($player == $from)
+			{
 
-    /**
-     * Convert PreachIt to BibleStudy
-     */
-    function convertPreachIt() {
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.preachitconvert.class.php');
-        $convert = new JBSPIconvert();
-        $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $piconversion);
-    }
+				$playerposition = strpos($params,'player=');
+				$toposition = $playerposition + 7;
+				$params = substr_replace($params,$to,$toposition, 1);
+				 
+				$query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+				$db->setQuery($query);
+				$db->query();
+				if ($db->getErrorNum() > 0)
+				{
+					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+				}
+				else
+				{
+					$msg = JText::_('Operation Successful. No Errors Reported.');
+				}
 
-    /**
-     * Tries to fix missing database updates
-     *
-     * @since	7.1.0
-     */
-    function fix() {
-        $model = $this->getModel('admin');
-        $model->fix();
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
-    }
+			}
 
-    /**
-     * Alias Updates
-     * @since 7.1.0
-     */
-    function aliasUpdate() {
-        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'alias.php');
-        $alias = new fixJBSalias();
-        $update = $alias->updateAlias();
-        $this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
-    }
+		}
 
+		 
+		//  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+	}
+	 
+	function changePopup()
+	{
+
+		$db = JFactory::getDBO();
+		$msg = null;
+		$from = JRequest::getInt('pfrom','','post');
+		$to = JRequest::getInt('pto','','post');
+
+
+		$query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
+		$db->setQuery($query);
+		$db->query();
+		$results = $db->loadObjectList();
+
+		foreach ($results AS $result)
+		{
+			$params = $result->params;
+			$param = new JParameter($result->params);
+			$popup = $param->get('internal_popup'); //dump ($popup, 'popup: ');
+			if (!$popup && $from == '100')
+			{
+				 
+				//If the params field is empty we fill it with blank params plus the internal popup
+				if (!$result->params)
+				{
+					$query = 'UPDATE #__bsms_mediafiles SET `params` = "player=\ninternal_popup='.$to.'\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=\npodcasts=-1\n" WHERE `id` = '.$result->id;
+					$db->setQuery($query);
+					$db->query();
+					if ($db->getErrorNum() > 0)
+					{
+						$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+					}
+					else
+					{
+						$msg = JText::_('Operation Successful. No Errors Reported.');
+					}
+				}
+				//If the param field is not empty we check to see what it has in it.
+				if ($result->params)
+				{
+					//This checks to see if the string internal_popup= exists. If so, we replce it. If not, we put it at the begining of the param
+					$ispopup = substr_count($params,'internal_popup=');
+					if ($ispopop)
+					{
+						$params = str_replace('internal_popup=\n','internal_popup='.$to.'\n',$params);
+					}
+					else
+					{
+						$params = 'internal_popup='.$to.'\n'.$params;
+					}
+					$query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+					$db->setQuery($query);
+					$db->query();
+					if ($db->getErrorNum() > 0)
+					{
+						$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+					}
+					else
+					{
+						$msg = JText::_('Operation Successful. No Errors Reported.');
+					}
+				}
+			}
+			//This should be if there is a player set and it matches the $from in the post
+			//  dump ($popup, 'popup: '); dump ($from, 'from: ');
+			if($popup == $from)
+			{
+				//In this case we know that the string internal_popup exists in param so we replace only the player
+				$popupposition = strpos($params,'internal_popup=');
+				$p = $popupposition + 15;
+				$params = substr_replace($params,$to,$p,1); //dump ($params, 'params: ');
+				$query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+				$db->setQuery($query);
+				$db->query();
+				if ($db->getErrorNum() > 0)
+				{
+					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+				}
+				else
+				{
+					$msg = JText::_('Operation Successful. No Errors Reported.');
+				}
+			}
+
+		}
+
+
+		//  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+	}
 }
+?>
