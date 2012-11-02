@@ -53,7 +53,7 @@ class JBSMParams
 	public static function getTemplateparams()
 	{
 		$db = JFactory::getDbo();
-		$pk = JRequest::getInt('t', 'get', '1');
+		$pk = JFactory::getApplication()->input->getInt('t', 'get', '1');
 		$query = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bams_template')

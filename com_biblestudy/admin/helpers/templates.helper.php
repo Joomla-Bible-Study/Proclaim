@@ -19,7 +19,11 @@ defined('_JEXEC') or die;
  */
 class JBSMTemplate extends JObject
 {
-
+	/**
+	 * Extension Deceleration
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**

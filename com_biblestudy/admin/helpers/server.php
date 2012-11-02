@@ -11,9 +11,15 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * @package BibleStudy.Admin
+ * @since   8.0.0ß
+ */
 class JBSMServer
 {
-
+	/**
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
@@ -25,16 +31,12 @@ class JBSMServer
 	 */
 	function getServer($serverid)
 	{
-		$mainframe = & JFactory::getApplication();
-		$option = JRequest::getCmd('option');
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
 
 		$db->setQuery($query);
 
 		$tresult = $db->loadObject();
-
-		$i = 0;
 
 		return $tresult;
 	}
@@ -46,19 +48,15 @@ class JBSMServer
 	 *
 	 * @return object
 	 */
-	function getFolder($folderId)
+	static function getFolder($folderId)
 	{
-		$mainframe = & JFactory::getApplication();
-		$option = JRequest::getCmd('option');
 
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
 
 		$db->setQuery($query);
 
 		$tresult = $db->loadObject();
-
-		$i = 0;
 
 		return $tresult;
 	}
