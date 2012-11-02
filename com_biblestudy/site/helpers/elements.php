@@ -9,8 +9,13 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+/**
+ * @todo change to JLoader::register
+ */
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 
 /**
  * Get Elementid
@@ -19,6 +24,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  * @param array $params
  * @param array $admin_params
  * @param array $template
+ * @todo Redo to MVC Standers under a class
  * @return object
  */
 function getElementid($rowid, $row, $params, $admin_params, $template) {
@@ -34,8 +40,6 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
 
     $db = JFactory::getDBO();
     switch ($rowid) {
@@ -180,7 +184,6 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
                     . ' WHERE #__bsms_mediafiles.study_id = ' . $row->id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering, #__bsms_mediafiles.id ASC LIMIT 1';
 
             $db->setQuery($query_media1);
-            //$db->query();
             $media1 = $db->loadObject();
             $elementid->element = getFilesize($media1->size);
             break;
@@ -224,8 +227,8 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
             break;
         case 30:
             $timages = new jbsImages();
-            $elementid->id = 'teacher-image';
-            $elemtenid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
+	        $elementid->id = 'teacher-image';
+	        $elementid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
             $query = "SELECT thumb, teacher_thumbnail FROM #__bsms_teachers WHERE id = $row->teacher_id";
             $db->setQuery($query);
             $thumb = $db->loadObject();
