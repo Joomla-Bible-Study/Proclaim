@@ -73,8 +73,12 @@ class BiblestudyModelFolders extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'folder.id, folder.foldername, folder.folderpath, folder.published'));
+                        'list.select', 'folder.id, folder.foldername, folder.folderpath, folder.published, folder.access'));
         $query->from('#__bsms_folders AS folder');
+
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level');
+        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = folder.access');
 
         // Filter by published state
         $published = $this->getState('filter.published');

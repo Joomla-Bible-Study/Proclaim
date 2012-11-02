@@ -8,11 +8,12 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 if (BIBLESTUDY_CHECKREL)
 {
-    $this->loadTemplate('30');
+    echo $this->loadTemplate('30'); 
 }
 else
 {
-    $this->loadTemplate('25');
+    echo $this->loadTemplate('25');
 }
