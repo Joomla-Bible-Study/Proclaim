@@ -122,8 +122,8 @@ class BiblestudyModelMessagetypes extends JModelList {
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-
+      //  $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $query->order('messagetype.message_type ASC');
         return $query;
     }
 

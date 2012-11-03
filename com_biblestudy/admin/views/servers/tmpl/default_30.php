@@ -82,7 +82,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clr"> </div>
 
-    <table class="table table-striped adminlist" id="seriesList">
+    <table class="table table-striped adminlist" id="serversList">
         <thead>
         <tr>
 

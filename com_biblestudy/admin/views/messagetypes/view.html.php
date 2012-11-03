@@ -47,6 +47,9 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
+        if ($this->getLayout() !== 'modal') {
+            JBSMHelper::addSubmenu('messagetypes');
+        }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
@@ -57,6 +60,28 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
             return false;
         }
 
+
+// Levels filter.
+        $options = array();
+        $options[] = JHtml::_('select.option', '1', JText::_('J1'));
+        $options[] = JHtml::_('select.option', '2', JText::_('J2'));
+        $options[] = JHtml::_('select.option', '3', JText::_('J3'));
+        $options[] = JHtml::_('select.option', '4', JText::_('J4'));
+        $options[] = JHtml::_('select.option', '5', JText::_('J5'));
+        $options[] = JHtml::_('select.option', '6', JText::_('J6'));
+        $options[] = JHtml::_('select.option', '7', JText::_('J7'));
+        $options[] = JHtml::_('select.option', '8', JText::_('J8'));
+        $options[] = JHtml::_('select.option', '9', JText::_('J9'));
+        $options[] = JHtml::_('select.option', '10', JText::_('J10'));
+
+        $this->f_levels = $options;
+
+        // We don't need toolbar in the modal window.
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+            if (BIBLESTUDY_CHECKREL)
+                $this->sidebar = JHtmlSidebar::render();
+        }
         // Preprocess the list of items to find ordering divisions.
         // TODO: Complete the ordering stuff with nested sets
         foreach ($this->items as &$item) {
@@ -80,6 +105,8 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
      */
     protected function addToolbar() {
         $user = JFactory::getUser();
+        // Get the toolbar object instance
+        $bar = JToolBar::getInstance('toolbar');
         JToolBarHelper::title(JText::_('JBS_CMN_MESSAGE_TYPES'), 'messagetype.png');
         if ($this->canDo->get('core.create')) {
             JToolBarHelper::addNew('messagetype.add');
@@ -96,7 +123,24 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
         if ($this->canDo->get('core.delete')) {
             JToolBarHelper::trash('messagetypes.trash');
         }
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        // Add a batch button
+        if ($user->authorise('core.edit')) {
+            if (BIBLESTUDY_CHECKREL)
+                JHtml::_('bootstrap.modal', 'collapseModal');
+            $title = JText::_('JTOOLBAR_BATCH');
+            $dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
+						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
+						$title</button>";
+            $bar->appendButton('Custom', $dhtml, 'batch');
+        }
+        if (BIBLESTUDY_CHECKREL) {
+            JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=folders');
+
+            JHtmlSidebar::addFilter(
+                JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+            );
+        }
+            if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
         }
     }
@@ -110,5 +154,18 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_TITLE_MESSAGE_TYPES'));
     }
-
+    /**
+     * Returns an array of fields the table can be sorted by
+     *
+     * @return  array  Array containing the field name to sort by as the key and display text as value
+     *
+     * @since   3.0
+     */
+    protected function getSortFields() {
+        return array(
+            'messagetypes.message_type' => JText::_('JGRID_HEADING_ORDERING'),
+            'messagetypes.published' => JText::_('JSTATUS'),
+            'messagetypes.id' => JText::_('JGRID_HEADING_ID')
+        );
+    }
 }
