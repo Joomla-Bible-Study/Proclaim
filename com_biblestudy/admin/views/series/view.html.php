@@ -2,7 +2,9 @@
 
 /**
  * JView html
- * @package BibleStudy
+ * @package Joomla.Administrator
+ * @subpachage com_biblestudy
+ *
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,7 +14,9 @@ defined('_JEXEC') or die;
 
 /**
  * View class for Series
- * @package BibleStudy.Admin
+ * @package Joomla.Administrator
+ * @subpachage com_biblestudy
+ *
  * @since 7.0.0
  */
 class BiblestudyViewSeries extends JViewLegacy {
@@ -46,13 +50,19 @@ class BiblestudyViewSeries extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
+
+	    if ($this->getLayout() !== 'modal')
+	    {
+		    JBSMHelper::addSubmenu('series');
+	    }
+
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->canDo = JBSMHelper::getActions('', 'serie');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
-            JError::raiseError(500, implode("\n", $errors));
+            throw new Exception(implode("\n", $errors), 500);
             return false;
         }
 
@@ -165,7 +175,6 @@ class BiblestudyViewSeries extends JViewLegacy {
         return array(
             'series.ordering' => JText::_('JGRID_HEADING_ORDERING'),
             'series.published' => JText::_('JSTATUS'),
-            'series_test' => JText::_('JBS_CMN_SERIES'),
             'access_level' => JText::_('JGRID_HEADING_ACCESS'),
             'series.language' => JText::_('JGRID_HEADING_LANGUAGE'),
             'series.id' => JText::_('JGRID_HEADING_ID')

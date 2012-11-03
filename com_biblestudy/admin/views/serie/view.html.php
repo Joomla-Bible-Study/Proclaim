@@ -54,12 +54,11 @@ class BiblestudyViewSerie extends JViewLegacy
      */
     public function display($tpl = null)
     {
-	    throw new Exception('help', 403);
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = JBSMHelper::getActions($this->item->id, 'serie');
-	     var_dump($this->item);
+
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors), 500);

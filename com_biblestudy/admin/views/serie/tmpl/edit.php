@@ -1,10 +1,11 @@
 <?php
 /**
  * Form
+ *
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @link    http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -17,7 +18,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 if (BIBLESTUDY_CHECKREL)
-    JHtml::_('formbehavior.chosen', 'select');
+	JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
@@ -28,7 +29,7 @@ $input = $app->input;
 ?>
 
 <script type="text/javascript">
-    Joomla.submitbutton = function(task) {
+    Joomla.submitbutton = function (task) {
         if (task == 'serie.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
@@ -37,112 +38,125 @@ $input = $app->input;
     }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int)$this->item->id); ?>"
+      method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="row-fluid">
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
-                <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_PUBLISHING'); ?></a></li>
-                <?php if ($this->canDo->get('core.admin')): ?>
-                    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-                <?php endif ?>
+                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+                </li>
+                <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_PUBLISHING'); ?></a>
+                </li>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
+				<?php endif ?>
             </ul>
             <div class="tab-content">
                 <!-- Begin Tabs -->
                 <div class="tab-pane active" id="general">
                     <fieldset class="adminform">
                         <div class="control-group form-inline">
-                            <?php echo $this->form->getLabel('series_text'); ?> <?php echo $this->form->getInput('series_text'); ?>
+							<?php echo $this->form->getLabel('series_text'); ?> <?php echo $this->form->getInput('series_text'); ?>
                         </div>
                         <div class="control-group  form-inline">
-                            <?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
+							<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
                         </div>
-                        <?php echo $this->form->getInput('description'); ?>
+						<?php echo $this->form->getInput('description'); ?>
                     </fieldset>
                 </div>
                 <div class="tab-pane" id="publishing">
                     <div class="row-fluid">
                         <div class="span6">
                             <div class="control-group">
-                                <?php echo $this->form->getLabel('alias'); ?>
+								<?php echo $this->form->getLabel('alias'); ?>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('alias'); ?>
+									<?php echo $this->form->getInput('alias'); ?>
                                 </div>
                             </div>
+							<?php if (!BIBLESTUDY_CHECKREL) { ?>
                             <div class="control-group">
                                 <div class="control-label">
-                                    <?php echo $this->form->getLabel('teacher'); ?>
+									<?php echo $this->form->getLabel('ordering'); ?>
+                                </div>
+                                <div class="controls">
+									<?php echo $this->form->getInput('ordering'); ?>
+                                </div>
+                            </div>
+							<?php } ?>
+                            <div class="control-group">
+                                <div class="control-label">
+									<?php echo $this->form->getLabel('teacher'); ?>
                                 </div>
                                 <div class="contols">
-                                    <?php echo $this->form->getInput('teacher'); ?>
+									<?php echo $this->form->getInput('teacher'); ?>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <div class="control-label">
-                                    <?php echo $this->form->getLabel('landing_show'); ?>
+									<?php echo $this->form->getLabel('landing_show'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('landing_show'); ?>
+									<?php echo $this->form->getInput('landing_show'); ?>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <div class="control-label">
-                                    <?php echo $this->form->getLabel('series_thumbnail'); ?>
+									<?php echo $this->form->getLabel('series_thumbnail'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php
-                                    // series_text is required; fill in default if empty and leave value otherwise
-                                    echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_text) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail);
-                                    ?>
+									<?php
+									// series_text is required; fill in default if empty and leave value otherwise
+									echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_text) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail);
+									?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php if ($this->canDo->get('core.admin')): ?>
-                    <div class="tab-pane" id="permissions">
-                        <fieldset>
-                            <?php echo $this->form->getInput('rules'); ?>
-                        </fieldset>
-                    </div>
-                <?php endif; ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <div class="tab-pane" id="permissions">
+                    <fieldset>
+						<?php echo $this->form->getInput('rules'); ?>
+                    </fieldset>
+                </div>
+				<?php endif; ?>
 
             </div>
-            <input type="hidden" name="task" value="" />
-            <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
-            <?php echo JHtml::_('form.token'); ?>
+            <input type="hidden" name="task" value=""/>
+            <input type="hidden" name="return" value="<?php echo $input->getCmd('return', ''); ?>"/>
+			<?php echo JHtml::_('form.token'); ?>
         </div>
         <!-- End Content -->
         <!-- Begin Sidebar -->
         <div class="span2">
             <h4><?php echo JText::_('JDETAILS'); ?></h4>
-            <hr />
+            <hr/>
             <fieldset class="form-vertical">
                 <div class="control-group">
                     <div class="controls">
-                        <?php echo $this->form->getValue('series_text'); ?>
+						<?php echo $this->form->getValue('series_text'); ?>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <?php echo $this->form->getLabel('published'); ?>
+					<?php echo $this->form->getLabel('published'); ?>
                     <div class="controls">
-                        <?php echo $this->form->getInput('published'); ?>
+						<?php echo $this->form->getInput('published'); ?>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <?php echo $this->form->getLabel('access'); ?>
+					<?php echo $this->form->getLabel('access'); ?>
                     <div class="controls">
-                        <?php echo $this->form->getInput('access'); ?>
+						<?php echo $this->form->getInput('access'); ?>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <?php echo $this->form->getLabel('language'); ?>
+					<?php echo $this->form->getLabel('language'); ?>
                     <div class="controls">
-                        <?php echo $this->form->getInput('language'); ?>
+						<?php echo $this->form->getInput('language'); ?>
                     </div>
                 </div>
             </fieldset>

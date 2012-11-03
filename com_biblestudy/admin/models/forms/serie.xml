@@ -58,5 +58,7 @@
                 >
             <option value="*">JALL</option>
         </field>
+        <field name="ordering" type="test" label="JBS_CMN_ORDERING"
+               description="JBS_CMN_ORDERING_DESC" class="inputbox" size="5" default="0" />
     </fieldset>
 </form>

@@ -42,16 +42,15 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$categoryId = null;
-
+		$app = JFactory::getApplication();
 		$table = $this->getTable();
 		$i = 0;
 
 		// Check that the user has create permission for the component
-		$extension = JFactory::getApplication()->input->get('option', '');
+		$extension = $app->input->get('option', '');
 		$user = JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+			$app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
 			return false;
 		}
 
@@ -66,17 +65,17 @@ class BiblestudyModelSerie extends JModelAdmin
 			if (!$table->load($pk)) {
 				if ($error = $table->getError()) {
 					// Fatal error
-					$this->setError($error);
+					$app->enqueueMessage($error, 'error');
 					return false;
 				} else {
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
 
 			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			$data = $this->generateNewTitle('', $table->alias, $table->title);
 			$table->title = $data['0'];
 			$table->alias = $data['1'];
 
@@ -85,13 +84,13 @@ class BiblestudyModelSerie extends JModelAdmin
 
 			// Check the row.
 			if (!$table->check()) {
-				$this->setError($table->getError());
+				$app->enqueueMessage($table->getError(), 'error');
 				return false;
 			}
 
 			// Store the row.
 			if (!$table->store()) {
-				$this->setError($table->getError());
+				$app->enqueueMessage($table->getError(), 'error');
 				return false;
 			}
 
@@ -124,7 +123,7 @@ class BiblestudyModelSerie extends JModelAdmin
 				return;
 			}
 			$user = JFactory::getUser();
-			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
+			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int)$record->id);
 		}
 	}
 
@@ -142,7 +141,7 @@ class BiblestudyModelSerie extends JModelAdmin
 
 		// Check for existing article.
 		if (!empty($record->id)) {
-			return $user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $record->id);
+			return $user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int)$record->id);
 		}
 		// Default to component settings if serie known.
 		return parent::canEditState('com_biblestudy');
@@ -181,6 +180,10 @@ class BiblestudyModelSerie extends JModelAdmin
 				$table->ordering = $max + 1;
 			}
 		}
+		if ($table->ordering == 0) {
+			$table->ordering = 1;
+			$table->reorder('id = ' . (int)$table->id);
+		}
 	}
 
 	/**
@@ -207,20 +210,8 @@ class BiblestudyModelSerie extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		if ($item = parent::getItem($pk)) {
-			if (isset($item['params']) && is_array($item['params'])) {
-				$registry = new JRegistry();
-				$registry->loadArray($item['params']);
-				$item['params'] = (string) $registry;
-			}
 
-			// Bind the rules.
-			if (isset($item['rules']) && is_array($item['rules'])) {
-				$rules = new JRules($item['rules']);
-				$item->setRules($rules);
-			}
-
-			$item->admin = BsmHelper::getAdmin();
-			var_dump($item);
+			$item->admin = JBSMParams::getAdmin();
 		}
 		return $item;
 	}
@@ -255,7 +246,7 @@ class BiblestudyModelSerie extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $id))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int)$id))
 				|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
 		) {
 			// Disable fields for display.
@@ -300,8 +291,9 @@ class BiblestudyModelSerie extends JModelAdmin
 		// Check the session for previously entered form data.
 		$app = JFactory::getApplication();
 		$data = $app->getUserState('com_biblestudy.edit.serie.data', array());
-		if (empty($data))
+		if (empty($data)) {
 			$data = $this->getItem();
+		}
 
 		return $data;
 	}
@@ -343,14 +335,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function getReorderConditions($table)
 	{
-		/*
-		 * @todo need to look at a way to make this work on other to look at the
-		 *  id from series do to we are now using it category
-		 */
-		$condition = array();
-		//$condition[] = 'catid = '.(int) $table->catid;
-		$condition[] = 'catid = 1';
-		return $condition;
+		return;
 	}
 
 	/**
@@ -363,9 +348,6 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
 	{
-		// Association content items
-		//$app = JFactory::getApplication();
-
 		parent::preprocessForm($form, $data, $group);
 	}
 
