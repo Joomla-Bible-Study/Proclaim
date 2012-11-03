@@ -39,8 +39,7 @@ class BiblestudyController extends JControllerLegacy
         $db = JFactory::getDBO();
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->execute();
-        require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-        JBSMHelper::addSubmenu($app->input->getCmd('view', 'cpanel'));
+
         $view = $app->input->getCmd('view', 'cpanel');
         $layout = $app->input->getCmd('layout', 'default');
         $id = $app->input->getInt('id');

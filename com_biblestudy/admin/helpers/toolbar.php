@@ -20,7 +20,7 @@ jimport('joomla.html.toolbar');
 class JBSMToolbar extends JObject {
 
     public static $extension = 'com_biblestudy';
-    
+
     /**
      * Get Toolbar
      *

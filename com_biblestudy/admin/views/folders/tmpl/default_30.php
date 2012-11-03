@@ -9,7 +9,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 if (BIBLESTUDY_CHECKREL) {
     JHtml::_('bootstrap.tooltip');
     JHtml::_('dropdown.init');
@@ -82,10 +81,9 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clr"> </div>
 
-    <table class="table table-striped adminlist" id="seriesList">
+    <table class="table table-striped" id="foldersList">
         <thead>
         <tr>
-
             <th width="1%">
                 <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
             </th>
@@ -98,7 +96,6 @@ $sortFields = $this->getSortFields();
             <th width="10%" class="nowrap hidden-phone">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
             </th>
-
             <th width="1%" class="nowrap hidden-phone">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'folders.id', $listDirn, $listOrder); ?>
             </th>
@@ -113,7 +110,7 @@ $sortFields = $this->getSortFields();
             $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.folder.' . $item->id);
             $canChange = $user->authorise('core.edit.state', 'com_biblestudy.folder.' . $item->id);
             ?>
-        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id ?>">
+        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
             <td class="center hidden-phone">
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
@@ -167,9 +164,6 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="small hidden-phone">
                 <?php echo $this->escape($item->access_level); ?>
-            </td>
-            <td class="small hidden-phone">
-
             </td>
             <td class="center hidden-phone">
                 <?php echo (int) $item->id; ?>

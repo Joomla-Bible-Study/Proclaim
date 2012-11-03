@@ -56,20 +56,12 @@ class JBSMHelper
 					$assetName = 'com_biblestudy.commentsedit.' . (int)$Itemid;
 					break;
 
-				case 'cssedit':
-					$assetName = 'com_biblestudy.cssedit.' . (int)$Itemid;
-					break;
-
 				case 'location':
 					$assetName = 'com_biblestudy.locationsedit.' . (int)$Itemid;
 					break;
 
 				case 'mediaimage':
 					$assetName = 'com_biblestudy.mediaedit.' . (int)$Itemid;
-					break;
-
-				case 'mediafile':
-					$assetName = 'com_biblestudy.mediafilesedit.' . (int)$Itemid;
 					break;
 
 				case 'messagetype':
@@ -94,10 +86,6 @@ class JBSMHelper
 
 				case 'share':
 					$assetName = 'com_biblestudy.shareedit.' . (int)$Itemid;
-					break;
-
-				case 'message':
-					$assetName = 'com_biblestudy.studiesedit.' . (int)$Itemid;
 					break;
 
 				case 'teacher':
