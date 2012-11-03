@@ -35,7 +35,7 @@ $input = $app->input;
         <div class="span10 form-horizontal">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
-                <li class="active"><a href="#ftp" data-toggle="tab"><?php echo JText::_('JBS_CMN_FTP'); ?></a></li>
+                <li><a href="#ftp" data-toggle="tab"><?php echo JText::_('JBS_CMN_FTP'); ?></a></li>
                 <?php if ($this->canDo->get('core.admin')): ?>
                 <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
                 <?php endif ?>
@@ -70,7 +70,7 @@ $input = $app->input;
                     </fieldset>
                 </div>
                     
-                    <div class="tab-pane active" id="ftp">
+                    <div class="tab-pane" id="ftp">
                         <div class="row-fluid">
                         <div class="span6">
                         <div class="control-group">
@@ -142,11 +142,11 @@ $input = $app->input;
         <!-- Begin Sidebar -->
         <div class="span2">
             <h4><?php echo JText::_('JDETAILS'); ?></h4>
-            <hr />
+            <hr/>
             <fieldset class="form-vertical">
                 <div class="control-group">
                     <div class="controls">
-                        <?php echo $this->form->getValue('server_name'); ?>
+                        <?php echo $this->form->getValue('server_bane'); ?>
                     </div>
                 </div>
 
@@ -157,12 +157,6 @@ $input = $app->input;
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <?php echo $this->form->getLabel('access'); ?>
-                    <div class="controls">
-                        <?php echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
 
             </fieldset>
         </div>

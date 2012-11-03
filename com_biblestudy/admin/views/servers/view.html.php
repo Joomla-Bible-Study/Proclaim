@@ -48,6 +48,9 @@ class BiblestudyViewServers extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
+        if ($this->getLayout() !== 'modal') {
+            JBSMHelper::addSubmenu('servers');
+        }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
