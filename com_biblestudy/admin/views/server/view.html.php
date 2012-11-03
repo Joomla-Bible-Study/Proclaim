@@ -58,11 +58,9 @@ class BiblestudyViewServer extends JViewLegacy {
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = JBSMHelper::getActions($this->item->id, 'server');
-        //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin();
 
-        $this->setLayout("form");
+
+        $this->setLayout("edit");
         // Set the toolbar
         $this->addToolbar();
 

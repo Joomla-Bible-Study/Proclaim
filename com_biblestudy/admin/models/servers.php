@@ -74,7 +74,8 @@ class BiblestudyModelServers extends JModelList {
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        //$query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $query->order('server.id ASC');
         return $query;
     }
 

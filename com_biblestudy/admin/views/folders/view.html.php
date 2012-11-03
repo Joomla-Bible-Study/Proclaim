@@ -156,11 +156,8 @@ class BibleStudyViewFolders extends JViewLegacy {
      */
     protected function getSortFields() {
         return array(
-            'series.foldername' => JText::_('JGRID_HEADING_ORDERING'),
+            'folders.foldername' => JText::_('JGRID_HEADING_ORDERING'),
             'folders.published' => JText::_('JSTATUS'),
-            'series_test' => JText::_('JBS_CMN_SERIES'),
-            'access_level' => JText::_('JGRID_HEADING_ACCESS'),
-
             'folders.id' => JText::_('JGRID_HEADING_ID')
         );
     }
