@@ -78,8 +78,26 @@ $sortFields = $this->getSortFields();
                 <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
             </select>
         </div>
+	    <?php if (!BIBLESTUDY_CHECKREL): ?>
+        <div class="btn-group pull-right">
+            <label for="filter_published" id="filter_published"
+                   class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+            <select name="filter_published" class="input-medium" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+			    <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+            </select>
+        </div>
+        <div class="btn-group pull-right">
+            <label for="filter_language" id="filter_language"
+                   class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+            <select name="filter_language" class="input-medium" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
+			    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
+            </select>
+        </div>
+	    <?php endif; ?>
     </div>
-    <div class="clr"> </div>
+    <div class="clearfix"> </div>
 
     <table class="table table-striped" id="foldersList">
         <thead>

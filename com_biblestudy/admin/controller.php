@@ -2,6 +2,7 @@
 
 /**
  * Admin Controller
+ *
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,322 +16,333 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
 
 /**
  * JController for BibleStudy Admin class
+ *
  * @package BibleStudy.Admin
  * @since   7.0.0
  */
 class BiblestudyController extends JControllerLegacy
 {
 
-    /**
-     * Default view var.
-     * @var string
-     */
-    protected $default_view = 'cpanel';
+	/**
+	 * Default view var.
+	 *
+	 * @var string
+	 */
+	protected $default_view = 'cpanel';
 
-    /**
-     * Core Display
-     * @param boolaen $cachable
-     * @param boolean $urlparams
-     */
-    public function display($cachable = false, $urlparams = false)
-    {
-        $app = JFactory::getApplication();
-        //attempt to change mysql for error in large select
-        $db = JFactory::getDBO();
-        $db->setQuery('SET SQL_BIG_SELECTS=1');
-        $db->execute();
+	/**
+	 * Core Display
+	 *
+	 * @param boolaen $cachable
+	 * @param boolean $urlparams
+	 */
+	public function display($cachable = false, $urlparams = false)
+	{
 
-        $view = $app->input->getCmd('view', 'cpanel');
-        $layout = $app->input->getCmd('layout', 'default');
-        $id = $app->input->getInt('id');
+		$app = JFactory::getApplication();
+		//attempt to change mysql for error in large select
+		$db = JFactory::getDBO();
+		$db->setQuery('SET SQL_BIG_SELECTS=1');
+		$db->execute();
 
-        $jbsstate = JBSMDbHelper::getinstallstate();
-        if ($jbsstate):
-            $jbsname = $jbsstate->get('jbsname');
-            $jbstype = $jbsstate->get('jbstype');
-            JBSMDbHelper::setinstallstate();
-            $this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
-        endif;
-        $type = $app->input->getWord('view');
-        if (!$type) {
-            $app->input->set('view ', 'cpanel');
-        }
-        if ($type == 'admin') {
-            $tool = $app->input->get('tooltype', '', 'post');
-            if ($tool) {
-                switch ($tool) {
-                    case 'players':
-                        $player = $this->changePlayers();
-                        $this->setRedirect('index.php?option=com_biblestudy&view=admin ', $player);
-                        break;
+		$view = $app->input->getCmd('view', 'cpanel');
+		$layout = $app->input->getCmd('layout', 'default');
+		$id = $app->input->getInt('id');
 
-                    case 'popups':
-                        $popups = $this->changePopup();
-                        $this->setRedirect('index.php?option=com_biblestudy&view=admin ', $popups);
-                        break;
-                }
-            }
-        }
+		if ($layout !== 'modal') {
+			JBSMHelper::addSubmenu($view);
+		}
 
-        if ($app->input->getCmd('view') == 'study') {
-            $model = $this->getModel('study');
-        }
-        $fixassets = $app->input->getWord('task ', ' ', 'get');
-        if ($fixassets == 'fixassetid') {
-            $dofix = fixJBSAssets::fixassets();
-            if (!$dofix) {
-                JError::raiseNotice('SOME_ERROR_CODE', ' Fix Asset Function not successful');
-            } else {
-                JError::raiseNotice('SOME_ERROR_CODE ', 'Fix assets successful');
-            }
-        }
+		$jbsstate = JBSMDbHelper::getinstallstate();
+		if ($jbsstate):
+			$jbsname = $jbsstate->get('jbsname');
+			$jbstype = $jbsstate->get('jbstype');
+			JBSMDbHelper::setinstallstate();
+			$this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
+		endif;
+		$type = $app->input->getWord('view');
+		if (!$type) {
+			$app->input->set('view ', 'cpanel');
+		}
+		if ($type == 'admin') {
+			$tool = $app->input->get('tooltype', '', 'post');
+			if ($tool) {
+				switch ($tool) {
+					case 'players':
+						$player = $this->changePlayers();
+						$this->setRedirect('index.php?option=com_biblestudy&view=admin ', $player);
+						break;
 
-        parent::display();
+					case 'popups':
+						$popups = $this->changePopup();
+						$this->setRedirect('index.php?option=com_biblestudy&view=admin ', $popups);
+						break;
+				}
+			}
+		}
 
-        return $this;
-    }
+		if ($app->input->getCmd('view') == 'study') {
+			$model = $this->getModel('study');
+		}
+		$fixassets = $app->input->getWord('task ', ' ', 'get');
+		if ($fixassets == 'fixassetid') {
+			$dofix = fixJBSAssets::fixassets();
+			if (!$dofix) {
+				JError::raiseNotice('SOME_ERROR_CODE', ' Fix Asset Function not successful');
+			} else {
+				JError::raiseNotice('SOME_ERROR_CODE ', 'Fix assets successful');
+			}
+		}
 
-    /**
-     * Get File List
-     * @since 7.0.0
-     */
-    public function getFileList()
-    {
-        $app = JFactory::getApplication();
-        $serverId = $app->input->getVar('server');
-        $folderId = $app->input->getVar('path');
+		parent::display();
 
-        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'server . php');
+		return $this;
+	}
 
-        $server = getServer($serverId);
-        $folder = getFolder($folderId);
+	/**
+	 * Get File List
+	 *
+	 * @since 7.0.0
+	 */
+	public function getFileList()
+	{
+		$app = JFactory::getApplication();
+		$serverId = $app->input->getVar('server');
+		$folderId = $app->input->getVar('path');
 
-        $type = $server->server_type;
-        $files = null;
-        switch ($type) {
-            case 'ftp':
-                $ftp_server = $server->server_path;
-                $conn_id = ftp_connect($ftp_server);
+		$path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+		include_once($path1 . 'server . php');
 
-                // login with username and password
-                $ftp_user_name = $server->ftp_username;
-                $ftp_user_pass = $server->ftp_password;
-                $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+		$server = getServer($serverId);
+		$folder = getFolder($folderId);
 
-                // get contents of the current directory
-                $files = ftp_nlist($conn_id, $folder->folderpath);
+		$type = $server->server_type;
+		$files = null;
+		switch ($type) {
+			case 'ftp':
+				$ftp_server = $server->server_path;
+				$conn_id = ftp_connect($ftp_server);
 
-                //ftp_quit();
+				// login with username and password
+				$ftp_user_name = $server->ftp_username;
+				$ftp_user_pass = $server->ftp_password;
+				$login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
 
-                break;
-            case 'local':
-                $searchpath = JPATH_ROOT . $folder->folderpath;
-                $files = JFolder::files($searchpath);
-                break;
-        }
+				// get contents of the current directory
+				$files = ftp_nlist($conn_id, $folder->folderpath);
 
-        // output $contents
-        echo json_encode($files);
-    }
+				//ftp_quit();
 
-    /**
-     * Change Players
-     *
-     * @return string
-     */
-    public function changePlayers()
-    {
-        $app = JFactory::getApplication();
-        $db = JFactory::getDBO();
-        $msg = null;
-        $data = $app->input->get('jform', array(), 'post  ', ' array');
-        $from = $data['params']['from'];
-        $to = $data['params']['to'];
-        switch ($from) {
-            case '100':
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '0' OR `player` = '100' or `player` IS NULL";
-                break;
+				break;
+			case 'local':
+				$searchpath = JPATH_ROOT . $folder->folderpath;
+				$files = JFolder::files($searchpath);
+				break;
+		}
 
-            default:
-                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
-                break;
-        }
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
-        } else {
-            $num_rows = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
-        }
+		// output $contents
+		echo json_encode($files);
+	}
 
-        return $msg;
-    }
+	/**
+	 * Change Players
+	 *
+	 * @return string
+	 */
+	public function changePlayers()
+	{
+		$app = JFactory::getApplication();
+		$db = JFactory::getDBO();
+		$msg = null;
+		$data = $app->input->get('jform', array(), 'post  ', ' array');
+		$from = $data['params']['from'];
+		$to = $data['params']['to'];
+		switch ($from) {
+			case '100':
+				$query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '0' OR `player` = '100' or `player` IS NULL";
+				break;
 
-    /**
-     * Change Pupup
-     *
-     * @return string
-     */
-    public function changePopup()
-    {
-        $app = JFactory::getApplication();
-        $db = JFactory::getDBO();
-        $msg = null;
-        $data = $app->input->get('jform', array(), 'post', 'array  ');
-        $from = $data['params']['pFrom'];
-        $to = $data['params']['pTo'];
+			default:
+				$query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
+				break;
+		}
+		$db->setQuery($query);
+		if (!$db->execute()) {
+			$msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
+		} else {
+			$num_rows = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
+		}
 
-        $query = 'UPDATE #__bsms_mediafiles SET ' . $db->quoteName('popup') . ' = ' . $db->quote($to) . ' WHERE `popup` = ' . $db->quote($from);
-        $db->setQuery($query);
-        if (!$db->execute()) {
-            $msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
-        } else {
-            $num_rows = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
-        }
+		return $msg;
+	}
 
-        return $msg;
-    }
+	/**
+	 * Change Pupup
+	 *
+	 * @return string
+	 */
+	public function changePopup()
+	{
+		$app = JFactory::getApplication();
+		$db = JFactory::getDBO();
+		$msg = null;
+		$data = $app->input->get('jform', array(), 'post', 'array  ');
+		$from = $data['params']['pFrom'];
+		$to = $data['params']['pTo'];
 
-    /**
-     * Write the XML file
-     *
-     */
-    public function writeXMLFile()
-    {
-        $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
-        require_once($path1 . 'biblestudy.podcast.class.php');
-        $podcasts = new JBSPodcast();
-        $result = $podcasts->makePodcasts();
-        $this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
-    }
+		$query = 'UPDATE #__bsms_mediafiles SET ' . $db->quoteName('popup') . ' = ' . $db->quote($to) . ' WHERE `popup` = ' . $db->quote($from);
+		$db->setQuery($query);
+		if (!$db->execute()) {
+			$msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
+		} else {
+			$num_rows = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
+		}
 
-    /**
-     * Resets the hits
-     *
-     */
-    public function resetHits()
-    {
-        $app = JFactory::getApplication();
-        $id = $app->input->getInt('id', 0, 'get');
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
-        if (!$db->execute()) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-        }
-        $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
-    }
+		return $msg;
+	}
 
-    /**
-     * Resets Donwnloads
-     */
-    public function resetDownloads()
-    {
-        $app = JFactory::getApplication();
-        $id = $app->input->getInt('id', 0, 'get');
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
-        if (!$db->execute()) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-        }
-        $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
-    }
+	/**
+	 * Write the XML file
+	 *
+	 */
+	public function writeXMLFile()
+	{
+		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
+		require_once($path1 . 'biblestudy.podcast.class.php');
+		$podcasts = new JBSPodcast();
+		$result = $podcasts->makePodcasts();
+		$this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
+	}
 
-    /**
-     * Resets Plays
-     */
-    public function resetPlays()
-    {
-        $jinput = new JInput();
-        $id = $jinput->getInt('id', 0, 'get');
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
-        if (!$db->execute()) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-        }
-        $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
-    }
+	/**
+	 * Resets the hits
+	 *
+	 */
+	public function resetHits()
+	{
+		$app = JFactory::getApplication();
+		$id = $app->input->getInt('id', 0, 'get');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+		if (!$db->execute()) {
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
+		} else {
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
+	}
 
-    /**
-     * Adds the ability to uploade with flash
-     * @since 7.1.0
-     *        Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
-     */
-    public function uploadflash()
-    {
-        $app = JFactory::getApplication();
-        $app->checkSession() or jexit('Invalid Token');
-        $jinput = $app->input;
-        $option = $jinput->getCmd('option');
-        jimport('joomla.filesystem.file');
-        //get the server and folder id from the request
-        $serverid = $jinput->getInt('upload_server', '', 'post');
-        $folderid = $jinput->getInt('upload_folder', '', 'post');
-        $app = JFactory::getApplication();
-        $app->setUserState($option, 'serverid', $serverid);
-        $app->setUserState($option . 'folderid', $folderid);
-        $form = $jinput->getArray('jform');
-        $returnid = $form['id'];
-        // get temp file details
-        $temp = JBSUpload::gettempfile();
-        $temp_folder = JBSUpload::gettempfolder();
-        $tempfile = $temp_folder . $temp;
-        // get path and abort if none
-        $layout = $jinput->getWord('layout');
-        if ($layout == 'modal') {
-            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
-        } else {
-            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
-        }
-        $path = JBSUpload::getpath($url, $tempfile);
+	/**
+	 * Resets Donwnloads
+	 */
+	public function resetDownloads()
+	{
+		$app = JFactory::getApplication();
+		$id = $app->input->getInt('id', 0, 'get');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
+		if (!$db->execute()) {
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
+		} else {
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+	}
 
-        // check filetype is allowed
-        $allow = JBSUpload::checkfile($temp);
-        if ($allow) {
-            $filename = JBSUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
+	/**
+	 * Resets Plays
+	 */
+	public function resetPlays()
+	{
+		$jinput = new JInput();
+		$id = $jinput->getInt('id', 0, 'get');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
+		if (!$db->execute()) {
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
+		} else {
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+	}
+
+	/**
+	 * Adds the ability to uploade with flash
+	 *
+	 * @since 7.1.0
+	 *        Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
+	 */
+	public function uploadflash()
+	{
+		$app = JFactory::getApplication();
+		$app->checkSession() or jexit('Invalid Token');
+		$jinput = $app->input;
+		$option = $jinput->getCmd('option');
+		jimport('joomla.filesystem.file');
+		//get the server and folder id from the request
+		$serverid = $jinput->getInt('upload_server', '', 'post');
+		$folderid = $jinput->getInt('upload_folder', '', 'post');
+		$app = JFactory::getApplication();
+		$app->setUserState($option, 'serverid', $serverid);
+		$app->setUserState($option . 'folderid', $folderid);
+		$form = $jinput->getArray('jform');
+		$returnid = $form['id'];
+		// get temp file details
+		$temp = JBSUpload::gettempfile();
+		$temp_folder = JBSUpload::gettempfolder();
+		$tempfile = $temp_folder . $temp;
+		// get path and abort if none
+		$layout = $jinput->getWord('layout');
+		if ($layout == 'modal') {
+			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
+		} else {
+			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+		}
+		$path = JBSUpload::getpath($url, $tempfile);
+
+		// check filetype is allowed
+		$allow = JBSUpload::checkfile($temp);
+		if ($allow) {
+			$filename = JBSUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
 
-            // process file
-            $uploadmsg = JBSUpload::processflashfile($tempfile, $filename);
-            if (!$uploadmsg) {
-                // set folder and link entries
+			// process file
+			$uploadmsg = JBSUpload::processflashfile($tempfile, $filename);
+			if (!$uploadmsg) {
+				// set folder and link entries
 
-                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED
+				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED
 
         ');
-            }
-        } else {
-            $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT  ');
-        }
-        // delete temp file
+			}
+		} else {
+			$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT  ');
+		}
+		// delete temp file
 
-        JBSUpload::deletetempfile($tempfile);
-        $mediafileid = $jinput->getInt('id', '', 'post');
-        if ($layout == ' modal') {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
-        } else {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
-        }
-    }
+		JBSUpload::deletetempfile($tempfile);
+		$mediafileid = $jinput->getInt('id', '', 'post');
+		if ($layout == ' modal') {
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+		} else {
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+		}
+	}
 
-    /**
-     * Upload Flash System
-     * @return text
-     * @todo try this out soon. make the upflash() work.
-     */
+	/**
+	 * Upload Flash System
+	 *
+	 * @return text
+	 * @todo try this out soon. make the upflash() work.
+	 */
 //    function upflash() {
 //        jimport('joomla.filesystem.file');
 //        jimport('joomla.filesystem.folder');
@@ -403,47 +415,47 @@ class BiblestudyController extends JControllerLegacy
 //        }
 //    }
 
-    /**
-     * Upload function
-     *
-     */
-    public function upload()
-    {
-        $app = JFactory::getApplication();
-        $app->checkSession() or jexit('Invalid Token');
-        $jinput = $app->input;
-        $option = $jinput->getCmd('option');
-        $uploadmsg = '';
-        $serverid = $jinput->getInt('upload_server', '', 'post');
-        $folderid = $jinput->getInt('upload_folder', '', 'post');
-        $form = $jinput->getArray('jform');
-        $returnid = $form['id'];
-        $url = 'index.php?option=com_biblestudy&view=mediafile&id=' .
-            $returnid;
-        $path = JBSUpload :: getpath($url, '');
-        $file = $jinput->getArray('uploadfile');
-        // check filetype allowed
-        $allow = JBSUpload::checkfile($file['name']);
-        if ($allow) {
-            $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path);
-            // process file
-            $uploadmsg = JBSUpload::processuploadfile($file, $filename);
+	/**
+	 * Upload function
+	 *
+	 */
+	public function upload()
+	{
+		$app = JFactory::getApplication();
+		$app->checkSession() or jexit('Invalid Token');
+		$jinput = $app->input;
+		$option = $jinput->getCmd('option');
+		$uploadmsg = '';
+		$serverid = $jinput->getInt('upload_server', '', 'post');
+		$folderid = $jinput->getInt('upload_folder', '', 'post');
+		$form = $jinput->getArray('jform');
+		$returnid = $form['id'];
+		$url = 'index.php?option=com_biblestudy&view=mediafile&id=' .
+				$returnid;
+		$path = JBSUpload :: getpath($url, '');
+		$file = $jinput->getArray('uploadfile');
+		// check filetype allowed
+		$allow = JBSUpload::checkfile($file['name']);
+		if ($allow) {
+			$filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path);
+			// process file
+			$uploadmsg = JBSUpload::processuploadfile($file, $filename);
 
-            if (!$uploadmsg) {
-                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
-            }
-        }
-        $mediafileid = $jinput->getInt('id', '', 'post');
-        $app->setUserState($option . 'fname', $file['name']);
-        $app->setUserState($option . 'size', $file['size']);
-        $app->setUserState($option . 'serverid', $serverid);
-        $app->setUserState($option . 'folderid', $folderid);
-        $layout = $jinput->getWord('layout');
-        if ($layout == 'modal') {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
-        } else {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
-        }
-    }
+			if (!$uploadmsg) {
+				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+			}
+		}
+		$mediafileid = $jinput->getInt('id', '', 'post');
+		$app->setUserState($option . 'fname', $file['name']);
+		$app->setUserState($option . 'size', $file['size']);
+		$app->setUserState($option . 'serverid', $serverid);
+		$app->setUserState($option . 'folderid', $folderid);
+		$layout = $jinput->getWord('layout');
+		if ($layout == 'modal') {
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+		} else {
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+		}
+	}
 
 }

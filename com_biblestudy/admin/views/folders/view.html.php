@@ -55,10 +55,6 @@ class BibleStudyViewFolders extends JViewLegacy
 	public function display($tpl = null)
 	{
 
-		if ($this->getLayout() !== 'modal') {
-			JBSMHelper::addSubmenu('folders');
-		}
-
 		$this->items = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');

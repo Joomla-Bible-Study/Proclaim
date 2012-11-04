@@ -117,7 +117,7 @@ $sortFields = $this->getSortFields();
     <table class="table table-striped" id="seriesList">
         <thead>
         <tr>
-            <th width="2px" class="nowrap center hidden-phone">
+            <th width="1%" class="nowrap center hidden-phone">
 				<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'series.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING');
 				if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'series.saveorder');?>
             </th>
@@ -163,7 +163,6 @@ $sortFields = $this->getSortFields();
 						$disabledLabel = JText::_('JORDERINGDISABLED');
 						$disableClassName = 'inactive tip-top';
 					endif;
-					echo($disableClassName);
 					?>
                     <span class="sortable-handler hasTooltip <?php echo $disableClassName ?>"
                           title="<?php echo $disabledLabel ?>">
