@@ -22,7 +22,7 @@ include_once($path1 . 'scripture.php');
  * @package BibleStudy.Site
  * @since   7.0.0
  */
-class JBSPodcast
+class JBSMPodcast
 {
 
 	/**
@@ -30,7 +30,7 @@ class JBSPodcast
 	 *
 	 * @return boolean|string
 	 */
-	function makePodcasts()
+	public function makePodcasts()
 	{
 		$admin_params = getAdminsettings();
 		$msg = array();
@@ -38,24 +38,29 @@ class JBSPodcast
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
+
 		//First get all of the podcast that are published
 		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
 		$db->setQuery($query);
 		$podids = $db->loadObjectList();
 
 
-		//Now iterate through the podcasts, and pick up the mediafiles
-		if ($podids) {
-			foreach ($podids AS $podinfo) {
-				//check to see if there is a media file associated - if not, don't continue
+		// Now iterate through the podcasts, and pick up the mediafiles
+		if ($podids)
+		{
+			foreach ($podids AS $podinfo)
+			{
+				// Check to see if there is a media file associated - if not, don't continue
 				$query = 'SELECT id FROM #__bsms_mediafiles WHERE podcast_id LIKE "%' . $podinfo->id . '%" AND published = 1';
 				$db->setQuery($query);
 				$checkresult = $db->loadObjectList();
-				if ($checkresult) {
+				if ($checkresult)
+				{
 					$description = str_replace("&", "and", $podinfo->description);
 					$description = strip_tags($description);
 					$detailstemplateid = $podinfo->detailstemplateid;
-					if (!$detailstemplateid) {
+					if (!$detailstemplateid)
+					{
 						$detailstemplateid = 1;
 					}
 					$detailstemplateid = '&amp;t=' . $detailstemplateid;
@@ -95,11 +100,15 @@ class JBSPodcast
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
                 	<atom:link href="http://' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
-					//Now let's get the podcast episodes
+
+					// Now let's get the podcast episodes
 					$limit = $podinfo->podcastlimit;
-					if ($limit > 0) {
+					if ($limit > 0)
+					{
 						$limit = 'LIMIT ' . $limit;
-					} else {
+					}
+					else
+					{
 						$limit = '';
 					}
 					$episodes = $this->getEpisodes($podinfo->id, $limit);
@@ -108,27 +117,35 @@ class JBSPodcast
 					$registry->loadString($podinfo->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
-					if (!$episodes) {
+					if (!$episodes)
+					{
 						return false;
 					}
 					$episodedetail = '';
-					foreach ($episodes as $episode) {
+					foreach ($episodes as $episode)
+					{
 
 						$episodedate = date("r", strtotime($episode->createdate));
 						$hours = $episode->media_hours;
-						if (!$hours) {
+						if (!$hours)
+						{
 							$hours = '00';
 						}
-						if ($hours < 1) {
+						if ($hours < 1)
+						{
 							$hours = '00';
 						}
-						if ($hours > 0) {
+						if ($hours > 0)
+						{
 							$hours = $hours;
-						} else {
+						}
+						else
+						{
 							$hours = '00';
 						}
-						//if there is no length set, we default to 35 minuts
-						if (!$episode->media_minutes && !$episode->media_seconds) {
+						// If there is no length set, we default to 35 minuts
+						if (!$episode->media_minutes && !$episode->media_seconds)
+						{
 							$episode->media_minutes = 35;
 						}
 						$esv = 0;
@@ -136,10 +153,12 @@ class JBSPodcast
 						$episode->id = $episode->study_id;
 						$scripture = getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title = $podinfo->episodetitle;
-						if (!$episode->size) {
+						if (!$episode->size)
+						{
 							$episode->size = '1024';
 						}
-						switch ($pod_title) {
+						switch ($pod_title)
+						{
 							case 0:
 								$title = $scripture . ' - ' . $episode->studytitle;
 								break;
@@ -175,7 +194,7 @@ class JBSPodcast
 						$title = str_replace('&', "and", $title);
 						$description = str_replace('&', "and", $episode->studyintro);
 						$description = strip_tags($description);
-						$episodedetailtemp = '';
+						;
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
@@ -190,19 +209,24 @@ class JBSPodcast
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf("%02d", $episode->media_minutes) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
-						//Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
-						if ($episode->article_id > 1) {
+
+						// Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
+						if ($episode->article_id > 1)
+						{
 							$episodedetailtemp .=
 									'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id=' . $episode->article_id . '" length="' . $episode->size . '" type="'
 											. $episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id=' . $episode->article_id . '</guid>';
 						}
-						if ($episode->docMan_id > 1) {
+						if ($episode->docMan_id > 1)
+						{
 							$episodedetailtemp .=
 									'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $episode->docMan_id . '" length="' . $episode->size . '" type="'
 											. $episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $episode->docMan_id . '</guid>';
-						} else {
+						}
+						else
+						{
 							$episodedetailtemp .=
 									'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '" length="' . $episode->size . '" type="'
 											. $episode->mimetype . '" />
@@ -212,7 +236,7 @@ class JBSPodcast
                         		<itunes:explicit>no</itunes:explicit>
                         	       </item>';
 						$episodedetail = $episodedetail . $episodedetailtemp;
-					} //end of foreach for episode details
+					} // End of foreach for episode details
 
 					$podfoot = '
                         </channel>
@@ -221,22 +245,28 @@ class JBSPodcast
 					$file = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
 					$filewritten = $this->writeFile($file, $filecontent);
-					if (!$filewritten) {
+					if (!$filewritten)
+					{
 						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_FAILURE');
-					} else {
+					}
+					else
+					{
 						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
 					}
-				} // end if $checkresult if positive
+				} // End if $checkresult if positive
 			}
-			//end foreach podids as podinfo
+			// End foreach podids as podinfo
 		}
 		$message = '';
-		foreach ($msg as $m) {
+		foreach ($msg as $m)
+		{
 			$message .= $m . '<br />';
 		}
-		if (!$message) {
+		if (!$message)
+		{
 			$message = 'No message';
 		}
+
 		return $message;
 	}
 
@@ -248,9 +278,9 @@ class JBSPodcast
 	 *
 	 * @return object
 	 */
-	function getEpisodes($id, $limit)
+	public function getEpisodes($id, $limit)
 	{
-		//here's where we look at each mediafile to see if they are connected to this podcast
+		// Here's where we look at each mediafile to see if they are connected to this podcast
 		$db = JFactory::getDBO();
 		$query = 'SELECT p.id AS pid, p.podcastlimit,'
 				. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
@@ -276,6 +306,7 @@ class JBSPodcast
 
 		$db->setQuery($query);
 		$episodes = $db->loadObjectList();
+
 		return $episodes;
 	}
 
@@ -287,7 +318,7 @@ class JBSPodcast
 	 *
 	 * @return boolean|string
 	 */
-	function writeFile($file, $filecontent)
+	public function writeFile($file, $filecontent)
 	{
 
 		// Set FTP credentials, if given
@@ -299,24 +330,32 @@ class JBSPodcast
 		$ftp = JClientHelper::getCredentials('ftp');
 
 		// Try to make the template file writeable
-		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
+		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755'))
+		{
+			JFactory::getApplication()->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file writable', 'notice');
 		}
 
 		$fileit = JFile::write($file, $filecontent);
-		if ($fileit) {
+		if ($fileit)
+		{
 			return true;
-			//JError::raiseNotice('SOME_ERROR_CODE', $file.' - Success');
 		}
-		if (!$fileit) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
+		if (!$fileit)
+		{
+			JFactory::getApplication()
+					->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+
 			return false;
 		}
 		// Try to make the template file unwriteable
-		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
+		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
+		{
+			JFactory::getApplication()
+					->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+
 			return false;
 		}
+
 		return $podcastresults;
 	}
 
