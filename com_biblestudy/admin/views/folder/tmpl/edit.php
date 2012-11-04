@@ -97,12 +97,7 @@ $input = $app->input;
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <?php echo $this->form->getLabel('access'); ?>
-                    <div class="controls">
-                        <?php echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
+
                 
             </fieldset>
         </div>
