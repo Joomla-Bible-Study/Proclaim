@@ -119,6 +119,10 @@ class BiblestudyModelLocations extends JModelList {
                         'list.select', 'location.id, location.published, location.location_text'));
         $query->from('`#__bsms_locations` AS location');
 
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level');
+        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = location.access');
+
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {
