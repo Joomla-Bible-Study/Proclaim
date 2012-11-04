@@ -244,8 +244,8 @@ class biblestudyController extends JControllerLegacy {
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
-        $temp = JBSUpload::gettempfile();
-        $temp_folder = JBSUpload::gettempfolder();
+        $temp = JBSMUpload::gettempfile();
+        $temp_folder = JBSMUpload::gettempfolder();
         $tempfile = $temp_folder . $temp;
         // get path and abort if none
         $layout = JRequest::getWord('layout', '');
@@ -254,16 +254,16 @@ class biblestudyController extends JControllerLegacy {
         } else {
             $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
         }
-        $path = JBSUpload::getpath($url, $tempfile);
+        $path = JBSMUpload::getpath($url, $tempfile);
 
         // check filetype is allowed
-        $allow = JBSUpload::checkfile($temp);
+        $allow = JBSMUpload::checkfile($temp);
         if ($allow) {
-            $filename = JBSUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
+            $filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
 
             // process file
-            $uploadmsg = JBSUpload::processflashfile($tempfile, $filename);
+            $uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
             if (!$uploadmsg) {
                 // set folder and link entries
 
@@ -275,7 +275,7 @@ class biblestudyController extends JControllerLegacy {
         //  $podmsg = PIHelperadmin::setpods($row);
         // delete temp file
 
-        JBSUpload::deletetempfile($tempfile);
+        JBSMUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
         if ($layout == 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
@@ -330,7 +330,7 @@ class biblestudyController extends JControllerLegacy {
 //
 //        //check the file extension is ok
 //        $fileName = $_FILES[$fieldName]['name'];
-//        $extOk = JBSUpload::checkfile($fileName);
+//        $extOk = JBSMUpload::checkfile($fileName);
 //        $app = JFactory::getApplication();
 //        $option = JRequest::getCmd('option');
 //        $app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
@@ -373,14 +373,14 @@ class biblestudyController extends JControllerLegacy {
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
-        $path = JBSUpload::getpath($url, '');
+        $path = JBSMUpload::getpath($url, '');
         $file = JRequest::getVar('uploadfile', '', 'files', 'array');
         // check filetype allowed
-        $allow = JBSUpload::checkfile($file['name']);
+        $allow = JBSMUpload::checkfile($file['name']);
         if ($allow) {
-            $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path);
+            $filename = JBSMUpload::buildpath($file, 1, $serverid, $folderid, $path);
             // process file
-            $uploadmsg = JBSUpload::processuploadfile($file, $filename);
+            $uploadmsg = JBSMUpload::processuploadfile($file, $filename);
 
             if (!$uploadmsg) {
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');

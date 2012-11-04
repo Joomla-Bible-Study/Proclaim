@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 JLoader::register('JBSMUpload', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/upload.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
+JLoader::register('JBSMServer', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
 
 
 /**
@@ -231,8 +232,6 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function writeXMLFile()
 	{
-		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
-		require_once($path1 . 'biblestudy.podcast.class.php');
 		$podcasts = new JBSPodcast;
 		$result = $podcasts->makePodcasts();
 		$this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
