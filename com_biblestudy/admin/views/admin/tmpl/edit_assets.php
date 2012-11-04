@@ -8,6 +8,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
     <div class="row-fluid">
