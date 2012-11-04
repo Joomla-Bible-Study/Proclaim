@@ -1,200 +1,199 @@
 <?php
-
 /**
- * Popup JView
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
-
-JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
-JLoader::register('jbsImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
+ * @version     $Id: view.html.php 1330 2011-01-06 08:01:38Z genu $
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+    // no direct access
+    defined( '_JEXEC' ) or die( 'Restricted access' );    jimport( 'joomla.application.component.view');
 
 // This is the popup window for the teachings.  We could put anything in this window.
 
-/**
- * View class for Popup
- * @package BibleStudy.Site
- * @since 7.0.0
- */
-class biblestudyViewpopup extends JViewLegacy {
+    class biblestudyViewpopup extends JView
+    {
+                                  
+        function display()
+        {
+			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+            $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+            include_once($path1.'scripture.php');
+            include_once($path1.'date.php');
+            include_once($path1.'duration.php');
+		//	$getMedia = new jbsMedia();
+            JRequest::setVar('tmpl', 'component');
+            $mediaid  = JRequest::getInt('mediaid','','get');
+			$Itemid = JRequest::getInt('Itemid','1','get');
+            $templateid = JRequest::getInt('template','1','get'); 
+            $close = JRequest::getInt('close','0','get');
+            $player = JRequest::getInt('player','1','get');
+            
+			$document =& JFactory::getDocument();
+            $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
+            $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+			$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jwplayer.js');
+        //Errors when using local swfobject.js file.  IE 6 doesn't work
+        //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
+        
+        // If this is a direct new window then all we need to do is perform hitPlay and close this window
+		if ($close == 1)
+            {
+                echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
+                
+            }
+        	
+			
+            jimport ('joomla.application.component.helper');
+			
+            $getMedia = new jbsMedia();
+            $media = $getMedia->getMediaRows2($mediaid);
+            $db	= & JFactory::getDBO();
+			$query = 'SELECT * FROM #__bsms_templates WHERE id = '.$templateid; 
+            $db->setQuery($query);
+            $db->query();
+            $template = $db->loadObject();
+            $params = new JParameter($template->params);
+            $itemparams = new JParameter($media->params);
+            $saveid = $media->id;
+            $media->id = $media->study_id;
+			$scripture = getScripture($params, $media, $esv='0', $scripturerow='1'); //dump ($media->study_id, 'scripture: ');
+            $media->id = $saveid;
+            $date = getstudyDate($params, $media->studydate);
+			// The popup window call the counter function
+			$play = $getMedia->hitPlay($mediaid);
+			$length = getDuration($params, $media);
+            $badchars = array("'", '"');
+            $studytitle = str_replace($badchars, ' ', $media->studytitle);
+            $studyintro = str_replace($badchars, ' ', $media->studyintro);
+            
+             $path1 = $media->spath.$media->fpath.$media->filename;
+             if(!eregi('http://', $path1)) 
+            		{
+                            $path1 = 'http://'.$path1;
+					}
+		    $playerwidth = $params->get('player_width');
+            $playerheight = $params->get('player_height');
+            if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
+            if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
+            $extraparams = '';
+        	if ($itemparams->get('playervars')){$extraparams = $itemparams->get('playervars');}
+			if ($itemparams->get('altflashvars'))
+			{
+				$flashvars = $itemparams->get('altflashvars');
+			}
+            $backcolor = $params->get('backcolor','0x287585');
+            $frontcolor = $params->get('frontcolor','0xFFFFFF');
+            $lightcolor = $params->get('lightcolor','0x000000');
+            $screencolor = $params->get('screencolor','0xFFFFFF');
+            //Here is where we start the display
+   
+ 
+            echo '<div class="popupwindow">';
+            $headertext = '';
+            $footertext = ''; 
 
-    /**
-     * Execute and display a template script.
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     *
-     * @see     fetch()
-     * @since   11.1
-     */
-    public function display($tpl = null) {
-        /*
-         * Load Helpers
-         */
-        JView::loadHelper('scripture');
-        JView::loadHelper('date');
-        JView::loadHelper('duration');
-        JView::loadHelper('params');
+            // Need to add in template
+            echo "<body bgcolor='".$params->get('popupbackground', 'black')."'>";
+            $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+            if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);}
+                $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
+            if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
+                echo '<div class="popuptitle"><p class="popuptitle">'.$headertext.'</p></div>';
+            //Here is where we choose whether to use the Internal Viewer or All Videos
+            if ($itemparams->get('player') == 3 || $player == 3) 
+                    {
+                        $mediacode = $getMedia->getAVmediacode($media->mediacode);
+                        echo JHTML::_('content.prepare', $mediacode);
+                    }  
 
-        JRequest::setVar('tmpl', 'component');
-        $mediaid = JRequest::getInt('mediaid', '', 'get');
-        $close = JRequest::getInt('close', '0', 'get');
-        $this->player = JRequest::getInt('player', '1', 'get');
 
-        /*
-         *  If this is a direct new window then all we need to do is perform hitPlay and close this window
-         */
-        if ($close == 1) {
-            echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
-        }
+            if ($itemparams->get('player')== 1 || $player == 1)
+                    {  
+                      $embedshare = $params->get('embedshare','FALSE'); // Used for Embed Share replace with param
+                    echo "<div align='center'>";
+					echo "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('Get flash')."</a> ".JText::_('to see this player')."</div>";
+					echo "</div>";
 
-        $document = JFactory::getDocument();
+					echo "<script type='text/javascript'>
+							jwplayer('placeholder').setup({
+								stretching: 'fill',
+								flashplayer: '".JURI::base()."components/com_biblestudy/assets/player/player.swf',
+								width: ".$playerwidth.",
+								height:".$playerheight.",
+								displayheight:'300',
+								title:'".$studytitle."',
+								author:'".$media->teachername."',
+								date:'".$media->studydate."',
+								description:'".$studyintro."',
+								controlbar:'bottom',
+								link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',
+								image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',
+								autostart:'true',
+								lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',
+								'plugins': {
+								'viral-2': {'onpause':'".$embedshare."','oncomplete':'".$embedshare."','allowmenu':'".$embedshare."'},
+								},
+								levels: [
+								   {file: '".$path1."'}
+											],
+								'modes': [
+								{type: 'html5'},
+								{type: 'flash', src: '".JURI::base()."components/com_biblestudy/assets/player/player.swf'},
+								]
 
-        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+							})
+						</script>";  
 
-        jimport('joomla.application.component.helper');
+					 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
+                    //    Params - Allowfullscreen, Allowscriptaccess
+                    //    Attributes - ID, Name
 
-        $getMedia = new jbsMedia();
-        $this->media = $getMedia->getMediaRows2($mediaid);
-        $template = BsmHelper::getTemplateparams();
+                   
+                    }
+            /**
+             * @desc This is already possible by adding text in the Header and Footer in the Media drop down in the template so i've removed. Added Scripture
+            echo "<BR>Date: ". $date;
+            if ($scripture) {echo " - Scripture: " . $scripture;}
+            echo "<BR>Title: ". $studytitle;
+            echo "<BR>Teacher: ". $media->teachername;
+            */
+            if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
+                    {
 
-        /*
-         *  Convert parameter fields to objects.
-         */
-        $registry = new JRegistry;
-        $registry->loadString($template->params);
-        $this->params = $registry;
+                        echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('Your browser does not support iframes').'</p>
+                    </iframe></div>';
+                    }
+            //Legacy Player (since JBS 6.2.2)
+            if ($player == 7)
+                    {
+                        echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
+                                    <object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$playerwidth.'">
+                                    <param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
+                                    <param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
+                                    <param name="quality" value="high">
+                                    <param name="menu" value="false">
+                                    <param name="wmode" value="transparent">
+                                    </object> ';
+                    }
 
-        /*
-         *  Convert parameter fields to objects.
-         */
-        $registry = new JRegistry;
-        $registry->loadString($this->media->params);
-        $this->params->merge($registry);
+            // Footer
+            echo '</div><div class="popupfooter"><p class="popupfooter">';
+            echo $footertext;
+            echo '</p></div>';
 
-        $css = $this->params->get('css', 'biblestudy.css');
-        if ($css != '-1'):
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-        endif;
+                    } //end of display function
 
-        $saveid = $this->media->id;
-        $this->media->id = $this->media->study_id;
-        $this->scripture = getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
-        $this->media->id = $saveid;
-        $this->date = getstudyDate($this->params, $this->media->studydate);
-        /*
-         *  The popup window call the counter function
-         */
-        $getMedia->hitPlay($mediaid);
-        $this->lenght = getDuration($this->params, $this->media);
-        //$badchars = array("'", '"');
-//$studytitle = str_replace($badchars, ' ', $this->media->studytitle);
-//$studyintro = str_replace($badchars, ' ', $this->media->studyintro);
-        $images = new jbsImages();
-        $seriesimage = $images->getSeriesThumbnail($this->media->series_thumbnail);
-        $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
-        $image = $images->getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
-        $this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $this->media->teachername . '" />';
-        $this->path1 = $this->media->spath . $this->media->fpath . $this->media->filename;
-        if (preg_match('@^(?:http://)?([^/]+)@i', $this->path1)) {
-            $this->path1 = 'http://' . $this->path1;
-        }
-        $this->playerwidth = $this->params->get('player_width');
-        $this->playerheight = $this->params->get('player_height');
-        if ($this->params->get('playerheight') < 55 && $this->params->get('playerheight')) {
-            $this->playerheight = 55;
-        } elseif ($this->params->get('playerheight')) {
-            $this->playerheight = $this->params->get('playerheight');
-        }
-        if ($this->params->get('playerwidth')) {
-            $this->playerwidth = $this->params->get('playerwidth');
-        }
-        if ($this->params->get('playervars')) {
-            $this->extraparams = $this->params->get('playervars');
-        }
-        if ($this->params->get('altflashvars')) {
-            $this->flashvars = $this->params->get('altflashvars');
-        }
-        $this->backcolor = $this->params->get('backcolor', '0x287585');
-        $this->frontcolor = $this->params->get('frontcolor', '0xFFFFFF');
-        $this->lightcolor = $this->params->get('lightcolor', '0x000000');
-        $this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
-        if ($this->params->get('autostart', 1) == 1) {
-            $this->autostart = 'true';
-        } else {
-            $this->autostart = 'false';
-        }
-        if ($this->params->get('playeridlehide')) {
-            $this->playeridlehide = 'true';
-        } else {
-            $this->playeridlehide = 'false';
-        }
-        if ($this->params->get('autostart') == 1) {
-            $this->autostart = 'true';
-        } elseif ($this->params->get('autostart') == 2) {
-            $this->autostart = 'false';
-        }
-        $this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
-        if ($this->params->get('itempopuptitle')) {
-            $this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
-        }
-        $this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
-        if ($this->params->get('itempopupfooter')) {
-            $this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
-        }
+            function titles($text, $media, $scripture, $date, $length)
+                {
+                   // dump ($text, 'text1: ');
+                   if (isset($media->teachername)){ $text = str_replace('{{teacher}}', $media->teachername, $text);}
+                   if (isset($date)){ $text = str_replace('{{studydate}}', $date, $text);}
+                   if (isset($media->filename)) {$text = str_replace('{{filename}}', $media->filename, $text);}
+                   if (isset($media->studyintro)){ $text = str_replace('{{description}}', $media->studyintro, $text);}
+                   if (isset($length)){ $text = str_replace('{{length}}', $length, $text);}
+                   if (isset($media->studytitle)){ $text = str_replace('{{title}}', $media->studytitle, $text);}
+                   if (isset($scripture)){ $text = str_replace('{{scripture}}', $scripture, $text);}
+                    return $text;
+                }
+          
 
-        parent::display($tpl);
-    }
-
-    /**
-     * Set Titles
-     * @param string $text
-     * @param string $this->media
-     * @param string $scripture
-     * @param string $date
-     * @param string $length
-     * @return object
-     */
-    private function titles($text, $media, $scripture, $date, $length) {
-        if (isset($media->teachername)) {
-            $text = str_replace('{{teacher}}', $media->teachername, $text);
-        }
-        if (isset($date)) {
-            $text = str_replace('{{studydate}}', $date, $text);
-        }
-        if (isset($media->filename)) {
-            $text = str_replace('{{filename}}', $media->filename, $text);
-        }
-        if (isset($media->studyintro)) {
-            $text = str_replace('{{description}}', $media->studyintro, $text);
-        }
-        if (isset($length)) {
-            $text = str_replace('{{length}}', $length, $text);
-        }
-        if (isset($media->studytitle)) {
-            $text = str_replace('{{title}}', $media->studytitle, $text);
-        }
-        if (isset($scripture)) {
-            $text = str_replace('{{scripture}}', $scripture, $text);
-        }
-        if (isset($this->teacherimage)) {
-            $text = str_replace('{{teacherimage}}', $this->teacherimage, $text);
-        }
-        if (isset($media->series_text)) {
-            $text = str_replace('{{series}}', $media->series_text, $text);
-        }
-        if (isset($media->series_thumbnail)) {
-            $text = str_replace('{{series_thumbnail}}', $this->series_thumbnail, $text);
-        }
-        return $text;
-    }
-
-}
-
-//end of class
+            } //end of class

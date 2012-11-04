@@ -1,305 +1,206 @@
+<?php defined('_JEXEC') or die('Restriced Access'); ?>
 <?php
+if(class_exists('modbiblestudyhelper')){return;}
+		
+class modBiblestudyHelper
+{
+	var $_template;
+	var $_admin;
+	function getLatest($params)
+	{
+		$items = $params->get('moduleitems', 1);
+		
+		$db =& JFactory::getDBO();
+		$teacher = $params->get('teacher_id', 1);
+		$topic = $params->get('topic_id', 1);
+		$book = $params->get('booknumber', 101);
+		$series = $params->get('series_id', 1);
+		$locations = $params->get('locations');
+		$condition = $params->get('condition', 'OR');
+		$messagetype_menu = $params->get('messagetype');
+		if($condition > 0){
+			$condition = ' AND ';
+			}
+		else {
+			$condition = ' OR ';
+			}
+		$where = array();
+		
+		$where[] = ' #__bsms_studies.published = 1';
 
-/**
- * Helper for mod_biblestudy.php
- * @package BibleStudy
- * @subpackage Model.BibleStudy
- * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-defined('_JEXEC') or die;
+		if ($teacher > 0) {
+			$where[] = ' #__bsms_studies.teacher_id = '.(int) $teacher;
+		}
+		if ($book > 0) {
+			$where[] = ' #__bsms_studies.booknumber = '.(int) $book;
+		}
+		if ($series > 0) {
+			$where[] = ' #__bsms_studies.series_id = '.(int) $series;
+		}
+		if ($topic > 0) {
+			$where[] = ' #__bsms_studies.topics_id = '.(int) $topic;
+		}
+		if ($locations > 0) {
+			$where[] = ' #__bsms_studies.location_id = '.(int) $locations;
+		}
+		if ($messagetype_menu > 0) {
+			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
+		}
+		$user =& JFactory::getUser();
+		$level_user = $user->get('gid');
+		$where[] = ' #__bsms_studies.show_level <= '.$level_user;	
 
-if (class_exists('modbiblestudyhelper')) {
-    return;
+		$where 		= ( count( $where ) ? ' WHERE '. implode( $condition, $where ) : '' );
+
+$where2 = array();
+		$continue = 0;
+		if ($params->get('mult_teachers')) 
+			{ 
+				if (!$filter_teacher)
+				{
+					$continue = 1;
+					$filters = explode(",", $params->get('mult_teachers'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+						}
+				}
+			}
+		
+		if ($params->get('mult_locations')) 
+			{ 
+				if (!$filter_location)
+				{
+					$continue = 1;
+					$filters = null;
+					$filters = explode(",", $params->get('mult_locations'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
+						}
+				}
+			}
+			
+		if ($params->get('mult_books')) 
+			{ 
+				if (!$filter_book)
+				{
+					$continue = 1;
+					$filters = null;
+					$filters = explode(",", $params->get('mult_books'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
+						}
+				}
+			}
+		
+		if ($params->get('mult_series')) 
+			{ 
+				if (!$filter_series)
+				{
+					$continue = 1;
+					$filters = null;
+					$filters = explode(",", $params->get('mult_series'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+						}
+				}
+			}
+			
+		if ($params->get('mult_topics')) 
+			{ 
+				if (!$filter_topic) 
+				{
+					$continue = 1;
+					$filters = null;
+					$filters = explode(",", $params->get('mult_topics'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
+						}
+				}
+			}
+			
+		if ($params->get('mult_messagetype')) 
+			{ 
+				if (!$filter_messagetype)
+				{
+					$continue = 1;
+					$filters = null;
+					$filters = explode(",", $params->get('mult_messagetype'));
+					foreach ($filters AS $filter)
+						{
+							$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+						}
+				}
+			}
+			
+		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
+
+		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
+		
+		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
+			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname AS bname,'
+			. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
+			. ' FROM #__bsms_studies'
+			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+			. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
+			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
+			. $where 
+			. ' ORDER BY #__bsms_studies.studydate DESC ';
+		$db->setQuery( $query, 0, $items );
+		$rows = $db->loadObjectList();
+		//dump ($rows, 'rows: ');
+		return $rows;
+	}
+	function _buildContentWhere()
+	{
+		
+	
+		//return $where;
+		//return $this->where;
+	}
+	
+	function getTemplate($params) {
+		$db =& JFactory::getDBO();
+		//if(empty($this->_template)) {
+			$templateid = $params->get('modulemenuid', 1);
+			//$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT *'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = '.$templateid;
+			$db->setQuery($query);
+			$template = $db->loadObjectList();
+			//$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
+		//}
+		return $template;
+	}	
+	
+	 function getAdmin()
+	{
+		//if (empty($this->_admin)) {
+			$db =& JFactory::getDBO();
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$db->setQuery($query);
+			$admin = $db->loadObjectList();
+		//}
+		return $admin;
+	}
+	
+	function renderStudy(&$study, &$params)
+	{
+		require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
+	}
 }
-
-/**
- * BibleStudy mod helper
- * @package BibleStudy
- * @subpackage Model.BibleStudy
- * @since 7.1.0
- */
-class modBiblestudyHelper {
-
-    /**
-     * Template Sistem
-     * @var array
-     */
-    var $_template;
-
-    /**
-     * Admin Settings
-     * @var array
-     */
-    var $_admin;
-
-    /**
-     * Get Latest
-     * @param array $params
-     * @return array
-     */
-    static function getLatest($params) {
-
-        $items = $params->get('locations', 1);
-
-        $db = JFactory::getDbo();
-        $db->setQuery('SET SQL_BIG_SELECTS=1');
-        $db->query();
-        $query = $db->getQuery(true);
-        $teacher = $params->get('teacher_id');
-        $topic = $params->get('topic_id');
-        $book = $params->get('booknumber');
-        $series = $params->get('series_id');
-        $locations = $params->get('locations');
-        $condition = $params->get('condition');
-        $messagetype_menu = $params->get('messagetype');
-        $year = $params->get('year');
-        $orderparam = $params->get('order', '1');
-        $language = $params->get('language', '*');
-        if ($orderparam == 2) {
-            $order = "ASC";
-        } else {
-            $order = "DESC";
-        }
-        if ($condition > 0) {
-            $condition = ' AND ';
-        } else {
-            $condition = ' OR ';
-        }
-
-        $query->from('#__bsms_studies AS study');
-
-        $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
-                        study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-                        study.media_seconds, study.series_id, study.chapter_begin2, study.chapter_end2, study.verse_begin2, study.verse_end2, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
-                        study.user_id, study.studynumber,'
-                . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
-
-        //Join over mediafile ids
-        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-        $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
-
-        //Join over Message Types
-        $query->select('messageType.message_type AS messageType');
-        $query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
-
-        //Join over Teachers
-        $query->select('teacher.teachername AS teachername, teacher.id AS tid');
-        $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
-
-        //Join over Series
-        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
-        $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
-
-        //Join over Books
-        $query->select('book.bookname');
-        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
-
-        //Join over Plays/Downloads
-        $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
-        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
-        $query->group('study.id');
-
-        //Join over topics
-        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-        $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
-        $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
-        $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
-
-        //filter over teachers
-        $filters = $teacher;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.teacher_id = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters as $filter) {
-                if ($filter != -1) {
-                    $query->where('study.teacher_id = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        //filter locations
-        $filters = $locations;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.location_id = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('study.location_id = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        //filter over books
-        $filters = $book;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.booknumber = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('study.booknumber = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        $filters = $series;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.series_id = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('study.series_id = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        $filters = $topic;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.topics_id = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('study.topics_id = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        $app = JFactory::getApplication();
-        //  $this->setState('filter.language', $app->getLanguageFilter());
-        // Filter by language
-        $lang = $app->getLanguageFilter();
-        if ($lang || $language != '*') {
-            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
-        }
-
-        $filters = $messagetype_menu;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'study.messagetype = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('study.messagetype = ' . (int) $filter, $condition);
-                }
-            }
-        }
-        $filters = $year;
-        if (count($filters) > 1) {
-            $where2 = array();
-            $subquery = '(';
-            foreach ($filters as $filter) {
-                $where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-
-            $query->where($subquery);
-        } else {
-            if ($filters !== NULL):
-                foreach ($filters AS $filter) {
-                    if ($filter != -1) {
-                        $query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
-                    }
-                }
-            endif;
-        }
-        $query->where('study.published = 1');
-        $query->order('studydate ' . $order);
-        $db->setQuery((string) $query, 0, $params->get('moduleitems', '5'));
-        $rows = $db->loadObjectList();
-        return $rows;
-    }
-
-    /**
-     * Build Content Where
-     * @deprecated since version 7.1.0
-     */
-    function _buildContentWhere() {
-
-    }
-
-    /**
-     * Get Template Setting
-     * @param array $params
-     * @return object
-     */
-    static function getTemplate($params) {
-        $db = JFactory::getDBO();
-        $templateid = $params->get('modulemenuid', 1);
-        $query = 'SELECT *'
-                . ' FROM #__bsms_templates'
-                . ' WHERE published = 1 AND id = ' . $templateid;
-        $db->setQuery($query);
-        $template = $db->loadObjectList();
-        return $template;
-    }
-
-    /**
-     * Get Admin Setting
-     * @return object
-     */
-    static function getAdmin() {
-        $db = JFactory::getDBO();
-        $query = 'SELECT *'
-                . ' FROM #__bsms_admin'
-                . ' WHERE id = 1';
-        $db->setQuery($query);
-        $admin = $db->loadObjectList();
-        return $admin;
-    }
-
-    /**
-     * Render Study
-     * @param type $study
-     * @param type $params
-     * @todo make this change according to the parameter settings for new template
-     */
-    function renderStudy($study, $params) {
-        require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
-    }
-
-}
+	
+?>

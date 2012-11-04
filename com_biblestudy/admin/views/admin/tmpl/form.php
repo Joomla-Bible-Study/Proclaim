@@ -1,296 +1,222 @@
-<?php
-/**
- * Admin Form
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
-$messages = JRequest::getVar('messages', '', 'get', 'array');
+<?php defined('_JEXEC') or die('Restricted access');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
+
+
+$db = JFactory::getDBO();
+$query = 'SELECT id, params FROM #__bsms_mediafiles';
+$db->setQuery($query);
+$db->query();
+$results = $db->loadObjectList();
+foreach ($results AS $result)
+{
+    $params = new JParameter($result->params);
+    $player = $params->get('player');
+    $popup = $params->get('internal_popup');
+    
+  //  echo $player.' - '.$popup;
+    $params->set('internal_popup', '3');
+    
+   // echo ' - new: '.$params->get('internal_popup').'<br />';
+}
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton3 = function(pressbutton) {
-        var form = document.getElementById('adminForm');
-        form.tooltype.value = 'players';
-        form.task = 'tools';
-        form.submit();
-    }
 
-    Joomla.submitbutton4 = function(pressbutton) {
-        var form = document.getElementById('adminForm');
-        form.tooltype.value = 'popups';
-        form.task = 'tools';
-        form.submit();
-    }
-</script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-    <?php echo JHtml::_('tabs.start', 'com_biblestudy_admin_' . $this->item->id, array('useCookie' => 1)); ?>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
-                        <?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
-                    </li>
-                    <li>
-                        <label style="max-width: 100%; padding: 0 5px 0 0;">
-                            <a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">
-                                <?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
-                            </a>
-                        </label>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('metakey', 'params'); ?>
-                        <?php echo $this->form->getInput('metakey', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('metadesc', 'params'); ?>
-                        <?php echo $this->form->getInput('metadesc', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('compat_mode', 'params'); ?>
-                        <?php echo $this->form->getInput('compat_mode', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('drop_tables'); ?>
-                        <?php echo $this->form->getInput('drop_tables'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
-                        <?php echo $this->form->getInput('studylistlimit', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('uploadtype', 'params'); ?>
-                        <?php echo $this->form->getInput('uploadtype', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('show_location_media', 'params'); ?>
-                        <?php echo $this->form->getInput('show_location_media', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('popular_limit', 'params'); ?>
-                        <?php echo $this->form->getInput('popular_limit', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('character_filter', 'params'); ?>
-                        <?php echo $this->form->getInput('character_filter', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('format_popular', 'params'); ?>
-                        <?php echo $this->form->getInput('format_popular', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
-                        <?php echo $this->form->getInput('socialnetworking', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('sharetype', 'params'); ?>
-                        <?php echo $this->form->getInput('sharetype', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('debug'); ?>
-                        <?php echo $this->form->getInput('debug'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>
-    </div>
-    <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('default_main_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_main_image', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_series_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_series_image', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_teacher_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_teacher_image', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_download_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_download_image', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_showHide_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_showHide_image', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>
-        <div class="width-40 fltrt">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('location_id', 'params'); ?>
-                        <?php echo $this->form->getInput('location_id', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('teacher_id', 'params'); ?>
-                        <?php echo $this->form->getInput('teacher_id', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('series_id', 'params'); ?>
-                        <?php echo $this->form->getInput('series_id', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('booknumber', 'params'); ?>
-                        <?php echo $this->form->getInput('booknumber', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('messagetype', 'params'); ?>
-                        <?php echo $this->form->getInput('messagetype', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_study_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_study_image', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('download', 'params'); ?>
-                        <?php echo $this->form->getInput('download', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('target', 'params'); ?>
-                        <?php echo $this->form->getInput('target', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('server', 'params'); ?>
-                        <?php echo $this->form->getInput('server', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('path', 'params'); ?>
-                        <?php echo $this->form->getInput('path', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('podcast', 'params'); ?>
-                        <?php echo $this->form->getInput('podcast', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('mime', 'params'); ?>
-                        <?php echo $this->form->getInput('mime', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>
-    </div>
-    <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
-    <div class="width-100">
-        <div class="width-50 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
-                        <?php echo $this->playerstats; ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('from', 'params'); ?>
-                        <?php echo $this->form->getInput('from', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('to', 'params'); ?>
-                        <?php echo $this->form->getInput('to', 'params'); ?>
-                    </li>
-                    <li>
-                        <input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>
-        <div class="width-50 fltrt">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
-                        <?php echo $this->popups; ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
-                        <?php echo $this->form->getInput('pFrom', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
-                        <?php echo $this->form->getInput('pTo', 'params'); ?>
-                    </li>
-                    <li>
-                        <input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>
-    </div>
-    <div>
-        <input type="hidden" name="task" value="" />
-        <input type="hidden" name="tooltype" value="" />
-        <?php echo JHtml::_('form.token'); ?>
-    </div>
-    <div class="clr"></div>
+<form action="index.php" method="post" name="adminForm" id="adminForm">
+<div class="col100">
+	<fieldset class="adminform">
+		<legend><?php echo JText::_( 'Administration' ); //dump ($this->admin, 'admin: ');?></legend>
+
+
+    <table class="admintable" summary="administration">
+    <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
+    <?php
+
+	jimport('joomla.html.pane');
+	$pane =& JPane::getInstance( 'sliders' );
+
+echo $pane->startPane( 'content-pane' );
+
+echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
+echo $this->params->render( 'params' );
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_( 'Images Folders' ), 'FILLIN-IMAGES' );
+echo $this->params->render( 'params' , 'FILLIN-IMAGES');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_( 'Auto Fill Study Record' ), 'FILLIN-STUDY' );
+echo $this->params->render( 'params' , 'FILLIN-STUDY');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_( 'Auto Fill Media File Record' ), 'FILLIN-MEDIAFILE' );
+echo $this->params->render( 'params' , 'FILLIN-MEDIAFILE');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_( 'Front End Submission' ), 'SUBMISSION' );
+echo $this->params->render( 'params' , 'SUBMISSION');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_( 'All Videos Reloaded Compatability' ), 'ALLVIDEOSRELOADED' );
+echo $this->params->render( 'params' , 'ALLVIDEOSRELOADED');
+echo $pane->endPanel();
+
+echo $pane->endPane();?>
+<tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php
+if ($this->lists['main'])
+{
+    echo $this->lists['main']; echo ' '.JText::_('Default for Study List Page Image. Media images folder used (set above).');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php
+if (isset($this->lists['study']))
+{
+    echo $this->lists['study']; echo ' '.JText::_('Default for study thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php
+if (isset($this->lists['series']))
+{
+    echo $this->lists['series']; echo ' '.JText::_('Default for series thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+}
+?></td></tr>
+
+<tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php
+if (isset($this->lists['teacher']))
+{
+    echo $this->lists['teacher']; echo ' '.JText::_('Default for teacher thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php
+if (isset($this->lists['download']))
+{
+    echo $this->lists['download']; echo ' '.JText::_('Default for download image. Must be called download.png. Media images folder used (set above).');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td>
+<?php echo $this->lists['showhide']; echo ' '.JText::_('Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
+
+<?php //test for sh404SEF
+jimport('joomla.filesystem.file');
+$dest = JPATH_SITE.DS.'/components/com_sh404sef/index.html';
+$sh404exists = JFile::exists($dest);
+if ($sh404exists)
+{
+	?>
+	<tr><td class="key"><?php echo JText::_('sh404SEF maintenance'); ?></td><td><a href="index.php?option=com_biblestudy&view=admin&controller=admin&task=updatesef">Update sh404SEF links for com_biblestudy</a></td></tr>
+	<?php
+}
+?>
+
+
+    </table>
+	</fieldset>
+</div>
+
+<input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="id" value="1" />
+<input type="hidden" name="controller" value="admin" />
+<input type="hidden" name="task" value="save" />
 </form>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DB'), 'admin-db-settings'); ?>
-<?php echo $this->loadTemplate('assets'); ?>
 <div class="clr"></div>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_BACKUP'), 'admin-backup-settings'); ?>
-<div class="width-100">
-    <div class="width-60 fltlft">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_IBM_BACKUP'); ?></legend>
-            <?php echo $this->loadTemplate('backup'); ?>
-        </fieldset>
-    </div>
-</div>
-<div class="clr"></div>
-<?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1) : ?>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_MIGRATE'), 'admin-migrate-settings'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_IBM_MIGRATION'); ?></legend>
-                <?php echo $this->loadTemplate('migrate'); ?>
-            </fieldset>
-        </div>
-    </div>
 
-<?php endif ?>
+<form action="index.php" method="post" name="adminForm2" id="adminForm2">
+    <div class="col100">
+        <fieldset class="adminform">
+		  <legend><?php echo JText::_( 'Media Files' ); ?></legend>
+<table class="admintable" summary="players statistics">
+<tr><td class="key"><?php echo JText::_('Media Players Statistics:');?> </td><td><?php echo $this->playerstats;?></td> </tr>
+<tr>
+<td class="key"><?php echo JText::_('Change Players'); ?></td>
+<td>
+
+<select name="from" id="from">
+<option value="x"><?php echo JText::_('Select an Existing Player');?></option>
+<option value="0"><?php echo JText::_('Direct');?></option>
+<option value="1"><?php echo JText::_('Internal Player');?></option>
+<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
+<option value="100"><?php echo JText::_('No Player Listed');?></option>
+</select>
+</td>
+<td>
+<select name="to" id="to">
+<option value="x"><?php echo JText::_('Select a New Player');?></option>
+<option value="0"><?php echo JText::_('Direct');?></option>
+<option value="1"><?php echo JText::_('Internal Player');?></option>
+<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
+
+</select>
+<input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="task" value="changePlayers" />
+<input type="hidden" name="controller" value="admin" />
+<input type="submit" value="Submit" />
+</td>
+</tr>
+</table>
+</fieldset>
+</form>
 <div class="clr"></div>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DATABASE'), 'admin-database'); ?>
-<div class="width-100">
-    <div class="width-60 fltlft">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_ADM_DATABASE'); ?></legend>
-            <?php echo $this->loadTemplate('database'); ?>
-        </fieldset>
-    </div>
+<div>
+<form action="index.php" method="post" name="adminForm3" id="adminForm3">
+    <div class="col100">
+        <fieldset class="adminform">
+		  <legend><?php echo JText::_( 'Pop Up Options' ); ?></legend>
+<table class="admintable" summary="player">
+<tr><td class="key"><?php echo JText::_('Media Players Popup Statistics:');?> </td><td><?php echo $this->popups;?></td> </tr>
+<tr>
+<td class="key"><?php echo JText::_('Change Popup'); ?></td>
+<td>
+
+<select name="pfrom" id="pfrom">
+<option value="x"><?php echo JText::_('Select an Existing Option');?></option>
+<option value="2"><?php echo JText::_('Inline');?></option>
+<option value="1"><?php echo JText::_('Popup/New Window');?></option>
+<option value="3"><?php echo JText::_('Use Global Settings');?></option>
+<option value="100"><?php echo JText::_('No Option Listed');?></option>
+</select>
+</td>
+<td>
+<select name="pto" id="pto">
+<option value="x"><?php echo JText::_('Select a New Option');?></option>
+<option value="2"><?php echo JText::_('Inline');?></option>
+<option value="1"><?php echo JText::_('Popup/New Window');?></option>
+<option value="3"><?php echo JText::_('Use Global Settings');?></option>
+
+
+</select>
+<input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="task" value="changePopup" />
+<input type="hidden" name="controller" value="admin" />
+
+<input type="submit" value="Submit" />
+</td>
+</tr>
+</table>
+</fieldset>
+</form>
 </div>
-<div class="clr"></div>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_CONVERSION'), 'admin-conversion-settings'); ?>
-<div class="width-100">
-    <div class="width-60 fltlft">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_IBM_CONVERT'); ?></legend>
-            <div> <?php echo $this->ss; ?> </div>
-            <div> <?php echo $this->pi; ?> </div>
-        </fieldset>
-    </div>
 </div>
-<div class="clr"></div>
-<?php echo JHtml::_('tabs.end'); ?>

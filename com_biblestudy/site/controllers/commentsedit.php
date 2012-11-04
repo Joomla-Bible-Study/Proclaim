@@ -1,92 +1,143 @@
 <?php
-
 /**
- * Comments Edit Controller
- * @package BibleStudy
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
-
-/**
- * Controller class for CommentsEdit
- * @package BibleStudy.Site
- * @since 7.0.0
+ * Media Edit Controller for Bible Study Component
+ * 
+ 
  */
-class biblestudyControllerCommentsEdit extends JControllerForm {
 
-    /**
-     * View List
-     * @var type
-     */
-    protected $view_list = 'commentslist';
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
-    /**
-     * View Item
-     * @since	1.6
-     */
-    protected $view_item = 'commentsedit';
+/**
+ * Media Edit Controller
+ *
+ */
+class biblestudyControllercommentsedit extends JController
+{
+	/**
+	 * constructor (registers additional tasks to methods)
+	 * @return void
+	 */
+	function __construct()
+	{
+		parent::__construct();
 
-    /**
-     * Method to cancel an edit.
-     *
-     * @param	string	$key	The name of the primary key of the URL variable.
-     *
-     * @return	Boolean	True if access level checks pass, false otherwise.
-     * @since	1.6
-     */
-    public function cancel($key = 'a_id') {
-        parent::cancel($key);
-    }
+		// Register Extra tasks
+		$this->registerTask( 'add'  , 	'edit' );
+	}
 
-    /**
-     * Method to edit an existing record.
-     *
-     * @param	string	$key	The name of the primary key of the URL variable.
-     * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-     *
-     * @return	Boolean	True if access level check and checkout passes, false otherwise.
-     * @since	1.6
-     */
-    public function edit($key = null, $urlVar = 'a_id') {
-        $result = parent::edit($key, $urlVar);
-        return $result;
-    }
+	/**
+	 * display the edit form
+	 * @return void
+	 */
+	function edit()
+	{
+		JRequest::setVar( 'view', 'commentsedit' );
+		JRequest::setVar( 'layout', 'form'  );
+		JRequest::setVar('hidemainmenu', 1);
 
-    /**
-     * Method to save a record.
-     *
-     * @param	string	$key	The name of the primary key of the URL variable.
-     * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-     *
-     * @return	Boolean	True if successful, false otherwise.
-     * @since	1.6
-     */
-    public function save($key = null, $urlVar = 'a_id') {
+		parent::display();
+	}
 
-        $result = parent::save($key, $urlVar);
-        return $result;
-    }
+	/**
+	 * save a record (and redirect to main page)
+	 * @return void
+	 */
+	function save()
+	{
+		$model = $this->getModel('commentsedit');
 
-    /**
-     * Method to get a model object, loading it if required.
-     *
-     * @param	string	$name	The model name. Optional.
-     * @param	string	$prefix	The class prefix. Optional.
-     * @param	array	$config	Configuration array for model. Optional.
-     *
-     * @return	object	The model.
-     *
-     * @since	1.5
-     */
-    public function getModel($name = 'CommentsEdit', $prefix = 'biblestudyModel', $config = array('ignore_request' => true)) {
-        $model = parent::getModel($name, $prefix, $config);
+		if ($model->store($post)) {
+			$msg = JText::_( 'Comment Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving Comment' );
+		}
 
-        return $model;
-    }
+		
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
+			// Check the table in so it can be edited.... we are done with it anyway
+			$mainframe->redirect (str_replace("&amp;","&",$link));
+	}
 
+	/**
+	 * remove record(s)
+	 * @return void
+	 */
+	function remove()
+	{
+		$model = $this->getModel('commentsedit');
+		if(!$model->delete()) {
+			$msg = JText::_( 'Error: One or More Items Could not be Deleted' );
+		} else {
+			$msg = JText::_( 'Item(s) Deleted' );
+		}
+
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
+	}
+function publish()
+	{
+		$mainframe =& JFactory::getApplication();
+
+		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+		if (!is_array( $cid ) || count( $cid ) < 1) {
+			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+		}
+
+		$model = $this->getModel('commentsedit');
+		if(!$model->publish($cid, 1)) {
+			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+		}
+
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist' );
+	}
+
+
+	function unpublish()
+	{
+		$mainframe =& JFactory::getApplication();
+
+		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+		if (!is_array( $cid ) || count( $cid ) < 1) {
+			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+		}
+
+		$model = $this->getModel('commentsedit');
+		if(!$model->publish($cid, 0)) {
+			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+		}
+
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist' );
+	}
+
+	/**
+	 * cancel editing a record
+	 * @return void
+	 */
+	function cancel()
+	{
+		$mainframe =& JFactory::getApplication();
+		$msg = JText::_( 'Operation Cancelled' );
+
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+		$db=& JFactory::getDBO();
+		$query = "SELECT id"
+		. "\nFROM #__menu"
+		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
+			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+
+			// Check the table in so it can be edited.... we are done with it anyway
+			$mainframe->redirect (str_replace("&amp;","&",$link));
+	}
 }
+?>

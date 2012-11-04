@@ -1,54 +1,70 @@
 <?php
-
 /**
- * BibleStudy Defined file
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
+* @version $Id: biblestudy.defines.php 1 $
+* Bible Study Component
+* @package Bible Study
+* @Copyright (C) 2010 Joomla Bible Study All rights reserved
+* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+* @link http://www.JoomlaBibleStudy.org
+**/
+require_once (JPATH_ROOT . DS . 'components' . DS . 'com_biblestudy' . DS . 'lib' . DS . 'biblestudy.admin.class.php');
+defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
-define('BIBLESTUDY_VERSION', '7.0.2');
-define('BIBLESTUDY_VERSION_DATE', '2011-12-01');
-define('BIBLESTUDY_VERSION_BUILD', '702');
+define ('BIBLESTUDY_VERSION', '6.2.0');
+define ('BIBLESTUDY_VERSION_DATE', '2010-08-04');
+define ('BIBLESTUDY_VERSION_NAME', 'Deuteronomy');
+define ('BIBLESTUDY_VERSION_BUILD', '614');
 
 // Default values
 define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');
 define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
 define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
 
+$language =& JFactory::getLanguage();
+$lang = $language->getBackwardLang();
+
+define('BIBLESTUDY_LANGUAGE', $lang);
+
 // File system paths
-define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME);
+define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NAME);
 
 define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
 define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
 
-define('BIBLESTUDY_PATH', JPATH_SITE . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
-define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib');
-define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'template');
-define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT);
+define('BIBLESTUDY_PATH', JPATH_SITE .DS. BIBLESTUDY_COMPONENT_RELPATH);
+define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH .DS. 'lib');
+define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH .DS. 'template');
+define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE .DS. BIBLESTUDY_TEMPLATE_DEFAULT);
 
-define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
-define('BIBLESTUDY_PATH_ADMIN_LIB', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'lib');
-define('BIBLESTUDY_PATH_ADMIN_HELPERS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers');
-define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'language');
-define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'install');
-define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images');
+define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN .DS. BIBLESTUDY_COMPONENT_RELPATH);
+define('BIBLESTUDY_PATH_ADMIN_LIB', BIBLESTUDY_PATH_ADMIN .DS. 'lib');
+define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN .DS. 'language');
+define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'install');
+define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN .DS. 'images');
 
 
-define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'biblestudy.xml');
+define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'manifest.xml');
 
 // URLs
+
+
 // Constants
+
 // Minimum version requirements
-DEFINE('BIBLESTUDY_MIN_PHP', '5.0.3');
+DEFINE('BIBLESTUDY_MIN_PHP',   '5.0.3');
 DEFINE('BIBLESTUDY_MIN_MYSQL', '4.1.19');
 
 // Time related
-define('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
-define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
+define ('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
+define ('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 
 // Database defines
-define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
+define ('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
+
+//define the player in use whether All Videos (av) or All Videos Reloaded (avr)
+$admin = new JBSAdmin();
+$player = $admin->getMediaPlayer();
+define ('BIBLESTUDY_PLAYER',$player);
+
+
+?>

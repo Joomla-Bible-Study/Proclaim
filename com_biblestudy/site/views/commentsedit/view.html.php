@@ -1,75 +1,60 @@
 <?php
 
-/**
- * JView Comments Edit
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
+jimport( 'joomla.application.component.view' );
 
-/**
- * View class for CommentsEdit
- * @package BibleStudy.Site
- * @since 7.0.0
- */
-class biblestudyViewcommentsedit extends JViewLegacy {
+class biblestudyViewcommentsedit extends JView
+{
+	
+	function display($tpl = null)
+	{
+		$mainframe =& JFactory::getApplication();
+		$params =& $mainframe->getPageParameters();
+		$this->assignRef('params', $params);
+		$commentsedit		=& $this->get('Data');
+		$isNew		= ($commentsedit->id < 1);
+		//$editor =& JFactory::getEditor();
+		//this->assignRef( 'editor', $editor );
+		$lists = array();
+		/*
+		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		JToolBarHelper::title(   JText::_( 'Edit Comment' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::save();
+		if ($isNew)  {
+			JToolBarHelper::cancel();
+			// initialise new record
+			//$studiesedit->teacher_id 	= JRequest::getVar( 'teacher_id', 0, 'post', 'int' );
+			
+		} else {
+			// for existing items the button is renamed `close`
+			JToolBarHelper::cancel( 'Cancel', 'Close' );
+		}
+		jimport( 'joomla.i18n.help' );
+		JToolBarHelper::help( 'biblestudy.commentsedit', true );
+		*/
+		// build the html select list for ordering
+		
+		$database	= & JFactory::getDBO();
+			
+		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $commentsedit->published);
+		
+		
+		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+		$database->setQuery($query);
+		//$studies = $database->loadObjectList();
+		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		$studies = array_merge($studies,$database->loadObjectList() );
+		$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $commentsedit->study_id);
+		
 
-    /**
-     * Form
-     * @var array
-     */
-    protected $form;
-
-    /**
-     * Item
-     * @var array
-     */
-    protected $item;
-
-    /**
-     * State
-     * @var array
-     */
-    protected $state;
-
-    /**
-     * Execute and display a template script.
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     *
-     * @see     fetch()
-     * @since   11.1
-     */
-    public function display($tpl = null) {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
-        $this->state = $this->get("State");
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
-        $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-        //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
-        //check permissions to enter studies
-        //check permissions to enter studies
-        if (!$this->canDo->get('core.edit')) {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-        }
-        $this->setLayout('form');
-
-
-        parent::display($tpl);
-    }
-
+	
+	
+		$this->assignRef('lists',		$lists);
+		$this->assignRef('commentsedit',		$commentsedit);
+		parent::display($tpl);
+	}
 }
+?>

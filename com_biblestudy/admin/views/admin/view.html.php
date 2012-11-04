@@ -1,218 +1,186 @@
 <?php
 
-/**
- * View html
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
+
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-jimport('joomla.application.component.helper');
-jimport('joomla.i18n.help');
+jimport( 'joomla.application.component.view' );
 
-require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
 
-/**
- * View class for Admin
- * @package BibleStudy.Admin
- * @since 7.0.0
- */
-class BiblestudyViewAdmin extends JViewLegacy {
+class biblestudyViewadmin extends JView
+{
 
-    /**
-     * Form
-     * @var array
-     */
-    protected $form;
-
-    /**
-     * Item
-     * @var array
-     */
-    protected $item;
-
-    /**
-     * State
-     * @var array
-     */
-    protected $state;
-
-    /**
-     * Execute and display a template script.
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     *
-     * @see     fetch()
-     * @since   11.1
-     */
-    public function display($tpl = null) {
-
-        $language = JFactory::getLanguage();
-        $language->load('com_installer');
-
-        // Get data from the model
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
-        $this->state = $this->get("State");
-
-        // Get data from the model for database
-        $this->changeSet = $this->get('Items');
-        $this->errors = $this->changeSet->check();
-        $this->results = $this->changeSet->getStatus();
-        $this->schemaVersion = $this->get('SchemaVersion');
-        $this->updateVersion = $this->get('UpdateVersion');
-        $this->filterParams = $this->get('DefaultTextFilters');
-        $this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-        $this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-        $this->pagination = $this->get('Pagination');
-        $this->errorCount = count($this->errors);
-        $this->jversion = $this->get('CompVersion');
-        //end for database
-
-        $this->setLayout('form');
-
-        $this->loadHelper('params');
-        $config = JFactory::getConfig();
-        //$tmp_dest = $config->getValue('config.tmp_path');
-        //$this->assignRef('tmp_dest', $tmp_dest);
+	function display($tpl = null)
+	{
+                   
+        JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		$admin		=& $this->get('Data');
+		$this->assignRef('admin', $admin);
+		JToolBarHelper::title(   JText::_( 'Administration' ), 'administration');
+		JToolBarHelper::save();
+        JToolBarHelper::cancel();
+        JToolBarHelper::apply();
+		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
+		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
+		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'Reset All Plays', false, false );
+        JToolBarHelper::help('biblestudy', true );
+		$paramsdata = $admin->params;
+		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
+		$params = new JParameter($paramsdata, $paramsdefs);
+		$this->assignRef('params', $params);
 
         $stats = new jbStats();
-        $playerstats = $stats->players();
-        $this->assignRef('playerstats', $playerstats);
-        $this->assets = JRequest::getVar('checkassets', null, 'get', 'array');
+        $playerstats = $stats->players(); 
+        $this->assignRef('playerstats',$playerstats);
+        
         $popups = $stats->popups();
         $this->assignRef('popups', $popups);
-
-        //get the list of backupfiles
-        $backedupfiles = array();
-        jimport('joomla.filesystem.folder');
-        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
-        if (JFolder::exists($path)) {
-            if (!$files = JFolder::files($path, '.sql')) {
-                $this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
-            } else {
-                asort($files, SORT_STRING);
-                $filelist = array();
-                foreach ($files as $i => $value) {
-                    $filelisttemp = array('value' => $value, 'text' => $value);
-                    $filelist[] = $filelisttemp;
-                }
-
-                $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
-                $types = array_merge($types, $filelist);
-                $this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
-            }
-        } else {
-            $this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
-        }
-        //Check for SermonSpeaker and PreachIt
-        $db = JFactory::getDBO();
-        $query = 'SELECT extension_id, name, element FROM #__extensions';
-        $db->setQuery($query);
-        $db->query();
-        $extensions = $db->loadObjectList();
-        foreach ($extensions as $extension) {
-            if ($extension->element == 'com_sermonspeaker') {
-                $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">' . JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
-            } else {
-                $this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
-            }
-            if ($extension->element == 'com_preachit') {
-                $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">' . JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
-            } else {
-                $this->pi = JText::_('JBS_IBM_NO_PREACHIT_FOUND');
-            }
+        
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('study_images', 'stories');
+		$javascript			= 'onchange="changeDisplayImage();"';
+		$fileList 	= JFolder::files($studypath);
+		if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal2[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['study'] = JHTML::_('select.genericlist',  $folderfinal2, 'study', 'class="inputbox"', 'value', 'value', $admin->study );
         }
 
-        $jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'biblestudy.xml');
-        $this->version = $jbsversion['version'];
 
-        $errors = count($this->errors);
-        if (!(strncmp($this->schemaVersion, $this->version, 5) === 0)) {
-            $this->errorCount++;
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('series_imagefolder'); 
+		$fileList 	= JFolder::files($studypath); 
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal3[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal3, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['series'] = JHTML::_('select.genericlist',  $folderfinal3, 'series', 'class="inputbox"', 'value', 'value', $admin->series );
         }
-        if (!$this->filterParams) {
-            $this->errorCount++;
+
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal4[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal4, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['media'] = JHTML::_('select.genericlist',  $folderfinal4, 'media', 'class="inputbox"', 'value', 'value', $admin->media );
         }
-        if (($this->updateVersion != $this->version)) {
-            $this->errorCount++;
+
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal8[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal8, JHTML::_('select.option', '0', '- '.JText::_('Default Image').' -', 'value', 'value'));
+    		$lists['main'] = JHTML::_('select.genericlist',  $folderfinal8, 'main', 'class="inputbox"', 'value', 'value', $admin->main );
         }
 
-        // Set the toolbar
-        $this->addToolbar();
 
-        // Display the template
-        parent::display($tpl);
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder', 'stories');
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal5[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal5, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['teacher'] = JHTML::_('select.genericlist',  $folderfinal5, 'teacher', 'class="inputbox"', 'value', 'value', $admin->teacher );
 
-        // Set the document
-        $this->setDocument();
-    }
-
-    /**
-     * Add Toolbar
-     *
-     * @since 7.0.0
-     */
-    protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', TRUE);
-
-        JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-        JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-        JToolBarHelper::divider();
-        JToolBarHelper::save('admin.save');
-        JToolBarHelper::apply('admin.apply');
-        JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
-        JToolBarHelper::divider();
-        JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
-        JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
-        JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
-        JToolBarHelper::divider();
-        JToolBarHelper::custom('admin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
-        JToolBarHelper::divider();
-        JToolBarHelper::help('biblestudy', true);
-    }
-
-    /**
-     * Add the page title to browser.
-     *
-     * @since	7.1.0
-     */
-    protected function setDocument() {
-        $document = JFactory::getDocument();
-        $document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
-    }
-
-    /**
-     * Added for Sermonspeaker and preachit.
-     *
-     * @since 7.1.0
-     * @param type $component
-     * @return boolean
-     */
-    protected function versionXML($component) {
-        switch ($component) {
-            case 'sermonspeaker':
-                if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sermonspeaker' . DIRECTORY_SEPARATOR . 'sermonspeaker.xml')) {
-                    return $data['version'];
-                } else {
-                    return FALSE;
-                }
-                break;
-
-            case 'preachit':
-                if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_preachit' . DIRECTORY_SEPARATOR . 'preachit.xml')) {
-                    return $data['version'];
-                } else {
-                    return FALSE;
-                }
-                break;
         }
-    }
 
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('podcast_imagefolder', 'stories');
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal6[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal6, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['podcast'] = JHTML::_('select.genericlist',  $folderfinal6, 'podcast', 'class="inputbox"', 'value', 'value', $admin->podcast );
+        }
+
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media', '../components/com_biblestudy/images');
+		$javascript			= 'onchange="changeDisplayImage();"';
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal7[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal7, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+    		$lists['download'] = JHTML::_('select.genericlist',  $folderfinal7, 'download', 'class="inputbox"', 'value', 'value', $admin->download );
+        }
+
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+		$fileList 	= JFolder::files($studypath);
+        if ($fileList)
+        {
+            foreach($fileList as $key=>$value)
+    		{
+    			$folderfinal1 = new JObject();
+    			$folderfinal1->value = $value;
+    			$folderfinal1->id = $key;
+    			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+    			else {$folderfinal9[] = $folderfinal1;}
+    		}
+    		array_unshift($folderfinal9, JHTML::_('select.option', '0', '- '.JText::_('Default Image').' -', 'value', 'value'));
+    		$lists['showhide'] = JHTML::_('select.genericlist',  $folderfinal9, 'showhide', 'class="inputbox"', 'value', 'value', $admin->showhide );
+        }
+
+
+		jimport( 'joomla.i18n.help' );
+	//	JToolBarHelper::help( 'biblestudy', true );
+		$this->assignRef('lists', $lists);
+
+	
+		parent::display($tpl);
+	}
 }
+?>

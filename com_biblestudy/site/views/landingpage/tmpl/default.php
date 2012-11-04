@@ -1,150 +1,184 @@
 <?php
-/**
- * Default
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die(); ?>
 
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
+<?php
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
+$database = & JFactory::getDBO();
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'helper.php');
+$document =& JFactory::getDocument();
+$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+$showhide = getShowhide(); //dump ($showhide, 'showhide: ');
+$document->addScriptDeclaration($showhide);
+//$document->addStyleSheet(JURI::base().'components/com_biblestudy'.DS.'tooltip.css');
+$stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
+$document->addStyleSheet($stylesheet);
 $params = $this->params;
-JView::loadHelper('listing');
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'image.php');
+$d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+//dump( $params, 'Variable Name' );
+//dump ($this->admin_params);
+
+
+$listingcall = JView::loadHelper('listing');
+
 ?>
-<div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
+<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
+
+<!--<tbody><tr>-->
+  <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
+
     <div id="bsms_header">
-        <h1 class="componentheading">
-            <?php
-            if ($this->params->get('show_page_image') > 0) {
-                if (isset($this->main->path)) {
-                    ?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
-                    <?php
-                    //End of column for logo
-                }
-            }
-            if ($this->params->get('show_page_title') > 0) {
-                echo $this->params->get('page_title');
-            }
-            //echo "\n";
-            ?>
-        </h1>
+      <h1 class="componentheading">
+<?php
+     if ($this->params->get( 'show_page_image' ) >0) {
+
+     ?>
+       <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
+    <?php //End of column for logo
+    }
+    ?>
+    <?php
+if ( $this->params->get( 'show_page_title' ) >0 ) {
+    echo $this->params->get('page_title');
+    }
+	echo "\n";?>
+      </h1>
     </div> <!-- End div id="bsms_header" -->
 
-    <?php
-    $i = 1;
-    for ($i = 1; $i <= 7; $i++) {
-        $showIt = $params->get('headingorder_' . $i);
-        if ($params->get('show' . $showIt) == 1) {
-            $heading_call = null;
-            $heading = null;
-            $showIt_phrase = null;
-            switch ($showIt) {
+<?php
 
-                case 'teachers':
-                    JView::loadHelper('teacher');
-                    $heading = getTeacherLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_TEACHERS');
-                    break;
+$i = 1;
 
-                case 'series':
-                    JView::loadHelper('serieslist');
-                    $heading = getSeriesLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_SERIES');
-                    break;
+for ($i=1;$i<=7;$i++) {
 
-                case 'locations':
-                    JView::loadHelper('location');
-                    $heading = getLocationsLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
-                    break;
+  $showIt = $params->get('headingorder_'.$i);
 
-                case 'messagetypes':
-                    JView::loadHelper('messagetype');
-                    $heading = getMessageTypesLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
-                    break;
+  if ($params->get('show'.$showIt) == 1 )
+    {
+    	//Wrap each in a DIV...
 
-                case 'topics':
-                    JView::loadHelper('topics');
-                    $heading = getTopicsLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_TOPICS');
-                    break;
+?>
 
-                case 'books':
-                    JView::loadHelper('book');
-                    $heading = getBooksLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_BOOKS');
-                    break;
+    <div id="landing_item">
+      <div id="landing_title">
+      <?php echo $params->get($showIt.'label'); echo "\n"; ?>
+      </div> <!-- end div id="landing_title" -->
+<?php
+  if ($params->get('landing'.$showIt.'limit'))
+  {
+	$images = new jbsImages();
+	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide); //dump ($this->admin[0]->showhide, 'showhideimage: ');
+//	$d_image = ($this->admin[0]->showhide ? DS.$this->admin[0]->showhide : '/showhide.gif');
+//	$d_path = $d_path1.$d_image;
+//	$showhide_tmp = $images->getImagePath($d_path);
+    $showhide_image = $showhide_tmp->path; //dump ($showhide_tmp, 'showhide_tmp');
 
-                case 'years':
-                    JView::loadHelper('year');
-                    $heading = getYearsLandingPage($params, $id = null, $this->admin_params);
-                    $showIt_phrase = JText::_('JBS_CMN_YEARS');
-                    break;
-            }// End Switch
+	$showhideall = "      <div id='showhide'>";
 
-            if ($params->get('landing' . $showIt . 'limit')) {
-                $images = new jbsImages();
-                $showhide_tmp = $images->getShowHide();
+	$buttonlink = "\n\t".'<a class="showhideheadingbutton" href="javascript:ReverseDisplay('."'showhide".$showIt."'".')">';
+	$labellink = "\n\t".'<a class="showhideheadinglabel" href="javascript:ReverseDisplay('."'showhide".$showIt."'".')">';
 
-                $showhideall = "<div id='showhide" . $i . "'>";
+	switch ($params->get('landing_hide', 0))
+	{
+		case 0:         // image only
+		$showhideall .= $buttonlink;
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All').' '.JText::_($showIt).'" title="'.JText::_('Show/Hide All').' '.JText::_($showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+		$showhideall .= ' '; // spacer
+		$showhideall .= "\n\t".'</a>';
+		break;
 
-                $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
-                $labellink = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
+		case 1:         // image and label
+		$showhideall .= $buttonlink;
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All').' '.JText::_($showIt).'" title="'.JText::_('Show/Hide All').' '.JText::_($showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+		$showhideall .= ' '; // spacer
+		$showhideall .= "\n\t".'</a>';
+		$showhideall .= $labellink;
+		$showhideall .= "\n\t\t".'<span id="landing_label">'.$params->get('landing_hidelabel').'</span>';
+		$showhideall .= "\n\t".'</a>';
+		break;
 
-                switch ($params->get('landing_hide', 0)) {
-                    case 0:         // image only
-                        $showhideall .= $buttonlink;
-                        $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-                        $showhideall .= ' '; // spacer
-                        $showhideall .= "\n\t" . '</a>';
-                        break;
+		case 2:         // label only
+		$showhideall .= $labellink;
+		$showhideall .= "\n\t\t".'<span id="landing_label">'.$params->get('landing_hidelabel').'</span>';
+		$showhideall .= "\n\t".'</a>';
+		break;
+	}
 
-                    case 1:         // image and label
-                        $showhideall .= $buttonlink;
-                        $showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="' . $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-                        $showhideall .= ' '; // spacer
-                        $showhideall .= "\n\t" . '</a>';
-                        $showhideall .= $labellink;
-                        $showhideall .= "\n\t\t" . '<span id="landing_label">' . $params->get('landing_hidelabel') . '</span>';
-                        $showhideall .= "\n\t" . '</a>';
-                        break;
+	$showhideall .= "\n".'      </div> <!-- end div id="showhide" for '.$i.' -->'."\n";
+	echo $showhideall;
+}
+?>
+      <div id="landinglist">
+<?php
 
-                    case 2:         // label only
-                        $showhideall .= $labellink;
-                        $showhideall .= "\n\t\t" . '<span id="landing_label">' . $params->get('landing_hidelabel') . '</span>';
-                        $showhideall .= "\n\t" . '</a>';
-                        break;
-                }
+    $heading_call = null;
+    $heading = null;
+    switch ($showIt) {
 
-                $showhideall .= "\n" . '      </div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
-            }
-            ?>
-            <!-- Wrap each in a DIV... -->
-            <div class="landing_item">
-                <div class="landing_title">
-                    <?php
-                    echo $params->get($showIt . 'label');
-                    echo "\n";
-                    ?>
-                </div> <!-- end div id="landing_title" -->
-                <div class="landinglist">
-                    <?php
-                    if (isset($showhideall)) {
-                        echo $showhideall;
-                    }
-                    if (isset($heading)) {
-                        echo $heading;
-                    }
-                    ?>
-                </div> <!-- end div class="landinglist" -->
-            </div><!-- end div class="landing_item" -->
-            <?php
-        }
-    } // End Loop for the landing items
-    ?>
-</div><!-- end div id="biblestudy_landing" -->
+      case 'teachers':
+        $heading_call = JView::loadHelper('teacher');
+        $heading = getTeacherLandingPage($params, $id=null, $this->admin_params);
+        //echo "</div>";
+        break;
+
+      case 'series':
+        $heading_call = JView::loadHelper('serieslist');
+        $heading = getSeriesLandingPage($params, $id=null, $this->admin_params);
+        //echo "</div>";
+        break;
+
+      case 'locations':
+        $heading_call = JView::loadHelper('location');
+        $heading = getLocationsLandingPage($params, $id=null, $this->admin_params);
+        //echo "</div>";
+        break;
+
+      case 'messagetypes':
+        $heading_call = JView::loadHelper('messagetype');
+        $heading = getMessageTypesLandingPage($params, $id=null, $this->admin_params);
+        //echo "</div>";
+        break;
+
+      case 'topics':
+        $heading_call = JView::loadHelper('topics');
+        $heading = getTopicsLandingPage($params, $id=null, $this->admin_params);
+        //	echo "</div>";
+        break;
+
+      case 'books':
+        $heading_call = JView::loadHelper('book');
+        $heading = getBooksLandingPage($params, $id=null, $this->admin_params);
+          //echo "</div>";
+        break;
+
+      case 'years':
+        $heading_call = JView::loadHelper('year');
+        $heading = getYearsLandingPage($params, $id=null, $this->admin_params);
+        //echo "</div>";
+        break;
+
+    }// End Switch
+    if ($heading) {
+      echo $heading;
+    }
+    echo "\n".'      </div> <!-- end div id="landinglist" '.$i." -->";
+    echo "\n";
+?>
+    </div> <!-- end div id="landing_item" <?php echo $i; ?> -->
+<?php
+  }
+} // End Loop for the landing items
+
+?>
+</div> <!-- end div id="biblestudy_landing" -->
+  <input name="option" value="com_biblestudy" type="hidden">
+
+  <input name="task" value="" type="hidden">
+  <input name="boxchecked" value="0" type="hidden">
+  <input name="controller" value="studieslist" type="hidden">
+</form>

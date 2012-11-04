@@ -1,1 +1,0 @@
-/* need to make a update media table where autostart params where 0 need to be empty

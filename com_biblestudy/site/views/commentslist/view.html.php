@@ -1,75 +1,85 @@
 <?php
-
 /**
- * CommentsList JView
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- * */
-//No Direct Access
-defined('_JEXEC') or die;
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
-
-
-
-/**
- * Comment list view class
- * @package BibleStudy.Site
- * @since 7.0.0
+ * Podcast list View for Bible Study Component
+ * 
+ * @license		GNU/GPL
  */
-class biblestudyViewcommentslist extends JViewLegacy {
 
-    /**
-     * Items
-     * @var array
-     */
-    protected $items;
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
-    /**
-     * Pagination
-     * @var array
-     */
-    protected $pagination;
+jimport( 'joomla.application.component.view' );
 
-    /**
-     * State
-     * @var array
-     */
-    protected $state;
 
-    /**
-     * Display function
-     * @param string $tpl
-     * @return boolean
-     */
-    public function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions('', 'commentsedit');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state = $this->get('State');
+class biblestudyViewcommentslist extends JView
+{
+	
+	function display($tpl = null)
+	{
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+		$lists = array();
+		//$params = &JComponentHelper::getParams($option);
+		$params = &$mainframe->getPageParameters();
+		$this->assignRef('params', $params);
+		/*JToolBarHelper::title(   JText::_( 'Comments Manager' ), 'generic.png' );
+		JToolBarHelper::publishList();
+		JToolBarHelper::unpublishList();
+		//Checks to see if the admin allows rows to be deleted
+		if ($params->get('allow_deletes') > 0 ):
+			JToolBarHelper::deleteList();
+		endif;
+		JToolBarHelper::editListX();
+		JToolBarHelper::addNewX();
+		JToolBarHelper::preferences('com_biblestudy', '550');
+		jimport( 'joomla.i18n.help' );
+		JToolBarHelper::help( 'biblestudy.commentslist', true );*/
+		
+		$db=& JFactory::getDBO();
+		$uri	=& JFactory::getURI();
+	$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'published' );
+	$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'ASC' );
+	$filter_studyid		= $mainframe->getUserStateFromRequest( $option.'filter_studyid',		'filter_studyid',		0,				'int' );
 
-        //Check for errors
-        if (count($errors = $this->get('Errors'))) {
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
-        $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-        //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
+// table order
+		$lists['order_Dir'] = $filter_order_Dir;
+		$lists['order'] = $filter_order;
+		
+	/*$query5 = " SELECT DISTINCT date_format(comment_date, '%Y') AS value, date_format(comment_date, '%Y') AS text "
+			. ' FROM #__bsms_comments '
+			. ' ORDER BY value DESC';
+		$db->setQuery( $query5 );
+		$studyyear = $db->loadObjectList();
+		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+		$years 			= array_merge( $years, $db->loadObjectList() );
+		$lists['years']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
+*/
+	$query6 = ' SELECT * FROM #__bsms_order '
+		. ' ORDER BY id ';
+		$db->setQuery( $query6 );
+		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		$orders 			= array_merge( $orders, $db->loadObjectList() );
+		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_order', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_order" );
 
-        //check permissions to enter studies
-        if (!$this->canDo->get('core.edit')) {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-        }
-        $this->setLayout('form');
+$query = "SELECT id AS value, CONCAT(studytitle,' - ', studydate, ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+		$db->setQuery($query);
+		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		$studies = array_merge($studies,$db->loadObjectList() );
+		$lists['studyid'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_studyid");		
+	// Get data from the model
+	$items		= & $this->get( 'Data');
+	$total		= & $this->get( 'Total');
+	$pagination = & $this->get( 'Pagination' );
+	
+	$javascript 	= 'onchange="document.adminForm.submit();"';
+	//$lists['studyid'] = JHTML::_('list.category',  'filter_studyid', $option, intval( $filter_studyid ), $javascript );	
+// build list of categories
+		
+	$this->assignRef('lists', $lists);
+	$this->assignRef('items',		$items);
+	$this->assignRef('pagination',	$pagination);
+	$this->assignRef('request_url',	$uri->toString());
 
-        parent::display($tpl);
-    }
-
+		parent::display($tpl);
+	}
 }
+?>
