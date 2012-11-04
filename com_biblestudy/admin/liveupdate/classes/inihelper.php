@@ -16,6 +16,7 @@ class LiveUpdateINIHelper
 	 * Parse an INI file and return an associative array. Since PHP versions before
 	 * 5.1 are bitches with regards to INI parsing, I use a PHP-only solution to
 	 * overcome this obstacle.
+	 *
 	 * @param	string	$file	The file to process
 	 * @param	bool	$process_sections	True to also process INI sections
 	 * @return	array	An associative array of sections, keys and values

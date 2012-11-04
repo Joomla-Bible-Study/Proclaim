@@ -21,6 +21,7 @@ class BiblestudyModelTopics extends JModelList {
 
     /**
      * Constructer
+     *
      * @param string $config
      */
     public function __construct($config = array()) {
