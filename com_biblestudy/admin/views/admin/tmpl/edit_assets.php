@@ -1,13 +1,12 @@
 <?php
 /**
- * Form sub assets
- * @package BibleStudy.Admin
- * @author Joomla Bible Study
- * @copyright 2012
- * @since 7.0.2
- * @desc Form to perform check and fix to the assets
- */
-//No Direct Access
+ * Admin Form
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
+// No Direct Access
 defined('_JEXEC') or die;
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
@@ -33,61 +32,72 @@ defined('_JEXEC') or die;
             </div>
             <div class="clearfix"></div>
             <div class="table">
-                <?php
-                $checkassets2 = JRequest::getVar('checkassets', null, 'get', 'array');
+				<?php
+				$checkassets2 = JRequest::getVar('checkassets', null, 'get', 'array');
 
-                if ($checkassets2) {
-                    echo '<table>';
-                    echo '<caption><h2>' . JText::_('JBS_ADM_ASSET_TABLE_NAME') . '</h2></caption>';
-                    echo '<thead>';
-                    echo '<tr>';
+				if ($checkassets2)
+				{
+					echo '<table>';
+					echo '<caption><h2>' . JText::_('JBS_ADM_ASSET_TABLE_NAME') . '</h2></caption>';
+					echo '<thead>';
+					echo '<tr>';
 
-                    echo '<th>' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
-                    echo '<th>' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
-                    echo '<th>' . JText::_('JBS_ADM_NULLROWS') . '</th>';
-                    echo '<th>' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
-                    echo '<th>' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    foreach ($checkassets2 as $asset) {
-                        echo '<tr>';
-                        echo '<td><p>' . JText::_($asset['realname']) . '</p></td>';
-                        echo '<td><p>' . JText::_($asset['numrows']) . '</p></td>';
-                        echo '<td>';
-                        if ($asset['nullrows'] > 0) {
-                            echo '<p style="color: red;">';
-                        } else {
-                            echo '<p>';
-                        }
-                        echo JText::_($asset['nullrows']) . '</p></td>';
-                        echo '<td>';
-                        if ($asset['matchrows'] > 0) {
-                            echo '<p style="color: green">';
-                        } else {
-                            echo '<p>';
-                        }
-                        echo JText::_($asset['matchrows']) . '</p></td>';
-                        echo '<td>';
-                        if ($asset['nomatchrows'] > 0) {
-                            echo '<p style="color: red">';
-                        } else {
-                            echo '<p>';
-                        }
-                        echo JText::_($asset['nomatchrows']) . '</p></td>';
-                        echo '</tr>';
-                    }
-                    echo '<tr><td colspan="5">';
-                    echo '<p>' . JText::_('JBS_ADM_ASSET_EXPLANATION') . '</p>';
-                    echo '</td></tr>';
-                    echo '</table>';
-                }
-                ?>
+					echo '<th>' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_NULLROWS') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
+					echo '</tr>';
+					echo '</thead>';
+					foreach ($checkassets2 as $asset)
+					{
+						echo '<tr>';
+						echo '<td><p>' . JText::_($asset['realname']) . '</p></td>';
+						echo '<td><p>' . JText::_($asset['numrows']) . '</p></td>';
+						echo '<td>';
+						if ($asset['nullrows'] > 0)
+						{
+							echo '<p style="color: red;">';
+						}
+						else
+						{
+							echo '<p>';
+						}
+						echo JText::_($asset['nullrows']) . '</p></td>';
+						echo '<td>';
+						if ($asset['matchrows'] > 0)
+						{
+							echo '<p style="color: green">';
+						}
+						else
+						{
+							echo '<p>';
+						}
+						echo JText::_($asset['matchrows']) . '</p></td>';
+						echo '<td>';
+						if ($asset['nomatchrows'] > 0)
+						{
+							echo '<p style="color: red">';
+						}
+						else
+						{
+							echo '<p>';
+						}
+						echo JText::_($asset['nomatchrows']) . '</p></td>';
+						echo '</tr>';
+					}
+					echo '<tr><td colspan="5">';
+					echo '<p>' . JText::_('JBS_ADM_ASSET_EXPLANATION') . '</p>';
+					echo '</td></tr>';
+					echo '</table>';
+				}
+				?>
             </div>
             <input type="hidden" name="option" value="com_biblestudy"/>
             <input type="hidden" name="task" value="admin.checkassets"/>
             <input type="hidden" name="controller" value="admin"/>
             <input type="hidden" name="tooltype" value=""/>
-	        <?php echo JHtml::_('form.token'); ?>
+			<?php echo JHtml::_('form.token'); ?>
         </div>
     </div>
 </form>
