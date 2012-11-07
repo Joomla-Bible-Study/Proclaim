@@ -2,43 +2,45 @@
 /**
  * Admin form subset database
  *
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
- * @since   7.1.0
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * @since      7.1.0
  * */
-// no direct access
+// No direct access
 defined('_JEXEC') or die;
 ?>
 <div id="installer-database">
     <form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
-		<div id="j-main-container">
-		<?php if ($this->errorCount === 0) : ?>
-        <div class="alert alert-info">
-            <a class="close" data-dismiss="alert" href="#">&times;</a>
-			<?php echo JText::_('COM_INSTALLER_MSG_DATABASE_OK'); ?>
-        </div>
+        <div id="j-main-container">
+			<?php if ($this->errorCount === 0) : ?>
+            <div class="alert alert-info">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+				<?php echo JText::_('COM_INSTALLER_MSG_DATABASE_OK'); ?>
+            </div>
 
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#other"
-                                  data-toggle="tab"><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_INFO');?></a></li>
-        </ul>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#other"
+                                      data-toggle="tab"><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_INFO');?></a>
+                </li>
+            </ul>
 
 			<div class="tab-content">
 
 	    <?php else : ?>
-        <div class="alert alert-error">
-            <a class="close" data-dismiss="alert" href="#">&times;</a>
-			<?php echo JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'); ?>
-        </div>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+				<?php echo JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'); ?>
+            </div>
 
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#problems"
-                                  data-toggle="tab"><?php echo JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount);?>
-                <span class="badge badge-info"><?php echo $this->errorCount;?></span></a></li>
-            <li><a href="#other" data-toggle="tab"><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_INFO');?></a></li>
-        </ul>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#problems"
+                                      data-toggle="tab"><?php echo JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount);?>
+                    <span class="badge badge-info"><?php echo $this->errorCount;?></span></a></li>
+                <li><a href="#other" data-toggle="tab"><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_INFO');?></a>
+                </li>
+            </ul>
 
 			<div class="tab-content">
 				<div class="tab-pane active" id="problems">
@@ -71,20 +73,20 @@ defined('_JEXEC') or die;
                         </ul>
                     </fieldset>
                 </div>
-		<?php endif; ?>
+			<?php endif; ?>
 
-        <div class="tab-pane" id="other">
-            <fieldset class="panelform">
-                <ul>
-                    <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_VERSION', $this->schemaVersion); ?></li>
-                    <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATE_VERSION', $this->updateVersion); ?></li>
-                    <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_DRIVER', JFactory::getDbo()->name); ?></li>
-                    <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_CHECKED_OK', count($this->results['ok'])); ?></li>
-                    <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SKIPPED', count($this->results['skipped'])); ?></li>
-                </ul>
-            </fieldset>
+            <div class="tab-pane" id="other">
+                <fieldset class="panelform">
+                    <ul>
+                        <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_VERSION', $this->schemaVersion); ?></li>
+                        <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATE_VERSION', $this->updateVersion); ?></li>
+                        <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_DRIVER', JFactory::getDbo()->name); ?></li>
+                        <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_CHECKED_OK', count($this->results['ok'])); ?></li>
+                        <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SKIPPED', count($this->results['skipped'])); ?></li>
+                    </ul>
+                </fieldset>
+            </div>
         </div>
-    </div>
             <input type="hidden" name="option" value="com_biblestudy"/>
             <input type="hidden" name="task" value="fix"/>
             <input type="hidden" name="boxchecked" value="0"/>

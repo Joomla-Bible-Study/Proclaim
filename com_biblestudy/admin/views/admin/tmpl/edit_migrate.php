@@ -2,13 +2,13 @@
 /**
  * Form sub migrate
  *
- * @package   BibleStudy.Admin
- * @author    Joomla Bible Study
- * @copyright 2012
- * @since     7.0.2
- * @desc Form to perform migration from 1.5 version to the latest JBS version
- */
-//No Direct Access
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * @since      7.1.0
+ * */
+// No Direct Access
 defined('_JEXEC') or die;
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" enctype="multipart/form-data"

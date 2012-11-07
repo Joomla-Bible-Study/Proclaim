@@ -14,8 +14,6 @@ defined('_JEXEC') or die;
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 {
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
-
-	return;
 }
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
