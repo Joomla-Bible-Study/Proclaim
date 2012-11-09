@@ -68,7 +68,7 @@ function biblestudyParseRoute($segments) {
         return $vars;
     } elseif ($count == 2) {
         $vars['view'] = $segments[0];
-        $vars['t'] = $segments[$count - 1];
+        $vars['id'] = $segments[$count - 1];
         return $vars;
     } else {
         $vars['view'] = $segments[0];

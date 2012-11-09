@@ -9,7 +9,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-echo $this->loadTemplate('header');
+?><div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page --><?php
+//echo $this->loadTemplate('header');
 if ($this->params->get('useexpert_details') > 0) {
     echo $this->loadTemplate('custom');
 } elseif ($this->params->get('sermontemplate')) {
@@ -28,4 +29,5 @@ if ($show_comments > 1)
             }
 }
 echo $this->loadTemplate('footerlink');
-echo $this->loadTemplate('footer');
+
+?></div>

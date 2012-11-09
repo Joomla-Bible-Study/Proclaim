@@ -12,4 +12,3 @@ defined('_JEXEC') or die;
  *
  */
 ?>
-<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
