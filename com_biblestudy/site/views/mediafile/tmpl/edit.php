@@ -152,7 +152,14 @@ if (JRequest::getWord('layout', '') == 'modal') {
                                 <?php echo JText::_('JSAVE'); ?></button>
                             <button type="button" onclick="window.parent.SqueezeBox.close();  ">
                                 <?php echo JText::_('JCANCEL'); ?></button>
-                        </div> <?php } ?>
+                        </div> <?php } else { ?>
+                            <div class="fltlft">
+                            <button type="button" onclick="submitbutton('mediafile.save');  ">
+                                <?php echo JText::_('JSAVE'); ?></button>
+                            <button type="button" onclick="submitbutton('mediafile.cancel');  ">
+                                <?php echo JText::_('JCANCEL'); ?></button>
+                        </div>
+                        <?php } ?>
                 </legend>
             </div>
             <div class="formelm">
