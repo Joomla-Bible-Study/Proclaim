@@ -79,15 +79,15 @@ class BiblestudyViewAdmin extends JViewLegacy {
 
         $this->loadHelper('params');
         $config = JFactory::getConfig();
-        //$tmp_dest = $config->getValue('config.tmp_path');
-        //$this->assignRef('tmp_dest', $tmp_dest);
-
+        
         $stats = new jbStats();
         $playerstats = $stats->players();
         $this->assignRef('playerstats', $playerstats);
         $this->assets = JRequest::getVar('checkassets', null, 'get', 'array');
         $popups = $stats->popups();
         $this->assignRef('popups', $popups);
+        $tmp_dest = $config->getValue('config.tmp_path');
+        $this->assignRef('tmp_dest', $tmp_dest);
 
         //get the list of backupfiles
         $backedupfiles = array();
