@@ -25,6 +25,8 @@ function biblestudyBuildRoute(&$query) {
 
     if (isset($query['view'])) {
 
+        if ($query['view'] == 'mediafile'){ return $segments;}
+        if ($query['view'] == 'message'){ return $segments;}
         $segments[] = $query['view'];
         unset($query['view']);
     }
@@ -60,7 +62,6 @@ function biblestudyParseRoute($segments) {
     $count = count($segments);
 
 
-
     if ($count == 3) {
         $vars['view'] = $segments[0];
         $vars['id'] = (int) $segments[$count - 2];
@@ -71,7 +72,8 @@ function biblestudyParseRoute($segments) {
         $vars['id'] = $segments[$count - 1];
         return $vars;
     } else {
-        $vars['view'] = $segments[0];
+        $vars['view'] = $segments[0]; 
+
         return $vars;
     }
 }
