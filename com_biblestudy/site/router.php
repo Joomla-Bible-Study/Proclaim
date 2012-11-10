@@ -24,7 +24,8 @@ function biblestudyBuildRoute(&$query) {
     $advanced = $params->get('sef_advanced_link', 0);
 
     if (isset($query['view'])) {
-
+        if ($query['view'] == 'mediafile'){ return $segments;}
+        if ($query['view'] == 'message'){ return $segments;}
         $segments[] = $query['view'];
         unset($query['view']);
     }
