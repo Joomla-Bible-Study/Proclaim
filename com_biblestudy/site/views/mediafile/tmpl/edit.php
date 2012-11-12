@@ -34,6 +34,7 @@ if ($this->item->path) {
 } elseif (empty($this->item->study_id)) {
     $folder = $this->admin->params['path'];
 }
+
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)

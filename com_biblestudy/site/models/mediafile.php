@@ -70,7 +70,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id');
+        $pks = JRequest::getInt('a_id'); 
         $this->pks = $pks;
         $this->setState('mediafile.id', $pks);
     }
@@ -118,7 +118,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * Get Data
      * @return object
      */
-    public function &getData() {
+    public function &legacygetData() {
         // Load the data
         if (empty($this->_data)) {
             $query = ' SELECT * FROM #__bsms_mediafiles ' .
