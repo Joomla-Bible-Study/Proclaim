@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
-
+jimport('joomla.application.component.modellist');
 /**
  * Message model class
  * @package BibleStudy.Admin

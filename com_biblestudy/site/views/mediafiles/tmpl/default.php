@@ -108,7 +108,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
                 </td>
                 <td class="center">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit&id=' . (int) $item->id); ?>">
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit&a_id=' . (int) $item->id); ?>">
                         <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
                     </a>
                 </td>

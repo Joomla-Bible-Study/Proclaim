@@ -237,7 +237,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('path'); ?>
-                <?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
+                <?php echo $this->form->getInput('path', null, empty($this->item->path) ? $folder : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>

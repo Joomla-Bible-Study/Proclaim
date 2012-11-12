@@ -56,7 +56,24 @@ class BiblestudyModelMediafile extends JModelAdmin {
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }
-
+ /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @since	1.6
+     */
+    protected function populateState() {
+        $app = JFactory::getApplication('site');
+        // Adjust the context to support modal layouts.
+        if ($layout = JRequest::getVar('layout')) {
+            $this->context .= '.' . $layout;
+        }
+        // Load state from the request. We use a_id to avoid collisions with the router
+        $pks = JRequest::getInt('a_id');
+        $this->pks = $pks;
+        $this->setState('mediafile.id', $pks);
+    }
     /**
      * Method override to check if you can edit an existing record.
      *
@@ -595,6 +612,51 @@ class BiblestudyModelMediafile extends JModelAdmin {
     public function save($data) {
         //Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
         $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+        $pks = JRequest::getInt('a_id');
+        if ($pks) {
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->clear();
+            $query->update('#__bsms_studies');
+            $query->set(' study_id = ' . $db->Quote($data['study_id']));
+            $query->set(' media_image = ' . $db->Quote($data['media_image']));
+            $query->set(' server = ' . $db->Quote($data['server']));
+            $query->set(' size = ' . $db->Quote($data['size']));
+            $query->set(' mime_type = ' . $db->Quote($data['mime_type']));
+            $query->set(' podcast_id = ' . $db->Quote($data['podcast_id']));
+            $query->set(' internal_viewer = ' . $db->Quote($data['internal_viewer']));
+            $query->set(' mediacode = ' . $db->Quote($data['mediacode']));
+            $query->set(' ordering = ' . $db->Quote($data['ordering']));
+            $query->set(' createdate = ' . $db->Quote($data['createdate']));
+            $query->set(' link_type = ' . $db->Quote($data['link_type']));
+            $query->set(' hits = ' . $db->Quote($data['hits']));
+            $query->set(' published = ' . $db->Quote($data['published']));
+            $query->set(' docMan_id = ' . $db->Quote($data['docMan_id']));
+            $query->set(' article_id = ' . $db->Quote($data['article_id']));
+            $query->set(' comment = ' . $db->Quote($data['comment']));
+            $query->set(' virtueMart_id = ' . $db->Quote($data['virtueMart_id']));
+            $query->set(' downloads = ' . $db->Quote($data['downloads']));
+            $query->set(' plays = ' . $db->Quote($data['plays']));
+            $query->set(' params = ' . $db->Quote($data['params']));
+            $query->set(' player = ' . $db->Quote($data['player']));
+            $query->set(' popup = ' . $db->Quote($data['popup']));
+            $query->set(' asset_id = ' . $db->Quote($data['aset_id']));
+            $query->set(' access = ' . $db->Quote($data['access']));
+            $query->set(' language = ' . $db->Quote($data['language']));
+            $query->set(' created_by = ' . $db->Quote($data['created_by']));
+            $query->set(' created_by_alias = ' . $db->Quote($data['created_by_alias']));
+            $query->set(' modified = ' . $db->Quote($data['modified']));
+            $query->set(' modified_by = ' . $db->Quote($data['modified_by']));
+            $query->where(' id =' . (int) $pks . ' LIMIT 1');
+            $db->setQuery((string) $query);
+            if (!$db->query()) {
+                JError::raiseError(500, $db->getErrorMsg());
+                return false;
+            } else {
+                
+                return true;
+            }
+        }
         return parent::save($data);
     }
 
