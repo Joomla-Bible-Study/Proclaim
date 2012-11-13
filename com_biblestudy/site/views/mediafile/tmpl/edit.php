@@ -241,7 +241,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>
-                <?php echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
+                <?php if (JRequest::getWord('layout', '') == 'modal') {echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('size'); ?>
@@ -287,7 +287,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
             <?php
-            foreach ($params as $name => $fieldset): // @fixme what is going on hear not sure whey we need this?
+            foreach ($params as $name => $fieldset): // @fixme what is going on here not sure whey we need this? @answer a way to go through the paramets without having to name each one
                 ?>
                 <fieldset class="panelform" >
                     <legend><?php echo JText::_('JBS_MED_OPTIONS'); ?></legend>
