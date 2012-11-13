@@ -413,7 +413,7 @@ class biblestudyModelmessage extends JModelAdmin {
             return false;
         }
         $properties = $table->getProperties(1);
-        $value = JArrayHelper::toObject($properties, 'JObject');
+        $value = JArrayHelper::toObject($properties, 'JObject'); 
         return $value;
     }
 

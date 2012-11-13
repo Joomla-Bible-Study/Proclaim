@@ -252,7 +252,7 @@ class TableMediafile extends JTable {
      * @return      boolean
      * @see JTable:load
      */
-    public function load($pk = null, $reset = true) {
+    public function legacyload($pk = null, $reset = true) {
         if (parent::load($pk, $reset)) {
             // Convert the params field to a registry.
             $params = new JRegistry;

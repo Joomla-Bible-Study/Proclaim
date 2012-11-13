@@ -53,9 +53,9 @@ class biblestudyViewmediafile extends JViewLegacy {
      * @see     fetch()
      * @since   11.1
      */
-    public function display($tpl = null) {
+    public function display($tpl = null) { 
         $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        $this->item = $this->get("Item"); 
 
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');

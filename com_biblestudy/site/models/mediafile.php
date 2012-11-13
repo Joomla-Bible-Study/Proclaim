@@ -31,31 +31,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      */
     var $_text_prefix = 'COM_BIBLESTUDY';
 
-    /**
-     * Constructor.
-     *
-     * @param   array  $config  An optional associative array of configuration settings.
-     *
-     * @see     JController
-     * @since   11.1
-     */
-    public function __construct($config = array()) {
-        parent::__construct($config);
-
-        /**
-         * @todo J16 has new way of retrieving parameters so we need to implement it here too
-         */
-        jimport('joomla.html.parameter');
-        $admin = $this->getLegacyAdmin();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadString($admin[0]->params);
-        $this->admin_params = $registry;
-
-        $array = JRequest::getVar('cid', 0, '', 'array');
-        $this->setId((int) $array[0]);
-    }
+    
  /**
      * Method to auto-populate the model state.
      *
@@ -104,131 +80,10 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return JTable::getInstance($name, $prefix, $options);
     }
 
-    /**
-     * Set ID
-     * @param int $id
-     */
-    public function setId($id) {
-        // Set id and wipe data
-        $this->_id = $id;
-        $this->_data = null;
-    }
+   
 
-    /**
-     * Get Data
-     * @return object
-     */
-    public function &legacygetData() {
-        // Load the data
-        if (empty($this->_data)) {
-            $query = ' SELECT * FROM #__bsms_mediafiles ' .
-                    '  WHERE id = ' . $this->_id;
-            $this->_db->setQuery($query);
-            $this->_data = $this->_db->loadObject();
-        }
-        if (!$this->_data) {
-            $this->_data = new stdClass();
-            $this->_data->id = 0;
-            //TF added these
-            $today = date("Y-m-d H:i:s");
-            $this->_data->published = 1;
-            $this->_data->media_image = null;
-            $this->_data->server = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
-            $this->_data->path = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
-            $this->_data->special = ($this->_admin_params->get('target') != 'No default' ? $this->_admin_params->get('target') : null);
-            ;
-            $this->_data->filename = null;
-            $this->_data->size = null;
-            $this->_data->podcast_id = ($this->_admin_params->get('podcast') > 0 ? $this->_admin_params->get('podcast') : null);
-            $this->_data->internal_viewer = null;
-            $this->_data->mediacode = null;
-            $this->_data->ordering = null;
-            $this->_data->study_id = null;
-            $this->_data->createdate = $today;
-            $this->_data->link_type = ($this->_admin_params->get('download') > 0 ? $this->_admin_params->get('download') : null);
-            $this->_date->hits = null;
-            $this->_data->mime_type = ($this->_admin_params->get('mime') > 0 ? $this->_admin_params->get('mime') : null);
-            $this->_data->docMan_id = null;
-            $this->_data->article_id = null;
-            $this->_data->comment = null;
-            $this->_data->virtueMart_id = null;
-            $this->_data->params = null;
-            $this->_data->player = null;
-            $this->_data->popup = null;
-        }
-        return $this->_data;
-    }
-
-    /**
-     * Method to store a record
-     *
-     * @access	public
-     * @return	boolean	True on success
-     * @todo Need to check the current order of the studies for that particular
-     * study, so that it doesn't default to 0, buecause that will break the
-     * ordering functionality.
-     */
-    public function store() {
-        $row = & $this->getTable();
-
-        $data = JRequest::get('post');
-        //This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
-
-        $file = JRequest::getVar('file', null, 'files', 'array');
-        $filename_upload = $file['name'];
-        if (isset($filename_upload)) {
-            $name_bak = $data['filename'];
-            $data['filename'] = $filename_upload;
-        }
-        if ($filename_upload == '') {
-            $data['filename'] = $name_bak;
-        }
-
-        if ($this->_admin_params->get('character_filter') > 0) {
-            $badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
-            $data['filename'] = str_replace($badchars, '_', $data['filename']);
-        }
-        $data['filename'] = str_replace('&', '_and_', $data['filename']);
-        $data['mediacode'] = str_replace('"', "'", $data['mediacode']);
-        // Bind the form fields to the  table
-        if ($data['docManItem'] == null) {
-            $data['docMan_id'] = 0;
-        } else {
-            $data['docMan_id'] = $data['docManItem'];
-        }
-        if ($data['virtueMartItem'] == null) {
-            $data['virtueMart_id'] = 0;
-        } else {
-            $data['virtueMart_id'] = $data['virtueMartItem'];
-        }
-        if ($data['categoryItem'] == null) {
-            $data['article_id'] = 0;
-        } else {
-            $data['article_id'] = $data['categoryItem'];
-        }
-        if (is_array($data['podcast_id'])) {
-            $data['podcast_id'] = implode(',', $data['podcast_id']);
-        }
-
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-
-        // Make sure the  record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-
-        // Store the table to the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-            //			$this->setError( $row->getErrorMsg() );
-            return false;
-        }
-        return true;
-    }
+   
+  
 
     /**
      * Method to delete one or more records.
@@ -255,30 +110,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return true;
     }
 
-    /**
-     * Lagacy Publish
-     * @deprecated since version 7.0.4
-     * @param int $cid
-     * @param int $publish
-     * @return boolean
-     */
-    public function legacyPublish($cid = array(), $publish = 1) {
-
-        if (count($cid)) {
-            $cids = implode(',', $cid);
-
-            $query = 'UPDATE #__bsms_mediafiles'
-                    . ' SET published = ' . intval($publish)
-                    . ' WHERE id IN ( ' . $cids . ' )'
-
-            ;
-            $this->_db->setQuery($query);
-            if (!$this->_db->query()) {
-                $this->setError($this->_db->getErrorMsg());
-                return false;
-            }
-        }
-    }
+   
 
     /**
      * Method to move a mediafile listing
@@ -708,12 +540,39 @@ class BiblestudyModelMediafile extends JModelAdmin {
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafile.data', array());
         if (empty($data)) {
-            $data = $this->getItem();
+            $data = $this->getItem(); 
             $data->podcast_id = explode(',', $data->podcast_id);
         }
 
 
         return $data;
+    }
+
+/**
+     * Method to get article data.
+     *
+     * @param	integer	The id of the article.
+     *
+     * @return	mixed	Content item data object on success, false on failure.
+     */
+    public function getItem($itemId = null) {
+        // Initialise variables.
+        $itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('mediafile.id');
+
+        // Get a row instance.
+        $table = $this->getTable();
+
+        // Attempt to load the row.
+        $return = $table->load($itemId);
+
+        // Check for a table object error.
+        if ($return === false && $table->getError()) {
+            $this->setError($table->getError());
+            return false;
+        }
+        $properties = $table->getProperties(1);
+        $value = JArrayHelper::toObject($properties, 'JObject'); 
+        return $value;
     }
 
 }

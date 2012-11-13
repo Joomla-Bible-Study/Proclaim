@@ -57,7 +57,7 @@ class biblestudyViewmessage extends JViewLegacy {
     public function display($tpl = null) {
 
         $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        $this->item = $this->get("Item"); 
         $option = JRequest::getCmd('option');
         $JApplication = new JApplication();
         $JApplication->setUserState($option . 'sid', $this->item->id);

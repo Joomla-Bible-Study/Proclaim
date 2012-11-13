@@ -49,6 +49,19 @@ class biblestudyControllermediafile extends JControllerForm {
         return $model;
     }
 
+/**
+     * Method to edit an existing record.
+     *
+     * @param	string	$key	The name of the primary key of the URL variable.
+     * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return	Boolean	True if access level check and checkout passes, false otherwise.
+     * @since	1.6
+     */
+    public function edit($key = null, $urlVar = 'a_id') {
+        $result = parent::edit($key, $urlVar);
+        return $result;
+    }
     /**
      * Link to Docman Category Items
      */
