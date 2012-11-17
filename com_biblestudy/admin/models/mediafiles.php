@@ -152,7 +152,7 @@ class BiblestudyModelMediafiles extends JModelList {
                         'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
                         mediafile.createdate, mediafile.plays, mediafile.downloads, mediafile.language, mediafile.study_id '));
 
-        $query->from('`#__bsms_mediafiles` AS mediafile');
+        $query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
 
         // Join over the language
         $query->select('l.title AS language_title');
@@ -167,11 +167,11 @@ class BiblestudyModelMediafiles extends JModelList {
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
         // Filter by published state
-        $published = $this->getState('filter.published');
+        $published = $this->getState('filter.state');
         if (is_numeric($published)) {
-            $query->where('mediafile.published = ' . (int) $published);
-        } else if ($published === '') {
-            $query->where('(mediafile.published = 0 OR mediafile.published = 1)');
+            $query->where('mediafile.published = '.(int) $published);
+        } elseif ($published === '') {
+            $query->where('(mediafile.published IN (0, 1))');
         }
 
         //Filter by filename
@@ -191,11 +191,22 @@ class BiblestudyModelMediafiles extends JModelList {
         if (is_numeric($mediaType)) {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
+
+        // Filter by search in filename or study title
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where('a.id = '.(int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%'.$db->escape($search, true).'%');
+                $query->where('(mediafile.filename LIKE '.$search.' OR mediafile.studytitle LIKE '.$search.')');
+            }
+        }
         //Add the list ordering clause
-      //  $orderCol = $this->state->get('list.ordering', 'mediafile.filename');
-      //  $orderDirn = $this->state->get('list.direction', 'asc');
-      //  $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-        $query->order('mediafile.study_id DESC');
+        $orderCol = $this->state->get('list.ordering', 'ordering');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+        $query->order($db->escape($orderCol.' '.$orderDirn));
+       // $query->order('mediafile.study_id DESC');
         return $query;
     }
 

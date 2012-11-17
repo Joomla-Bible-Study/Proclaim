@@ -165,6 +165,7 @@ class BiblestudyViewMediafiles extends JViewLegacy {
     {
         return array(
             'mediafiles.study_id' => JText::_('JBS_CMN_STUDY_ID'),
+            'mediafiles.media_text' => JText::_('JBS_MED_MEDIA_TYPE'),
             'mediafiles.ordering' => JText::_('JGRID_HEADING_ORDERING'),
             'mediafiles.published' => JText::_('JSTATUS'),
             'mediafiles.id' => JText::_('JGRID_HEADING_ID')
