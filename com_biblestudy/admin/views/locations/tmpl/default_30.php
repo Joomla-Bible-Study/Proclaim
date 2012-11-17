@@ -192,7 +192,7 @@ $sortFields = $this->getSortFields();
     </table>
     <?php echo $this->pagination->getListFooter(); ?>
     <?php //Load the batch processing form. ?>
-    <?php //echo $this->loadTemplate('batch'); ?>
+    <?php echo $this->loadTemplate('batch'); ?>
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
