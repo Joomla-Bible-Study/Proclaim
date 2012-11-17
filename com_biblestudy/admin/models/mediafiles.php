@@ -150,7 +150,7 @@ class BiblestudyModelMediafiles extends JModelList {
         $query->select(
                 $this->getState(
                         'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
-                        mediafile.createdate, mediafile.plays, mediafile.downloads, mediafile.language'));
+                        mediafile.createdate, mediafile.plays, mediafile.downloads, mediafile.language, mediafile.study_id '));
 
         $query->from('`#__bsms_mediafiles` AS mediafile');
 
@@ -192,10 +192,10 @@ class BiblestudyModelMediafiles extends JModelList {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering', 'mediafile.filename');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-
+      //  $orderCol = $this->state->get('list.ordering', 'mediafile.filename');
+      //  $orderDirn = $this->state->get('list.direction', 'asc');
+      //  $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $query->order('mediafile.study_id DESC');
         return $query;
     }
 
