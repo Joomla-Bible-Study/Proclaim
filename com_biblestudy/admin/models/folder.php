@@ -20,6 +20,11 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelFolder extends JModelAdmin {
 
     /**
+     * @var        string    The prefix to use with controller messages.
+     * @since    1.6
+     */
+    protected $text_prefix = 'COM_BIBLESTUDY';
+    /**
      * Method override to check if you can edit an existing record.
      *
      * @param       array   $data   An array of input data.
@@ -31,6 +36,85 @@ class BiblestudyModelFolder extends JModelAdmin {
     protected function allowEdit($data = array(), $key = 'id') {
         // Check specific edit permission then general edit permission.
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.folder.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+    }
+
+    /**
+     * Batch copy items to a new category or current.
+     *
+     * @param   integer  $value     The new category.
+     * @param   array    $pks       An array of row IDs.
+     * @param   array    $contexts  An array of item contexts.
+     *
+     * @return  mixed  An array of new IDs on success, boolean false on failure.
+     *
+     * @since    11.1
+     */
+    protected function batchCopy($value, $pks, $contexts)
+    {
+        $app = JFactory::getApplication();
+        $table = $this->getTable();
+        $i = 0;
+
+        // Check that the user has create permission for the component
+        $extension = $app->input->get('option', '');
+        $user = JFactory::getUser();
+        if (!$user->authorise('core.create', $extension)) {
+            $app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
+            return false;
+        }
+
+        // Parent exists so we let's proceed
+        while (!empty($pks)) {
+            // Pop the first ID off the stack
+            $pk = array_shift($pks);
+
+            $table->reset();
+
+            // Check that the row actually exists
+            if (!$table->load($pk)) {
+                if ($error = $table->getError()) {
+                    // Fatal error
+                    $app->enqueueMessage($error, 'error');
+                    return false;
+                } else {
+                    // Not fatal error
+                    $app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+                    continue;
+                }
+            }
+
+            // Alter the title & alias
+            $data = $this->generateNewTitle('', $table->alias, $table->title);
+            $table->title = $data['0'];
+            $table->alias = $data['1'];
+
+            // Reset the ID because we are making a copy
+            $table->id = 0;
+
+            // Check the row.
+            if (!$table->check()) {
+                $app->enqueueMessage($table->getError(), 'error');
+                return false;
+            }
+
+            // Store the row.
+            if (!$table->store()) {
+                $app->enqueueMessage($table->getError(), 'error');
+                return false;
+            }
+
+            // Get the new item ID
+            $newId = $table->get('id');
+
+            // Add the new ID to the array
+            $newIds[$i] = $newId;
+            $i++;
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return $newIds;
     }
 
     /**
