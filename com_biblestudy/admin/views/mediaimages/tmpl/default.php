@@ -55,14 +55,14 @@ $saveOrder = $listOrder == 'mediafile.ordering';
         </tfoot>
         <?php
         foreach ($this->items as $i => $item) :
-            $ordering = ($listOrder == 'mediafile.ordering');
+            $ordering = ($listOrder == 'mediaimage.ordering');
             ?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td class="center">
                     <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', true, 'cb', '', ''); ?>
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediaimages.', true, 'cb', '', ''); ?>
                 </td>
                 <td class="order">
                     <?php

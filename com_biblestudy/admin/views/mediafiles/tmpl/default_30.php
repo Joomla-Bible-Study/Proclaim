@@ -191,7 +191,21 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="nowrap has-context">
                 <div class="pull-left">
-                    <?php echo $this->escape($item->mediaType); ?>
+                    <?php
+                    //echo $this->directory;
+                    $path = JURI::base() . '../';
+                    if ($item->path2) {
+                        if (!substr_count($item->path2, '/')) {
+                            $image = '/media/com_biblestudy/images/' . $item->path2;
+                        } else {
+                            $image = $item->path2;
+                        }
+                    } else {
+                        $image = $item->media_image_path;
+                        $path = '../';
+                    }
+                    ?>
+                    <img src=" <?php echo $path . $image; ?>" alt="<?php echo $item->mediaType; ?>" title="<?php echo $item->mediaType; ?>"/>
                 </div>
             </td>
             <td class="nowrap has-context">

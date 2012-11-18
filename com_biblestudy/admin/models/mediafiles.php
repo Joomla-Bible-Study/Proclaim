@@ -82,16 +82,19 @@ class BiblestudyModelMediafiles extends JModelList {
             $this->context .= '.' . $layout;
         }
 
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
         $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
         $this->setState('filter.filename', $filename);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $study = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
+        $study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
         $this->setState('filter.studytitle', $study);
 
-        $mediaTypeId = $this->getUserStateFromRequest($this->context . '.filter.mediatype', 'filter_mediatypeId');
+        $mediaTypeId = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
         $this->setState('filter.mediatypeId', $mediaTypeId);
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
@@ -130,8 +133,8 @@ class BiblestudyModelMediafiles extends JModelList {
         // Compile the store id.
         $id .= ':' . $this->getState('filter.filename');
         $id .= ':' . $this->getState('filter.published');
-        $id .= ':' . $this->getState('filter.studytitle');
-        $id .= ':' . $this->getState('filter.mediatypeId');
+        $id .= ':' . $this->getState('filter.study_id');
+        $id .= ':' . $this->getState('filter.mediatype');
         $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
@@ -163,7 +166,7 @@ class BiblestudyModelMediafiles extends JModelList {
         $query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
 
         //Join over the mediatypes
-        $query->select('mediatype.media_text AS mediaType');
+        $query->select('mediatype.media_text AS mediaType, mediatype.media_image_path, mediatype.path2');
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
         // Filter by published state
@@ -181,13 +184,13 @@ class BiblestudyModelMediafiles extends JModelList {
         }
 
         //Filter by study title
-        $study = $this->getState('filter.studytitle');
+        $study = $this->getState('filter.study_id');
         if (!empty($study)) {
-            $query->where('study.studytitle LIKE "%' . $study . '%"');
+            $query->where('study.id LIKE "%' . $study . '%"');
         }
 
         //Filter by media type
-        $mediaType = $this->getState('filter.mediatypeId');
+        $mediaType = $this->getState('filter.mediatype');
         if (is_numeric($mediaType)) {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
@@ -203,10 +206,9 @@ class BiblestudyModelMediafiles extends JModelList {
             }
         }
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering', 'ordering');
-        $orderDirn = $this->state->get('list.direction', 'asc');
+        $orderCol = $this->state->get('list.ordering', 'study_id');
+        $orderDirn = $this->state->get('list.direction', 'desc');
         $query->order($db->escape($orderCol.' '.$orderDirn));
-       // $query->order('mediafile.study_id DESC');
         return $query;
     }
 
