@@ -52,7 +52,7 @@ class BiblestudyViewMediafiles extends JViewLegacy {
         $this->state = $this->get('State');
         $this->mediatypes = $this->get('Mediatypes');
         $this->canDo = JBSMHelper::getActions('', 'mediafile');
-
+        
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -164,12 +164,12 @@ class BiblestudyViewMediafiles extends JViewLegacy {
     protected function getSortFields()
     {
         return array(
-            'mediafiles.study_id' => JText::_('JBS_CMN_STUDY_ID'),
-            'mediafiles.mediaType' => JText::_('JBS_MED_MEDIA_TYPE'),
-            'mediafiles.filename' => JText::_('JBS_MED_FILENAME'),
-            'mediafiles.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'mediafiles.published' => JText::_('JSTATUS'),
-            'mediafiles.id' => JText::_('JGRID_HEADING_ID')
+            'mediafile.study_id' => JText::_('JBS_CMN_STUDY_ID'),
+            'mediafile.mediaType' => JText::_('JBS_MED_MEDIA_TYPE'),
+            'mediafile.filename' => JText::_('JBS_MED_FILENAME'),
+            'mediafile.ordering' => JText::_('JGRID_HEADING_ORDERING'),
+            'mediafile.published' => JText::_('JSTATUS'),
+            'mediafile.id' => JText::_('JGRID_HEADING_ID')
         );
     }
 }

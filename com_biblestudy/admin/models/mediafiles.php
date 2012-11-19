@@ -100,6 +100,11 @@ class BiblestudyModelMediafiles extends JModelList {
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
+        $filter_order = JRequest::getCmd('filter_order');
+        $filter_order_Dir = JRequest::getCmd('filter_order_Dir');
+
+
+
         parent::populateState('mediafile.createdate', 'DESC');
     }
 
@@ -207,7 +212,7 @@ class BiblestudyModelMediafiles extends JModelList {
             }
         }
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering', 'study_id'); //dump($orderCol);
+        $orderCol = $this->state->get('list.ordering', 'ordering'); //dump($orderCol);
         $orderDirn = $this->state->get('list.direction', 'desc');
 
         //sqlsrv change
