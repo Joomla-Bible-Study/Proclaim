@@ -92,10 +92,10 @@ class BiblestudyModelMediafiles extends JModelList {
         $this->setState('filter.published', $published);
 
         $study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
-        $this->setState('filter.studytitle', $study);
+        $this->setState('filter.study_id', $study);
 
-        $mediaTypeId = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
-        $this->setState('filter.mediatypeId', $mediaTypeId);
+        $mediaType = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
+        $this->setState('filter.mediaType', $mediaType);
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
@@ -132,9 +132,10 @@ class BiblestudyModelMediafiles extends JModelList {
 
         // Compile the store id.
         $id .= ':' . $this->getState('filter.filename');
+        $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.study_id');
-        $id .= ':' . $this->getState('filter.mediatype');
+        $id .= ':' . $this->getState('filter.mediaType');
         $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
@@ -202,12 +203,26 @@ class BiblestudyModelMediafiles extends JModelList {
                 $query->where('a.id = '.(int) substr($search, 3));
             } else {
                 $search = $db->Quote('%'.$db->escape($search, true).'%');
-                $query->where('(mediafile.filename LIKE '.$search.' OR mediafile.studytitle LIKE '.$search.')');
+                $query->where('(mediafile.filename LIKE '.$search.' OR study.studytitle LIKE '.$search.')');
             }
         }
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering', 'study_id');
+        $orderCol = $this->state->get('list.ordering', 'study_id'); //dump($orderCol);
         $orderDirn = $this->state->get('list.direction', 'desc');
+
+        //sqlsrv change
+        if ($orderCol == 'study_id')
+            $orderCol = 'mediafile.study_id';
+        if ($orderCol == 'mediaType')
+            $orderCol = 'mediafile.mediaType';
+        if ($orderCol == 'filename')
+            $orderCol = 'mediafile.filename';
+        if ($orderCol == 'ordering')
+            $orderCol = 'mediafile.ordering';
+        if ($orderCol == 'published')
+            $orderCol = 'mediafile.published';
+        if ($orderCol == 'id')
+            $orderCol = 'mediafile.id';
         $query->order($db->escape($orderCol.' '.$orderDirn));
         return $query;
     }
