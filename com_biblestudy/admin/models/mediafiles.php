@@ -100,10 +100,6 @@ class BiblestudyModelMediafiles extends JModelList {
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $filter_order = JRequest::getCmd('filter_order');
-        $filter_order_Dir = JRequest::getCmd('filter_order_Dir');
-
-
 
         parent::populateState('mediafile.createdate', 'DESC');
     }
@@ -219,7 +215,7 @@ class BiblestudyModelMediafiles extends JModelList {
         if ($orderCol == 'study_id')
             $orderCol = 'mediafile.study_id';
         if ($orderCol == 'mediaType')
-            $orderCol = 'mediafile.mediaType';
+            $orderCol = 'mediafile.media_image';
         if ($orderCol == 'filename')
             $orderCol = 'mediafile.filename';
         if ($orderCol == 'ordering')
