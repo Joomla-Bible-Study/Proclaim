@@ -82,6 +82,9 @@ class BiblestudyModelMediafiles extends JModelList {
             $this->context .= '.' . $layout;
         }
 
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $this->setState('filter.access', $access);
+
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
@@ -171,14 +174,23 @@ class BiblestudyModelMediafiles extends JModelList {
         $query->select('mediatype.media_text AS mediaType, mediatype.media_image_path, mediatype.path2');
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
-        // Filter by published state
-        $published = $this->getState('filter.state');
-        if (is_numeric($published)) {
-            $query->where('mediafile.published = '.(int) $published);
-        } elseif ($published === '') {
-            $query->where('(mediafile.published IN (0, 1))');
-        }
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level');
+        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
 
+
+
+        // Filter by published state
+        $published = $this->getState('filter.published');
+        if (is_numeric($published)) {
+            $query->where('mediafile.published = ' . (int)$published);
+        } else if ($published === '') {
+            $query->where('(mediafile.published = 0 OR mediafile.published = 1)');
+        }
+        // Filter by access level.
+        if ($access = $this->getState('filter.access')) {
+            $query->where('mediafile.access = ' . (int)$access);
+        }
         //Filter by filename
         $filename = $this->getState('filter.filename');
         if (!empty($filename)) {

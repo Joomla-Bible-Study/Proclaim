@@ -112,13 +112,15 @@ $sortFields = $this->getSortFields();
             <th width="20%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
             </th>
-            <th width="20%">
+            <th width="10%">
                 <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
             </th>
             <th width="15%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
             </th>
-
+            <th width="10%" class="nowrap hidden-phone">
+                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
+            </th>
             <th width="5%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
             </th>
@@ -212,6 +214,9 @@ $sortFields = $this->getSortFields();
                 <div class="pull-left">
                     <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                 </div>
+            </td>
+            <td class="small hidden-phone">
+                <?php echo $this->escape($item->access_level); ?>
             </td>
             <td class="nowrap has-context">
                 <div class="pull-left">
