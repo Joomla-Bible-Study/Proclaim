@@ -351,6 +351,11 @@ class JBSMHelper
 		return $admin_params->debug;
 	}
 
+    /**
+     * @return array
+     * @since 8.0.0
+     * Returns lists of media types
+     */
     public static function getMediaTypes()
     {
         $options = array();
@@ -374,10 +379,7 @@ class JBSMHelper
             JError::raiseWarning(500, $e->getMessage());
         }
 
-        // Merge any additional options in the XML definition.
-        //$options = array_merge(parent::getOptions(), $options);
 
-       // array_unshift($options, JHtml::_('select.option', '0', JText::_('JBS_ALL_MEDIA')));
 
         return $options;
     }
