@@ -351,4 +351,34 @@ class JBSMHelper
 		return $admin_params->debug;
 	}
 
+    public static function getMediaTypes()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('id As value, media_image_name As text');
+        $query->from('#__bsms_media AS a');
+        $query->order('a.media_image_name');
+
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+
+        // Merge any additional options in the XML definition.
+        //$options = array_merge(parent::getOptions(), $options);
+
+       // array_unshift($options, JHtml::_('select.option', '0', JText::_('JBS_ALL_MEDIA')));
+
+        return $options;
+    }
 }

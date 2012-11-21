@@ -104,6 +104,7 @@ class BiblestudyModelMediafiles extends JModelList {
         $this->setState('filter.language', $language);
 
 
+
         parent::populateState('mediafile.createdate', 'DESC');
     }
 
@@ -204,7 +205,7 @@ class BiblestudyModelMediafiles extends JModelList {
         }
 
         //Filter by media type
-        $mediaType = $this->getState('filter.mediatype');
+        $mediaType = $this->getState('filter.mediaType');
         if (is_numeric($mediaType)) {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
