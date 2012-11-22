@@ -177,11 +177,11 @@ class BiblestudyViewMessages extends JViewLegacy {
                 JHtml::_('select.options', JBSMHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
             );
             
-           /* JHtmlSidebar::addFilter(
+            JHtmlSidebar::addFilter(
                 JText::_('JBS_CMN_SELECT_LOCATION'),
                 'filter_location',
                 JHtml::_('select.options', JBSMHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
-            ); */
+            ); 
 
         }
     }

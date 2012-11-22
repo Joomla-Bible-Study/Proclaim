@@ -41,7 +41,8 @@ class BiblestudyModelMessages extends JModelList {
                 'hits', 'study.hits',
                 'plays', 'mediafile.plays',
                 'access', 'series.access', 'access_level',
-                'downloads', 'mediafile.downloads'
+                'downloads', 'mediafile.downloads',
+                'locations', 'locations.location_text'
             );
         }
 
@@ -162,7 +163,7 @@ class BiblestudyModelMessages extends JModelList {
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);
         
-        $location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location', 0, 'int');
+        $location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
         $this->setState('filter.location', $location);
 
 
@@ -274,7 +275,7 @@ class BiblestudyModelMessages extends JModelList {
         //Filter by location
         $location = $this->getState('filter.location');
         if (is_numeric($location)){
-          //  $query->where ('study.location_id = ' . (int) $location);
+            $query->where ('study.location_id = ' . (int) $location);
         }
         
         //Add the list ordering clause
