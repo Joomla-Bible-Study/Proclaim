@@ -99,7 +99,10 @@ class BiblestudyModelMediafiles extends JModelList {
 
         $mediaType = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
         $this->setState('filter.mediaType', $mediaType);
-
+        
+        $mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
+        $this->setState('filter.mediaYears', $mediaYears);
+        
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
@@ -210,6 +213,11 @@ class BiblestudyModelMediafiles extends JModelList {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
 
+        //Filter by media years
+        $mediaYears = $this->getState('filter.mediaYears');
+        if (is_numeric($mediaYears)) {
+            $query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
+        }
         // Filter by search in filename or study title
         $search = $this->getState('filter.search');
         if (!empty($search)) {

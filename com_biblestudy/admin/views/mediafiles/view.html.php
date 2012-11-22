@@ -145,6 +145,12 @@ class BiblestudyViewMediafiles extends JViewLegacy {
                 'filter_mediaType',
                 JHtml::_('select.options', JBSMHelper::getMediaTypes(), 'value', 'text', $this->state->get('filter.mediaType'))
             );
+            
+            JHtmlSidebar::addFilter(
+                JText::_('JBS_MED_SELECT_YEAR'),
+                'filter_mediaYears',
+                JHtml::_('select.options', JBSMHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
+            );
 
         }
     }

@@ -383,4 +383,220 @@ class JBSMHelper
 
         return $options;
     }
+    
+      /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of years of media files based on createdate
+     */
+    public static function getMediaYears()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
+        $query->from('#__bsms_mediafiles');
+        $query->order('value');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
+    
+     /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of message types
+     */
+    public static function getMessageTypes()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+         $query->select('messageType.id AS value, messageType.message_type AS text');
+        $query->from('#__bsms_message_type AS messageType');
+        $query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
+        $query->group('messageType.id');
+        $query->order('messageType.message_type');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
+    
+     /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of years of studies based on studydate
+     */
+    public static function getStudyYears()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
+        $query->from('#__bsms_studies');
+        $query->order('value');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
+    
+    /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of Teachers
+     */
+    public static function getTeachers()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('teacher.id AS value, teacher.teachername AS text');
+        $query->from('#__bsms_teachers AS teacher');
+        $query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
+        $query->group('teacher.id');
+        $query->order('teacher.teachername');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
+    
+    /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of books
+     */
+    public static function getStudyBooks()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('book.booknumber AS value, book.bookname AS text, book.id');
+        $query->from('#__bsms_books AS book');
+        $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
+        $query->group('book.id');
+        $query->order('book.booknumber');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
+        $translate = new JBSMTranslated();
+        foreach ($options as $option) {
+            $option->text = JText::_($option->text);
+            }
+        return $options;
+    }
+    
+     /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of books
+     */
+    public static function getStudyMediaTypes()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+         $query->select('messageType.id AS value, messageType.message_type AS text');
+        $query->from('#__bsms_message_type AS messageType');
+        $query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
+        $query->group('messageType.id');
+        $query->order('messageType.message_type');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
+    
+     /**
+     * @return array
+     * @since 8.0.0
+     * Returns list of books
+     */
+    public static function getStudyLocations()
+    {
+        $options = array();
+
+        $db		= JFactory::getDbo();
+        $query	= $db->getQuery(true);
+
+        $query->select('id AS value, location_text AS text');
+        $query->from('#__bsms_locations');
+        $query->order('location_text ASC');
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            JError::raiseWarning(500, $e->getMessage());
+        }
+        return $options;
+    }
 }

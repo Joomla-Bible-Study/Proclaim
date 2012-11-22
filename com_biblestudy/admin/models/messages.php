@@ -158,6 +158,13 @@ class BiblestudyModelMessages extends JModelList {
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
+        
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $this->setState('filter.access', $access);
+        
+        $location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location', 0, 'int');
+        $this->setState('filter.location', $location);
+
 
         parent::populateState('study.studydate', 'DESC');
     }
@@ -176,7 +183,7 @@ class BiblestudyModelMessages extends JModelList {
         $query->select(
                 $this->getState(
                         'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.language, study.access'));
+                        study.verse_begin, study.chapter_end, study.verse_end, study.ordering, study.hits, study.alias, study.language, study.access'));
         $query->from('#__bsms_studies AS study');
 
         // Join over the language
@@ -194,6 +201,11 @@ class BiblestudyModelMessages extends JModelList {
         //Join over Series
         $query->select('series.series_text');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
+        
+        //Join over Location
+        $query->select('locations.location_text');
+        $query->join('LEFT', '#__bsms_locations AS locations ON locations.id = study.location_id');
+        
 
         //Join over Books
         $query->select('book.bookname');
@@ -258,7 +270,13 @@ class BiblestudyModelMessages extends JModelList {
         if (is_numeric($book)) {
             $query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
         }
-
+    
+        //Filter by location
+        $location = $this->getState('filter.location');
+        if (is_numeric($location)){
+          //  $query->where ('study.location_id = ' . (int) $location);
+        }
+        
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering', 'a.id');
         $orderDirn = $this->state->get('list.direction', 'asc');
@@ -274,10 +292,10 @@ class BiblestudyModelMessages extends JModelList {
      */
     public function getTranslated($items = array()) {
         require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
-        $translate = new jbsTranslated();
+        $translate = new JBSMTranslated();
         foreach ($items as $item) {
             $item->bookname = JText::_($item->bookname);
-            $item->topic_text = $translate->getTopicItemTranslated($item);
+            //$item->topic_text = $translate->getTopicItemTranslated($item);
         }
         return $items;
     }

@@ -56,7 +56,7 @@ class BiblestudyViewMessages extends JViewLegacy {
         $this->canDo = JBSMHelper::getActions('', 'message');
         $modelView = $this->getModel();
         $this->items = $modelView->getTranslated($items);
-
+        
         $this->books = $this->get('Books');
         $this->teachers = $this->get('Teachers');
         $this->series = $this->get('Series');
@@ -84,10 +84,12 @@ class BiblestudyViewMessages extends JViewLegacy {
 
         $this->f_levels = $options;
 
-        // We don't need toolbar in the modal window.
-        if ($this->getLayout() !== 'modal') {
-            $this->addToolbar();
-        }
+       	// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal') {
+			$this->addToolbar();
+			if (BIBLESTUDY_CHECKREL)
+				$this->sidebar = JHtmlSidebar::render();
+		}
 
         // Display the template
         parent::display($tpl);
@@ -101,8 +103,11 @@ class BiblestudyViewMessages extends JViewLegacy {
      * @since 7.0
      */
     protected function addToolbar() {
+        $user = JFactory::getUser();
+        $bar = JToolBar::getInstance('toolbar');
+        
         JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
-
+        
         if ($this->canDo->get('core.create')) {
             JToolBarHelper::addNew('message.add');
         }
@@ -125,6 +130,60 @@ class BiblestudyViewMessages extends JViewLegacy {
             JToolBarHelper::trash('messages.trash');
             JToolBarHelper::divider();
         }
+        
+        // Add a batch button
+        if ($user->authorise('core.edit')) {
+            if (BIBLESTUDY_CHECKREL)
+                JHtml::_('bootstrap.modal', 'collapseModal');
+            $title = JText::_('JTOOLBAR_BATCH');
+            $dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
+						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
+						$title</button>";
+            $bar->appendButton('Custom', $dhtml, 'batch');
+        }
+        if (BIBLESTUDY_CHECKREL) {
+            JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
+
+            JHtmlSidebar::addFilter(
+                JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+            );
+
+            JHtmlSidebar::addFilter(
+                JText::_('JOPTION_SELECT_ACCESS'), 'filter_access', JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+            );
+
+            JHtmlSidebar::addFilter(
+                JText::_('JBS_CMN_SELECT_TEACHER'),
+                'filter_teacher',
+                JHtml::_('select.options', JBSMHelper::getTeachers(), 'value', 'text', $this->state->get('filter.teacher'))
+            );
+            
+            JHtmlSidebar::addFilter(
+                JText::_('JBS_MED_SELECT_YEAR'),
+                'filter_year',
+                JHtml::_('select.options', JBSMHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
+            );
+            
+             JHtmlSidebar::addFilter(
+                JText::_('JBS_CMS_SELECT_BOOK'),
+                'filter_book',
+                JHtml::_('select.options', JBSMHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
+            );
+            
+            
+            JHtmlSidebar::addFilter(
+                JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'),
+                'filter_message_type',
+                JHtml::_('select.options', JBSMHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
+            );
+            
+           /* JHtmlSidebar::addFilter(
+                JText::_('JBS_CMN_SELECT_LOCATION'),
+                'filter_location',
+                JHtml::_('select.options', JBSMHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
+            ); */
+
+        }
     }
 
     /**
@@ -137,4 +196,25 @@ class BiblestudyViewMessages extends JViewLegacy {
         $document->setTitle(JText::_('JBS_TITLE_STUDIES'));
     }
 
+ /**
+     * Returns an array of fields the table can be sorted by
+     *
+     * @return  array  Array containing the field name to sort by as the key and display text as value
+     *
+     * @since   3.0
+     */
+    protected function getSortFields()
+    {
+        return array(
+            'study.studydate' => JText::_('JBS_CMN_YEARS'),
+            'teachers.teachername' => JText::_('JBS_CMN_TEACHERS'),
+            'series.seriestext' => JText::_('JBS_CMN_SERIES'),
+            'study.ordering' => JText::_('JGRID_HEADING_ORDERING'),
+            'study.published' => JText::_('JSTATUS'),
+            'study.id' => JText::_('JGRID_HEADING_ID'),
+            'access_level' => JText::_('JGRID_HEADING_ACCESS'),
+			'study.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+            'messageType.message_type' => JText::_('JBS_CMN_MESSAGETYPE')
+        );
+    }
 }

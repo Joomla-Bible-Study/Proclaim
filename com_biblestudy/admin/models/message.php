@@ -406,4 +406,41 @@ class BiblestudyModelMessage extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
+ /**
+     * Saves the manually set order of records.
+     *
+     * @param   array    $pks    An array of primary key ids.
+     * @param   array    $cid
+     * @param   integer  $order  +1 or -1
+     *
+     * @return  mixed
+     * @since	11.1
+     */
+    public function saveorder($pks = null, $cid = array(), $order = null) {
+        $row = & $this->getTable();
+        $groupings = array();
+
+        // update ordering values
+        for ($i = 0; $i < count($cid); $i++) {
+            $row->load((int) $cid[$i]);
+            // track categories
+            $groupings[] = $row->id;
+
+            if ($row->ordering != $order[$i]) {
+                $row->ordering = $order[$i];
+                if (!$row->store()) {
+                    $this->setError($this->_db->getErrorMsg());
+                    return false;
+                }
+            }
+        }
+
+        // execute updateOrder for each parent group
+        $groupings = array_unique($groupings);
+        foreach ($groupings as $group) {
+            $row->reorder('id = ' . (int) $group);
+        }
+
+        return true;
+    }
 }
