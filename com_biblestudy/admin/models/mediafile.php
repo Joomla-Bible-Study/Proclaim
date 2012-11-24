@@ -426,7 +426,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
         }
         if (strlen($commands['link_type']) > 0)
         {
-            if (!$this->batchPlayer($commands['link_type'], $pks, $contexts))
+            if (!$this->batchlink_type($commands['link_type'], $pks, $contexts))
             {
                 return false;
             }
@@ -435,7 +435,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
         }
         if (strlen($commands['mimetype']) > 0)
         {
-            if (!$this->batchPlayer($commands['mimetype'], $pks, $contexts))
+            if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts))
             {
                 return false;
             }
@@ -445,7 +445,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
         if (strlen($commands['mediatype']) > 0)
         {
-            if (!$this->batchPlayer($commands['mediatype'], $pks, $contexts))
+            if (!$this->batchMediatype($commands['mediatype'], $pks, $contexts))
             {
                 return false;
             }
