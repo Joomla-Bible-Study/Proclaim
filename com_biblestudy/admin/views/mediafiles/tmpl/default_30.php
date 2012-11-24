@@ -270,15 +270,15 @@ $sortFields = $this->getSortFields();
                 <div class="pull-left">
                     <?php switch ($this->escape($item->link_type))
                             {
-                                case 0:
-                                    echo JText::_('JYES');
-                                    break;
-                                case 1:
-                                    echo JText::_('JNO');
-                                    break;
-                                case 2:
-                                    echo JText::_('JBS_CMN_ONLY');
-                                    break;
+                            case 0:
+                                echo JText::_('JYES');
+                                break;
+                            case 1:
+                                echo JText::_('JNO');
+                                break;
+                            case 2:
+                                echo JText::_('JBS_CMN_ONLY');
+                                break;
                             }?>
                 </div>
             </td>
