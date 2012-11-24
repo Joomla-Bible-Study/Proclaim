@@ -163,4 +163,156 @@ class BiblestudyModelMediafile extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
+    /**
+     * Batch Player changes for a group of mediafiles.
+     *
+     * @param   string  $value     The new value matching a player.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  boolean  True if successful, false otherwise and internal error is set.
+     *
+     * @since   2.5
+     */
+    protected function batchPlayer($value, $pks, $contexts)
+    {
+        // Set the variables
+        $user = JFactory::getUser();
+        $table = $this->getTable();
+
+        foreach ($pks as $pk)
+        {
+            if ($user->authorise('core.edit', $contexts[$pk]))
+            {
+                $table->reset();
+                $table->load($pk);
+                $table->player = (int) $value;
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+            else
+            {
+                $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch popup changes for a group of media files.
+     *
+     * @param   string  $value     The new value matching a client.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  boolean  True if successful, false otherwise and internal error is set.
+     *
+     * @since   2.5
+     */
+    protected function batchPopup($value, $pks, $contexts)
+    {
+        // Set the variables
+        $user = JFactory::getUser();
+        $table = $this->getTable();
+
+        foreach ($pks as $pk)
+        {
+            if ($user->authorise('core.edit', $contexts[$pk]))
+            {
+                $table->reset();
+                $table->load($pk);
+                $table->popup = (int) $value;
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+            else
+            {
+                $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Method to perform batch operations on an item or a set of items.
+     *
+     * @param   array   $commands   An array of commands to perform.
+     * @param   array   $pks        An array of item ids.
+     * @param   array   $contexts   An array of item contexts.
+     *
+     * @return	boolean	 Returns true on success, false on failure.
+     *
+     * @since	2.5
+     */
+    public function batch($commands, $pks, $contexts)
+    {
+        // Sanitize user ids.
+        $pks = array_unique($pks);
+        JArrayHelper::toInteger($pks);
+
+        // Remove any values of zero.
+        if (array_search(0, $pks, true))
+        {
+            unset($pks[array_search(0, $pks, true)]);
+        }
+
+        if (empty($pks))
+        {
+            $this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+            return false;
+        }
+
+        $done = false;
+
+
+
+        if (strlen($commands['player']) > 0)
+        {
+            if (!$this->batchPlayer($commands['player'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (strlen($commands['popup']) > 0)
+        {
+            if (!$this->batchLanguage($commands['popup'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (!$done)
+        {
+            $this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+            return false;
+        }
+
+        // Clear the cache
+        $this->cleanCache();
+
+        return true;
+    }
 }

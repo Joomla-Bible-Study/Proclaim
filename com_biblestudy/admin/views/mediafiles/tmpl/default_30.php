@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 if (BIBLESTUDY_CHECKREL) {
+    JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
     JHtml::_('bootstrap.tooltip');
     JHtml::_('dropdown.init');
     JHtml::_('formbehavior.chosen', 'select');
@@ -103,7 +104,7 @@ $sortFields = $this->getSortFields();
                                   value="" onclick="checkAll(this)" />
             </th>
             <th width="5%">
-                <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
             </th>
 
             <th width="20%">
@@ -115,6 +116,12 @@ $sortFields = $this->getSortFields();
             <th width="10%">
                 <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
             </th>
+            <th >
+                <?php echo JHtml::_('grid.sort', 'JBS_MED_PLAYERLABEL', 'mediafile.player', $listDirn, $listOrder); ?>
+            </th>
+            <th >
+                <?php echo JHtml::_('grid.sort', 'JBS_MED_POPUPLABEL', 'mediafile.popup', $listDirn, $listOrder); ?>
+            </th>
             <th width="15%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
             </th>
@@ -125,7 +132,7 @@ $sortFields = $this->getSortFields();
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
-                <?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort', 'JBS_MED_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mediafile.id', $listDirn, $listOrder); ?>
@@ -208,6 +215,47 @@ $sortFields = $this->getSortFields();
                     }
                     ?>
                     <img src=" <?php echo $path . $image; ?>" alt="<?php echo $item->mediaType; ?>" title="<?php echo $item->mediaType; ?>"/>
+                </div>
+            </td>
+            <td class="nowrap has-context">
+                <div class="pull-left">
+                    <?php switch ($this->escape($item->player))
+                            {
+                                case 100:
+                                    echo JText::_('JBS_MED_GLOBAL');
+                                    break;
+                                case 0:
+                                    echo JText::_('JBS_MED_DIRECT_LINK');
+                                    break;
+                                case 1:
+                                    echo JText::_('JBS_MED_INTERNAL_PLAYER');
+                                    break;
+                                case 3:
+                                    echo JText::_('JBS_MED_AV');
+                                    break;
+                                case 7:
+                                    echo JText::_('JBS_MED_LEGACY_PLAYER');
+                                    break;
+                                case 8:
+                                    echo JText::_('JBS_MED_EMBED_CODE');
+                                    break;
+                            } ?>
+                </div>
+            </td>
+            <td class="nowrap has-context">
+                <div class="pull-left">
+                    <?php switch ($this->escape($item->popup))
+                    {
+                    case 3:
+                        echo JText::_('JBS_MED_GLOBAL');
+                        break;
+                    case 1:
+                        echo JText::_('JBS_MED_POPUPLABEL');
+                        break;
+                    case 2:
+                        echo JText::_('JBS_MED_INLINELABEL');
+                        break;
+                    }?>
                 </div>
             </td>
             <td class="nowrap has-context">

@@ -181,7 +181,7 @@ class BiblestudyViewMessages extends JViewLegacy {
                 JText::_('JBS_CMN_SELECT_LOCATION'),
                 'filter_location',
                 JHtml::_('select.options', JBSMHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
-            ); 
+            );
 
         }
     }

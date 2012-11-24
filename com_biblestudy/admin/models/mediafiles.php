@@ -161,7 +161,7 @@ class BiblestudyModelMediafiles extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
+                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename, mediafile.player, mediafile.popup,
                         mediafile.createdate, mediafile.plays, mediafile.downloads, mediafile.language, mediafile.study_id '));
 
         $query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
