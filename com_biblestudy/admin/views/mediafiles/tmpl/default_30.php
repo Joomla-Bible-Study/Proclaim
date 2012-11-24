@@ -125,6 +125,9 @@ $sortFields = $this->getSortFields();
             <th width="15%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
             </th>
+            <th>
+                <?php echo JHtml::_('grid.sort', 'JBS_MED_DOWNLOAD', 'mediafile.link_type', $listDirn, $listOrder); ?>
+            </th>
             <th width="10%" class="nowrap hidden-phone">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
             </th>
@@ -261,6 +264,22 @@ $sortFields = $this->getSortFields();
             <td class="nowrap has-context">
                 <div class="pull-left">
                     <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+                </div>
+            </td>
+            <td class="nowrap has-context">
+                <div class="pull-left">
+                    <?php switch ($this->escape($item->link_type))
+                            {
+                                case 0:
+                                    echo JText::_('JYES');
+                                    break;
+                                case 1:
+                                    echo JText::_('JNO');
+                                    break;
+                                case 2:
+                                    echo JText::_('JBS_CMN_ONLY');
+                                    break;
+                            }?>
                 </div>
             </td>
             <td class="small hidden-phone">

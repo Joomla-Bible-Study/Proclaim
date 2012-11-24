@@ -27,6 +27,16 @@ $published = $this->state->get('filter.published');
                 <?php echo JHtml::_('biblestudy.popup');?>
             </div>
         </div>
+        <div class="control-group">
+            <div class="controls">
+                <?php echo JHtml::_('biblestudy.Mediatype');?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <?php echo JHtml::_('biblestudy.link_type');?>
+            </div>
+        </div>
 		<div class="control-group">
 			<div class="controls">
 				<?php echo JHtml::_('batch.access'); ?>

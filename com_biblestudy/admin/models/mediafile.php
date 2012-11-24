@@ -207,7 +207,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return true;
     }
 
-    /**
+            /**
      * Batch popup changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
@@ -231,6 +231,137 @@ class BiblestudyModelMediafile extends JModelAdmin {
                 $table->reset();
                 $table->load($pk);
                 $table->popup = (int) $value;
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+            else
+            {
+                $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch popup changes for a group of media files.
+     *
+     * @param   string  $value     The new value matching a client.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  boolean  True if successful, false otherwise and internal error is set.
+     *
+     * @since   2.5
+     */
+    protected function batchMediatype($value, $pks, $contexts)
+    {
+        // Set the variables
+        $user = JFactory::getUser();
+        $table = $this->getTable();
+
+        foreach ($pks as $pk)
+        {
+            if ($user->authorise('core.edit', $contexts[$pk]))
+            {
+                $table->reset();
+                $table->load($pk);
+                $table->media_image = (int) $value;
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+            else
+            {
+                $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+    /**
+     * Batch popup changes for a group of media files.
+     *
+     * @param   string  $value     The new value matching a client.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  boolean  True if successful, false otherwise and internal error is set.
+     *
+     * @since   2.5
+     */
+    protected function batchlink_type($value, $pks, $contexts)
+    {
+        // Set the variables
+        $user = JFactory::getUser();
+        $table = $this->getTable();
+
+        foreach ($pks as $pk)
+        {
+            if ($user->authorise('core.edit', $contexts[$pk]))
+            {
+                $table->reset();
+                $table->load($pk);
+                $table->link_type = (int) $value;
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+            else
+            {
+                $this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch popup changes for a group of media files.
+     *
+     * @param   string  $value     The new value matching a client.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  boolean  True if successful, false otherwise and internal error is set.
+     *
+     * @since   2.5
+     */
+    protected function batchMimetype($value, $pks, $contexts)
+    {
+        // Set the variables
+        $user = JFactory::getUser();
+        $table = $this->getTable();
+
+        foreach ($pks as $pk)
+        {
+            if ($user->authorise('core.edit', $contexts[$pk]))
+            {
+                $table->reset();
+                $table->load($pk);
+                $table->mime_type = (int) $value;
 
                 if (!$table->store())
                 {
@@ -293,10 +424,37 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
             $done = true;
         }
+        if (strlen($commands['link_type']) > 0)
+        {
+            if (!$this->batchPlayer($commands['link_type'], $pks, $contexts))
+            {
+                return false;
+            }
 
+            $done = true;
+        }
+        if (strlen($commands['mimetype']) > 0)
+        {
+            if (!$this->batchPlayer($commands['mimetype'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (strlen($commands['mediatype']) > 0)
+        {
+            if (!$this->batchPlayer($commands['mediatype'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
         if (strlen($commands['popup']) > 0)
         {
-            if (!$this->batchLanguage($commands['popup'], $pks, $contexts))
+            if (!$this->batchPopup($commands['popup'], $pks, $contexts))
             {
                 return false;
             }
