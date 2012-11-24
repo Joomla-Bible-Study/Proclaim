@@ -271,10 +271,10 @@ $sortFields = $this->getSortFields();
                     <?php switch ($this->escape($item->link_type))
                             {
                             case 0:
-                                echo JText::_('JYES');
+                                echo JText::_('JNO');
                                 break;
                             case 1:
-                                echo JText::_('JNO');
+                                echo JText::_('JYES');
                                 break;
                             case 2:
                                 echo JText::_('JBS_CMN_ONLY');

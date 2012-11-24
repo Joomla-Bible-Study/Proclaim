@@ -131,7 +131,8 @@ class BiblestudyViewMediafiles extends JViewLegacy {
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
         if (BIBLESTUDY_CHECKREL) {
-
+            include_once(JPATH_COMPONENT.'/helpers/html/biblestudy.php');
+            //JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
             JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediafiles');
 
             JHtmlSidebar::addFilter(
@@ -156,7 +157,7 @@ class BiblestudyViewMediafiles extends JViewLegacy {
             JHtmlSidebar::addFilter(
                 JText::_('JBS_FILTER_DOWNLOAD'),
                 'filter_download',
-                JHtml::_('select.options', 'filter_download', 'value', 'text', $this->state->get('filter.download'))
+                JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
             );
         }
     }
