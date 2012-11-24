@@ -106,7 +106,8 @@ class BiblestudyModelMediafiles extends JModelList {
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-
+        $download = $this->getUserStateFromRequest($this->context . '.filter.download', 'filter_download','');
+        $this->setState('filter.download', $download);
 
         parent::populateState('mediafile.createdate', 'DESC');
     }
@@ -213,6 +214,11 @@ class BiblestudyModelMediafiles extends JModelList {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
 
+        //Filter by download
+        $download = $this->getState('filter.download');
+        if (is_numeric($download)) {
+            $query->where('mediafile.link_type = ' . (int) $download);
+        }
         //Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');
         if (is_numeric($mediaYears)) {
