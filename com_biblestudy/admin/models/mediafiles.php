@@ -109,6 +109,9 @@ class BiblestudyModelMediafiles extends JModelList {
         $download = $this->getUserStateFromRequest($this->context . '.filter.download', 'filter_download','');
         $this->setState('filter.download', $download);
 
+        $player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player','');
+        $this->setState('filter.player', $player);
+
         parent::populateState('mediafile.createdate', 'DESC');
     }
 
@@ -162,7 +165,7 @@ class BiblestudyModelMediafiles extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename, mediafile.player, mediafile.popup,
+                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename, mediafile.player, mediafile.popup, mediafile.player,
                         mediafile.createdate, mediafile.plays, mediafile.link_type, mediafile.downloads, mediafile.language, mediafile.study_id '));
 
         $query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
@@ -210,18 +213,23 @@ class BiblestudyModelMediafiles extends JModelList {
 
         //Filter by media type
         $mediaType = $this->getState('filter.mediaType');
-        if (is_numeric($mediaType)) {
+        if (!empty($mediaType)) {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
 
         //Filter by download
         $download = $this->getState('filter.download');
-        if (is_numeric($download)) {
+        if (!empty($download)) {
             $query->where('mediafile.link_type = ' . (int) $download);
+        }
+        //Filter by player
+        $player = $this->getState('filter.player');
+        if (!empty($player)) {
+            $query->where('mediafile.player = ' . (int) $download);
         }
         //Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');
-        if (is_numeric($mediaYears)) {
+        if (!empty($mediaYears)) {
             $query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
         }
         // Filter by search in filename or study title
