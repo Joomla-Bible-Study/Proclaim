@@ -86,6 +86,10 @@ class BiblestudyModelPodcasts extends JModelList {
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
+        
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
         parent::populateState('podcast.title', 'ASC');
     }
 
@@ -114,6 +118,16 @@ class BiblestudyModelPodcasts extends JModelList {
             $query->where('podcast.published = ' . (int) $published);
         } else if ($published === '') {
             $query->where('(podcast.published = 0 OR podcast.published = 1)');
+        }
+        // Filter by search in filename or study title
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where('podcast.id = '.(int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%'.$db->escape($search, true).'%');
+                $query->where('(podcast.title LIKE '.$search.' OR podcast.description LIKE '.$search.')');
+            }
         }
 
         //Add the list ordering clause

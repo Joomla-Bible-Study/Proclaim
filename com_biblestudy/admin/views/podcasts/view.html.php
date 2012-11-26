@@ -54,6 +54,23 @@ class BiblestudyViewPodcasts extends JViewLegacy {
         $this->canDo = JBSMHelper::getActions('', 'podcast');
         $this->addToolbar();
 
+        // Levels filter.
+        $options = array();
+        $options[] = JHtml::_('select.option', '1', JText::_('J1'));
+        $options[] = JHtml::_('select.option', '2', JText::_('J2'));
+        $options[] = JHtml::_('select.option', '3', JText::_('J3'));
+        $options[] = JHtml::_('select.option', '4', JText::_('J4'));
+        $options[] = JHtml::_('select.option', '5', JText::_('J5'));
+        $options[] = JHtml::_('select.option', '6', JText::_('J6'));
+        $options[] = JHtml::_('select.option', '7', JText::_('J7'));
+        $options[] = JHtml::_('select.option', '8', JText::_('J8'));
+        $options[] = JHtml::_('select.option', '9', JText::_('J9'));
+        $options[] = JHtml::_('select.option', '10', JText::_('J10'));
+
+        $this->f_levels = $options;
+        
+        if (BIBLESTUDY_CHECKREL)
+                {$this->sidebar = JHtmlSidebar::render();}
         // Display the template
         parent::display($tpl);
 
@@ -100,5 +117,19 @@ class BiblestudyViewPodcasts extends JViewLegacy {
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_TITLE_PODCASTS'));
     }
-
+ /**
+     * Returns an array of fields the table can be sorted by
+     *
+     * @return  array  Array containing the field name to sort by as the key and display text as value
+     *
+     * @since   3.0
+     */
+    protected function getSortFields() {
+        return array(
+            'podcast.title' => JText::_('JBS_CMN_PODCAST'),
+            'podcast.published' => JText::_('JSTATUS'),
+            'podcast.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+            'podcast.id' => JText::_('JGRID_HEADING_ID')
+        );
+    }
 }
