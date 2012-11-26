@@ -18,7 +18,25 @@ jimport('joomla.application.component.modellist');
  * @since 7.0.0
  */
 class BiblestudyModelMediaimages extends JModelList {
+/**
+	 * Constructer
+	 *
+	 * @param string $config
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'id', 'image.id',
+				'published', 'image.alttext',
+				'path2', 'image.path2',
+				'media_image_path', 'image.media_image_path'
+                
+			);
+		}
 
+		parent::__construct($config);
+	}
     /**
      * Data
      * @var array
@@ -67,6 +85,9 @@ class BiblestudyModelMediaimages extends JModelList {
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
+        
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
 
         parent::populateState('media.media_image_name', 'ASC');
     }
@@ -93,9 +114,20 @@ class BiblestudyModelMediaimages extends JModelList {
         } else if ($published === '') {
             $query->where('(media.published = 0 OR media.published = 1)');
         }
+        
+        // Filter by search in title.
+		$search = $this->getState('filter.search');
+		if (!empty($search)) {
+			if (stripos($search, 'id:') === 0) {
+				$query->where('media.id = ' . (int) substr($search, 3));
+			} else {
+				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$query->where('(media.media_image_name LIKE ' . $search . ' OR media.path2 LIKE ' . $search . ')');
+			}
+		}
 
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
+        $orderCol = $this->state->get('list.ordering'); 
         $orderDirn = $this->state->get('list.direction');
         $query->order($db->escape($orderCol.' '.$orderDirn));
         return $query;
