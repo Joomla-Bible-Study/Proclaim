@@ -56,6 +56,23 @@ class BiblestudyViewMimetypes extends JViewLegacy {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+        	// Levels filter.
+		$options = array();
+		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
+		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
+		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
+		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
+		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
+		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
+		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
+		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
+		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
+		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+
+		$this->f_levels = $options;
+        
+        if (BIBLESTUDY_CHECKREL)
+				{$this->sidebar = JHtmlSidebar::render();}
         // Set the toolbar
         $this->addToolbar();
 
@@ -103,4 +120,19 @@ class BiblestudyViewMimetypes extends JViewLegacy {
         $document->setTitle(JText::_('JBS_TITLE_MIME_TYPES'));
     }
 
+	/**
+	 * Returns an array of fields the table can be sorted by
+	 *
+	 * @return  array  Array containing the field name to sort by as the key and display text as value
+	 *
+	 * @since   3.0
+	 */
+	protected function getSortFields()
+	{
+		return array(
+			'mimetype.mimetype' => JText::_('JBS_CMN_MIME_TYPE'),
+			'mimetype.mimetext' => JText::_('JBS_MMT_MIME_TEXT'),
+			'mimetype.id' => JText::_('JGRID_HEADING_ID')
+		);
+	}
 }

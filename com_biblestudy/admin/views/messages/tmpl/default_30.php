@@ -198,11 +198,43 @@ $sortFields = $this->getSortFields();
                     <?php else : ?>
                     <?php echo ($this->escape($item->studytitle) ? $this->escape($item->studytitle) : 'ID: ' . $this->escape($item->id)); ?>
                     <?php endif; ?>
+                    <div class="pull-left">
+                    <?php
+                    if (BIBLESTUDY_CHECKREL) {
+                        // Create dropdown items
+                        JHtml::_('dropdown.edit', $item->id, 'article.');
+                        JHtml::_('dropdown.divider');
+                        if ($item->published) :
+                            JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+                        endif;
+
+                        JHtml::_('dropdown.divider');
+
+                        if ($archived) :
+                            JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+                        endif;
+
+                        if ($trashed) :
+                            JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+                        endif;
+
+                        // Render dropdown list
+                        echo JHtml::_('dropdown.render');
+                    }
+                    ?>
+                </div>
                     <?php if ($item->alias) : ?>
                     <p class="smallsub">
                         <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
                     <?php endif; ?>
                 </div>
+                
             </td>
            
             

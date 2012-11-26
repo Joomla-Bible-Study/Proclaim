@@ -10,7 +10,6 @@
 defined('_JEXEC') or die;
 
 if (BIBLESTUDY_CHECKREL) {
-    JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
     JHtml::_('bootstrap.tooltip');
     JHtml::_('dropdown.init');
     JHtml::_('formbehavior.chosen', 'select');
@@ -27,7 +26,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 
-$sortFields = $this->getSortFields(); 
+$sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function() {
@@ -42,7 +41,7 @@ $sortFields = $this->getSortFields();
         Joomla.tableOrdering(order, dirn, '');
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediaimages'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mimetypes'); ?>" method="post" name="adminForm" id="adminForm">
     <?php if (!empty($this->sidebar)): ?>
     <div id="j-sidebar-container" class="span2">
         <?php echo $this->sidebar; ?>
@@ -88,80 +87,67 @@ $sortFields = $this->getSortFields();
 			    <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
             </select>
         </div>
-
+        <div class="btn-group pull-right">
+            <label for="filter_language" id="filter_language"
+                   class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+            <select name="filter_language" class="input-medium" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
+			    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
+            </select>
+        </div>
 	    <?php endif; ?>
     </div>
     <div class="clearfix"> </div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped" id="foldersList">
         <thead>
         <tr>
-            <th width="1%"><input type="checkbox" name="checkall-toggle"
-                                  value="" onclick="checkAll(this)" />
-            </th>
-            <th>
-                <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'media.published', $listDirn, $listOrder); ?>
-            </th>
-
             <th width="1%">
-                    <?php
-                    echo JHtml::_('grid.sort', 'JBS_CMN_IMAGE', 'media.path2', $listDirn, $listOrder);
-                    ?>
-                </th>
-                <th width="77%">
-                    <?php
-                    echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA', 'media.media_image_name', $listDirn, $listOrder);
-                    ?>
-                </th>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'media.id', $listDirn, $listOrder); ?>
-                </th>
+                <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+            </th>
+            <th width="1%" style="min-width:55px" class="nowrap center">
+                <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mimetype.published', $listDirn, $listOrder); ?>
+            </th>
+            <th width="20%">
+                <?php echo JHtml::_('grid.sort', 'JBS_MMT_MIME_TEXT', 'mimetype.mimetext', $listDirn, $listOrder); ?>
+            </th>
+            <th width="10%" class="nowrap hidden-phone">
+                <?php echo JHtml::_('grid.sort', 'JBS_CMN_MIME_TYPE', 'mimetype.mimetype', $listDirn, $listOrder); ?>
+            </th>
+            <th width="1%" class="nowrap hidden-phone">
+                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mimetype.id', $listDirn, $listOrder); ?>
+            </th>
         </tr>
         </thead>
         <tbody>
         <?php
         foreach ($this->items as $i => $item) :
-            $link = JRoute::_('index.php?option=com_biblestudy&task=mediaimage.edit&id=' . (int)$item->id);
+            $link = JRoute::_('index.php?option=com_biblestudy&task=mimetype.edit&id=' . (int) $item->id);
             $canCreate = $user->authorise('core.create');
-            $canEdit = $user->authorise('core.edit', 'com_biblestudy.mediaimage.' . $item->id);
-            $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.mediaimage.' . $item->id);
-            $canChange = $user->authorise('core.edit.state', 'com_biblestudy.mediaimage.' . $item->id);
+            $canEdit = $user->authorise('core.edit', 'com_biblestudy.mimetype.' . $item->id);
+            $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.mimetype.' . $item->id);
+            $canChange = $user->authorise('core.edit.state', 'com_biblestudy.mimetype.' . $item->id);
             ?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
-            
+
             <td class="center hidden-phone">
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
             <td class="center">
                 <div class="btn-group">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediaimage.', $canChange, 'cb', '', ''); ?>
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'folders.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
-
             <td class="nowrap has-context">
                 <div class="pull-left">
-                    <?php
-                    //echo $this->directory;
-                    $path = JURI::base() . '../';
-                    if ($item->path2) {
-                        if (!substr_count($item->path2, '/')) {
-                            $image = $this->directory . '/' . $item->path2;
-                        } else {
-                            $image = $item->path2;
-                        }
-                    } else {
-                        $image = $item->media_image_path;
-                        $path = '../';
-                    }
-                    ?>
-                    <img src=" <?php echo $path . $image; ?>" alt="<?php echo $item->media_alttext; ?>"/>
+
+                    <?php if ($canEdit || $canEditOwn) : ?>
+                    <a href="<?php echo $link; ?>"><?php echo $item->mimetext; ?></a>
+                    <?php else : ?>
+                    <span title="<?php echo $item->mimetext; ?>"><?php echo $item->mimetext; ?></span>
+                    <?php endif; ?>
                 </div>
-            </td>
-            <td class="nowrap has-context">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediaimage.edit&id=' . (int) $item->id); ?>">
-                        <?php echo $this->escape($item->media_image_name); ?>
-                    </a>
-                    <div class="pull-left">
+                <div class="pull-left">
                     <?php
                     if (BIBLESTUDY_CHECKREL) {
                         // Create dropdown items
@@ -193,7 +179,9 @@ $sortFields = $this->getSortFields();
                     ?>
                 </div>
             </td>
-           
+            <td class="small hidden-phone">
+                <?php echo $this->escape($item->mimetype); ?>
+            </td>
             <td class="center hidden-phone">
                 <?php echo (int) $item->id; ?>
             </td>

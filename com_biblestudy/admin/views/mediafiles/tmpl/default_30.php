@@ -195,6 +195,37 @@ $sortFields = $this->getSortFields();
                     <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
                     <?php endif; ?>
                 </div>
+                <div class="pull-left">
+                    <?php
+                    if (BIBLESTUDY_CHECKREL) {
+                        // Create dropdown items
+                        JHtml::_('dropdown.edit', $item->id, 'article.');
+                        JHtml::_('dropdown.divider');
+                        if ($item->published) :
+                            JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+                        endif;
+
+                        JHtml::_('dropdown.divider');
+
+                        if ($archived) :
+                            JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+                        endif;
+
+                        if ($trashed) :
+                            JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+                        else :
+                            JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+                        endif;
+
+                        // Render dropdown list
+                        echo JHtml::_('dropdown.render');
+                    }
+                    ?>
+                </div>
             </td>
             <td class="nowrap has-context">
                 <div class="pull-left">
