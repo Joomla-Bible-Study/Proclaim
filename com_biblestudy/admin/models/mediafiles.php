@@ -112,6 +112,9 @@ class BiblestudyModelMediafiles extends JModelList {
         $player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player','');
         $this->setState('filter.player', $player);
 
+        $popup = $this->getUserStateFromRequest($this->context . '.filter.popup', 'filter_popup','');
+        $this->setState('filter.popup', $popup);
+
         parent::populateState('mediafile.createdate', 'DESC');
     }
 
@@ -217,6 +220,11 @@ class BiblestudyModelMediafiles extends JModelList {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
         }
 
+        //Filter by popup
+        $popup = $this->getState('filter.popup');
+        if (!empty($popup)) {
+            $query->where('mediafile.popup = ' . (int) $popup);
+        }
         //Filter by download
         $download = $this->getState('filter.download');
         if (!empty($download)) {
@@ -225,7 +233,7 @@ class BiblestudyModelMediafiles extends JModelList {
         //Filter by player
         $player = $this->getState('filter.player');
         if (!empty($player)) {
-            $query->where('mediafile.player = ' . (int) $download);
+            $query->where('mediafile.player = ' . (int) $player);
         }
         //Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');

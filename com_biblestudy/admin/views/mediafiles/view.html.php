@@ -164,6 +164,11 @@ class BiblestudyViewMediafiles extends JViewLegacy {
                 'filter_player',
                 JHtml::_('select.options', JHtmlBiblestudy::playerlist(), 'value', 'text', $this->state->get('filter.player'))
             );
+            JHtmlSidebar::addFilter(
+                JText::_('JBS_CMN_FILTER_POPUP'),
+                'filter_popup',
+                JHtml::_('select.options', JHtmlBiblestudy::popuplist(), 'value', 'text', $this->state->get('filter.popup'))
+            );
         }
     }
 
