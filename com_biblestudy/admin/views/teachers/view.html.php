@@ -60,15 +60,27 @@ class BiblestudyViewTeachers extends JViewLegacy {
             return false;
         }
 
-        // Preprocess the list of items to find ordering divisions.
-        // TODO: Complete the ordering stuff with nested sets
-        foreach ($this->items as &$item) {
-            $item->order_up = true;
-            $item->order_dn = true;
+        // Levels filter.
+        $options = array();
+        $options[] = JHtml::_('select.option', '1', JText::_('J1'));
+        $options[] = JHtml::_('select.option', '2', JText::_('J2'));
+        $options[] = JHtml::_('select.option', '3', JText::_('J3'));
+        $options[] = JHtml::_('select.option', '4', JText::_('J4'));
+        $options[] = JHtml::_('select.option', '5', JText::_('J5'));
+        $options[] = JHtml::_('select.option', '6', JText::_('J6'));
+        $options[] = JHtml::_('select.option', '7', JText::_('J7'));
+        $options[] = JHtml::_('select.option', '8', JText::_('J8'));
+        $options[] = JHtml::_('select.option', '9', JText::_('J9'));
+        $options[] = JHtml::_('select.option', '10', JText::_('J10'));
+
+        $this->f_levels = $options;
+
+        // We don't need toolbar in the modal window.
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+            if (BIBLESTUDY_CHECKREL)
+                $this->sidebar = JHtmlSidebar::render();
         }
-
-        $this->addToolbar();
-
         // Display the template
         parent::display($tpl);
 
@@ -82,6 +94,9 @@ class BiblestudyViewTeachers extends JViewLegacy {
      * @since 7.0
      */
     protected function addToolbar() {
+        $user = JFactory::getUser();
+        // Get the toolbar object instance
+        $bar = JToolBar::getInstance('toolbar');
         JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'teachers.png');
         if ($this->canDo->get('core.create')) {
             JToolBarHelper::addNew('teacher.add');
@@ -101,6 +116,16 @@ class BiblestudyViewTeachers extends JViewLegacy {
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             JToolBarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
         }
+        // Add a batch button
+        if ($user->authorise('core.edit')) {
+            if (BIBLESTUDY_CHECKREL)
+                JHtml::_('bootstrap.modal', 'collapseModal');
+            $title = JText::_('JTOOLBAR_BATCH');
+            $dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
+						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
+						$title</button>";
+            $bar->appendButton('Custom', $dhtml, 'batch');
+        }
     }
 
     /**
@@ -113,4 +138,22 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $document->setTitle(JText::_('JBS_TITLE_TEACHERS'));
     }
 
+    /**
+     * Returns an array of fields the table can be sorted by
+     *
+     * @return  array  Array containing the field name to sort by as the key and display text as value
+     *
+     * @since   3.0
+     */
+    protected function getSortFields()
+    {
+        return array(
+            'teacher.teachername' => JText::_('JBS_CMN_STUDY_TITLE'),
+            'teacher.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+            'teacher.ordering' => JText::_('JGRID_HEADING_ORDERING'),
+            'teacher.published' => JText::_('JSTATUS'),
+            'access_level' => JText::_('JGRID_HEADING_ACCESS'),
+            'teacher.id' => JText::_('JGRID_HEADING_ID')
+        );
+    }
 }

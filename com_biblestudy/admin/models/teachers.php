@@ -107,13 +107,16 @@ class BiblestudyModelTeachers extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'teacher.id, landing_show, list_show, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language'));
+                        'list.select', 'teacher.id, landing_show, list_show, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language, teacher.access'));
         $query->from('#__bsms_teachers AS teacher');
 
         // Join over the language
         $query->select('l.title AS language_title');
         $query->join('LEFT', '`#__languages` AS l ON l.lang_code = teacher.language');
 
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level');
+        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = teacher.access');
 
         // Filter by published state
         $published = $this->getState('filter.published');
