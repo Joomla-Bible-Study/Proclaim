@@ -179,5 +179,5 @@ class BiblestudyModelTeacher extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
-    
+
 }
