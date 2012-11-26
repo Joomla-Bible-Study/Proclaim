@@ -111,7 +111,7 @@ $sortFields = $this->getSortFields();
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
             </th>
             <th width="10%" class="nowrap hidden-phone">
-                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'teacger.access', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'teacher.access', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>

@@ -107,7 +107,7 @@ class BiblestudyModelTeachers extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'teacher.id, landing_show, list_show, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language, teacher.access'));
+                        'list.select', 'teacher.id, teacher.landing_show, teacher.list_show, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language, teacher.access'));
         $query->from('#__bsms_teachers AS teacher');
 
         // Join over the language

@@ -109,7 +109,7 @@ class BiblestudyModelComments extends JModelList
 		$query = $db->getQuery(true);
 		$query->select(
 			$this->getState(
-				'list.select', 'comment.*'));
+				'list.select', 'comment.id, comment.published, comment.user_id, comment.full_name, comment.user_email, comment.comment_date, comment.comment_text, comment.access, comment.language, comment.asset_id'));
 		$query->from('#__bsms_comments AS comment');
 
 		// Join over the language
@@ -143,9 +143,12 @@ class BiblestudyModelComments extends JModelList
 		$query->select('book.bookname as bookname');
 		$query->join('LEFT', '#__bsms_books as book ON book.booknumber = study.booknumber');
 
-
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level');
+        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = comment.access');
+        
 		//Add the list ordering clause
-		$orderCol = $this->state->get('list.ordering', 'comment.studytitle');
+		$orderCol = $this->state->get('list.ordering', 'study.studytitle');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 		return $query;
