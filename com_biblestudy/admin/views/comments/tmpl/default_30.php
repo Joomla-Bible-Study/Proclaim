@@ -99,27 +99,30 @@ $sortFields = $this->getSortFields();
             <th width="1%"><input type="checkbox" name="checkall-toggle"
                                   value="" onclick="checkAll(this)" />
             </th>
-            <th width="5%">
+            <th>
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
             </th>
 
             <th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'comment.studytitle', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
             </th>
-            <th width="10%" class="nowrap hidden-phone">
+            <th class="nowrap hidden-phone">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'comment.access', $listDirn, $listOrder); ?>
             </th>
-            <th width="10%">
-				<?php echo JText::_('JBS_CMT_FULL_NAME'); ?>
+            <th>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
             </th>
-            <th width="10%">
+            <th>
+                <?php echo JText::_('JBS_CMT_TEXT'); ?>
+            </th>
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
             </th>
-            <th width="5%" class="nowrap hidden-phone">
+            <th class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap hidden-phone">
-				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'commint.id', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'comment.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -160,21 +163,26 @@ $sortFields = $this->getSortFields();
                     <?php echo $item->full_name; ?>
                 </div>
             </td>
+            <td>
+                <div class="pull-left">
+                    <?php echo substr($item->comment_text,0,50); ?>
+                </div>
+            </td>
             <td class="nowrap has-context">
                 <div class="pull-left">
                    <?php echo $item->comment_date; ?>
                 </div>
             </td>
-            <td class="nowrap has-context">
+            <td class="small hidden-phone">
                 <div class="pull-left">
-                     <td class="small hidden-phone">
 		            <?php if ($item->language == '*'): ?>
 		            <?php echo JText::alt('JALL', 'language'); ?>
 		            <?php else: ?>
 		            <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 		            <?php endif; ?>
-                </td>
                 </div>
+                </td>
+                
             </td>
             <td class="center hidden-phone">
                 <?php echo (int) $item->id; ?>

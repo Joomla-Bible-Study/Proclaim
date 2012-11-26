@@ -145,12 +145,12 @@ class BiblestudyViewComments extends JViewLegacy {
 	 */
 	protected function getSortFields() {
 		return array(
-			'comments.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-			'comments.published' => JText::_('JSTATUS'),
-			'comments_test' => JText::_('JBS_CMN_SERIES'),
-			'comments_level' => JText::_('JGRID_HEADING_ACCESS'),
-			'comments.language' => JText::_('JGRID_HEADING_LANGUAGE'),
-			'comments.id' => JText::_('JGRID_HEADING_ID')
+			'comment.full_name' => JText::_('JBS_CMT_FULL_NAME'),
+			'comment.published' => JText::_('JSTATUS'),
+			'study.studytitle' => JText::_('JBS_CMN_TITLE'),
+			'comment.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+            'access_level' => JText::_('JGRID_HEADING_ACCESS'),
+			'comment.id' => JText::_('JGRID_HEADING_ID')
 		);
 	}
 

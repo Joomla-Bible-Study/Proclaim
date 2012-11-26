@@ -125,7 +125,7 @@ $sortFields = $this->getSortFields();
 				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
             </th>
             <th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'comment.studytitle', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
             </th>
             <th width="10%">
 				<?php echo JText::_('JBS_CMT_FULL_NAME'); ?>

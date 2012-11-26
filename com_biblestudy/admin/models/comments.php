@@ -34,9 +34,10 @@ class BiblestudyModelComments extends JModelList
 				'id', 'comment.id',
 				'published', 'comment.published',
 				'ordering', 'comment.ordering',
-				'studytitle', 'comment.studytitle',
+				'studytitle', 'study.studytitle',
 				'bookname', 'comment.bookname',
 				'createdate', 'comment.createdate',
+                'full_name', 'comment.full_name',
 				'language', 'comment.language'
 			);
 		}
@@ -131,12 +132,12 @@ class BiblestudyModelComments extends JModelList
 				$query->where('comment.id = ' . (int) substr($search, 3));
 			} else {
 				$search = $db->Quote('%' . $db->escape($search, true) . '%');
-				$query->where('(comment.studytitle LIKE ' . $search . ' OR comment.bookname LIKE ' . $search . ')');
+				$query->where('(study.studytitle LIKE ' . $search . ' OR book.bookname LIKE ' . $search . ')');
 			}
 		}
 
 		//Join over Studies
-		$query->select('study.studytitle AS studytitle, study.chapter_begin, study.studydate');
+		$query->select('study.studytitle AS studytitle, study.chapter_begin, study.studydate, study.booknumber');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = comment.study_id');
 
 		//Join over books
