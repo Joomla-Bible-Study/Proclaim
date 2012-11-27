@@ -9,7 +9,15 @@
 //No Direct Access
 defined('_JEXEC') or die; ?>
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm" id="adminForm">
-
+<?php if (!empty($this->sidebar)): ?>
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+    <div id="j-main-container" class="span10">
+        <?php else : ?>
+            <div id="j-main-container">
+            <?php endif; ?>
+        
 <div class="width-100 fltlft">
     <fieldset class="panelform">
         <legend><?php echo JText::_('JBS_CMN_EXPORT'); ?></legend>
@@ -31,6 +39,7 @@ defined('_JEXEC') or die; ?>
 <input type="hidden" name="task" value=""/>
         
         <?php echo JHtml::_('form.token'); ?>
+        </div>
 </form>
 
 

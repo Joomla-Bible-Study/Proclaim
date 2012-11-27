@@ -74,7 +74,10 @@ class BiblestudyModelTemplates extends JModelList {
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
-
+        
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+        
         parent::populateState('template.title', 'ASC');
     }
 
@@ -100,6 +103,16 @@ class BiblestudyModelTemplates extends JModelList {
             $query->where('(template.published = 0 OR template.published = 1)');
         }
 
+        // Filter by search in filename or study title
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where('template.id = '.(int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%'.$db->escape($search, true).'%');
+                $query->where('(template.title LIKE '.$search.' OR template.params LIKE '.$search.')');
+            }
+        }
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
