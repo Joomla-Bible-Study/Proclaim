@@ -175,20 +175,7 @@ class BiblestudyModelComment extends JModelAdmin
 		return JTable::getInstance($type, $prefix, $config);
 	}
 
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param    integer    The id of the primary key.
-	 *
-	 * @return    mixed    Object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		if ($item = parent::getItem($pk)) {
-			$item->admin = BsmHelper::getAdmin();
-		}
-		return $item;
-	}
+
 
 	/**
 	 * Method to store a record

@@ -30,7 +30,7 @@ $input = $app->input;
 
 <script type="text/javascript">
     Joomla.submitbutton = function (task) {
-        if (task == 'commint.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        if (task == 'comment.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
@@ -45,8 +45,7 @@ $input = $app->input;
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
                 </li>
-                <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_PUBLISHING'); ?></a>
-                </li>
+                
 				<?php if ($this->canDo->get('core.admin')): ?>
                 <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 				<?php endif ?>
