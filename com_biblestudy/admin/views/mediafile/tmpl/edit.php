@@ -146,7 +146,8 @@ if (JRequest::getWord('layout') == 'modal') {
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
 } echo $url;
-?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+<div class="row-fluid">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend>
@@ -358,5 +359,6 @@ if (JRequest::getWord('layout') == 'modal') {
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="controller" value="mediafile" />
+    </div>
 </form>
 
