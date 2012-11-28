@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset>
-        <field name="published" type="radio" label="JBS_CMN_PUBLISHED"
+        <field name="published" type="radio" label="JBS_CMN_ITEM_PUBLISHED"
                description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1"
                required="true">
             <option value="0">JBS_CMN_NO</option>
