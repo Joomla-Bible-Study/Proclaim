@@ -62,7 +62,7 @@ class BiblestudyViewMediaimage extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->setLayout('form');
+        $this->setLayout('edit');
         $directory = '/media/com_biblestudy/images';
         $this->assignRef('directory', $directory);
 
