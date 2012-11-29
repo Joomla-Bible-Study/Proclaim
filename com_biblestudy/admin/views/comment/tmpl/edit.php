@@ -46,7 +46,8 @@ $input = $app->input;
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
                 </li>
-                
+                <li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
+                </li>
 				<?php if ($this->canDo->get('core.admin')): ?>
                 <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 				<?php endif ?>
@@ -102,7 +103,7 @@ $input = $app->input;
 							<?php echo $this->form->getInput('id'); ?>
                        </div>
                    </div>
-
+                </div>
 
                     <?php if ($this->canDo->get('core.admin')): ?>
                     <div class="tab-pane" id="permissions">
@@ -116,7 +117,7 @@ $input = $app->input;
                         </div>
                     </div>
                     <?php endif; ?>
-                    <div class="tab-pane" id="publishing">
+                    <div class="tab-pane" id="parameters">
                     <div class="control-group">
                         <div class="control-label">
                         <?php echo $this->form->getLabel('published'); ?>
@@ -127,14 +128,18 @@ $input = $app->input;
                     </div>
 
                     <div class="control-group">
-                        <?php echo $this->form->getLabel('access'); ?>
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('access'); ?>
+                        </div>
                         <div class="controls">
                             <?php echo $this->form->getInput('access'); ?>
                         </div>
                     </div>
 
                     <div class="control-group">
-                        <?php echo $this->form->getLabel('language'); ?>
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('language'); ?>
+                        </div>
                         <div class="controls">
                             <?php echo $this->form->getInput('language'); ?>
                         </div>
@@ -143,17 +148,11 @@ $input = $app->input;
             </div>
 
 
-
-
-            <h4><?php echo JText::_('JDETAILS'); ?></h4>
-            <hr/>
-
-
-
-
-    </fieldset>
-    </div>
+           
+        </div>
+     </fieldset>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
     <?php echo JHtml::_('form.token'); ?>
+    </div>
 </form>

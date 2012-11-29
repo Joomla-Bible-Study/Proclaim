@@ -507,6 +507,7 @@ if (JRequest::getWord('layout') == 'modal') {
 
         
     </div>
+    </fieldset>
 </div>
 </form>
 
