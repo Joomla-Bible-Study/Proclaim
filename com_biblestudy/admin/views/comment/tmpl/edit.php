@@ -39,9 +39,10 @@ $input = $app->input;
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
-    <div class="row-fluid">
+
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
+            <fieldset>
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
                 </li>
@@ -53,88 +54,106 @@ $input = $app->input;
             <div class="tab-content">
                 <!-- Begin Tabs -->
                 <div class="tab-pane active" id="general">
-                    <fieldset class="adminform">
-                        <div class="control-group  form-inline">
-							<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
-                        </div>
-						<?php echo $this->form->getInput('comment_text'); ?>
-                    </fieldset>
-                    <div class="row-fluid">
-                        <div class="span6">
-                            <div class="control-group">
-								<?php echo $this->form->getLabel('study_id'); ?>
-                                <div class="controls">
-									<?php echo $this->form->getInput('study_id'); ?></div>
+                   <div class="control-group">
+                       <div class="control-label">
+					        <?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
+                       </div>
+                       <div class="controls">
+                            <?php echo $this->form->getInput('comment_text'); ?>
+                       </div>
+                   </div>
+                   <div class="control-group">
+                       <div class="control-label">
+							<?php echo $this->form->getLabel('study_id'); ?>
+                       </div>
+                       <div class="controls">
+							<?php echo $this->form->getInput('study_id'); ?>
+                       </div>
+                   </div>
+                   <div class="control-group">
+                       <div class="control-label">
+				    	    <?php echo $this->form->getLabel('comment_date'); ?>
+                       </div>
+                       <div class="controls">
+							<?php echo $this->form->getInput('comment_date'); ?>
+                       </div>
+                   </div>
+                   <div class="control-group">
+                       <div class="control-label">
+							<?php echo $this->form->getLabel('full_name'); ?>
+                       </div>
+                       <div class="controls">
+							<?php echo $this->form->getInput('full_name'); ?>
+                       </div>
+                   </div>
+                   <div class="control-group">
+                       <div class="control-label">
+							<?php echo $this->form->getLabel('user_email'); ?>
+                       </div>
+                       <div class="controls">
+							<?php echo $this->form->getInput('user_email'); ?>
+                       </div>
+                   </div>
+                   <div class="control-group">
+                       <div class="control-label">
+							<?php echo $this->form->getLabel('id'); ?>
+                       </div>
+                       <div class="controls">
+							<?php echo $this->form->getInput('id'); ?>
+                       </div>
+                   </div>
+
+
+                    <?php if ($this->canDo->get('core.admin')): ?>
+                    <div class="tab-pane" id="permissions">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <?php echo JText::_('JBS_CMN_FIELDSET_RULES');?>
                             </div>
-                            <div class="control-group">
-								<?php echo $this->form->getLabel('comment_date'); ?>
-                                <div class="controls">
-									<?php echo $this->form->getInput('comment_date'); ?></div>
-                            </div>
-                            <div class="control-group">
-								<?php echo $this->form->getLabel('full_name'); ?>
-                                <div class="controls">
-									<?php echo $this->form->getInput('full_name'); ?></div>
-                            </div>
-                            <div class="control-group">
-								<?php echo $this->form->getLabel('user_email'); ?>
-                                <div class="controls">
-									<?php echo $this->form->getInput('user_email'); ?></div>
-                            </div>
-                            <div class="control-group">
-								<?php echo $this->form->getLabel('id'); ?>
-                                <div class="controls">
-									<?php echo $this->form->getInput('id'); ?></div>
+                            <div class="controls">
+                            <?php echo $this->form->getInput('rules'); ?>
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
+                    <div class="tab-pane" id="publishing">
+                    <div class="control-group">
+                        <div class="control-label">
+                        <?php echo $this->form->getLabel('published'); ?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('published'); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('access'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('access'); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('language'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('language'); ?>
+                        </div>
+                    </div>
                 </div>
-				<?php if ($this->canDo->get('core.admin')): ?>
-                <div class="tab-pane" id="permissions">
-                    <fieldset>
-						<?php echo $this->form->getInput('rules'); ?>
-                    </fieldset>
-                </div>
-				<?php endif; ?>
             </div>
-            <input type="hidden" name="task" value=""/>
-            <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
-        </div>
-        <!-- End Content -->
-        <!-- Begin Sidebar -->
-        <div class="span2">
+
+
+
+
             <h4><?php echo JText::_('JDETAILS'); ?></h4>
             <hr/>
-            <fieldset class="form-vertical">
-                <div class="control-group">
-                    <div class="controls">
-						<?php echo $this->form->getValue('series_text'); ?>
-                    </div>
-                </div>
 
-                <div class="control-group">
-					<?php echo $this->form->getLabel('published'); ?>
-                    <div class="controls">
-						<?php echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
 
-                <div class="control-group">
-					<?php echo $this->form->getLabel('access'); ?>
-                    <div class="controls">
-						<?php echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
 
-                <div class="control-group">
-					<?php echo $this->form->getLabel('language'); ?>
-                    <div class="controls">
-						<?php echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-        <!-- End Sidebar -->
+
+    </fieldset>
     </div>
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+    <?php echo JHtml::_('form.token'); ?>
 </form>
