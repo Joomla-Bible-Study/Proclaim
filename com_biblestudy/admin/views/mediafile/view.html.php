@@ -63,7 +63,12 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
 		//Load the Admin settings
 		$this->loadHelper('params');
-		$this->admin = JBSMParams::getAdmin();
+		$this->admin = JBSMParams::getAdmin(); 
+        $registry = new JRegistry();
+        $registry->loadString($this->admin->params);
+        $this->admin_params = $registry;
+        
+       
 		$host = JURI::root();
 		$admin = 'administrator/';
 		//Needed to load the article field type for the article selector

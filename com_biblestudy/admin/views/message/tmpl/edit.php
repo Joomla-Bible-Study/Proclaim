@@ -10,12 +10,13 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.modal');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 if (BIBLESTUDY_CHECKREL)
     JHtml::_('formbehavior.chosen', 'select');
-
 
 $params = $this->form->getFieldsets('params');
 $app = JFactory::getApplication();
@@ -38,7 +39,6 @@ $input = $app->input;
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_STY_DETAILS'); ?></a></li>
                 <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></a></li>
                 <li><a href="#scripture" data-toggle="tab"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></a></li>
-                <li><a href="#duration" data-toggle="tab"><?php echo JText::_('JBS_CMN_DURATION'); ?></a></li>
                 <li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
                 <li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
                 <li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
@@ -114,7 +114,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('booknumber'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber);?>
+                            <?php echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber);?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -199,7 +199,7 @@ $input = $app->input;
                    </div>
                 </div>
                 
-               <div class="tab-pane" id="duration">
+               <div class="tab-pane" id="info">
                     <div class="control-group">
                         <div class="control-label">
                             <?php echo $this->form->getLabel('media_hours'); ?>
@@ -229,7 +229,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('teacher_id'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin->params['teacher_id'] : $this->item->teacher_id) ?>
+                            <?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id) ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -237,7 +237,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('location_id'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin->params['location_id'] : $this->item->location_id) ?>
+                            <?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin_params->get('location_id') : $this->item->location_id) ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -245,7 +245,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('series_id'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
+                            <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin_params->get('series_id') : $this->item->series_id) ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -262,7 +262,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('messagetype'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin->params['messagetype'] : $this->item->messagetype) ?>
+                            <?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin_params->get('messagetype') : $this->item->messagetype) ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -270,7 +270,7 @@ $input = $app->input;
                             <?php echo $this->form->getLabel('thumbnailm'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin->params['default_study_image'] : $this->item->thumbnailm) ?>
+                            <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm) ?>
                         </div>
                     </div>
                 </div>
@@ -350,8 +350,7 @@ $input = $app->input;
                 <?php endif; ?>
             
        
-    </div>
-    <div class="width-35 fltrt">
+    <div class="tab-pane" id="metadata">
         <?php
         foreach ($params as $name => $fieldset):
             if (isset($fieldset->description) && trim($fieldset->description)):
@@ -360,20 +359,21 @@ $input = $app->input;
                     <?php echo $this->escape(JText::_($fieldset->description)); ?>
                 </p>
             <?php endif; ?>
-            <fieldset class="panelform" >
-                <legend><?php echo JText::_('JBS_STY_METADATA'); ?></legend>
-                <ul class="adminformlist">
+            
                     <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                        <li><?php echo $field->label; ?><?php echo $field->input; ?>
-                        </li>
+                        <div class="control-group">
+                            <div class="control-label">
+                            </div>
+                            <div class="controls">
+                                <?php echo $field->label; ?><?php echo $field->input; ?>
+                            </div>
+                        </div>
+                        
                     <?php endforeach; ?>
-                </ul>
-            </fieldset>
+               
         <?php endforeach; ?>
     </div>
-    <div class="width-35 fltrt">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
+     <div class="tab-pane" id="media">
             <table class="adminlist">
                 <thead>
                     <tr>
@@ -389,7 +389,7 @@ $input = $app->input;
                             ?>
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td align="center">
-                                    <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;layout=modal'; ?>
+                                    <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
                                     <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
                                         <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
                                     </a>
@@ -412,13 +412,13 @@ $input = $app->input;
                 <tfoot>
                     <tr>
                         <td colspan="4">
-                            <?php $link = 'index.php?option=com_biblestudy&task=mediafile.edit&id=0&tmpl=component&layout=modal&sid=' . $this->form->getValue('id'); ?>
+                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid=' . $this->form->getValue('id').'&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
                             <?php
                             if (empty($this->item->id)) {
                                 ?> <a onClick="Joomla.submitbutton('message.apply');" href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
                         } else {
                                 ?>
-                                <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                     <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                             }
                                 ?>
@@ -426,28 +426,18 @@ $input = $app->input;
                     </tr>
                 </tfoot>
             </table>
-
-        </fieldset>
-
-    </div>
-    <div class="clr"></div>
-    <?php if ($this->canDo->get('core.admin')): ?>
-        <div class="width-100 fltlft">
-            <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
-            <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
-            <fieldset class="panelform">
-                <?php echo $this->form->getLabel('rules'); ?>
-                <?php echo $this->form->getInput('rules'); ?>
-            </fieldset>
-
-            <?php echo JHtml::_('sliders.end'); ?>
         </div>
-    <?php endif; ?>
-    <input type="hidden" name="task" value=""/>
-    <?php echo JHtml::_('form.token'); ?>
-        </div>
+    
+        <?php if ($this->canDo->get('core.admin')): ?>
+                <div class="tab-pane" id="permissions">
+                    
+                        <?php echo $this->form->getInput('rules'); ?>
+                    
+                </div>
+            <?php endif; ?>
+        <input type="hidden" name="task" value=""/>
+        <?php echo JHtml::_('form.token'); ?>
+            </div>
     </fieldset>
 </div>
 </form>

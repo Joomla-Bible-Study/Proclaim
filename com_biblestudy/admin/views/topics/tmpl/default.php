@@ -66,7 +66,7 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
                         <?php echo JHtml::_('jgrid.published', $item->published, $i, 'topics.', true, 'cb', '', ''); ?>
                     </td>
                     <td>
-                        <a href="<?php echo $link; ?>"><?php echo getTopicItemTranslated($item); ?></a>
+                        <a href="<?php echo $link; ?>"><?php echo JBSMTranslated::getTopicItemTranslated($item); ?></a>
                     </td>
                     <td>
                         <?php echo $item->id; ?>

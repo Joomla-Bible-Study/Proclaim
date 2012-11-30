@@ -56,13 +56,19 @@ class BiblestudyViewMessage extends JViewLegacy {
     public function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
         $option = JRequest::getCmd('option');
-        @JApplication::setUserState($option . 'sid', $this->item->id);
-        @JApplication::setUserState($option . 'sdate', $this->item->studydate);
+        $input = new Jinput(array('sid'=>$this->item->id,'sdate'=>$this->item->studydate));
+        
+        //JApplication::setUserState($option . 'sid', $this->item->id);
+        //JApplication::setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin();
+		$this->admin = JBSMParams::getAdmin();
+        $registry = new JRegistry();
+        $registry->loadString($this->admin->params);
+        $this->admin_params = $registry;
         $this->canDo = JBSMHelper::getActions($type = 'message', $Itemid = $this->item->id);
         $host = JURI::base();
         $document = JFactory::getDocument();
@@ -89,11 +95,7 @@ class BiblestudyViewMessage extends JViewLegacy {
 
         $document->addScript(JURI::root() . 'media/com_biblestudy/js/biblestudy.js');
 
-        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
-            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
-            return false;
-        }
-
+       
         $this->setLayout("edit");
         // Set the toolbar
         $this->addToolbar();

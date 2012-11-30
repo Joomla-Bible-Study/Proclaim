@@ -41,7 +41,7 @@ if ($this->item->server) {
 } elseif ($serverid) {
     $server = $serverid;
 } elseif (empty($this->item->study_id)) {
-    $server = $this->admin->params['server'];
+    $server = $this->admin_params->get('server'); 
 }
 $folderid = $app->getUserState('folderid');
 if ($this->item->path) {
@@ -49,7 +49,7 @@ if ($this->item->path) {
 } elseif ($folderid) {
     $folder = $folderid;
 } elseif (empty($this->item->study_id)) {
-    $folder = $this->admin->params['path'];
+    $folder = $this->admin_params->get('path');
 }
 ?>
 <script type="text/javascript">
@@ -232,7 +232,7 @@ if (JRequest::getWord('layout') == 'modal') {
                                 <?php echo $this->form->getLabel('podcast_id'); ?>
                             </div>
                             <div class="controls">
-                                <?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->admin->params['podcast'] : null); ?>
+                                <?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->admin_params->get('podcast') : null); ?>
                             </div>
                         </div>
                         <div class="control-group">
@@ -240,7 +240,7 @@ if (JRequest::getWord('layout') == 'modal') {
                                 <?php echo $this->form->getLabel('link_type'); ?>
                             </div>
                             <div class="controls">
-                                <?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->admin->params['download'] : $this->item->link_type); ?>
+                                <?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->admin_params->get('download') : $this->item->link_type); ?>
                             </div>
                         </div>
                         <div class="control-group">
@@ -381,7 +381,7 @@ if (JRequest::getWord('layout') == 'modal') {
                             <?php echo $this->form->getLabel('special'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin->params['target'] : $this->item->special); ?>
+                            <?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
                         </div>
                     </div>
 
@@ -431,7 +431,7 @@ if (JRequest::getWord('layout') == 'modal') {
                             <?php echo $this->form->getLabel('mime_type'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin->params['mime'] : $this->item->mime_type); ?>
+                            <?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
                         </div>
                     </div>
 

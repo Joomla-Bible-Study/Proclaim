@@ -28,6 +28,11 @@ class BiblestudyModelMessage extends JModelAdmin {
      */
     var $_admin;
 
+/**
+	 * @var    string  The prefix to use with controller messages.
+	 * @since  1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY_MESSAGE';
     /**
      * Method override to check if you can edit an existing record.
      *
@@ -194,7 +199,7 @@ class BiblestudyModelMessage extends JModelAdmin {
             $topics = $db->loadObjectList();
             if ($topics) {
                 foreach ($topics as $topic) {
-                    $text = getTopicItemTranslated($topic);
+                    $text = JBSMTranslated::getTopicItemTranslated($topic);
                     $translatedList[] = array('id' => $topic->id, 'name' => $text);
                 }
             }
@@ -220,7 +225,7 @@ class BiblestudyModelMessage extends JModelAdmin {
         $translatedList = array();
         if ($topics) {
             foreach ($topics as $topic) {
-                $text = getTopicItemTranslated($topic);
+                $text = JBSMTranslated::getTopicItemTranslated($topic);
                 $translatedList[] = array('id' => $topic->id, 'name' => $text);
             }
         }
