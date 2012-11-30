@@ -94,7 +94,7 @@ class BiblestudyViewMessage extends JViewLegacy {
             return false;
         }
 
-        $this->setLayout("form");
+        $this->setLayout("edit");
         // Set the toolbar
         $this->addToolbar();
 

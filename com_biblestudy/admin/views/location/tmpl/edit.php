@@ -24,7 +24,7 @@ $input = $app->input;
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task == 'folder.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        if (task == 'location.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
@@ -33,9 +33,10 @@ $input = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
-    <div class="row-fluid">
+   
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
+            <fieldset>
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
                 
@@ -46,12 +47,22 @@ $input = $app->input;
             <div class="tab-content">
                 <!-- Begin Tabs -->
                 <div class="tab-pane active" id="general">
-                    <fieldset class="adminform">
-                         <div class="control-group  form-inline">
-                            <?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
+                    
+                         <div class="control-group">
+                            <div class="control-label">
+                                <?php echo $this->form->getLabel('id'); ?>
+                            </div>
+                            <div class="controls">
+                             <?php echo $this->form->getInput('id'); ?>
+                            </div>
                         </div>
-                        <div class="control-group form-inline">
-                            <?php echo $this->form->getLabel('location_text'); ?> <?php echo $this->form->getInput('location_text'); ?>
+                        <div class="control-group">
+                            <div class="control-label">
+                                <?php echo $this->form->getLabel('location_text'); ?>
+                            </div>
+                            <div class="controls">
+                                <?php echo $this->form->getInput('location_text'); ?>
+                            </div>
                         </div>
                        
                        <div class="control-group">
@@ -61,7 +72,7 @@ $input = $app->input;
                                 <div class="contols">
                                     <?php echo $this->form->getInput('landing_show'); ?>
                                 </div>
-                            </div>
+                       </div>
                         <div class="control-group">
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('language'); ?>
@@ -70,36 +81,35 @@ $input = $app->input;
                                 <?php echo $this->form->getInput('language'); ?>
                             </div>
                        </div>
-                    </fieldset>
+                    
                 </div>
                 
                 <?php if ($this->canDo->get('core.admin')): ?>
                     <div class="tab-pane" id="permissions">
-                        <fieldset>
+                        
                             <?php echo $this->form->getInput('rules'); ?>
-                        </fieldset>
+                        
                     </div>
                 <?php endif; ?>
-
-            </div>
+   </div>
+        </fieldset>
+   
             <input type="hidden" name="task" value="" />
             <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
             <?php echo JHtml::_('form.token'); ?>
-        </div>
+   </div>
         <!-- End Content -->
         <!-- Begin Sidebar -->
         <div class="span2">
             <h4><?php echo JText::_('JDETAILS'); ?></h4>
             <hr />
             <fieldset class="form-vertical">
-                <div class="control-group">
-                    <div class="controls">
-                        <?php echo $this->form->getValue('location_text'); ?>
-                    </div>
-                </div>
+                
 
                 <div class="control-group">
-                    <?php echo $this->form->getLabel('published'); ?>
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('published'); ?>
+                    </div>
                     <div class="controls">
                         <?php echo $this->form->getInput('published'); ?>
                     </div>
@@ -110,5 +120,5 @@ $input = $app->input;
             </fieldset>
         </div>
         <!-- End Sidebar -->
-    </div>
+   
 </form>

@@ -17,7 +17,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <script type="text/javascript">
     Joomla.submitbutton = function(task)
     {
-        if (task == 'banner.cancel' || document.formvalidator.isValid(document.id('mediaimage-form'))) {
+        if (task == 'mediaimage.cancel' || document.formvalidator.isValid(document.id('mediaimage-form'))) {
             Joomla.submitform(task, document.getElementById('mediaimage-form'));
         }
     }
