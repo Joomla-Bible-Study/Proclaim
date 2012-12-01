@@ -41,7 +41,7 @@ $sortFields = $this->getSortFields();
         Joomla.tableOrdering(order, dirn, '');
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=topics'); ?>" method="post" name="adminForm" id="adminForm">
     <?php if (!empty($this->sidebar)): ?>
     <div id="j-sidebar-container" class="span2">
         <?php echo $this->sidebar; ?>
@@ -88,26 +88,26 @@ $sortFields = $this->getSortFields();
                 <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
             </th>
             <th width="1%" class="nowrap center hidden-phone">
-                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'template.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
-                if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'template.saveorder');?>
+                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'topic.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
+                if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'topic.saveorder');?>
             </th>
            <th alicn="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_ID', 'template.title', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_ID', 'topic.topic_text', $listDirn, $listOrder); ?>
                 </th>
                 <th width="1%" class="nowrap">
-                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'template.id', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
                 </th>
         </tr>
         </thead>
         <tbody>
         <?php
         foreach ($this->items as $i => $item) :
-        $link = JRoute::_('index.php?option=com_biblestudy&task=template.edit&id=' . (int) $item->id);
+        $link = JRoute::_('index.php?option=com_biblestudy&task=topic.edit&id=' . (int) $item->id);
             $item->max_ordering = 0; //??
             $canCreate = $user->authorise('core.create');
-            $canEdit = $user->authorise('core.edit', 'com_biblestudy.template.' . $item->id);
-            $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.template.' . $item->id);
-            $canChange = $user->authorise('core.edit.state', 'com_biblestudy.template.' . $item->id);
+            $canEdit = $user->authorise('core.edit', 'com_biblestudy.topic.' . $item->id);
+            $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.topic.' . $item->id);
+            $canChange = $user->authorise('core.edit.state', 'com_biblestudy.topic.' . $item->id);
             ?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -116,7 +116,7 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="center">
                 <div class="btn-group">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'templates.', $canChange, 'cb', '', ''); ?>
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'topics.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
             
@@ -124,12 +124,12 @@ $sortFields = $this->getSortFields();
                 <div class="pull-left">
 
                     <?php if ($canEdit || $canEditOwn) : ?>
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=template.edit&id=' . (int) $item->id); ?>">
-                            <?php echo $this->escape($item->title); ?>
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=topic.edit&id=' . (int) $item->id); ?>">
+                            <?php echo $this->escape($item->topic_text); ?>
                         </a>
                             
                     <?php else : ?>
-                    <span title="<?php echo $this->escape($item->title); ?>"><?php echo $this->escape($item->title); ?></span>
+                    <span title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="pull-left">
