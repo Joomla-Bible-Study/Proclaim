@@ -48,7 +48,7 @@ class BiblestudyViewTopics extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $this->items = $this->get('Items');
+        $items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->canDo = JBSMHelper::getActions('', 'topic');
@@ -57,6 +57,8 @@ class BiblestudyViewTopics extends JViewLegacy {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+        $modelView = $this->getModel();
+        $this->items = $modelView->getTranslated($items);
 
         // Levels filter.
         $options = array();

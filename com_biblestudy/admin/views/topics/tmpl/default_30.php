@@ -92,7 +92,7 @@ $sortFields = $this->getSortFields();
                 if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'topic.saveorder');?>
             </th>
            <th alicn="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_ID', 'topic.topic_text', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
                 </th>
                 <th width="1%" class="nowrap">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
