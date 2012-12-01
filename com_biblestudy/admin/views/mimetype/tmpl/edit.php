@@ -67,28 +67,21 @@ $input = $app->input;
                     </div>
                     <div class="control-group">
                             <div class="control-label">
-                                <?php echo $this->form->getLabel('message_type'); ?>
+                                <?php echo $this->form->getLabel('mimetext'); ?>
                             </div>
                             <div class="controls">
-                                <?php echo $this->form->getInput('message_type'); ?>
+                                <?php echo $this->form->getInput('mimetext'); ?>
                             </div>
                     </div>
                     <div class="control-group">
                             <div class="control-label">
-                                <?php echo $this->form->getLabel('alias'); ?>
+                                <?php echo $this->form->getLabel('mimetype'); ?>
                             </div>
                             <div class="controls">
-                                <?php echo $this->form->getInput('alias'); ?>
+                                <?php echo $this->form->getInput('mimetype'); ?>
                             </div>
                     </div>
-                    <div class="control-group">
-                            <div class="control-label">
-                                <?php echo $this->form->getLabel('landing_show'); ?>
-                            </div>
-                            <div class="controls">
-                                <?php echo $this->form->getInput('landing_show'); ?>
-                            </div>
-                    </div>
+
                 </div>
 
 
