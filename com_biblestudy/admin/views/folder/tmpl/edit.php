@@ -52,7 +52,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('id'); ?> 
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('id'); ?>
                             </div>
                          </div>
@@ -61,7 +61,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('foldername'); ?>
                             </div> 
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('foldername'); ?>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ $input = $app->input;
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('folderpath'); ?>
                                 </div>
-                                <div class="contols">
+                                <div class="controls">
                                     <?php echo $this->form->getInput('folderpath'); ?>
                                 </div>
                             </div>

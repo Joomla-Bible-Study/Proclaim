@@ -55,7 +55,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('server_path'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('server_path'); ?>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ $input = $app->input;
                         <div class="control-label">
                             <?php echo $this->form->getLabel('type'); ?>
                         </div>
-                        <div class="contols">
+                        <div class="controls">
                             <?php echo $this->form->getInput('type'); ?>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('ftphost'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('ftphost'); ?>
                             </div>
                         </div>
@@ -85,7 +85,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('ftpuser'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('ftpuser'); ?>
                             </div>
                         </div>
@@ -93,7 +93,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('ftppassword'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('ftppassword'); ?>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('ftpport'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('ftpport'); ?>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('aws_key'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('aws_key'); ?>
                             </div>
                         </div>
@@ -117,7 +117,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('aws_secret'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('aws_secret'); ?>
                             </div>
                         </div>

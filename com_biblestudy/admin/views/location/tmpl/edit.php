@@ -69,7 +69,7 @@ $input = $app->input;
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('landing_show'); ?>
                                 </div>
-                                <div class="contols">
+                                <div class="controls">
                                     <?php echo $this->form->getInput('landing_show'); ?>
                                 </div>
                        </div>
@@ -77,7 +77,7 @@ $input = $app->input;
                             <div class="control-label">
                                 <?php echo $this->form->getLabel('language'); ?>
                             </div>
-                            <div class="contols">
+                            <div class="controls">
                                 <?php echo $this->form->getInput('language'); ?>
                             </div>
                        </div>

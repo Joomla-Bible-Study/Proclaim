@@ -88,7 +88,7 @@ $input = $app->input;
                                 <div class="control-label">
 									<?php echo $this->form->getLabel('teacher'); ?>
                                 </div>
-                                <div class="contols">
+                                <div class="controls">
 									<?php echo $this->form->getInput('teacher'); ?>
                                 </div>
                             </div>
