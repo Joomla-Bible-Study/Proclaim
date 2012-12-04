@@ -24,7 +24,7 @@ $input = $app->input;
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task == 'share.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        if (task == 'templatecode.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
@@ -64,23 +64,36 @@ $input = $app->input;
                 </div>
                 <div class="control-group">
                     <div class="control-label">
-                        <?php echo $this->form->getLabel('name'); ?>
+                        <?php echo $this->form->getLabel('filename'); ?>
                     </div>
                     <div class="controls">
-                        <?php echo $this->form->getInput('name'); ?></li>
+                        <?php echo $this->form->getInput('filename'); ?></li>
                     </div>
                 </div>
-            
-                <?php foreach ($this->form->getFieldset('params') as $field): ?>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php echo $field->label; ?>
-                        </div>
-                        <div class="controls">
-                            <?php echo $field->input; ?>
-                        </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('type'); ?>
                     </div>
-                    <?php endforeach; ?>
+                    <div class="controls">
+                    <?php
+                    if ($this->item->id == 0) {
+                        echo $this->form->getInput('type');
+                    } else {
+                        ?><label id="jform_type-lbl" for="jform_type" style="clear: none"><?php echo $this->type ?></label>
+                    <?php } ?>
+                        
+                    </div>
+                    <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('templatecode'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('templatecode', null, empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode); ?>
+                    </div>
+                </div>
+                </div>
+            
+               
             </div>
                 <?php if ($this->canDo->get('core.admin')): ?>
                     <div class="tab-pane" id="permissions">

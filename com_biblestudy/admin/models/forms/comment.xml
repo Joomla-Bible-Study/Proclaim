@@ -3,8 +3,8 @@
   	<field
 			name="published"
 			type="radio"
-			class="btn-group"
-			id="published"
+            class="btn-group"
+            id="published"
 			label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC"
 			size="1"

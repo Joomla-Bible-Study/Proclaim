@@ -226,7 +226,7 @@
                 <option value="top">top</option>
                 <option value="none">none</option>
             </field>
-            <field name="playeridlehide" type="radio" default="1"
+            <field name="playeridlehide" type="radio" default="1" class="btn-group"
                    label="playeridlehide" description="playeridlehide">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -257,7 +257,7 @@
         &lt;/table&gt;"
                    label="JBS_TPL_TEMPLATECODE" description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_DESC"
                    filter="raw" />
-            <field name="wrapcode" type="radio" default="0"
+            <field name="wrapcode" type="radio" default="0" class="btn-group"
                    label="JBS_TPL_TABLE_OR_DIV">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="T">JBS_TPL_TABLE</option>
@@ -861,7 +861,7 @@
 &lt;/table&gt;"
                    label="JBS_TPL_TEACHERLIST_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"
                    filter="raw" />
-            <field name="teacher_wrapcode" type="radio" default="0"
+            <field name="teacher_wrapcode" type="radio" default="0" class="btn-group"
                    label="JBS_TPL_TABLE_OR_DIV">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="T">JBS_TPL_TABLE</option>
@@ -1006,7 +1006,7 @@
                    label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" />
             <field name="series_templatecode" type="textarea" rows="10"
                    cols="100" default="" label="JBS_TPL_TEMPLATECODE" description="JBS_TPL_SERIES_TEMPLATECODE_DESC" />
-            <field name="series_wrapcode" type="radio" default="0"
+            <field name="series_wrapcode" type="radio" default="0" class="btn-group"
                    label="JBS_TPL_TABLE_OR_DIV">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="T">JBS_TPL_TABLE</option>
@@ -1498,7 +1498,7 @@
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
 
-            <field name="showteachers" type="radio"
+            <field name="showteachers" type="radio" class="btn-group"
                    label="JBS_TPL_LANDINGPAGE_SHOWTEACHERS" default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1512,12 +1512,12 @@
                    size="5" />
             <field name="teacherslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_TEACHERSLABEL" default="Speakers" size="45" />
-            <field name="linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO"
+            <field name="linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO" class="btn-group"
                    default="1">
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
                 <option value="1">JBS_TPL_LINK_TEACHER_DETAILS</option>
             </field>
-            <field name="showseries" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWSERIES"
+            <field name="showseries" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWSERIES" class="btn-group"
                    default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1531,12 +1531,12 @@
                    size="5" />
             <field name="serieslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_SERIESLABEL" default="Series" size="45" />
-            <field name="series_linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO"
+            <field name="series_linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO" class="btn-group"
                    default="0">
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
                 <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
             </field>
-            <field name="showbooks" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWBOOKS"
+            <field name="showbooks" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWBOOKS" class="btn-group"
                    default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1546,7 +1546,7 @@
                    size="5" />
             <field name="bookslabel" type="text" label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
                    default="Books" size="45" />
-            <field name="showtopics" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWTOPICS"
+            <field name="showtopics" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWTOPICS" class="btn-group"
                    default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1556,7 +1556,7 @@
                    size="5" />
             <field name="topicslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_TOPICSLABEL" default="Topics" size="45" />
-            <field name="showlocations" type="radio"
+            <field name="showlocations" type="radio" class="btn-group"
                    label="JBS_TPL_LANDINGPAGE_SHOWLOCATIONS" default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1570,7 +1570,7 @@
                    size="5" />
             <field name="locationslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL" default="Locations" size="45" />
-            <field name="showmessagetypes" type="radio"
+            <field name="showmessagetypes" type="radio" class="btn-group"
                    label="JBS_TPL_LANDINGPAGE_SHOWMESSAGETYPES" default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
@@ -1585,7 +1585,7 @@
             <field name="messagetypeslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL" default="Message Types"
                    size="45" />
-            <field name="showyears" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWYEARS"
+            <field name="showyears" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWYEARS" class="btn-group"
                    default="1">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>

@@ -25,8 +25,8 @@
 				value="-2">
 				JTRASHED</option>
 		</field>
-        <field name="list_show" type="radio" label="JBS_TCH_SHOW_LIST_VIEW"
-           description="JBS_TCH_SHOW_LIST_VIEW_DESC" class="inputbox" default="0"
+        <field name="list_show" type="radio" label="JBS_TCH_SHOW_LIST_VIEW" class="btn-group"
+           description="JBS_TCH_SHOW_LIST_VIEW_DESC" default="0"
            required="true">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>

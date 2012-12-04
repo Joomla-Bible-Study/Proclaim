@@ -59,9 +59,9 @@ class BiblestudyViewTeacher extends JViewLegacy {
         $this->canDo = JBSMHelper::getActions($this->item->id, 'teacher');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+       	$this->admin = JBSMParams::getAdmin();
 
-        $this->setLayout("form");
+        $this->setLayout("edit");
 
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {

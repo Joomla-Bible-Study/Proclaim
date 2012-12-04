@@ -65,7 +65,7 @@ class biblestudyViewStyle extends JViewLegacy {
         $this->item = $item;
         $this->state = $this->get("State");
         $this->canDo = JBSMHelper::getActions($this->item->id, 'style');
-
+         $this->setLayout("edit");
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

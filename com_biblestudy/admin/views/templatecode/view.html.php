@@ -70,11 +70,8 @@ class biblestudyViewTemplatecode extends JViewLegacy {
         $this->item = $item;
         $this->state = $this->get("State");
         $this->canDo = JBSMHelper::getActions($this->item->id, 'templatecode');
-        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
-            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
-            return false;
-        }
-        $this->setLayout("form");
+       
+        $this->setLayout("edit");
         $this->addToolbar();
         parent::display($tpl);
     }
