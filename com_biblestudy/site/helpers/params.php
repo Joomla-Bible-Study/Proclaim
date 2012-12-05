@@ -28,8 +28,8 @@ class BsmHelper extends JComponentHelper {
      */
     public static function getAdmin($isSite = false) {
         if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
-        $admin = JModel::getInstance('Admin', 'biblestudyModel');
+            JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
+        $admin = JModelLegacy::getInstance('Admin', 'biblestudyModel');
         $admin = $admin->getItem(1);
 
         //Add the current user id

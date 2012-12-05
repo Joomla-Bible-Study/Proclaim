@@ -24,7 +24,7 @@ $messagetype_menu = $messagetype_menu1[0];
 $params = $this->params;
 // @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');
-$listingcall = JView::loadHelper('listing');
+$listingcall = JViewLegacy::loadHelper('listing');
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsheader">
@@ -50,7 +50,7 @@ $listingcall = JView::loadHelper('listing');
         </h1>
         <?php
         if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-            JView::loadHelper('teacher');
+            JViewLegacy::loadHelper('teacher');
             $teacher = getTeacher($params, $id = null, $this->admin_params);
             if ($teacher) {
                 echo $teacher;
@@ -125,7 +125,7 @@ $listingcall = JView::loadHelper('listing');
         <thead>
         <?php
         if (isset($this->items['0'])):
-            JView::loadHelper('header');
+            JViewLegacy::loadHelper('header');
             $header = getHeader($this->items['0'], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
             echo $header;
         endif;

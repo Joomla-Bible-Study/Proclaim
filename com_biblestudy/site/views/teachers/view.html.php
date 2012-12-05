@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Teachers JView
+ * Teachers JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -52,9 +52,9 @@ class BiblestudyViewTeachers extends JViewLegacy {
     public function display($tpl = null) {
 
         //Load the Admin settings and params from the template
-        JView::loadHelper('params');
+        JViewLegacy::loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-        JView::loadHelper('image');
+        JViewLegacy::loadHelper('image');
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;

@@ -19,9 +19,9 @@ defined('_JEXEC') or die;
 function getBooksLandingPage($params) {
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $book = null;
     $template = $params->get('studieslisttemplateid');
     $limit = $params->get('landingbookslimit');

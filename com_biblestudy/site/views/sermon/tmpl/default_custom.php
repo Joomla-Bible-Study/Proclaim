@@ -31,7 +31,7 @@ $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
 
 $row = $this->studydetails;
-$listingcall = JView::loadHelper('listing');
+$listingcall = JViewLegacy::loadHelper('listing');
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <?php
@@ -48,7 +48,7 @@ $listingcall = JView::loadHelper('listing');
                     <?php echo JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE'); ?><<</a>
                 <div id="scripture" style="display:none;"></strong>
             <?php
-            $passage_call = JView::loadHelper('passage');
+            $passage_call = JViewLegacy::loadHelper('passage');
             $response = getPassage($params, $row);
             echo $response;
             ?>
@@ -60,7 +60,7 @@ $listingcall = JView::loadHelper('listing');
         ?>
         <div id="scripture">
             <?php
-            $passage_call = JView::loadHelper('passage');
+            $passage_call = JViewLegacy::loadHelper('passage');
             $response = getPassage($params, $row);
             echo $response;
             ?>

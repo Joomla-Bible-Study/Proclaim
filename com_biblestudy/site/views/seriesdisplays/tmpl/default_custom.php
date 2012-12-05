@@ -21,7 +21,7 @@ $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
-$listingcall = JView::loadHelper('serieslist');
+$listingcall = JViewLegacy::loadHelper('serieslist');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->

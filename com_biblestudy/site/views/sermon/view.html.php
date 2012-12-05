@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Sermon JView
+ * Sermon JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -211,7 +211,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         $detailslink = htmlspecialchars($u->toString());
         $detailslink = JRoute::_($detailslink);
         $this->assignRef('detailslink', $detailslink);
-        $share = JView::loadHelper('share');
+        $share = JViewLegacy::loadHelper('share');
         $this->page = new stdClass();
         $this->page->social = getShare($detailslink, $study, $params, $this->admin_params);
         JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');

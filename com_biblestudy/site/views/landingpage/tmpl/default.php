@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
-JView::loadHelper('listing');
+JViewLegacy::loadHelper('listing');
 ?>
 <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsms_header">
@@ -45,43 +45,43 @@ JView::loadHelper('listing');
             switch ($showIt) {
 
                 case 'teachers':
-                    JView::loadHelper('teacher');
+                    JViewLegacy::loadHelper('teacher');
                     $heading = getTeacherLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_TEACHERS');
                     break;
 
                 case 'series':
-                    JView::loadHelper('serieslist');
+                    JViewLegacy::loadHelper('serieslist');
                     $heading = getSeriesLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_SERIES');
                     break;
 
                 case 'locations':
-                    JView::loadHelper('location');
+                    JViewLegacy::loadHelper('location');
                     $heading = getLocationsLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
                     break;
 
                 case 'messagetypes':
-                    JView::loadHelper('messagetype');
+                    JViewLegacy::loadHelper('messagetype');
                     $heading = getMessageTypesLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
                     break;
 
                 case 'topics':
-                    JView::loadHelper('topics');
+                    JViewLegacy::loadHelper('topics');
                     $heading = getTopicsLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_TOPICS');
                     break;
 
                 case 'books':
-                    JView::loadHelper('book');
+                    JViewLegacy::loadHelper('book');
                     $heading = getBooksLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_BOOKS');
                     break;
 
                 case 'years':
-                    JView::loadHelper('year');
+                    JViewLegacy::loadHelper('year');
                     $heading = getYearsLandingPage($params, $id = null, $this->admin_params);
                     $showIt_phrase = JText::_('JBS_CMN_YEARS');
                     break;

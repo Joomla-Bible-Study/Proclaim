@@ -23,8 +23,8 @@ function getShare($link, $row, $params, $admin_params) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
 
     $sharetype = $admin_params->get('sharetype', 1);
 

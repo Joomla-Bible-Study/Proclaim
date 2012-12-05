@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Sermons JView
+ * Sermons JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -70,7 +70,7 @@ class BiblestudyViewSermons extends JViewLegacy {
         $this->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
         $this->assignRef('pagination', $pagination);
         //Load the Admin settings and params from the template
-        JView::loadHelper('params');
+        JViewLegacy::loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
         $admin_parameters = $this->get('Admin');
@@ -179,9 +179,11 @@ class BiblestudyViewSermons extends JViewLegacy {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        JView::loadHelper('image');
+        JViewLegacy::loadHelper('image');
 
-        JHTML::_('behavior.mootools');
+        if (BIBLESTUDY_CHECKREL)
+                    {JHtml::_('behavior.framework');}
+                    else {JHTML::_('behavior.mootools');}
         $css = $params->get('css');
         if ($css <= "-1" ):
             $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
@@ -224,7 +226,7 @@ class BiblestudyViewSermons extends JViewLegacy {
         $this->books = $this->get('Books');
 
         //This is the helper for scripture formatting
-        $scripture_call = Jview::loadHelper('scripture');
+        $scripture_call = JViewLegacy::loadHelper('scripture');
         //end scripture helper
         //Get the data for the drop down boxes
         $this->assignRef('template', $template);

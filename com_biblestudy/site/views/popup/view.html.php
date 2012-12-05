@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Popup JView
+ * Popup JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -36,10 +36,10 @@ class biblestudyViewpopup extends JViewLegacy {
         /*
          * Load Helpers
          */
-        JView::loadHelper('scripture');
-        JView::loadHelper('date');
-        JView::loadHelper('duration');
-        JView::loadHelper('params');
+        JViewLegacy::loadHelper('scripture');
+        JViewLegacy::loadHelper('date');
+        JViewLegacy::loadHelper('duration');
+        JViewLegacy::loadHelper('params');
 
         JRequest::setVar('tmpl', 'component');
         $mediaid = JRequest::getInt('mediaid', '', 'get');

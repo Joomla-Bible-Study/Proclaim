@@ -22,9 +22,9 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
     $option = JRequest::getCmd('option');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $addItemid = JRequest::getInt('Itemid', '', '');
     $messagetype = null;
     $teacherid = null;

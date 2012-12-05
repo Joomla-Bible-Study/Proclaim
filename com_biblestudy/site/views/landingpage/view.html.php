@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LandingPage JView
+ * LandingPage JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -35,7 +35,7 @@ class biblestudyViewLandingpage extends JViewLegacy {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
-        JView::loadHelper('image');
+        JViewLegacy::loadHelper('image');
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
@@ -82,7 +82,7 @@ class biblestudyViewLandingpage extends JViewLegacy {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        JView::loadHelper('helper');
+        JViewLegacy::loadHelper('helper');
         $showhide = getShowhide();
         $document->addScriptDeclaration($showhide);
         $css = $params->get('css');

@@ -747,8 +747,8 @@ function getListingExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'media.php');
     include_once($path1 . 'mediatable.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
     $label = $params->get('templatecode');
@@ -798,8 +798,8 @@ function getStudyExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'share.php');
     include_once($path1 . 'date.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
     $label = $params->get('study_detailtemplate');

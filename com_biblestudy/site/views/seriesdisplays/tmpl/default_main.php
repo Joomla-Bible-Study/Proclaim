@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
-$listingcall = JView::loadHelper('serieslist');
+$listingcall = JViewLegacy::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 

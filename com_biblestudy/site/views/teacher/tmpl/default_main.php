@@ -166,7 +166,7 @@ if (!$studieslisttemplateid) {
 
                                             endforeach;
 
-                                            $headerCall = JView::loadHelper('header');
+                                            $headerCall = JViewLegacy::loadHelper('header');
                                             $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
                                             echo $header;
                                             $class1 = 'bsodd';

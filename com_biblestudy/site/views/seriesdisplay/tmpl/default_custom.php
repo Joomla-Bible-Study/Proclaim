@@ -17,7 +17,7 @@ $url = $this->params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
-$listingcall = JView::loadHelper('serieslist');
+$listingcall = JViewLegacy::loadHelper('serieslist');
 $t = $this->params->get('serieslisttemplateid');
 if (!$t) {
     $t = JRequest::getVar('t', 1, 'get', 'int');

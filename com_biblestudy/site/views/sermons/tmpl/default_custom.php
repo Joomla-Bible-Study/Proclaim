@@ -29,7 +29,7 @@ $params = $this->params;
 $teachers = $params->get('teacher_id');
 
 // @todo need to rework to be proper php and html outside php
-$listingcall = JView::loadHelper('listing');
+$listingcall = JViewLegacy::loadHelper('listing');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
@@ -51,7 +51,7 @@ $listingcall = JView::loadHelper('listing');
             </h1>
             <?php
             if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-                $teacher_call = JView::loadHelper('teacher');
+                $teacher_call = JViewLegacy::loadHelper('teacher');
                 $teacher = getTeacher($params, $id = null, $this->admin_params);
                 if ($teacher) {
                     echo $teacher;

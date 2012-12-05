@@ -27,8 +27,8 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
     $path1 = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
 
     //Set the slug if not present
     $row->slug = $row->alias ? ($row->id . ':' . $row->alias) : $row->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($row->series_text, ENT_QUOTES));
@@ -421,9 +421,9 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $series = null;
     $seriesid = null;
     $template = $params->get('serieslisttemplateid', 1);
@@ -606,9 +606,9 @@ function getSerieslistExp($row, $params, $admin_params, $template) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $t = $params->get('serieslisttemplateid');
     $images = new jbsImages();
     $image = $images->getSeriesThumbnail($row->series_thumbnail);
@@ -645,8 +645,8 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'share.php');
     //include_once($path1.'comments.php');
     include_once($path1 . 'date.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getSeriesThumbnail($row->series_thumbnail);
     $label = $params->get('series_detailcode');

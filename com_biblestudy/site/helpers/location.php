@@ -22,9 +22,9 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
     $option = JRequest::getCmd('option');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $location = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid', 1);

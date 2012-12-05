@@ -33,9 +33,9 @@ function getMediatable($params, $row, $admin_params) {
     include_once($path1 . 'filesize.php');
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
     $admin = $database->loadObjectList();
 

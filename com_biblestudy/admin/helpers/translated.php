@@ -98,7 +98,7 @@ class JBSMTranslated {
                     if ($i > 0) {
                         $output .= ', ';
                     }
-                    $output .= getTopicItemTranslated($results[$i]);
+                    $output .= JBSMTranslated::getTopicItemTranslated($results[$i]);
                 }
                 return $output;
             }

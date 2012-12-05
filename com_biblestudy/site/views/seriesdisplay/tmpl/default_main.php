@@ -8,8 +8,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-$listingcall = JView::loadHelper('serieslist');
-$studylistcall = JView::loadHelper('listing');
+$listingcall = JViewLegacy::loadHelper('serieslist');
+$studylistcall = JViewLegacy::loadHelper('listing');
 $t = $this->params->get('serieslisttemplateid');
 if (!$t) {
     $t = JRequest::getVar('t', 1, 'get', 'int');
@@ -39,7 +39,7 @@ if (!$t) {
 
                     case 1:
                         ?></tbody></table> <table class="bslisttable" cellspacing="0"><tr><td><?php
-                $headerCall = JView::loadHelper('header');
+                $headerCall = JViewLegacy::loadHelper('header');
                 $header = getHeader($this->seriesstudies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
                 echo $header;
 

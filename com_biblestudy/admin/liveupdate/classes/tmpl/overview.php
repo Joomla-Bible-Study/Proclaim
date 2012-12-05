@@ -84,7 +84,9 @@ defined('_JEXEC') or die();
 					<?php if($this->updateInfo->releasenotes): ?>
 					<a href="#" id="btnLiveUpdateReleaseNotes"><?php echo JText::_('LIVEUPDATE_RELEASENOTES') ?></a>
 					<?php
-					JHTML::_('behavior.mootools');
+                    if (BIBLESTUDY_CHECKREL)
+                    {JHtml::_('behavior.framework');}
+                    else {JHTML::_('behavior.mootools');}
 					JHTML::_('behavior.modal');
 
 					$script = <<<ENDSCRIPT

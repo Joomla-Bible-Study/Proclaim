@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Series Display JView
+ * Series Display JViewLegacy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -34,7 +34,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
     public function display($tpl = null) {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
-        JView::loadHelper('image');
+        JViewLegacy::loadHelper('image');
 
         $document = JFactory::getDocument();
 
@@ -134,7 +134,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
         $series = $this->get('Series');
 
         //This is the helper for scripture formatting
-        $scripture_call = Jview::loadHelper('scripture');
+        $scripture_call = JViewLegacy::loadHelper('scripture');
         //end scripture helper
         $this->assignRef('template', $template);
         $this->assignRef('pagination', $pagination);

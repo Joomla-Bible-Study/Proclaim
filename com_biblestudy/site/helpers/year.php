@@ -22,9 +22,9 @@ function getYearsLandingPage($params, $id, $admin_params) {
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
     $option = JRequest::getCmd('option');
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
     $year = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid');

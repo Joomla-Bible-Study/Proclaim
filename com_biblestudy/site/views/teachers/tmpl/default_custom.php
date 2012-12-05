@@ -22,7 +22,7 @@ $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
 $admin_params = $this->admin_params;
 include_once($path1 . 'image.php');
 
-$listingcall = JView::loadHelper('teacher');
+$listingcall = JViewLegacy::loadHelper('teacher');
 ?>
 <div id="biblestudy" class="noRefTagger">
     <table id="bsm_teachertable" cellspacing="0">

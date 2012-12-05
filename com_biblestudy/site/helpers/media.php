@@ -47,11 +47,11 @@ function getMedia($id) {
  */
 function getInternalPlayer($media, $params, $admin_params) {
 
-    $JView = new JView();
-    $JView->loadHelper('image');
-    $JView->loadHelper('filesize.php');
-    $JView->loadHelper('filepath.php');
-    $JView->loadHelper('duration.php');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('filesize.php');
+    $JViewLegacy->loadHelper('filepath.php');
+    $JViewLegacy->loadHelper('duration.php');
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
@@ -100,8 +100,8 @@ function getDownloadLink($media, $params, $admin_params) {
     include_once($path1 . 'filesize.php');
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;
@@ -167,8 +167,8 @@ function getMediaFile($media, $params, $admin_params) {
     include_once($path1 . 'filesize.php');
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $images = new jbsImages();
     $image = $images->getMediaImage($media->path2, $media->impath);
 
@@ -225,8 +225,8 @@ function getTypeIcon($media, $params, $admin_params) {
     include_once($path1 . 'filesize.php');
     include_once($path1 . 'filepath.php');
     include_once($path1 . 'duration.php');
-    $JView = new JView();
-    $JView->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
 
     // Convert parameter fields to objects.
     $registry = new JRegistry;

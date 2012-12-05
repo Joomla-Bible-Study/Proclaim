@@ -22,8 +22,8 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 function getTeacher($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $option = JRequest::getCmd('option');
-    $jview = new JView();
-    $jview->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $teacher = null;
     $teacherid = null;
     $teacherids = new stdClass();
@@ -91,9 +91,9 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
     $option = JRequest::getCmd('option');
-    $jview = new JView();
-    $jview->loadHelper('image');
-    $jview->loadHelper('helper');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
+    $JViewLegacy->loadHelper('helper');
 
     $teacher = null;
     $teacherid = null;
@@ -277,8 +277,8 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template) {
     include_once($path1 . 'elements.php');
     include_once($path1 . 'scripture.php');
     include_once($path1 . 'custom.php');
-    $jview = new JView();
-    $jview->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
     $images = new jbsImages();
     $imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 
@@ -310,8 +310,8 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params) {
     include_once($path1 . 'elements.php');
     include_once($path1 . 'scripture.php');
     include_once($path1 . 'custom.php');
-    $jview = new JView();
-    $jview->loadHelper('image');
+    $JViewLegacy = new JViewLegacy();
+    $JViewLegacy->loadHelper('image');
 
 
     //Get the image folders and images
