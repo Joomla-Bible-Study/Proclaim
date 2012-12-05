@@ -11,9 +11,10 @@ defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
 JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.modal');
+
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.modal');
 JHtml::_('behavior.keepalive');
 if (BIBLESTUDY_CHECKREL)
     JHtml::_('formbehavior.chosen', 'select');

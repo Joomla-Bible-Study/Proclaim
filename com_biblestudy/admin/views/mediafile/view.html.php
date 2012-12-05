@@ -67,7 +67,8 @@ class BiblestudyViewMediafile extends JViewLegacy
         $registry = new JRegistry();
         $registry->loadString($this->admin->params);
         $this->admin_params = $registry;
-        
+        $document = JFactory::getDocument();
+     //   $document->addScript(JURI::root() . '/media/com_biblestudy/js/'); 
        
 		$host = JURI::root();
 		$admin = 'administrator/';

@@ -52,6 +52,20 @@ if ($this->item->path) {
     $folder = $this->admin_params->get('path');
 }
 ?>
+<script>
+function openConverter1()
+{
+    var Wheight=125;
+    var Wwidth=300;
+    var winl = (screen.width - Wwidth) / 2;
+    var wint = (screen.height - Wheight) / 2;
+
+    var msg1=window.open("components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
+    if (!msg1.closed) {
+        msg1.focus();
+    }
+}
+</script>
 <script type="text/javascript">
     Joomla.submitbutton = function (task) {
         if (task == 'mediafile.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
@@ -209,6 +223,22 @@ if (JRequest::getWord('layout') == 'modal') {
                             </div>
                              <div class="controls">
                                 <?php echo $this->form->getInput('id'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+                                <?php echo $this->form->getLabel('plays'); ?>
+                            </div>
+                             <div class="controls">
+                                <?php echo $this->form->getInput('plays'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+                                <?php echo $this->form->getLabel('downloads'); ?>
+                            </div>
+                             <div class="controls">
+                                <?php echo $this->form->getInput('downloads'); ?>
                             </div>
                         </div>
                         <div class="control-group">
