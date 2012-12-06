@@ -18,6 +18,7 @@ JHtml::_('behavior.modal');
 JHtml::_('behavior.keepalive');
 if (BIBLESTUDY_CHECKREL)
     JHtml::_('formbehavior.chosen', 'select');
+   	JHtml::_('behavior.framework');
 
 $params = $this->form->getFieldsets('params');
 $app = JFactory::getApplication();
@@ -391,7 +392,7 @@ $input = $app->input;
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td align="center">
                                     <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
-                                    <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
+                                    <a class="btn btn-primary" onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})" title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
                                         <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
                                     </a>
                                 </td>
@@ -419,7 +420,7 @@ $input = $app->input;
                                 ?> <a onClick="Joomla.submitbutton('message.apply');" href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
                         } else {
                                 ?>
-                                <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                <a class="btn btn-primary" onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                     <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                             }
                                 ?>
