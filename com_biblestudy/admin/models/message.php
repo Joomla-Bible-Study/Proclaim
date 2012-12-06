@@ -57,8 +57,9 @@ class BiblestudyModelMessage extends JModelAdmin {
         // fix up special html fields
 
         $row = & $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
+        //$data = JRequest::get('post');
 
         //Allows HTML content to come through to the database row
         $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);

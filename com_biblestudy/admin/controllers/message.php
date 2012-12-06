@@ -42,7 +42,8 @@ class BiblestudyControllerMessage extends JControllerForm {
      */
     function resetHits() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'post');
+        $input = new JInput;
+        $id = $input->get('id', 0, 'int');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         $reset = $db->query();

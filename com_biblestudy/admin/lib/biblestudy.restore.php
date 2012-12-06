@@ -31,8 +31,11 @@ class JBSImport {
         if (!ini_get('safe_mode')) {
             set_time_limit(300);
         }
-        $installtype = JRequest::getString('install_directory', '', 'post');
-        $backuprestore = JRequest::getString('backuprestore', '', 'post');
+        $input = new JInput;
+        $installtype = $input->get('install_directory');
+        //$installtype = JRequest::getString('install_directory', '', 'post');
+        $backuprestore = $input->getWord('backuprestore','');
+        //$backuprestore = JRequest::getString('backuprestore', '', 'post');
         if (substr_count($backuprestore, '.sql')) {
             if ($restored = JBSImport::restoreDB($backuprestore)) {
                 $result = true;
@@ -48,7 +51,9 @@ class JBSImport {
         }
         if ($result) {
             $result = JBSImport::installdb($uploadresults, $perent);
-            $userfile = JRequest::getVar('importdb', null, 'files', 'array');
+            $inputfiles = new JInputFiles;
+            $userfile = $inputfiles->get('importdb');
+            //$userfile = JRequest::getVar('importdb', null, 'files', 'array');
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
                 unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
@@ -68,7 +73,9 @@ class JBSImport {
      */
     public function _getPackageFromUpload() {
         // Get the uploaded file information
-        $userfile = JRequest::getVar('importdb', null, 'files', 'array');
+        $input = new JInputFiles;
+        $userfile = $input->get('importdb');
+        //$userfile = JRequest::getVar('importdb', null, 'files', 'array');
 
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
@@ -237,7 +244,9 @@ class JBSImport {
      * @return boolean
      */
     private static function _getPackageFromFolder() {
-        $p_dir = JRequest::getString('install_directory', '', 'post');
+        $input = new JInput;
+        $p_dir = $input->get('install_directory','','word');
+        //$p_dir = JRequest::getString('install_directory', '', 'post');
         $p_dir = JPath::clean($p_dir);
         return $p_dir;
     }

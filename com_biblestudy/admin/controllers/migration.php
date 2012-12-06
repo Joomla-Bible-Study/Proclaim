@@ -34,13 +34,19 @@ class BiblestudyControllerMigration extends JControllerLegacy {
      */
     public function display($cachable = false, $urlparams = false) {
 
-        JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
+        $input = new JInput;
+        $input->set('view', 'admin');
+        //JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
         $application = JFactory::getApplication();
-        JRequest::setVar('migrationdone', '0', 'get');
-        $task = JRequest::getWord('task', '', '');
-        $oldprefix = JRequest::getInt('oldprefix', '', 'post');
+        $input->set('migrationdone', '0');
+        //JRequest::setVar('migrationdone', '0', 'get');
+        $task = $input->get('task');
+        //$task = JRequest::getWord('task', '', '');
+        $oldprefix = $input->get('oldprefix','');
+        //$oldprefix = JRequest::getInt('oldprefix', '', 'post');
         $run = 0;
-        $run = JRequest::getInt('run', '', 'get');
+        $run = $input->get('run','','int');
+        //$run = JRequest::getInt('run', '', 'get');
 
         if ($task == 'export' && ($run == 1 || $run == 2)) {
             $export = new JBSExport();
@@ -63,8 +69,10 @@ class BiblestudyControllerMigration extends JControllerLegacy {
             $migration = $migrate->migrate();
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
-                JRequest::setVar('migrationdone', '1', 'get');
-                JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
+                $input->set('migrationdone','1');
+                //JRequest::setVar('migrationdone', '1', 'get');
+                $input->set('jbsmessages', $jbsmessages);
+                //JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
             } else {
                 JError::raiseWarning('403', JText::_('JBS_CMN_OPERATION_FAILED'));
             }
@@ -104,11 +112,14 @@ class BiblestudyControllerMigration extends JControllerLegacy {
         $copysuccess = false;
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
-        JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
+        $input = new JInput;
+        $input->set('view', $input->get('view','admin','cmd'));
+        //JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
 
         //Add commands to move tables from old prefix to new
         $oldprefix = '';
-        $oldprefix = JRequest::getWord('oldprefix', '', 'post');
+        $oldprefix = $input->get('oldprefix','','string');
+        //$oldprefix = JRequest::getWord('oldprefix', '', 'post');
 
         if ($oldprefix) {
             if ($this->copyTables($oldprefix)) {
@@ -134,7 +145,8 @@ class BiblestudyControllerMigration extends JControllerLegacy {
                 $installer->fixImagePaths();
                 $installer->fixemptyaccess();
                 $installer->fixemptylanguage();
-                JRequest::setVar('migrationdone', '1', 'get');
+                $input->set('migrationdone','1');
+                //JRequest::setVar('migrationdone', '1', 'get');
             } elseif (!$copysuccess) {
                 JBSMDbHelper::resetdb();
             } else {

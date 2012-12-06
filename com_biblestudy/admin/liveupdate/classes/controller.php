@@ -60,7 +60,8 @@ class LiveUpdateController extends JController
 			$this->display();
 		} else {
 			// No FTP credentials required; proceed with the download
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=download');
+            $input = new JInput;
+			$this->setRedirect('index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','cmd').'&task=download');
 			$this->redirect();
 		}
 	}
@@ -80,8 +81,11 @@ class LiveUpdateController extends JController
 		} else {
 			// Download successful. Let's extract the package.
 			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=extract';
-			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
-			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+            $input = new JInput;
+            $user = $input->getUsername('username');
+			//$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
+            $pass = $input->getString('password');
+			//$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
 			if($user) {
 				$url .= '&username='.urlencode($user).'&password='.urlencode($pass);
 			}
@@ -102,8 +106,11 @@ class LiveUpdateController extends JController
 		} else {
 			// Extract successful. Let's install the package.
 			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=install';
-			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
-			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+			$input = new JInput;
+            $user = $input->getUsername('username');
+			//$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
+            $pass = $input->getString('password');
+			//$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
 			if($user) {
 				$url .= '&username='.urlencode($user).'&password='.urlencode($pass);
 			}
@@ -174,7 +181,9 @@ class LiveUpdateController extends JController
 	 */
 	public final function display($cachable = false, $urlparams = false)
 	{
-		$viewLayout	= JRequest::getCmd( 'layout', 'default' );
+		$input = new JInput;
+        $viewlayout = $input->get('layout','default','cmd');
+        //$viewLayout	= JRequest::getCmd( 'layout', 'default' );
 
 		$view = $this->getThisView();
 
@@ -243,8 +252,11 @@ class LiveUpdateController extends JController
 	{
 		// Determine wether FTP credentials have been passed along with the current request
 		jimport('joomla.client.helper');
-		$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
-		$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+		$input = new JInput;
+            $user = $input->getUsername('username');
+			//$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
+            $pass = $input->getString('password');
+			//$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
 		if ($user != '' && $pass != '')
 		{
 			// Add credentials to the session

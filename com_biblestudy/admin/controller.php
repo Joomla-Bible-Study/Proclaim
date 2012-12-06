@@ -394,8 +394,9 @@ class BiblestudyController extends JControllerLegacy
 	/*    function upflash() {
 			jimport('joomla.filesystem.file');
 			jimport('joomla.filesystem.folder');
-			$serverid = JRequest::getInt('upload_server', '', 'post');
-			$folderid = JRequest::getInt('upload_folder', '', 'post');
+            $input = new JInput;
+			$serverid = $input->get('upload_server', '', 'int');
+			$folderid = $input->get('upload_folder', '', 'int');
 			/* Import joomla filesystem functions, we will do all the filewriting with joomlas functions,
 			 * so if the ftp layer is on, joomla will write with that, not the apache user, which might
 	         * not have the correct permissions
@@ -439,7 +440,8 @@ class BiblestudyController extends JControllerLegacy
 			$fileName = $_FILES[$fieldName]['name'];
 			$extOk = JBSMUpload::checkfile($fileName);
 			$app = JFactory::getApplication();
-			$option = JRequest::getCmd('option');
+            $input = new JInput:
+			$option = $input->get('option','','cmd');
 			$app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
 			$app->setUserState($option.'size', $_FILES[$fieldName]['size']);
 			$app->setUserState($option.'serverid', $serverid);

@@ -6,14 +6,15 @@
  */
 
 defined('_JEXEC') or die();
+$input = new JInput;
 ?>
 
 <div class="liveupdate">
 	<div class="liveupdate-ftp">
 		<p><?php echo JText::_('LIVEUPDATE_FTP_REQUIRED')?></p>
 		<form name="adminForm" action="index.php" method="get">
-			<input name="option" value="<?php echo JRequest::getCmd('option','')?>" type="hidden" />
-			<input name="view" value="<?php echo JRequest::getCmd('view','liveupdate')?>" type="hidden" />
+			<input name="option" value="<?php echo $input->get('optoin','','cmd');?>" type="hidden" />
+			<input name="view" value="<?php echo $input->get('view','liveupdate','cmd')?>" type="hidden" />
 			<input name="task" value="download" type="hidden" />
 			<fieldset>
 				<legend><?php echo JText::_('LIVEUPDATE_FTP') ?></legend>

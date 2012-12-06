@@ -178,39 +178,6 @@ class BiblestudyModelComment extends JModelAdmin
 
 
 	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 */
-//	public function store()
-//	{
-//		$row = & $this->getTable();
-
-//		$data = JRequest::get('post');
-
-		// Bind the form fields to the  table
-//		if (!$row->bind($data)) {
-//			$this->setError($this->_db->getErrorMsg());
-//			return false;
-//		}
-
-//		// Make sure the  record is valid
-//		if (!$row->check()) {
-//			$this->setError($this->_db->getErrorMsg());
-//			return false;
-//		}
-
-		// Store the table to the database
-//		if (!$row->store()) {
-//			$this->setError($this->_db->getErrorMsg());
-//			return false;
-//		}
-
-//		return true;
-//	}
-
-	/**
 	 * Get the form data
 	 *
 	 * @param array   $data

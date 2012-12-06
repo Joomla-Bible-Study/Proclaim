@@ -46,8 +46,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         if (!ini_get('safe_mode')) {
             set_time_limit(300);
         }
-
-        $userfile = JRequest::getVar('template_import', null, 'files', 'array');
+        $input = new JInputFiles;
+        $userfile = $input->get('template_import');
+        //$userfile = JRequest::getVar('template_import', null, 'files', 'array');
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_CMN_UPLOADS_NOT_ENABLED'));
@@ -242,7 +243,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      * @return boolean
      */
     public function template_export() {
-        $data = JRequest::getVar('template_export', '', 'post', '');
+        $input = new JInput;
+        $data = $input->get('template_export');
+        //$data = JRequest::getVar('template_export', '', 'post', '');
         $exporttemplate = $data;
         if (!$exporttemplate) {
             $message = JText::_('JBS_TPL_NO_FILE_SELECTED');

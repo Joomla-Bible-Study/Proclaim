@@ -10,6 +10,8 @@ defined( '_JEXEC' ) or die();
 $state			= $this->get('State');
 $message1		= $state->get('message');
 $message2		= $state->get('extmessage');
+$input = new JInput;
+$command = $input->get('option','','cmd');
 ?>
 <table class="adminform">
 	<tbody>
@@ -31,4 +33,4 @@ $message2		= $state->get('extmessage');
 </p>
 
 <iframe style="width: 0px; height: 0px; border: none;" frameborder="0" marginheight="0" marginwidth="0" height="0" width="0"
-	src="index.php?option=<?php echo JRequest::getCmd('option','')?>&view=<?php echo JRequest::getCmd('view','')?>&task=cleanup"></iframe>
+	src="index.php?option=<?php echo $command; ?>&view=<?php echo $input->get('view','','cmd');?>&task=cleanup"></iframe>

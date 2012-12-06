@@ -48,7 +48,9 @@ class BiblestudyControllerStyles extends JControllerAdmin {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
         // Initialise variables.
         $user = JFactory::getUser();
-        $ids = JRequest::getVar('cid', array(), '', 'array');
+        $input = new JInput;
+        $ids = $input->get('cid','','array');
+        //$ids = JRequest::getVar('cid', array(), '', 'array');
 
         // Access checks.
         foreach ($ids as $i => $id) {

@@ -35,9 +35,14 @@ class BiblestudyControllerInstall extends JControllerForm {
         require_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $fixassets = $asset->fixAssets();
-        JRequest::setVar('messages', $fixassets, 'get', 'true');
-        $jbsname = JRequest::getVar('jbsname');
-        $jbstype = JRequest::getVar('jbstype');
+        /** 
+        * @todo Need to test this new way of using JInput */
+        $input = new JInput;
+        $input->set('messages', $fixassets);
+        //JRequest::setVar('messages', $fixassets, 'get', 'true');
+        
+        $jbsname = $input->get('jbsname');
+        $jbstype = $input->get('jbstype');
         if ($jbsname):
             $this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
         endif;

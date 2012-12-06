@@ -34,7 +34,9 @@ class BiblestudyControllerTemplate extends JControllerForm {
      * Copy Template
      */
     function copy() {
-        $cid = JRequest::getVar('cid', array(), 'post', 'array');
+        $input = new JInput;
+        $cid = $input->get('cid','','array');
+        //$cid = JRequest::getVar('cid', array(), 'post', 'array');
         JArrayHelper::toInteger($cid);
 
         $model = & $this->getModel('template');
@@ -53,7 +55,9 @@ class BiblestudyControllerTemplate extends JControllerForm {
      */
     function makeDefault() {
         $mainframe = JFactory::getApplication();
-        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
+        $input = new JInput;
+        $cid = $input->get('cid',array(0),'array');
+        //$cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
         if (!is_array($cid) || count($cid) < 1) {
             JError::raiseError(500, JText::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'));

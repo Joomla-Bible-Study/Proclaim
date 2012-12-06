@@ -125,8 +125,9 @@ class BiblestudyModelFolder extends JModelAdmin {
      */
     public function store() {
         $row = & $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
+        //$data = JRequest::get('post');
 
         $folderpath = $data['folderpath'];
         $slash_begining = substr($folderpath, 0, 1);

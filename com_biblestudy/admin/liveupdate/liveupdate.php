@@ -56,7 +56,9 @@ class LiveUpdate
 		// Load the controller and let it run the show
 		require_once dirname(__FILE__).'/classes/controller.php';
 		$controller = new LiveUpdateController();
-		$controller->execute(JRequest::getCmd('task','overview'));
+        $input = new JInput;
+        $controller = $input->get('task','overview','cmd');
+		//$controller->execute(JRequest::getCmd('task','overview'));
 		$controller->redirect();
 	}
 
@@ -86,9 +88,9 @@ class LiveUpdate
 		self::loadLanguage();
 
 		$defaultConfig = array(
-			'option'			=> JRequest::getCmd('option',''),
+			'option'			=> $input->get('option','','cmd'),
 			'view'				=> 'liveupdate',
-			'mediaurl'			=> JURI::base().'components/'.JRequest::getCmd('option','').'/liveupdate/assets/'
+			'mediaurl'			=> JURI::base().'components/'.$input->get('option','','cmd').'/liveupdate/assets/'
 		);
 		$c = array_merge($defaultConfig, $config);
 

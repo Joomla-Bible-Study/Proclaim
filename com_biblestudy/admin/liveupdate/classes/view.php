@@ -22,11 +22,12 @@ class LiveUpdateView extends JView
 		if(!$config->addMedia()) {
 			// No custom CSS overrides were set; include our own
 			$document = JFactory::getDocument();
-			$url = JURI::base().'/components/'.JRequest::getCmd('option','').'/liveupdate/assets/liveupdate.css';
+            $input = new JInput;
+			$url = JURI::base().'/components/'.$input->get('option','','cmd').'/liveupdate/assets/liveupdate.css';
 			$document->addStyleSheet($url, 'text/css');
 		}
 		
-		$requeryURL = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&force=1';
+		$requeryURL = 'index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','cmd').'&force=1';
 		$this->assign('requeryURL', $requeryURL);
 		
 		$model = $this->getModel();
@@ -38,13 +39,13 @@ class LiveUpdateView extends JView
 		} else {
 			$msg = 'Back';
 		}
-		JToolBarHelper::back($msg, 'index.php?option='.JRequest::getCmd('option',''));
+		JToolBarHelper::back($msg, 'index.php?option='.$input->get('option','','cmd'));
 		
 		switch(JRequest::getCmd('task','default'))
 		{
 			case 'startupdate':
 				$this->setLayout('startupdate');
-				$this->assign('url','index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=download');
+				$this->assign('url','index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','cmd').'&task=download');
 				break;
 				
 			case 'install':
@@ -70,10 +71,10 @@ class LiveUpdateView extends JView
 			case 'overview':
 			default:
 				$this->setLayout('overview');
-				
-				$force = JRequest::getInt('force',0);
+				$input = new JInput;
+				$force = $input->get('force',0,'int');
 				$this->assign('updateInfo', LiveUpdate::getUpdateInformation($force));
-				$this->assign('runUpdateURL','index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=startupdate');
+				$this->assign('runUpdateURL','index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','cmd').'&task=startupdate');
 				
 				$needsAuth = !($config->getAuthorization()) && ($config->requiresAuthorization());
 				$this->assign('needsAuth', $needsAuth); 
