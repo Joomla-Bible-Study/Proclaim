@@ -21,7 +21,8 @@ function getLocationsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');

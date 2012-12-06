@@ -50,7 +50,8 @@ class BiblestudyModelStyle extends JModelAdmin {
         $key = $table->getKeyName();
 
         // Get the pk of the record from the request.
-        $pk = JRequest::getInt($key);
+        $input = new JInput;
+        $pk = $input->get($key,'','int');
         $this->setState($this->getName() . '.id', $pk);
 
         // Load the parameters.

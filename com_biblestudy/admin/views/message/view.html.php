@@ -57,11 +57,12 @@ class BiblestudyViewMessage extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
-        $option = JRequest::getCmd('option');
-        $input = new Jinput(array('sid'=>$this->item->id,'sdate'=>$this->item->studydate));
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
+        $input = $input->set('messageinfo',array('sid'=>$this->item->id,'sdate'=>$this->item->studydate));
         
-        //JApplication::setUserState($option . 'sid', $this->item->id);
-        //JApplication::setUserState($option . 'sdate', $this->item->studydate);
+        JApplication::setUserState($option . 'sid', $this->item->id);
+        JApplication::setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');
@@ -112,7 +113,8 @@ class BiblestudyViewMessage extends JViewLegacy {
      * @since 7.0.0
      */
     protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', true);
+        $input = new JInput;
+        $input->set('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');

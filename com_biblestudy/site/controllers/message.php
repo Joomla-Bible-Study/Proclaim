@@ -44,7 +44,8 @@ class biblestudyControllermessage extends JControllerForm {
         $task = $this->getTask();
 
         if ($task == 'save') {
-            $id = JRequest::getInt('a_id');
+            $input = new JInput;
+            $id = $input->get('a_id','','int');
             //this will be null if new
             if (empty($id)) {
                 $db = JFactory::getDBO();
@@ -57,7 +58,7 @@ class biblestudyControllermessage extends JControllerForm {
                     $this->setRedirect('index.php?option=com_biblestudy&view=messages', $msg);
                 }
             }
-            //  $this->setTopics($id = JRequest::getInt('id', 0), $data);
+            //  $this->setTopics($id = $input->get('id', 0,'int'), $data);
             //	$this->setRedirect(JRoute::_('index.php?option=com_content&view=category&id='.$validData['catid'], false));
         }
     }
@@ -119,7 +120,8 @@ class biblestudyControllermessage extends JControllerForm {
      */
     public function resetHits() {
         $msg = null;
-        $id = JRequest::getInt('a_id', 0, 'post');
+        $input = new JInput;
+        $id = $input->get('a_id', 0, 'int');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         $reset = $db->query();

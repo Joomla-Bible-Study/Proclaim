@@ -33,7 +33,8 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
      */
     public function display($tpl = null) {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         JViewLegacy::loadHelper('image');
 
         $document = JFactory::getDocument();
@@ -44,7 +45,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
-        $t = JRequest::getInt('t', 'get', 1);
+        $t = $input->get('t', 1,'int');
         if (!$t) {
             $t = 1;
         }

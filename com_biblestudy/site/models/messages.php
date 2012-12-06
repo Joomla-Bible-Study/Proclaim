@@ -57,7 +57,8 @@ class biblestudyModelMessages extends JModelList {
         parent::__construct($config);
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
 
         // Get the pagination request variables
         $limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
@@ -148,7 +149,8 @@ class biblestudyModelMessages extends JModelList {
      */
     function _buildContentWhere() {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
 
         $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
         $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
@@ -188,7 +190,8 @@ class biblestudyModelMessages extends JModelList {
      */
     function _buildContentOrderBy() {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
 
         $orders = array('id', 'published', 'studydate', 'messagetype', 'teacher_id', 'studytitle', 'series_id');
         $filter_order = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');

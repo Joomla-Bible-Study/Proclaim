@@ -11,8 +11,8 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
-
-$function = JRequest::getVar('function', 'jSelectTeacher');
+$input = new JInput;
+$function = $input->get('function', 'jSelectTeacher','cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>

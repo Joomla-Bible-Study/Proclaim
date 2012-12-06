@@ -55,7 +55,8 @@ class biblestudyModelmediafiles extends JModelList {
         parent::__construct($config);
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+    $option = $input->get('option','','cmd');
 
         // Get the pagination request variables
         $limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
@@ -134,7 +135,8 @@ class biblestudyModelmediafiles extends JModelList {
      */
     public function _buildContentWhere() {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $where = array();
         $filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
         if ($filter_studyid > 0) {
@@ -151,7 +153,8 @@ class biblestudyModelmediafiles extends JModelList {
      */
     public function _buildContentOrderBy() {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $orders = array('id', 'published', 'studytitle', 'ordering', 'media_image_name', 'createdate', 'filename');
         $filter_order = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');
         $filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC'));

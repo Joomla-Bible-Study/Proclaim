@@ -40,8 +40,8 @@ class BiblestudyControllerSermons extends JControllerLegacy {
     public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-
-        $task = JRequest::getVar('task');
+        $input = new JInput;
+        $task = $input->get('task');
         if ($task == 'download') {
 
             $downloader = new Dump_File();
@@ -56,7 +56,8 @@ class BiblestudyControllerSermons extends JControllerLegacy {
      * @return none
      */
     public function avplayer() {
-        $task = JRequest::getVar('task');
+        $input = new JInput;
+        $task = $input->get('task');
         if ($task == 'avplayer') {
             $mediacode = JRequest::getVar('code');
             $this->mediaCode = $mediacode;

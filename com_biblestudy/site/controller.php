@@ -34,8 +34,9 @@ class biblestudyController extends JControllerLegacy {
         // Set the default view name and format from the Request.
         // Note we are using a_id to avoid collisions with the router and the return page.
         // Frontend is a bit messier than the backend.
-        $vName = JRequest::getCmd('view', 'landingpage');
-        JRequest::setVar('view', $vName);
+        $input = new JInput;
+        $vName = $input->get('view', 'landingpage','cmd');
+        $input->set('view', $vName);
         if ($vName == 'popup')
             $cachable = false;
 
@@ -51,11 +52,11 @@ class biblestudyController extends JControllerLegacy {
         $db = JFactory::getDBO();
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->query();
-        $t = JRequest::getInt('t', 'get');
+        $t = $input->get('t','', 'int');
         if (!$t) {
             $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
+        $input->set('t', $t, 'string');
 
         $safeurlparams = array('id' => 'INT', 'cid' => 'ARRAY', 'year' => 'INT', 'month' => 'INT', 'limit' => 'INT', 'limitstart' => 'INT',
             'showall' => 'INT', 'return' => 'BASE64', 'filter' => 'STRING', 'filter_order' => 'CMD', 'filter_order_Dir' => 'CMD', 'filter-search' => 'STRING', 'print' => 'BOOLEAN', 'lang' => 'CMD');
@@ -71,8 +72,9 @@ class biblestudyController extends JControllerLegacy {
      */
     public function comment() {
 
+        $input = new JInput;
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $option = $input->get('option','','cmd');
 
         $model = $this->getModel('sermon');
         $app = JFactory::getApplication();
@@ -83,7 +85,7 @@ class biblestudyController extends JControllerLegacy {
         if (!$t) {
             $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
+        $input->set('t', $t);
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
@@ -95,8 +97,8 @@ class biblestudyController extends JControllerLegacy {
             //Begin reCaptcha
             require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php');
             $privatekey = $params->get('private_key');
-            $challenge = JRequest::getVar('recaptcha_challenge_field', '', 'post');
-            $response = JRequest::getVar('recaptcha_response_field', '', 'post');
+            $challenge = $input->get('recaptcha_challenge_field', '', 'post');
+            $response = $input->get('recaptcha_response_field', '', 'string');
             $resp = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
             if (!$resp->is_valid) {
                 // What happens when the CAPTCHA was entered incorrectly
@@ -111,7 +113,7 @@ class biblestudyController extends JControllerLegacy {
         }
 
         if ($cap == 1) {
-            if (JRequest::getInt('published', '', 'post') == 0) {
+            if ($input->get('published', '', 'int') == 0) {
                 $msg = JText::_('JBS_STY_COMMENT_UNPUBLISHED');
             } else {
                 $msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
@@ -134,18 +136,19 @@ class biblestudyController extends JControllerLegacy {
      * @param string $params
      */
     public function commentsEmail($params) {
+        $input = new JInput;
         $mainframe = JFactory::getApplication();
-        $menuitemid = JRequest::getInt('Itemid');
+        $menuitemid = $input->get('Itemid','','int');
         if ($menuitemid) {
             $menu = $mainframe->getMenu();
             $menuparams = $menu->getParams($menuitemid);
         }
-        $comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');
-        $comment_study_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-        $comment_email = JRequest::getVar('user_email', 'No Email', 'POST', 'WORD');
-        $comment_text = JRequest::getVar('comment_text', 'None', 'POST', 'WORD');
-        $comment_published = JRequest::getVar('published', 0, 'POST', 'INT');
-        $comment_date = JRequest::getVar('comment_date', 0, 'POST', 'INT');
+        $comment_author = $input->get('full_name', 'Anonymous', 'WORD');
+        $comment_study_id = $input->get('study_detail_id', 0, 'INT');
+        $comment_email = $input->get('user_email', 'No Email', 'WORD');
+        $comment_text = $input->get('comment_text', 'None', 'WORD');
+        $comment_published = $input->get('published', 0, 'INT');
+        $comment_date = $input->get('comment_date', 0, 'INT');
         $comment_date = date('Y-m-d H:i:s');
         $config = JFactory::getConfig();
         $comment_abspath = JPATH_SITE;
@@ -182,11 +185,12 @@ class biblestudyController extends JControllerLegacy {
      * Download
      */
     public function download() {
+        $input = new JInput;
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-        $task = JRequest::getVar('task');
+        $task = $input->get('task');
         if ($task == 'download') {
-            $mid = JRequest::getInt('mid', '0');
+            $mid = $input->get('mid', '0','int');
             $downloader = new Dump_File();
             $downloader->download($mid);
 
@@ -199,9 +203,10 @@ class biblestudyController extends JControllerLegacy {
      * @return none
      */
     public function avplayer() {
-        $task = JRequest::getVar('task');
+        $task = $input->get('task','','cmd');
         if ($task == 'avplayer') {
-            $mediacode = JRequest::getVar('code');
+            $input = new JInput;
+            $mediacode = $input->get('code','','string');
             $this->mediaCode = $mediacode;
             echo $mediacode;
             return;
@@ -212,9 +217,10 @@ class biblestudyController extends JControllerLegacy {
      * Play Hit
      */
     public function playHit() {
+        $input = new JInput;
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $getMedia = new jbsMedia();
-        $getMedia->hitPlay(JRequest::getInt('id'));
+        $getMedia->hitPlay($input->get('id','','int'));
     }
 
     /**
@@ -233,22 +239,23 @@ class biblestudyController extends JControllerLegacy {
     public function uploadflash() {
 
         JRequest::checktoken() or jexit('Invalid Token');
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         jimport('joomla.filesystem.file');
         //get the server and folder id from the request
-        $serverid = JRequest::getInt('upload_server', '', 'post');
-        $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $serverid = $input('upload_server', '', 'int');
+        $folderid = $input->get('upload_folder', '', 'int');
         $app = JFactory::getApplication();
         $app->setUserState($option, 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);
-        $form = JRequest::getVar('jform', array(), 'post', 'array');
+        $form = $input->get('jform', '', 'array');
         $returnid = $form['id'];
         // get temp file details
         $temp = JBSMUpload::gettempfile();
         $temp_folder = JBSMUpload::gettempfolder();
         $tempfile = $temp_folder . $temp;
         // get path and abort if none
-        $layout = JRequest::getWord('layout', '');
+        $layout = $input->get('layout', '','string');
         if ($layout == 'modal') {
             $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
         } else {
@@ -276,7 +283,7 @@ class biblestudyController extends JControllerLegacy {
         // delete temp file
 
         JBSMUpload::deletetempfile($tempfile);
-        $mediafileid = JRequest::getInt('id', '', 'post');
+        $mediafileid = $input->get('id', '', 'int');
         if ($layout == 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {
@@ -365,16 +372,18 @@ class biblestudyController extends JControllerLegacy {
      *
      */
     public function upload() {
+        $input = new JInput;
         JRequest::checktoken() or jexit('Invalid Token');
-        $option = JRequest::getCmd('option');
+        $option = $input->get('option','','cmd');
         $uploadmsg = '';
-        $serverid = JRequest::getInt('upload_server', '', 'post');
-        $folderid = JRequest::getInt('upload_folder', '', 'post');
-        $form = JRequest::getVar('jform', array(), 'post', 'array');
+        $serverid = $input->get('upload_server', '', 'int');
+        $folderid = $input->get('upload_folder', '', 'int');
+        $form = $input->get('jform', array(), 'array');
         $returnid = $form['id'];
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
         $path = JBSMUpload::getpath($url, '');
-        $file = JRequest::getVar('uploadfile', '', 'files', 'array');
+        $files = new JInputFiles;
+        $file = $files->get('uploadfile');
         // check filetype allowed
         $allow = JBSMUpload::checkfile($file['name']);
         if ($allow) {
@@ -386,7 +395,7 @@ class biblestudyController extends JControllerLegacy {
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
             }
         }
-        $mediafileid = JRequest::getInt('id', '', 'post');
+        $mediafileid = $input->get('id', '', 'int');
         $app = JFactory::getApplication();
         $app->setUserState($option . 'fname', $file['name']);
         $app->setUserState($option . 'size', $file['size']);

@@ -34,13 +34,14 @@ class biblestudyViewLandingpage extends JViewLegacy {
     public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         JViewLegacy::loadHelper('image');
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        
         $itemparams = $mainframe->getPageParameters();
 
         // Convert parameter fields to objects.
@@ -62,7 +63,7 @@ class biblestudyViewLandingpage extends JViewLegacy {
         }
         //$model = $this->getModel();
 
-        $t = JRequest::getInt('t', 'get', 1);
+        $t = $input->get('t', 1, 'int');
         if (!$t) {
             $t = 1;
         }

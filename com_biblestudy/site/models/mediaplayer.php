@@ -28,8 +28,8 @@ class biblestudyModelmediaplayer extends JModelLegacy {
      */
     public function __construct($config = array()) {
         parent::__construct($config);
-
-        $array = JRequest::getVar('cid', 0, '', 'array');
+        $input = new JInput;
+        $array = $input->get('cid', 0, 'array');
         $this->setId((int) $array[0]);
     }
 
@@ -101,8 +101,8 @@ class biblestudyModelmediaplayer extends JModelLegacy {
      */
     public function store() {
         $row = $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
 
         // Bind the form fields to the  table
         if (!$row->bind($data)) {
@@ -133,7 +133,8 @@ class biblestudyModelmediaplayer extends JModelLegacy {
      * @return	boolean	True on success
      */
     public function delete() {
-        $cids = JRequest::getVar('cid', array(0), 'post', 'array');
+        $input = new JInput;
+        $cids = $input('cid', array(0), 'array');
 
         $row = $this->getTable();
 

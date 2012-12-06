@@ -67,7 +67,8 @@ class biblestudyControllermediafile extends JControllerForm {
     public function docmanCategoryItems() {
         //hide errors and warnings
         error_reporting(0);
-        $catId = JRequest::getVar('catId');
+        $input = new JInput;
+        $catId = $input->get('catId','','int');
 
         $model = & $this->getModel('mediafilesedit');
         $items = & $model->getdocManCategoryItems($catId);
@@ -79,7 +80,8 @@ class biblestudyControllermediafile extends JControllerForm {
      */
     public function articlesSectionCategories() {
         error_reporting(0);
-        $secId = JRequest::getVar('secId');
+        $input = new JInput;
+        $secId = $input->get('secId','','int');
 
         $model = & $this->getModel('mediafilesedit');
         $items = & $model->getArticlesSectionCategories($secId);
@@ -90,8 +92,9 @@ class biblestudyControllermediafile extends JControllerForm {
      * Link to Articals Category Items
      */
     public function articlesCategoryItems() {
+        $input = new JInput;
         error_reporting(0);
-        $catId = JRequest::getVar('catId');
+        $catId = $input->get('catId','','int');
 
         $model = & $this->getModel('mediafilesedit');
         $items = & $model->getCategoryItems($catId);
@@ -102,8 +105,9 @@ class biblestudyControllermediafile extends JControllerForm {
      * Link to VertueMart Items
      */
     public function virtueMartItems() {
+        $input = new JInput;
         error_reporting(0);
-        $catId = JRequest::getVar('catId');
+        $catId = $input->get('catId','','int');
 
         $model = & $this->getModel('mediafilesedit');
         $items = & $model->getVirtueMartItems($catId);
@@ -115,7 +119,8 @@ class biblestudyControllermediafile extends JControllerForm {
      */
     public function resetDownloads() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'post');
+        $input = new JInput;
+        $id = $input->get('id', 0, 'int');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -135,7 +140,8 @@ class biblestudyControllermediafile extends JControllerForm {
      */
     public function resetPlays() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'post');
+        $input = new JInput;
+        $id = $input->get('id', 0, 'int');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
         $reset = $db->query();

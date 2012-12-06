@@ -31,9 +31,10 @@ class biblestudyViewterms extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $t = JRequest::getInt('t', '1', 'get');
-        $mid = JRequest::getInt('mid', '', 'get');
-        $compat_mode = JRequest::getInt('compat_mode', '0', 'get');
+        $input = new JInput;
+        $t = $input->get('t', 1, 'int');
+        $mid = $input->get('mid', '', 'int');
+        $compat_mode = $input->get('compat_mode', '0', 'int');
 
         $db = JFactory::getDBO();
         $query = $db->getQuery('true');

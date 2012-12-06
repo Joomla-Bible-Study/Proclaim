@@ -344,7 +344,8 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
  */
 function getSeriesstudies($id, $params, $admin_params, $template) {
     $limit = '';
-    $nolimit = JRequest::getVar('nolimit', 'int', 0);
+    $input = new JInput;
+    $nolimit = $input->get('nolimit', '', 'int');
     if ($params->get('series_detail_limit')) {
         $limit = ' LIMIT ' . $params->get('series_detail_limit');
     }
@@ -402,7 +403,7 @@ function getSeriesstudies($id, $params, $admin_params, $template) {
     }
     $t = $params->get('serieslisttemplateid');
     if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
+        $t = $input->get('t', 1, 'int');
     }
     $studies .= '</tr>';
 
@@ -420,7 +421,8 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');
@@ -673,9 +675,9 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'listing.php');
     $path2 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR;
-
+    $input = new JInput;
     $limit = '';
-    $nolimit = JRequest::getVar('nolimit', 'int', 0);
+    $nolimit = $input->get('nolimit', '','int');
     if ($params->get('series_detail_limit')) {
         $limit = ' LIMIT ' . $params->get('series_detail_limit');
     }

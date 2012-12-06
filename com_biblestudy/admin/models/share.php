@@ -54,8 +54,9 @@ class BiblestudyModelShare extends JModelAdmin {
      */
     public function store() {
         $row = $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
+        //$data = JRequest::get('post');
 
         // Bind the form fields to the hello table
         if (!$row->bind($data)) {

@@ -34,7 +34,8 @@ defined('_JEXEC') or die;
             <div class="clearfix"></div>
             <div class="table">
 				<?php
-				$checkassets2 = JRequest::getVar('checkassets', null, 'get', 'array');
+                $input = new JInput;
+				$checkassets2 = $input->get('checkassets', null, 'array');
 
 				if ($checkassets2)
 				{

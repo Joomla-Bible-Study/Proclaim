@@ -13,7 +13,8 @@ $params = $this->form->getFieldsets('params');
 $folder = '';
 $server = '';
 $app = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+ $input = new JInput;
+    $option = $input->get('option','','cmd');
 $study = $app->getUserState($option . 'sid');
 $sdate = $app->getUserState($option . 'sdate');
 $size = $app->getUserState($option . 'size');
@@ -135,7 +136,8 @@ if ($this->item->path) {
 
 <div class="edit">
     <form action="<?php
-if (JRequest::getWord('layout', '') == 'modal') {
+    $input = new JInput;
+if ($input->get('layout', '','string') == 'modal') {
     $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
@@ -146,7 +148,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <legend>
                     <?php
                     echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
-                    if (JRequest::getWord('layout', '') == 'modal') {
+                    if ($input->get('layout', '', 'string') == 'modal') {
                         ?> <div class="fltlft">
                             <button type="button" onclick="submitbutton('mediafile.save');  ">
                                 <?php echo JText::_('JSAVE'); ?></button>
@@ -241,7 +243,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>
-                <?php if (JRequest::getWord('layout', '') == 'modal') {echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
+                <?php if ($input->get('layout', '','string') == 'modal') {echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('size'); ?>

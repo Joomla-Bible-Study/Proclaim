@@ -59,7 +59,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
     public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $document = JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
@@ -79,7 +80,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
         $items->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
         $teacherimage = $images->getTeacherThumbnail($items->thumb, $image2 = null);
         $items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="' . $teacherimage->width . '" alt="" />';
-        $t = JRequest::getInt('t', 'get', 1);
+        $t = $input->get('t', '1', 'int');
         if (!$t) {
             $t = 1;
         }
@@ -140,7 +141,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
 
         $studies = $items;
 
-        JRequest::setVar('returnid', $items->id, 'get', true);
+        $input->set('returnid', $items->id);
         //Passage link to BibleGateway
         $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
         if ($plugin) {

@@ -81,7 +81,8 @@ class biblestudyViewTemplatecode extends JViewLegacy {
      * @since 7.0.0
      */
     protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', true);
+        $input = new JInput;
+        $input->set('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'templates.png');

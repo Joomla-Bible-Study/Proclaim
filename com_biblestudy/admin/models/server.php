@@ -77,8 +77,9 @@ class BiblestudyModelServer extends JModelAdmin {
      */
     public function store() {
         $row = & $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
+        //$data = JRequest::get('post');
 
         // Remove starting and traling spaces
         $data['server_path'] = trim($data['server_path']);

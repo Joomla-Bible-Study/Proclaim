@@ -10,8 +10,8 @@
 defined('_JEXEC') or die;
 
 JHtml::_('script', 'system/multiselect.js', false, true);
-
-$function = JRequest::getCmd('function', 'jSelectStudy');
+$input = new JInput;
+$function = $input->get('function', 'jSelectStudy','cmd');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>

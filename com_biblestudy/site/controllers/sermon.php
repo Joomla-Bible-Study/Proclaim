@@ -43,18 +43,19 @@ class BiblestudyControllerSermon extends JControllerLegacy {
         if (!$t) {
             $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
+        $input = new JInput;
+        $input->set('t', $t);
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadString($template[0]->params);
         $params = $registry;
         if ($params->get('useexpert_details') > 0) {
-            JRequest::setVar('layout', 'custom');
+            $input->set('layout', 'custom');
         } else {
-            JRequest::setVar('layout', 'default');
+            $input->set('layout', 'default');
         }
-        JRequest::setVar('view', 'sermon');
+        $input->set('view', 'sermon');
 
         $model->hit();
 
@@ -68,7 +69,8 @@ class BiblestudyControllerSermon extends JControllerLegacy {
     public function comment() {
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $model = $this->getModel('sermon');
         $menu = $mainframe->getMenu();
         $item = $menu->getActive();
@@ -77,8 +79,8 @@ class BiblestudyControllerSermon extends JControllerLegacy {
         if (!$t) {
             $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
-
+        $input->set('t',$t);
+        
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadString($model->_template[0]->params);
@@ -114,7 +116,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
             if ($params->get('email_comments') > 0) {
                 $EmailResult = $this->commentsEmail($params);
             }
-            $study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
+            $study_detail_id = $input->get('study_detail_id', 0, 'int');
 
             $mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg, 'Comment Added');
         } // End of $cap
@@ -124,8 +126,9 @@ class BiblestudyControllerSermon extends JControllerLegacy {
      * Begin scripture links plugin function
      */
     public function biblegateway_link() {
+        $input = new JInput;
         $return = false;
-        $row->text = JRequest::getVar('scripture1');
+        $row->text = $input->get('scripture1','','string');
         JPluginHelper::importPlugin('content', 'scripturelinks');
 
         // Convert parameter fields to objects.
@@ -143,7 +146,8 @@ class BiblestudyControllerSermon extends JControllerLegacy {
     public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-        $task = JRequest::getVar('task');
+        $input = new JInput;
+        $task = $input->get('task');
         if ($task == 'download') {
             $downloader = new Dump_File();
             $downloader->download();
@@ -158,17 +162,18 @@ class BiblestudyControllerSermon extends JControllerLegacy {
      */
     public function commentsEmail($params) {
         $mainframe = JFactory::getApplication();
-        $menuitemid = JRequest::getInt('Itemid');
+        $input = new JInput;
+        $menuitemid = $input->get('Itemid','','int');
         if ($menuitemid) {
             $menu = $mainframe->getMenu();
             $menuparams = $menu->getParams($menuitemid);
         }
-        $comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');
-        $comment_study_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-        $comment_email = JRequest::getVar('user_email', 'No Email', 'POST', 'WORD');
-        $comment_text = JRequest::getVar('comment_text', 'None', 'POST', 'WORD');
-        $comment_published = JRequest::getVar('published', 0, 'POST', 'INT');
-        $comment_date = JRequest::getVar('comment_date', 0, 'POST', 'INT');
+        $comment_author = $input->get('full_name', 'Anonymous', 'string');
+        $comment_study_id = $input->get('study_detail_id', 0, 'int');
+        $comment_email = $input->get('user_email', 'No Email', 'string');
+        $comment_text = $input->get('comment_text', 'None', 'string');
+        $comment_published = $input->get('published', 0, 'int');
+        $comment_date = $input->get('comment_date', 0, 'int');
         $comment_date = date('Y-m-d H:i:s');
         $config = JFactory::getConfig();
         $comment_abspath = JPATH_SITE;

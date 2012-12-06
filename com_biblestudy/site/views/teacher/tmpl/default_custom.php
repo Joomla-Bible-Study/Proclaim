@@ -20,19 +20,19 @@ $params = $this->params;
 
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'teacher.php');
-
-$t = JRequest::getVar('t', 1, 'get', 'int');
+$input = new JInput;
+$t = $input->get('t', 1, 'int');
 
 if (!$t) {
     $t = 1;
 }
 $t = $this->params->get('teachertemplateid');
 if (!$t) {
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $t = $input->get('t', 1, 'int');
 }
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 if (!$studieslisttemplateid) {
-    $studieslisttemplateid = JRequest::getVar('t', 1, 'get', 'int');
+    $studieslisttemplateid = $input->get('t', 1, 'int');
 }
 if (!$teacher->teacher_image) {
     $image->path = $teacher->image;

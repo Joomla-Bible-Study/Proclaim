@@ -10,7 +10,8 @@
 defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+$input = new JInput;
+$option = $input->get('option','','cmd');
 $document = JFactory::getDocument();
 $params = $this->params;
 $url = $this->params->get('stylesheet');
@@ -20,7 +21,7 @@ if ($url) {
 $listingcall = JViewLegacy::loadHelper('serieslist');
 $t = $this->params->get('serieslisttemplateid');
 if (!$t) {
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $t = $input->get('t', 1, 'int');
 }
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">

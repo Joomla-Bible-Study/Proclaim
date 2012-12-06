@@ -20,7 +20,8 @@ defined('_JEXEC') or die;
  */
 function getScripture($params, $row, $esv, $scripturerow) {
     $mainframe = JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+   $input = new JInput;
+    $option = $input->get('option','','cmd');
     if (!isset($row->id)) {
         return;
     }

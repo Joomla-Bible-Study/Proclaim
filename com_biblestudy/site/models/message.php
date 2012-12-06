@@ -39,11 +39,12 @@ class biblestudyModelmessage extends JModelAdmin {
     protected function populateState() {
         $app = JFactory::getApplication('site');
         // Adjust the context to support modal layouts.
-        if ($layout = JRequest::getVar('layout')) {
+        $input = new JInput;
+        if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id');
+        $pks = $input->get('a_id','','int');
         $this->pks = $pks;
         $this->setState('message.id', $pks);
     }
@@ -93,7 +94,8 @@ class biblestudyModelmessage extends JModelAdmin {
      * @since   11.1
      */
     public function delete(&$pks) {
-        $cids = JRequest::getVar('cid', array(0), 'post', 'array');
+        $input = new JInput;
+        $cids = $input->get('cid', array(0), 'array');
 
         $row = & $this->getTable();
 
@@ -117,7 +119,8 @@ class biblestudyModelmessage extends JModelAdmin {
     public function getTopics() {
         // do search in case of present study only, suppress otherwise
         $translatedList = array();
-        if (JRequest::getVar('id', 0, null, 'int') > 0) {
+        $input = new JInput;
+        if ($input->get('id', 0, 'int') > 0) {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
@@ -125,7 +128,7 @@ class biblestudyModelmessage extends JModelAdmin {
             $query->from('#__bsms_studytopics AS studytopics');
 
             $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-            $query->where('studytopics.study_id = ' . JRequest::getVar('id', 0, null, 'int'));
+            $query->where('studytopics.study_id = ' . $input->get('id', 0, 'int'));
 
             $db->setQuery($query->__toString());
             $topics = $db->loadObjectList();
@@ -204,7 +207,8 @@ class biblestudyModelmessage extends JModelAdmin {
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('a_id');
+        $input = new JInput;
+        $pks = $input->get('a_id','','int');
         if ($pks) {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);

@@ -16,7 +16,9 @@ if (BIBLESTUDY_CHECKREL)
     JHtml::_('formbehavior.chosen', 'select');
 
 $msg = '';
-$msg = JRequest::getVar('msg', '', 'post');
+$input = new JInput;
+$msg = $input->get('msg');
+//$msg = JRequest::getVar('msg', '', 'post');
 if ($msg) {
     echo $msg;
 }

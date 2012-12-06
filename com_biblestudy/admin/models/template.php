@@ -44,9 +44,11 @@ class BiblestudyModelTemplate extends JModelAdmin {
         $row = $this->getTable();
         //@todo Clean this up
         if (!isset($data)) {
-            $data = JRequest::get('post');
+            $input = new JInput;
+            $data = $input->post;
+            //$data = JRequest::get('post');
         }
-        $data['tmpl'] = JRequest::getVar('tmpl', '', 'post', 'string', JREQUEST_ALLOWRAW);
+        $data['tmpl'] = $input->get('tmpl', '', 'string');
 
         // Bind the form fields to the table
         if (!$row->bind($data)) {

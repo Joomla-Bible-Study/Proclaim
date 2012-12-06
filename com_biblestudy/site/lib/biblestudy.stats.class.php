@@ -26,7 +26,8 @@ class jbStats {
      * @return string
      */
     function top_score_site() {
-        $t = JRequest::getInt('t', 1, 'get');
+        $input = new JInput;
+        $t = $input->get('t', 1, 'int');
 
         $admin_params = getAdminsettings();
         $limit = $admin_params->get('popular_limit', '25');

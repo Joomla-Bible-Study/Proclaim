@@ -62,7 +62,8 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $params = $registry;
         $t = $params->get('teachertemplateid');
         if (!$t) {
-            $t = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $t = $input->get('t', 1, 'int');
         }
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.

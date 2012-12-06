@@ -62,7 +62,7 @@ class BiblestudyModelMessage extends JModelAdmin {
         //$data = JRequest::get('post');
 
         //Allows HTML content to come through to the database row
-        $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
+        $data['studytext'] = $input->get('studytext', '', 'string');
         $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
@@ -99,7 +99,7 @@ class BiblestudyModelMessage extends JModelAdmin {
         }
 
         //Get Tags
-        $vTags = JRequest::getVar('topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW);
+        $vTags = $input->get('topic_tags', '', 'string');
         $iTags = explode(",", $vTags);
 
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables');
@@ -185,8 +185,9 @@ class BiblestudyModelMessage extends JModelAdmin {
      */
     public function getTopics() {
         // do search in case of present study only, suppress otherwise
+        $input = new JInput;
         $translatedList = array();
-        if (JRequest::getVar('id', 0, null, 'int') > 0) {
+        if ($input->get('id', 0, 'int') > 0) {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 

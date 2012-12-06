@@ -76,7 +76,8 @@ class BiblestudyViewServer extends JViewLegacy {
      * @since 7.0.0
      */
     protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', true);
+        $input = new JInput;
+        $input->set('hidemainmenu', true);
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_SERVERS') . ': <small><small>[' . $title . ']</small></small>', 'servers.png');

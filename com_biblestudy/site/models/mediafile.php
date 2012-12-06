@@ -52,8 +52,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
         $registry = new JRegistry;
         $registry->loadString($admin[0]->params);
         $this->admin_params = $registry;
-
-        $array = JRequest::getVar('cid', 0, '', 'array');
+        $input = new JInput;
+        $array = $input->get('cid', 0, 'array');
         $this->setId((int) $array[0]);
     }
 
@@ -153,11 +153,11 @@ class BiblestudyModelMediafile extends JModelAdmin {
      */
     public function store() {
         $row = & $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
         //This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
-
-        $file = JRequest::getVar('file', null, 'files', 'array');
+        $files = new JInputFiles;
+        $file = $files->get('file');
         $filename_upload = $file['name'];
         if (isset($filename_upload)) {
             $name_bak = $data['filename'];
@@ -223,7 +223,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * @since   11.1
      */
     public function delete(&$pks) {
-        $cids = JRequest::getVar('cid', array(0), 'post', 'array');
+        $input = new JInput;
+        $cids = $input->get('cid', array(0), 'array');
 
         $row = & $this->getTable();
 

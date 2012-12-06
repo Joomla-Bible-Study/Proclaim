@@ -24,5 +24,6 @@ require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 
 $controller = JControllerLegacy::getInstance('biblestudy');
-$controller->execute(JRequest::getCmd('task'));
+$input = new JInput;
+$controller->execute($input->get('task','','cmd'));
 $controller->redirect();

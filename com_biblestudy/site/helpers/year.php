@@ -21,7 +21,8 @@ function getYearsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');

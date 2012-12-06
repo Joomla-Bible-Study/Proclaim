@@ -187,8 +187,9 @@ class relatedStudies {
         }
 
         $related = '<select onchange="goTo()" id="urlList"><option value="">' . JText::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
+        $input = new JInput;
         foreach ($studyrecords as $studyrecord) {
-            $related .= '<option value="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . JRequest::getInt('t', '1')) . '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin . '</option>';
+            $related .= '<option value="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1','int')) . '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin . '</option>';
         }
         $related .= '</select>';
 

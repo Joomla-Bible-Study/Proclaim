@@ -23,7 +23,8 @@ defined('_JEXEC') or die;
 </script>
 <?php
 $mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $admin_params = $this->admin_params;

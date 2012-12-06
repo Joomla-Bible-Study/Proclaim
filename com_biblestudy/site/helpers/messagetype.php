@@ -21,11 +21,13 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');
-    $addItemid = JRequest::getInt('Itemid', '', '');
+    $input = new JInput;
+    $addItemid = $input->get('Itemid', '', 'int');
     $messagetype = null;
     $teacherid = null;
     $template = $params->get('studieslisttemplateid', 1);

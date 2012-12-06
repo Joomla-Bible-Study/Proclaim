@@ -38,7 +38,8 @@ class BiblestudyViewLatest extends JViewLegacy {
         $query->order('studydate DESC LIMIT 1');
         $db->setQuery($query);
         $id = $db->loadResult();
-        $t = JRequest::getInt('t', '1', '');
+        $input = new JInput;
+        $t = $input->get('t', '1', 'int');
 
         $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $id . '&t=' . $t);
         $app = JFactory::getApplication();

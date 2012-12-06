@@ -62,10 +62,11 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
         $app = JFactory::getApplication('site');
 
         // Load state from the request.
-        $pk = JRequest::getInt('id');
+        $input = new JInput;
+        $pk = $input->get('id','','int');
         $this->setState('series.id', $pk);
-
-        $offset = JRequest::getUInt('limitstart');
+        $input = new JInput;
+        $offset = $input->get('limitstart','''int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -135,7 +136,8 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
      */
     function getTemplate() {
         if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $templateid = $input->get('t', 1, 'int');
             $query = 'SELECT *'
                     . ' FROM #__bsms_templates'
                     . ' WHERE published = 1 AND id = ' . $templateid;

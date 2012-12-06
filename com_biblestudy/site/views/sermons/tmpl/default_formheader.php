@@ -12,5 +12,6 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
+$input = new JInput;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1','int')); ?>" method="post">

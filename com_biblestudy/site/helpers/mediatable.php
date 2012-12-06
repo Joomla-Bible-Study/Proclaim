@@ -27,7 +27,8 @@ function getMediatable($params, $row, $admin_params) {
         return FALSE;
     }
     $mainframe = JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $database = JFactory::getDBO();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'filesize.php');
@@ -82,9 +83,9 @@ function getMediatable($params, $row, $admin_params) {
         $registry = new JRegistry;
         $registry->loadString($media->params);
         $itemparams = $registry;
-
-        $Itemid = JRequest::getInt('Itemid', '1', 'get');
-        $template = JRequest::getInt('t', '1', 'get');
+        $input = new JInput;
+        $Itemid = $input->get('Itemid', '1', 'int');
+        $template = $input->get('t', '1', 'int');
         $images = new jbsImages();
         $image = $images->getMediaImage($media->path2, $media->impath);
 

@@ -58,7 +58,8 @@ class biblestudyViewmessage extends JViewLegacy {
 
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $JApplication = new JApplication();
         $JApplication->setUserState($option . 'sid', $this->item->id);
         $JApplication->setUserState($option . 'sdate', $this->item->studydate);

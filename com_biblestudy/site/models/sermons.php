@@ -116,9 +116,9 @@ class BiblestudyModelSermons extends JModelList {
          * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
          */
         parent::populateState('study.studydate', 'DESC');
-
-        $limitstart = JRequest::getInt('limitstart');
-        $value = JRequest::getUInt('start');
+        $input = new JInput;
+        $limitstart = $input->get('limitstart','','int');
+        $value = $input->get('start','','int');
         $this->setState('list.start', $value);
     }
 
@@ -243,7 +243,8 @@ class BiblestudyModelSermons extends JModelList {
         $years = null;
 
         // See if we are getting itemid
-        $itemid = JRequest::getVar('Itemid');
+        $input = new JInput;
+        $itemid = $input->get('Itemid','','int');
         $application = JFactory::getApplication();
         $menu = $application->getMenu();
         $item = $menu->getItem($itemid);
@@ -410,8 +411,9 @@ class BiblestudyModelSermons extends JModelList {
         //Filter by book
         $book = $this->getState('filter.book');
         if (!empty($book)) {
-            $chb = JRequest::getInt('minChapt', '', 'post');
-            $che = JRequest::getInt('maxChapt', '', 'post');
+            $input = new JInput;
+            $chb = $input->get('minChapt', '', 'int');
+            $che = $input->get('maxChapt', '', 'int');
             if ($chb && $che) {
                 $query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin >= ' . $chb . ' AND study.chapter_end <= ' . $che . ') OR study.booknumber2 = ' . (int) $book);
             } else if ($chb) {
@@ -659,7 +661,8 @@ class BiblestudyModelSermons extends JModelList {
      */
     public function getTemplate() {
         if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $templateid = $input->get('t', 1, 'int');
             $db = $this->getDBO();
             $query = $db->getQuery(true);
             $query->select('*');

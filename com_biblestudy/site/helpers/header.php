@@ -33,7 +33,8 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
     include_once($path1 . 'elements.php');
 
     //Here we test to see if this is a sermon or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
-    $view = JRequest::getVar('view', 'get');
+    $input = new JInput;
+    $view = $input->get('view');
     if ($view == 'sermon' && $ismodule < 1) {
 
         $params->set('row1col1', $params->get('drow1col1'));

@@ -21,7 +21,8 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
     $user = JFactory::getUser();
     $db = JFactory::getDBO();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');
@@ -32,7 +33,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if (!$limit) {
         $limit = 10000;
     }
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $t = $input->get('t', 1, 'int');
     $menu = $mainframe->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;

@@ -40,11 +40,11 @@ class biblestudyViewpopup extends JViewLegacy {
         JViewLegacy::loadHelper('date');
         JViewLegacy::loadHelper('duration');
         JViewLegacy::loadHelper('params');
-
-        JRequest::setVar('tmpl', 'component');
-        $mediaid = JRequest::getInt('mediaid', '', 'get');
-        $close = JRequest::getInt('close', '0', 'get');
-        $this->player = JRequest::getInt('player', '1', 'get');
+        $input = new JInput;
+        $input->get('tmpl', 'component','string');
+        $mediaid = $input->get('mediaid', '', 'int');
+        $close = $input->get('close', '0', 'int');
+        $this->player = $input->get('player', '1', 'int');
 
         /*
          *  If this is a direct new window then all we need to do is perform hitPlay and close this window

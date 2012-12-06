@@ -32,7 +32,8 @@ class Dump_File {
         //@todo test if this will work.
         $Hit = '';
         $Hit = $this->hitDownloads($mid);
-        $template = JRequest::getInt('t', '1', 'get');
+        $input = new JInput;
+        $template = $input->get('t', '1', 'int');
         $db = JFactory::getDBO();
         //Get the template so we can find a protocol
         $query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = ' . $template;

@@ -10,8 +10,9 @@
 defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
-$message = JRequest::getVar('msg');
+$input = new JInput;
+$option = $input->get('option','','cmd');
+$message = $input->get('msg','','string');
 $database = JFactory::getDBO();
 $teacher_menu1 = $this->params->get('teacher_id');
 $teacher_menu = $teacher_menu1[0];
@@ -31,7 +32,7 @@ $teachers = $params->get('teacher_id');
 // @todo need to rework to be proper php and html outside php
 $listingcall = JViewLegacy::loadHelper('listing');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1','int')); ?>" method="post">
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
         <div id="bsheader">
             <h1 class="componentheading">
@@ -94,15 +95,7 @@ $listingcall = JViewLegacy::loadHelper('listing');
             if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {
                 echo $this->lists['books'] . ' ';
                 echo JText::_('JBS_STY_FROM_CHAPTER') . ' <input type="text" id="minChapt" name="minChapt" size="3"';
-                if (JRequest::getInt('minChapt', '', 'post')) {
-                    echo 'value="' . JRequest::getInt('minChapt', '', 'post') . '"';
-                }
-                echo '> ';
-                echo JText::_('JBS_STY_TO_CHAPTER') . ' <input type="text" id=maxChapt" name="maxChapt" size="3"';
-                if (JRequest::getInt('maxChapt', '', 'post')) {
-                    echo 'value="' . JRequest::getInt('maxChapt', '', 'post') . '"';
-                }
-                echo '> ';
+                
             }
             if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) {
                 echo $this->lists['teacher_id'];

@@ -67,7 +67,8 @@ class BiblestudyModelTeachers extends JModelList {
      */
     public function getTemplate() {
         if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $templateid = $input->get('t', 1, 'int');
             $db = $this->getDBO();
             $query = $db->getQuery(true);
             $query->select('*');

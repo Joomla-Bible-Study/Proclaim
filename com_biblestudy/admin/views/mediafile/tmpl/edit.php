@@ -30,7 +30,8 @@ $input = $app->input;
 //Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
-$option = JRequest::getCmd('option');
+$input = new JInput;
+$option = $input->get('option','','cmd');
 $study = $app->getUserState($option . 'sid');
 $sdate = $app->getUserState($option . 'sdate');
 $size = $app->getUserState($option . 'size');
@@ -174,7 +175,8 @@ function openConverter1()
 </script>
 <form
     action="<?php
-if (JRequest::getWord('layout') == 'modal') {
+    $input = new JInput;
+if ($input->get('layout','','string') == 'modal') {
     $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
@@ -209,7 +211,7 @@ if (JRequest::getWord('layout') == 'modal') {
     <div class="tab-content">
          <div class="tab-pane active" id="general">
 
-                <?php if (JRequest::getWord('layout', '') == 'modal') {?> 
+                <?php if ($input->get('layout', '','string') == 'modal') {?> 
                 <div class="control-group  form-inline">
                             <button type="button" onclick="submitbutton('mediafile.save');  ">
                                 <?php echo JText::_('JSAVE'); ?></button>

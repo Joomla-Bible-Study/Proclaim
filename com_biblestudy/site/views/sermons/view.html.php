@@ -53,15 +53,15 @@ class BiblestudyViewSermons extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-
-        $limitstart = JRequest::getInt('limitstart');
-        JRequest::setVar('start', $limitstart, 'get', 'true');
+        $input = new JInput;
+        $limitstart = $input->get('limitstart','','int');
+        $input->set('start', $limitstart);
         $state = $this->get('State');
         $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
         $items = $this->get('Items');
-        $this->limitstart = JRequest::getVar('start', 'int');
+        $this->limitstart = $input->get('start','' ,'int');
         $pagination = $this->get('Pagination');
         $pagelinks = $pagination->getPagesLinks();
         if ($pagelinks !== ''):
@@ -119,7 +119,7 @@ class BiblestudyViewSermons extends JViewLegacy {
                 JPluginHelper::importPlugin('content', 'scripturelinks');
                 break;
         }
-        $limitstart = JRequest::getVar('limitstart', 'int');
+        $limitstart = $input->get('limitstart','', 'int');
 
 
         $studies = $items;
@@ -163,7 +163,7 @@ class BiblestudyViewSermons extends JViewLegacy {
         $podcast = new podcastSubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $option = $input->get('option','','cmd');
         $itemparams = $mainframe->getPageParameters();
 
         //Prepare meta information (under development)

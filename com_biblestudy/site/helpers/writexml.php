@@ -259,7 +259,8 @@ function writeXML() {
             jimport('joomla.filesystem.file');
             JClientHelper::setCredentialsFromRequest('ftp');
             $ftp = JClientHelper::getCredentials('ftp');
-            $client = JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+            $input = new JInput;
+            $client = JApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
             $file = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
             $files[] = $file;
             // Try to make the template file writeable

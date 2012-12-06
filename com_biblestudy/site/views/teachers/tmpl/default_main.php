@@ -10,7 +10,8 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'route.php');
 $params = $this->params;
-$t = $params->get('teachertemplateid');
+$input = new JInput;
+$t = $input->get('t', 1, 'int');
 if (!$t) {
     $t = JRequest::getVar('t', 1, 'get', 'int');
 }

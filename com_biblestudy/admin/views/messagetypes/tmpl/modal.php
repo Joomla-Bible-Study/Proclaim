@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
-
-$function = JRequest::getCmd('function', 'jSelectMessagetype');
+$input = new JInput;
+$function = $input->get('function', 'jSelectMessagetype','cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>

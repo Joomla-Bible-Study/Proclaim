@@ -72,7 +72,8 @@ class BiblestudyViewTeacher extends JViewLegacy {
         } elseif (!$itemparams->get('metadesc')) {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
-        $t = JRequest::getInt('t', 'get', 1);
+        $input = new JInput;
+        $t = $input->get('t', 1, 'int');
         if (!$t) {
             $t = 1;
         }
@@ -92,7 +93,7 @@ class BiblestudyViewTeacher extends JViewLegacy {
         $item = $this->get('Item');
         //add the slug
         $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES)) . ':' . $item->id;
-        $id = JRequest::getInt('id', 'get');
+        $id = $input->get('id','', 'get');
         if ($id) {
             $item->id = $id;
         }
@@ -138,7 +139,7 @@ class BiblestudyViewTeacher extends JViewLegacy {
         }
 
         $this->item = $item;
-        $print = JRequest::getBool('print');
+        $print = $input->get('print','','bool');
         // build the html select list for ordering
         $this->assignRef('print', $print);
         $this->assignRef('params', $params);

@@ -113,7 +113,8 @@ class JBSMUpload
 	 */
 	public static function gettempfile()
 	{
-		$temp = JRequest::getVar('flupfile', '', 'POST', 'STRING');
+		$input = new JInput;
+        $temp = $input->get('flupfile', '', 'string');
 
 		return $temp;
 	}
@@ -143,8 +144,9 @@ class JBSMUpload
 	public static function getpath($url, $tempfile, $front = '')
 	{
 		jimport('joomla.filesystem.file');
-		$path = JRequest::getVar('upload_folder', '', 'POST', 'INT');
-		$server = JRequest::getVar('upload_server', '', 'POST', 'INT');
+        $input = new JInput;
+		$path = $input->get('upload_folder', '', 'int');
+		$server = $input->get('upload_server', '', 'int');
 		if ($server == '')
 		{
 			if ($tempfile)

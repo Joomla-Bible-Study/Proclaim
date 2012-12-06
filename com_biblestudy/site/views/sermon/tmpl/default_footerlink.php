@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 ?>
 <div class="listingfooter"><br />
     <?php
+    $input = new JInput;
     $link_text = $this->params->get('link_text');
     if (!$link_text) {
         $link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
@@ -18,12 +19,12 @@ defined('_JEXEC') or die;
     if ($this->params->get('view_link') > 0) {
         $t = $this->params->get('studieslisttemplateid');
         if (!$t) {
-            $t = JRequest::getVar('t', 1, 'get', 'int');
+            $t = $input->get('t', 1, 'int');
         }
         if (!isset($returnmenu)) {
             $returnmenu = 1;
         }
-        $Itemid = JRequest::getVar('Itemid', '', 'get');
+        $Itemid = $input->get('Itemid', '', 'int');
         if (!$Itemid) {
             $link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
         } else {

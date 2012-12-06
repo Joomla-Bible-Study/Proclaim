@@ -29,8 +29,8 @@ class jbsMedia {
      */
     function getMediaTable($row, $params, $admin_params) {
         //First we get some items from GET and instantiate the images class
-
-        $template = JRequest::getInt('t', '1', 'get');
+        $input = new JInput;
+        $template = $input->get('t', '1', 'int');
         $images = new jbsImages();
         $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once ($path1 . 'helper.php');
@@ -402,6 +402,7 @@ class jbsMedia {
      * @return string
      */
     function getPlayerCode($params, $itemparams, $player, $image, $media) {
+        $input = new JInput;
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'filesize.php');
         include_once($path1 . 'duration.php');
@@ -412,7 +413,7 @@ class jbsMedia {
         $frontcolor = $params->get('frontcolor', '0xFFFFFF');
         $lightcolor = $params->get('lightcolor', '0x000000');
         $screencolor = $params->get('screencolor', '0xFFFFFF');
-        $template = JRequest::getInt('t', '1', 'get');
+        $template = $input->get('t', '1', 'int');
         //Here we get more information about the particular media file
         $filesize = getFilesize($media->size);
         /**

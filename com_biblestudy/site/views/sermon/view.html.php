@@ -179,7 +179,8 @@ class BiblestudyViewSermon extends JViewLegacy {
             $this->_displayPagebreak($tpl);
             return;
         }
-        $print = JRequest::getBool('print');
+        $input = new JInput;
+        $print = $input->get('print','','bool');
         // build the html select list for ordering
 
         /*
@@ -198,7 +199,7 @@ class BiblestudyViewSermon extends JViewLegacy {
                     JPluginHelper::importPlugin('content', 'scripturelinks');
                     break;
             }
-            $limitstart = JRequest::getVar('limitstart', 'int');
+            $limitstart = $input->get('limitstart','', 'int');
             $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
             $article->studytext = $article->text;
             $study->studytext = $article->text;

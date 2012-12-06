@@ -80,9 +80,10 @@ class BiblestudyModelSermon extends JModelItem {
         $app = JFactory::getApplication('site');
 
         // Load state from the request.
-        $pk = JRequest::getInt('id');
+        $input = new JInput;
+        $pk = $input->get('id','','int');
         $this->setState('study.id', $pk);
-        $offset = JRequest::getUInt('limitstart');
+        $offset = $input->get('limitstart','','int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -180,9 +181,9 @@ class BiblestudyModelSermon extends JModelItem {
      */
     protected function storecomment() {
         $row = $this->getTable('commentsedit');
-
-        $data = JRequest::get('post');
-        $data['comment_text'] = JRequest::getVar('comment_text', '', 'post', 'string', JREQUEST_ALLOWRAW);
+        $input = new JInput;
+        $data = $input->post;
+        $data['comment_text'] = $input->get('comment_text', '', 'string');
         // Bind the form fields to the table
         if (!$row->bind($data)) {
             $this->setError($this->_db->getErrorMsg());
@@ -211,7 +212,8 @@ class BiblestudyModelSermon extends JModelItem {
      */
     public function getTemplate() {
         if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $templateid = $input->get('t', 1, 'int');
             $query = 'SELECT *'
                     . ' FROM #__bsms_templates'
                     . ' WHERE published = 1 AND id = ' . $templateid;

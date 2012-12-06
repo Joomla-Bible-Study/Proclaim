@@ -65,7 +65,8 @@ class BiblestudyModelTemplates extends JModelList {
      */
     protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
-        if ($layout = JRequest::getVar('layout')) {
+        $input = new JInput;
+        if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
 

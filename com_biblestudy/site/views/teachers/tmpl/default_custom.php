@@ -11,12 +11,13 @@ defined('_JEXEC') or die;
 
 $user = JFactory::getUser();
 $mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+ $input = new JInput;
+    $option = $input->get('option','','cmd');
 $params = $this->params;
 
 $t = $params->get('teachertemplateid');
 if (!$t) {
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $t = $input->get('t', 1, 'int');
 }
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 $admin_params = $this->admin_params;

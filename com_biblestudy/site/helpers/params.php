@@ -43,7 +43,8 @@ class BsmHelper extends JComponentHelper {
      * @return Object
      */
     public static function getTemplateparams() {
-        $pk = JRequest::getInt('t', 'get', '1');
+        $input = new JInput;
+        $pk = $input->get('t', '', 'int');
         $db = JFactory::getDBO();
         $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $pk;
         $db->setQuery($query);

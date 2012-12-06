@@ -29,14 +29,15 @@ class biblestudyModelcommentsedit extends JModelAdmin {
     protected function populateState() {
         $app = JFactory::getApplication('site');
         // Adjust the context to support modal layouts.
-        if ($layout = JRequest::getVar('layout')) {
+        $input = new JInput;
+        if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id');
+        $pks = $input->get('a_id');
         $this->pks = $pks;
         $this->setState('comment.id', $pks);
-        $option = JRequest::getCmd('option');
+        $option = $input->get('option','','cmd');
         $app = JFactory::getApplication();
         $app->setUserState($option . 'comment.id', $pks);
     }
@@ -75,8 +76,9 @@ class biblestudyModelcommentsedit extends JModelAdmin {
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('a_id');
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $pks = $input->get('a_id','','int');
+        $option = $input->get('option','','cmd');
         $app = JFactory::getApplication();
         $pks = $app->getUserState($option . 'comment.id');
         if ($pks) {
@@ -114,8 +116,8 @@ class biblestudyModelcommentsedit extends JModelAdmin {
      */
     function store() {
         $row = & $this->getTable();
-
-        $data = JRequest::get('post');
+        $input = new JInput;
+        $data = $input->post;
 
         // Bind the form fields to the  table
         if (!$row->bind($data)) {

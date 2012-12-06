@@ -25,9 +25,10 @@ class biblestudyViewInstall extends JViewLegacy {
      */
     public function display($tpl = null) {
 
-        $this->msg = JRequest::getVar('msg', '', 'post');
-        $this->jbsname = JRequest::getVar('jbsname');
-        $this->jbstype = JRequest::getVar('jbstype');
+        $input = new JInput;
+        $this->msg = $input->get('msg', '', 'post');
+        $this->jbsname = $input->get('jbsname');
+        $this->jbstype = $input->get('jbstype');
 
         if ($this->jbsname === NULL || $this->jbstype === NULL):
             JError::raiseWarning(500, JText::_('JBS_INS_WARNING_INSTALL'));

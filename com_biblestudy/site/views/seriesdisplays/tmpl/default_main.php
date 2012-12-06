@@ -10,7 +10,8 @@
 defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
 $listingcall = JViewLegacy::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);

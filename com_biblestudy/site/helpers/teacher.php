@@ -21,7 +21,8 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  */
 function getTeacher($params, $id, $admin_params) {
     $mainframe = JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $teacher = null;
@@ -29,9 +30,9 @@ function getTeacher($params, $id, $admin_params) {
     $teacherids = new stdClass();
     $t = $params->get('teachertemplateid');
     if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
+        $t = $input->get('t', 1, 'int');
     }
-    $viewtype = JRequest::getVar('view');
+    $viewtype = $input->get('view');
     if ($viewtype == 'sermons') {
         $teacherid = $params->get('listteachers');
         $teacherids = explode(",", $params->get('listteachers'));
@@ -87,10 +88,11 @@ function getTeacher($params, $id, $admin_params) {
  * @return string
  */
 function getTeacherLandingPage($params, $id, $admin_params) {
+    $input = new JInput;
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
     $user = JFactory::getUser();
-    $option = JRequest::getCmd('option');
+    $option = $input->get('option','','cmd');
     $JViewLegacy = new JViewLegacy();
     $JViewLegacy->loadHelper('image');
     $JViewLegacy->loadHelper('helper');
@@ -352,7 +354,8 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template) {
 
 
     $limit = '';
-    $nolimit = JRequest::getVar('nolimit', 'int', 0);
+    $input = new JInput;
+    $nolimit = $input->get('nolimit', '', 'int');
 
     if ($params->get('series_detail_limit')) {
         $limit = ' LIMIT ' . $params->get('series_detail_limit');

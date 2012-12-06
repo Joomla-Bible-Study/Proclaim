@@ -20,10 +20,11 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 function getEditlisting($admin_params, $params) {
 
     $mainframe = JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+    $input = new JInput;
+    $option = $input->get('option','','cmd');
     $database = JFactory::getDBO();
     $editlisting = null;
-    $message = JRequest::getVar('msg');
+    $message = $input->get('msg');
     $user = JFactory::getUser();
     $admin = new JBSAdmin();
     $allow = $admin->getPermission();

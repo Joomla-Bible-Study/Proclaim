@@ -40,7 +40,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
 
         $app = JFactory::getApplication();
         // Adjust the context to support modal layouts.
-        if ($layout = JRequest::getVar('layout')) {
+        $input = new JInput;
+        if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
         $params = $app->getParams();
@@ -59,8 +60,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         } else {
             $this->setState('filter.access', false);
         }
-
-        $this->setState('layout', JRequest::getCmd('layout'));
+        $input = new JInput;
+        $this->setState('layout', $input->get('layout','','cmd'));
     }
 
     /**
@@ -135,7 +136,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
      */
     function getTemplate() {
         if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
+            $input = new JInput;
+            $templateid = $input->get('t', 1, 'int');
             $db = $this->getDBO();
             $query = $db->getQuery(true);
             $query->select('*');
@@ -154,7 +156,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
      */
     function _buildContentWhere() {
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
+        $input = new JInput;
+        $option = $input->get('option','','cmd');
         $params = JComponentHelper::getParams($option);
         $default_order = $params->get('default_order');
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');

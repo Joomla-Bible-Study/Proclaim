@@ -11,8 +11,10 @@ defined('_JEXEC') or die;
 $listingcall = JViewLegacy::loadHelper('serieslist');
 $studylistcall = JViewLegacy::loadHelper('listing');
 $t = $this->params->get('serieslisttemplateid');
+$input = new JInput;
 if (!$t) {
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    
+    $t = $input->get('t', 1, 'int');
 }
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">

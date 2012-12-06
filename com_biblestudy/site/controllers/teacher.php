@@ -32,8 +32,9 @@ class BiblestudyControllerTeacher extends JControllerLegacy {
      * @return void
      */
     public function view() {
-        JRequest::setVar('view', 'teacher');
-        JRequest::setVar('layout', 'default');
+        $input = new JInput;
+        $input->set('view', 'teacher');
+        $input->set('layout', 'default');
 
         parent::display();
     }

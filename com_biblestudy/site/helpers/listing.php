@@ -32,7 +32,8 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
     include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'helper.php');
 
     //Here we test to see if this is a sermon or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
-    $view = JRequest::getVar('view', 'get');
+    $input = new JInput;
+    $view = $input->get('view');
     if ($view == 'sermon' && $ismodule < 1) {
 
         $params->set('row1col1', $params->get('drow1col1'));
@@ -659,15 +660,16 @@ function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, 
  * @return string
  */
 function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template) {
+    $input = new JInput;
     $filelinks = new JBSListing();
-    $Itemid = JRequest::getVar('Itemid');
+    $Itemid = $input->get('Itemid','','int');
     $column = '';
     $mime = ' AND #__bsms_mediafiles.mime_type = 1';
     $itemlink = $params->get('itemidlinktype');
     switch ($islink) {
 
         case 1 :
-            $Itemid = JRequest::getInt('Itemid', '', '');
+            $Itemid = $input->get('Itemid','','int');
             if (!$Itemid) {
                 $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
             } else {

@@ -31,7 +31,8 @@ function getTextlink($params, $row, $textorpdf, $admin_params, $template) {
     $intro = str_replace('"', '', $row->studyintro);
 
     $images = new jbsImages();
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $input = new JInput;
+    $t = $input->get('t', 1, 'int');
     if (!$template->text || !substr_count($template->text, '/')) {
         $i_path = 'media/com_biblestudy/images/textfile24.png';
         $textimage = $images->getImagePath($i_path);

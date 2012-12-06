@@ -241,7 +241,8 @@ class JBSMPodcast
 					$podfoot = '
                         </channel>
                         </rss>';
-					$client = JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+                        $input = new JInput;
+					$client = JApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
 					$file = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
 					$filewritten = $this->writeFile($file, $filecontent);
