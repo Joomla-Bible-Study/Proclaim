@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-
+JLoader::register('BiblestudyHelper', JPATH_COMPONENT.'/helpers/images.php');
 
 /**
  * Landing page list view class
@@ -83,8 +83,9 @@ class biblestudyViewLandingpage extends JViewLegacy {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        JViewLegacy::loadHelper('helper');
-        $showhide = getShowhide();
+        //JViewLegacy::loadHelper('helper');
+        $images = new jbsImages();
+        $showhide = $images->getShowhide();
         $document->addScriptDeclaration($showhide);
         $css = $params->get('css');
 

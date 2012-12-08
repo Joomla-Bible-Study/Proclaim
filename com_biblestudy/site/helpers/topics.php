@@ -9,7 +9,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+JLoader::register('BiblestudyHelper', JPATH_COMPONENT.'/helpers/translated.php');
 /**
  * Get Topics for LandingPage
  * @param object $params
@@ -109,8 +109,8 @@ function getTopicsLandingPage($params, $id, $admin_params) {
             }
             $topic .= "\n\t\t" . '<td class="landing_td">';
             $topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0' . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-
-            $topic .= getTopicItemTranslated($b);
+            $trans = new JBSMTranslated();
+            $topic .= $trans->getTopicItemTranslated($b);
 
             $topic .='</a>';
 

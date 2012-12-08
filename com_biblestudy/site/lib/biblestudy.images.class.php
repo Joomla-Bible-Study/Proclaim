@@ -22,7 +22,7 @@ class jbsImages {
      * @param string $path
      * @return \JObject
      */
-    function getImagePath($path) {
+    public function getImagePath($path) {
         $tmp = new JObject();
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
