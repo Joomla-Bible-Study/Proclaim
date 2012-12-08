@@ -59,10 +59,11 @@ class BiblestudyViewMessage extends JViewLegacy {
         $this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
         $input = new JInput;
         $option = $input->get('option','','cmd');
-        $input = $input->set('messageinfo',array('sid'=>$this->item->id,'sdate'=>$this->item->studydate));
+        $input->set('sid',$this->item->id);
+        $input->set('sdate',$this->item->studydate);
         
-        JApplication::setUserState($option . 'sid', $this->item->id);
-        JApplication::setUserState($option . 'sdate', $this->item->studydate);
+        //JApplication::setUserState($option . 'sid', $this->item->id);
+        //JApplication::setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');

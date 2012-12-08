@@ -22,7 +22,18 @@ require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
  * Bible Study Core Difines
  */
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+jimport('joomla.version');
+$version = new JVersion;
 
+if ($version->RELEASE == '3.0')
+{
+	$versionName = true;
+}
+else
+{
+	$versionName = false;
+}
+define('BIBLESTUDY_CHECKREL', $versionName);
 $controller = JControllerLegacy::getInstance('biblestudy');
 $input = new JInput;
 $controller->execute($input->get('task','','cmd'));

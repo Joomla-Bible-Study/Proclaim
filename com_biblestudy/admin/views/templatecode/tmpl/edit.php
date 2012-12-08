@@ -79,7 +79,7 @@ $input = $app->input;
                     if ($this->item->id == 0) {
                         echo $this->form->getInput('type');
                     } else {
-                        ?><label id="jform_type-lbl" for="jform_type" style="clear: none"><?php echo $this->type ?></label>
+                        ?><label id="jform_type-lbl" for="jform_type" style="clear: both"><?php echo $this->type ?></label>
                     <?php } ?>
                         
                     </div>
@@ -87,7 +87,9 @@ $input = $app->input;
                     <div class="control-label">
                         <?php echo $this->form->getLabel('templatecode'); ?>
                     </div>
-                    <div class="controls">
+                    <div class="clr"></div>
+                    <hr />
+                    <div class="editor-border">
                         <?php echo $this->form->getInput('templatecode', null, empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode); ?>
                     </div>
                 </div>

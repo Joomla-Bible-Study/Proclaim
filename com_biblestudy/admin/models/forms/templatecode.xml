@@ -32,7 +32,7 @@
         </field>
 	<field name="filename" type="text" label="JBS_TPLCODE_FILENAME" description="JBS_TPLCODE_FILENAME_DESC"
 		size="75" required="true" />
-        <field name="templatecode" type="editor" editor="codemirror|none" buttons="no" rows="20" cols="100" label="JBS_TPLCODE_CODE" description="JBS_TPLCODE_CODE_DESC"
+        <field name="templatecode" type="editor" editor="codemirror|none" buttons="no" rows="100" cols="500" label="JBS_TPLCODE_CODE" description="JBS_TPLCODE_CODE_DESC"
                 required="true" filter="raw"/>
 	<field name="asset_id" type="hidden" filter="unset" />
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"

@@ -73,12 +73,6 @@ class BiblestudyViewSermons extends JViewLegacy {
         JViewLegacy::loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
-        $admin_parameters = $this->get('Admin');
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadString($admin_parameters->params);
-        $this->admin_params = $registry;
-
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();

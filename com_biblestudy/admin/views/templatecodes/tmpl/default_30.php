@@ -96,16 +96,13 @@ $sortFields = $this->getSortFields();
      <table class="table table-striped" id="locations">
         <thead>
         <tr>
-            <th width="1%" class="nowrap center hidden-phone">
-                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
-                if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'message.saveorder');?>
-            </th>
+            
             <th width="1%"><input type="checkbox" name="checkall-toggle"
                                   value="" onclick="checkAll(this)" />
             </th>
             
             <th width="8%">
-                    <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
                 </th>
                 <th>
                         <?php echo JText::_('JBS_TPLCODE_FILENAME'); ?>
@@ -129,30 +126,7 @@ $sortFields = $this->getSortFields();
             $canChange = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
             ?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
-            <td class="order nowrap center hidden-phone">
-                <?php
-                if ($canChange) :
-                    $disableClassName = '';
-                    $disabledLabel = '';
-
-                    if (!$saveOrder) :
-                        $disabledLabel = JText::_('JORDERINGDISABLED');
-                        $disableClassName = 'inactive tip-top';
-                    endif;
-                    ?>
-                    <span class="sortable-handler hasTooltip <?php echo $disableClassName ?>"
-                          title="<?php echo $disabledLabel ?>">
-                                            <i class="icon-menu"></i>
-                                        </span>
-                    <input type="text" style="<?php if (BIBLESTUDY_CHECKREL): ?>display:none<?php endif; ?>"
-                           name="order[]"
-                           size="5" value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
-                    <?php else : ?>
-                    <span class="sortable-handler inactive">
-                                            <i class="icon-menu"></i>
-                                        </span>
-                    <?php endif; ?>
-            </td>
+            
             <td class="center hidden-phone">
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
@@ -161,11 +135,7 @@ $sortFields = $this->getSortFields();
                     <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
-             <td class="nowrap has-context">
-                <div class="pull-left">
-                     <?php echo JHtml::_('date', $this->escape($item->studydate, JText::_('DATE_FORMAT_LC4'))); ?>
-                </div>
-            </td>
+             
             <td class="nowrap has-context">
                 <div class="pull-left">
                     <?php if ($canEdit || $canEditOwn) : ?>

@@ -43,7 +43,7 @@
 
     <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
            description="JBS_STY_CREATE_DATE_DESC" class="inputbox" size="22"
-           format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
+           format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true" labelclass="control-label" />
 
     <field name="comments" type="radio" class="btn-group" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC" default="0">
         <option value="0">JBS_CMN_NO</option>
