@@ -43,7 +43,7 @@ class BiblestudyViewLatest extends JViewLegacy {
 
         $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $id . '&t=' . $t);
         $app = JFactory::getApplication();
-        $app->redirect($link);
+      //  $app->redirect($link);
     }
 
 }
