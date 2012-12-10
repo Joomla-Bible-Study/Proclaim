@@ -66,7 +66,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
         $pk = $input->get('id','','int');
         $this->setState('series.id', $pk);
         $input = new JInput;
-        $offset = $input->get('limitstart','''int');
+        $offset = $input->get('limitstart','','int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.

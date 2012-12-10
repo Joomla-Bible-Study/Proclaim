@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 /**
  * Get SeriesList
@@ -327,7 +328,7 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
     $items = $results;
     foreach ($items as $item) {
         // concat topic_text and concat topic_params do not fit, so translate individually
-        $topics_text = getConcatTopicItemTranslated($item);
+        $topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
         $item->topics_text = $topics_text;
     }
 

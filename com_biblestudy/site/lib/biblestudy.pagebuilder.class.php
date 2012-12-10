@@ -253,7 +253,7 @@ class JBSPagebuilder {
 
         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
         $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
-        $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
+        $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text, GROUP_CONCAT(DISTINCT t.params) as topic_params');
         $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
         //Join over users
