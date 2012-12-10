@@ -429,6 +429,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $JViewLegacy->loadHelper('helper');
     $series = null;
     $seriesid = null;
+
     $template = $params->get('serieslisttemplateid', 1);
     $limit = $params->get('landingserieslimit');
     if (!$limit) {
@@ -449,7 +450,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     }
     if ($language == '*' || !$language) {
         $langlink = '';
-    } elseif ($language != '*') {
+    } elseif ($language != '*' && isset($item->language)) {
         $langlink = '&amp;filter.languages=' . $item->language;
     }
     if ($menu_order) {
@@ -480,7 +481,7 @@ function getSeriesLandingPage($params, $id, $admin_params) {
     $items = $db->loadObjectList();
     $count = count($items);
 
-    if ($count > 0):
+    if ($count != 0):
         switch ($seriesuselimit) {
             case 0:
                 $series = "\n" . '<table class="landing_table" width="100%" >';

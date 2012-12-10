@@ -72,6 +72,7 @@ class biblestudyViewmessages extends JViewLegacy {
         if ($this->canDo->get('core.create')) {
             $this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit') . '">' . JText::_('JBS_CMN_NEW') . '</a>';
         }
+
         parent::display($tpl);
     }
 
