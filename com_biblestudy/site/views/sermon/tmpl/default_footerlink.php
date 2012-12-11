@@ -9,7 +9,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<div class="listingfooter"><br />
+<div class="listingfooter">
     <?php
     $input = new JInput;
     $link_text = $this->params->get('link_text');
