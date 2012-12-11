@@ -117,7 +117,7 @@ function getTeacherLandingPage($params, $id, $admin_params) {
     }
     if ($language == '*' || !$language) {
         $langlink = '';
-    } elseif ($language != '*') {
+    } elseif ($language != '*' && isset($item->language)) {
         $langlink = '&amp;filter.languages=' . $item->language;
     }
     if ($menu_order) {

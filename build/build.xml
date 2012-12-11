@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="biblestudy_package" default="build">
+<project name="biblestudy_package" basedir="." default="build">
     <echo description="Build for Joomla Bible Study, Please modify location as you need." />
     <!-- set global properties for this build -->
-    <property name="src" location="src"/>
-    <property name="build" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/"/>
-    <property name="src.test" location="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/tests/test"/>
-    <property name="dest.test" location="${build}/com_biblestudy/admin/views/test"/>
-    <property name="dist" location="dist"/>
-    <property name="comppkgversion" location="7.1.1"/>
+    <property name="src" value="src"/>
+    <property name="build" value="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/"/>
+    <property name="src.test" value="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/tests/test"/>
+    <property name="dest.test" value="${build}/com_biblestudy/admin/views/test"/>
+    <property name="dist" value="dist"/>
+    <property name="comppkgversion" value="7.1.1"/>
     <target name="reset">
         <echo message="Reset back to Dev State"/>
         <delete file="../com_biblestudy/admin/biblestudy.xml"/>
         <delete file="../com_biblestudy/admin/biblestudy.script.php"/>
         <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true"/>
         <delete file="../com_biblestudy/media/css/site/biblestudy.css"/>
-        <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" resource="${build}/com_biblestudy/biblestudy.xml"/>
+        <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" target="${build}/com_biblestudy/biblestudy.xml"/>
         <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php"
-                 resource="${build}/com_biblestudy/biblestudy.script.php"/>
+                 target="${build}/com_biblestudy/biblestudy.script.php"/>
         <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css"
-                 resource="${build}/com_biblestudy/media/css/biblestudy.css"/>
+                 target="${build}/com_biblestudy/media/css/biblestudy.css"/>
         <copy todir="${dest.test}">
             <fileset dir="${src.test}" includes="**"/>
         </copy>

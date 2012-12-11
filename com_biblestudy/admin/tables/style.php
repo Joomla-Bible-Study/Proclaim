@@ -119,9 +119,9 @@ class TableStyle extends JTable {
         $filename = $this->filename . '.css';
         $filecontent = $this->stylecode;
         $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filename;
+	    var_dump(JFile::write($file, $filecontent));
         if (!JFile::write($file, $filecontent)) {
-            $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
-            return false;
+	        throw new Exception(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
         }
         return parent::store($updateNulls);
     }

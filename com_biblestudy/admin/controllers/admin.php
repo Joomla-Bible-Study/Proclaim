@@ -10,6 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * Set the available masks for cleaning variables
+ */
+const JREQUEST_NOTRIM    = 1;
+const JREQUEST_ALLOWRAW  = 2;
+const JREQUEST_ALLOWHTML = 4;
+
 JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
 JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');

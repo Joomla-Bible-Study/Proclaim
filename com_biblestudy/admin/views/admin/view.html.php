@@ -80,12 +80,10 @@ class BiblestudyViewAdmin extends JViewLegacy
 		// End for database
 		$this->loadHelper('params');
 		$config = JFactory::getApplication();
-		$tmp_dest = $config->getCfg('tmp_path');
-		$this->temp_dest = $tmp_dest;
+		$this->tmp_dest = $config->getCfg('tmp_path');
 
 		$stats = new jbStats;
-		$playerstats = $stats->players();
-		$this->playerstats = $playerstats;
+		$this->playerstats = $stats->players();
 		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
 		$popups = $stats->popups();
 		$this->popups = $popups;
@@ -151,7 +149,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
-		$errors = count($this->errors);
+		//$errors = count($this->errors);
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
 		{
 			$this->errorCount++;
