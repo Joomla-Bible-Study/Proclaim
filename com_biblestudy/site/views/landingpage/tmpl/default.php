@@ -14,6 +14,7 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 JViewLegacy::loadHelper('listing');
 ?>
+
 <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsms_header">
         <h1 class="componentheading">
@@ -93,8 +94,8 @@ JViewLegacy::loadHelper('listing');
 
                 $showhideall = "<div id='showhide" . $i . "'>";
 
-                $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
-                $labellink = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay(' . "'showhide" . $showIt . "'" . ')">';
+                $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
+                $labellink = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
 
                 switch ($params->get('landing_hide', 0)) {
                     case 0:         // image only
