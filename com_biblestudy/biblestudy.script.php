@@ -30,7 +30,8 @@ class Com_BiblestudyInstallerScript
 	private $release = '8.0.0';
 
 	/**
-	 * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
+	 * Find minimum required joomla version for this extension.
+	 * It will be read from the version attribute (install tag) in the manifest file
 	 *
 	 * @var string
 	 */
@@ -61,12 +62,13 @@ class Com_BiblestudyInstallerScript
 		$jversion = new JVersion;
 
 		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
+		/** @noinspection PhpUndefinedMethodInspection */
 		$this->release = $parent->get("manifest")->version;
 
 		// Start DB factory
 		$db = JFactory::getDBO();
 
-		// Set the #__schemas version_id to the correct number so the update will occur if out of seqence.
+		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
 		$query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
 		$db->setQuery($query);
 		$extensionid = $db->loadResult();
@@ -83,18 +85,6 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		// Find mimimum required joomla version
-		$this->minimum_joomla_release = $parent
-				->get("manifest")
-				->attributes()->version;
-
-		if (version_compare($jversion->getShortVersion(), $this->minimum_joomla_release, 'lt'))
-		{
-			JFactory::getApplication()
-					->enqueueMessage('Cannot install com_biblestudy in a Joomla release prior to ' . $this->minimum_joomla_release, 'error');
-
-			return false;
-		}
 		// Copy the css file over to another location
 		$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
 		if (JFile::exists($src))
@@ -229,11 +219,7 @@ class Com_BiblestudyInstallerScript
 			{
 				$query = 'UPDATE #__schemas SET version_id = ' . $db->quote($this->release) . ' WHERE extension_id = ' . (int) $db->quote($extensionid);
 				$db->setQuery($query);
-				if (!$db->execute())
-				{
-					JFactory::getApplication()
-							->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
-				}
+				$db->execute();
 			}
 		}
 
@@ -248,16 +234,10 @@ class Com_BiblestudyInstallerScript
 		'{\"release\":\"" . $this->release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type
 				. "\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
 		$db->setQuery($query1);
-		if (!$db->execute())
-		{
-			JFactory::getApplication()
-					->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
-		}
+		$db->execute();
 
 		// An redirect to a new location after the install is completed.
-		$parent
-				->getParent()
-				->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
+		$parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
 	}
 
 	/**

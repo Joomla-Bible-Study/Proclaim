@@ -193,16 +193,16 @@ class biblestudyController extends JControllerLegacy {
             $mid = $input->get('mid', '0','int');
             $downloader = new Dump_File();
             $downloader->download($mid);
-
             die;
         }
     }
 
     /**
      * AV Player
-     * @return none
+     * @return null
      */
     public function avplayer() {
+		$input = new JInput;
         $task = $input->get('task','','cmd');
         if ($task == 'avplayer') {
             $input = new JInput;
@@ -226,7 +226,7 @@ class biblestudyController extends JControllerLegacy {
     /**
      * This function is supposed to generate the Media Player that is requested via AJAX
      * from the sermons view "default.php". It has not been implemented yet, so its not used.
-     * @return unknown_type
+     * @return null
      */
     public function inlinePlayer() {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
@@ -243,7 +243,7 @@ class biblestudyController extends JControllerLegacy {
         $option = $input->get('option','','cmd');
         jimport('joomla.filesystem.file');
         //get the server and folder id from the request
-        $serverid = $input('upload_server', '', 'int');
+        $serverid = $input->get('upload_server', '', 'int');
         $folderid = $input->get('upload_folder', '', 'int');
         $app = JFactory::getApplication();
         $app->setUserState($option, 'serverid', $serverid);
@@ -375,6 +375,7 @@ class biblestudyController extends JControllerLegacy {
         $input = new JInput;
         JRequest::checktoken() or jexit('Invalid Token');
         $option = $input->get('option','','cmd');
+		$layout = $input->get('layout','','string');
         $uploadmsg = '';
         $serverid = $input->get('upload_server', '', 'int');
         $folderid = $input->get('upload_folder', '', 'int');
