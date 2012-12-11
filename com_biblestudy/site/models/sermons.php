@@ -501,28 +501,51 @@ class BiblestudyModelSermons extends JModelList {
      */
     public function getTopics() {
         if (empty($this->_Topics)) {
+        try {
             $db = $this->getDBO();
-            $query = $db->getQuery(true);
-            $query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
-            $query->from('#__bsms_studies');
-            $db->select('#__bsms_studytopics');
-            $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id');
-            $db->select('#__bsms_topics');
-            $query->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id');
-            $query->where('#__bsms_topics.published = 1');
-            $query->order('#__bsms_topics.topic_text ASC');
-            $db->setQuery($query->__toString());
+            $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params 
+            FROM #__bsms_studies 
+            LEFT JOIN #__bsms_studytopics 
+            ON #__bsms_studies.id = #__bsms_studytopics.study_id 
+            LEFT JOIN #__bsms_topics 
+            ON #__bsms_topics.id = #__bsms_studytopics.topic_id 
+            WHERE #__bsms_topics.published = 1 
+            ORDER BY #__bsms_topics.topic_text ASC';
+            $db->setQuery($query);
+/*            $query = $db->getQuery(true);
+             $query->select('(topic.id, topic.topic_text');
+            $query->from('#__bsms_topics AS topic');
+            $query->select('studytopics.id, studytopics.params as topics_params');
+            $query->join('LEFT', '#__bsms_studytopics AS studytopics ON topic.id = studytopics.topic_id');
+            $query->where('topic.published = 1');
+            $query->order('topic.topic_text ASC');
+            $db->setQuery($query->__toString()); */
             $db_result = $db->loadObjectList();
-
+            if ($error = $db->getErrorMsg()) {
+                    throw new Exception($error);
+                }
+            if (empty($db_result)) {
+                    return JError::raiseError(404, JText::_('JBS_CMN_TOPICS_NOT_FOUND'));
+                }
             $output = array();
             foreach ($db_result as $i => $value) {
-                $value->text = getTopicItemTranslated($value);
+                $value->text = JBSMTranslated::getTopicItemTranslated($value);
 
                 $value->value = $value->id;
                 $output[] = $value;
             }
 
             $this->_Topics = $output;
+            }
+            catch (JException $e) {
+                if ($e->getCode() == 404) {
+                    // Need to go thru the error handler to allow Redirect to work.
+                    JError::raiseError(404, $e->getMessage());
+                } else {
+                    $this->setError($e);
+                    $this->_Topics = false;
+                }
+            }
         }
         return $this->_Topics;
     }
