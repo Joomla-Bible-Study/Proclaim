@@ -36,6 +36,7 @@ class BiblestudyControllerSermons extends JControllerLegacy {
 
     /**
      * Download?
+	 * @todo Fix ASAP Broken
      */
     public function download() {
         $abspath = JPATH_SITE;
@@ -53,7 +54,7 @@ class BiblestudyControllerSermons extends JControllerLegacy {
 
     /**
      * Avplayer
-     * @return none
+     * @return null
      */
     public function avplayer() {
         $input = new JInput;
@@ -62,7 +63,7 @@ class BiblestudyControllerSermons extends JControllerLegacy {
             $mediacode = JRequest::getVar('code');
             $this->mediaCode = $mediacode;
             echo $mediacode;
-            return;
+            return null;
         }
     }
 
@@ -78,7 +79,7 @@ class BiblestudyControllerSermons extends JControllerLegacy {
     /**
      * This function is supposed to generate the Media Player that is requested via AJAX
      * from the studiesList view "default.php". It has not been implemented yet, so its not used.
-     * @return unknown_type
+     * @return null
      * @deprecated since version 7.0.4
      */
     public function inlinePlayer() {

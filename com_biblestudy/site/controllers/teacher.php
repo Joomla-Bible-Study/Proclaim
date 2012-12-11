@@ -15,28 +15,31 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyControllerTeacher extends JControllerLegacy {
+class BiblestudyControllerTeacher extends JControllerLegacy
+{
 
-    /**
-     * constructor (registers additional tasks to methods)
-     * @return void
-     */
-    public function __construct() {
-        parent::__construct();
+	/**
+	 * constructor (registers additional tasks to methods)
+	 * @return void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
 
-        // Register Extra tasks
-    }
+		// Register Extra tasks
+	}
 
-    /**
-     * display the edit form
-     * @return void
-     */
-    public function view() {
-        $input = new JInput;
-        $input->set('view', 'teacher');
-        $input->set('layout', 'default');
+	/**
+	 * display the edit form
+	 * @return void
+	 */
+	public function view()
+	{
+		$input = new JInput;
+		$input->set('view', 'teacher');
+		$input->set('layout', 'default');
 
-        parent::display();
-    }
+		parent::display();
+	}
 
 }

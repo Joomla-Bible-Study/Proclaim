@@ -75,14 +75,17 @@ class biblestudyControllermessage extends JControllerForm {
         parent::cancel($key);
     }
 
-    /**
+	/**
      * Routine to save the topics(tags)
+	 *
      * @param array $pks is the id of the record being saved
      * @param array $data from post
+	 * @return boolean|null
+	 * @throws Exception
      * @since 7.0.2
      * @todo This may need to be optimized
      */
-    public function setTopics($pks, $data) {
+	public function setTopics($pks, $data) {
         if (empty($pks)) {
             $this->setError(JText::_('JBS_STY_ERROR_TOPICS_UPDATE'));
             return false;
@@ -113,12 +116,13 @@ class biblestudyControllermessage extends JControllerForm {
                 throw new Exception($db->getErrorMsg());
             }
         }
+		return null;
     }
 
     /**
      * Reset Hits
      */
-    public function resetHits() {
+	public function resetHits() {
         $msg = null;
         $input = new JInput;
         $id = $input->get('a_id', 0, 'int');

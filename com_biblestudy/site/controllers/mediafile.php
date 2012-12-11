@@ -21,8 +21,8 @@ class biblestudyControllermediafile extends JControllerForm {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
-     * @todo    We should rename this controler to "mediafile" and the list view controller
-     * to "mediafiles" so that the pluralization in 1.6 would work properly
+     * @todo    We should rename this controler to "mediafile" and the list view controller,
+     * @todo	to "mediafiles" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
      */
@@ -63,6 +63,7 @@ class biblestudyControllermediafile extends JControllerForm {
     }
     /**
      * Link to Docman Category Items
+	 * @todo This is brocken and not sure if needed.
      */
     public function docmanCategoryItems() {
         //hide errors and warnings
@@ -70,13 +71,14 @@ class biblestudyControllermediafile extends JControllerForm {
         $input = new JInput;
         $catId = $input->get('catId','','int');
 
-        $model = & $this->getModel('mediafilesedit');
-        $items = & $model->getdocManCategoryItems($catId);
+        $model = $this->getModel('mediafilesedit');
+        $items = $model->getdocManCategoryItems($catId);
         echo $items;
     }
 
     /**
      * Link to Sections May need to be Removed.
+	 * @todo This is brocken and not sure if needed.
      */
     public function articlesSectionCategories() {
         error_reporting(0);
@@ -90,6 +92,7 @@ class biblestudyControllermediafile extends JControllerForm {
 
     /**
      * Link to Articals Category Items
+	 * @todo This is brocken and not sure if needed.
      */
     public function articlesCategoryItems() {
         $input = new JInput;
@@ -103,6 +106,7 @@ class biblestudyControllermediafile extends JControllerForm {
 
     /**
      * Link to VertueMart Items
+	 * @todo This is brocken and not sure if needed.
      */
     public function virtueMartItems() {
         $input = new JInput;

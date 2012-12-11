@@ -38,7 +38,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
         $app = JFactory::getApplication();
         $menu = $app->getMenu();
         $item = $menu->getActive();
-        $params = $mainframe->getPageParameters();
+        $params = BsmHelper::getAdmin();
         $t = $params->get('t');
         if (!$t) {
             $t = 1;
@@ -124,6 +124,7 @@ class BiblestudyControllerSermon extends JControllerLegacy {
 
     /**
      * Begin scripture links plugin function
+	 * @todo brocken
      */
     public function biblegateway_link() {
         $input = new JInput;
