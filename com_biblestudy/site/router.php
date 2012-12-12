@@ -26,6 +26,8 @@ function biblestudyBuildRoute(&$query) {
     if (isset($query['view'])) {
         if ($query['view'] == 'mediafile'){ return $segments;}
         if ($query['view'] == 'message'){ return $segments;}
+        if ($query['view'] == 'comment'){ return $segments;}
+        if ($query['view'] == 'comments'){ return $segments;}
         $segments[] = $query['view'];
         unset($query['view']);
     }

@@ -43,14 +43,11 @@ $sortFields = $this->getSortFields();
     }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=comments'); ?>" method="post" name="adminForm" id="adminForm">
-    <?php if (!empty($this->sidebar)): ?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-        <div id="j-main-container" class="span10">
-        <?php else : ?>
+    
+    
+        
             <div id="j-main-container">
-            <?php endif; ?>
+           
     <div id="filter-bar" class="btn-toolbar">
         <div class="filter-search btn-group pull-left">
             <label for="filter_search" class="element-invisible"><?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?></label>
@@ -91,9 +88,9 @@ $sortFields = $this->getSortFields();
 
 	    <?php endif; ?>
     </div>
-    <div class="clearfix"> </div>
+    
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped" style="width: 100%;">
         <thead>
         <tr>
             <th width="1%">
@@ -107,9 +104,7 @@ $sortFields = $this->getSortFields();
             <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
             </th>
-            <th class="nowrap hidden-phone">
-                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'comment.access', $listDirn, $listOrder); ?>
-            </th>
+            
             <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
             </th>
@@ -119,10 +114,8 @@ $sortFields = $this->getSortFields();
             <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
             </th>
-            <th class="nowrap hidden-phone">
-				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-            </th>
-            <th width="1%" class="nowrap hidden-phone">
+            
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'comment.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
@@ -130,7 +123,7 @@ $sortFields = $this->getSortFields();
         <tbody>
         <?php
         foreach ($this->items as $i => $item) :
-            $link = JRoute::_('index.php?option=com_biblestudy&task=comment.edit&id=' . (int)$item->id);
+            $link = 'index.php?option=com_biblestudy&task=comment.edit&a_id=' . (int)$item->id;
             $canCreate = $user->authorise('core.create');
             $canEdit = $user->authorise('core.edit', 'com_biblestudy.comment.' . $item->id);
             $canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.comment.' . $item->id);
@@ -147,7 +140,7 @@ $sortFields = $this->getSortFields();
                 </div>
             </td>
 
-            <td class="nowrap has-context">
+            <td class=" has-context">
                 <div class="pull-left">
                     <?php if ($canEdit || $canEditOwn) : ?>
                     <a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
@@ -187,10 +180,8 @@ $sortFields = $this->getSortFields();
                     ?>
                 </div>
             </td>
-            <td class="small hidden-phone">
-                <?php echo $this->escape($item->access_level); ?>
-            </td>
-            <td class="nowrap has-context">
+           
+            <td class=" has-context">
                 <div class="pull-left">
                     <?php echo $item->full_name; ?>
                 </div>
@@ -200,22 +191,12 @@ $sortFields = $this->getSortFields();
                     <?php echo substr($item->comment_text,0,50); ?>
                 </div>
             </td>
-            <td class="nowrap has-context">
+            <td class=" has-context">
                 <div class="pull-left">
                    <?php echo $item->comment_date; ?>
                 </div>
             </td>
-            <td class="small hidden-phone">
-                <div class="pull-left">
-		            <?php if ($item->language == '*'): ?>
-		            <?php echo JText::alt('JALL', 'language'); ?>
-		            <?php else: ?>
-		            <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-		            <?php endif; ?>
-                </div>
-                </td>
-                
-            </td>
+           
             <td class="center hidden-phone">
                 <?php echo (int) $item->id; ?>
             </td>

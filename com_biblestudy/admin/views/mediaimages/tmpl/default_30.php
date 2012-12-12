@@ -96,8 +96,9 @@ $sortFields = $this->getSortFields();
     <table class="table table-striped" id="locations">
         <thead>
         <tr>
-            <th width="1%"><input type="checkbox" name="checkall-toggle"
-                                  value="" onclick="checkAll(this)" />
+            <th width="1%">
+                <input type="checkbox" name="checkall-toggle" value=""
+                       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
             <th>
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'media.published', $listDirn, $listOrder); ?>

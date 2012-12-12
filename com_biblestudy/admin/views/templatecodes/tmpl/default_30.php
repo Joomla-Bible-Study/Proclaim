@@ -97,8 +97,9 @@ $sortFields = $this->getSortFields();
         <thead>
         <tr>
             
-            <th width="1%"><input type="checkbox" name="checkall-toggle"
-                                  value="" onclick="checkAll(this)" />
+           <th width="1%">
+                <input type="checkbox" name="checkall-toggle" value=""
+                       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
             
             <th width="8%">

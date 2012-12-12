@@ -100,8 +100,9 @@ $sortFields = $this->getSortFields();
                 <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
                 if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'mediafile.saveorder');?>
             </th>
-            <th width="1%"><input type="checkbox" name="checkall-toggle"
-                                  value="" onclick="checkAll(this)" />
+            <th width="1%">
+                <input type="checkbox" name="checkall-toggle" value=""
+                       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
             <th width="5%">
                 <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
