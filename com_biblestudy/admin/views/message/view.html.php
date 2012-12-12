@@ -74,14 +74,17 @@ class BiblestudyViewMessage extends JViewLegacy {
         $this->canDo = JBSMHelper::getActions($type = 'message', $Itemid = $this->item->id);
         $host = JURI::base();
         $document = JFactory::getDocument();
-        JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        
         JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
         //$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
         if (BIBLESTUDY_CHECKREL){JHtml::_('jquery.framework');}
+        
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        JHtml::script('media/com_biblestudy/js/biblestudy.js');
         $script = "
-            \$j(document).ready(function() {
-                \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
+            jQuery(document).ready(function() {
+                jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
                 {
                     theme: 'jbs',
                     hintText: '" . JText::_('JBS_CMN_TOPIC_TAG') . "',
@@ -92,13 +95,14 @@ class BiblestudyViewMessage extends JViewLegacy {
                     prePopulate: " . $this->get('topics') . "
                 });
             });
-             ";
-        JHtml::script($script);
-        //$document->addScriptDeclaration($script);
+             "; 
+        //JHtml::script($script);
+        $document->addScriptDeclaration($script);
+        
+        JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
         //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
-        JHtml::script('media/com_biblestudy/js/biblestudy.js');
-        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        
 
        
         $this->setLayout("edit");

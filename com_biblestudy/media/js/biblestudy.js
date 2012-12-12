@@ -1,51 +1,51 @@
-$j(document).ready( function() {
-    $j('.btnPlay').click( function() {
-        var mediaId = $j(this).attr('alt');
-        var url = $j(this).attr('href');
+jQuery(document).ready( function() {
+    jQuery('.btnPlay').click( function() {
+        var mediaId = jQuery(this).attr('alt');
+        var url = jQuery(this).attr('href');
 
-        $j('.inlinePlayer:not(#media-'+mediaId+')').hide();
-        $j('.inlinePlayer').html('');
-        $j('#media-' + mediaId).toggle();
-        $j('#media-' + mediaId).load('index.php?option=com_biblestudy&view=studieslist&controller=studieslist&task=inlinePlayer&tmpl=component');
+        jQuery('.inlinePlayer:not(#media-'+mediaId+')').hide();
+        jQuery('.inlinePlayer').html('');
+        jQuery('#media-' + mediaId).toggle();
+        jQuery('#media-' + mediaId).load('index.php?option=com_biblestudy&view=studieslist&controller=studieslist&task=inlinePlayer&tmpl=component');
         return false;
     });
 
     /**
 	 * @title Add Study
 	 */
-    $j('#addReference').click(function() {
-        var newReference = $j('#reference').clone();
+    jQuery('#addReference').click(function() {
+        var newReference = jQuery('#reference').clone();
         var deleteButton = '<a href="#" class="referenceDelete">Delete</a>';
 
-        $j(newReference).children('#text').attr('value', '');
-        $j(newReference).children('#scripture').selectOptions('0');
+        jQuery(newReference).children('#text').attr('value', '');
+        jQuery(newReference).children('#scripture').selectOptions('0');
 
-        $j(newReference).append(deleteButton);
-        $j(newReference).appendTo('#references');
+        jQuery(newReference).append(deleteButton);
+        jQuery(newReference).appendTo('#references');
 
-        $j(".referenceDelete").bind('click', function() {
-            $j(this).parent("#reference").remove();
+        jQuery(".referenceDelete").bind('click', function() {
+            jQuery(this).parent("#reference").remove();
             return false;
         });
         return false;
     });
-    $j(".referenceDelete").click(function() {
-        $j(this).parent("#reference").remove();
+    jQuery(".referenceDelete").click(function() {
+        jQuery(this).parent("#reference").remove();
         return false;
     });
 
-    $j('.imgChoose').change(function(){
-        var targetImage = $j('#img'+$j(this).attr('id'));
+    jQuery('.imgChoose').change(function(){
+        var targetImage = jQuery('#img'+jQuery(this).attr('id'));
         var activeDir = targetImage.attr('src').split('/');
         activeDir.pop(); //Remove the previous image
 
-        if($j(this).val().substr(0,1) == 0) {
+        if(jQuery(this).val().substr(0,1) == 0) {
             targetImage.hide();
         } else {
             targetImage.show();
         }
 
-        targetImage.attr('src', activeDir.join('/') + '/' + $j(this).val());
+        targetImage.attr('src', activeDir.join('/') + '/' + jQuery(this).val());
     });
 
     /**
@@ -53,16 +53,16 @@ $j(document).ready( function() {
 	 */
 
     //Determine the type of template, and route to that function
-    $j('#type').change(function() {
-        eval($j('#type option:selected').attr('value') + '()');
+    jQuery('#type').change(function() {
+        eval(jQuery('#type option:selected').attr('value') + '()');
     });
 
 
     function canvasItemFunctions() {
-        $j('#canvasDeleteItem').click(function() {
+        jQuery('#canvasDeleteItem').click(function() {
             //Delete Item, and update JSON string
 
-            $j(this).parent('#canvasListItem').draggable(
+            jQuery(this).parent('#canvasListItem').draggable(
             {
                 handle: 'div#canvasDeleteItem'
             }
@@ -79,10 +79,10 @@ $j(document).ready( function() {
         var moveItem = '<div id="canvasMoveItem">&nbsp;</div>';
         var deleteItem = '<div id="canvasDeleteItem">&nbsp;</div>';
 
-        $j('.canvasItem').append(itemOptions);
-        $j('.canvasItem').append(moveItem);
-        $j('.canvasItem').append(deleteItem);
-        $j('.canvasItem').append('<div class="canvasItemName">' + itemLabel + '</div>');
+        jQuery('.canvasItem').append(itemOptions);
+        jQuery('.canvasItem').append(moveItem);
+        jQuery('.canvasItem').append(deleteItem);
+        jQuery('.canvasItem').append('<div class="canvasItemName">' + itemLabel + '</div>');
 
         canvasItemFunctions();
     }
@@ -94,7 +94,7 @@ $j(document).ready( function() {
     function tmplList () {
         var canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>';
 
-        $j('#tmplCanvas').append(canvasListItem);
+        jQuery('#tmplCanvas').append(canvasListItem);
         canvasItemControls('List Items');
     }
 

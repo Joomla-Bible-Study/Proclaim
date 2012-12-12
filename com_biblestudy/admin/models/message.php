@@ -185,7 +185,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      */
     public function getTopics() {
         // do search in case of present study only, suppress otherwise
-        $input = new JInput;
+        $input = new JInput; 
         $translatedList = array();
         if ($input->get('id', 0, 'int') > 0) {
             $db = $this->getDbo();
@@ -195,10 +195,10 @@ class BiblestudyModelMessage extends JModelAdmin {
             $query->from('#__bsms_studytopics AS studytopics');
 
             $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-            $query->where('studytopics.study_id = ' . JRequest::getVar('id', 0, null, 'int'));
+            $query->where('studytopics.study_id = ' . $input->get('id', 0, 'int'));
 
             $db->setQuery($query->__toString());
-            $topics = $db->loadObjectList();
+            $topics = $db->loadObjectList();  
             if ($topics) {
                 foreach ($topics as $topic) {
                     $text = JBSMTranslated::getTopicItemTranslated($topic);
