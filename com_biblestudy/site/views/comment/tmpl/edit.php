@@ -21,8 +21,8 @@ if (BIBLESTUDY_CHECKREL)
 	JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
-$params = $this->state->get('params');
-$params = $params->toArray();
+//$params = $this->state->get('params');
+//$params = $params->toArray();
 
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -44,7 +44,7 @@ $input = $app->input;
                                 <?php echo JText::_('JSAVE'); ?></button>
                             <button type="button" onclick="submitbutton('comment.cancel');  ">
                                 <?php echo JText::_('JCANCEL'); ?></button>
-                </div>
+ </div>
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
             <fieldset>
@@ -62,7 +62,14 @@ $input = $app->input;
                 <div class="tab-pane active" id="general">
                    <div class="control-group">
                        <div class="control-label">
-					        <?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
+					        <?php echo $this->form->getLabel('id'); ?></div>
+                       <div class="controls"> 
+                            <?php echo $this->form->getInput('id'); ?>
+                       </div>
+                    </div>
+                    <div class="control-group">
+                       <div class="control-label">
+                            <?php echo $this->form->getLabel('comment_text'); ?>
                        </div>
                        <div class="controls">
                             <?php echo $this->form->getInput('comment_text'); ?>
@@ -154,7 +161,7 @@ $input = $app->input;
 
 
            
-        </div>
+        
      </fieldset>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>

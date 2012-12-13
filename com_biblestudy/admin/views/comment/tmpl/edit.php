@@ -57,7 +57,14 @@ $input = $app->input;
                 <div class="tab-pane active" id="general">
                    <div class="control-group">
                        <div class="control-label">
-					        <?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
+					        <?php echo $this->form->getLabel('id'); ?></div>
+                       <div class="controls"> 
+                            <?php echo $this->form->getInput('id'); ?>
+                       </div>
+                    </div>
+                    <div class="control-group">
+                       <div class="control-label">
+                            <?php echo $this->form->getLabel('comment_text'); ?>
                        </div>
                        <div class="controls">
                             <?php echo $this->form->getInput('comment_text'); ?>
@@ -95,14 +102,7 @@ $input = $app->input;
 							<?php echo $this->form->getInput('user_email'); ?>
                        </div>
                    </div>
-                   <div class="control-group">
-                       <div class="control-label">
-							<?php echo $this->form->getLabel('id'); ?>
-                       </div>
-                       <div class="controls">
-							<?php echo $this->form->getInput('id'); ?>
-                       </div>
-                   </div>
+                  
                 </div>
 
                     <?php if ($this->canDo->get('core.admin')): ?>
@@ -149,7 +149,7 @@ $input = $app->input;
 
 
            
-        </div>
+        
      </fieldset>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>

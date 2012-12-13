@@ -47,19 +47,25 @@ class BiblestudyViewComment extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->form = $this->get("Form");
+		//$input = new JInput; $a_id = $input->get('a_id','int'); dump($a_id);
+        $this->form = $this->get("Form");
 		$this->item = $this->get("Item"); 
 		$this->state = $this->get("State");
 		$this->canDo = JBSMHelper::getActions($this->item->id, 'comment');
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-
+        //$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+        $document->addStyleSheet(JURI::base().'administrator/templates/isis/css/template.css');
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
+        //check permissions to enter comments
+        if (!$this->canDo->get('core.edit')) {
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
 		// Set the toolbar
 		$this->addToolbar();
 

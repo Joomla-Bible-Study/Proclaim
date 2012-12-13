@@ -30,6 +30,28 @@ class BiblestudyModelComment extends JModelAdmin
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
+/**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @since	1.6
+     */
+    protected function populateState() {
+        $app = JFactory::getApplication('site');
+        // Adjust the context to support modal layouts.
+        $input = new JInput;
+        if ($layout = $input->get('layout')) {
+            $this->context .= '.' . $layout;
+        }
+        // Load state from the request. We use a_id to avoid collisions with the router
+        $pks = $input->get('a_id');
+        $this->pks = $pks;
+        $this->setState('comment.id', $pks);
+        $option = $input->get('option','','cmd');
+        $app = JFactory::getApplication();
+        $app->setUserState($option . 'comment.id', $pks);
+    }
 	/**
 	 * Batch copy items to a new category or current.
 	 *
