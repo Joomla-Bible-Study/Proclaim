@@ -379,6 +379,7 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/controllers/templateslist.php',
 			'/administrator/components/com_biblestudy/controllers/topicslist.php',
 			'/administrator/components/com_biblestudy/controllers/topicsedit.php',
+			'/administrator/components/com_biblestudy/controllers/message.php',
 			'/administrator/components/com_biblestudy/models/forms/commentsedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/foldersedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/locationsedit.xml',
@@ -443,7 +444,7 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/tables/teacheredit.php',
 			'/administrator/components/com_biblestudy/tables/topicsedit.php',
 			'/administrator/components/com_biblestudy/tables/templateedit.php',
-			'/administrator/components/com_biblestudy/tables/topicsedit.php',
+			'/administrator/components/com_biblestudy/tables/message.php',
 			'/administrator/components/com_biblestudy/helpers/version.php',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.ini',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
@@ -502,6 +503,7 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/views/templateedit',
 			'/administrator/components/com_biblestudy/views/templateslist',
 			'/administrator/components/com_biblestudy/views/topicslist',
+			'/administrator/components/com_biblestudy/views/message',
 			'/administrator/components/com_biblestudy/views/topicsedit',);
 
 		foreach ($files as $file)
