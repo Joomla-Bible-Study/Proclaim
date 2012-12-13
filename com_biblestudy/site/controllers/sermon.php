@@ -9,6 +9,9 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+if (!BIBLESTUDY_CHECKREL)
+	jimport('joomla.application.component.controllerform');
+
 /**
  * @package BibleStudy.Site
  * @since   7.0.0
@@ -141,6 +144,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
+		$this->input = new JInput();
+
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
 		$layout = $this->input->get('layout', 'edit');

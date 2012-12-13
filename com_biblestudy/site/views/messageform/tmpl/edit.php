@@ -15,13 +15,17 @@ if (BIBLESTUDY_CHECKREL) {
 	JHtml::_('behavior.calendar');
 }
 JHtml::_('behavior.formvalidation');
-$params = $this->form->getFieldsets('params');
+
+// Create shortcut to parameters.
+$params = $this->state->get('params');
+
 $app    = JFactory::getApplication();
 $input  = $app->input;
 ?>
+
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&a_id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="adminForm">
+      method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 <div class="btn-toolbar">
     <div class="btn-group">
         <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('sermon.save')">
@@ -42,9 +46,6 @@ $input  = $app->input;
     <li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
     <li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
     <li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
-	<?php if ($this->canDo->get('core.admin')): ?>
-    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-	<?php endif ?>
 </ul>
 <div class="tab-content">
 <!-- Begin Tabs -->
@@ -77,7 +78,6 @@ $input  = $app->input;
         <div class="control-label">
 			<?php echo $this->form->getLabel('studyintro'); ?>
         </div>
-        <div class="clr"></div>
         <div class="controls">
 			<?php echo $this->form->getInput('studyintro'); ?>
         </div>
@@ -86,7 +86,6 @@ $input  = $app->input;
         <div class="control-label">
 			<?php echo $this->form->getLabel('studytext'); ?>
         </div>
-        <div class="clr"></div>
         <div class="controls">
 			<?php echo $this->form->getInput('studytext'); ?>
         </div>
@@ -252,7 +251,6 @@ $input  = $app->input;
         <div class="control-label">
 			<?php echo $this->form->getLabel('topics'); ?>
         </div>
-        <div class="clr"></div>
         <div class="controls">
 			<?php echo $this->form->getInput('topics'); ?>
         </div>
@@ -320,7 +318,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('access'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('access'); ?></li>
+			<?php echo $this->form->getInput('access'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -328,7 +326,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('language'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('language'); ?></li>
+			<?php echo $this->form->getInput('language'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -336,7 +334,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('id'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('id'); ?></li>
+			<?php echo $this->form->getInput('id'); ?>
         </div>
     </div>
 </div>
@@ -363,9 +361,10 @@ $input  = $app->input;
 		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
         <div class="control-group">
             <div class="control-label">
+				<?php echo $field->label; ?>
             </div>
             <div class="controls">
-				<?php echo $field->label; ?><?php echo $field->input; ?>
+				<?php echo $field->input; ?>
             </div>
         </div>
 
@@ -382,7 +381,6 @@ $input  = $app->input;
         </tr>
         </thead>
         <tbody>
-
 		<?php
 		if (count($this->mediafiles) > 0) :
 			foreach ($this->mediafiles as $i => $item) :
@@ -431,19 +429,9 @@ $input  = $app->input;
         </tfoot>
     </table>
 </div>
-
-<?php if ($this->canDo->get('core.admin')): ?>
-<div class="tab-pane" id="permissions">
-
-	<?php echo $this->form->getInput('rules'); ?>
-
-</div>
-	<?php endif; ?>
 <input type="hidden" name="task" value=""/>
+<input type="hidden" name="return" value="<?php echo $this->return_page; ?>" />
 <?php echo JHtml::_('form.token'); ?>
-</div>
-</fieldset>
-</div>
 <!-- End Sidebar -->
 
 </div>

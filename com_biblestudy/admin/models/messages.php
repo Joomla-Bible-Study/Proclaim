@@ -297,7 +297,6 @@ class BiblestudyModelMessages extends JModelList {
      * @since 7.0
      */
     public function getTranslated($items = array()) {
-        require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
         $translate = new JBSMTranslated();
         foreach ($items as $item) {
             $item->bookname = JText::_($item->bookname);

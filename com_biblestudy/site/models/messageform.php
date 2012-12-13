@@ -11,7 +11,7 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
-
+if(BIBLESTUDY_CHECKREL)
 jimport('joomla.application.component.modeladmin');
 
 // Base this model on the backend version.
@@ -65,6 +65,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		// Get a row instance.
 		$table = $this->getTable();
+		var_dump($table);
 
 		// Attempt to load the row.
 		$return = $table->load($itemId);

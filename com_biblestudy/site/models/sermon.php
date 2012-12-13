@@ -9,7 +9,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+if(BIBLESTUDY_CHECKREL)
 jimport('joomla.application.component.modelitem');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
