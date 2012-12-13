@@ -56,6 +56,12 @@ class BiblestudyViewComments extends JViewLegacy {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+        $this->canDo = JBSMHelper::getActions('', 'comments');
+        //check permissions to enter studies
+        if (!$this->canDo->get('core.edit')) {
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
         //Add the admin css
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base().'administrator/templates/isis/css/template.css');
