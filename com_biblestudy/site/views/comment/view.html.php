@@ -47,7 +47,8 @@ class BiblestudyViewComment extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->form = $this->get("Form");
+		//$input = new JInput; $a_id = $input->get('a_id','int'); dump($a_id);
+        $this->form = $this->get("Form");
 		$this->item = $this->get("Item"); 
 		$this->state = $this->get("State");
 		$this->canDo = JBSMHelper::getActions($this->item->id, 'comment');
