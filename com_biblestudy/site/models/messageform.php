@@ -62,11 +62,9 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	{
 		// Initialise variables.
 		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('sermon.id');
-		var_dump($itemId);
 
 		// Get a row instance.
 		$table = $this->getTable();
-		var_dump($table);
 
 		// Attempt to load the row.
 		$return = $table->load($itemId);

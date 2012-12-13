@@ -15,8 +15,6 @@ JHtml::_('behavior.caption');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-http://localhost/j3/index.php?option=com_content&task=article.edit&a_id=1&return=aHR0cDovL2xvY2FsaG9zdC9qMy9pbmRleC5waHA/b3B0aW9uPWNvbV9jb250ZW50JnZpZXc9YXJ0aWNsZSZpZD0xJkl0ZW1pZD00MzU=&Itemid=435
-
 <h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
@@ -107,7 +105,7 @@ http://localhost/j3/index.php?option=com_content&task=article.edit&a_id=1&return
                     <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
                 </td>
                 <td class="center">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $item->id); ?>">
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=sermon.edit&a_id=' . (int) $item->id); ?>">
                         <?php echo $this->escape($item->studytitle); ?>
                     </a>
                 </td>

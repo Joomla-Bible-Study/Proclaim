@@ -96,6 +96,11 @@ class BiblestudyViewMessageform extends JViewLegacy {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
+	    // Create a shortcut to the parameters.
+	    $params	= &$this->state->params;
+
+	    //Escape strings for HTML output
+	    $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
         //$document = JFactory::getDocument();
        // $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');

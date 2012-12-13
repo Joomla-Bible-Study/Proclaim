@@ -28,7 +28,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'sermons';
+	protected $view_list = 'messages';
 
 	/**
 	 * Method to add a new record.

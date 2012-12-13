@@ -25,7 +25,7 @@ class BiblestudyControllerMediafiles extends JControllerAdmin {
      *
      * @param	array	$config	An optional associative array of configuration settings.
 
-     * @return	ContentControllerArticles
+     * @return	BibleStudyControllerMediafiles
      * @see		JController
      * @since	1.6
      */
