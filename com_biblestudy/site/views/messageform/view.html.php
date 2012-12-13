@@ -72,21 +72,13 @@ class BiblestudyViewMessageform extends JViewLegacy {
 	    $this->form			= $this->get('Form');
 	    $this->return_page	= $this->get('ReturnPage');
 
-	    if (empty($this->item->id)) {
-		    $authorised = $user->authorise('core.create', 'com_biblestudy');
-	    }
-	    else {
-		    $authorised = $this->item->params->get('access-edit');
-	    }
-
         $input = new JInput;
         $option = $input->get('option','','cmd');
         $JApplication = new JApplication();
         $JApplication->setUserState($option . 'sid', $this->item->id);
         $JApplication->setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
-        $this->setLayout('form');
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'message');
+        $this->canDo = JBSMHelper::getActions($this->item->id, 'sermon');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($isSite = true);
 
@@ -98,21 +90,21 @@ class BiblestudyViewMessageform extends JViewLegacy {
 	    $this->params = $params;
 	    $this->user   = $user;
 
-        $canDo = JBSMHelper::getActions($this->item->id, 'message');
+        $canDo = JBSMHelper::getActions($this->item->id, 'sermon');
 
         if (!$canDo->get('core.edit')) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
 
-        $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-ui.core.min.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+        //$document = JFactory::getDocument();
+       // $document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-ui.core.min.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
+        //$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
+        //$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         $script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -128,12 +120,12 @@ class BiblestudyViewMessageform extends JViewLegacy {
             });
              ";
 
-        $document->addScriptDeclaration($script);
+        //$document->addScriptDeclaration($script);
 
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/jquery.tagit.css');
+        //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
+        //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/jquery.tagit.css');
 
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 
 	    $this->_prepareDocument();
         parent::display($tpl);

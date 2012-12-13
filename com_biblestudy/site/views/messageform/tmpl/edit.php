@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 JHtml::_('behavior.formvalidation');
 $params = $this->form->getFieldsets('params');
+var_dump($this->form->getInput('id'));
 ?>
 <div class="edit">
     <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&a_id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">

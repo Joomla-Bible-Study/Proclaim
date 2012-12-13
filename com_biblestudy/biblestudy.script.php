@@ -103,7 +103,8 @@ class Com_BiblestudyInstallerScript
 			Exceptions:
 		}
 
-		return null;
+		// Only allow to install on Joomla! 2.5.0 or later
+		return version_compare(JVERSION, '2.5.0', 'ge');
 	}
 
 	/**

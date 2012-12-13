@@ -14,12 +14,6 @@ defined('_JEXEC') or die;
 require_once JPATH_COMPONENT.'/helpers/route.php';
 
 /**
- * Joomla Core Toolbar
- */
-//require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
-
-JLoader::register('BibleStudyHelper', __DIR__ . '/helpers/content.php');
-/**
  * Bible Study Core Difines
  */
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
@@ -35,7 +29,6 @@ else
 	$versionName = false;
 }
 define('BIBLESTUDY_CHECKREL', $versionName);
-$controller = JControllerLegacy::getInstance('biblestudy');
-$input = new JInput;
-$controller->execute($input->get('task','','cmd'));
+$controller = JControllerLegacy::getInstance('Biblestudy');
+$controller->execute(JFactory::getApplication()->input->get('task','','cmd'));
 $controller->redirect();

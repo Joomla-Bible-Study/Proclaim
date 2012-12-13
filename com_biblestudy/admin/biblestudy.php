@@ -20,7 +20,6 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
 if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 {
 	LiveUpdate::handleRequest();
-
 	return;
 }
 

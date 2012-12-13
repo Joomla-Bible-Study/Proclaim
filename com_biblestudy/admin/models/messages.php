@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
+if (version_compare(JVERSION, '2.5', 'ge')){
+	jimport( 'joomla.application.component.modellist' );
+}
+
 /**
  * Message model class
  * @package BibleStudy.Admin
