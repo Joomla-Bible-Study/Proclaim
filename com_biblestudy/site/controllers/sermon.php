@@ -193,7 +193,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		$return = $this->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
-			return JURI::base();
+			return JURI::base() . 'index.php?option=com_biblestudy&view=messages';
 		} else {
 			return base64_decode($return);
 		}
