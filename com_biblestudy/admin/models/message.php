@@ -376,7 +376,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * @return	void
      * @since	1.6
      */
-    protected function prepareTable(&$table) {
+    protected function prepareTable($table) {
         jimport('joomla.filter.output');
         $date = JFactory::getDate();
         $user = JFactory::getUser();

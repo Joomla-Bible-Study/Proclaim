@@ -16,8 +16,9 @@ require_once JPATH_COMPONENT.'/helpers/route.php';
 /**
  * Joomla Core Toolbar
  */
-require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
+//require_once(JPATH_ADMINISTRATOR . '/includes/toolbar.php');
 
+JLoader::register('BibleStudyHelper', __DIR__ . '/helpers/content.php');
 /**
  * Bible Study Core Difines
  */

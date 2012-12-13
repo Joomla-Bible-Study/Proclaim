@@ -18,7 +18,7 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyViewmessage extends JViewLegacy {
+class BiblestudyViewMessageform extends JViewLegacy {
 
     /**
      * Form
@@ -31,6 +31,13 @@ class biblestudyViewmessage extends JViewLegacy {
      * @var array
      */
     protected $item;
+
+
+	/**
+	 * Return Page
+	 * @var string
+	 */
+	protected $return_page;
 
     /**
      * State
@@ -56,8 +63,22 @@ class biblestudyViewmessage extends JViewLegacy {
      */
     public function display($tpl = null) {
 
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+	    $app		= JFactory::getApplication();
+	    $user		= JFactory::getUser();
+
+	    // Get model data.
+	    $this->state		= $this->get('State');
+	    $this->item			= $this->get('Item');
+	    $this->form			= $this->get('Form');
+	    $this->return_page	= $this->get('ReturnPage');
+
+	    if (empty($this->item->id)) {
+		    $authorised = $user->authorise('core.create', 'com_biblestudy');
+	    }
+	    else {
+		    $authorised = $this->item->params->get('access-edit');
+	    }
+
         $input = new JInput;
         $option = $input->get('option','','cmd');
         $JApplication = new JApplication();
@@ -71,6 +92,11 @@ class biblestudyViewmessage extends JViewLegacy {
 
         $user = JFactory::getUser();
 
+	    // Create a shortcut to the parameters.
+	    $params	= &$this->state->params;
+
+	    $this->params = $params;
+	    $this->user   = $user;
 
         $canDo = JBSMHelper::getActions($this->item->id, 'message');
 
@@ -109,7 +135,56 @@ class biblestudyViewmessage extends JViewLegacy {
 
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 
+	    $this->_prepareDocument();
         parent::display($tpl);
     }
+
+	/**
+	 * Prepares the document
+	 */
+	protected function _prepareDocument()
+	{
+		$app		= JFactory::getApplication();
+		$menus		= $app->getMenu();
+		$pathway	= $app->getPathway();
+		$title 		= null;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		} else {
+			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
+		}
+
+		$title = $this->params->def('page_title', JText::_('JBS_FORM_EDIT_ARTICLE'));
+		if ($app->getCfg('sitename_pagetitles', 0) == 1) {
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+		$this->document->setTitle($title);
+
+		$pathway = $app->getPathWay();
+		$pathway->addItem($title, '');
+
+		if ($this->params->get('menu-meta_description'))
+		{
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+		}
+
+		if ($this->params->get('menu-meta_keywords'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
+	}
 
 }
