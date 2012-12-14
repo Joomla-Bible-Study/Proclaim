@@ -357,22 +357,8 @@ class JBSPagebuilder {
 function runContentPlugins($item, $params)
     {
         $offset = ''; //We don't need offset but it is a required argument for the plugin dispatcher
-        //Determine what plugins we want to run
-        $linkit = $params->get('show_scripture_link');
-        if ($linkit) 
-        {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-        }
-               
+        JPluginHelper::importPlugin('content');
+                       
         //Run content plugins
         $dispatcher	= JEventDispatcher::getInstance();
         $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $item, & $params, $offset));

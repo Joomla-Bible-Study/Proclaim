@@ -101,6 +101,18 @@ class BiblestudyViewTeacher extends JViewLegacy {
         $largeimage = $images->getTeacherImage($item->image, $item->teacher_image);
         $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
         $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+        if (isset($item->information))
+                {
+                    $item->text = $item->information;
+                    $information = $pagebuilder->runContentPlugins($item, $params);
+                    $item->information = $information->text;
+                }
+            if (isset($item->short))
+                {
+                    $item->text = $item->short;
+                    $short = $pagebuilder->runContentPlugins($item, $params);
+                    $item->short = $short->text;
+                }
         //Check to see if com_contact used instead
         if ($item->contact) {
             require_once JPATH_ROOT . DIRECTORY_SEPARATOR .'components'. DIRECTORY_SEPARATOR .'com_contact'. DIRECTORY_SEPARATOR .'models'. DIRECTORY_SEPARATOR .'contact.php';
@@ -135,7 +147,32 @@ class BiblestudyViewTeacher extends JViewLegacy {
         $limit = $params->get('studies', '20');
         $order = 'DESC';
         if ($params->get('show_teacher_studies') > 0) {
-            $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);
+            $studies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);
+            foreach ($studies as $i=>$study)
+            {
+                $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+                $studies[$i]->scripture1 = $pelements->scripture1;
+                $studies[$i]->scripture2 = $pelements->scripture2;
+                $studies[$i]->media = $pelements->media;
+                $studies[$i]->duration = $pelements->duration;
+                $studies[$i]->studydate = $pelements->studydate;
+                $studies[$i]->topics = $pelements->topics;
+                if (isset($pelements->study_thumbnail)):
+                    $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+                else:
+                    $studies[$i]->study_thumbnail = null;
+                endif;
+                if (isset($pelements->series_thumbnail)):
+                    $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+                else:
+                    $studies[$i]->series_thumbnail = null;
+                endif;
+                $studies[$i]->detailslink = $pelements->detailslink;
+                $studies[$i]->studyintro = $pelements->studyintro;
+                if (isset($pelements->secondary_reference)){$studies[$i]->secondary_reference = $pelements->secondary_reference;} else {$studies[$i]->secondary_reference = '';}
+                if (isset($pelements->sdescription)){$studies[$i]->sdescription = $pelements->sdescription;} else {$studies[$i]->sdescription = '';}
+            }
+            $this->teacherstudies = $studies;
         }
 
         $this->item = $item;

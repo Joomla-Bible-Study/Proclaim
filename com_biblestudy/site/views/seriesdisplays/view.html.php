@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
 
 /**
  * View class for SeriesDisplays
@@ -99,7 +100,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
 
         $uri = JFactory::getURI();
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-
+        $pagebuilder = new JBSPagebuilder();
         $items = $this->get('Items');
         $images = new jbsImages();
         //Adjust the slug if there is no alias in the row
@@ -111,6 +112,12 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
             $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
             $teacherimage = $images->getTeacherImage($item->thumb, $image2 = null);
             $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="' . $teacherimage->width . '" alt="" />';
+            if (isset($item->description))
+            {
+                $item->text = $item->description;
+                $description = $pagebuilder->runContentPlugins($item, $params);
+                $item->description = $description->text;
+            }
         }
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();

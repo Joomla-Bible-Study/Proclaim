@@ -101,26 +101,11 @@ class BiblestudyViewSermons extends JViewLegacy {
         foreach ($items AS $item) {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
         }
-        //Build the elements so they can be accessed through the $this->page array in the template
-        $dispatcher = JDispatcher::getInstance();
-        $linkit = $params->get('show_scripture_link', '0');
-        switch ($linkit) {
-            case 0:
-                break;
-            case 1:
-                JPluginHelper::importPlugin('content');
-                break;
-            case 2:
-                JPluginHelper::importPlugin('content', 'scripturelinks');
-                break;
-        }
-        $limitstart = $input->get('limitstart','', 'int');
-
-
+        
         $studies = $items;
         $pagebuilder = new JBSPagebuilder();
         foreach ($studies as $i => $study) {
-            $article = new stdClass();
+            
             $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
             $studies[$i]->scripture1 = $pelements->scripture1;
             $studies[$i]->scripture2 = $pelements->scripture2;
