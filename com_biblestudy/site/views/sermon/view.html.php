@@ -38,7 +38,7 @@ class BiblestudyViewSermon extends JViewLegacy {
     public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $study = $this->get('Item');
+        $study = $this->get('Item'); 
         $relatedstudies = new relatedStudies();
         $this->state = $this->get('State');
         $app = JFactory::getApplication();
@@ -78,18 +78,21 @@ class BiblestudyViewSermon extends JViewLegacy {
         endif;
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
-        //$dispatcher = JDispatcher::getInstance();
+        
         $dispatcher	= JEventDispatcher::getInstance();
         //Adjust the slug if there is no alias in the row
-        //Set the slug
         $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
         $pagebuilder = new JBSPagebuilder();
-        $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+        $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params); 
         $study->scripture1 = $pelements->scripture1;
         $study->scripture2 = $pelements->scripture2;
         $study->media = $pelements->media;
         $study->duration = $pelements->duration;
         $study->studydate = $pelements->studydate;
+        $study->studyintro = $pelements->studyintro;
+        $study->sdescription = $pelements->sdescription;
+        $study->studytext = $pelements->studytext;
+        if (isset($pelements->secondary_reference)){$study->secondary_reference = $pelements->secondary_reference;} else{$study->secondary_reference = '';}
         if (isset($pelements->topics)):
             $study->topics = $pelements->topics;
         else:
@@ -111,19 +114,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         else:
             $study->teacherimage = null;
         endif;
-        $article = new stdClass();
-        $article->text = $study->scripture1;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->scripture1 = $article->text;
-        $article->text = $study->scripture2;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->scripture2 = $article->text;
-        $article->text = $study->studyintro;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->studyintro = $article->text;
-        $article->text = $study->secondary_reference;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->secondary_reference = $article->text;
+      
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
 
@@ -181,44 +172,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         }
         $input = new JInput;
         $print = $input->get('print','','bool');
-        // build the html select list for ordering
-
-        /*
-         * Process the prepare content plugins
-         */
-
-        $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link');
-        if ($linkit) {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-
-            $offset = $this->state->get('list.offset');
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $offset));
-
-            $article->event = new stdClass;
-
-            $results = $dispatcher->trigger('onContentAfterTitle', array('com_biblestudy.sermon', &$article, &$params, $offset));
-            $article->event->afterDisplayTitle = trim(implode("\n", $results));
-
-            $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_biblestudy.sermon', &$article, &$params, $offset));
-            $article->event->beforeDisplayContent = trim(implode("\n", $results));
-
-            $results = $dispatcher->trigger('onContentAfterDisplay', array('com_biblestudy.sermon', &$article, &$params, $offset));
-            $article->event->afterDisplayContent = trim(implode("\n", $results));
-
-            $article->studytext = $article->text;
-            $study->studytext = $article->text;
-            $study->event = $article->event;
-        } //end if $linkit
+       
         $Biblepassage = new showScripture();
         $this->passage = $Biblepassage->buildPassage($study, $params);
 

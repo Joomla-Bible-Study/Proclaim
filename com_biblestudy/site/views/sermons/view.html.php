@@ -124,12 +124,6 @@ class BiblestudyViewSermons extends JViewLegacy {
             $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
             $studies[$i]->scripture1 = $pelements->scripture1;
             $studies[$i]->scripture2 = $pelements->scripture2;
-            $article->text = $studies[$i]->scripture1;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
-            $studies[$i]->scripture1 = $article->text;
-            $article->text = $studies[$i]->scripture2;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
-            $studies[$i]->scripture2 = $article->text;
             $studies[$i]->media = $pelements->media;
             $studies[$i]->duration = $pelements->duration;
             $studies[$i]->studydate = $pelements->studydate;
@@ -145,12 +139,9 @@ class BiblestudyViewSermons extends JViewLegacy {
                 $studies[$i]->series_thumbnail = null;
             endif;
             $studies[$i]->detailslink = $pelements->detailslink;
-            $article->text = $studies[$i]->studyintro;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
-            $studies[$i]->studyintro = $article->text;
-            $article->text = $studies[$i]->secondary_reference;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
-            $studies[$i]->secondary_reference = $article->text;
+            $studies[$i]->studyintro = $pelements->studyintro;
+            if (isset($pelements->secondary_reference)){$studies[$i]->secondary_reference = $pelements->secondary_reference;} else {$studies[$i]->secondary_reference = '';}
+            if (isset($pelements->sdescription)){$studies[$i]->sdescription = $pelements->sdescription;} else {$studies[$i]->sdescription = '';}
         }
         $this->study = $studies;
         $this->items = $items;
