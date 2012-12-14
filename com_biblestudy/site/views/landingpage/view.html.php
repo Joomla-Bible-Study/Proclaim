@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 JLoader::register('BiblestudyHelper', JPATH_COMPONENT.'/helpers/images.php');
+JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/helper.php');
 
 /**
  * Landing page list view class
@@ -83,22 +84,28 @@ class biblestudyViewLandingpage extends JViewLegacy {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        //JViewLegacy::loadHelper('helper');
+        JViewLegacy::loadHelper('helper');
         $images = new jbsImages();
         $showhide = $images->getShowhide();
-        $document->addScriptDeclaration($showhide);
+        //$document->addScriptDeclaration($showhide);
+        
         $css = $params->get('css');
-
+         if (BIBLESTUDY_CHECKREL){JHtml::_('jquery.framework');}
         //Import Scripts
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        JHtml::script('media/com_biblestudy/js/biblestudy.js');
+        JHtml::script('media/com_biblestudy/js/jquery.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        //$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 
         //Import Stylesheets
-        $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
+         JHtml::stylesheet('media/com_biblestudy/css/general.css');
+        //$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         if ($css <= "-1"):
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+             JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
+            //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         else:
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+            JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
+            //$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         endif;
 
         $url = $params->get('stylesheet');

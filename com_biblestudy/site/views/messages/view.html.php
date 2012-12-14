@@ -49,29 +49,34 @@ class biblestudyViewmessages extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
+
+	    $items = $this->get('Items');
+	    $this->pagination = $this->get('Pagination');
+	    $this->state = $this->get('State');
+
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-        $this->canDo = JBSMHelper::getActions('', 'studiesedit');
-        $this->state = $this->get('State');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
+        $this->canDo = JBSMHelper::getActions('', 'message');
+		var_dump($this->canDo);
         $this->books = $this->get('Books');
         $this->teachers = $this->get('Teachers');
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
+	    $modelView = $this->getModel();
+	    $this->items = $modelView->getTranslated($items);
 
         $user = JFactory::getUser();
 
-        if (!$this->canDo->get('core.edit')) {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-        }
+        //if (!$this->canDo->get('core.edit')) {
+        //    JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+        //    return false;
+        //}
         //Puts a new record link at the top of the form
-        if ($this->canDo->get('core.create')) {
+        //if ($this->canDo->get('core.create')) {
             $this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit') . '">' . JText::_('JBS_CMN_NEW') . '</a>';
-        }
+        //}
 
         parent::display($tpl);
     }

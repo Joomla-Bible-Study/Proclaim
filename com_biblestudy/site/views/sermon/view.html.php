@@ -40,7 +40,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         $mainframe = JFactory::getApplication();
         $study = $this->get('Item');
         $relatedstudies = new relatedStudies();
-
+        $this->state = $this->get('State');
         $app = JFactory::getApplication();
         $menu = $app->getMenu();
         $item = $menu->getActive();
@@ -57,8 +57,8 @@ class BiblestudyViewSermon extends JViewLegacy {
         $registry = new JRegistry();
         $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
-        //@todo need to move to module bad way to code this.
-        // Convert item paremeters into objects
+        //@todo need to move to model bad way to code this.
+        // Convert item parameters into objects
         $registry = new JRegistry;
         $registry->loadString($study->params);
         $itemparams = $registry;
@@ -78,8 +78,8 @@ class BiblestudyViewSermon extends JViewLegacy {
         endif;
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
-        $dispatcher = JDispatcher::getInstance();
-
+        //$dispatcher = JDispatcher::getInstance();
+        $dispatcher	= JEventDispatcher::getInstance();
         //Adjust the slug if there is no alias in the row
         //Set the slug
         $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
@@ -186,6 +186,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         /*
          * Process the prepare content plugins
          */
+
         $article->text = $study->studytext;
         $linkit = $params->get('show_scripture_link');
         if ($linkit) {
@@ -199,10 +200,24 @@ class BiblestudyViewSermon extends JViewLegacy {
                     JPluginHelper::importPlugin('content', 'scripturelinks');
                     break;
             }
-            $limitstart = $input->get('limitstart','', 'int');
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
+
+            $offset = $this->state->get('list.offset');
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $offset));
+
+            $article->event = new stdClass;
+
+            $results = $dispatcher->trigger('onContentAfterTitle', array('com_biblestudy.sermon', &$article, &$params, $offset));
+            $article->event->afterDisplayTitle = trim(implode("\n", $results));
+
+            $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_biblestudy.sermon', &$article, &$params, $offset));
+            $article->event->beforeDisplayContent = trim(implode("\n", $results));
+
+            $results = $dispatcher->trigger('onContentAfterDisplay', array('com_biblestudy.sermon', &$article, &$params, $offset));
+            $article->event->afterDisplayContent = trim(implode("\n", $results));
+
             $article->studytext = $article->text;
             $study->studytext = $article->text;
+            $study->event = $article->event;
         } //end if $linkit
         $Biblepassage = new showScripture();
         $this->passage = $Biblepassage->buildPassage($study, $params);
@@ -225,7 +240,7 @@ class BiblestudyViewSermon extends JViewLegacy {
         $this->assignRef('params', $params);
         $this->assignRef('study', $study);
         $this->assignRef('article', $article);
-        $this->assignRef('passage_link', $passage_link);
+        //$this->assignRef('passage_link', $passage_link);
 
         parent::display($tpl);
     }

@@ -25,7 +25,7 @@ class BiblestudyControllerMessages extends JControllerAdmin {
      *
      * @param	array	$config	An optional associative array of configuration settings.
 
-     * @return	ContentControllerArticles
+     * @return	BibleStudyControllerMessages
      * @see		JController
      * @since	1.6
      */

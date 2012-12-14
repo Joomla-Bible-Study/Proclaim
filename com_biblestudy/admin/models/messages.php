@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
+if (version_compare(JVERSION, '2.5', 'ge')){
+	jimport( 'joomla.application.component.modellist' );
+}
+
 /**
  * Message model class
  * @package BibleStudy.Admin
@@ -293,7 +297,6 @@ class BiblestudyModelMessages extends JModelList {
      * @since 7.0
      */
     public function getTranslated($items = array()) {
-        require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
         $translate = new JBSMTranslated();
         foreach ($items as $item) {
             $item->bookname = JText::_($item->bookname);

@@ -163,6 +163,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 			$this->errorCount++;
 		}
 
+		$this->setLayout('edit');
+
 		// Set the toolbar
 		$this->addToolbar();
 
