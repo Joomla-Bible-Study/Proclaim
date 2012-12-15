@@ -38,7 +38,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$app = JFactory::getApplication();
 
 		// Load state from the request.
-		$pk = $app->input->getInt('a_id');
+		$pk = $app->input->getInt('a_id', '0');
 		$this->setState('sermon.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');
