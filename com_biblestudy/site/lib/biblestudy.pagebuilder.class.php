@@ -40,6 +40,7 @@ class JBSPagebuilder {
      * @return string
      */
     function buildPage($item, $params, $admin_params) {
+        
         $item->tp_id = '1';
         $images = new jbsImages();
         //media files image, links, download
@@ -57,6 +58,10 @@ class JBSPagebuilder {
             $page->scripture1 = getScripture($params, $item, $esv, $scripturerow);
         } else {
             $page->scripture1 = '';
+        }
+        if (!$item->secondary_reference)
+        {
+            $item->secondary_reference = '';
         }
         //scripture 2
         $esv = 0;
@@ -105,7 +110,63 @@ class JBSPagebuilder {
         } else {
             $page->teacherimage = '';
         }
-        return $page;
+        //studytext
+        if (!isset($item->studytext))
+        {
+            $item->studytext = '';
+        }
+        if (!isset($item->secondary_reference))
+        {
+            $item->secondary_reference = '';
+        }
+        if (!isset($item->sdescription))
+        {
+            $item->sdescription = '';
+        }
+        if($params->get('show_scripture_link') == 0){return $page;}
+        else
+            {
+                //set the item for the plugin to $item->text //run content plugins
+                if ($page->scripture1) 
+                {
+                    $item->text = $page->scripture1;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->scripture1 = $item->text;
+                }
+                if ($page->scripture2) 
+                {
+                    $item->text = $page->scripture2;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->scripture2 = $item->text;
+                }
+                if ($item->studyintro) 
+                {
+                    $item->text = $item->studyintro;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->studyintro = $item->text;
+                }
+                if ($item->studytext) 
+                {
+                    $item->text = $item->studytext;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->studytext = $item->text;
+                }
+                if ($item->secondary_reference) 
+                {
+                    $item->text = $item->secondary_reference;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->secondary_reference = $item->text;
+                }
+                if ($item->sdescription) 
+                {
+                    $item->text = $item->sdescription;
+                    $item = $this->runContentPlugins($item, $params);
+                    $page->sdescription = $item->text;
+                }
+                return $page;
+            }
+        
+            
     }
 
     /**
@@ -287,5 +348,32 @@ class JBSPagebuilder {
 
         return $studies;
     }
-
+/**
+     * Run Content Plugins
+     * @param array $params
+     * @param array $item
+     * @return object
+     */
+function runContentPlugins($item, $params)
+    {
+        $offset = ''; //We don't need offset but it is a required argument for the plugin dispatcher
+        JPluginHelper::importPlugin('content');
+                       
+        //Run content plugins
+        $dispatcher	= JEventDispatcher::getInstance();
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $item, & $params, $offset));
+        
+        $item->event = new stdClass;
+        
+        $results = $dispatcher->trigger('onContentAfterTitle', array('com_biblestudy.sermon', &$item, &$params, $offset));
+        $item->event->afterDisplayTitle = trim(implode("\n", $results));
+        
+        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_biblestudy.sermon', &$item, &$params, $offset));
+        $item->event->beforeDisplayContent = trim(implode("\n", $results));
+        
+        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_biblestudy.sermon', &$item, &$params, $offset));
+        $item->event->afterDisplayContent = trim(implode("\n", $results));
+        
+        return $item;
+    }
 }

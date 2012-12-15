@@ -51,7 +51,7 @@ h2 {
         <div>
             <table class="sample">
                  <th colspan="2">Studies Codes (for all views)</th>
-                 <tr>  <td>To get the list, see each view</td><td><input type="text" size="75" onClick="this.select();" value="foreach ($this->items as $study){put code here}" /></td></tr>
+                 <tr>  <td>To get the list, see each view</td><td><input type="text" size="75" onClick="this.select();" value="foreach ($this->items as $study){put individual items here}" /></td></tr>
                  <tr><td>Title</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->studytitle;" /></td></tr>
                  <tr><td>Study Number</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->studynumber;" /></td></tr>
                  <tr><td>Description</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->studyintro;" /></td></tr>
@@ -65,6 +65,7 @@ h2 {
                  <tr><td>Topics</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->topics;" /></td></tr>
                  <tr><td>Study Thumbnail</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->study_thumbnail;" /></td></tr>
                  <tr><td>Series Thumbnail</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->series_thumbnail;" /></td></tr>
+                 <tr><td>Secondary Reference</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->secondary_reference;" /></td></tr>
                  <tr><td>Link to Details View</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->detailslink;" /></td></tr>
                  <tr><td>Topics</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->topics;" /></td></tr>
                  <tr><td>Teacher Name</td><td><input type="text" size="75" onClick="this.select();" value="echo $study->teachername;" /></td></tr>

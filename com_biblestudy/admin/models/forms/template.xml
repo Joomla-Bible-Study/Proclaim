@@ -677,7 +677,6 @@
                    label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK" description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC">
                 <option value="0">JBS_TPL_NO_PLUGINS</option>
                 <option value="1">JBS_TPL_ALL_PLUGINS</option>
-                <option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
             </field>
             <field name="show_passage_view" type="list" default="3"
                    label="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW" description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_DESC">

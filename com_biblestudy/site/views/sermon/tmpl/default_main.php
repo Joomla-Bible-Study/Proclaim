@@ -99,15 +99,9 @@ JViewLegacy::loadHelper('share');
     </table>
     <?php
     echo $this->passage;
-    if ($this->item->params->get('show_scripture_link') > 0) {
-        ?>
-        <div style="width:80%">
-        <?php echo $this->article->studytext; ?>
-        </div>
-        <?php
-    } else {
-        echo $this->item->studytext;
-    }
+    
+        echo $this->study->studytext;
+    
     ?>
     <?php
     if ($this->item->params->get('showrelated') == 2) {

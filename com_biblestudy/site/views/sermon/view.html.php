@@ -72,6 +72,15 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Create a shortcut for $item.
 		$item = & $this->item;
 
+        if ($this->getLayout() == 'pagebreak') {
+            $this->_displayPagebreak($tpl);
+            return;
+        }
+        $input = new JInput;
+        $print = $input->get('print','','bool');
+       
+        $Biblepassage = new showScripture();
+        $this->passage = $Biblepassage->buildPassage($study, $params);
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
@@ -168,6 +177,10 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->item->media = $pelements->media;
 		$this->item->duration = $pelements->duration;
 		$this->item->studydate = $pelements->studydate;
+		$this->item->studyintro = $pelements->studyintro;
+		$this->item->sdescription = $pelements->sdescription;
+		$this->item->studytext = $pelements->studytext;
+		if (isset($pelements->secondary_reference)){$study->secondary_reference = $pelements->secondary_reference;} else{$study->secondary_reference = '';}
 		if (isset($pelements->topics)):
 			$this->item->topics = $pelements->topics; else:
 			$this->item->topics = '';
@@ -186,31 +199,6 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->teacherimage = null;
 		endif;
 
-		$article = new stdClass();
-		$article->text = $this->item->scripture1;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',
-																  & $article,
-																  & $this->item->params,
-																  $limitstart = null));
-		$this->item->scripture1 = $article->text;
-		$article->text = $this->item->scripture2;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',
-																  & $article,
-																  & $this->item->params,
-																  $limitstart = null));
-		$this->item->scripture2 = $article->text;
-		$article->text = $this->item->studyintro;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',
-																  & $article,
-																  & $this->item->params,
-																  $limitstart = null));
-		$this->item->studyintro = $article->text;
-		$article->text = $this->item->secondary_reference;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',
-																  & $article,
-																  & $this->item->params,
-																  $limitstart = null));
-		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 

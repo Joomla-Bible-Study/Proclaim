@@ -112,13 +112,32 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
         //  $wherefield = 'study.teacher_id';
         $limit = $params->get('series_detail_limit', 10);
         $seriesorder = $params->get('series_detail_order', 'DESC');
-        $results = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $seriesorder);
-        foreach ($results AS $study) {
-            $topic_text = JBSMTranslated::getTopicItemTranslated($study);
-            $study->topic_text = $topic_text;
-            dump ($study);
+        $studies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $seriesorder);
+        foreach ($studies AS $i=>$study) {
+            $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+            $studies[$i]->scripture1 = $pelements->scripture1;
+            $studies[$i]->scripture2 = $pelements->scripture2;
+            $studies[$i]->media = $pelements->media;
+            $studies[$i]->duration = $pelements->duration;
+            $studies[$i]->studydate = $pelements->studydate;
+            $studies[$i]->topics = $pelements->topics;
+            if (isset($pelements->study_thumbnail)):
+                $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+            else:
+                $studies[$i]->study_thumbnail = null;
+            endif;
+            if (isset($pelements->series_thumbnail)):
+                $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+            else:
+                $studies[$i]->series_thumbnail = null;
+            endif;
+            $studies[$i]->detailslink = $pelements->detailslink;
+            $studies[$i]->studyintro = $pelements->studyintro;
+            if (isset($pelements->secondary_reference)){$studies[$i]->secondary_reference = $pelements->secondary_reference;} else {$studies[$i]->secondary_reference = '';}
+            if (isset($pelements->sdescription)){$studies[$i]->sdescription = $pelements->sdescription;} else {$studies[$i]->sdescription = '';}
+            
         }
-        $this->seriesstudies = $results;
+        $this->seriesstudies = $studies;
         $this->page = $items;
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
@@ -155,25 +174,13 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy {
         }
         $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 
-
-        $limitstart = 0;
-        $article = new stdClass();
-        $article->text = $items->description;
-        $linkit = $params->get('show_scripture_link');
-        if ($linkit) {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-            $results = $dispatcher->trigger('onPrepareContent', array(& $article, & $params, $limitstart));
-            $items->description = $article->text;
-        } //end if $linkit
+        
+        if (isset($items->description))
+            {
+                $items->text = $items->description;
+                $description = $pagebuilder->runContentPlugins($items, $params);
+                $items->description = $description->text;
+            }        
         // End process prepare content plugins
         $this->assignRef('template', $template);
         $this->assignRef('params', $params);

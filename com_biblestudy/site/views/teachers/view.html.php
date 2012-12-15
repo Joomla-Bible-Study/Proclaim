@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 
 
 /**
@@ -104,12 +104,25 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $images = new jbsImages();
         // Get data from the model
         $items = $this->get('Items');
-
+        $pagebuilder = new JBSPagebuilder();
         foreach ($items as $i => $item) {
             $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
             $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $item->teachername . '" />';
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
             $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
+            if (isset($items[$i]->information))
+                {
+                    $items[$i]->text = $items[$i]->information;
+                    $information = $pagebuilder->runContentPlugins($items[$i], $params);
+                    $items[$i]->information = $information->text;
+                }
+            if (isset($items[$i]->short))
+                {
+                    $items[$i]->text = $items[$i]->short;
+                    $short = $pagebuilder->runContentPlugins($items[$i], $params);
+                    $items[$i]->short = $short->text;
+                }
+            
         }
 
         $pagination = $this->get('Pagination');
