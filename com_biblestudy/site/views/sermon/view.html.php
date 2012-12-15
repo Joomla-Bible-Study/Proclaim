@@ -80,7 +80,7 @@ class BiblestudyViewSermon extends JViewLegacy
         $print = $input->get('print','','bool');
        
         $Biblepassage = new showScripture();
-        $this->passage = $Biblepassage->buildPassage($study, $params);
+        $this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
@@ -177,10 +177,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->item->media = $pelements->media;
 		$this->item->duration = $pelements->duration;
 		$this->item->studydate = $pelements->studydate;
-		$this->item->studyintro = $pelements->studyintro;
-		$this->item->sdescription = $pelements->sdescription;
-		$this->item->studytext = $pelements->studytext;
-		if (isset($pelements->secondary_reference)){$study->secondary_reference = $pelements->secondary_reference;} else{$study->secondary_reference = '';}
+		if (isset($pelements->secondary_reference)){$this->item->secondary_reference = $pelements->secondary_reference;} else{$this->item->secondary_reference = '';}
 		if (isset($pelements->topics)):
 			$this->item->topics = $pelements->topics; else:
 			$this->item->topics = '';
@@ -198,7 +195,19 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->teacherimage = $pelements->teacherimage; else:
 			$this->item->teacherimage = null;
 		endif;
-
+		$article = new stdClass();
+		$article->text = $this->item->scripture1;
+		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->scripture1 = $article->text;
+		$article->text = $this->item->scripture2;
+		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->scripture2 = $article->text;
+		$article->text = $this->item->studyintro;
+		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->studyintro = $article->text;
+		$article->text = $this->item->secondary_reference;
+		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 
@@ -233,13 +242,12 @@ class BiblestudyViewSermon extends JViewLegacy
 			return;
 		}
 
-		//
-		// Process the content plugins.
-		//
+		/*
+         * Process the prepare content plugins
+         */
 		$article->text = $this->item->studytext;
 		$linkit = $this->item->params->get('show_scripture_link');
-		$linkits = 0;
-		if ($linkits) {
+		if ($linkit) {
 			switch ($linkit) {
 				case 0:
 					break;
@@ -250,36 +258,10 @@ class BiblestudyViewSermon extends JViewLegacy
 					JPluginHelper::importPlugin('content', 'scripturelinks');
 					break;
 			}
-
-			$offset = $this->state->get('list.offset');
-			$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon',
-																	  & $article,
-																	  & $this->item->params,
-																	  $offset));
-
-			$article->event = new stdClass;
-
-			$results = $dispatcher->trigger('onContentAfterTitle', array('com_biblestudy.sermon',
-																		 &$article,
-																		 &$this->item->params,
-																		 $offset));
-			$article->event->afterDisplayTitle = trim(implode("\n", $results));
-
-			$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_biblestudy.sermon',
-																			&$article,
-																			&$this->item->params,
-																			$offset));
-			$article->event->beforeDisplayContent = trim(implode("\n", $results));
-
-			$results = $dispatcher->trigger('onContentAfterDisplay', array('com_biblestudy.sermon',
-																		   &$article,
-																		   &$this->item->params,
-																		   $offset));
-			$article->event->afterDisplayContent = trim(implode("\n", $results));
-
+			$limitstart = $app->input->get('limitstart', 'int');
+			$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext = $article->text;
 			$this->item->studytext = $article->text;
-			$this->item->event = $article->event;
 		} //end if $linkit
 		$Biblepassage = new showScripture();
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);

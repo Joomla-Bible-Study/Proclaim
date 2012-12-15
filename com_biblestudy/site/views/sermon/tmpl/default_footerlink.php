@@ -12,12 +12,12 @@ defined('_JEXEC') or die;
 <div class="listingfooter">
     <?php
     $input = new JInput;
-    $link_text = $this->params->get('link_text');
+    $link_text = $this->item->params->get('link_text');
     if (!$link_text) {
         $link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
     }
-    if ($this->params->get('view_link') > 0) {
-        $t = $this->params->get('studieslisttemplateid');
+    if ($this->item->params->get('view_link') > 0) {
+        $t = $this->item->params->get('studieslisttemplateid');
         if (!$t) {
             $t = $input->get('t', 1, 'int');
         }

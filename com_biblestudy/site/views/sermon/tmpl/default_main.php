@@ -100,7 +100,7 @@ JViewLegacy::loadHelper('share');
     <?php
     echo $this->passage;
     
-        echo $this->study->studytext;
+        echo $this->item->studytext;
     
     ?>
     <?php

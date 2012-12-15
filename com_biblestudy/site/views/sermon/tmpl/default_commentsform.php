@@ -23,9 +23,9 @@ defined('_JEXEC') or die;
 </script>
 <?php
 $commentjava = "javascript:ReverseDisplay('comments')";
-switch ($this->params->get('link_comments', 0)) {
+switch ($this->item->params->get('link_comments', 0)) {
     case 0:
-        echo '<strong><a class="heading' . $this->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
+        echo '<strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
         . JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
         ?>
         <div id="comments" style="display:none;">
@@ -42,11 +42,11 @@ switch ($this->params->get('link_comments', 0)) {
                     </th></tr></thead>
             <?php
             $input = new JInput;
-            if (!$this->study->id) {
-                $this->study->id = $input->get('id','','int');
+            if (!$this->item->id) {
+                $this->item->id = $input->get('id','','int');
             }
             $db = JFactory::getDBO();
-            $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->study->id . ' ORDER BY c.comment_date ASC';
+            $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->item->id . ' ORDER BY c.comment_date ASC';
 
             $db->setQuery($query);
             $comments = $db->loadObjectList();
@@ -69,8 +69,8 @@ switch ($this->params->get('link_comments', 0)) {
         $allow = 0;
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
-        $show_comments = $this->params->get('show_comments');
-        $comment_access = $this->params->get('comment_access');
+        $show_comments = $this->item->params->get('show_comments');
+        $comment_access = $this->item->params->get('comment_access');
 
         if (in_array($show_comments, $groups)) {
             $allow == 9;
@@ -143,7 +143,7 @@ switch ($this->params->get('link_comments', 0)) {
                             </td>
                             <td>
                                 <?php
-                                if ($this->params->get('use_captcha') > 0) {
+                                if ($this->item->params->get('use_captcha') > 0) {
                                     // Begin captcha
                                     ?>
                                     <script language="javascript" type="text/javascript">
@@ -153,8 +153,8 @@ switch ($this->params->get('link_comments', 0)) {
                                     </script>
                                     <?php
                                     require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php');
-                                    $publickey = $this->params->get('public_key'); // you got this from the signup page
-                                    if ($this->params->get('public_key')) {
+                                    $publickey = $this->item->params->get('public_key'); // you got this from the signup page
+                                    if ($this->item->params->get('public_key')) {
                                         echo recaptcha_get_html($publickey);
                                     } else {
                                         echo JText::_('JBS_CMN_NO_KEY');
@@ -169,7 +169,7 @@ switch ($this->params->get('link_comments', 0)) {
                                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->studydetails->id ?>" />
                                 <input type="hidden" name="task" value="comment" />
                                 <input type="hidden" name="option" value="com_biblestudy" />
-                                <input type="hidden" name="published" id="published" value="<?php echo $this->params->get('comment_publish') ?>"  />
+                                <input type="hidden" name="published" id="published" value="<?php echo $this->item->params->get('comment_publish') ?>"  />
                                 <input type="hidden" name="view" value="sermon" />
 
                                 <input type="hidden" name="comment_date" id="comment_date" value="<?php echo date('Y-m-d H:i:s') ?>"  />
