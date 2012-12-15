@@ -8,8 +8,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link    http://www.JoomlaBibleStudy.org
  * */
+
 //No Direct Access
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 $BsmTmplTags = array(
 	'[studyDate]' => array(

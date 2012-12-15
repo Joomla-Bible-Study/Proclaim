@@ -19,12 +19,13 @@ JHtml::_('behavior.formvalidation');
 // Create shortcut to parameters.
 $params = $this->state->get('params');
 
-$app    = JFactory::getApplication();
-$input  = $app->input;
+$app = JFactory::getApplication();
+$input = $app->input;
+var_dump($this->form->getInput('id'));
 ?>
 
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&a_id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist'); ?>"
       method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 <div class="btn-toolbar">
     <div class="btn-group">
@@ -387,7 +388,7 @@ $input  = $app->input;
 				?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td align="center">
-					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int)$item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
                     <a class="btn btn-primary"
                        onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
                        title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
@@ -428,12 +429,12 @@ $input  = $app->input;
         </tr>
         </tfoot>
     </table>
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 </div>
-<input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $this->return_page; ?>" />
+</div>
 <?php echo JHtml::_('form.token'); ?>
 <!-- End Sidebar -->
-
-</div>
+</fieldset>
 </form>
 </div>

@@ -12,28 +12,27 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 
 JHTML::_('behavior.tooltip');
-$params = $this->params;
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
-$row = $this->study;
+$row = $this->item;
 // @todo need to clean up old code.
-$listingcall = JViewLegacy::loadHelper('listing');
-$sharecall = JViewLegacy::loadHelper('share');
+JViewLegacy::loadHelper('listing');
+JViewLegacy::loadHelper('share');
 ?>
 <div id="bsmHeader">
     <?php
-    if ($this->params->get('showpodcastsubscribedetails') == 1) {
+    if ($this->item->params->get('showpodcastsubscribedetails') == 1) {
         echo $this->subscribe;
     }
-    if ($this->params->get('showrelated') == 1) {
+    if ($this->item->params->get('showrelated') == 1) {
         echo $this->related;
     }
     ?>
     <div class="buttonheading">
 
         <?php
-        if ($this->params->get('show_print_view') > 0) {
+        if ($this->item->params->get('show_print_view') > 0) {
             echo $this->page->print;
         }
         ?>
@@ -41,28 +40,28 @@ $sharecall = JViewLegacy::loadHelper('share');
 
     <?php
     //Social Networking begins here
-    if ($this->admin_params->get('socialnetworking') > 0) {
+    if ($this->item->admin_params->get('socialnetworking') > 0) {
         ?>
         <div id="bsms_share">
             <?php
-            $social = getShare($this->detailslink, $row, $params, $this->admin_params);
+            $social = getShare($this->detailslink, $row, $this->item->params, $this->item->admin_params);
             echo $this->page->social;
             ?>
         </div>
     <?php } //End Social Networking     ?>
     <?php
-    if ($this->params->get('show_teacher_view') > 0) {
-        $teacher_call = JViewLegacy::loadHelper('teacher');
-        $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
+    if ($this->item->params->get('show_teacher_view') > 0) {
+        JViewLegacy::loadHelper('teacher');
+        $teacher = getTeacher($this->item->params, $row->teacher_id, $this->item->admin_params);
         echo $teacher;
         ?>
     </td>
     <td>
         <?php
     }
-    if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
-        $title_call = JViewLegacy::loadHelper('title');
-        $title = getTitle($this->params, $row, $this->admin_params, $this->template);
+    if ($this->item->params->get('title_line_1') + $this->item->params->get('title_line_2') > 0) {
+        JViewLegacy::loadHelper('title');
+        $title = getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
         echo $title;
     }
     ?>
@@ -71,28 +70,28 @@ $sharecall = JViewLegacy::loadHelper('share');
     <table id="bsmsdetailstable" cellspacing="0">
         <thead>
             <?php
-            if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
-                $headerCall = JViewLegacy::loadHelper('header');
-                $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_view'), $ismodule = 0);
+            if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1) {
+                JViewLegacy::loadHelper('header');
+                $header = getHeader($row, $this->item->params, $this->item->admin_params, $this->template, $showheader = $this->item->params->get('use_headers_view'), $ismodule = 0);
                 echo $header;
             }
             ?>
         </thead>
         <tbody>
-            <?php if ($this->params->get('list_items_view') == 1) { ?> <!-- Media table listing view -->
+            <?php if ($this->item->params->get('list_items_view') == 1) { ?> <!-- Media table listing view -->
                         <?php
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
                         $media = new jbsMedia();
-                        $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
+                        $listing = $media->getMediaTable($row, $this->item->params, $this->item->admin_params);
                         echo $listing;
                         ?>
                 <?php
             }
-            if ($params->get('list_items_view') == 0) {
+            if ($this->item->params->get('list_items_view') == 0) {
                 ?><!-- List items view -->
                         <?php
                         $oddeven = 'bsodd';
-                        $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+                        $listing = getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
                         echo $listing;
                         ?>
     <?php } ?>
@@ -100,23 +99,23 @@ $sharecall = JViewLegacy::loadHelper('share');
     </table>
     <?php
     echo $this->passage;
-    if ($this->params->get('show_scripture_link') > 0) {
+    if ($this->item->params->get('show_scripture_link') > 0) {
         ?>
         <div style="width:80%">
         <?php echo $this->article->studytext; ?>
         </div>
         <?php
     } else {
-        echo $this->study->studytext;
+        echo $this->item->studytext;
     }
     ?>
     <?php
-    if ($this->params->get('showrelated') == 2) {
+    if ($this->item->params->get('showrelated') == 2) {
         echo $this->related;
     }
     ?>
     <?php
-    if ($this->params->get('showpodcastsubscribedetails') == 2) {
+    if ($this->item->params->get('showpodcastsubscribedetails') == 2) {
         echo $this->subscribe;
     }
     ?>

@@ -15,7 +15,7 @@ $function = $input->get('function', 'jSelectStudy','cmd');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages&layout=modal&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&layout=modal&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter">
         <div class="filter-search fltlft">
             <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>

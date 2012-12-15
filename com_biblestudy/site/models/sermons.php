@@ -38,6 +38,7 @@ class BiblestudyModelSermons extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
+				'id', 'study.id',
                 'study.published',
                 'study.studydate',
                 'study.studytitle',
@@ -503,7 +504,7 @@ class BiblestudyModelSermons extends JModelList {
         if (empty($this->_Topics)) {
         try {
             $db = $this->getDBO();
-            $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params 
+            /* $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params
             FROM #__bsms_studies 
             LEFT JOIN #__bsms_studytopics 
             ON #__bsms_studies.id = #__bsms_studytopics.study_id 
@@ -511,21 +512,21 @@ class BiblestudyModelSermons extends JModelList {
             ON #__bsms_topics.id = #__bsms_studytopics.topic_id 
             WHERE #__bsms_topics.published = 1 
             ORDER BY #__bsms_topics.topic_text ASC';
-            $db->setQuery($query);
-/*            $query = $db->getQuery(true);
+            $db->setQuery($query); */
+            $query = $db->getQuery(true);
              $query->select('(topic.id, topic.topic_text');
             $query->from('#__bsms_topics AS topic');
             $query->select('studytopics.id, studytopics.params as topics_params');
             $query->join('LEFT', '#__bsms_studytopics AS studytopics ON topic.id = studytopics.topic_id');
             $query->where('topic.published = 1');
             $query->order('topic.topic_text ASC');
-            $db->setQuery($query->__toString()); */
+            $db->setQuery($query->__toString());
             $db_result = $db->loadObjectList();
             if ($error = $db->getErrorMsg()) {
                     throw new Exception($error);
                 }
             if (empty($db_result)) {
-                    return JError::raiseError(404, JText::_('JBS_CMN_TOPICS_NOT_FOUND'));
+                    return false;
                 }
             $output = array();
             foreach ($db_result as $i => $value) {

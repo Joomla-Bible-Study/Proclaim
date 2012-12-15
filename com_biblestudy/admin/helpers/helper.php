@@ -59,6 +59,7 @@ class JBSMHelper
      * Get ShowHide.
      *
      * @return string
+	 * @deprecated 7.1.8
      */
     static function getShowhide()
     {

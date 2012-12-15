@@ -19,9 +19,8 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/messages.p
  *
  * @package BibleStudy.Site
  * @since   7.0.0
- * @todo    need to redo model to Joomla Standers.
  */
-class BiblestudyModelMessageslist extends BiblestudyModelMessages
+class BiblestudyModelMessagelist extends BiblestudyModelMessages
 {
 
 	/**

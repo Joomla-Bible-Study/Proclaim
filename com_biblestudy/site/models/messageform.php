@@ -65,7 +65,6 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		// Get a row instance.
 		$table = $this->getTable();
-		var_dump($table);
 
 		// Attempt to load the row.
 		$return = $table->load($itemId);
@@ -79,11 +78,6 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		$properties = $table->getProperties(1);
 		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		// Compute selected asset permissions.
-		$user	= JFactory::getUser();
-		$userId	= $user->get('id');
-		$asset	= 'com_biblestudy.sermon.'.$value->id;
 
 		return $value;
 	}

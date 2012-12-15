@@ -25,19 +25,14 @@ if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 
-
-jimport('joomla.version');
-$version = new JVersion;
-
-if ($version->RELEASE == '3.0')
+if (version_compare(JVERSION, '3.0', 'ge'))
 {
-	$versionName = true;
+	define('BIBLESTUDY_CHECKREL', true);
 }
 else
 {
-	$versionName = false;
+	define('BIBLESTUDY_CHECKREL', false);
 }
-define('BIBLESTUDY_CHECKREL', $versionName);
 
 
 // Register helper class

@@ -17,7 +17,7 @@ jimport('joomla.application.component.controlleradmin');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyControllerMessages extends JControllerAdmin {
+class biblestudyControllerMessagelist extends JControllerAdmin {
 
     /**
      * Proxy for getModel
@@ -28,7 +28,7 @@ class biblestudyControllerMessages extends JControllerAdmin {
      *
      * @since 7.0.0
      */
-    public function &getModel($name = 'message', $prefix = 'biblestudyModel') {
+    public function &getModel($name = 'Messagelist', $prefix = 'BiblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
         return $model;
     }

@@ -31,7 +31,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'messages';
+	protected $view_list = 'messagelist';
 
 	/**
 	 * Method to add a new record.
@@ -198,7 +198,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		$return = $this->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
-			return JURI::base() . 'index.php?option=com_biblestudy&view=messages';
+			return JURI::base(); //. 'index.php?option=com_biblestudy&view=messagelist';
 		} else {
 			return base64_decode($return);
 		}

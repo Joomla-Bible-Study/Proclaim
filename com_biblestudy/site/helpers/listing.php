@@ -528,7 +528,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
             $params->set('row4col3', 100);
         }
         if ($params->get('row4col3') == 24) {
-            $elementid = getCustom($params->get('row4col3'), $params->get('r4c3custom'), $row, $params, $tempalte);
+            $elementid = getCustom($params->get('row4col3'), $params->get('r4c3custom'), $row, $params, $admin_params, $template);
             $elementid->headertext = $params->get('r4c3customlabel');
         } else {
             $elementid = getElementid($params->get('row4col3'), $row, $params, $admin_params, $template);
