@@ -21,7 +21,7 @@ $params = $this->state->get('params');
 
 $app = JFactory::getApplication();
 $input = $app->input;
-var_dump($this->form->getInput('id'));
+var_dump($this->form->getValue('a_id'));
 ?>
 
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
@@ -29,12 +29,12 @@ var_dump($this->form->getInput('id'));
       method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 <div class="btn-toolbar">
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('sermon.save')">
+        <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('message.save')">
             <i class="icon-ok"></i> <?php echo JText::_('JSAVE') ?>
         </button>
     </div>
     <div class="btn-group">
-        <button type="button" class="btn" onclick="Joomla.submitbutton('sermon.cancel')">
+        <button type="button" class="btn" onclick="Joomla.submitbutton('message.cancel')">
             <i class="icon-cancel"></i> <?php echo JText::_('JCANCEL') ?>
         </button>
     </div>
