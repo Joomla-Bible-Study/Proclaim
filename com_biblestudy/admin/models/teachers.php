@@ -30,6 +30,7 @@ class BiblestudyModelTeachers extends JModelList {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'teacher.id',
+				'title', 'teacher.title',
                 'catid', 'teacher.catid',
                 'access', 'teacher.access', 'access_level',
                 'published', 'teacher.published',
@@ -108,7 +109,7 @@ class BiblestudyModelTeachers extends JModelList {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'teacher.id, teacher.landing_show, teacher.list_show, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language, teacher.access'));
+                        'list.select', 'teacher.*'));
         $query->from('#__bsms_teachers AS teacher');
 
         // Join over the language

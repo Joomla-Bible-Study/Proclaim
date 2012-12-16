@@ -136,11 +136,18 @@ class BiblestudyModelMessages extends JModelList {
      */
     protected function populateState($ordering = null, $direction = null) {
 
+		$app = JFactory::getApplication();
+
         // Adjust the context to support modal layouts.
         $input = new JInput;
         if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 

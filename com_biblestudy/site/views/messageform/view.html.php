@@ -89,7 +89,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		// Create a shortcut to the parameters.
 		$params = & $this->state->params;
 
-		$this->params = $params;
+		//$this->params = $params;
 		$this->user = $user;
 
 		$canDo = JBSMHelper::getActions($this->item->id, 'sermon');
@@ -166,7 +166,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
 
-		$title = $this->params->def('page_title', JText::_('JBS_FORM_EDIT_ARTICLE'));
+		$title = $this->admin->params->def('page_title', '');
 		if ($app->getCfg('sitename_pagetitles', 0) == 1) {
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		} elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {

@@ -195,27 +195,13 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function getReturnPage()
 	{
-		$return = $this->input->get('return', null, 'base64');
+		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
-			return JURI::base(); //. 'index.php?option=com_biblestudy&view=messagelist';
+			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
 		} else {
 			return base64_decode($return);
 		}
-	}
-
-	/**
-	 * Function that allows child controller access to model data after the data has been saved.
-	 *
-	 * @param   JModelLegacy  $model      The data model object.
-	 * @param   array         $validData  The validated data.
-	 *
-	 * @return	void
-	 * @since	1.6
-	 */
-	protected function postSaveHook(JModelLegacy &$model, $validData)
-	{
-		$task = $this->getTask();
 	}
 
 	/**

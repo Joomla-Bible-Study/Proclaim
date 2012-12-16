@@ -33,7 +33,7 @@ class JBSMParams
 		$query = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bsms_admin')
-				->where('id = ' . (int)1);
+				->where("`id` = '1'");
 		$db->setQuery($query);
 		$admin = $db->loadObject();
 		$registry = new JRegistry();
@@ -53,17 +53,20 @@ class JBSMParams
 	public static function getTemplateparams()
 	{
 		$db = JFactory::getDbo();
-		$pk = JFactory::getApplication()->input->getInt('t', 'get', '1');
+		$pk = JFactory::getApplication()->input->getInt('t', '1');
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bams_template')
-				->where('id = ' . (int)$db->quote($pk));
+				->from('#__bsms_templates')
+				->where('published = 1 AND id = ' . $db->q($pk));
 		$db->setQuery($query);
 		$template = $db->loadObject();
-		$registry = new JRegistry();
-		$registry->loadString($template->params);
-		$template->params = $registry;
-		return $template;
+		if ($template) {
+			$registry = new JRegistry();
+			$registry->loadString($template->params);
+			$template->params = $registry;
+			return $template;
+		}
+		return false;
 	}
 
 }
