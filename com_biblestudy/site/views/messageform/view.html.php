@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
+JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 /**
  * View class for Message
@@ -81,15 +82,18 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$JApplication->setUserState($option . 'sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->canDo = JBSMHelper::getActions($this->item->id, 'sermon');
-		$this->loadHelper('params');
-		$this->admin = BsmHelper::getAdmin($isSite = true);
+		$this->admin = JBSMParams::getAdmin($isSite = true);
 
 		$user = JFactory::getUser();
 
 		// Create a shortcut to the parameters.
 		$params = & $this->state->params;
-
-		//$this->params = $params;
+		if (!$this->admin->params->def('page_title', '')) {
+			define('JBSPAGETITLE', 0);
+		}
+		$params->merge($this->admin->params);
+		$this->admin->params->merge($params);
+		$this->params = $params;
 		$this->user = $user;
 
 		$canDo = JBSMHelper::getActions($this->item->id, 'sermon');
@@ -165,8 +169,14 @@ class BiblestudyViewMessageform extends JViewLegacy
 		} else {
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
-
-		$title = $this->admin->params->def('page_title', '');
+		if (JBSPAGETITLE) {
+			$title = $this->params->def('page_title', '');
+		} else {
+			$title = JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY');
+		}
+		$isNew = ($this->item->id == 0);
+		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+		$title .= ' : ' . $state . ' : ' . $this->form->getValue('studytitle');
 		if ($app->getCfg('sitename_pagetitles', 0) == 1) {
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		} elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
