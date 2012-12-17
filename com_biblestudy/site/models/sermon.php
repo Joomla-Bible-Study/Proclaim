@@ -229,8 +229,9 @@ class BiblestudyModelSermon extends JModelItem
 	{
 		$row = $this->getTable('comment');
 		$input = new JInput;
-		$data = $input->post; print_r($data);
-		//$data['comment_text'] = $input->get('comment_text', '', 'string');
+		$data = $_POST; 
+        //$comment = $input->get('comment_text'); 
+		$data['comment_text'] = $input->get('comment_text', '', 'string');
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
