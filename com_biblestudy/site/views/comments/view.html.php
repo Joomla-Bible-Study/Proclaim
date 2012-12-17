@@ -64,7 +64,12 @@ class BiblestudyViewComments extends JViewLegacy {
         }
         //Add the admin css
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base().'administrator/templates/isis/css/template.css');
+		$document->addStyleSheet(JUri::base() .'media/com_biblestudy/jui/css/bootstrap.css');
+		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/jquery.js');
+		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/jquery-noconflict.js');
+		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/bootstrap.js');
+
+        //$document->addStyleSheet(JURI::base().'administrator/templates/isis/css/template.css');
         //JHtml::stylesheet(JPATH_ADMINISTRATOR.'/templates/isis/css/template.css');
          // Levels filter.
         $options = array();
@@ -83,7 +88,7 @@ class BiblestudyViewComments extends JViewLegacy {
 
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
-            $this->addToolbar();
+            //$this->addToolbar();
             if (BIBLESTUDY_CHECKREL)
                 $this->sidebar = JHtmlSidebar::render();
         }
@@ -93,46 +98,6 @@ class BiblestudyViewComments extends JViewLegacy {
 
         // Set the document
         $this->setDocument();
-    }
-
-    /**
-     * Add the page title and toolbar
-     *
-     * @since 7.0
-     */
-    protected function addToolbar() {
-        $user = JFactory::getUser();
-        // Get the toolbar object instance
-        $bar = JToolBar::getInstance('toolbar');
-        $canDo = JBSMHelper::getActions('', 'comment');
-        JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
-        if ($canDo->get('core.create')) {
-            JToolBarHelper::addNew('comment.add');
-        }
-        if ($canDo->get('core.edit')) {
-            JToolBarHelper::editList('comment.edit');
-        }
-        if ($canDo->get('core.edit.state')) {
-            JToolBarHelper::divider();
-            JToolBarHelper::publishList('comments.publish');
-            JToolBarHelper::unpublishList('comments.unpublish');
-        }
-        if ($canDo->get('core.delete')) {
-            JToolBarHelper::trash('comments.trash');
-        }
-        if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
-            JToolBarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
-        // Add a batch button
-        if ($user->authorise('core.edit')) {
-            if (BIBLESTUDY_CHECKREL)
-                JHtml::_('bootstrap.modal', 'collapseModal');
-            $title = JText::_('JTOOLBAR_BATCH');
-            $dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-            $bar->appendButton('Custom', $dhtml, 'batch');
-        }
     }
 
     /**

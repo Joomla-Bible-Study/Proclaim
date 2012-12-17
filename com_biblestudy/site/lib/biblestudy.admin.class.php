@@ -50,7 +50,7 @@ class JBSAdmin {
      * @return \JRegistry
      * @todo move to helper
      */
-    function getAdminsettings() {
+    public static function getAdminsettings() {
         $db = JFactory::getDBO();
         $db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
         $db->query();
