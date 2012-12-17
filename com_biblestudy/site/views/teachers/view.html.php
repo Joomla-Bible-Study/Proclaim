@@ -20,7 +20,7 @@ JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyViewTeacherlist extends JViewLegacy
+class BiblestudyViewTeachers extends JViewLegacy
 {
 
 	/**
