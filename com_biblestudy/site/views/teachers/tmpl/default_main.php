@@ -13,7 +13,7 @@ $params = $this->params;
 $input = new JInput;
 $t = $input->get('t', 1, 'int');
 if (!$t) {
-    $t = JRequest::getVar('t', 1, 'get', 'int');
+    $t = $input->get('t', 1, 'int');
 }
 $admin_params = $this->admin_params;
 ?>

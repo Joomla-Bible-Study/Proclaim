@@ -48,8 +48,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$row   = & $this->getTable();
 		$input = new JInput;
 		$data  = $input->post;
-		//$data = JRequest::get('post');
-
+		
 		//Allows HTML content to come through to the database row
 		$data['studytext']           = $input->get('studytext', '', 'string');
 		$data['studyintro']          = str_replace('"', "'", $data['studyintro']);

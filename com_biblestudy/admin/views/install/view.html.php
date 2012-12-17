@@ -32,7 +32,7 @@ class biblestudyViewInstall extends JViewLegacy {
 
         if ($this->jbsname === NULL || $this->jbstype === NULL):
             JError::raiseWarning(500, JText::_('JBS_INS_WARNING_INSTALL'));
-            JRequest::setVar('hidemainmenu', TRUE);
+            $input->set('hidemainmenu', TRUE);
             return FALSE;
         endif;
         JHTML::stylesheet('media/com_biblestudy/css/general.css');

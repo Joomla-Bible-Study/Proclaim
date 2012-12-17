@@ -225,12 +225,12 @@ class BiblestudyModelSermon extends JModelItem
 	 * @access    public
 	 * @return    boolean    True on success
 	 */
-	protected function storecomment()
+	public function storecomment()
 	{
-		$row = $this->getTable('commentsedit');
+		$row = $this->getTable('comment');
 		$input = new JInput;
-		$data = $input->post;
-		$data['comment_text'] = $input->get('comment_text', '', 'string');
+		$data = $input->post; print_r($data);
+		//$data['comment_text'] = $input->get('comment_text', '', 'string');
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -261,7 +261,7 @@ class BiblestudyModelSermon extends JModelItem
 	{
 		if (empty($this->_template)) {
 			$input = new JInput;
-			$templateid = $input->get('t', 1, 'int');
+			$templateid = $input->get('t', 1, 'int'); 
 			$query = 'SELECT *'
 					. ' FROM #__bsms_templates'
 					. ' WHERE published = 1 AND id = ' . $templateid;

@@ -60,7 +60,7 @@ class BiblestudyControllerSermons extends JControllerLegacy {
         $input = new JInput;
         $task = $input->get('task');
         if ($task == 'avplayer') {
-            $mediacode = JRequest::getVar('code');
+            $mediacode = $input->get('code','','string');
             $this->mediaCode = $mediacode;
             echo $mediacode;
             return null;
@@ -73,7 +73,8 @@ class BiblestudyControllerSermons extends JControllerLegacy {
     public function playHit() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $getMedia = new jbsMedia();
-        $getMedia->hitPlay(JRequest::getInt('id'));
+        $input = new JInput;
+        $getMedia->hitPlay($input->get('id','','int'));
     }
 
     /**

@@ -74,13 +74,14 @@ class LiveUpdateController extends JController
 		$ftp = $this->setCredentialsFromRequest('ftp');
 		$model = $this->getThisModel();
 		$result = $model->download();
+        $input = new JInput;
 		if(!$result) {
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_DOWNLOAD_FAILED');
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=overview', $msg, 'error');
+			$this->setRedirect('index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','string').'&task=overview', $msg, 'error');
 		} else {
 			// Download successful. Let's extract the package.
-			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=extract';
+			$url = 'index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','string').'&task=extract';
             $input = new JInput;
             $user = $input->getUsername('username');
 			//$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
@@ -102,10 +103,10 @@ class LiveUpdateController extends JController
 		if(!$result) {
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_EXTRACT_FAILED');
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=overview', $msg, 'error');
+			$this->setRedirect('index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','string').'&task=overview', $msg, 'error');
 		} else {
 			// Extract successful. Let's install the package.
-			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=install';
+			$url = 'index.php?option='.$input->get('option','','cmd').'&view='.$input->get('view','liveupdate','string').'&task=install';
 			$input = new JInput;
             $user = $input->getUsername('username');
 			//$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);

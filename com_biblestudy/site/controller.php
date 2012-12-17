@@ -115,8 +115,9 @@ class biblestudyController extends JControllerLegacy
 	public function comment()
 	{
 		$mainframe = JFactory::getApplication();
-		$option    = $this->input->get('option', '', 'cmd');
-
+        $input = new JInput;
+		$option    = $input->get('option', '', 'cmd');
+        
 		$model  = $this->getModel('sermon');
 		$app    = JFactory::getApplication();
 		$menu   = $app->getMenu();
@@ -126,7 +127,7 @@ class biblestudyController extends JControllerLegacy
 		if (!$t) {
 			$t = 1;
 		}
-		$this->input->set('t', $t);
+		$input->set('t', $t);
 
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
@@ -167,7 +168,7 @@ class biblestudyController extends JControllerLegacy
 			if ($params->get('email_comments') > 0) {
 				$EmailResult = $this->commentsEmail($params);
 			}
-			$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
+			$study_detail_id = $input->get('study_detail_id', 0, 'INT');
 
 			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
 		} // End of $cap
@@ -289,8 +290,8 @@ class biblestudyController extends JControllerLegacy
 	 */
 	public function uploadflash()
 	{
-
-		JRequest::checktoken() or jexit('Invalid Token');
+        $input = new JInput;
+		//JRequest::checktoken() or jexit('Invalid Token');
 		$option = $this->input->get('option', '', 'cmd');
 		jimport('joomla.filesystem.file');
 		//get the server and folder id from the request
@@ -424,7 +425,7 @@ class biblestudyController extends JControllerLegacy
 	 */
 	public function upload()
 	{
-		JRequest::checktoken() or jexit('Invalid Token');
+		//JRequest::checktoken() or jexit('Invalid Token');
 		$option    = $this->input->get('option', '', 'cmd');
 		$uploadmsg = '';
 		$serverid  = $this->input->get('upload_server', '', 'int');

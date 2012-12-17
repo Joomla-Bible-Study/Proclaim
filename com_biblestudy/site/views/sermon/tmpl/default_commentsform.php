@@ -87,8 +87,7 @@ switch ($this->item->params->get('link_comments', 0)) {
                     if ($allow < 10) {
                         ?><tr>
                             <td>
-                                <strong><?php echo JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?><
-                                    /strong>
+                                <strong><?php echo JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></strong>
                             </td>
                         </tr>
                         <?php
@@ -166,14 +165,14 @@ switch ($this->item->params->get('link_comments', 0)) {
                         <tr>
                             <td>
 
-                                <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->studydetails->id ?>" />
+                                <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>" />
                                 <input type="hidden" name="task" value="comment" />
                                 <input type="hidden" name="option" value="com_biblestudy" />
                                 <input type="hidden" name="published" id="published" value="<?php echo $this->item->params->get('comment_publish') ?>"  />
                                 <input type="hidden" name="view" value="sermon" />
 
                                 <input type="hidden" name="comment_date" id="comment_date" value="<?php echo date('Y-m-d H:i:s') ?>"  />
-                                <input type="hidden" name="study_detail_id" id="study_detail_id" value="<?php echo $this->studydetails->id ?>"  />
+                                <input type="hidden" name="study_detail_id" id="study_detail_id" value="<?php echo $this->item->id ?>"  />
 
                                 <input type="submit" class="button" id="button" value="Submit"  />
                             <?php } //End of if $allow > 10

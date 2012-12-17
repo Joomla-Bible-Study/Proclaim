@@ -56,7 +56,7 @@ class BiblestudyControllerSeriesdisplays extends JControllerLegacy {
         $task = $input->get('task','','cmd');
         
         if ($task == 'avplayer') {
-            $mediacode = JRequest::getVar('code');
+            $mediacode = $input->get('code','','string');
             $this->mediaCode = $mediacode;
             echo $mediacode;
             return;
