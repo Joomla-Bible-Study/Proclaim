@@ -325,15 +325,15 @@ class BiblestudyViewSermon extends JViewLegacy
 		// if the menu item does not concern this article
 		if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id)) {
 			// If this is not a single article menu item, set the page title to the article title
-			if ($this->item->title) {
-				$title = $this->item->title;
+			if ($this->item->studytitle) {
+				$title = $this->item->studytitle;
 			}
-			$path = array(array('title' => $this->item->title,
+			$path = array(array('studytitle' => $this->item->studytitle,
 								'link' => ''));
 
 			$path = array_reverse($path);
 			foreach ($path as $item) {
-				$pathway->addItem($item['title'], $item['link']);
+				$pathway->addItem($item['studytitle'], $item['link']);
 			}
 		}
 
