@@ -10,27 +10,14 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
+// Base this model on the backend version.
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php';
 
 /**
  * Controller class for Messages
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyControllerMessagelist extends JControllerAdmin {
-
-    /**
-     * Proxy for getModel
-     *
-     * @param string $name    The name of the model
-     * @param string $prefix  The prefix for the PHP class name
-     * @return JModel
-     *
-     * @since 7.0.0
-     */
-    public function &getModel($name = 'Messagelist', $prefix = 'BiblestudyModel') {
-        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-        return $model;
-    }
+class BiblestudyControllerMessagelist extends BiblestudyControllerMessages {
 
 }

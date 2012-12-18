@@ -12,11 +12,11 @@ defined('_JEXEC') or die;
 require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
- * View class for Comments
+ * View class for CommentList extends Comments
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class BiblestudyViewComments extends JViewLegacy {
+class BiblestudyViewCommentlist extends JViewLegacy {
 
     /**
      * Items
@@ -62,12 +62,6 @@ class BiblestudyViewComments extends JViewLegacy {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
-        //Add the admin css
-        $document = JFactory::getDocument();
-		$document->addStyleSheet(JUri::base() .'media/com_biblestudy/jui/css/bootstrap.css');
-		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/jquery-noconflict.js');
-		$document->addScript(JUri::base() .'media/com_biblestudy/jui/js/bootstrap.js');
 
         //$document->addStyleSheet(JURI::base().'administrator/templates/isis/css/template.css');
         //JHtml::stylesheet(JPATH_ADMINISTRATOR.'/templates/isis/css/template.css');

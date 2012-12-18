@@ -1,23 +1,27 @@
 <?php
 
 /**
- * Controller for Comments
+ * Comments Model
+ *
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @link    http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
 
+
 // Base this model on the backend version.
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/comments.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comments.php';
 
 /**
- * Controller for Comments
+ * Comments model class
+ *
  * @package BibleStudy.Admin
- * @since 7.0.0
+ * @since   7.0.0
  */
-class BiblestudyControllerCommentlist extends BiblestudyControllerComments {
+class BiblestudyModelCommentlist extends BiblestudyModelComments
+{
 
 }
