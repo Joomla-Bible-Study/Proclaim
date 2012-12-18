@@ -25,6 +25,15 @@
 			<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 		</field>
 	</fieldset>
+    <field
+            id="id"
+            name="id"
+            type="hidden"
+            class="inputbox" label="JGLOBAL_FIELD_ID_LABEL"
+            description ="JGLOBAL_FIELD_ID_DESC"
+            size="10"
+            default="0"
+            readonly="true" />
 	<field name="plays" type="text" class="readonly" label="JBS_CMN_PLAYS"
 		description="JBS_MED_PLAYS_DESC" size="10" default="N/A" readonly="true" />
 	<field name="downloads" type="text" class="readonly" label="JBS_CMN_DOWNLOADS"
@@ -103,18 +112,4 @@
 		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
 		section="mediafilesedit" validate="rules" />
 	<field name="asset_id" type="hidden" filter="unset" />
-	<fields name="params">
-		<fieldset name="params">
-			<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
-				description="JBS_MED_PLAYERWIDTH_DESC" />
-			<field name="playerheight" default="" type="text"
-				label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC" />
-			<field name="itempopuptitle" type="text" size="35" default=""
-				label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
-			<field name="itempopupfooter" type="text" size="35" default=""
-				label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
-			<field name="popupmargin" type="text" default="50"
-				label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC" />
-		</fieldset>
-	</fields>
 </form>

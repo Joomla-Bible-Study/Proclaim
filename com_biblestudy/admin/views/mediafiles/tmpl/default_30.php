@@ -93,7 +93,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"> </div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped adminlist" id="articleList">
         <thead>
         <tr>
             <th width="1%" class="nowrap center hidden-phone">
@@ -200,26 +200,26 @@ $sortFields = $this->getSortFields();
                     <?php
                     if (BIBLESTUDY_CHECKREL) {
                         // Create dropdown items
-                        JHtml::_('dropdown.edit', $item->id, 'article.');
+                        JHtml::_('dropdown.edit', $item->id, 'mediafile.');
                         JHtml::_('dropdown.divider');
                         if ($item->published) :
-                            JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafiles.');
                         else :
-                            JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.publish', 'cb' . $i, 'mediafiles.');
                         endif;
 
                         JHtml::_('dropdown.divider');
 
                         if ($archived) :
-                            JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediafiles.');
                         else :
-                            JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.archive', 'cb' . $i, 'mediafiles.');
                         endif;
 
                         if ($trashed) :
-                            JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.untrash', 'cb' . $i, 'mediafiles.');
                         else :
-                            JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+                            JHtml::_('dropdown.trash', 'cb' . $i, 'mediafiles.');
                         endif;
 
                         // Render dropdown list
@@ -327,8 +327,6 @@ $sortFields = $this->getSortFields();
                     <?php echo $this->escape($item->downloads); ?>
                 </div>
             </td>
-
-
             <td class="center hidden-phone">
                 <?php echo (int) $item->id; ?>
             </td>
