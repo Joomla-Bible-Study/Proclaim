@@ -112,4 +112,24 @@
 		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
 		section="mediafilesedit" validate="rules" />
 	<field name="asset_id" type="hidden" filter="unset" />
+    <fields name="params">
+        <fieldset name="params">
+            <field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
+                   description="JBS_MED_PLAYERWIDTH_DESC" />
+            <field name="playerheight" default="" type="text"
+                   label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC" />
+            <field name="itempopuptitle" type="textarea"  cols="54" rows="10" default="" filter="raw"
+                   label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+            <field name="itempopupfooter" type="textarea" cols="54" rows="10" default="" filter="raw"
+                   label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+            <field name="popupmargin" type="text" default="50"
+                   label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC" />
+            <field name="autostart" type="list"
+                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
+                <option value="">JBS_CMN_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="2">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
 </form>

@@ -485,7 +485,7 @@ if ($this->item->path) {
 </div>
 <div class="tab-pane" id="parameters">
 
-	<?php var_dump($this->form->params); ?>
+
 	<?php foreach ($params as $name => $fieldset):
 	foreach ($this->form->getFieldset($name) as $field) : ?>
         <div class="control-group">
