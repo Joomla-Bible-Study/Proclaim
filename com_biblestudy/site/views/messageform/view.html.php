@@ -137,7 +137,6 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$document->addScriptDeclaration($script);
 
 		if (!BIBLESTUDY_CHECKREL) {
-			JHTML::stylesheet('media/com_biblestudy/css/z2.5.css');
 			$document->addStyleSheet('media/com_biblestudy/jui/css/bootstrap.css');
 			$document->addStyleSheet('media/com_biblestudy/jui/css/chosen.css');
 			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');

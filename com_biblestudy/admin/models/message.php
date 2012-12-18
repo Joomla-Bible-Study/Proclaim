@@ -48,7 +48,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$row   = & $this->getTable();
 		$input = new JInput;
 		$data  = $input->post;
-		
+
 		//Allows HTML content to come through to the database row
 		$data['studytext']           = $input->get('studytext', '', 'string');
 		$data['studyintro']          = str_replace('"', "'", $data['studyintro']);
@@ -200,8 +200,9 @@ class BiblestudyModelMessage extends JModelAdmin
 			if ($topics) {
 				foreach ($topics as $topic) {
 					$text             = JBSMTranslated::getTopicItemTranslated($topic);
-					$translatedList[] = array('id'   => $topic->id,
-					                          'name' => $text
+					$translatedList[] = array(
+						'id'   => $topic->id,
+						'name' => $text
 					);
 				}
 			}
@@ -230,8 +231,9 @@ class BiblestudyModelMessage extends JModelAdmin
 		if ($topics) {
 			foreach ($topics as $topic) {
 				$text             = JBSMTranslated::getTopicItemTranslated($topic);
-				$translatedList[] = array('id'   => $topic->id,
-				                          'name' => $text
+				$translatedList[] = array(
+					'id'   => $topic->id,
+					'name' => $text
 				);
 			}
 		}
@@ -353,8 +355,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.message', 'message', array('control'   => 'jform',
-		                                                                   'load_data' => $loadData
+		$form = $this->loadForm('com_biblestudy.message', 'message', array(
+			'control'   => 'jform',
+			'load_data' => $loadData
 		));
 		if (empty($form)) {
 			return false;
@@ -362,13 +365,10 @@ class BiblestudyModelMessage extends JModelAdmin
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
+		if ($jinput->get('a_id')) {
 			$id = $jinput->get('a_id', 0);
-		}
-		// The back end uses id so we use that the rest of the time and set it to 0 by default.
-		else
-		{
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else {
 			$id = $jinput->get('id', 0);
 		}
 
@@ -376,10 +376,9 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.'.(int) $id))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.' . (int) $id))
 				|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
-		{
+		) {
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('state', 'disabled', 'true');

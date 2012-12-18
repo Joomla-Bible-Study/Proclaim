@@ -24,6 +24,14 @@ JLoader::register('BsmHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy
  */
 class BiblestudyModelComment extends JModelAdmin
 {
+
+	/**
+	 * Admin
+	 *
+	 * @var string
+	 */
+	var $_admin;
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
@@ -46,13 +54,14 @@ class BiblestudyModelComment extends JModelAdmin
 		$categoryId = null;
 
 		$table = $this->getTable();
-		$i = 0;
+		$i     = 0;
 
 		// Check that the user has create permission for the component
 		$extension = JFactory::getApplication()->input->get('option', '');
-		$user = JFactory::getUser();
+		$user      = JFactory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+
 			return false;
 		}
 
@@ -68,6 +77,7 @@ class BiblestudyModelComment extends JModelAdmin
 				if ($error = $table->getError()) {
 					// Fatal error
 					$this->setError($error);
+
 					return false;
 				} else {
 					// Not fatal error
@@ -77,7 +87,7 @@ class BiblestudyModelComment extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			$data         = $this->generateNewTitle($categoryId, $table->alias, $table->title);
 			$table->title = $data['0'];
 			$table->alias = $data['1'];
 
@@ -87,12 +97,14 @@ class BiblestudyModelComment extends JModelAdmin
 			// Check the row.
 			if ($error = $table->getError()) {
 				throw new Exception($error);
+
 				return false;
 			}
 
 			// Store the row.
 			if (!$table->store()) {
 				throw new Exception($error);
+
 				return false;
 			}
 
@@ -125,7 +137,25 @@ class BiblestudyModelComment extends JModelAdmin
 				return;
 			}
 			$user = JFactory::getUser();
+
 			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
+		}
+	}
+
+	/**
+	 * Overrides the JModelAdmin save routine to save the topics(tags)
+	 *
+	 * @param string $data
+	 *
+	 * @since 7.0.1
+	 * @todo  This may need to be optimized
+	 */
+	public function save($data)
+	{
+		if (parent::save($data)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -143,8 +173,9 @@ class BiblestudyModelComment extends JModelAdmin
 
 		// Check for existing article.
 		if (!empty($record->id)) {
-			return $user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int)$record->id);
+			return $user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $record->id);
 		}
+
 		// Default to component settings if serie known.
 		return parent::canEditState('com_biblestudy');
 	}
@@ -164,17 +195,16 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Returns a Table object, always creating it.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
+	 * @param    type      The table type to instantiate
+	 * @param    string    A prefix for the table class name. Optional.
+	 * @param    array     Configuration array for model. Optional.
 	 *
-	 * @return	JTable	A database object
+	 * @return    JTable    A database object
 	 */
 	public function getTable($type = 'Comment', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-
 
 
 	/**
@@ -189,7 +219,9 @@ class BiblestudyModelComment extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_biblestudy.comment', 'comment', array('control'   => 'jform',
+		                                                                   'load_data' => $loadData
+		));
 		if (empty($form)) {
 			return false;
 		}

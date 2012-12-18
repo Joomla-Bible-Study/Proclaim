@@ -18,11 +18,10 @@ if (BIBLESTUDY_CHECKREL) {
 } else {
 	JHtml::_('behavior.tooltip');
 	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	//Add the admin css
-	JHtml::stylesheet(JUri::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script(JUri::base() . 'media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script(JUri::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script(JUri::base() . 'media/com_biblestudy/jui/js/bootstrap.js');
+	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
+	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
+	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
 }
 JHtml::_('behavior.multiselect');
 
@@ -139,7 +138,7 @@ $sortFields = $this->getSortFields();
             <tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$link       = 'index.php?option=com_biblestudy&task=comment.edit&a_id=' . (int) $item->id;
+				$link       = 'index.php?option=com_biblestudy&task=commentform.edit&a_id=' . (int) $item->id;
 				$canCreate  = $user->authorise('core.create');
 				$canEdit    = $user->authorise('core.edit', 'com_biblestudy.comment.' . $item->id);
 				$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.comment.' . $item->id);

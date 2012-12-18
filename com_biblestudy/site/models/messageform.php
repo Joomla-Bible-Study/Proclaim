@@ -11,8 +11,6 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
-if(BIBLESTUDY_CHECKREL)
-jimport('joomla.application.component.modeladmin');
 
 // Base this model on the backend version.
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php';
