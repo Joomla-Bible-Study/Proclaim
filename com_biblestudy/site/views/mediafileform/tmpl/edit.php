@@ -484,10 +484,8 @@ if ($this->item->path) {
 
 </div>
 <div class="tab-pane" id="parameters">
-
-
-	<?php foreach ($params as $name => $fieldset):
-	foreach ($this->form->getFieldset($name) as $field) : ?>
+	<?php foreach ($params as $name => $fieldset) :
+	foreach ($this->form->getFieldset('params') as $field) :  ?>
         <div class="control-group">
             <div class="control-label">
 				<?php echo $field->label; ?>

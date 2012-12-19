@@ -85,30 +85,16 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 
 		$properties = $table->getProperties(1);
 		$value      = JArrayHelper::toObject($properties, 'JObject');
-		$params     = $value->params;
 
 		// Convert params field to Registry.
-		$value->params = new JRegistry;
-		$value->params->loadString($params);
+		$registry = new JRegistry;
+		$registry->loadString($value->params);
+		$value->params = $registry->toArray();
 
 		// Compute selected asset permissions.
 		$user   = JFactory::getUser();
 		$userId = $user->get('id');
 		$asset  = 'com_biblestudy.mediafile.' . $value->id;
-
-		// Check general edit permission first.
-		if ($user->authorise('core.edit', $asset)) {
-			$value->params->set('access-edit', true);
-		}
-
-		// Check edit state permission.
-		if ($itemId) {
-			// Existing item
-			$value->params->set('access-change', $user->authorise('core.edit.state', $asset));
-		} else {
-			$value->params->set('access-change', $user->authorise('core.edit.state', 'com_biblestudy'));
-		}
-
 		return $value;
 	}
 
