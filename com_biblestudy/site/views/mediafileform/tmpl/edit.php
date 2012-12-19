@@ -175,16 +175,22 @@ if ($this->item->path) {
 
 </script>
 <form
-        action="<?php
-		$input = new JInput;
-		if ($input->get('layout', '', 'string') == 'modal') {
-			$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
-		} else {
-			$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
-		} echo $url;
-		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+        action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileform&a_id=' . (int) $this->item->id);
+		?>" method="post" name="adminForm" id="item-form" class="form-validate form-vertical" enctype="multipart/form-data">
 
 <!-- Begin Content -->
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" onclick="submitbutton('mediafileform.save');  ">
+            <i class="icon-ok"></i> <?php echo JText::_('JSAVE') ?>
+        </button>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn" onclick="submitbutton('mediafileform.cancel');  ">
+            <i class="icon-cancel"></i> <?php echo JText::_('JCANCEL') ?>
+        </button>
+    </div>
+</div>
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
@@ -204,7 +210,7 @@ if ($this->item->path) {
     <li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
     </li>
 
-	<?php if ($this->canDo->get('core.admin')): ?>
+	<?php if (0)://$this->canDo->get('core.admin')): ?>
     <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
 </ul>
@@ -513,24 +519,19 @@ if ($this->item->path) {
         </div>
     </fieldset>
 </div>
-<?php if ($this->canDo->get('core.admin')): ?>
+<?php if (0)://$this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
-
     <div class="control-group">
         <div class="controls">
-			<?php echo $this->form->getInput('rules'); ?>
+			<?php //echo $this->form->getInput('rules'); ?>
         </div>
     </div>
-
 </div>
-
 	<?php endif; ?>
 <input type="hidden" name="flupfile" value=""/>
 <input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 <?php echo JHtml::_('form.token'); ?>
-<input type="hidden" name="controller" value="mediafile"/>
-
 </div>
 </fieldset>
 </form>

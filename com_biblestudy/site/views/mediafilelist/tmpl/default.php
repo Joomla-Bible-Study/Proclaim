@@ -146,7 +146,7 @@ $sortFields = $this->getSortFields();
 					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', true, 'cb', '', ''); ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafilelist.', true, 'cb', '', ''); ?>
                 </td>
 
                 <td class="nowrap has-context">
@@ -158,7 +158,35 @@ $sortFields = $this->getSortFields();
 						<?php else : ?>
 						<?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
 						<?php endif; ?>
-                    </div>
+                    </div><div class="pull-left">
+	                <?php
+	                if (BIBLESTUDY_CHECKREL) {
+		                // Create dropdown items
+		                if ($item->published) :
+			                JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafilelist.');
+		                else :
+			                JHtml::_('dropdown.publish', 'cb' . $i, 'mediafilelist.');
+		                endif;
+
+		                JHtml::_('dropdown.divider');
+
+		                if ($archived) :
+			                JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediafilelist.');
+		                else :
+			                JHtml::_('dropdown.archive', 'cb' . $i, 'mediafilelsit.');
+		                endif;
+
+		                if ($trashed) :
+			                JHtml::_('dropdown.untrash', 'cb' . $i, 'mediafilelist.');
+		                else :
+			                JHtml::_('dropdown.trash', 'cb' . $i, 'mediafilelist.');
+		                endif;
+
+		                // Render dropdown list
+		                echo JHtml::_('dropdown.render');
+	                }
+	                ?>
+                </div>
                 </td>
                 <td class="nowrap has-context">
                     <div class="pull-left">

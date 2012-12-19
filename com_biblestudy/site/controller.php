@@ -309,9 +309,9 @@ class biblestudyController extends JControllerLegacy
 		// get path and abort if none
 		$layout = $this->input->get('layout', '', 'string');
 		if ($layout == 'modal') {
-			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
+			$url = 'index.php?option=' . $option . '&view=mediafileform&task=edit&tmpl=component&layout=modal&a_id=' . $returnid;
 		} else {
-			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+			$url = 'index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid;
 		}
 		$path = JBSMUpload::getpath($url, $tempfile);
 
@@ -337,9 +337,9 @@ class biblestudyController extends JControllerLegacy
 		JBSMUpload::deletetempfile($tempfile);
 		$mediafileid = $this->input->get('id', '', 'int');
 		if ($layout == 'modal') {
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&tmpl=component&layout=modal&a_id=' . $returnid, $uploadmsg);
 		} else {
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
 
@@ -454,9 +454,9 @@ class biblestudyController extends JControllerLegacy
 		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
 		if ($layout == 'modal') {
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&tmpl=component&layout=modal&a_id=' . $returnid, $uploadmsg);
 		} else {
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
 

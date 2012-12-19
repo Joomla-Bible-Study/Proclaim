@@ -84,17 +84,15 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value = JArrayHelper::toObject($properties, 'JObject');
+
+		// Convert attrib field to Registry.
 
 		// Convert params field to Registry.
 		$registry = new JRegistry;
 		$registry->loadString($value->params);
 		$value->params = $registry->toArray();
 
-		// Compute selected asset permissions.
-		$user   = JFactory::getUser();
-		$userId = $user->get('id');
-		$asset  = 'com_biblestudy.mediafile.' . $value->id;
 		return $value;
 	}
 
@@ -109,154 +107,6 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	{
 		return base64_encode($this->getState('return_page'));
 	}
-
-	/**
-	 * Get Data
-	 *
-	 * @return object
-	 */
-	/* public function &getData()
-	{
-		// Load the data
-		if (empty($this->_data)) {
-			$query = ' SELECT * FROM #__bsms_mediafiles ' .
-					'  WHERE id = ' . $this->_id;
-			$this->_db->setQuery($query);
-			$this->_data = $this->_db->loadObject();
-		}
-		if (!$this->_data) {
-			$this->_data     = new stdClass();
-			$this->_data->id = 0;
-			//TF added these
-			$today                    = date("Y-m-d H:i:s");
-			$this->_data->published   = 1;
-			$this->_data->media_image = null;
-			$this->_data->server      = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
-			$this->_data->path        = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
-			$this->_data->special     = ($this->_admin_params->get('target') != 'No default' ? $this->_admin_params->get('target') : null);
-			;
-			$this->_data->filename        = null;
-			$this->_data->size            = null;
-			$this->_data->podcast_id      = ($this->_admin_params->get('podcast') > 0 ? $this->_admin_params->get('podcast') : null);
-			$this->_data->internal_viewer = null;
-			$this->_data->mediacode       = null;
-			$this->_data->ordering        = null;
-			$this->_data->study_id        = null;
-			$this->_data->createdate      = $today;
-			$this->_data->link_type       = ($this->_admin_params->get('download') > 0 ? $this->_admin_params->get('download') : null);
-			$this->_date->hits            = null;
-			$this->_data->mime_type       = ($this->_admin_params->get('mime') > 0 ? $this->_admin_params->get('mime') : null);
-			$this->_data->docMan_id       = null;
-			$this->_data->article_id      = null;
-			$this->_data->comment         = null;
-			$this->_data->virtueMart_id   = null;
-			$this->_data->params          = null;
-			$this->_data->player          = null;
-			$this->_data->popup           = null;
-		}
-
-		return $this->_data;
-	} */
-
-	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 * @todo Need to check the current order of the studies for that particular
-	 *       study, so that it doesn't default to 0, buecause that will break the
-	 *       ordering functionality.
-	 */
-	/* public function store()
-	{
-		$row   = & $this->getTable();
-		$input = new JInput;
-		$data  = $input->post;
-		//This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
-		$files           = new JInputFiles;
-		$file            = $files->get('file');
-		$filename_upload = $file['name'];
-		if (isset($filename_upload)) {
-			$name_bak         = $data['filename'];
-			$data['filename'] = $filename_upload;
-		}
-		if ($filename_upload == '') {
-			$data['filename'] = $name_bak;
-		}
-
-		if ($this->_admin_params->get('character_filter') > 0) {
-			$badchars         = array(
-				' ',
-				'`',
-				'@',
-				'^',
-				'!',
-				'#',
-				'$',
-				'%',
-				'*',
-				'(',
-				')',
-				'[',
-				']',
-				'{',
-				'}',
-				'~',
-				'?',
-				'>',
-				'<',
-				',',
-				'|',
-				'\\',
-				';'
-			);
-			$data['filename'] = str_replace($badchars, '_', $data['filename']);
-		}
-		$data['filename']  = str_replace('&', '_and_', $data['filename']);
-		$data['mediacode'] = str_replace('"', "'", $data['mediacode']);
-		// Bind the form fields to the  table
-		if ($data['docManItem'] == null) {
-			$data['docMan_id'] = 0;
-		} else {
-			$data['docMan_id'] = $data['docManItem'];
-		}
-		if ($data['virtueMartItem'] == null) {
-			$data['virtueMart_id'] = 0;
-		} else {
-			$data['virtueMart_id'] = $data['virtueMartItem'];
-		}
-		if ($data['categoryItem'] == null) {
-			$data['article_id'] = 0;
-		} else {
-			$data['article_id'] = $data['categoryItem'];
-		}
-		if (is_array($data['podcast_id'])) {
-			$data['podcast_id'] = implode(',', $data['podcast_id']);
-		}
-
-		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the  record is valid
-		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the table to the database
-		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
-
-			//			$this->setError( $row->getErrorMsg() );
-			return false;
-		}
-
-		return true;
-	} */
 
 	/**
 	 * @desc Functions to satisfy the ajax requests

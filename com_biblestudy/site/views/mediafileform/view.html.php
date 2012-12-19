@@ -152,7 +152,7 @@ class biblestudyViewmediafileform extends JViewLegacy
 		$ref2                = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
 		$this->upload_folder = $ref2;
 
-		//$this->setLayout('edit');
+		$this->setLayout('edit');
 
 		parent::display($tpl);
 	}
