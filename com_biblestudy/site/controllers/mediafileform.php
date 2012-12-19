@@ -65,7 +65,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	function __construct($config = array())
 	{
-		$input = new JInput;
+		$input = new JInput; 
 		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 
