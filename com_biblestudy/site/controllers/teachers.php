@@ -1,7 +1,6 @@
 <?php
 
 /**
- * Controller Messages
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,16 +8,14 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
-// Base this model on the backend version.
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php';
+jimport('joomla.application.component.controller');
 
 /**
- * Controller class for Messages
+ * Controller for Teachers
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class BiblestudyControllerMessagelist extends BiblestudyControllerMessages {
+class BiblestudyControllerTeachers extends JControllerLegacy {
 
 	/**
 	 * Proxy for getModel
@@ -30,7 +27,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages {
 	 * @return JModel
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Mediafileform', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+	public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
 		$model = parent::getModel($name, $prefix, $config);
 		return $model;
 	}

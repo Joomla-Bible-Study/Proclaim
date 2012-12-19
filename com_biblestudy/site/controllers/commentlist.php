@@ -20,4 +20,19 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/comme
  */
 class BiblestudyControllerCommentlist extends BiblestudyControllerComments {
 
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param string $name    The name of the model
+	 * @param string $prefix  The prefix for the PHP class name
+	 * @param array $config Set ignore request
+	 *
+	 * @return JModel
+	 * @since 7.0
+	 */
+	public function &getModel($name = 'Commentform', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+		$model = parent::getModel($name, $prefix, $config);
+		return $model;
+	}
+
 }

@@ -84,6 +84,9 @@ form .btn-group label {
 	}
 input, select {
 	font-size: 0.909em;
-	border: none;
+	/* border: none; */
 	background: none;
 	}
+.table td.center {
+    text-align: center;
+}

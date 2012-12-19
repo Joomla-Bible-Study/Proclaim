@@ -9,7 +9,9 @@
             size="10"
             default="0"
             readonly="true" />
-    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+    <field name="published" type="list" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC"
+           class="inputbox"
+           labelclass="control-label" default="0" required="true">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
@@ -18,7 +20,9 @@
            description="JBS_STY_CREATE_DATE_DESC" class="inputbox" size="22"
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
     
-    <field name="comments" type="radio" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC" class="inputbox" default="0">
+    <field name="comments" type="list" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC"
+           class="inputbox"
+           labelclass="control-label" default="0">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
