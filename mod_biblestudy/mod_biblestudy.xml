@@ -19,7 +19,6 @@
         <filename>mod_biblestudy.xml</filename>
     </files>
     <config>
-        <!-- @todo: look at new params for j1.7+ -->
         <fields name="params">
             <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">

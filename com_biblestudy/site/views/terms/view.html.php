@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 
 // This is the popup window for the teachings.  We could put anything in this window.
-//TODO Need to Clean this up and rework to be proper Joomla calls bcc
+//TODO Need to Clean this up and rework to be proper Joomla and move to helpers calls bcc
 /**
  * View class for Terms
  * @package BibleStudy.Site
@@ -54,7 +54,6 @@ class biblestudyViewterms extends JViewLegacy {
         $query->from('#__bsms_mediafiles');
         $query->where('id= ' . $mid);
         $db->setQuery($query);
-        // $db->query();
         $media = $db->loadObject();
         ?>
         <div class="termstext">

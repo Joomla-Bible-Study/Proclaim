@@ -34,7 +34,6 @@
         <folder>sql</folder>
     </files>
     <config>
-        <!-- @todo: look into new params system for this -->
         <fields name="params">
             <fieldset name="basic">
                 <field name="email" type="list" default="1"
