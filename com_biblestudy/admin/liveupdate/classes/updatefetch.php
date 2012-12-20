@@ -110,7 +110,8 @@ class LiveUpdateFetch extends JObject
 		
 		// Get an instance of the storage class
 		$storageOptions = $config->getStorageAdapterPreferences();
-		require_once dirname(__FILE__).'/storage/storage.php';
+		//require_once dirname(__FILE__).'/storage/storage.php';
+        JLoader::register('LiveUpdateStorage', dirname(__FILE__) . '/storage/storage.php');
 		$this->storage = LiveUpdateStorage::getInstance($storageOptions['adapter'], $storageOptions['config']);
 		$storage = $this->storage;
 		
@@ -177,8 +178,8 @@ class LiveUpdateFetch extends JObject
 		
 		$ret['stuck'] = false;
 
-		require_once dirname(__FILE__).'/download.php';
-		
+		//require_once dirname(__FILE__).'/download.php';
+		JLoader::register('LiveUpdateDownloadHelper', dirname(__FILE__) . '/download.php');
 		// First we mark Live Updates as getting stuck. This way, if fetching the update
 		// fails with a server error, reloading the page will not result to a White Screen
 		// of Death again. Hey, Joomla! core team, are you listening? Some hosts PRETEND to
@@ -276,7 +277,8 @@ class LiveUpdateFetch extends JObject
 			$rawData = substr($rawData, $magicPos);
 		}
 		
-		require_once dirname(__FILE__).'/inihelper.php';
+		//require_once dirname(__FILE__).'/inihelper.php';
+        JLoader::register('LiveUpdateINIHelper', dirname(__FILE__) . '/inihelper.php');
 		$iniData = LiveUpdateINIHelper::parse_ini_file($rawData, false, true);
 		
 		$ret['version'] = $iniData['version'];

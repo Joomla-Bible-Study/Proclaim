@@ -213,7 +213,8 @@ class LiveUpdateController extends JController
 			$basePath = ($this->jversion == '15') ? $this->_basePath : $this->basePath;
 			$tPath = dirname(__FILE__).'/tmpl';
 
-			require_once('view.php');
+			//require_once('view.php');
+            JLoader::register('LiveUpdateView', 'view.php');
 			$view = new LiveUpdateView(array('base_path'=>$basePath, 'template_path'=>$tPath));
 		}
 
@@ -226,7 +227,8 @@ class LiveUpdateController extends JController
 
 		if(is_null($model))
 		{
-			require_once('model.php');
+			//require_once('model.php');
+            JLoader::register('LiveUpdateModel', 'model.php');
 			$model = new LiveUpdateModel();
 			$task = ($this->jversion == '15') ? $this->_task : $this->task;
 

@@ -32,7 +32,8 @@ class LiveUpdateStorage
 		
 		$sig = md5($type, serialize($config));
 		if(!array_key_exists($sig, $instances)) {
-			require_once dirname(__FILE__).'/'.strtolower($type).'.php';
+			//require_once dirname(__FILE__).'/'.strtolower($type).'.php';
+            JLoader::register('LiveUpdateStorage', dirname(__FILE__).'/'.strtolower($type).'.php');
 			$className = 'LiveUpdateStorage'.ucfirst($type);
 			$object = new $className($config);
 			$object->load($config);

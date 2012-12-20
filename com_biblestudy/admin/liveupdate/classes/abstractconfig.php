@@ -173,7 +173,8 @@ abstract class LiveUpdateAbstractConfig extends JObject
 	 */
 	private function populateExtensionInfo()
 	{
-		require_once dirname(__FILE__).'/xmlslurp.php';
+		//require_once dirname(__FILE__).'/xmlslurp.php';
+        JLoader::register('LiveUpdateXMLSlurp', dirname(__FILE__) . '/xmlslurp.php');
 		$xmlslurp = new LiveUpdateXMLSlurp();
 		$data = $xmlslurp->getInfo($this->_extensionName, $this->_xmlFilename);
 		if(empty($this->_currentVersion)) $this->_currentVersion = $data['version'];

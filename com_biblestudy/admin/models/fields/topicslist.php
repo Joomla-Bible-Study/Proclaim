@@ -36,7 +36,8 @@ class JFormFieldTopicslist extends JFormFieldList {
      * @return      array           An array of JHtml options.
      */
     protected function getOptions() {
-        require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/translated.php');
+        //require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/translated.php');
+        JLoader::register('JBSMTranslated', dirname(__FILE__) . '/helpers/translated.php');
         $db = JFactory::getDBO();
         $query = "SELECT id, topic_text, params AS topic_params FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC";
         $db->setQuery((string) $query);

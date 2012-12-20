@@ -23,8 +23,10 @@
 
 defined('_JEXEC') or die();
 
-require_once dirname(__FILE__) . '/classes/abstractconfig.php';
-require_once dirname(__FILE__) . '/config.php';
+//require_once dirname(__FILE__) . '/classes/abstractconfig.php';
+JLoader::register('LiveUpdateAbstractConfig', dirname(__FILE__) . '/classes/abstractconfig.php');
+//require_once dirname(__FILE__) . '/config.php';
+JLoader::register('LiveUpdateConfig', dirname(__FILE__) . '/config.php');
 
 class LiveUpdate
 {
@@ -54,7 +56,8 @@ class LiveUpdate
 		self::loadLanguage();
 
 		// Load the controller and let it run the show
-		require_once dirname(__FILE__) . '/classes/controller.php';
+		//require_once dirname(__FILE__) . '/classes/controller.php';
+        JLoader::register('LiveUpdateController', dirname(__FILE__) . '/classes/controller.php');
 		$controller = new LiveUpdateController();
 		$input      = new JInput;
 		$controller = $input->get('task', 'overview', 'cmd');
@@ -69,7 +72,8 @@ class LiveUpdate
 	 */
 	public static function getUpdateInformation($force = false)
 	{
-		require_once dirname(__FILE__) . '/classes/updatefetch.php';
+		//require_once dirname(__FILE__) . '/classes/updatefetch.php';
+        JLoader::register('LiveUpdateFetch', dirname(__FILE__) . '/classes/updatefetch.php');
 		$update           = new LiveUpdateFetch();
 		$info             = $update->getUpdateInformation($force);
 		$hasUpdates       = $update->hasUpdates();

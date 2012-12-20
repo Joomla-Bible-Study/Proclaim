@@ -65,7 +65,8 @@ class LiveUpdateModel extends JModel
 		$session->set('tempdir', $tempdir, 'liveupdate');
 		
 		// Let's download!
-		require_once dirname(__FILE__).'/download.php';
+		//require_once dirname(__FILE__).'/download.php';
+        JLoader::register('LiveUpdateDownloadHelper', dirname(__FILE__) . '/download.php');
 		return LiveUpdateDownloadHelper::download($url, $target);
 	}
 	
@@ -144,7 +145,8 @@ class LiveUpdateModel extends JModel
 		$instModelFile = JPATH_ADMINISTRATOR.'/components/com_akeeba/models/installer.php';
 		if(!JFile::exists($instModelFile)) return false;
 		
-		require_once JPATH_ADMINISTRATOR.'/components/com_akeeba/models/installer.php';
+		//require_once JPATH_ADMINISTRATOR.'/components/com_akeeba/models/installer.php';
+        JLoader::register('JInstallerHelper', JPATH_ADMINISTRATOR.'/components/com_akeeba/models/installer.php');
 		$model	= JModel::getInstance('Installer', 'AkeebaModel');
 		$packageType = JInstallerHelper::detectType($tempdir);
 		$name = $model->getExtensionName($tempdir);
