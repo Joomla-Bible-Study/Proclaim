@@ -29,8 +29,7 @@ abstract class JBSMHelperRoute {
 
     /**
      * Get Artical Rout
-     * @fixme This need to be fixed
-     * @param	int	The route of the study item
+     * @param	int	 $id The route of the study item
      */
     public static function getArticleRoute($id) {
         $needles = array(
@@ -44,7 +43,7 @@ abstract class JBSMHelperRoute {
 
     /**
      * Get Teacher Route
-     * @param	int	The route of the teacher item
+     * @param	int $id	The route of the teacher item
      */
     public static function getTeacherRoute($id) {
         $needles = array(

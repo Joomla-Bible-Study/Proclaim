@@ -14,6 +14,7 @@ jimport('joomla.application.component.modeladmin');
 
 /**
  * MediaImage model class
+ * @property mixed _admin
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
@@ -29,9 +30,9 @@ class BiblestudyModelMediaimage extends JModelAdmin {
      * @return      boolean
      * @since       1.6
      */
-    protected function allowEdit($data = array(), $key = 'id') {
+    public  function allowEdit($data = array(), $key = 'id') {
         // Check specific edit permission then general edit permission.
-        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediaimage.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediaimage.' . ((int) isset($data[$key]) ? $data[$key] : 0));
     }
 
     /**
@@ -71,6 +72,7 @@ class BiblestudyModelMediaimage extends JModelAdmin {
     /**
      * Get Admin Table
      * @return object
+     * @todo move to helper
      */
     public function getAdmin() {
         if (empty($this->_admin)) {

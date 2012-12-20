@@ -59,7 +59,6 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
      * @since	1.6
      */
     protected function populateState() {
-        $app = JFactory::getApplication('site');
 
         // Load state from the request.
         $input = new JInput;
@@ -70,10 +69,9 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
-        $params = $app->getParams();
+        $params = JComponentHelper::getParams('site');
         $this->setState('params', $params);
 
-        // TODO: Tune these values based on other permissions.
         $user = JFactory::getUser();
         if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy'))) {
             $this->setState('filter.published', 1);
@@ -84,7 +82,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
     /**
      * Method to get study data.
      *
-     * @param	integer	The id of the study.
+     * @param	int $pk	The id of the study.
      * @since 7.1.0
      * @return	mixed	Menu item data object on success, false on failure.
      */
@@ -149,7 +147,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
     /**
      * Get Admin
      * @todo Need to move this into the Helper.php
-     * @return type
+     * @return object
      */
     function getAdmin() {
         if (empty($this->_admin)) {

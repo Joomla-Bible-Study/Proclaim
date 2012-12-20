@@ -262,10 +262,10 @@ class BiblestudyControllerSermon extends JControllerForm
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
-				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()";
+				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
 
 				$cap = 0;
-				return;
+				return null;
 			} else {
 				$cap = 1;
 			}

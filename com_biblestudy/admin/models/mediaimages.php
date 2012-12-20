@@ -45,7 +45,7 @@ class BiblestudyModelMediaimages extends JModelList {
 
     /**
      * Admin
-     * @var admin
+     * @var $_admin
      */
     var $_admin;
 
@@ -53,6 +53,7 @@ class BiblestudyModelMediaimages extends JModelList {
      * Get Admin info
      *
      * @return array
+     * @todo move to helper
      */
     public function getAdmin() {
         if (empty($this->_admin)) {

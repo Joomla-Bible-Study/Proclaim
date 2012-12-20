@@ -190,10 +190,6 @@ class BiblestudyControllerCommentform extends JControllerForm
 			$append .= '&tmpl=' . $tmpl;
 		}
 
-		// TODO This is a bandaid, not a long term solution.
-//		if ($layout) {
-//			$append .= '&layout='.$layout;
-//		}
 		$append .= '&layout=edit';
 
 		if ($recordId) {
