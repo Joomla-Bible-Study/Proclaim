@@ -47,7 +47,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$app = JFactory::getApplication();
 
 		// Load state from the request.
-		$pk = $app->input->getInt('a_id');
+		$pk = $app->input->getInt('a_id'); 
 		$this->setState('mediafile.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');

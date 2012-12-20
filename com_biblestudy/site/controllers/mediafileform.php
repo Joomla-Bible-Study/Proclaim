@@ -65,7 +65,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	function __construct($config = array())
 	{
-		$input = new JInput;
+		$input = new JInput; 
 		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 
@@ -216,7 +216,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
-			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
+			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafiles';
 		} else {
 			return base64_decode($return);
 		}
@@ -258,7 +258,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$input = new JInput;
 		$catId = $input->get('catId', '', 'int');
 
-		$model = $this->getModel('mediafilesedit');
+		$model = $this->getModel('mediafile');
 		$items = $model->getdocManCategoryItems($catId);
 		echo $items;
 	}
@@ -274,7 +274,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$input = new JInput;
 		$secId = $input->get('secId', '', 'int');
 
-		$model = & $this->getModel('mediafilesedit');
+		$model = & $this->getModel('mediafile');
 		$items = & $model->getArticlesSectionCategories($secId);
 		echo $items;
 	}
@@ -290,7 +290,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		error_reporting(0);
 		$catId = $input->get('catId', '', 'int');
 
-		$model = & $this->getModel('mediafilesedit');
+		$model = & $this->getModel('mediafile');
 		$items = & $model->getCategoryItems($catId);
 		echo $items;
 	}
@@ -306,53 +306,11 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		error_reporting(0);
 		$catId = $input->get('catId', '', 'int');
 
-		$model = & $this->getModel('mediafilesedit');
+		$model = & $this->getModel('mediafile');
 		$items = & $model->getVirtueMartItems($catId);
 		echo $items;
 	}
 
-	/**
-	 * Reset Download count
-	 */
-	public function resetDownloads()
-	{
-		$msg   = null;
-		$input = new JInput;
-		$id    = $input->get('id', 0, 'int');
-		$db    = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
-		$reset = $db->query();
-		if ($db->getErrorNum() > 0) {
-			$error = $db->getErrorMsg();
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-			$this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]=' . $id, $msg);
-		} else {
-			$updated = $db->getAffectedRows();
-			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-			$this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
-		}
-	}
 
-	/**
-	 * Reset Play Count
-	 */
-	public function resetPlays()
-	{
-		$msg   = null;
-		$input = new JInput;
-		$id    = $input->get('id', 0, 'int');
-		$db    = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
-		$reset = $db->query();
-		if ($db->getErrorNum() > 0) {
-			$error = $db->getErrorMsg();
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-			$this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]=' . $id, $msg);
-		} else {
-			$updated = $db->getAffectedRows();
-			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-			$this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
-		}
-	}
 
 }

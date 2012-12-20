@@ -80,6 +80,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$JApplication = new JApplication();
 		$JApplication->setUserState($option . 'sid', $this->item->id);
 		$JApplication->setUserState($option . 'sdate', $this->item->studydate);
+        $input->set('sid', $this->item->id);
+        $input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->canDo = JBSMHelper::getActions($this->item->id, 'sermon');
 		$this->admin = JBSMParams::getAdmin($isSite = true);

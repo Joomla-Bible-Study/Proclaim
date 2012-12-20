@@ -387,7 +387,7 @@ $input = $app->input;
 				?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td align="center">
-					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int)$item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' . (int)$item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal'; ?>
                     <a class="btn btn-primary"
                        onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
                        title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
@@ -411,7 +411,7 @@ $input = $app->input;
         <tfoot>
         <tr>
             <td colspan="4">
-				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal'; ?>
 				<?php
 				if (empty($this->item->id)) {
 					?> <a onClick="Joomla.submitbutton('message.apply');"

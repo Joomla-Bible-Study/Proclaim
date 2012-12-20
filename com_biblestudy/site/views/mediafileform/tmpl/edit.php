@@ -1,11 +1,10 @@
 <?php
 /**
  * Edit
- *
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -38,19 +37,22 @@ JHtml::_('behavior.keepalive');
 //$params = $this->state->get('params');
 //$params = $params->toArray();
 $params = $this->item->params;
-$app    = JFactory::getApplication();
-$input  = $app->input;
+$app = JFactory::getApplication();
+$input = $app->input;
 
 //$params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
-$folder   = '';
-$server   = '';
-$input    = new JInput;
-$option   = $input->get('option', '', 'cmd');
-$study    = $input->get('sid', '', 'int');
-$sdate    = $input->get('sdate', '', 'string');
-$size     = $app->getUserState($option . 'size');
-$fname    = $app->getUserState($option . 'fname');
+$folder = '';
+$server = '';
+$option = $input->get('option','','cmd');
+$input = new JInput;
+$study = $app->getUserState($option.'sid'); 
+$sdate = $app->getUserState($option.'sdate'); 
+
+//$study = $input->get('sid','','int');
+//$sdate = $input->get('sdate','','string'); 
+$size = $app->getUserState($option . 'size');
+$fname = $app->getUserState($option . 'fname');
 $serverid = $app->getUserState($option . 'serverid');
 if ($this->item->server) {
 	$server = $this->item->server;
@@ -68,14 +70,15 @@ if ($this->item->path) {
 	$folder = $this->admin_params->get('path');
 }
 ?>
-<script xmlns="http://www.w3.org/1999/html">
-    function openConverter1() {
-        var Wheight = 125;
-        var Wwidth = 300;
+<script>
+    function openConverter1()
+    {
+        var Wheight=125;
+        var Wwidth=300;
         var winl = (screen.width - Wwidth) / 2;
         var wint = (screen.height - Wheight) / 2;
 
-        var msg1 = window.open("components/com_biblestudy/convert1.htm", "Window", "scrollbars=1,width=" + Wwidth + ",height=" + Wheight + ",top=" + wint + ",left=" + winl);
+        var msg1=window.open("components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
         if (!msg1.closed) {
             msg1.focus();
         }
@@ -91,15 +94,20 @@ if ($this->item->path) {
     }
 </script>
 <script language="javascript" type="text/javascript">
-    function submitbutton(task) {
-        if (task == '') {
+    function submitbutton(task)
+    {
+        if (task == '')
+        {
             return false;
         }
-        else if (task == 'upload') {
-            if (document.adminForm.upload_folder.value == '') {
+        else if (task == 'upload')
+        {
+            if (document.adminForm.upload_folder.value == '')
+            {
                 alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER'); ?>");
             }
-            else if (document.adminForm.upload_server.value == '') {
+            else if (document.adminForm.upload_server.value == '' )
+            {
                 alert("<?php echo JText::_('JBS_MED_ENTER_SERVER'); ?>");
             }
             else {
@@ -109,115 +117,137 @@ if ($this->item->path) {
             }
         }
 
-        else if (task == 'thirdparty') {
-            if (document.adminForm.video_third.value == '') {
+        else if  (task == 'thirdparty')
+        {
+            if (document.adminForm.video_third.value == '')
+            {
                 alert("<?php echo JText::_('JBS_MED_ADD_THIRD_PARTY_URL'); ?>");
             }
-            else {
-                if (confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS'); ?>")) {
-                    submitform(task);
+            else
+            {
+                if(confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS'); ?>"))
+                {submitform(task);
                     window.top.setTimeout('window.location.reload(true)', 1000);
-                    return true;
-                }
+                    return true;}
             }
         }
-        else if (task == 'cancelclose') {
+        else if (task == 'cancel')
+        {
 
             window.parent.SqueezeBox.close();
         }
-        else {
-            var isValid = true;
-            if (task != 'cancel' && task != 'close' && task != 'uploadflash') {
+        else
+        {
+            var isValid=true;
+            if (task != 'cancel' && task != 'close' && task != 'uploadflash')
+            {
                 var forms = $$('form.form-validate');
-                for (var i = 0; i < forms.length; i++) {
-                    if (!document.formvalidator.isValid(forms[i])) {
+                for (var i=0;i<forms.length;i++)
+                {
+                    if (!document.formvalidator.isValid(forms[i]))
+                    {
                         isValid = false;
                         break;
                     }
                 }
             }
 
-            if (isValid) {
+            if (isValid)
+            {
                 submitform(task);
-                if (self != top) {
+                if (self != top)
+                {
                     window.top.setTimeout('window.parent.SqueezeBox.close()', 2000);
                 }
                 window.top.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
-            else {
+            else
+            {
                 alert('<?php echo JText::_('JBS_MED_FIELDS_INVALID'); ?>');
                 return false;
             }
         }
     }
 
-    function sizebutton(remotefilesize) {
+    function sizebutton(remotefilesize)
+    {
         var objTB = document.getElementById("size");
         objTB.value = remotefilesize;
     }
 
     function showupload() {
         var id = 'SWFUpload_0';
-        if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '') {
-            document.getElementById(id).style.display = 'inline';
-        }
-        else {
-            document.getElementById(id).style.display = 'none';
-        }
+        if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '')
+        {document.getElementById(id).style.display = 'inline';}
+        else {document.getElementById(id).style.display = 'none';}
     }
 
-    if (window.addEventListener) {
+    if (window.addEventListener){
         window.addEventListener('load', showupload, false);
-    } else if (window.attachEvent) {
+    } else if (window.attachEvent){
         window.attachEvent('load', showupload);
     }
 
 </script>
 <form
-        action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileform&a_id=' . (int) $this->item->id);
-		?>" method="post" name="adminForm" id="item-form" class="form-validate form-vertical" enctype="multipart/form-data">
-
+        action="<?php
+		$input = new JInput;
+		if ($input->get('layout','','string') == 'modal') {
+			$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
+		} else {
+			$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+		} echo $url;
+		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+            <div class="formelm-buttons">
+                <legend>
+                    <?php
+                    echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+                    if ($input->get('layout', '', 'string') == 'modal') {
+                        ?> <div class="fltlft">
+                            <button type="button" onclick="submitbutton('mediafileform.save');  ">
+                                <?php echo JText::_('JSAVE'); ?></button>
+                            <button type="button" onclick="window.parent.SqueezeBox.close();  ">
+                                <?php echo JText::_('JCANCEL'); ?></button>
+                        </div> <?php } else { ?>
+                            <div class="fltlft">
+                            <button type="button" onclick="submitbutton('mediafileform.save');  ">
+                                <?php echo JText::_('JSAVE'); ?></button>
+                            <button type="button" onclick="submitbutton('mediafileform.cancel');  ">
+                                <?php echo JText::_('JCANCEL'); ?></button>
+                        </div>
+                        <?php } ?>
+                </legend>
+            </div>
 <!-- Begin Content -->
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" onclick="submitbutton('mediafileform.save');  ">
-            <i class="icon-ok"></i> <?php echo JText::_('JSAVE') ?>
-        </button>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn" onclick="submitbutton('mediafileform.cancel');  ">
-            <i class="icon-cancel"></i> <?php echo JText::_('JCANCEL') ?>
-        </button>
-    </div>
-</div>
+<div class="span10 form-horizontal">
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
     </li>
-    <li><a href="#state" data-toggle="tab"><?php echo JText::_('JBS_CMN_ITEM_PUBLISHED'); ?></a>
+    <li ><a href="#state" data-toggle="tab"><?php echo JText::_('JBS_CMN_ITEM_PUBLISHED'); ?></a>
     </li>
-    <li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
+    <li ><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
     </li>
-    <li><a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
+    <li ><a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
     </li>
-    <li><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
+    <li ><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
     </li>
-    <li><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
+    <li ><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
     </li>
-    <li><a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
+    <li ><a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
     </li>
-    <li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
+    <li ><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
     </li>
 
-	<?php if (0)://$this->canDo->get('core.admin')): ?>
+	<?php if ($this->canDo->get('core.admin')): ?>
     <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
 </ul>
 <div class="tab-content">
 <div class="tab-pane active" id="general">
 
-	<?php if ($input->get('layout', '', 'string') == 'modal') { ?>
+	<?php if ($input->get('layout', '','string') == 'modal') {?>
     <div class="control-group  form-inline">
         <button type="button" onclick="submitbutton('mediafile.save');  ">
 			<?php echo JText::_('JSAVE'); ?></button>
@@ -299,6 +329,7 @@ if ($this->item->path) {
     </div>
 
 
+
 </div>
 <div class="tab-pane" id="linktype">
     <div class="row-fluid">
@@ -332,6 +363,7 @@ if ($this->item->path) {
     </div>
 </div>
 <div class="tab-pane" id="player">
+
 
 
     <div class="control-group">
@@ -433,22 +465,18 @@ if ($this->item->path) {
             <table class="adminlist">
 
                 <tbody>
-                <tr>
-                    <td>
-						<?php echo $this->upload_server; ?></td>
+                <tr><td>
+					<?php echo $this->upload_server; ?></td>
                     </td></tr>
-                <tr>
-                    <td>
-						<?php echo $this->upload_folder; ?></td>
+                <tr><td>
+					<?php echo $this->upload_folder; ?></td>
                     </td></tr>
                 <tr>
                     <td>
 
-                        <input type="file" name="uploadfile" value=""/>
-                        <button type="button" onclick="submitbutton('upload')">
-							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
-                    </td>
-                    <td></td>
+                        <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
+						<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
+                    </td><td></td>
                 </tr>
                 </tbody>
             </table>
@@ -478,16 +506,20 @@ if ($this->item->path) {
 
 </div>
 <div class="tab-pane" id="parameters">
-	<?php foreach ($this->form->getFieldset('params') as $field) : ?>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $field->label; ?>
+	<?php foreach ($params as $name => $fieldset) :
+	foreach ($this->form->getFieldset('params') as $field) :  ?>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $field->label; ?>
+            </div>
+            <div class="controls">
+				<?php echo $field->input; ?>
+            </div>
         </div>
-        <div class="controls">
-			<?php echo $field->input; ?>
-        </div>
-    </div>
+		<?php endforeach; ?>
 	<?php endforeach; ?>
+
+
 </div>
 <div class="tab-pane" id="state">
     <fieldset>
@@ -517,22 +549,31 @@ if ($this->item->path) {
 				<?php echo $this->form->getInput('language'); ?>
             </div>
         </div>
-    </fieldset>
+
+
 </div>
-<?php if (0)://$this->canDo->get('core.admin')): ?>
+<?php if ($this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
+
     <div class="control-group">
         <div class="controls">
-			<?php //echo $this->form->getInput('rules'); ?>
+			<?php echo $this->form->getInput('rules'); ?>
         </div>
     </div>
+
 </div>
+
 	<?php endif; ?>
-<input type="hidden" name="flupfile" value=""/>
-<input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+</fieldset>
+<input type="hidden" name="flupfile" value ="" />
+<input type="hidden" name="task" value="" />
+<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 <?php echo JHtml::_('form.token'); ?>
+<input type="hidden" name="controller" value="mediafile" />
+
+
 </div>
 </fieldset>
+</div>
 </form>
 
