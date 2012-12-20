@@ -36,10 +36,10 @@ class modJBSMHelper {
 
     /**
      * Get Latest
-     * @param array $params
+     * @param JObject $params
      * @return array
      */
-    static function getLatest($params) {
+    public static function getLatest($params) {
 
         $items = $params->get('locations', 1);
 
@@ -201,10 +201,9 @@ class modJBSMHelper {
                 }
             }
         }
-        $app = JFactory::getApplication();
-        //  $this->setState('filter.language', $app->getLanguageFilter());
+
         // Filter by language
-        $lang = $app->getLanguageFilter();
+        $lang = JFactory::getLanguage();
         if ($lang || $language != '*') {
             $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
@@ -264,10 +263,11 @@ class modJBSMHelper {
 
     /**
      * Get Template Setting
-     * @param array $params
+     * @param JObject $params
      * @return object
+     * @todo move to com_biblestudy helper
      */
-    static function getTemplate($params) {
+    public static function getTemplate($params) {
         $db = JFactory::getDBO();
         $templateid = $params->get('modulemenuid', 1);
         $query = 'SELECT *'
@@ -281,8 +281,9 @@ class modJBSMHelper {
     /**
      * Get Admin Setting
      * @return object
+     * @todo move to com_biblestudy helper
      */
-    static function getAdmin() {
+    public static function getAdmin() {
         $db = JFactory::getDBO();
         $query = 'SELECT *'
                 . ' FROM #__bsms_admin'
@@ -294,12 +295,12 @@ class modJBSMHelper {
 
     /**
      * Render Study
-     * @param type $study
-     * @param type $params
+     * @param string $study
+     * @param JObject $params
      * @todo make this change according to the parameter settings for new template
      */
-    function renderStudy($study, $params) {
-        require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
+    public function renderStudy($study = '_study', $params) {
+        require(JModuleHelper::getLayoutPath('mod_biblestudy', $study));
     }
 
 }

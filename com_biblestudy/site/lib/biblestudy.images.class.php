@@ -19,11 +19,11 @@ class jbsImages {
 
     /**
      * Get Image Path
-     * @param string $path
-     * @return \JObject
+     * @param Object $path
+     * @return Object
      */
     public function getImagePath($path) {
-        $tmp = new JObject();
+        $tmp = new stdClass();
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path)):
@@ -64,7 +64,7 @@ class jbsImages {
 
     /**
      * Main Study Image
-     * @return string
+     * @return Object
      */
     function mainStudyImage() {
         $mainimage = array();
@@ -140,7 +140,7 @@ class jbsImages {
     /**
      * Get Study Thumbnail
      * @param string $image
-     * @return string
+     * @return Object
      */
     function getStudyThumbnail($image = 'openbible.png') {
         $imagepath = array();
@@ -156,7 +156,7 @@ class jbsImages {
     /**
      * Get Series Thumbnail
      * @param string $image
-     * @return string
+     * @return Object
      */
     function getSeriesThumbnail($image = 'openbible.png') {
         $imagepath = array();
@@ -173,7 +173,7 @@ class jbsImages {
      * Get Teacher Thumbnail
      * @param string $image1
      * @param string $image2
-     * @return string
+     * @return Object
      */
     function getTeacherThumbnail($image1 = NULL, $image2 = NULL) {
         $imagepath = array();
@@ -199,7 +199,7 @@ class jbsImages {
      * Get Teacher Image
      * @param string $image1
      * @param string $image2
-     * @return string
+     * @return Object
      */
     function getTeacherImage($image1 = null, $image2 = null) {
         $imagepath = array();
@@ -223,7 +223,7 @@ class jbsImages {
      * Get Media Image
      * @param string $media1
      * @param string $media2
-     * @return string
+     * @return Object
      */
     function getMediaImage($media1 = NULL, $media2 = NULL) {
         $imagepath = array();
@@ -246,7 +246,7 @@ class jbsImages {
     /**
      * Get Show Hide
      * @todo Brent Cordis need to refacter this to pull admin params from the helper.php
-     * @return string
+     * @return Object
      */
     function getShowHide() {
         $database = JFactory::getDBO();

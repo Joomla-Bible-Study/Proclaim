@@ -22,7 +22,7 @@ $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
-$listingcall = JViewLegacy::loadHelper('serieslist');
+//$listingcall = JViewLegacy::loadHelper('serieslist');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
@@ -57,7 +57,7 @@ $listingcall = JViewLegacy::loadHelper('serieslist');
                     break;
                 case 'T':
                     //Table
-                    echo '<table id="bsms_studytable" width="100%">';
+                    echo '<table id="bsms_studytable" style="width: 100%">';
                     break;
                 case 'D':
                     //DIV
@@ -89,7 +89,6 @@ $listingcall = JViewLegacy::loadHelper('serieslist');
                 <?php
                 echo $this->pagination->getPagesLinks();
                 echo $this->pagination->getPagesCounter();
-                //echo $this->pagination->getListFooter();
                 ?>
             </div> <!--end of bsfooter div-->
         </div><!--end of bspagecontainer div-->

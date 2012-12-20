@@ -21,8 +21,10 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  * @since 7.0.0
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy {
+	public $admin;
+	public $admin_params;
 
-    /**
+	/**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -44,7 +46,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin(true);
+        $this->admin = JBSMParams::getAdmin();
 
         $t = $input->get('t', 1,'int');
         if (!$t) {
@@ -61,7 +63,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
         $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
 
-        $itemparams = $mainframe->getPageParameters();
+        $itemparams = JComponentHelper::getParams('site');
 
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
