@@ -42,7 +42,8 @@ function trigger_dberror($text = '', $back = 0) {
     $dberror = $biblestudy_db->stderr(true);
     echo debug_callstackinfo($back + 1);
 
-    require_once (BIBLESTUDY_PATH_LIB . DIRECTORY_SEPARATOR . 'biblestudy.version.php');
+    //require_once (BIBLESTUDY_PATH_LIB . DIRECTORY_SEPARATOR . 'biblestudy.version.php');
+    JLoader::register('CBiblestudyVersion', dirname(__FILE__) . '/lib/version.php');
     $biblestudyVersion = CBiblestudyVersion::version();
     $biblestudyPHPVersion = CBiblestudyVersion::PHPVersion();
     $biblestudyMySQLVersion = CBiblestudyVersion::MySQLVersion();

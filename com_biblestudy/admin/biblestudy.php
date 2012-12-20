@@ -16,14 +16,16 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
-require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
+//require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
+JLoader::register('LiveUpdate', dirname(__FILE__) . '/liveupdate/liveupdate.php');
 if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 {
 	LiveUpdate::handleRequest();
 	return;
 }
 
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+include_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+
 
 if (version_compare(JVERSION, '3.0', 'ge'))
 {

@@ -32,7 +32,8 @@ class BiblestudyControllerInstall extends JControllerForm {
      * Fix Assets
      */
     function fixAssets() {
-        require_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        //require_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $fix_assets = $asset->fixAssets();
         $input = new JInput;

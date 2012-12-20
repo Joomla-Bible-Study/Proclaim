@@ -415,7 +415,8 @@ class JBSMigrate {
      * @return string
      */
     function update611() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
+        JLoader::register('jbs611Install', dirname(__FILE__) . '/migration/biblestudy.611.upgrade.php');
         $install = new jbs611Install();
         if (!$install->upgrade611()) {
             return FALSE;
@@ -428,7 +429,8 @@ class JBSMigrate {
      * @return string
      */
     function update613() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
+        JLoader::register('jbs613Install', dirname(__FILE__) . '/migration/biblestudy.613.upgrade.php');
         $install = new jbs613Install();
         if (!$install->upgrade613()) {
             return FALSE;
@@ -441,7 +443,8 @@ class JBSMigrate {
      * @return string
      */
     function update614() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
+        JLoader::register('jbs614Install', dirname(__FILE__) . '/migration/biblestudy.614.upgrade.php');
         $install = new jbs614Install();
         if (!$install->upgrade614()) {
             return FALSE;
@@ -454,7 +457,8 @@ class JBSMigrate {
      * @return string
      */
     function update622() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
+        JLoader::register('jbs622Install', dirname(__FILE__) . '/migration/biblestudy.622.upgrade.php');
         $install = new jbs622Install();
         if (!$install->upgrade622()) {
             return FALSE;
@@ -467,7 +471,8 @@ class JBSMigrate {
      * @return string
      */
     function update623() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
+       // require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
+        JLoader::register('jbs623Install', dirname(__FILE__) . '/migration/biblestudy.623.upgrade.php');
         $install = new jbs623Install();
         if (!$install->upgrade623()) {
             return FALSE;
@@ -480,7 +485,8 @@ class JBSMigrate {
      * @return string
      */
     function update700() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
+       // require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
+        JLoader::register('jbs700Install', dirname(__FILE__) . '/migration/biblestudy.700.upgrade.php');
         $install = new jbs700Install();
         if (!$install->upgrade700()) {
             return FALSE;
@@ -493,7 +499,8 @@ class JBSMigrate {
      * @return string
      */
     function update701() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
+        JLoader::register('updatejbs701', dirname(__FILE__) . '/migration/update701.php');
         $install = new updatejbs701();
         if (!$install->do701update()) {
             return FALSE;
@@ -506,7 +513,8 @@ class JBSMigrate {
      * @return string|boolean
      */
     function update710() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
+        JLoader::register('JBS710Update', dirname(__FILE__) . '/install/updates/update710.php');
         $migrate = new JBS710Update();
         if (!$migrate->update710()) {
             return FALSE;
@@ -519,7 +527,8 @@ class JBSMigrate {
      * @return string
      */
     function allupdate() {
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
+        //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
+        JLoader::register('updatejbsALL', dirname(__FILE__) . '/migration/updateALL.php');
         $install = new updatejbsALL();
         if (!$install->doALLupdate()) {
             return FALSE;

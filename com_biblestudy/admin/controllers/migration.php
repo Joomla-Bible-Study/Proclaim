@@ -198,7 +198,8 @@ class BiblestudyControllerMigration extends JControllerLegacy {
      * @return boolean
      */
     public function fixAssets() {
-        require_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        //require_once(BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $asset->fixAssets();
         return true;

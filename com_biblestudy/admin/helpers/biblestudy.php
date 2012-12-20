@@ -532,7 +532,9 @@ class JBSMHelper
         {
             JError::raiseWarning(500, $e->getMessage());
         }
-        require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
+        //require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/translated.php');
+        JLoader::register('JBSMTranslated', dirname(__FILE__) . '/helpers/translated.php');
+        
         $translate = new JBSMTranslated();
         foreach ($options as $option) {
             $option->text = JText::_($option->text);
