@@ -2,10 +2,11 @@
 
 /**
  * Sermon JViewLegacy
+ *
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @link    http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -20,8 +21,10 @@ require_once (JPATH_COMPONENT . '/helpers/biblegateway.php');
 
 /**
  * View class for Sermon
+ *
+ * @property mixed document
  * @package BibleStudy.Site
- * @since 7.0.0
+ * @since   7.0.0
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
@@ -36,6 +39,15 @@ class BiblestudyViewSermon extends JViewLegacy
 
 	protected $user;
 
+	public $passage;
+	public $related;
+	public $subscribe;
+	public $menuid;
+	public $detailslink;
+	public $page;
+	public $template;
+	public $article;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -48,18 +60,19 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app    = JFactory::getApplication();
+		$user   = JFactory::getUser();
 		$userId = $user->get('id');
-		if(BIBLESTUDY_CHECKREL){
-		$dispatcher = JEventDispatcher::getInstance();} else {
+		if (BIBLESTUDY_CHECKREL) {
+			$dispatcher = JEventDispatcher::getInstance();
+		} else {
 			$dispatcher = JDispatcher::getInstance();
 		}
 
-		$this->item = $this->get('Item');
+		$this->item  = $this->get('Item');
 		$this->print = $app->input->getBool('print');
 		$this->state = $this->get('State');
-		$this->user = $user;
+		$this->user  = $user;
 
 
 		// Check for errors.
@@ -72,32 +85,32 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Create a shortcut for $item.
 		$item = & $this->item;
 
-        if ($this->getLayout() == 'pagebreak') {
-            $this->_displayPagebreak($tpl);
-            return;
-        }
-        $input = new JInput;
-        $print = $input->get('print','','bool');
-       
-        $Biblepassage = new showScripture();
-        $this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
+		if ($this->getLayout() == 'pagebreak') {
+			$this->_displayPagebreak($tpl);
+
+			return null;
+		}
+		$input = new JInput;
+		$print = $input->get('print', '', 'bool');
+
+		$Biblepassage  = new showScripture();
+		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		// TODO: Change based on shownoauth
 		$item->readmore_link = JRoute::_(JBSMHelperRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
 		$this->params = $this->state->get('params');
-		$active = $app->getMenu()->getActive();
-		$temp = clone ($this->params);
+		$active       = $app->getMenu()->getActive();
+		$temp         = clone ($this->params);
 
 		// Check to see which parameters should take priority
 		if ($active) {
 			$currentLink = $active->link;
 			// If the current view is the active item and an article view for this article, then the menu item params take priority
-			if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string)$item->id))) {
+			if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string) $item->id))) {
 				// $item->params are the article params, $temp are the menu item params
 				// Merge so that the menu item params take priority
 				$item->params->merge($temp);
@@ -133,9 +146,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest')))) {
 
-			JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
-
-			return;
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
 
 		}
 		//check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -143,20 +154,16 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		if ($this->item->access > 1) {
 			if (!in_array($this->item->access, $groups)) {
-				return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
 
 		//$study = $this->item;
 		$relatedstudies = new relatedStudies();
 
-		$template = $this->get('template');
+		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
-		//@todo need to move to model bad way to code this.
-		// Convert item parameters into objects
-		//$registry = new JRegistry;
-		//$registry->loadString($study->params);
-		//$itemparams = $registry;
+
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
@@ -170,14 +177,18 @@ class BiblestudyViewSermon extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		endif;
 
-		$pagebuilder = new JBSPagebuilder();
-		$pelements = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+		$pagebuilder            = new JBSPagebuilder();
+		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
 		$this->item->scripture1 = $pelements->scripture1;
 		$this->item->scripture2 = $pelements->scripture2;
-		$this->item->media = $pelements->media;
-		$this->item->duration = $pelements->duration;
-		$this->item->studydate = $pelements->studydate;
-		if (isset($pelements->secondary_reference)){$this->item->secondary_reference = $pelements->secondary_reference;} else{$this->item->secondary_reference = '';}
+		$this->item->media      = $pelements->media;
+		$this->item->duration   = $pelements->duration;
+		$this->item->studydate  = $pelements->studydate;
+		if (isset($pelements->secondary_reference)) {
+			$this->item->secondary_reference = $pelements->secondary_reference;
+		} else {
+			$this->item->secondary_reference = '';
+		}
 		if (isset($pelements->topics)):
 			$this->item->topics = $pelements->topics; else:
 			$this->item->topics = '';
@@ -195,24 +206,44 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->teacherimage = $pelements->teacherimage; else:
 			$this->item->teacherimage = null;
 		endif;
-		$article = new stdClass();
-		$article->text = $this->item->scripture1;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
-		$this->item->scripture1 = $article->text;
-		$article->text = $this->item->scripture2;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
-		$this->item->scripture2 = $article->text;
-		$article->text = $this->item->studyintro;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
-		$this->item->studyintro = $article->text;
-		$article->text = $this->item->secondary_reference;
-		$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$article                         = new stdClass();
+		$article->text                   = $this->item->scripture1;
+		$results                         = $dispatcher->trigger('onContentPrepare', array(
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
+		$this->item->scripture1          = $article->text;
+		$article->text                   = $this->item->scripture2;
+		$results                         = $dispatcher->trigger('onContentPrepare', array(
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
+		$this->item->scripture2          = $article->text;
+		$article->text                   = $this->item->studyintro;
+		$results                         = $dispatcher->trigger('onContentPrepare', array(
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
+		$this->item->studyintro          = $article->text;
+		$article->text                   = $this->item->secondary_reference;
+		$results                         = $dispatcher->trigger('onContentPrepare', array(
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 
 		//get the podcast subscription
-		$podcast = new podcastSubscribe();
+		$podcast         = new podcastSubscribe();
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
 		//Passage link to BibleGateway
@@ -222,31 +253,32 @@ class BiblestudyViewSermon extends JViewLegacy
 			// Convert parameter fields to objects.
 			$registry = new JRegistry;
 			$registry->loadString($plugin->params);
-			$st_params = $registry;
-			$version = $st_params->get('bible_version');
+			$st_params  = $registry;
+			$version    = $st_params->get('bible_version');
 			$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 		}
 
 		//Added database queries from the default template - moved here instead
 		$database = JFactory::getDBO();
-		$query = "SELECT id"
+		$query    = "SELECT id"
 				. "\nFROM #__menu"
 				. "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
 		$database->setQuery($query);
-		$menuid = $database->loadResult();
+		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
 
 
 		if ($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
-			return;
+
+			return null;
 		}
 
 		/*
          * Process the prepare content plugins
          */
 		$article->text = $this->item->studytext;
-		$linkit = $this->item->params->get('show_scripture_link');
+		$linkit        = $this->item->params->get('show_scripture_link');
 		if ($linkit) {
 			switch ($linkit) {
 				case 0:
@@ -258,34 +290,39 @@ class BiblestudyViewSermon extends JViewLegacy
 					JPluginHelper::importPlugin('content', 'scripturelinks');
 					break;
 			}
-			$limitstart = $app->input->get('limitstart', 'int');
-			$results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
-			$article->studytext = $article->text;
+			$limitstart            = $app->input->get('limitstart', 'int');
+			$results               = $dispatcher->trigger('onContentPrepare', array(
+				'com_biblestudy.sermon',
+				& $article,
+				& $this->item->params,
+				$limitstart
+			));
+			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 		} //end if $linkit
-		$Biblepassage = new showScripture();
+		$Biblepassage  = new showScripture();
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		//Prepares a link string for use in social networking
-		$u = JURI::getInstance();
-		$detailslink = htmlspecialchars($u->toString());
-		$detailslink = JRoute::_($detailslink);
+		$u                 = JURI::getInstance();
+		$detailslink       = htmlspecialchars($u->toString());
+		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
 
 		//End social networking
 		JViewLegacy::loadHelper('share');
 
-		$this->page = new stdClass();
+		$this->page         = new stdClass();
 		$this->page->social = getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');
 
 		// To add the icon class to JHTML
-		JHTML::addIncludePath(JPATH_COMPONENT .'/helpers');
+		JHTML::addIncludePath(JPATH_COMPONENT . '/helpers');
 		$this->page->print = JHtml::_('icon.print_popup', $this->item, $this->item->params);
 
 		// End process prepare content plugins
 		$this->template = $template;
-		$this->article = $article;
+		$this->article  = $article;
 		//$this->assignRef('passage_link', $passage_link);
 		// Increment the hit counter of the article.
 		if (!$this->params->get('intro_only') && $offset == 0) {
@@ -303,12 +340,12 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app = JFactory::getApplication();
-		$menus = $app->getMenu();
-		$pathway = $app->getPathway();
-		$title = null;
+		$app                  = JFactory::getApplication();
+		$menus                = $app->getMenu();
+		$pathway              = $app->getPathway();
+		$title                = null;
 		$this->item->metadesc = $this->item->studyintro;
-		$this->item->metakey = $this->item->topics;
+		$this->item->metakey  = $this->item->topics;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
@@ -321,15 +358,19 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		$title = $this->params->get('page_title', '');
 
-		$id = (int)@$menu->query['id'];
+		$id = (int) @$menu->query['id'];
 		// if the menu item does not concern this article
 		if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id)) {
 			// If this is not a single article menu item, set the page title to the article title
 			if ($this->item->studytitle) {
 				$title = $this->item->studytitle;
 			}
-			$path = array(array('studytitle' => $this->item->studytitle,
-								'link' => ''));
+			$path = array(
+				array(
+					'studytitle' => $this->item->studytitle,
+					'link'       => ''
+				)
+			);
 
 			$path = array_reverse($path);
 			foreach ($path as $item) {
@@ -390,12 +431,12 @@ class BiblestudyViewSermon extends JViewLegacy
 
 	/**
 	 * Display PageBrack
+	 *
 	 * @param string $tpl
 	 */
 	function _displayPagebreak($tpl)
 	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
 	}
 
