@@ -216,7 +216,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
-			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafiles';
+			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
 		} else {
 			return base64_decode($return);
 		}

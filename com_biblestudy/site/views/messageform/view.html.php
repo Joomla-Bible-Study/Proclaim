@@ -42,6 +42,12 @@ class BiblestudyViewMessageform extends JViewLegacy
 	protected $return_page;
 
 	/**
+	 * Return Page Item
+	 * @var string
+	 */
+	protected $return_page_item;
+
+	/**
 	 * State
 	 * @var array
 	 */
@@ -146,6 +152,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
+		var_dump($this->return_page_item);
 
 		$this->_prepareDocument();
 

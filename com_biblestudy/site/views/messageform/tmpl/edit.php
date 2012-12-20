@@ -19,12 +19,12 @@ JHtml::_('behavior.formvalidation');
 // Create shortcut to parameters.
 //$params = $this->state->get('params');
 $params = $this->form->getFieldsets('params');
-$app = JFactory::getApplication();
-$input = $app->input;
+$app    = JFactory::getApplication();
+$input  = $app->input;
 ?>
 
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id='.(int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 <div class="btn-toolbar">
     <div class="btn-group">
@@ -387,7 +387,7 @@ $input = $app->input;
 				?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td align="center">
-					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' . (int)$item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal'; ?>
+					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
                     <a class="btn btn-primary"
                        onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
                        title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
@@ -411,10 +411,10 @@ $input = $app->input;
         <tfoot>
         <tr>
             <td colspan="4">
-				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal'; ?>
+				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 				<?php
 				if (empty($this->item->id)) {
-					?> <a onClick="Joomla.submitbutton('message.apply');"
+					?> <a onClick="Joomla.submitbutton('messageform.apply');"
                           href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
 				} else {
 					?>

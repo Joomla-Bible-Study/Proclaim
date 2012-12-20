@@ -389,7 +389,6 @@ class BiblestudyController extends JControllerLegacy
 	 * Upload Flash System
 	 *
 	 * @return text
-	 * @todo try this out soon. make the upflash() work.
 	 */
 	/*    function upflash() {
 			jimport('joomla.filesystem.file');
