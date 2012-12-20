@@ -50,7 +50,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param	array	An array of input data.
+	 * @param	array	$data  An array of input data.
 	 *
 	 * @return	boolean
 	 * @since	1.6
@@ -156,10 +156,6 @@ class BiblestudyControllerSermon extends JControllerForm
 			$append .= '&tmpl=' . $tmpl;
 		}
 
-		// TODO This is a bandaid, not a long term solution.
-//		if ($layout) {
-//			$append .= '&layout='.$layout;
-//		}
 		$append .= '&layout=edit';
 
 		if ($recordId) {
@@ -232,6 +228,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * Comment
 	 *
 	 * @return NULL
+	 * @todo need to be looked at.
 	 */
 	public function comment()
 	{
@@ -242,8 +239,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		$model     = $this->getModel('sermon');
 		$menu      = $mainframe->getMenu();
 		$item      = $menu->getActive();
-		$params    = $mainframe->getPageParameters();
-		$t         = $params->get('t');
+		$t         = '';
 		if (!$t) {
 			$t = 1;
 		}
@@ -268,8 +264,8 @@ class BiblestudyControllerSermon extends JControllerForm
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()";
 
-				return;
 				$cap = 0;
+				return;
 			} else {
 				$cap = 1;
 			}
@@ -283,6 +279,7 @@ class BiblestudyControllerSermon extends JControllerForm
 			}
 
 			if ($params->get('email_comments') > 0) {
+				//@todo this looks like it is not needed.
 				$EmailResult = $this->commentsEmail($params);
 			}
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
@@ -293,6 +290,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 	/**
 	 * Begin scripture links plugin function
+	 * FIXME this looks to be broken.
 	 */
 	public function biblegateway_link()
 	{
@@ -319,14 +317,13 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function download()
 	{
-		$abspath = JPATH_SITE;
-		require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
+		$mid   = $input->getInt('id');
 		if ($task == 'download') {
 			$downloader = new Dump_File();
-			$downloader->download();
-			// FIXME why are we killing the scrip hear.
+			$downloader->download($mid);
 			die;
 		}
 	}
@@ -354,8 +351,8 @@ class BiblestudyControllerSermon extends JControllerForm
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
 		$comment_abspath   = JPATH_SITE;
-		$comment_mailfrom  = $config->getValue('config.mailfrom');
-		$comment_fromname  = $config->getValue('config.fromname');
+		$comment_mailfrom  = $config->get('mailfrom');
+		$comment_fromname  = $config->get('fromname');
 		;
 		$comment_livesite = JURI::root();
 		$db               = JFactory::getDBO();
