@@ -83,7 +83,7 @@ if ($this->item->path) {
 </script>
 <script type="text/javascript">
     Joomla.submitbutton = function (task) {
-        if (task == 'mediafile.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        if (task == 'mediafileform.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
