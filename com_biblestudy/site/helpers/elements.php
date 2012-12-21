@@ -13,9 +13,12 @@ defined('_JEXEC') or die;
  * @todo change to JLoader::register
  */
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
-require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('jbsImages', dirname(__FILE__) . '/lib/biblestudy.defines.php');
+//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
 require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
+
 
 /**
  * Get Elementid

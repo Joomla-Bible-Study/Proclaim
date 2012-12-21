@@ -212,7 +212,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	public function save($key = null, $urlVar = 'a_id')
 	{
 		// Load the backend helper for filtering.
-		require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php';
+		//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php';
+        JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
 
 		$result = parent::save($key, $urlVar);
 
@@ -317,7 +318,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function download()
 	{
-		require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		//require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+        JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');

@@ -9,8 +9,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'cleanurl.php';
-
+//require_once BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'cleanurl.php';
+JLoader::register('JBSMFilter', BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'cleanurl.php');
 /**
  * Scripture Show class.
  *

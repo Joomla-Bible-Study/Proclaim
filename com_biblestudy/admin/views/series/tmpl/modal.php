@@ -16,8 +16,8 @@ if ($app->isSite()) {
 	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 }
 
-require_once JPATH_ROOT . '/components/com_biblestudy/helpers/route.php';
-
+//require_once JPATH_ROOT . '/components/com_biblestudy/helpers/route.php';
+JLoader::register('JBSMHelperRoute', dirname(__FILE__) . '/helpers/route.php');
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 

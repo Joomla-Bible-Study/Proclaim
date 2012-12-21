@@ -10,7 +10,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
+//require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
+JLoader::register('JBSMUpload', dirname(__FILE__) . '/helpers/upload.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -135,7 +136,7 @@ class BiblestudyController extends JControllerLegacy
 		if ($params->get('use_captcha') > 0) {
 			//Begin reCaptcha
 			require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php');
-			$privatekey = $params->get('private_key');
+            $privatekey = $params->get('private_key');
 			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
 			$response   = $this->input->get('recaptcha_response_field', '', 'string');
 			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
@@ -228,7 +229,8 @@ class BiblestudyController extends JControllerLegacy
 	public function download()
 	{
 		$abspath = JPATH_SITE;
-		require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		//require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+        JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$task = $this->input->get('task');
 		if ($task == 'download') {
 			$mid        = $this->input->get('mid', '0', 'int');
@@ -263,7 +265,8 @@ class BiblestudyController extends JControllerLegacy
 	public function playHit()
 	{
 		$input = new JInput;
-		require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+		//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+        JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
 		$getMedia = new jbsMedia();
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
