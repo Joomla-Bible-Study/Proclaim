@@ -2,20 +2,22 @@
 
 /**
  * BibleStudy Download Class
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.environment.response');
 
 /**
  * BibleStudy Download Class
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class Dump_File
 {
@@ -23,8 +25,10 @@ class Dump_File
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param object $mid
+	 * @param   object  $mid  ID of media
+	 *
 	 * @since 6.1.2
+	 * @return null
 	 */
 	public function download($mid)
 	{
@@ -32,13 +36,13 @@ class Dump_File
 		clearstatcache();
 
 		$this->hitDownloads($mid);
-		$input = new JInput;
+		$input    = new JInput;
 		$template = $input->get('t', '1', 'int');
-		$db = JFactory::getDBO();
-		//Get the template so we can find a protocol
+		$db       = JFactory::getDBO();
+
+		// Get the template so we can find a protocol
 		$query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = ' . $template;
 		$db->setQuery($query);
-		// $db->query();
 		$template = $db->loadObject();
 
 		// Convert parameter fields to objects.
@@ -47,7 +51,7 @@ class Dump_File
 		$params = $registry;
 
 		$protocol = $params->get('protocol', 'http://');
-		$query = 'SELECT #__bsms_mediafiles.*,'
+		$query    = 'SELECT #__bsms_mediafiles.*,'
 				. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
 				. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
 				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype'
@@ -60,33 +64,42 @@ class Dump_File
 
 		$media = $db->LoadObject();
 		JResponse::clearHeaders();
-		$server = $media->spath;
-		$path = $media->fpath;
-		$filename = $media->filename;
-		$size = $media->size;
+		$server        = $media->spath;
+		$path          = $media->fpath;
+		$filename      = $media->filename;
+		$size          = $media->size;
 		$download_file = $protocol . $server . $path . $filename;
-		$mimeType = $media->mimetype;
+		$mimeType      = $media->mimetype;
 		/** @var $download_file object */
 		$getsize = $this->getRemoteFileSize($download_file);
-		if ($size === '') {
-			if ($size != $getsize) {
-				if ($getsize != FALSE) :
+
+		if ($size === '')
+		{
+			if ($size != $getsize)
+			{
+
+				if ($getsize != false)
+				{
 					$size = $getsize;
-				endif;
+				}
 			}
 		}
 
 		// Clean the output buffer
 		@ob_end_clean();
 
-		// test for protocol and set the appropriate headers
+		// Test for protocol and set the appropriate headers
 		jimport('joomla.environment.uri');
-		$_tmp_uri = JURI::getInstance(JURI::current());
+		$_tmp_uri      = JURI::getInstance(JURI::current());
 		$_tmp_protocol = $_tmp_uri->getScheme();
-		if ($_tmp_protocol == "https") {
+
+		if ($_tmp_protocol == "https")
+		{
 			// SSL Support
 			header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
-		} else {
+		}
+		else
+		{
 			header("Cache-Control: public, must-revalidate");
 			header('Cache-Control: pre-check=0, post-check=0, max-age=0');
 			header('Pragma: no-cache');
@@ -100,32 +113,50 @@ class Dump_File
 		// Modified by Rene
 		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
 		$newFileSize = $size - 1;
+
 		// Default values! Will be overridden if a valid range header field was detected!
-		$resultLenght = (string)$size;
-		$resultRange = "0-" . $newFileSize;
-		// We support requests for a single range only.
-		// So we check if we have a range field. If yes ensure that it is a valid one.
-		// If it is not valid we ignore it and sending the whole file.
-		if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE'])) {
+		$resultLenght = (string) $size;
+		$resultRange  = "0-" . $newFileSize;
+
+		/* We support requests for a single range only.
+		 * So we check if we have a range field. If yes ensure that it is a valid one.
+		 * If it is not valid we ignore it and sending the whole file.
+		 * */
+		if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE']))
+		{
 			// Let's take the right side
 			list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
-			// and get the two values (as strings!)
+
+			// And get the two values (as strings!)
 			$httpRange = explode('-', $httpRange);
+
 			// Check if we have values! If not we have nothing to do!
-			if (!empty($httpRange[0]) || !empty($httpRange[1])) {
+			if (!empty($httpRange[0]) || !empty($httpRange[1]))
+			{
 				// We need the new content length ...
 				$resultLenght = $size - $httpRange[0] - $httpRange[1];
+
 				// ... and we can add the 206 Status.
 				header("HTTP/1.1 206 Partial Content");
+
 				// Now we need the content-range, so we have to build it depending on the given range!
 				// ex.: -500 -> the last 500 bytes
 				if (empty($httpRange[0]))
+				{
 					$resultRange = $resultLenght . '-' . $newFileSize;
-				// ex.: 500- -> from 500 bytes to file size
+				}
+
+				// Ex.: 500- -> from 500 bytes to file size
 				elseif (empty($httpRange[1]))
-					$resultRange = $httpRange[0] . '-' . $newFileSize; // ex.: 500-1000 -> from 500 to 1000 bytes
+				{
+					$resultRange = $httpRange[0] . '-' . $newFileSize;
+				}
+
+				// Ex.: 500-1000 -> from 500 to 1000 bytes
 				else
+				{
 					$resultRange = $httpRange[0] . '-' . $httpRange[1];
+				}
 			}
 		}
 		header('Content-Length: ' . $resultLenght);
@@ -138,12 +169,17 @@ class Dump_File
 		// Try to deliver in chunks
 		@set_time_limit(0);
 		$fp = @fopen($download_file, 'rb');
-		if ($fp !== false) {
-			while (!feof($fp)) {
+
+		if ($fp !== false)
+		{
+			while (!feof($fp))
+			{
 				echo fread($fp, 8192);
 			}
 			fclose($fp);
-		} else {
+		}
+		else
+		{
 			@readfile($download_file);
 		}
 		flush();
@@ -153,53 +189,72 @@ class Dump_File
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param object $mid Media ID
-	 * @return boolean
-	 * @since 7.0.0
+	 * @param   object  $mid  Media ID
+	 *
+	 * @return  boolean
+	 *
+	 * @since   7.0.0
 	 */
 	protected function hitDownloads($mid)
 	{
 		$db = JFactory::getDBO();
-		$db->setQuery('UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('downloads') .
-				' = ' . $db->qn('downloads') . ' + 1 ' . ' WHERE id = ' . (int)$db->q($mid));
+		$db->setQuery(
+			'UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('downloads') .
+					' = ' . $db->qn('downloads') . ' + 1 ' . ' WHERE id = ' . (int) $db->q($mid)
+		);
 		$db->execute();
+
 		return true;
 	}
 
 	/**
 	 * Method to get file size
 	 *
-	 * @param object $url
-	 * @return boolean
+	 * @param   object  $url  URL
+	 *
+	 * @return  boolean
 	 */
 	protected function getRemoteFileSize($url)
 	{
 		$parsed = parse_url($url);
-		$host = $parsed["host"];
-		$fp = null;
-		if (function_exists('fsockopen')) {
+		$host   = $parsed["host"];
+		$fp     = null;
+
+		if (function_exists('fsockopen'))
+		{
 			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
 		}
 		if (!$fp)
+		{
 			return false;
-		else {
+		}
+		else
+		{
 			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
 			@fputs($fp, "HOST: $host\r\n");
 			@fputs($fp, "Connection: close\r\n\r\n");
 			$headers = "";
+
 			while (!@feof($fp))
+			{
 				$headers .= @fgets($fp, 128);
+			}
 		}
 		@fclose($fp);
-		$return = false;
+		$return      = false;
 		$arr_headers = explode("\n", $headers);
-		foreach ($arr_headers as $header) {
+
+		foreach ($arr_headers as $header)
+		{
 			$s = "Content-Length: ";
-			if (substr(strtolower($header), 0, strlen($s)) == strtolower($s)) {
+
+			if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
+			{
 				$return = trim(substr($header, strlen($s)));
 				break;
 			}
 		}
+
 		return $return;
 	}
 

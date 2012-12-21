@@ -5,7 +5,7 @@
  * @author Joomla Bible Study
  * @copyright 2010
  */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.

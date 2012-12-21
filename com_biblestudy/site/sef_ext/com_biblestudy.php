@@ -9,7 +9,7 @@
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
  *
  */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 // ------------------  standard plugin initialize function - don't change ---------------------------
