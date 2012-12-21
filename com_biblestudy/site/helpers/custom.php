@@ -2,62 +2,75 @@
 
 /**
  * Custom Helper
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 
 /**
  * Class custom helper
- * @package BibleStudy.Site
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  * */
 class JBSMCustom
 {
 	/**
 	 * Get Custom page
 	 *
-	 * @param int $rowid
-	 * @param string $custom
-	 * @param object $row
-	 * @param JRegistry $params
-	 * @param object $admin_params
-	 * @param int $templateid
+	 * @param   int        $rowid         ID of Row
+	 * @param   string     $custom        Custom String
+	 * @param   object     $row           Row info
+	 * @param   JRegistry  $params        Params for intro
+	 * @param   object     $admin_params  Admin Params
+	 * @param   int        $templateid    ID's for template
+	 *
 	 * @return object
 	 */
-	function getCustom($rowid, $custom, $row, $params, $admin_params, $templateid)
+	public function getCustom($rowid, $custom, $row, $params, $admin_params, $templateid)
 	{
-		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-		include_once($path1 . 'elements.php');
-		$elementid = new stdClass();
+		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
+				DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+		include_once $path1 . 'elements.php';
+		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
-		while ($countbraces > 0) {
+
+		while ($countbraces > 0)
+		{
 			$bracebegin = strpos($custom, '{');
-			$braceend = strpos($custom, '}');
-			$subcustom = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
+			$braceend   = strpos($custom, '}');
+			$subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
+
 			if (!$rowid)
+			{
 				$rowid = $this->getElementnumber($subcustom);
-			$elementid = getElementid($rowid, $row, $params, $admin_params, $templateid);
-			$custom = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
-			$countbraces = $countbraces - 1;
+			}
+			$elementid   = getElementid($rowid, $row, $params, $admin_params, $templateid);
+			$custom      = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$countbraces--;
 		}
 		$elementid->element = $custom;
-		$elementid->id = 'custom';
+		$elementid->id      = 'custom';
+
 		return $elementid;
 	}
 
 	/**
 	 * Get Element Number.
 	 *
-	 * @param int $rowid
+	 * @param   int  $rowid  Row ID
+	 *
 	 * @return int
 	 */
-	function getElementnumber($rowid)
+	public function getElementnumber($rowid)
 	{
-		switch ($rowid) {
+		switch ($rowid)
+		{
 			case 'scripture1' :
 				$rowid = 1;
 				break;

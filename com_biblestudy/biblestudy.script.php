@@ -27,7 +27,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.0.0';
+	private $release = '8.0.0';
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -35,14 +35,14 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_joomla_release = '2.5.0';
+	private $minimum_joomla_release = '2.5.0';
 
 	/**
 	 * The component's name
 	 *
 	 * @var string
 	 * */
-	protected $biblestudy_extension = 'com_biblestudy';
+	protected $_biblestudy_extension = 'com_biblestudy';
 
 	/**
 	 * $parent is the class calling this method.
@@ -51,7 +51,7 @@ class Com_BiblestudyInstallerScript
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
 	 * @param   string  $type    Type of install
-	 * @param   object  $parent  Where it is coming from
+	 * @param   string  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 */
@@ -63,7 +63,7 @@ class Com_BiblestudyInstallerScript
 
 		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
 		/** @noinspection PhpUndefinedMethodInspection */
-		$this->_release = $parent->get("manifest")->version;
+		$this->release = $parent->get("manifest")->version;
 
 		// Start DB factory
 		$db = JFactory::getDBO();
@@ -72,18 +72,14 @@ class Com_BiblestudyInstallerScript
 		$query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
 		$db->setQuery($query);
 		$extensionid = $db->loadResult();
-
 		if ($extensionid)
 		{
 			$query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . (int) $db->quote($extensionid);
 			$db->setQuery($query);
 			$jbsversion = $db->loadResult();
-
 			if ($jbsversion == '20100101')
 			{
-				$query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . (int) $db->quote(
-					$extensionid
-				);
+				$query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . (int) $db->quote($extensionid);
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -91,7 +87,6 @@ class Com_BiblestudyInstallerScript
 
 		// Copy the css file over to another location
 		$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
-
 		if (JFile::exists($src))
 		{
 			JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
@@ -105,33 +100,27 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Install
 	 *
-	 * @param   object  $parent  Where call is coming from
+	 * @param   string  $parent  Where call is coming from
 	 *
 	 * @return  string
 	 */
 	public function install($parent)
 	{
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "SELECT id FROM #__bsms_admin";
 		$db->setQuery($query);
-
 		if (!$db->loadResult())
 		{
-			$query   = file_get_contents(
-				JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql'
-			);
+			$query = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
 			$queries = $db->splitSql($query);
-
 			foreach ($queries as $querie)
 			{
 				$querie = trim($querie);
 				$db->setQuery($querie);
 				$db->execute();
 			}
-			//require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
-            JLoader::register('JBSMFreshInstall', dirname(__FILE__) . '/install/biblestudy.install.special.php');
+			require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
 			$fresh = new JBSMFreshInstall;
-
 			if (!$fresh->installCSS())
 			{
 				JFactory::getApplication()
@@ -145,7 +134,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall
 	 *
-	 * @param   object  $parent  Where call is coming from
+	 * @param   string  $parent  Where call is coming from
 	 *
 	 * @return   null
 	 */
@@ -153,8 +142,7 @@ class Com_BiblestudyInstallerScript
 	{
 		$admin = null;
 
-		//require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
-        JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+		require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 
 		$db = JFactory::getDBO();
 		$db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
@@ -165,21 +153,18 @@ class Com_BiblestudyInstallerScript
 		if ($drop_tables > 0)
 		{
 			// We must remove the assets manually each time
-			$db    = JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
 			$db->setQuery($query);
 			$parent_id = $db->loadResult();
-			$query     = "DELETE FROM #__assets WHERE parent_id = " . (int) $db->quote($parent_id);
+			$query = "DELETE FROM #__assets WHERE parent_id = " . (int) $db->quote($parent_id);
 			$db->setQuery($query);
 			$db->execute();
 			$query = 'DELETE FROM #__assets WHERE name like "%com_biblestudy%" and parent_id < 1';
 			$db->setQuery($query);
 			$db->execute();
-			$query   = file_get_contents(
-				JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/uninstall-dbtables.sql'
-			);
+			$query = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/uninstall-dbtables.sql');
 			$queries = $db->splitSql($query);
-
 			foreach ($queries as $querie)
 			{
 				$querie = trim($querie);
@@ -187,6 +172,7 @@ class Com_BiblestudyInstallerScript
 				$db->execute();
 			}
 			$drop_result = '';
+			$drop_result .= '<p>db Error: ' . $db->stderr() . '</p>';
 		}
 		else
 		{
@@ -198,7 +184,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update
 	 *
-	 * @param   object  $parent  Where call is coming from
+	 * @param   string  $parent  Where call is coming from
 	 *
 	 * @return   null
 	 */
@@ -214,29 +200,25 @@ class Com_BiblestudyInstallerScript
 	 * Post Flight
 	 *
 	 * @param   string  $type    Type of install
-	 * @param   object  $parent  Where it is coming from
+	 * @param   string  $parent  Where it is coming from
 	 *
 	 * @return   null
 	 */
 	public function postflight($type, $parent)
 	{
 		// Set the #__schemas version_id to the correct number for error from 7.0.0
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
 		$db->setQuery($query);
 		$extensionid = $db->loadResult();
-
 		if ($extensionid)
 		{
 			$query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . (int) $db->quote($extensionid);
 			$db->setQuery($query);
 			$jbsversion = $db->loadResult();
-
 			if ($jbsversion == '20100101')
 			{
-				$query = 'UPDATE #__schemas SET version_id = ' . $db->quote(
-					$this->release
-				) . ' WHERE extension_id = ' . (int) $db->quote($extensionid);
+				$query = 'UPDATE #__schemas SET version_id = ' . $db->quote($this->release) . ' WHERE extension_id = ' . (int) $db->quote($extensionid);
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -299,10 +281,12 @@ class Com_BiblestudyInstallerScript
 
 			// Store the combined new and existing values back as a JSON string
 			$paramsString = json_encode($params);
-			$db->setQuery(
-				'UPDATE #__extensions SET params = ' . $db->quote($paramsString) . ' WHERE name = "com_biblestudy"'
-			);
-			$db->execute();
+			$db->setQuery('UPDATE #__extensions SET params = ' . $db->quote($paramsString) . ' WHERE name = "com_biblestudy"');
+			if (!$db->execute())
+			{
+				JFactory::getApplication()
+						->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+			}
 		}
 	}
 
@@ -315,18 +299,14 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function deleteUnexistingFiles()
 	{
-		$files = array(
-			'/media/com_biblestudy/css/biblestudy.css.dist',
-			'/images/textfile24.png',
-			'/components/com_biblestudy/biblestudy.css',
-			'/components/com_biblestudy/class.biblestudydownload.php',
+		$files = array('/media/com_biblestudy/css/biblestudy.css.dist', '/images/textfile24.png',
+			'/components/com_biblestudy/biblestudy.css', '/components/com_biblestudy/class.biblestudydownload.php',
 			'/components/language/en-GB/en-GB.com_biblestudy.ini',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.ini',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
 			'/administrator/components/com_biblestudy/Snoopy.class.php',
 			'/administrator/components/com_biblestudy/admin.biblestudy.php',
-			'/components/com_biblestudy/helpers/updatesef.php',
-			'/components/com_biblestudy/helpers/image.php',
+			'/components/com_biblestudy/helpers/updatesef.php', '/components/com_biblestudy/helpers/image.php',
 			'/components/com_biblestudy/helpers/helper.php',
 			'/components/com_biblestudy/views/messages/tmpl/modal16.php',
 			'/components/com_biblestudy/controllers/teacherlist.php',
@@ -335,23 +315,15 @@ class Com_BiblestudyInstallerScript
 			'/components/com_biblestudy/controllers/studieslist.php',
 			'/components/com_biblestudy/controllers/serieslist.php',
 			'/components/com_biblestudy/controllers/seriesdetail.php',
-			'/components/com_biblestudy/models/teacherlist.php',
-			'/components/com_biblestudy/models/teacherdisplay.php',
-			'/components/com_biblestudy/models/studydetails.php',
-			'/components/com_biblestudy/models/studieslist.php',
-			'/components/com_biblestudy/models/seriesdetail.php',
-			'/components/com_biblestudy/models/serieslist.php',
+			'/components/com_biblestudy/models/teacherlist.php', '/components/com_biblestudy/models/teacherdisplay.php',
+			'/components/com_biblestudy/models/studydetails.php', '/components/com_biblestudy/models/studieslist.php',
+			'/components/com_biblestudy/models/seriesdetail.php', '/components/com_biblestudy/models/serieslist.php',
 			'/components/com_biblestudy/views/mediafile/tmpl/form.php',
-			'/components/com_biblestudy/views/mediafile/tmpl/form.xml',
-			'/language/en-GB/en-GB.com_biblestudy.ini',
-			'/language/cs-CZ/cs-CZ.com_biblestudy.ini',
-			'/language/de-DE/de-DE.com_biblestudy.ini',
-			'/language/es-ES/es-ES.com_biblestudy.ini',
-			'/language/hu-HU/hu-HU.com_biblestudy.ini',
-			'/language/nl-NL/nl-NL.com_biblestudy.ini',
-			'/language/no-NO/no-NO.com_biblestudy.ini',
-			'/language/en-GB/en-GB.mod_biblestudy.ini',
-			'/language/en-GB/en-GB.mod_biblestudy.sys.ini',
+			'/components/com_biblestudy/views/mediafile/tmpl/form.xml', '/language/en-GB/en-GB.com_biblestudy.ini',
+			'/language/cs-CZ/cs-CZ.com_biblestudy.ini', '/language/de-DE/de-DE.com_biblestudy.ini',
+			'/language/es-ES/es-ES.com_biblestudy.ini', '/language/hu-HU/hu-HU.com_biblestudy.ini',
+			'/language/nl-NL/nl-NL.com_biblestudy.ini', '/language/no-NO/no-NO.com_biblestudy.ini',
+			'/language/en-GB/en-GB.mod_biblestudy.ini', '/language/en-GB/en-GB.mod_biblestudy.sys.ini',
 			'/administrator/components/com_biblestudy/install/biblestudy.assets.php',
 			'/administrator/components/com_biblestudy/install/sql/jbs7.0.0.sql',
 			'/administrator/components/com_biblestudy/install/sql/updates/mysql/20100101.sql',
@@ -466,11 +438,9 @@ class Com_BiblestudyInstallerScript
 			'/administrator/language/hu-HU/hu-HU.com_biblestudy.sys.ini',
 			'/administrator/language/nl-NL/nl-NL.com_biblestudy.ini',
 			'/administrator/language/nl-NL/no-NO.com_biblestudy.ini',
-			'/administrator/language/no-NO/no-NO.com_biblestudy.sys.ini',
-		);
+			'/administrator/language/no-NO/no-NO.com_biblestudy.sys.ini',);
 
-		$folders = array(
-			'/components/com_biblestudy/assets',
+		$folders = array('/components/com_biblestudy/assets',
 			'/components/com_biblestudy/images',
 			'/components/com_biblestudy/views/teacherlist',
 			'/components/com_biblestudy/views/teacherdisplay',
@@ -514,8 +484,7 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/views/templateslist',
 			'/administrator/components/com_biblestudy/views/topicslist',
 			'/administrator/components/com_biblestudy/views/message',
-			'/administrator/components/com_biblestudy/views/topicsedit',
-		);
+			'/administrator/components/com_biblestudy/views/topicsedit',);
 
 		foreach ($files as $file)
 		{
@@ -543,7 +512,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function fixMenus()
 	{
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query
 				->select('*')
@@ -552,7 +521,6 @@ class Com_BiblestudyInstallerScript
 				->where("`link` LIKE '%com_biblestudy%'");
 		$db->setQuery($query);
 		$menus = $db->loadObjectList();
-
 		foreach ($menus AS $menu)
 		{
 			$menu->link = str_replace('teacherlist', 'teachers', $menu->link);
@@ -561,13 +529,17 @@ class Com_BiblestudyInstallerScript
 			$menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
 			$menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
 			$menu->link = str_replace('studieslist', 'sermons', $menu->link);
-			$query      = $db->getQuery(true);
+			$query = $db->getQuery(true);
 			$query
 					->update('#__menu')
 					->set("`link` = " . $db->quote($menu->link))
 					->where('id = ' . (int) $db->quote($menu->id));
 			$db->setQuery($query);
-			$db->execute();
+			if (!$db->execute())
+			{
+				JFactory::getApplication()
+						->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+			}
 		}
 	}
 
@@ -580,26 +552,29 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function fixImagePaths()
 	{
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query
 				->select('*')
 				->from('#__bsms_media');
 		$db->setQuery($query);
 		$images = $db->loadObjectList();
-
 		foreach ($images as $image)
 		{
 			if (!empty($image->media_image_path))
 			{
 				$image->media_image_path = str_replace('components', 'media', $image->media_image_path);
-				$query                   = $db->getQuery(true);
+				$query = $db->getQuery(true);
 				$query
 						->update('#__bsms_media')
 						->set("`media_image_path` = " . $db->quote($image->media_image_path))
 						->where('id = ' . (int) $db->quote($image->id));
 				$db->setQuery($query);
-				$db->execute();
+				if (!$db->execute())
+				{
+					JFactory::getApplication()
+							->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+				}
 			}
 		}
 		$query = $db->getQuery(true);
@@ -608,26 +583,29 @@ class Com_BiblestudyInstallerScript
 				->from('#__bsms_share');
 		$db->setQuery($query);
 		$datas = $db->loadObjectList();
-
 		foreach ($datas as $data)
 		{
 			// Need to adjust the params and write back
 			$registry = new JRegistry;
 			$registry->loadString($data->params);
-			$params     = $registry;
+			$params = $registry;
 			$shareimage = $params->get('shareimage');
 			$shareimage = str_replace('components', 'media', $shareimage);
 			$params->set('shareimage', $shareimage);
 
 			// Now write the params back into the $table array and store.
 			$data->params = (string) $params->toString();
-			$qeery        = $db->getQuery(true);
+			$qeery = $db->getQuery(true);
 			$qeery
 					->update('#__bsms_share')
 					->set('`params` =' . $db->quote($data->params))
 					->where('id = ' . (int) $db->quote($data->id));
 			$db->setQuery($query);
-			$db->execute();
+			if (!$db->execute())
+			{
+				JFactory::getApplication()
+						->enqueueMessage(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+			}
 		}
 	}
 
@@ -641,26 +619,25 @@ class Com_BiblestudyInstallerScript
 	public function fixemptylanguage()
 	{
 		// Tables to fix
-		$tables = array(
-			array('table' => '#__bsms_comments'),
-			array('table' => '#__bsms_mediafiles'),
-			array('table' => '#__bsms_series'),
-			array('table' => '#__bsms_studies'),
-			array('table' => '#__bsms_teachers'),
-		);
+		$tables = array(array('table' => '#__bsms_comments'), array('table' => '#__bsms_mediafiles'),
+			array('table' => '#__bsms_series'), array('table' => '#__bsms_studies'),
+			array('table' => '#__bsms_teachers'),);
 
 		// Correct blank records
-
 		foreach ($tables as $table)
 		{
-			$db    = JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query
 					->update($table['table'])
 					->set("`language` = '*'")
 					->where("`language` = ''");
 			$db->setQuery($query);
-			$db->execute();
+			if (!$db->execute())
+			{
+				JFactory::getApplication()
+						->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+			}
 		}
 	}
 
@@ -674,25 +651,15 @@ class Com_BiblestudyInstallerScript
 	public function fixemptyaccess()
 	{
 		// Tables to fix
-		$tables = array(
-			array('table' => '#__bsms_admin'),
-			array('table' => '#__bsms_mediafiles'),
-			array('table' => '#__bsms_message_type'),
-			array('table' => '#__bsms_mimetype'),
-			array('table' => '#__bsms_order'),
-			array('table' => '#__bsms_podcast'),
-			array('table' => '#__bsms_series'),
-			array('table' => '#__bsms_servers'),
-			array('table' => '#__bsms_share'),
-			array('table' => '#__bsms_studies'),
-			array('table' => '#__bsms_studytopics'),
-			array('table' => '#__bsms_teachers'),
-			array('table' => '#__bsms_templates'),
-			array('table' => '#__bsms_topics'),
-		);
+		$tables = array(array('table' => '#__bsms_admin'), array('table' => '#__bsms_mediafiles'),
+			array('table' => '#__bsms_message_type'), array('table' => '#__bsms_mimetype'),
+			array('table' => '#__bsms_order'), array('table' => '#__bsms_podcast'), array('table' => '#__bsms_series'),
+			array('table' => '#__bsms_servers'), array('table' => '#__bsms_share'), array('table' => '#__bsms_studies'),
+			array('table' => '#__bsms_studytopics'), array('table' => '#__bsms_teachers'),
+			array('table' => '#__bsms_templates'), array('table' => '#__bsms_topics'),);
 
 		// Get Public id
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query
 				->select('id')
@@ -710,7 +677,11 @@ class Com_BiblestudyInstallerScript
 					->set('`access` = ' . (int) $db->quote($id))
 					->where("(`access` = '0' or `access` = '')");
 			$db->setQuery($query);
-			$db->execute();
+			if (!$db->execute())
+			{
+				JFactory::getApplication()
+						->enqueueMessage(JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)), 'error');
+			}
 		}
 	}
 

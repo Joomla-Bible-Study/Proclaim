@@ -2,11 +2,11 @@
 /**
  * Form for exporting and importing template settings and files
  * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die; ?>
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if (!empty($this->sidebar)): ?>
