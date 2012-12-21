@@ -119,7 +119,8 @@ class Com_BiblestudyInstallerScript
 				$db->setQuery($querie);
 				$db->execute();
 			}
-			require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
+			//require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
+            JLoader::register('JBSMFreshInstall', dirname(__FILE__) . '/install/biblestudy.install.special.php');
 			$fresh = new JBSMFreshInstall;
 			if (!$fresh->installCSS())
 			{
@@ -142,7 +143,8 @@ class Com_BiblestudyInstallerScript
 	{
 		$admin = null;
 
-		require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+		//require_once (JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+        JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 
 		$db = JFactory::getDBO();
 		$db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
