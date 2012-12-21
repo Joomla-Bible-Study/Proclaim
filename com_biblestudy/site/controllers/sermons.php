@@ -47,7 +47,8 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function download()
 	{
-		require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		//require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+        JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
@@ -83,7 +84,8 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+		//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+        JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
 		$getMedia = new jbsMedia();
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
