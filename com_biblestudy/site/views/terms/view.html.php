@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyViewterms extends JViewLegacy {
+class BiblestudyViewTerms extends JViewLegacy {
 
     /**
      * Execute and display a template script.
@@ -36,23 +36,16 @@ class biblestudyViewterms extends JViewLegacy {
         $mid = $input->get('mid', '', 'int');
         $compat_mode = $input->get('compat_mode', '0', 'int');
 
-        $db = JFactory::getDBO();
-        $query = $db->getQuery('true');
-        $query->select('*');
-        $query->from('#__bsms_templates');
-        $query->where('id = ' . $t);
-        $db->setQuery($query);
-        //$db->query();
-        $template = $db->loadObject();
+        $template = JBSMParams::getTemplateparams();
         $registry = new JRegistry();
         $registry->loadString($template->params);
         $params = $registry;
         $termstext = $params->get('terms');
-
+		$db = JFactory::getDbo();
         $query = $db->getQuery('true');
         $query->select('*');
         $query->from('#__bsms_mediafiles');
-        $query->where('id= ' . $mid);
+        $query->where('id= ' . (int) $db->q($mid));
         $db->setQuery($query);
         $media = $db->loadObject();
         ?>

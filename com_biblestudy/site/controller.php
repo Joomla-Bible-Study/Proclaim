@@ -19,8 +19,12 @@ jimport('joomla.application.component.controller');
  * @package BibleStudy.Site
  * @since   7.0.0
  */
-class biblestudyController extends JControllerLegacy
+class BiblestudyController extends JControllerLegacy
 {
+	public  $mediaCode;
+	/**
+	 * @param array $config
+	 */
 	public function __construct($config = array())
 	{
 		$this->input = JFactory::getApplication()->input;
@@ -109,25 +113,18 @@ class biblestudyController extends JControllerLegacy
 
 	/**
 	 * Comments
-	 *
-	 * @return type
 	 */
 	public function comment()
 	{
 		$mainframe = JFactory::getApplication();
-        $input = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+		$option    = $this->input->get('option', '', 'cmd');
         
 		$model  = $this->getModel('sermon');
-		$app    = JFactory::getApplication();
-		$menu   = $app->getMenu();
-		$item   = $menu->getActive();
-		$params = $mainframe->getPageParameters();
-		$t      = $params->get('t');
+		$t      = $this->input->get('t');
 		if (!$t) {
 			$t = 1;
 		}
-		$input->set('t', $t);
+		$this->input->set('t', $t);
 
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
@@ -139,8 +136,8 @@ class biblestudyController extends JControllerLegacy
 			//Begin reCaptcha
 			require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php');
 			$privatekey = $params->get('private_key');
-			$challenge  = $input->get('recaptcha_challenge_field', '', 'post');
-			$response   = $input->get('recaptcha_response_field', '', 'string');
+			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
+			$response   = $this->input->get('recaptcha_response_field', '', 'string');
 			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
 			if (!$resp->is_valid) {
 				// What happens when the CAPTCHA was entered incorrectly
@@ -148,15 +145,15 @@ class biblestudyController extends JControllerLegacy
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
 
-				return;
 				$cap = 0;
+				return null;
 			} else {
 				$cap = 1;
 			}
 		}
 
 		if ($cap == 1) {
-			if ($input->get('published', '', 'int') == 0) {
+			if ($this->input->get('published', '', 'int') == 0) {
 				$msg = JText::_('JBS_STY_COMMENT_UNPUBLISHED');
 			} else {
 				$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
@@ -168,7 +165,7 @@ class biblestudyController extends JControllerLegacy
 			if ($params->get('email_comments') > 0) {
 				$EmailResult = $this->commentsEmail($params);
 			}
-			$study_detail_id = $input->get('study_detail_id', 0, 'INT');
+			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
 			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
 		} // End of $cap
@@ -181,19 +178,18 @@ class biblestudyController extends JControllerLegacy
 	 */
 	public function commentsEmail($params)
 	{
-		$input      = new JInput;
 		$mainframe  = JFactory::getApplication();
-		$menuitemid = $input->get('Itemid', '', 'int');
+		$menuitemid = $this->input->get('Itemid', '', 'int');
 		if ($menuitemid) {
 			$menu       = $mainframe->getMenu();
 			$menuparams = $menu->getParams($menuitemid);
 		}
-		$comment_author    = $input->get('full_name', 'Anonymous', 'WORD');
-		$comment_study_id  = $input->get('study_detail_id', 0, 'INT');
-		$comment_email     = $input->get('user_email', 'No Email', 'WORD');
-		$comment_text      = $input->get('comment_text', 'None', 'WORD');
-		$comment_published = $input->get('published', 0, 'INT');
-		$comment_date      = $input->get('comment_date', 0, 'INT');
+		$comment_author    = $this->input->get('full_name', 'Anonymous', 'WORD');
+		$comment_study_id  = $this->input->get('study_detail_id', 0, 'INT');
+		$comment_email     = $this->input->get('user_email', 'No Email', 'WORD');
+		$comment_text      = $this->input->get('comment_text', 'None', 'WORD');
+		$comment_published = $this->input->get('published', 0, 'INT');
+		$comment_date      = $this->input->get('comment_date', 0, 'INT');
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
 		$comment_abspath   = JPATH_SITE;
@@ -233,9 +229,9 @@ class biblestudyController extends JControllerLegacy
 	{
 		$abspath = JPATH_SITE;
 		require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-		$task = $input->get('task');
+		$task = $this->input->get('task');
 		if ($task == 'download') {
-			$mid        = $input->get('mid', '0', 'int');
+			$mid        = $this->input->get('mid', '0', 'int');
 			$downloader = new Dump_File();
 			$downloader->download($mid);
 
@@ -250,10 +246,10 @@ class biblestudyController extends JControllerLegacy
 	 */
 	public function avplayer()
 	{
-		$task = $input->get('task', '', 'cmd');
+		$task = $this->input->get('task', '', 'cmd');
 		if ($task == 'avplayer') {
 			$input           = new JInput;
-			$mediacode       = $input->get('code', '', 'string');
+			$mediacode       = $this->input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
 			echo $mediacode;
 
@@ -275,8 +271,6 @@ class biblestudyController extends JControllerLegacy
 	/**
 	 * This function is supposed to generate the Media Player that is requested via AJAX
 	 * from the sermons view "default.php". It has not been implemented yet, so its not used.
-	 *
-	 * @return unknown_type
 	 */
 	public function inlinePlayer()
 	{
@@ -290,12 +284,11 @@ class biblestudyController extends JControllerLegacy
 	 */
 	public function uploadflash()
 	{
-        $input = new JInput;
 		//JRequest::checktoken() or jexit('Invalid Token');
 		$option = $this->input->get('option', '', 'cmd');
 		jimport('joomla.filesystem.file');
 		//get the server and folder id from the request
-		$serverid = $this->input('upload_server', '', 'int');
+		$serverid = $this->input->get('upload_server', '', 'int');
 		$folderid = $this->input->get('upload_folder', '', 'int');
 		$app      = JFactory::getApplication();
 		$app->setUserState($option, 'serverid', $serverid);
@@ -431,6 +424,7 @@ class biblestudyController extends JControllerLegacy
 		$serverid  = $this->input->get('upload_server', '', 'int');
 		$folderid  = $this->input->get('upload_folder', '', 'int');
 		$form      = $this->input->get('jform', array(), 'array');
+		$layout      = $this->input->get('layout', '', 'string');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
 		$path      = JBSMUpload::getpath($url, '');
