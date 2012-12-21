@@ -22,7 +22,7 @@ class JBSMHelperToolbar extends JObject {
 
     /**
      * Get toolbar
-     * @return type
+     * @return object
      */
     public function getToolbar() {
 

@@ -16,11 +16,12 @@ defined('_JEXEC') or die;
  * @since 7.0.0
  */
 class TableTeacher extends JTable {
+	public $teachername;
 
-    /**
+	/**
      * Constructor
      *
-     * @param object Database connector object
+     * @param object $db Database connector object
      */
     public function Tableteacher(& $db) {
         parent::__construct('#__bsms_teachers', 'id', $db);

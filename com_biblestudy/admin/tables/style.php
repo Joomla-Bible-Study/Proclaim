@@ -16,23 +16,16 @@ defined('_JEXEC') or die;
  * @since 7.0.4
  */
 class TableStyle extends JTable {
+	public $filename;
+	public $stylecode;
 
-    /**
+	/**
      * Constructor
      *
-     * @param object Database connector object
+     * @param object $db Database connector object
      */
     public function __construct(&$db) {
         parent::__construct('#__bsms_styles', 'id', $db);
-    }
-
-    /**
-     * Not sure if this is in the right spot or used.
-     * @param int $pk
-     * @return mixed
-     */
-    public function getItem($pk = null) {
-        return parent::getItem($pk);
     }
 
     /**
@@ -105,7 +98,7 @@ class TableStyle extends JTable {
     /**
      * Overriden JTable::store to set modified data and user id.
      *
-     * @param	boolean	True to update fields even if they are null.
+     * @param	boolean	$updateNulls True to update fields even if they are null.
      * @return	boolean	True on success.
      * @since	1.6
      */

@@ -21,13 +21,13 @@ class BiblestudyModelTemplates extends JModelList {
 
     /**
      * Templates
-     * @var type
+     * @var object
      */
     var $_templates;
 
     /**
      * Get Templates
-     * @return type
+     * @return object
      */
     function getTemplates() {
         if (empty($this->_templates)) {

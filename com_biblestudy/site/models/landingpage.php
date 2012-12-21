@@ -10,7 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
-include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
+//JLoader::register('JBSMTranslated' ,JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
+JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 /**
  * Model class for LandingPage
@@ -19,10 +20,10 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
  */
 class biblestudyModellandingpage extends JModelList {
 
-    /**
+	/**
      * Constructor.
      *
-     * @param	array	An optional associative array of configuration settings.
+     * @param	array	$config An optional associative array of configuration settings.
      * @see		JController
      * @since	1.6
      */
@@ -70,13 +71,13 @@ class biblestudyModellandingpage extends JModelList {
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
-        $template_params = $this->getTemplate();
+        $template_params = JBSMParams::getTemplateparams();
         $registry = new JRegistry;
         $registry->loadString($template_params->params);
         $t_params = $registry;
         // Load the parameters. Merge Global and Menu Item params into new object
         $app = JFactory::getApplication('site');
-        $params = $app->getParams();
+        $params = JComponentHelper::getParams('com_biblestudy');
         $menuparams = new JRegistry;
 
         if ($menu = $app->getMenu()->getActive()) {
@@ -116,38 +117,6 @@ class biblestudyModellandingpage extends JModelList {
 
         $query->order('studydate ' . $order);
         return $query;
-    }
-
-    /**
-     * Returns Admin Setting
-     * @todo Need to move to helper.php
-     * @return Array
-     */
-    function getAdmin() {
-        if (empty($this->_admin)) {
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_admin = $this->_getList($query);
-        }
-        return $this->_admin;
-    }
-
-    /**
-     * Returns template
-     * @todo Need to move to helper.php
-     * @return type
-     */
-    function getTemplate() {
-        if (empty($this->_template)) {
-            $input = new JInput;
-            $templateid = $input->get('t', 1, 'int');
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_templates'
-                    . ' WHERE published = 1 AND id = ' . $templateid;
-            $this->_template = $this->_getList($query);
-        }
-        return $this->_template;
     }
 
 }

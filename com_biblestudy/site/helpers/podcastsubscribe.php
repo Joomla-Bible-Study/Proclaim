@@ -19,7 +19,7 @@ class podcastSubscribe {
 
     /**
      * Build Subscribe Table
-     * @param type $introtext
+     * @param string $introtext
      * @return string
      */
     public function buildSubscribeTable($introtext = 'Our Podcasts') {

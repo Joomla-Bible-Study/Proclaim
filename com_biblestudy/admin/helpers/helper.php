@@ -1,7 +1,6 @@
 <?php
 
 /**
- * Core Bible Study Helper
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,6 +9,10 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * Core Bible Study Helper
+ * @package BibleStudy.Admin
+ * */
 class JBSMHelper
 {
 
@@ -20,8 +23,8 @@ class JBSMHelper
      *
      * @param int $rowid
      * @param string $row
-     * @param array $params
-     * @param array $admin_params
+     * @param object $params
+     * @param object $admin_params
      * @param string $template
      * @return string
      */

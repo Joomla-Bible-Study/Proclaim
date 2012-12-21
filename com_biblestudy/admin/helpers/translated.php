@@ -9,7 +9,9 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+/**
+ * @package BibleStudy.Admin
+ */
 class JBSMTranslated {
 
     public static $extension = 'com_biblestudy';
@@ -20,7 +22,7 @@ class JBSMTranslated {
      * return: translated string or null if topicItem is not initialised
      *
      *
-     * @param string $topicItem
+     * @param object $topicItem
      * @return string|NULL
      */
     static function getTopicItemTranslated($topicItem) {
@@ -65,7 +67,7 @@ class JBSMTranslated {
     static function getTopicItemsTranslated($topicItems = array()) {
         $output = array();
         foreach ($topicItems as $topicItem) {
-            $text = getTopicItemTranslated($topicItem);
+            $text = JBSMTranslated::getTopicItemTranslated($topicItem);
             $topicItem->topic_text = $text;
             $output[] = $topicItem;
         }
@@ -78,8 +80,8 @@ class JBSMTranslated {
      * return: translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
      *
      *
-     * @param type $topicItem
-     * @return type
+     * @param object $topicItem
+     * @return string:null
      */
     static function getConcatTopicItemTranslated($topicItem) {
         if ($topicItem) {
@@ -103,7 +105,7 @@ class JBSMTranslated {
                 return $output;
             }
         }
-        return (null);
+        return null;
     }
 
 }

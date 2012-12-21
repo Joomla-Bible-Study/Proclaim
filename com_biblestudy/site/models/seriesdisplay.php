@@ -69,7 +69,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
-        $params = JComponentHelper::getParams('site');
+        $params = JComponentHelper::getParams('com_biblestudy');
         $this->setState('params', $params);
 
         $user = JFactory::getUser();

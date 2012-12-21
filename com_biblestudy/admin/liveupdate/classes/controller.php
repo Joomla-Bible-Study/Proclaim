@@ -12,7 +12,7 @@ jimport('joomla.application.component.controller');
 /**
  * The Live Update MVC controller
  */
-class LiveUpdateController extends JController
+class LiveUpdateController extends JControllerLegacy
 {
 	private $jversion = '15';
 
@@ -100,6 +100,7 @@ class LiveUpdateController extends JController
 		$ftp = $this->setCredentialsFromRequest('ftp');
 		$model = $this->getThisModel();
 		$result = $model->extract();
+		$input = new JInput();
 		if(!$result) {
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_EXTRACT_FAILED');

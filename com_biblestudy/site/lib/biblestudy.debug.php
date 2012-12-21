@@ -21,9 +21,9 @@ assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 /**
  * Default assert call back funtion
  * If certain things fail hard we MUST know about it
- * @param type $script
- * @param type $line
- * @param type $message
+ * @param string $script
+ * @param string $line
+ * @param string $message
  */
 function debug_assert_callback($script, $line, $message) {
     echo "<h1>Assertion failed!</h1><br />
@@ -36,8 +36,8 @@ function debug_assert_callback($script, $line, $message) {
 
 /**
  * Production error handling
- * @param type $text
- * @param type $back
+ * @param string $text
+ * @param int $back
  */
 function trigger_dberror($text = '', $back = 0) {
     $biblestudy_db = &JFactory::getDBO();

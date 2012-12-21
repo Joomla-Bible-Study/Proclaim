@@ -63,7 +63,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy {
         $registry->loadString($a_params[0]->params);
         $this->admin_params = $registry;
 
-        $itemparams = JComponentHelper::getParams('site');
+        $itemparams = JComponentHelper::getParams('com_biblestudy');
 
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
