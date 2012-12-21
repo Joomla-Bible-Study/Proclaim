@@ -17,6 +17,7 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Site
  * @since 7.0.0
  */
+/** @noinspection PhpUndefinedClassInspection */
 class JBSAdmin {
 
     /**
@@ -228,7 +229,7 @@ class JBSAdmin {
 
     /**
      * Show Rows
-     * @param object $results
+     * @param array $results
      * @return object
      */
     function showRows($results) {

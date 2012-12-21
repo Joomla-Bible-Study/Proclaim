@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 /**
- * This is for Retreving Admin and Template db
+ * This is for Retrieving Admin and Template db
  *
  * @package BibleStudy.Admin
  * @since   7.0.0
@@ -48,7 +48,7 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return object Retrun active template info
+	 * @return object Return active template info
 	 */
 	public static function getTemplateparams()
 	{

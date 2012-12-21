@@ -40,14 +40,14 @@ function debug_assert_callback($script, $line, $message) {
  * @param int $back
  */
 function trigger_dberror($text = '', $back = 0) {
-    $biblestudy_db = &JFactory::getDBO();
+    $biblestudy_db = JFactory::getDBO();
     $dberror = $biblestudy_db->stderr(true);
     echo debug_callstackinfo($back + 1);
 
     require_once (BIBLESTUDY_PATH_LIB . DIRECTORY_SEPARATOR . 'biblestudy.version.php');
-    $biblestudyVersion = CBiblestudyVersion::version();
-    $biblestudyPHPVersion = CBiblestudyVersion::PHPVersion();
-    $biblestudyMySQLVersion = CBiblestudyVersion::MySQLVersion();
+    $biblestudyVersion = BiblestudyVersion::version();
+    $biblestudyPHPVersion = BiblestudyVersion::PHPVersion();
+    $biblestudyMySQLVersion = BiblestudyVersion::MySQLVersion();
     ?>
     <!-- Version Info -->
     <div class="fbfooter">
@@ -97,7 +97,7 @@ function trigger_dbwarning($text = '') {
 
 /**
  * Little helper to created a formated output of variables
- * @param string $varlist
+ * @param array $varlist
  * @return string
  */
 function debug_vars($varlist) {

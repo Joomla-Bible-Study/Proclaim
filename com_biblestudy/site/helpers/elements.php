@@ -19,15 +19,15 @@ require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 
 /**
  * Get Elementid
- * @param string $rowid
- * @param string $row
- * @param array $params
- * @param array $admin_params
- * @param array $template
+ * @param int $rowid
+ * @param object $row
+ * @param JRegistry $params
+ * @param object $admin_params
+ * @param int $templateid
  * @todo Redo to MVC Standers under a class
  * @return object
  */
-function getElementid($rowid, $row, $params, $admin_params, $template) {
+function getElementid($rowid, $row, $params, $admin_params, $templateid) {
     $elementid = new stdClass();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'scripture.php');
@@ -38,7 +38,6 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
     include_once($path1 . 'mediatable.php');
     include_once($path1 . 'store.php');
     include_once($path1 . 'filepath.php');
-    include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
 
     $db = JFactory::getDBO();
@@ -148,22 +147,22 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
             $elementid->id = 'details';
             $elementid->headertext = JText::_('JBS_CMN_DETAILS');
             $textorpdf = 'text';
-            $elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
+            $elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $templateid);
             break;
         case 18:
             $elementid->id = 'details';
             $elementid->headertext = JText::_('JBS_CMN_DETAILS');
             $textorpdf = 'text';
             $elementid->element = '<table class="detailstable"><tbody><tr><td>';
-            $elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
+            $elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $templateid) . '</td><td>';
             $textorpdf = 'pdf';
-            $elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td></tr></table>';
+            $elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $templateid) . '</td></tr></table>';
             break;
         case 19:
             $elementid->id = 'details';
             $elementid->headertext = JText::_('JBS_CMN_DETAILS');
             $textorpdf = 'pdf';
-            $elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
+            $elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $templateid);
             break;
         case 20:
             $mediaclass = new jbsMedia();

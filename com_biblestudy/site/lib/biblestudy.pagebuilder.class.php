@@ -30,13 +30,14 @@ jimport('joomla.html.parameter');
  * @since 7.0.1
  */
 class JBSPagebuilder {
+	public $event;
 
     /**
      * Build Page
      *
      * @param object $item
-     * @param array $params
-     * @param array $admin_params
+     * @param object $params
+     * @param object $admin_params
      * @return string
      */
     function buildPage($item, $params, $admin_params) {
@@ -173,9 +174,9 @@ class JBSPagebuilder {
      * Media Builder
      *
      * @param array $mediaids
-     * @param array $params
-     * @param array $admin_params
-     * @return array
+     * @param object $params
+     * @param object $admin_params
+     * @return string
      */
     function mediaBuilder($mediaids, $params, $admin_params) {
         $images = new jbsImages();
@@ -214,6 +215,7 @@ class JBSPagebuilder {
             $download_tmp = $images->getMediaImage($d_image, NULL);
             $download_image = $download_tmp->path;
             $compat_mode = $admin_params->get('compat_mode');
+			$downloadlink = null;
             if ($link_type > 0) {
                 $width = $download_tmp->width;
                 $height = $download_tmp->height;
@@ -250,8 +252,8 @@ class JBSPagebuilder {
      * Study Builder
      * @param string $whereitem
      * @param string $wherefield
-     * @param array $params
-     * @param array $admin_params
+     * @param object $params
+     * @param object $admin_params
      * @param int $limit
      * @param string $order
      * @return object
@@ -350,8 +352,8 @@ class JBSPagebuilder {
     }
 /**
      * Run Content Plugins
-     * @param array $params
-     * @param array $item
+     * @param object $params
+     * @param object $item
      * @return object
      */
 function runContentPlugins($item, $params)

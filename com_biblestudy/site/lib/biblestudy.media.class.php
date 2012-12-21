@@ -35,19 +35,19 @@ class jbsMedia
 	function getMediaTable($row, $params, $admin_params)
 	{
 		//First we get some items from GET and instantiate the images class
-		$input        = new JInput;
-		$template     = $input->get('t', '1', 'int');
-		$images       = new jbsImages();
-		$filesize     = null;
+		$input = new JInput;
+		$template = $input->get('t', '1', 'int');
+		$images = new jbsImages();
+		$filesize = null;
 		$downloadlink = null;
-		$path1        = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+		$path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 		include_once ($path1 . 'helper.php');
 
-		//Here we get the administration row from the comnponent, and determine the download image to use
+		// Here we get the administration row from the component, and determine the download image to use
 
 		$db = JFactory::getDBO();
 		$db->setQuery('SELECT * FROM #__bsms_admin');
-		$admin    = $db->loadObject();
+		$admin = $db->loadObject();
 		$registry = new JRegistry;
 		$registry->loadString($admin->params);
 		$admin->params = $registry->toArray();
@@ -58,20 +58,14 @@ class jbsMedia
 		}
 		$d_image = ($admin_d_image ? $admin_d_image : 'download.png');
 
-		$download_tmp   = $images->getMediaImage($d_image, $media = null);
-		$download_image = $download_tmp->path;
-		$compat_mode    = $admin_params->get('compat_mode');
+		$download_image = $images->getMediaImage($d_image, $media = null);
+
+		$compat_mode = $admin_params->get('compat_mode');
 
 		//Here we get a list of the media ids associated with the study we got from $row
 
 		$mediaids = $this->getMediaRows($row->id);
 		if (!$mediaids) {
-			$table = null;
-
-			return $table;
-		}
-		$rowcount = count($mediaids);
-		if ($rowcount < 1) {
 			$table = null;
 
 			return $table;
@@ -89,7 +83,7 @@ class jbsMedia
 			$registry->loadString($media->params);
 			$itemparams = $registry;
 			//Get the attributes for the player used in this item
-			$player     = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+			$player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media);
 			$playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
 
 			//Now we build the column for each media file
@@ -102,8 +96,8 @@ class jbsMedia
 
 			if ($link_type > 0) {
 
-				$width  = $download_tmp->width;
-				$height = $download_tmp->height;
+				$width = $download_image->width;
+				$height = $download_image->height;
 
 				if ($compat_mode == 0) {
 					$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
@@ -112,12 +106,12 @@ class jbsMedia
 					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
 							$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
-				//Check to see if they want to use a popu
+				//Check to see if they want to use a popup
 				if ($params->get('useterms') > 0) {
 
 					$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode=' . $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 				}
-				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
+				$downloadlink .= '<img src="' . $download_image->path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
 						$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type) {
@@ -139,7 +133,7 @@ class jbsMedia
 		//End of row holding media image/link
 		$table .= '</tr>';
 
-		// This is the last part of the table where we see if we need to display the filesize
+		// This is the last part of the table where we see if we need to display the file size
 		if ($params->get('show_filesize') > 0 && isset($media)) {
 			$table .= '<tr>';
 			foreach ($mediaids as $media) {
@@ -159,7 +153,7 @@ class jbsMedia
 				$table .= '<td><span class="bsfilesize">' . $filesize . '</span></td>';
 			} //end second foreach
 			$table .= '</tr>';
-		} // end of if show_filesize
+		} // end of if show_file size
 
 
 		$table .= '</tbody></table>';
@@ -176,7 +170,7 @@ class jbsMedia
 	 */
 	function getMediaid($id)
 	{
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT m.id as mid, m.study_id, s.id as sid FROM #__bsms_mediafiles AS m
          LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . $id;
 		$db->setQuery($query);
@@ -197,7 +191,7 @@ class jbsMedia
 		if (!$id) {
 			return false;
 		}
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
 				. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
 				. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
@@ -209,11 +203,10 @@ class jbsMedia
 				. ' ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
 				. ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_media.media_image_name ASC';
 		$db->setQuery($query);
-		if ($media = $db->loadObjectList()) {
+		$media = $db->loadObjectList();
+		if ($media) {
 			return $media;
 		} else {
-			$error = $db->getErrorMsg();
-
 			return false;
 		}
 	}
@@ -228,7 +221,7 @@ class jbsMedia
 	function getMediaRows2($id)
 	{
 		//We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
 				. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
 				. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
@@ -243,32 +236,15 @@ class jbsMedia
 				. ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
 				. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
 				. ' LEFT JOIN #__bsms_series as se ON (s.series_id = se.id)'
-				. ' WHERE #__bsms_mediafiles.id = ' . (int) $id . ' AND #__bsms_mediafiles.published = 1'
+				. ' WHERE #__bsms_mediafiles.id = ' . (int)$id . ' AND #__bsms_mediafiles.published = 1'
 				. ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
 		$db->setQuery($query);
-		if ($media = $db->loadObject()) {
+		$media = $db->loadObject();
+		if ($media) {
 			return $media;
 		} else {
-			$error = $db->getErrorMsg();
-
 			return false;
 		}
-	}
-
-	/**
-	 * Return Admin DB
-	 *
-	 * @return object
-	 * @todo move to helper
-	 */
-	function getAdmin()
-	{
-		$db = JFactory::getDBO();
-		$db->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-		//$db->query();
-		$admin = $db->loadObjectList();
-
-		return $admin;
 	}
 
 	/**
@@ -279,12 +255,12 @@ class jbsMedia
 	 * @param object $itemparams
 	 * @param object $media
 	 *
-	 * @return string
+	 * @return object
 	 */
 	function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 	{
-		$player               = new stdClass();
-		$player->playerwidth  = $params->get('player_width');
+		$player = new stdClass();
+		$player->playerwidth = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');
 
 		if ($itemparams->get('playerheight')) {
@@ -307,9 +283,9 @@ class jbsMedia
 		 * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
 		 * In 6.2.3 we changed inline = 2
 		 */
-		$player->player     = 0;
+		$player->player = 0;
 		$params_mediaplayer = $params->get('media_player');
-		$item_mediaplayer   = $media->player;
+		$item_mediaplayer = $media->player;
 
 		//check to see if the item player is set to 100 - that means use global settings which comes from $params
 		if ($item_mediaplayer == 100) {
@@ -373,17 +349,16 @@ class jbsMedia
 	 */
 	function getDocman($media, $image)
 	{
-		$src    = JURI::base() . $image->path;
+		$src = JURI::base() . $image->path;
 		$height = $image->height;
-		$width  = $image->width;
-		$path1  = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+		$width = $image->width;
+		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 		include_once($path1 . 'filesize.php');
 		include_once($path1 . 'duration.php');
 		$filesize = getFilesize($media->size);
-		$duration = getDuration($params, $row);
-		$docman   = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
+		$docman = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
-				. '" alt="' . $media->malttext . ' ' . $duration . ' ' . $filesize . '" width="' . $width
+				. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
 				. '" height="' . $height . '" border="0" /></a>';
 
 
@@ -401,9 +376,9 @@ class jbsMedia
 	function getArticle($media, $image)
 	{
 
-		$src     = JURI::base() . $image->path;
-		$height  = $image->height;
-		$width   = $image->width;
+		$src = JURI::base() . $image->path;
+		$height = $image->height;
+		$width = $image->width;
 		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
 				. '" height="' . $height . '" border="0" /></a>';
@@ -422,10 +397,10 @@ class jbsMedia
 	 */
 	function getVirtuemart($media, $params, $image)
 	{
-		$src    = JURI::base() . $image->path;
+		$src = JURI::base() . $image->path;
 		$height = $image->height;
-		$width  = $image->width;
-		$vm     = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
+		$width = $image->width;
+		$vm = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
 		alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
 				. '" height="' . $height . '" border="0" /></a>';
 
@@ -449,14 +424,14 @@ class jbsMedia
 		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 		include_once($path1 . 'filesize.php');
 		include_once($path1 . 'duration.php');
-		$src         = JURI::base() . $image->path;
-		$height      = $image->height;
-		$width       = $image->width;
-		$backcolor   = $params->get('backcolor', '0x287585');
-		$frontcolor  = $params->get('frontcolor', '0xFFFFFF');
-		$lightcolor  = $params->get('lightcolor', '0x000000');
+		$src = JURI::base() . $image->path;
+		$height = $image->height;
+		$width = $image->width;
+		$backcolor = $params->get('backcolor', '0x287585');
+		$frontcolor = $params->get('frontcolor', '0xFFFFFF');
+		$lightcolor = $params->get('lightcolor', '0x000000');
 		$screencolor = $params->get('screencolor', '0xFFFFFF');
-		$template    = $input->get('t', '1', 'int');
+		$template = $input->get('t', '1', 'int');
 		//Here we get more information about the particular media file
 		$filesize = getFilesize($media->size);
 		/**
@@ -465,12 +440,12 @@ class jbsMedia
 		//$duration = getDuration($params, $row); //This one IS needed
 		$duration = '';
 		$mimetype = $media->mimetext;
-		$path     = $media->spath . $media->fpath . $media->filename;
+		$path = $media->spath . $media->fpath . $media->filename;
 		if (!isset($media->malttext))
 			$media->malttext = '';
 		if (!substr_count($path, '://')) {
 			$protocol = $params->get('protocol', 'http://');
-			$path     = $protocol . $path;
+			$path = $protocol . $path;
 		}
 		switch ($player->player) {
 			case 0: //Direct
@@ -514,7 +489,7 @@ class jbsMedia
 
 					case 1: //popup
 						// Add space for popup window
-						$player->playerwidth  = $player->playerwidth + 20;
+						$player->playerwidth = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
 
 						$playercode =
@@ -541,7 +516,7 @@ class jbsMedia
 						break;
 
 					case 2: // This plays the video inline
-						$mediacode  = $this->getAVmediacode($media->mediacode, $media);
+						$mediacode = $this->getAVmediacode($media->mediacode, $media);
 						$playercode = JHTML::_('content.prepare', $mediacode);
 						break;
 				}
@@ -609,6 +584,7 @@ class jbsMedia
 				return $playercode;
 				break;
 		}
+		return false;
 	}
 
 	/**
@@ -621,10 +597,10 @@ class jbsMedia
 	 */
 	function getAVmediacode($mediacode, $media)
 	{
-		$bracketpos   = strpos($mediacode, '}');
-		$bracketend   = strpos($mediacode, '{', $bracketpos);
+		$bracketpos = strpos($mediacode, '}');
+		$bracketend = strpos($mediacode, '{', $bracketpos);
 		$dashposition = strpos($mediacode, '-', $bracketpos);
-		$isonlydash   = substr_count($mediacode, '}-{');
+		$isonlydash = substr_count($mediacode, '}-{');
 		if ($isonlydash) {
 			$mediacode = substr_replace($mediacode, 'http://' . $media->spath . $media->fpath . $media->filename, $dashposition, 1);
 		} elseif ($dashposition) {
@@ -643,9 +619,9 @@ class jbsMedia
 	 */
 	function hitPlay($id)
 	{
-		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__bsms_mediafiles SET plays = plays + 1 WHERE id = ' . (int) $db->q($id);
-		$db->setQuery('UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('plays') . ' = ' . $db->qn('plays') . ' + 1 ' . ' 	WHERE id = ' . (int) $db->q($id));
+		$db = JFactory::getDBO();
+		$query = 'UPDATE #__bsms_mediafiles SET plays = plays + 1 WHERE id = ' . (int)$db->q($id);
+		$db->setQuery('UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('plays') . ' = ' . $db->qn('plays') . ' + 1 ' . ' 	WHERE id = ' . (int)$db->q($id));
 		$db->query();
 
 		return true;
