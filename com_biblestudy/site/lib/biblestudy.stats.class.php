@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 //require_once (JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
-JLoader::register('JBSAdmin', dirname(__FILE__) . '/lib/biblestudy.admin.class.php');
+JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
 
 /**
