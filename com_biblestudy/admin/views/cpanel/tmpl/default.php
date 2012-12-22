@@ -9,18 +9,26 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('behavior.modal');
 if (BIBLESTUDY_CHECKREL)
-    JHtml::_('formbehavior.chosen', 'select');
+{
+	JHtml::_('bootstrap.tooltip');
+	JHtml::_('dropdown.init');
+	JHtml::_('formbehavior.chosen', 'select');
+}
+else
+{
+	JHtml::_('behavior.tooltip');
+	JHtml::_('behavior.modal');
+}
+JHtml::_('behavior.multiselect');
 
 $msg = '';
 $input = new JInput;
 $msg = $input->get('msg');
-//$msg = JRequest::getVar('msg', '', 'post');
-if ($msg) {
-    echo $msg;
+
+if ($msg)
+{
+	echo $msg;
 }
 ?>
 <!-- Header -->
@@ -113,7 +121,8 @@ if ($msg) {
                     <div style = "float:left;">
                         <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=styles" style="text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_STYLES'); ?>"> <img src = "../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a> </div>
                     </div>
-                    <?php echo LiveUpdate::getIcon(); ?>
+                    <?php // FIXME need to fix the LiveUpdate system to 2.5 and 3.0
+	                //echo LiveUpdate::getIcon(); ?>
                 </div>
                 <div style="clear: both;"></div>
             </div>

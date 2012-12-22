@@ -3,10 +3,10 @@
 /**
  * Series model
  *
- * @package BibleStudy.Admin
+ * @package   BibleStudy.Admin
  * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link      http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -29,15 +29,24 @@ class BiblestudyModelSeries extends JModelList
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields'])) {
+		if (empty($config['filter_fields']))
+		{
 			$config['filter_fields'] = array(
-				'id', 'series.id',
-				'series_text', 'series.series_text',
-				'alias', 'series.alias',
-				'published', 'series.published',
-				'ordering', 'series.ordering',
-				'access', 'series.access', 'access_level',
-				'language', 'series.language'
+				'id',
+				'series.id',
+				'series_text',
+				'series.series_text',
+				'alias',
+				'series.alias',
+				'published',
+				'series.published',
+				'ordering',
+				'series.ordering',
+				'access',
+				'series.access',
+				'access_level',
+				'language',
+				'series.language'
 			);
 		}
 
@@ -57,6 +66,7 @@ class BiblestudyModelSeries extends JModelList
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
+	 *
 	 * @since   7.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -64,9 +74,11 @@ class BiblestudyModelSeries extends JModelList
 		$app = JFactory::getApplication();
 
 		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout')) {
+		if ($layout = $app->input->get('layout'))
+		{
 			$this->context .= '.' . $layout;
 		}
+
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
@@ -82,9 +94,10 @@ class BiblestudyModelSeries extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		// force a language
+		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
-		if (!empty($forcedLanguage)) {
+		if (!empty($forcedLanguage))
+		{
 			$this->setState('filter.language', $forcedLanguage);
 			$this->setState('filter.forcedLanguage', $forcedLanguage);
 		}
@@ -102,6 +115,7 @@ class BiblestudyModelSeries extends JModelList
 	 * @param    string        $id    A prefix for the store id.
 	 *
 	 * @return    string        A store id.
+	 *
 	 * @since    1.6
 	 */
 	protected function getStoreId($id = '')
@@ -119,19 +133,23 @@ class BiblestudyModelSeries extends JModelList
 	 * Build and SQL query to load the list data
 	 *
 	 * @return  JDatabaseQuery
+	 *
 	 * @since   7.1.0
 	 */
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
+		$user  = JFactory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
-				'list.select', 'series.id, series_text, series.published, series.alias, series.language , series.access, series.ordering'));
+				'list.select',
+				'series.id, series_text, series.published, series.alias, series.language , series.access, series.ordering'
+			)
+		);
 		$query->from('#__bsms_series AS series');
 
 		// Join over the language
@@ -143,53 +161,70 @@ class BiblestudyModelSeries extends JModelList
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access');
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
+		if ($language = $this->getState('filter.language'))
+		{
 			$query->where('series.language = ' . $db->quote($language));
 		}
 
 		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
-			$query->where('series.access = ' . (int)$access);
+		if ($access = $this->getState('filter.access'))
+		{
+			$query->where('series.access = ' . (int) $access);
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin')) {
+		if (!$user->authorise('core.admin'))
+		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('series.access IN (' . $groups . ')');
 		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('series.published = ' . (int)$published);
-		} else if ($published === '') {
-			$query->where('(series.published = 0 OR series.published = 1)');
+		if (is_numeric($published))
+		{
+			$query->where('series.published = ' . (int) $published);
+		}
+		else {
+			if ($published === '')
+			{
+				$query->where('(series.published = 0 OR series.published = 1)');
+			}
 		}
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
-		if (!empty($search)) {
-			if (stripos($search, 'id:') === 0) {
-				$query->where('series.id = ' . (int)substr($search, 3));
-			} else {
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('series.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
 				$search = $db->Quote('%' . $db->escape($search, true) . '%');
 				$query->where('(series.series_text LIKE ' . $search . ' OR series.alias LIKE ' . $search . ')');
 			}
 		}
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
+		if ($language = $this->getState('filter.language'))
+		{
 			$query->where('series.language = ' . $db->quote($language));
 		}
 
 		//Add the list ordering clause
-		$orderCol = $this->state->get('list.ordering', 'series.series_text');
+		$orderCol  = $this->state->get('list.ordering', 'series.series_text');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 		//sqlsrv change
 		if ($orderCol == 'language')
+		{
 			$orderCol = 'l.title';
+		}
 		if ($orderCol == 'access_level')
+		{
 			$orderCol = 'ag.title';
+		}
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
@@ -205,18 +240,22 @@ class BiblestudyModelSeries extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$app = JFactory::getApplication();
-		if ($app->isSite()) {
-			$user = JFactory::getUser();
+		$app   = JFactory::getApplication();
+		if ($app->isSite())
+		{
+			$user   = JFactory::getUser();
 			$groups = $user->getAuthorisedViewLevels();
 
-			for ($x = 0, $count = count($items); $x < $count; $x++) {
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
 				//Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups)) {
+				if (!in_array($items[$x]->access, $groups))
+				{
 					unset($items[$x]);
 				}
 			}
 		}
+
 		return $items;
 	}
 

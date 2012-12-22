@@ -1,25 +1,26 @@
 <?php
 /**
- * @package BibleStudy.Admin
+ * @package   BibleStudy.Admin
  * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link      http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-//require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-JLoader::register('JBSMHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
-//include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
-JLoader::register('JBSMTranslated', dirname(__FILE__) . '/helpers/translated.php');
+// --require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
+JLoader::register('JBSMHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
+
+// --include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
+JLoader::register('JBSMTranslated', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
 
 /**
  * Message model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelMessage extends JModelAdmin
 {
@@ -29,7 +30,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @var string
 	 */
-	var $_admin;
+	var $_admin = null;
 
 	/**
 	 * @var    string  The prefix to use with controller messages.
@@ -45,20 +46,23 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function store()
 	{
-		// fix up special html fields
+		// Fix up special html fields
 
 		$row   = & $this->getTable();
 		$input = new JInput;
 		$data  = $input->post;
+		$scriptures = null;
 
-		//Allows HTML content to come through to the database row
+		// Allows HTML content to come through to the database row
 		$data['studytext']           = $input->get('studytext', '', 'string');
 		$data['studyintro']          = str_replace('"', "'", $data['studyintro']);
 		$data['studynumber']         = str_replace('"', "'", $data['studynumber']);
 		$data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
 
-		foreach ($data['scripture'] as $scripture) {
-			if (!$data['text'][key($data['scripture'])] == '') {
+		foreach ($data['scripture'] as $scripture)
+		{
+			if (!$data['text'][key($data['scripture'])] == '')
+			{
 				$scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
 			}
 			next($data['scripture']);
@@ -66,7 +70,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		$data['scripture'] = implode(';', $scriptures);
 
 		// Bind the form fields to the table
-		if (!$row->bind($data)) {
+		if (!$row->bind($data))
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
@@ -74,72 +79,89 @@ class BiblestudyModelMessage extends JModelAdmin
 
 
 		// Make sure the record is valid
-		if (!$row->check()) {
+		if (!$row->check())
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
 
 		// Store the table to the database
-		//Checks to make sure a valid date field has been entered
-		if (!$row->studydate) {
+		// Checks to make sure a valid date field has been entered
+		if (!$row->studydate)
+		{
 			$row->studydate = date('Y-m-d H:i:s');
 		}
-		if (!$row->store()) {
+		if (!$row->store())
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
 
-		//Get Tags
+		// Get Tags
 		$vTags = $input->get('topic_tags', '', 'string');
 		$iTags = explode(",", $vTags);
 
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables');
+		JTable::addIncludePath(
+			JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables'
+		);
 
-		foreach ($iTags as $aTag) {
-			if (is_numeric($aTag)) {
-				//It's an existing tag.  Add it
-				if ($aTag != "") {
+		foreach ($iTags as $aTag)
+		{
+			if (is_numeric($aTag))
+			{
+				// It's an existing tag.  Add it
+				if ($aTag != "")
+				{
 
 					$tagRow = & JTable::getInstance('studytopics', 'Table');
 
 					$isDup = $this->isDuplicate($row->id, $aTag);
 
-					if (!$isDup) {
+					if (!$isDup)
+					{
 						$tagRow->study_id = $row->id;
 						$tagRow->topic_id = $aTag;
 
-						if (!$tagRow->store()) {
+						if (!$tagRow->store())
+						{
 							$this->setError($this->_db->getErrorMsg());
 
 							return false;
 						}
 					}
 				}
-			} else {
-				//It's a new tag.  Gotta insert it into the Topics table.
-				if ($aTag != "") {
+			}
+			else
+			{
+				// It's a new tag.  Gotta insert it into the Topics table.
+				if ($aTag != "")
+				{
 					$topicRow             = & JTable::getInstance('topic', 'Table');
 					$tempText             = $aTag;
 					$tempText             = str_replace("0_", "", $tempText);
 					$topicRow->topic_text = $tempText;
 					$topicRow->published  = 1;
-					if (!$topicRow->store()) {
+
+					if (!$topicRow->store())
+					{
 						$this->setError($this->_db->getErrorMsg());
 
 						return false;
 					}
 
-					//Gotta somehow make sure this isn't a duplicate...
+					// Gotta somehow make sure this isn't a duplicate...
 					$tagRow           = & JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $row->id;
 					$tagRow->topic_id = $topicRow->id;
 
 					$isDup = $this->isDuplicate($row->id, $aTag);
 
-					if (!$isDup) {
-						if (!$tagRow->store()) {
+					if (!$isDup)
+					{
+						if (!$tagRow->store())
+						{
 							$this->setError($this->_db->getErrorMsg());
 
 							return false;
@@ -155,8 +177,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Duplicate Check
 	 *
-	 * @param int $study_id
-	 * @param int $topic_id
+	 * @param   int  $study_id  Study ID
+	 * @param   int  $topic_id  Topic ID
 	 *
 	 * @return boolean
 	 */
@@ -169,9 +191,12 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		$tresult = $db->loadObject();
 
-		if (empty($tresult)) {
+		if (empty($tresult))
+		{
 			return false;
-		} else {
+		}
+		else
+		{
 			return true;
 		}
 	}
@@ -179,15 +204,18 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Gets all the topics associated with a particular study
 	 *
-	 * @return type JSON Object containing the topics
+	 * @return object JSON Object containing the topics
+	 *
 	 * @since 7.0.1
 	 */
 	public function getTopics()
 	{
-		// do search in case of present study only, suppress otherwise
+		// Do search in case of present study only, suppress otherwise
 		$input          = new JInput;
 		$translatedList = array();
-		if ($input->get('id', 0, 'int') > 0) {
+
+		if ($input->get('id', 0, 'int') > 0)
+		{
 			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
 
@@ -199,8 +227,11 @@ class BiblestudyModelMessage extends JModelAdmin
 
 			$db->setQuery($query->__toString());
 			$topics = $db->loadObjectList();
-			if ($topics) {
-				foreach ($topics as $topic) {
+
+			if ($topics)
+			{
+				foreach ($topics as $topic)
+				{
 					$text             = JBSMTranslated::getTopicItemTranslated($topic);
 					$translatedList[] = array(
 						'id'   => $topic->id,
@@ -216,7 +247,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Gets all topics available
 	 *
-	 * @return type JSON Object containing the topics
+	 * @return object JSON Object containing the topics
+	 *
 	 * @since 7.0.1
 	 */
 	public function getAlltopics()
@@ -230,8 +262,12 @@ class BiblestudyModelMessage extends JModelAdmin
 		$db->setQuery($query->__toString());
 		$topics         = $db->loadObjectList();
 		$translatedList = array();
-		if ($topics) {
-			foreach ($topics as $topic) {
+
+		if ($topics)
+		{
+
+			foreach ($topics as $topic)
+			{
 				$text             = JBSMTranslated::getTopicItemTranslated($topic);
 				$translatedList[] = array(
 					'id'   => $topic->id,
@@ -250,7 +286,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function getAdmin()
 	{
-		if (empty($this->_admin)) {
+		if (empty($this->_admin))
+		{
 			$query        = 'SELECT *'
 					. ' FROM #__bsms_admin'
 					. ' WHERE id = 1';
@@ -284,18 +321,23 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param string $data
+	 * @param   string  $data  The form data.
+	 *
+	 * @return boolean
 	 *
 	 * @since 7.0.1
 	 * @todo  This may need to be optimized
 	 */
 	public function save($data)
 	{
-		if (parent::save($data)) {
+		if (parent::save($data))
+		{
 			$this->setTopics($this->getState($this->getName() . '.id'), $data);
 
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -303,16 +345,20 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Routine to save the topics(tags)
 	 *
-	 * @param int    $pks  is the id of the record being saved
-	 * @param string $data from post
+	 * @param   int     $pks   Is the id of the record being saved.
+	 * @param   string  $data  from post
+	 *
+	 * @return boolean
 	 *
 	 * @since 7.0.2
 	 * @todo  This may need to be optimized
+	 * @throws Exception If error
 	 */
 	public function setTopics($pks, $data)
 	{
 
-		if (empty($pks)) {
+		if (empty($pks))
+		{
 			$this->setError(JText::_('COM_CONTENT_NO_ITEM_SELECTED'));
 
 			return false;
@@ -321,56 +367,75 @@ class BiblestudyModelMessage extends JModelAdmin
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		//Clear the tags first
+		// Clear the tags first
 		$query->delete();
 		$query->from('#__bsms_studytopics');
 		$query->where('study_id = ' . $pks);
 		$db->setQuery($query->__toString());
-		if (!$db->query()) {
+
+		if (!$db->query())
+		{
 			throw new Exception($db->getErrorMsg());
 		}
 		$query->clear();
 
-		//Add all the tags back
-		if ($data['topics']) {
+		// Add all the tags back
+		if ($data['topics'])
+		{
 			$topics     = explode(",", $data['topics']);
 			$topics_sql = array();
+
 			foreach ($topics as $topic)
+			{
 				$topics_sql[] = '(' . $topic . ', ' . $pks . ')';
+			}
 			$query->insert('#__bsms_studytopics (topic_id, study_id) VALUES ' . implode(',', $topics_sql));
 			$db->setQuery($query->__toString());
-			if (!$db->query()) {
+
+			if (!$db->query())
+			{
 				throw new Exception($db->getErrorMsg());
 			}
 		}
+		return true;
 	}
 
 	/**
 	 * Get the form data
 	 *
-	 * @param array   $data
-	 * @param boolean $loadData
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return string
+	 *
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.message', 'message', array(
-			'control'   => 'jform',
-			'load_data' => $loadData
-		));
-		if (empty($form)) {
+		$form = $this->loadForm(
+			'com_biblestudy.message',
+			'message',
+			array(
+					'control'   => 'jform',
+					'load_data' => $loadData
+			)
+		);
+
+		if (empty($form))
+		{
 			return false;
 		}
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id')) {
+		if ($jinput->get('a_id'))
+		{
 			$id = $jinput->get('a_id', 0);
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
-		else {
+		}
+		else
+		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$id = $jinput->get('id', 0);
 		}
 
@@ -379,8 +444,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.' . (int) $id))
-				|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		) {
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('state', 'disabled', 'true');
@@ -399,13 +464,17 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  array    The default data is an empty array.
+	 *
 	 * @since   7.0
 	 */
 	protected function loadFormData()
 	{
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
+
 		if (empty($data))
+		{
 			$data = $this->getItem();
+		}
 
 		return $data;
 	}
@@ -413,11 +482,12 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param    type      The table type to instantiate
-	 * @param    string    A prefix for the table class name. Optional.
-	 * @param    array     Configuration array for model. Optional.
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    JTable    A database object
+	 *
 	 * @since    1.6
 	 */
 	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
@@ -428,9 +498,10 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param    JTable    $table
+	 * @param   JTable  $table  A reference to a JTable object.
 	 *
 	 * @return    void
+	 *
 	 * @since    1.6
 	 */
 	protected function prepareTable($table)
@@ -442,14 +513,17 @@ class BiblestudyModelMessage extends JModelAdmin
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
 		$table->alias      = JApplication::stringURLSafe($table->alias);
 
-		if (empty($table->alias)) {
+		if (empty($table->alias))
+		{
 			$table->alias = JApplication::stringURLSafe($table->studytitle);
 		}
 
-		if (empty($table->id)) {
+		if (empty($table->id))
+		{
 
 			// Set ordering to the last item if not set
-			if (empty($table->ordering)) {
+			if (empty($table->ordering))
+			{
 				$db = JFactory::getDbo();
 				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_studies');
 				$max = $db->loadResult();
@@ -462,8 +536,10 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param string $group
-	 * @param int    $client_id
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
 	 *
 	 * @since    1.6
 	 */
@@ -477,38 +553,66 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * Saves the manually set order of records.
 	 *
 	 * @param   array    $pks    An array of primary key ids.
-	 * @param   array    $cid
 	 * @param   integer  $order  +1 or -1
 	 *
 	 * @return  mixed
+	 *
 	 * @since    11.1
 	 */
-	public function saveorder($pks = null, $cid = array(), $order = null)
+	public function saveorder($pks = null, $order = null)
 	{
 		$row       = & $this->getTable();
-		$groupings = array();
+		$conditions = array();
 
-		// update ordering values
-		for ($i = 0; $i < count($cid); $i++) {
-			$row->load((int) $cid[$i]);
-			// track categories
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$row->load((int) $pk);
+
+			// Track categories
 			$groupings[] = $row->id;
 
-			if ($row->ordering != $order[$i]) {
+			if ($row->ordering != $order[$i])
+			{
 				$row->ordering = $order[$i];
-				if (!$row->store()) {
+
+				if (!$row->store())
+				{
 					$this->setError($this->_db->getErrorMsg());
 
 					return false;
 				}
+
+				// Remember to reorder within position and client_id
+				$condition = $this->getReorderConditions($row);
+				$found = false;
+
+				foreach ($conditions as $cond)
+				{
+					if ($cond[1] == $condition)
+					{
+						$found = true;
+						break;
+					}
+				}
+
+				if (!$found)
+				{
+					$key = $row->getKeyName();
+					$conditions[] = array($row->$key, $condition);
+				}
 			}
 		}
 
-		// execute updateOrder for each parent group
-		$groupings = array_unique($groupings);
-		foreach ($groupings as $group) {
-			$row->reorder('id = ' . (int) $group);
+		foreach ($conditions as $cond)
+		{
+			// $row->reorder('id = ' . (int) $group);
+			$row->load($cond[0]);
+			$row->reorder($cond[1]);
 		}
+
+		// Clear the component's cache
+		$this->cleanCache();
 
 		return true;
 	}
