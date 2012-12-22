@@ -3,10 +3,10 @@
 /**
  * Controller MediaFile
  *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,8 +16,8 @@ jimport('joomla.application.component.controllerform');
 /**
  * Controller class for MediaFile
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyControllerMediafileform extends JControllerForm
 {
@@ -48,24 +48,30 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 * Method to add a new record.
 	 *
 	 * @return    boolean    True if the article can be added, false if not.
+	 *
 	 * @since    1.6
 	 */
 	public function add()
 	{
-		if (!parent::add()) {
+		if (!parent::add())
+		{
 			// Redirect to the return page.
 			$this->setRedirect($this->getReturnPage());
 		}
 	}
 
 	/**
-	 * constructor (registers additional tasks to methods)
+	 * Constructor.
 	 *
-	 * @return void
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see     JControllerForm
+	 * @since   12.2
+	 * @throws  Exception
 	 */
-	function __construct($config = array())
+	public function __construct($config = array())
 	{
-		$input = new JInput; 
+		$input = new JInput;
 		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 
@@ -107,9 +113,10 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param    string    $key    The name of the primary key of the URL variable.
+	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
-	 * @return    Boolean    True if access level checks pass, false otherwise.
+	 * @return  Boolean    True if access level checks pass, false otherwise.
+	 *
 	 * @since    1.6
 	 */
 	public function cancel($key = 'a_id')
@@ -123,10 +130,11 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param    string    $key       The name of the primary key of the URL variable.
-	 * @param    string    $urlVar    The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
+	 *
 	 * @since    1.6
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
@@ -136,15 +144,22 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		return $result;
 	}
 
+
 	/**
-	 * Get Model
+	 * Method to get a model object, loading it if required.
 	 *
-	 * @param string $name
-	 * @param string $prefix
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return array
+	 * @return  object  The model.
+	 *
+	 * @since   12.2
 	 */
-	public function getModel($name = 'Mediafileform', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel(
+		$name = 'Mediafileform',
+		$prefix = 'BiblestudyModel',
+		$config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
@@ -154,29 +169,32 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param    int        $recordId      The primary key id for the item.
-	 * @param    string     $urlVar        The name of the URL variable for the id.
+	 * @param   int     $recordId  The primary key id for the item.
+	 * @param   string  $urlVar    The name of the URL variable for the id.
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
+	 *
 	 * @since    1.6
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = new JInput();
+		$this->input = new JInput;
 
 		// Need to override the parent method completely.
-		$tmpl   = $this->input->get('tmpl');
+		$tmpl = $this->input->get('tmpl');
 		$layout = $this->input->get('layout', 'edit');
 		$append = '';
 
 		// Setup redirect info.
-		if ($tmpl) {
+		if ($tmpl)
+		{
 			$append .= '&tmpl=' . $tmpl;
 		}
 
 		$append .= '&layout=edit';
 
-		if ($recordId) {
+		if ($recordId)
+		{
 			$append .= '&' . $urlVar . '=' . $recordId;
 		}
 
@@ -184,15 +202,18 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$return = $this->getReturnPage();
 		$catId  = $this->input->getInt('catid', null, 'get');
 
-		if ($itemId) {
+		if ($itemId)
+		{
 			$append .= '&Itemid=' . $itemId;
 		}
 
-		if ($catId) {
+		if ($catId)
+		{
 			$append .= '&catid=' . $catId;
 		}
 
-		if ($return) {
+		if ($return)
+		{
 			$append .= '&return=' . base64_encode($return);
 		}
 
@@ -205,15 +226,19 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 * If a "return" variable has been passed in the request
 	 *
 	 * @return    string    The return URL.
+	 *
 	 * @since    1.6
 	 */
 	protected function getReturnPage()
 	{
 		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		{
 			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
-		} else {
+		}
+		else
+		{
 			return base64_decode($return);
 		}
 	}
@@ -221,21 +246,23 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param    string    $key       The name of the primary key of the URL variable.
-	 * @param    string    $urlVar    The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
+	 *
 	 * @since    1.6
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
 		// Load the backend helper for filtering.
-		//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php';
-        JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+		// -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php';
+		JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 		$result = parent::save($key, $urlVar);
 
 		// If ok, redirect to the return page.
-		if ($result) {
+		if ($result)
+		{
 			$this->setRedirect($this->getReturnPage());
 		}
 
@@ -245,24 +272,28 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Link to Docman Category Items
 	 *
+	 * @return object
+	 *
 	 * @todo This is brocken and not sure if needed.
 	 */
 	public function docmanCategoryItems()
 	{
-		//hide errors and warnings
+		// Hide errors and warnings
 		error_reporting(0);
 		$input = new JInput;
 		$catId = $input->get('catId', '', 'int');
 
 		$model = $this->getModel('mediafile');
 		$items = $model->getdocManCategoryItems($catId);
-		echo $items;
+
+		return $items;
 	}
 
 	/**
 	 * Link to Sections May need to be Removed.
 	 *
 	 * @todo This is brocken and not sure if needed.
+	 * @return object
 	 */
 	public function articlesSectionCategories()
 	{
@@ -272,13 +303,15 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		$model = & $this->getModel('mediafile');
 		$items = & $model->getArticlesSectionCategories($secId);
-		echo $items;
+
+		return $items;
 	}
 
 	/**
 	 * Link to Articals Category Items
 	 *
 	 * @todo This is brocken and not sure if needed.
+	 * @return object
 	 */
 	public function articlesCategoryItems()
 	{
@@ -288,13 +321,15 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		$model = & $this->getModel('mediafile');
 		$items = & $model->getCategoryItems($catId);
-		echo $items;
+
+		return $items;
 	}
 
 	/**
 	 * Link to VertueMart Items
 	 *
 	 * @todo This is brocken and not sure if needed.
+	 * @return object
 	 */
 	public function virtueMartItems()
 	{
@@ -304,9 +339,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		$model = & $this->getModel('mediafile');
 		$items = & $model->getVirtueMartItems($catId);
-		echo $items;
+
+		return $items;
 	}
-
-
 
 }

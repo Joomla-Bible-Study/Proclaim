@@ -3,10 +3,10 @@
 /**
  * Controller Sermons
  *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,8 +15,8 @@ jimport('joomla.application.component.controller');
 /**
  * Controller class for Sermons
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyControllerSermons extends JControllerLegacy
 {
@@ -47,14 +47,15 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function download()
 	{
-		//require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-        JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
+		// --require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
-		if ($task == 'download') {
 
-			$downloader = new Dump_File();
+		if ($task == 'download')
+		{
+			$downloader = new Dump_File;
 			$downloader->download($mid);
 
 			die;
@@ -70,7 +71,9 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	{
 		$input = new JInput;
 		$task  = $input->get('task');
-		if ($task == 'avplayer') {
+
+		if ($task == 'avplayer')
+		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
 			echo $mediacode;
@@ -81,12 +84,15 @@ class BiblestudyControllerSermons extends JControllerLegacy
 
 	/**
 	 * Add hits to the play count.
+	 *
+	 * @return null
 	 */
 	public function playHit()
 	{
-		//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-        JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
-		$getMedia = new jbsMedia();
+		// --require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
+		// 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+		JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
+		$getMedia = new jbsMedia;
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
@@ -96,6 +102,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
 	 *
 	 * @return null
+	 *
 	 * @deprecated since version 7.0.4
 	 */
 	public function inlinePlayer()

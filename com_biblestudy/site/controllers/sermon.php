@@ -1,20 +1,24 @@
 <?php
 
 /**
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 if (!BIBLESTUDY_CHECKREL)
+{
 	jimport('joomla.application.component.controllerform');
+}
 
 /**
- * @package BibleStudy.Site
- * @since   7.0.0
+ * Class for Sermon
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyControllerSermon extends JControllerForm
 {
@@ -37,11 +41,13 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * Method to add a new record.
 	 *
 	 * @return    boolean    True if the article can be added, false if not.
+	 *
 	 * @since    1.6
 	 */
 	public function add()
 	{
-		if (!parent::add()) {
+		if (!parent::add())
+		{
 			// Redirect to the return page.
 			$this->setRedirect($this->getReturnPage());
 		}
@@ -50,21 +56,24 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param	array	$data  An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
-	 * @return	boolean
-	 * @since	1.6
+	 * @return    boolean
+	 *
+	 * @since    1.6
 	 */
 	protected function allowAdd($data = array())
 	{
-		$user		= JFactory::getUser();
-		$allow		= null;
+		$user  = JFactory::getUser();
+		$allow = null;
 
-		if ($allow === null) {
+		if ($allow === null)
+		{
 			// In the absense of better information, revert to the component permissions.
 			return parent::allowAdd();
 		}
-		else {
+		else
+		{
 			return $allow;
 		}
 	}
@@ -72,11 +81,12 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param	array	$data	An array of input data.
-	 * @param	string	$key	The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
-	 * @return	boolean
-	 * @since	1.6
+	 * @return  boolean
+	 *
+	 * @since    1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
@@ -86,10 +96,11 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param	string	$key	The name of the primary key of the URL variable.
+	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
-	 * @return	Boolean	True if access level checks pass, false otherwise.
-	 * @since	1.6
+	 * @return    Boolean    True if access level checks pass, false otherwise.
+	 *
+	 * @since    1.6
 	 */
 	public function cancel($key = 'a_id')
 	{
@@ -102,11 +113,12 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param	string	$key	The name of the primary key of the URL variable.
-	 * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
-	 * @return	Boolean	True if access level check and checkout passes, false otherwise.
-	 * @since	1.6
+	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
+	 *
+	 * @since    1.6
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
@@ -118,9 +130,9 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param    string    $name      The model name. Optional.
-	 * @param    string    $prefix    The class prefix. Optional.
-	 * @param    array     $config    Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    object    The model.
 	 *
@@ -136,15 +148,16 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param    int        $recordId      The primary key id for the item.
-	 * @param    string     $urlVar        The name of the URL variable for the id.
+	 * @param   int     $recordId  The primary key id for the item.
+	 * @param   string  $urlVar    The name of the URL variable for the id.
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
+	 *
 	 * @since    1.6
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = new JInput();
+		$this->input = new JInput;
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
@@ -152,13 +165,15 @@ class BiblestudyControllerSermon extends JControllerForm
 		$append = '';
 
 		// Setup redirect info.
-		if ($tmpl) {
+		if ($tmpl)
+		{
 			$append .= '&tmpl=' . $tmpl;
 		}
 
 		$append .= '&layout=edit';
 
-		if ($recordId) {
+		if ($recordId)
+		{
 			$append .= '&' . $urlVar . '=' . $recordId;
 		}
 
@@ -166,15 +181,18 @@ class BiblestudyControllerSermon extends JControllerForm
 		$return = $this->getReturnPage();
 		$catId  = $this->input->getInt('catid', null, 'get');
 
-		if ($itemId) {
+		if ($itemId)
+		{
 			$append .= '&Itemid=' . $itemId;
 		}
 
-		if ($catId) {
+		if ($catId)
+		{
 			$append .= '&catid=' . $catId;
 		}
 
-		if ($return) {
+		if ($return)
+		{
 			$append .= '&return=' . base64_encode($return);
 		}
 
@@ -187,15 +205,19 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * If a "return" variable has been passed in the request
 	 *
 	 * @return    string    The return URL.
+	 *
 	 * @since    1.6
 	 */
 	protected function getReturnPage()
 	{
 		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		{
 			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
-		} else {
+		}
+		else
+		{
 			return base64_decode($return);
 		}
 	}
@@ -203,22 +225,24 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param    string    $key       The name of the primary key of the URL variable.
-	 * @param    string    $urlVar    The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
+	 *
 	 * @since    1.6
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
 		// Load the backend helper for filtering.
-		//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php';
-        JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
+		// --require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php';
+		JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 		$result = parent::save($key, $urlVar);
 
 		// If ok, redirect to the return page.
-		if ($result) {
+		if ($result)
+		{
 			$this->setRedirect($this->getReturnPage());
 		}
 
@@ -229,6 +253,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * Comment
 	 *
 	 * @return NULL
+	 *
 	 * @todo need to be looked at.
 	 */
 	public function comment()
@@ -241,7 +266,9 @@ class BiblestudyControllerSermon extends JControllerForm
 		$menu      = $mainframe->getMenu();
 		$item      = $menu->getActive();
 		$t         = '';
-		if (!$t) {
+
+		if (!$t)
+		{
 			$t = 1;
 		}
 		$input->set('t', $t);
@@ -253,51 +280,78 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		$cap = 1;
 
-		if ($params->get('use_captcha') > 0) {
-			//Begin reCaptcha
-			require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php');
+		if ($params->get('use_captcha') > 0)
+		{
+			// Begin reCaptcha
+			require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy'
+					. DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php';
 			$privatekey = $params->get('private_key');
-			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+			$resp       = recaptcha_check_answer(
+				$privatekey,
+				$_SERVER["REMOTE_ADDR"],
+				$_POST["recaptcha_challenge_field"],
+				$_POST["recaptcha_response_field"]
+			);
 
-			if (!$resp->is_valid) {
+			if (!$resp->is_valid)
+			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
 
 				$cap = 0;
+
 				return null;
-			} else {
+			}
+			else
+			{
 				$cap = 1;
 			}
 		}
 
-		if ($cap == 1) {
-			if ($model->storecomment()) {
+		if ($cap == 1)
+		{
+			if ($model->storecomment())
+			{
 				$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
-			} else {
+			}
+			else
+			{
 				$msg = JText::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
 			}
 
-			if ($params->get('email_comments') > 0) {
-				//@todo this looks like it is not needed.
+			if ($params->get('email_comments') > 0)
+			{
+				// @todo this looks like it is not needed.
 				$EmailResult = $this->commentsEmail($params);
 			}
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
-			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg, 'Comment Added');
+			$mainframe->redirect(
+				'index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
+				'Comment Added'
+			);
+
 		} // End of $cap
+
 	}
 
 	/**
 	 * Begin scripture links plugin function
 	 * FIXME this looks to be broken.
+	 *
+	 * @return null
 	 */
 	public function biblegateway_link()
 	{
-		$input     = new JInput;
-		$return    = false;
-		$row->text = $input->get('scripture1', '', 'string');
+		$input  = new JInput;
+		$return = false;
+		$row    = null;
+		$params = null;
+		$plugin = new stdClass;
+
+		// $row->text = $input->get('scripture1', '', 'string');
 		JPluginHelper::importPlugin('content', 'scripturelinks');
 
 		// Convert parameter fields to objects.
@@ -306,25 +360,32 @@ class BiblestudyControllerSermon extends JControllerForm
 		$slparams = $registry;
 
 		$dispatcher = JDispatcher::getInstance();
-		$results    = $mainframe->triggerEvent('onPrepareContent', array(
-			&$row,
-			&$params,
-			1
-		));
+		JFactory::getApplication()->triggerEvent(
+			'onPrepareContent',
+			array(
+				&$row,
+				&$params,
+				1
+			)
+		);
 	}
 
 	/**
 	 * Download system
+	 *
+	 * @return null
 	 */
 	public function download()
 	{
-		//require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-        JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
+		// --require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
+		JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
-		if ($task == 'download') {
-			$downloader = new Dump_File();
+
+		if ($task == 'download')
+		{
+			$downloader = new Dump_File;
 			$downloader->download($mid);
 			die;
 		}
@@ -333,14 +394,18 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Email comment out.
 	 *
-	 * @param object $params
+	 * @param   object  $params  Params of to parse
+	 *
+	 * @return null
 	 */
 	public function commentsEmail($params)
 	{
 		$mainframe  = JFactory::getApplication();
 		$input      = new JInput;
 		$menuitemid = $input->get('Itemid', '', 'int');
-		if ($menuitemid) {
+
+		if ($menuitemid)
+		{
 			$menu       = $mainframe->getMenu();
 			$menuparams = $menu->getParams($menuitemid);
 		}
@@ -355,7 +420,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		$comment_abspath   = JPATH_SITE;
 		$comment_mailfrom  = $config->get('mailfrom');
 		$comment_fromname  = $config->get('fromname');
-		;
+
 		$comment_livesite = JURI::root();
 		$db               = JFactory::getDBO();
 		$query            = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE id = ' . $comment_study_id;
@@ -367,12 +432,21 @@ class BiblestudyControllerSermon extends JControllerForm
 		$ToEmail            = $params->get('recipient', '');
 		$Subject            = $params->get('subject', 'Comments');
 		$FromName           = $params->get('fromname', $comment_fromname);
+
 		if (empty($ToEmail))
+		{
 			$ToEmail = $comment_mailfrom;
-		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . JText::_('JBS_STY_ON') . ': ' . $comment_date;
-		if ($comment_published > 0) {
+		}
+		$Body = $comment_author . ' ' . JText::_(
+			'JBS_STY_HAS_ENTERED_COMMENT'
+		) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . JText::_('JBS_STY_ON') . ': ' . $comment_date;
+
+		if ($comment_published > 0)
+		{
 			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_PUBLISHED');
-		} else {
+		}
+		else
+		{
 			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
 		$Body = $Body . ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
