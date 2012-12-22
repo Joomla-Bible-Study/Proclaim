@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php';
-
+JLoader::register('BiblestudyModelMessageform', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
 /**
  * Model class for Message
  *

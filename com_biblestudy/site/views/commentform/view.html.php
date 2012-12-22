@@ -10,8 +10,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
-
+//require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
+JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblstudy.php');
 /**
  * View class for Comment
  *
