@@ -181,7 +181,7 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
+		$params = $app->getParams();
 		$this->setState('params', $params);
 
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');

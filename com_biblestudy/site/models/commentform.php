@@ -1,24 +1,21 @@
 <?php
-
 /**
- * Comment Model
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php';
+// --require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php';
 JLoader::register('BiblestudyModelCommentform', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
 /**
  * Comment model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelCommentform extends BiblestudyModelComment
 {
@@ -28,11 +25,13 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @return void
+	 *
 	 * @since    1.6
 	 */
 	protected function populateState()
 	{
-		$app = JFactory::getApplication();
+		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
 		$pk = $app->input->getInt('a_id');
@@ -53,25 +52,26 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	}
 
 	/**
-	 * Method to get article data.
+	 * Method to get a single record.
 	 *
-	 * @param    integer    The id of the article.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
-	 * @return    mixed    Content item data object on success, false on failure.
+	 * @return  mixed    Object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('comment.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('comment.id');
 
 		// Get a row instance.
 		$table = $this->getTable();
 
 		// Attempt to load the row.
-		$return = $table->load($itemId);
+		$return = $table->load($pk);
 
 		// Check for a table object error.
-		if ($return === false) {
+		if ($return === false)
+		{
 			return false;
 		}
 
@@ -81,11 +81,11 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		return $value;
 	}
 
-
 	/**
 	 * Get the return URL.
 	 *
-	 * @return    string    The return URL.
+	 * @return  string    The return URL.
+	 *
 	 * @since    1.6
 	 */
 	public function getReturnPage()

@@ -1,32 +1,32 @@
 <?php
-
 /**
- * MediaFiles Model
- *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafiles.php';
+// --require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafiles.php';
 JLoader::register('BiblestudyModelMediafilelist', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafiles.php');
 /**
  * Model class for MediaFiles
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @property mixed _data
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 {
 
 	/**
-	 * Build Queary
+	 * Build Query
 	 *
 	 * @return string
+	 *
+	 * @todo may not be needed.
 	 */
 	public function _buildQuery()
 	{
@@ -46,11 +46,14 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 * Retrieves the data
 	 *
 	 * @return array Array of objects containing the data from the database
+	 *
+	 * @todo may not be needed.
 	 */
 	public function getData()
 	{
 		// Lets load the data if it doesn't already exist
-		if (empty($this->_data)) {
+		if (empty($this->_data))
+		{
 			$query       = $this->_buildQuery();
 			$this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
 		}
@@ -62,6 +65,8 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 * Build Content Where
 	 *
 	 * @return string
+	 *
+	 * @todo may not be needed.
 	 */
 	public function _buildContentWhere()
 	{
@@ -70,7 +75,9 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 		$option         = $input->get('option', '', 'cmd');
 		$where          = array();
 		$filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
-		if ($filter_studyid > 0) {
+
+		if ($filter_studyid > 0)
+		{
 			$where[] = 'm.study_id = ' . (int) $filter_studyid;
 		}
 		$where = (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
@@ -82,6 +89,8 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 * Build Content Order By
 	 *
 	 * @return string
+	 *
+	 * @todo may not be needed.
 	 */
 	public function _buildContentOrderBy()
 	{
@@ -97,18 +106,31 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 			'createdate',
 			'filename'
 		);
-		$filter_order     = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');
-		$filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC'));
-		if ($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC') {
+		$filter_order     = $mainframe->getUserStateFromRequest(
+			$option . 'filter_order',
+			'filter_order',
+			'ordering',
+			'cmd'
+		);
+		$filter_order_Dir = strtoupper(
+			$mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC')
+		);
+
+		if ($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC')
+		{
 			$filter_order_Dir = 'ASC';
 		}
-		if (!in_array($filter_order, $orders)) {
+		if (!in_array($filter_order, $orders))
+		{
 			$filter_order = 'ordering';
 		}
 
-		if ($filter_order == 'ordering') {
+		if ($filter_order == 'ordering')
+		{
 			$orderby = ' ORDER BY study_id, ordering ' . $filter_order_Dir;
-		} else {
+		}
+		else
+		{
 			$orderby = ' ORDER BY ' . $filter_order . ' ' . $filter_order_Dir . ' , study_id, ordering ';
 		}
 
@@ -135,7 +157,7 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	{
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
+		$params = JFactory::getApplication('site')->getParams();
 		$this->setState('params', $params);
 
 		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');

@@ -158,9 +158,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app        = JFactory::getApplication();
+		$app        = JFactory::getApplication('site');
 		$menus      = $app->getMenu();
-		$itemparams = JComponentHelper::getParams('com_biblestudy');
+		$itemparams = $app->getParams();
 
 		$title = null;
 		// Because the application sets a default page title,

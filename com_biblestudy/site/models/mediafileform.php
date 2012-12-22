@@ -1,12 +1,9 @@
 <?php
-
 /**
- * MediaFile Model
- *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -17,8 +14,8 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafile.
 /**
  * Model class for MediaFile
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 {
@@ -40,14 +37,16 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @return void
+	 *
 	 * @since    1.6
 	 */
 	protected function populateState()
 	{
-		$app = JFactory::getApplication();
+		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$pk = $app->input->getInt('a_id'); 
+		$pk = $app->input->getInt('a_id');
 		$this->setState('mediafile.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');
@@ -63,28 +62,29 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Method to get article data.
 	 *
-	 * @param    integer    The id of the article.
+	 * @param   integer  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('mediafile.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('mediafile.id');
 
 		// Get a row instance.
 		$table = $this->getTable();
 
 		// Attempt to load the row.
-		$return = $table->load($itemId);
+		$return = $table->load($pk);
 
 		// Check for a table object error.
-		if ($return === false) {
+		if ($return === false)
+		{
 			return false;
 		}
 
 		$properties = $table->getProperties(1);
-		$value = JArrayHelper::toObject($properties, 'JObject');
+		$value      = JArrayHelper::toObject($properties, 'JObject');
 
 		// Convert attrib field to Registry.
 
@@ -96,11 +96,11 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		return $value;
 	}
 
-
 	/**
 	 * Get the return URL.
 	 *
 	 * @return    string    The return URL.
+	 *
 	 * @since    1.6
 	 */
 	public function getReturnPage()
@@ -115,7 +115,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get docMan Categories
 	 *
-	 * @return object
+	 * @return string
 	 */
 	public function getdocManCategories()
 	{
@@ -127,6 +127,8 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 
 	/**
 	 * Get Article Categories
+	 *
+	 * @return string
 	 */
 	public function getArticleCategories()
 	{
@@ -138,7 +140,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get Article Articles
 	 *
-	 * @param it $catId
+	 * @param   int  $catId  Category ID
 	 *
 	 * @return string
 	 */
@@ -153,7 +155,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get Articles Item
 	 *
-	 * @param int $id
+	 * @param   int  $id  ID of Article
 	 *
 	 * @return object
 	 */
@@ -181,7 +183,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get DocMan Category items
 	 *
-	 * @param int $catId
+	 * @param   int  $catId  DocMan Category ID
 	 *
 	 * @return string
 	 */
@@ -208,7 +210,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get Articles Section Categories
 	 *
-	 * @param int $secId
+	 * @param   int  $secId  Articles Section Categories ID
 	 *
 	 * @return string
 	 */
@@ -222,7 +224,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get Category Items
 	 *
-	 * @param int $catId
+	 * @param   int  $catId  Category Item ID
 	 *
 	 * @return string
 	 */
@@ -231,9 +233,11 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$query = "SELECT id, title FROM #__content WHERE `state` = 1 AND `catid` = '$catId'";
 		$this->getDBO()->setQuery($query);
 
-		//We need to make the result in the right format for the ajax request
+		// We need to make the result in the right format for the ajax request
 		$articles = array("-1" => JText::_("JBS_MED_SELECT_ARTICLE"));
-		foreach ($this->getDBO()->loadAssocList() as $article) {
+
+		foreach ($this->getDBO()->loadAssocList() as $article)
+		{
 			$articles[$article['id']] = $article['title'];
 		}
 
@@ -243,7 +247,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get VertueMart Items
 	 *
-	 * @param int $catId
+	 * @param   int  $catId  VirtueMart item Category ID
 	 *
 	 * @return string
 	 */
@@ -262,7 +266,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get DocMan Item
 	 *
-	 * @param int $id
+	 * @param   int  $id  DocMain ID
 	 *
 	 * @return object
 	 */
@@ -278,7 +282,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get Article Item
 	 *
-	 * @param string $id
+	 * @param   int  $id  Article ID
 	 *
 	 * @return object
 	 */
@@ -294,7 +298,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Get VirtueMart Item
 	 *
-	 * @param int $id
+	 * @param   int  $id  VirtueMart Item ID
 	 *
 	 * @return object
 	 */
@@ -327,7 +331,8 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 */
 	public function getStudies()
 	{
-		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies ORDER BY studydate DESC";
+		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber)
+		AS text FROM #__bsms_studies ORDER BY studydate DESC";
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadObjectList();

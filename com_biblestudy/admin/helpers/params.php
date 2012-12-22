@@ -25,7 +25,7 @@ class JBSMParams
 	/**
 	 * Gets the settings from Admin
 	 *
-	 * @return object Return Admin table
+	 * @return mixed Return Admin table
 	 */
 	public static function getAdmin()
 	{
@@ -50,7 +50,7 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return object Return active template info
+	 * @return mixed|boolean Return active template info
 	 */
 	public static function getTemplateparams()
 	{

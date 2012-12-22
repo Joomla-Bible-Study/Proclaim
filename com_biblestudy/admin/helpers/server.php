@@ -1,19 +1,18 @@
 <?php
-
 /**
- * Server Helper
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 /**
- * @package BibleStudy.Admin
- * @since   8.0.0ß
+ * Class Server Helper
+ *
+ * @package  BibleStudy.Admin
+ * @since    8.0.0
  */
 class JBSMServer
 {
@@ -25,13 +24,13 @@ class JBSMServer
 	/**
 	 * Get Server
 	 *
-	 * @param type $serverid
+	 * @param   int  $serverid  Server ID
 	 *
-	 * @return type
+	 * @return object
 	 */
-	function getServer($serverid)
+	public static function getServer($serverid)
 	{
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
 
 		$db->setQuery($query);
@@ -44,14 +43,14 @@ class JBSMServer
 	/**
 	 * Get Folder
 	 *
-	 * @param int $folderId
+	 * @param   int  $folderId  Folder ID
 	 *
 	 * @return object
 	 */
-	static function getFolder($folderId)
+	public static function getFolder($folderId)
 	{
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
 
 		$db->setQuery($query);

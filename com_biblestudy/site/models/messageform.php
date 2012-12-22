@@ -1,25 +1,20 @@
 <?php
-
 /**
- * Message Model
- *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
- *          class biblestudyModelmessage extends JModelAdmin
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php';
-JLoader::register('BiblestudyModelMessageform', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
+JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
 /**
  * Model class for Message
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyModelMessageform extends BiblestudyModelMessage
 {
@@ -28,6 +23,8 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return void
 	 *
 	 * @since    1.6
 	 */
@@ -52,23 +49,24 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	/**
 	 * Method to get article data.
 	 *
-	 * @param    integer    The id of the article.
+	 * @param   int  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('sermon.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('sermon.id');
 
 		// Get a row instance.
 		$table = $this->getTable();
 
 		// Attempt to load the row.
-		$return = $table->load($itemId);
+		$return = $table->load($pk);
 
 		// Check for a table object error.
-		if ($return === false) {
+		if ($return === false)
+		{
 			return false;
 		}
 
@@ -83,6 +81,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	 * Get the return URL.
 	 *
 	 * @return    string    The return URL.
+	 *
 	 * @since    1.6
 	 */
 	public function getReturnPage()
