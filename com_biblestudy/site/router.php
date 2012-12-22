@@ -71,7 +71,8 @@ function biblestudyBuildRoute(&$query)
 function biblestudyParseRoute($segments)
 {
 	$vars = array();
-	//Get the active menu item.
+
+	// Get the active menu item.
 	$app      = JFactory::getApplication();
 	$menu     = $app->getMenu();
 	$item     = $menu->getActive();

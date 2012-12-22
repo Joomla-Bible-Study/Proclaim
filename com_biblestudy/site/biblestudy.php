@@ -2,16 +2,17 @@
 
 /**
  * Core BibleStudy Site File
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Include dependancies
-//require_once JPATH_COMPONENT.'/helpers/route.php';
+// --require_once JPATH_COMPONENT.'/helpers/route.php';
 JLoader::register('JBSMHelperRoute', dirname(__FILE__) . '/helpers/route.php');
 /**
  * Bible Study Core Difines
@@ -30,5 +31,5 @@ else
 }
 define('BIBLESTUDY_CHECKREL', $versionName);
 $controller = JControllerLegacy::getInstance('Biblestudy');
-$controller->execute(JFactory::getApplication()->input->get('task','','cmd'));
+$controller->execute(JFactory::getApplication()->input->get('task', '', 'cmd'));
 $controller->redirect();

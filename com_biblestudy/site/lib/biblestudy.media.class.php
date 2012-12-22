@@ -21,6 +21,8 @@ jimport('joomla.html.parameter');
  *
  * @package BibleStudy.Site
  * @since   7.0.0
+ *
+ * @todo this mey not be needed if elements has this all. tom
  */
 class jbsMedia
 {
