@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Custom Helper
- *
  * @package    BibleStudy.Site
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,11 +9,13 @@
 defined('_JEXEC') or die;
 
 
+JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
+
 /**
  * Class custom helper
  *
  * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since    8.0.0
  * */
 class JBSMCustom
 {
@@ -28,15 +27,12 @@ class JBSMCustom
 	 * @param   object     $row           Row info
 	 * @param   JRegistry  $params        Params for intro
 	 * @param   object     $admin_params  Admin Params
-	 * @param   int        $templateid    ID's for template
+	 * @param   object     $template      Template
 	 *
 	 * @return object
 	 */
-	public function getCustom($rowid, $custom, $row, $params, $admin_params, $templateid)
+	public static function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
 	{
-		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
-				DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-		include_once $path1 . 'elements.php';
 		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
 
@@ -48,9 +44,9 @@ class JBSMCustom
 
 			if (!$rowid)
 			{
-				$rowid = $this->getElementnumber($subcustom);
+				$rowid = self::getElementnumber($subcustom);
 			}
-			$elementid   = getElementid($rowid, $row, $params, $admin_params, $templateid);
+			$elementid   = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
 			$custom      = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
@@ -67,7 +63,7 @@ class JBSMCustom
 	 *
 	 * @return int
 	 */
-	public function getElementnumber($rowid)
+	public static function getElementnumber($rowid)
 	{
 		switch ($rowid)
 		{

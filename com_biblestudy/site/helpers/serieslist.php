@@ -764,15 +764,11 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
 	//seriesdesc_template
 	$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 	include_once($path1 . 'elements.php');
-	include_once($path1 . 'scripture.php');
 	include_once($path1 . 'custom.php');
-	include_once($path1 . 'passage.php');
 	//include_once($path1.'mediatable.php');
 	//This will eventually replace mediatable in this context.  Just for clarity.
 	include_once($path1 . 'media.php');
-	include_once($path1 . 'share.php');
 	//include_once($path1.'comments.php');
-	include_once($path1 . 'date.php');
 	$JViewLegacy = new JViewLegacy();
 	$JViewLegacy->loadHelper('image');
 	$images = new jbsImages();

@@ -7,14 +7,20 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-/**
- * @todo change to JLoader::register
- */
+
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('jbsImages', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 JLoader::register('JBSMCustom', JPATH_BASE . '/components/com_biblestudy/helper/custom.php');
+
+// ???? not sure if we need to load this ???
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 
+/**
+ * Class for Elements
+ *
+ * @package    BibleStudy.Site
+ * @since      8.0.0
+ */
 class JBSMElements
 {
 	/**
@@ -29,16 +35,15 @@ class JBSMElements
 	 * @param   object     $row           Table info
 	 * @param   JRegistry  $params        Component / System Params
 	 * @param   object     $admin_params  Admin Settings
-	 * @param   object     $templateid    Template ID
+	 * @param   object     $template    Template
 	 *
 	 * @todo Redo to MVC Standers under a class
 	 * @return object
 	 */
-	public function getElementid($rowid, $row, $params, $admin_params, $templateid)
+	public static function getElementid($rowid, $row, $params, $admin_params, $template)
 	{
 		// Start Element ID
 		$elementid = new stdClass;
-		$path1     = null;
 
 		$db = JFactory::getDBO();
 
@@ -162,33 +167,33 @@ class JBSMElements
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
-				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $templateid);
+				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 18:
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
 				$elementid->element    = '<table class="detailstable"><tbody><tr><td>';
-				$elementid->element .= self::getTextlink($params, $row, $textorpdf, $admin_params, $templateid) . '</td><td>';
+				$elementid->element .= self::getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
 				$textorpdf = 'pdf';
 				$elementid->element .= self::getTextlink(
 					$params,
 					$row,
 					$textorpdf,
 					$admin_params,
-					$templateid
+					$template
 				) . '</td></tr></table>';
 				break;
 			case 19:
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'pdf';
-				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $templateid);
+				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = $this->getMediaTable($row, $params, $admin_params);
+				$elementid->element    = self::getMediaTable($row, $params, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -292,7 +297,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	private static function getScripture($params, $row, $esv, $scripturerow)
+	public static function getScripture($params, $row, $esv, $scripturerow)
 	{
 		$scripture = '';
 
@@ -703,6 +708,7 @@ class JBSMElements
 	 */
 	public function getMediatable($params, $row, $admin_params)
 	{
+		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
 		$getMedia = new jbsMedia;
 		jimport('joomla.application.component.helper');
@@ -711,9 +717,7 @@ class JBSMElements
 		{
 			return false;
 		}
-		$mainframe = JFactory::getApplication();
-		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+
 		$database  = JFactory::getDBO();
 		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
 		$admin = $database->loadObjectList();
@@ -1106,6 +1110,11 @@ class JBSMElements
 	{
 
 		$mainframe = JFactory::getApplication();
+
+		// Placing for starter of var
+		$imagew = null;
+		$imageh = null;
+
 		$database  = JFactory::getDBO();
 		$query     = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
 				. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
