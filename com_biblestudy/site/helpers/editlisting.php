@@ -10,7 +10,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+
 JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 
 /**
@@ -24,41 +24,40 @@ JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/
 function getEditlisting($admin_params, $params)
 {
 
-	$mainframe = JFactory::getApplication();
-	$input = new JInput;
-	$option = $input->get('option', '', 'cmd');
-	$database = JFactory::getDBO();
+	$mainframe   = JFactory::getApplication();
+	$input       = new JInput;
+	$option      = $input->get('option', '', 'cmd');
+	$database    = JFactory::getDBO();
 	$editlisting = null;
-	$message = $input->get('msg');
-	$user = JFactory::getUser();
-	$admin = new JBSAdmin;
-	$allow = $admin->getPermission();
+	$message     = $input->get('msg');
+	$user        = JFactory::getUser();
+	$admin       = new JBSAdmin;
+	$allow       = $admin->getPermission();
 	if ($allow)
 	{
 
 		if ($message)
 		{
 			$editlisting .= '<div class="message' . $params->get('pageclass_sfx') . '"><h2>' . $message . '</h2></div>';
-		} //End of if $message
+
+		} // End of if $message
 
 		$editlisting .= '<div id="studyheader">' . JText::_('JBS_CMN_STUDIES') . '</div>';
 		$editlisting .= '<div class="studyedit">';
-		$editlisting .= '<a href="' . JURI::base(
-		) . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">' . JText::_(
-			'JBS_CMN_ADD_STUDY'
-		) . '</a><br />';
-		$editlisting .= '<a href="' . JURI::base(
-		) . 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">' . JText::_(
-			'JBS_CMN_ADD_MEDIA'
-		) . '</a><br />';
+		$editlisting .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'
+				. JText::_('JBS_CMN_ADD_STUDY') . '</a><br />';
+		$editlisting .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'
+				. JText::_('JBS_CMN_ADD_MEDIA') . '</a><br />';
+
 		if ($params->get('show_comments') > 0)
 		{
-			$editlisting .= '<a href="' . JURI::base(
-			) . 'index.php?option=com_biblestudy&view=commentslist">' . JText::_(
+			$editlisting .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&view=commentslist">' . JText::_(
 				'JBS_CMN_MANAGE_COMMENTS'
 			) . '</a><br /><br />';
 			$editlisting .= '</div>';
+
 		} // End if show_comments
+
 	} // End if $allow
 	else
 	{

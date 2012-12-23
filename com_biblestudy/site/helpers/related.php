@@ -3,10 +3,10 @@
 /**
  * Related Helper
  *
- * @package BibleStudy.Site
+ * @package   BibleStudy.Site
  * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link      http://www.JoomlaBibleStudy.org
  **/
 
 defined('_JEXEC') or die;
@@ -41,41 +41,52 @@ class relatedStudies
 		$keywords   = $params->get('metakey');
 		$topics     = $row->topics_id;
 		$topicslist = $this->getTopics();
-		if (!$keywords) {
-			if ($row->studyintro) {
+		if (!$keywords)
+		{
+			if ($row->studyintro)
+			{
 				$introkeys = $this->removeCommonWords($row->studyintro);
 				$keygo     = true;
-			} else {
+			}
+			else
+			{
 				$keygo = false;
 			}
 		}
 
-		if (!$topics) {
+		if (!$topics)
+		{
 			$topicsgo = false;
 		}
-		if (!$keygo && !$topicsgo) {
+		if (!$keygo && !$topicsgo)
+		{
 			return false;
 		}
 		$studies = $this->getStudies();
-		foreach ($studies as $study) {
+		foreach ($studies as $study)
+		{
 			$registry = new JRegistry();
 			$registry->loadString($study->params);
 			$sparams = $registry;
 			$compare = $sparams->get('metakey');
 
-			if ($compare) {
+			if ($compare)
+			{
 				$keywordsresults = $this->parseKeys($keywords, $compare, $study->id);
 			}
-			if ($study->topics_id) {
+			if ($study->topics_id)
+			{
 				$topicsresults = $this->parseKeys($topics, $study->topics_id, $study->id);
 			}
-			if ($study->tp_id) {
+			if ($study->tp_id)
+			{
 				$studytopics = $this->parseKeys($topicslist, $study->tp_id, $study->id);
 			}
 		}
 
 
-		if (!$this->score) {
+		if (!$this->score)
+		{
 			return false;
 		}
 		$related = $this->getRelatedLinks($this->score, $params);
@@ -99,35 +110,46 @@ class relatedStudies
 		$sourcearray    = array();
 		$comparearray   = array();
 		$this->score    = null;
-		if (substr_count($source, ',')) {
+		if (substr_count($source, ','))
+		{
 			$sourcearray   = explode(',', $source);
 			$sourceisarray = true;
 		}
-		if (substr_count($compare, ',')) {
+		if (substr_count($compare, ','))
+		{
 			$comparearray   = explode(',', $compare);
 			$compareisarray = true;
 		}
-		if ($sourceisarray && $compareisarray) {
-			foreach ($sourcearray as $sarray) {
-				if (in_array($sarray, $comparearray)) {
+		if ($sourceisarray && $compareisarray)
+		{
+			foreach ($sourcearray as $sarray)
+			{
+				if (in_array($sarray, $comparearray))
+				{
 					$this->score[] = $id;
 				}
 			}
 		}
-		if ($sourceisarray && !$compareisarray) {
-			if (in_array($compare, $sourcearray)) {
+		if ($sourceisarray && !$compareisarray)
+		{
+			if (in_array($compare, $sourcearray))
+			{
 				$this->score[] = $id;
 			}
 		}
 
-		if (!$sourceisarray && $compareisarray) {
-			if (in_array($source, $comparearray)) {
+		if (!$sourceisarray && $compareisarray)
+		{
+			if (in_array($source, $comparearray))
+			{
 				$this->score[] = $id;
 			}
 		}
 
-		if (!$sourceisarray && !$compareisarray) {
-			if (strcmp($source, $compare)) {
+		if (!$sourceisarray && !$compareisarray)
+		{
+			if (strcmp($source, $compare))
+			{
 				$this->score[] = $id;
 			}
 		}
@@ -159,10 +181,13 @@ class relatedStudies
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($studies);
 
-		for ($i = 0; $i < $count; $i++) {
+		for ($i = 0; $i < $count; $i++)
+		{
 
-			if ($studies[$i]->access > 1) {
-				if (!in_array($studies[$i]->access, $groups)) {
+			if ($studies[$i]->access > 1)
+			{
+				if (!in_array($studies[$i]->access, $groups))
+				{
 					unset($studies[$i]);
 				}
 			}
@@ -188,10 +213,12 @@ class relatedStudies
 		$links        = array();
 		$studyrecords = array();
 		$studyrecord  = '';
-		foreach ($output as $key => $value) {
+		foreach ($output as $key => $value)
+		{
 			$links[] = $key;
 		}
-		foreach ($links as $link) {
+		foreach ($links as $link)
+		{
 			$query = $db->getQuery('true');
 			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
 			$query->from('#__bsms_studies as s');
@@ -205,7 +232,8 @@ class relatedStudies
 
 		$related = '<select onchange="goTo()" id="urlList"><option value="">' . JText::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = new JInput;
-		foreach ($studyrecords as $studyrecord) {
+		foreach ($studyrecords as $studyrecord)
+		{
 			$related .= '<option value="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int')) . '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin . '</option>';
 		}
 		$related .= '</select>';
@@ -230,8 +258,10 @@ class relatedStudies
 		$db->setQuery($query);
 		$topics     = $db->loadObjectList();
 		$topicslist = array();
-		foreach ($topics as $key => $value) {
-			foreach ($value as $v) {
+		foreach ($topics as $key => $value)
+		{
+			foreach ($value as $v)
+			{
 				$topicslist[] = $v;
 			}
 		}
