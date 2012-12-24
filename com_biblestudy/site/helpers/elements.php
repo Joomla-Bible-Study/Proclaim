@@ -983,12 +983,8 @@ class JBSMElements
 						$filesize = $media->comment;
 						break;
 					case 3:
-						if ($media->comment ? $filesize = $media->comment : $filesize = self::getFilesize($media->size))
-						{
-							// @todo need to look into this and see if this will work. bcc, tom
-							null;
-						}
-						break;
+						 ($media->comment ? $filesize = $media->comment : $filesize = self::getFilesize($media->size));
+				        break;
 				}
 
 				$mediatable .= '<td><span class="bsfilesize">' . $filesize . '</span></td>';
