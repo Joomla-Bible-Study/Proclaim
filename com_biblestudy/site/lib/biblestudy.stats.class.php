@@ -30,9 +30,10 @@ class jbStats
 	{
 		$input = new JInput;
 		$t = $input->get('t', 1, 'int');
-
-		$admin_params = JBSMParams::getAdmin();
+        $admin = new JBSMParams(); 
+		$admin_params = $admin->getAdmin();
 		$limit = $admin_params->get('popular_limit', '25');
+        
 		$top = '<select onchange="goTo()" id="urlList"><option value="">' .
 				JText::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final = array();
