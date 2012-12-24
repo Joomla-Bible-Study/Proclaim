@@ -13,8 +13,8 @@ defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
 JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
-include_once JPATH_SITE . '/components/com_biblestudy/helpers/scripture.php';
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php';
+JLoader::register('JBSMElements', JPATH_SITE . '/components/com_biblestudy/helpers/elements.php');
+JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
 
 /**
  * BibleStudy Podcast Class
@@ -151,7 +151,7 @@ class JBSMPodcast
 						$esv          = 0;
 						$scripturerow = 1;
 						$episode->id  = $episode->study_id;
-						$scripture    = getScripture($params, $episode, $esv, $scripturerow);
+						$scripture    = JBSMElements::getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
 
 						if (!$episode->size)

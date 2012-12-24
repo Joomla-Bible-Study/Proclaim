@@ -72,7 +72,7 @@ JViewLegacy::loadHelper('share');
             <?php
             if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1) {
                 JViewLegacy::loadHelper('header');
-                $header = getHeader($row, $this->item->params, $this->item->admin_params, $this->template, $showheader = $this->item->params->get('use_headers_view'), $ismodule = 0);
+                $header = JBSMHeader::getHeader($row, $this->item->params, $this->item->admin_params, $this->template, $showheader = $this->item->params->get('use_headers_view'), $ismodule = 0);
                 echo $header;
             }
             ?>

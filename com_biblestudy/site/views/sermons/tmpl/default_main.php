@@ -126,7 +126,7 @@ $listingcall = JViewLegacy::loadHelper('listing');
         <?php
         if (isset($this->items['0'])):
             JViewLegacy::loadHelper('header');
-            $header = getHeader($this->items['0'], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
+            $header = JBSMHeader::getHeader($this->items['0'], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
             echo $header;
         endif;
         ?>

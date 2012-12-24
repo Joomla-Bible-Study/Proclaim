@@ -10,7 +10,9 @@
 defined('_JEXEC') or die;
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'teacher.php');
-include_once($path1 . 'listing.php');
+
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+
 $admin_params = $this->admin_params;
 $input = new JInput;
 $t = $input->get('t', 1, 'int');
@@ -168,7 +170,7 @@ if (!$studieslisttemplateid) {
                                             endforeach;
 
                                             $headerCall = JViewLegacy::loadHelper('header');
-                                            $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
+                                            $header = JBSMHeader::getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
                                             echo $header;
                                             $class1 = 'bsodd';
                                             $class2 = 'bseven';
@@ -179,7 +181,7 @@ if (!$studieslisttemplateid) {
                                                 } else {
                                                     $oddeven = $class1;
                                                 }
-                                                $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
+                                                $studies = JBSMListing::getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
 
                                                 echo $studies;
                                             }

@@ -598,7 +598,7 @@ class JBSMElements
 	 *
 	 * @return null|string
 	 */
-	protected static function getFilesize($file_size)
+	public static function getFilesize($file_size)
 	{
 		if (!$file_size)
 		{

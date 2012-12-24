@@ -797,8 +797,8 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
  */
 function getSeriesstudiesExp($id, $params, $admin_params, $template)
 {
-	$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-	include_once($path1 . 'listing.php');
+	JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+
 	$path2   = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR;
 	$input   = new JInput;
 	$limit   = '';
@@ -851,7 +851,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	foreach ($items AS $row)
 	{
 		$oddeven = 0;
-		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
+		$studies .= JBSMListing::getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
 	}
 
 	switch ($params->get('series_wrapcode'))

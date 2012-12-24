@@ -18,7 +18,8 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'teacher.php');
-include_once($path1 . 'listing.php');
+
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * View class for Teacher
@@ -36,6 +37,14 @@ class BiblestudyViewTeacher extends JViewLegacy
 	protected $admin_params;
 
 	protected $admin;
+
+	protected $params;
+
+	protected $template;
+
+	public $teacherstudies;
+
+	public $print;
 
 	/**
 	 * Execute and display a template script.
@@ -143,13 +152,14 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->short = $short->text;
 		}
 
-		//Check to see if com_contact used instead
+		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
-			require_once JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_contact' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'contact.php';
-			$contactmodel  = JModel::getInstance('contact', 'contactModel');
+			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);
-			//Substitute contact info from com_contacts for duplicate fields
+
+			// Substitute contact info from com_contacts for duplicate fields
 			$item->title       = $this->contact->con_position;
 			$item->teachername = $this->contact->name;
 			$item->email       = $this->contact->email_to;
@@ -157,7 +167,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
 			$item->information = $this->contact->misc;
 			$item->phone       = $this->contact->telephone;
-			$cregistry         = new JRegistry();
+			$cregistry         = new JRegistry;
 			$cregistry->loadString($this->contact->params);
 			$contact_params     = $cregistry;
 			$item->facebooklink = $contact_params->get('linka');
@@ -188,6 +198,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 				$limit,
 				$order
 			);
+
 			foreach ($studies as $i => $study)
 			{
 				$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
@@ -197,22 +208,32 @@ class BiblestudyViewTeacher extends JViewLegacy
 				$studies[$i]->duration   = $pelements->duration;
 				$studies[$i]->studydate  = $pelements->studydate;
 				$studies[$i]->topics     = $pelements->topics;
-				if (isset($pelements->study_thumbnail)):
+
+				if (isset($pelements->study_thumbnail))
+				{
 					$studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-				else:
+				}
+				else
+				{
 					$studies[$i]->study_thumbnail = null;
-				endif;
-				if (isset($pelements->series_thumbnail)):
+				}
+
+				if (isset($pelements->series_thumbnail))
+				{
 					$studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-				else:
+				}
+				else
+				{
 					$studies[$i]->series_thumbnail = null;
-				endif;
+				}
 				$studies[$i]->detailslink = $pelements->detailslink;
+
 				if (!isset($pelements->studyintro))
 				{
 					$pelements->studyintro = '';
 				}
 				$studies[$i]->studyintro = $pelements->studyintro;
+
 				if (isset($pelements->secondary_reference))
 				{
 					$studies[$i]->secondary_reference = $pelements->secondary_reference;
@@ -235,7 +256,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$this->item = $item;
 		$print      = $input->get('print', '', 'bool');
-		// build the html select list for ordering
+
+		// Build the html select list for ordering
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $template;
