@@ -121,7 +121,6 @@ class jbsImages
 	/**
 	 * Get SeriesImage Folder
 	 *
-	 * @todo Tom need to look at this and verify this is right
 	 * @return string
 	 */
 	function getSeriesImageFolder()
@@ -135,7 +134,6 @@ class jbsImages
 	/**
 	 * Get StudiesImage Folder
 	 *
-	 * @todo Tom need to look at this and verify this is right
 	 * @return string
 	 */
 	function getStudiesImageFolder()
@@ -149,8 +147,7 @@ class jbsImages
 	/**
 	 * Get TeacherImage Folder
 	 *
-	 * @todo Tom need to look at this and verify this is right
-	 * @return string
+     * @return string
 	 */
 	function getTeacherImageFolder()
 	{
