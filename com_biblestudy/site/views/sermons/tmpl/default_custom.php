@@ -29,9 +29,9 @@ $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu  = $messagetype_menu1[0];
 $params            = $this->params;
 $teachers          = $params->get('teacher_id');
-
+$jview = new JViewLegacy;
 // @todo need to rework to be proper php and html outside php
-$listingcall = JViewLegacy::loadHelper('listing');
+$jview->loadHelper('listing');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
       method="post">
@@ -59,7 +59,7 @@ $listingcall = JViewLegacy::loadHelper('listing');
 			<?php
 			if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 			{
-				$teacher_call = JViewLegacy::loadHelper('teacher');
+				$jview->loadHelper('teacher');
 				$teacher      = getTeacher($params, $id = null, $this->admin_params);
 
 				if ($teacher)

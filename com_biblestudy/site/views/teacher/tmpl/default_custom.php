@@ -58,7 +58,7 @@ if (!$teacher->teacher_image) {
         $image = getImage($i_path);
     }
     ?>
-    <table class="bslisttable" cellspacing="0">
+    <table class="bslisttable">
         <?php
         $listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
         echo $listing;
@@ -69,6 +69,10 @@ if (!$teacher->teacher_image) {
 
         echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
         ?>
-        <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>"><?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a>
+        <tr>
+	        <td style="text-align: center" colspan="0"class="bsm_teacherfooter">
+	        <a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>">
+		        <?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?>
+	        </a>
     </table>
 </div>

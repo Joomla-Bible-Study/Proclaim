@@ -25,7 +25,7 @@ class Dump_File
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param   object  $mid  ID of media
+	 * @param   int  $mid  ID of media
 	 *
 	 * @since 6.1.2
 	 * @return null

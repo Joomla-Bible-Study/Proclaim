@@ -23,7 +23,7 @@ if (!$t)
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
         <!--header-->
-    <table id="seriestable" cellspacing="0">
+    <table id="seriestable">
     <tbody>
 		<?php
 		$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
@@ -36,7 +36,7 @@ if (!$t)
 				?>
 	</tbody>
 	</table>
-	<table id="seriesstudytable" cellspacing="0">
+	<table id="seriesstudytable">
         <tbody>
 			<?php
 			$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
@@ -49,7 +49,7 @@ if (!$t)
 
 			case 1:
 				?></tbody></table>
-                <table class="bslisttable" cellspacing="0">
+                <table class="bslisttable">
                     <tr>
                         <td><?php
 							$headerCall = JViewLegacy::loadHelper('header');
@@ -83,7 +83,7 @@ if (!$t)
 			case 2:
 				?>
                 </table>
-                <table id="seriesstudytable" cellspacing="0">
+                <table id="seriesstudytable">
                     <tr>
                         <td><?php
 							$studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);

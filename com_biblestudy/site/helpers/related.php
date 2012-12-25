@@ -200,7 +200,7 @@ class relatedStudies
 	 * Look for Related Links.
 	 *
 	 * @param array $scored
-	 * @param array $params
+	 * @param object $params
 	 *
 	 * @return string
 	 */

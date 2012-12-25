@@ -104,12 +104,12 @@ class ShowScripture
 	/**
 	 * Get Link
 	 *
-	 * @param   type  $row        ?
-	 * @param   type  $reference  ?
+	 * @param   object  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
-	function getLink($row, $reference)
+	public function getLink($row, $reference)
 	{
 		$passage = '<div class = passage>';
 

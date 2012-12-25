@@ -64,7 +64,7 @@ function biblestudyBuildRoute(&$query)
 /**
  * BibleStudy Parse Route
  *
- * @param   object  $segments  Parse Route Info
+ * @param   array  $segments  Parse Route Info
  *
  * @return object
  */

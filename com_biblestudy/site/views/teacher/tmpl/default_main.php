@@ -29,7 +29,7 @@ if (!$studieslisttemplateid) {
 }
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <table id="bsm_teachertable" cellspacing="0">
+    <table id="bsm_teachertable">
         <tbody>
             <tr>
                 <td class="bsm_teacherthumbnail">
@@ -43,7 +43,7 @@ if (!$studieslisttemplateid) {
                     <?php echo $this->item->largeimage; ?>
                 </td>
                 <td class="bsm_teachername">
-                    <table id="bsm_teachertable_info" cellspacing="0"><tbody>
+                    <table id="bsm_teachertable_info"><tbody>
                             <tr><td class="bsm_teachername">
                                     <?php echo $teacherdisplay; ?>
                                 </td></tr>
