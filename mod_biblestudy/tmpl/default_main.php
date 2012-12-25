@@ -14,17 +14,18 @@ defined('_JEXEC') or die;
 $show_link = $params->get('show_link', 1);
 $pagetext  = $params->get('pagetext');
 $ismodule  = 1;
+
+$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
+$path2 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/';
+include_once($path1 . 'header.php');
+include_once($path2 . 'helper.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 ?>
 <div id="biblestudy" class="noRefTagger">
     <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
     <!-- This div is the container for the whole page -->
     <table id="bsmsmoduletable" cellspacing="0">
 		<?php
-		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
-		$path2 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/';
-		include_once($path1 . 'header.php');
-		include_once($path2 . 'helper.php');
-	    JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 		$header = JBSMHeader::getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
 		echo $header;
 		?>
