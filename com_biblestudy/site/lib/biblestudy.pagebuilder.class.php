@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // @todo dos not include from core controller need to look into why it is thinking it is apart of the com_content controller
-require_once JPATH_ADMINISTRATOR . 'components/com_biblestudy/lib/biblestudy.defines.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 

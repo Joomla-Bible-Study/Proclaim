@@ -30,7 +30,8 @@ class jbStats
 		$input = new JInput;
 		$t     = $input->get('t', 1, 'int');
 
-		$admin_params = JBSMParams::getAdmin();
+		$admin = JBSMParams::getAdmin();
+		$admin_params = $admin->params;
 		$limit        = $admin_params->get('popular_limit', '25');
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
 				JText::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
@@ -41,7 +42,7 @@ class jbStats
 		$query = $db->getQuery(true);
 		$query->select('m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added')
 				->from('#__bsms_mediafiles AS m')
-				->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id')
+				->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
 				->where('m.published = 1 GROUP BY m.study_id');
 		$db->setQuery($query);
 		$format = $admin_params->get('format_popular', '0');

@@ -16,9 +16,6 @@ $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
 $row = $this->item;
-// @todo need to clean up old code.
-JViewLegacy::loadHelper('listing');
-JViewLegacy::loadHelper('share');
 ?>
 <div id="bsmHeader">
     <?php
@@ -44,14 +41,14 @@ JViewLegacy::loadHelper('share');
         ?>
         <div id="bsms_share">
             <?php
-            $social = getShare($this->detailslink, $row, $this->item->params, $this->item->admin_params);
+            $social = JBSMListing::getShare($this->detailslink, $row, $this->item->params, $this->item->admin_params);
             echo $this->page->social;
             ?>
         </div>
     <?php } //End Social Networking     ?>
     <?php
     if ($this->item->params->get('show_teacher_view') > 0) {
-        JViewLegacy::loadHelper('teacher');
+        //JViewLegacy::loadHelper('teacher');
         $teacher = getTeacher($this->item->params, $row->teacher_id, $this->item->admin_params);
         echo $teacher;
         ?>
@@ -61,7 +58,7 @@ JViewLegacy::loadHelper('share');
     }
     if ($this->item->params->get('title_line_1') + $this->item->params->get('title_line_2') > 0) {
         JViewLegacy::loadHelper('title');
-        $title = getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
+        $title = JBSMListing::getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
         echo $title;
     }
     ?>
@@ -91,7 +88,7 @@ JViewLegacy::loadHelper('share');
                 ?><!-- List items view -->
                         <?php
                         $oddeven = 'bsodd';
-                        $listing = getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
+                        $listing = JBSMListing::getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
                         echo $listing;
                         ?>
     <?php } ?>

@@ -9,8 +9,8 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-JLoader::register('jbsImages', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
-JLoader::register('JBSMCustom', JPATH_BASE . '/components/com_biblestudy/helper/custom.php');
+JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
+JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
 
 // ???? not sure if we need to load this ???
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
@@ -35,7 +35,7 @@ class JBSMElements
 	 * @param   object     $row           Table info
 	 * @param   JRegistry  $params        Component / System Params
 	 * @param   object     $admin_params  Admin Settings
-	 * @param   object     $template    Template
+	 * @param   object     $template      Template
 	 *
 	 * @todo Redo to MVC Standers under a class
 	 * @return object
@@ -193,7 +193,7 @@ class JBSMElements
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = self::getMediaTable($row, $params, $admin_params);
+				$elementid->element    = self::getMediaTable($params, $row, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -706,7 +706,7 @@ class JBSMElements
 	 *
 	 * @return boolean|null|string
 	 */
-	public function getMediatable($params, $row, $admin_params)
+	public static function getMediatable($params, $row, $admin_params)
 	{
 		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
@@ -718,12 +718,16 @@ class JBSMElements
 			return false;
 		}
 
-		$database  = JFactory::getDBO();
-		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-		$admin = $database->loadObjectList();
+		$database = JFactory::getDBO();
 
-		$images       = new jbsImages;
-		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media = null);
+		$images = new jbsImages;
+
+		if (!isset($admin_params->default_download_image))
+		{
+			$admin_params->default_download_image = 'download.png';
+		}
+
+		$download_tmp = $images->getMediaImage($admin_params->default_download_image, $media = null);
 
 		$download_image = $download_tmp->path;
 
@@ -983,8 +987,8 @@ class JBSMElements
 						$filesize = $media->comment;
 						break;
 					case 3:
-						 ($media->comment ? $filesize = $media->comment : $filesize = self::getFilesize($media->size));
-				        break;
+						($media->comment ? $filesize = $media->comment : $filesize = self::getFilesize($media->size));
+						break;
 				}
 
 				$mediatable .= '<td><span class="bsfilesize">' . $filesize . '</span></td>';
@@ -1111,8 +1115,8 @@ class JBSMElements
 		$imagew = null;
 		$imageh = null;
 
-		$database  = JFactory::getDBO();
-		$query     = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
+		$database = JFactory::getDBO();
+		$query    = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
 				. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
                         FROM #__bsms_studies AS s
                         LEFT JOIN #__bsms_media AS m ON ( m.id = s.image_cd )

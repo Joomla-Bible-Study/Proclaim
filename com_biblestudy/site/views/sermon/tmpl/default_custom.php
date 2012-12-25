@@ -36,11 +36,10 @@ $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
 
 $row = $this->studydetails;
-JViewLegacy::loadHelper('listing');
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 <?php
-$details = getStudyExp($row, $params, $admin_params, $this->template);
+$details = JBSMListing::getStudyExp($row, $params, $admin_params, $this->template);
 echo $details;
 
 switch ($this->item->params->get('show_passage_view', '0')) {
@@ -56,7 +55,7 @@ switch ($this->item->params->get('show_passage_view', '0')) {
         </strong>
 		<?php
 		JViewLegacy::loadHelper('passage');
-		$response = getPassage($params, $row);
+		$response = JBSMListing::getPassage($params, $row);
 		echo $response;
 		?>
         </div>
@@ -68,7 +67,7 @@ switch ($this->item->params->get('show_passage_view', '0')) {
     <div id="scripture">
 		<?php
 		JViewLegacy::loadHelper('passage');
-		$response = getPassage($params, $row);
+		$response = JBSMListing::getPassage($params, $row);
 		echo $response;
 		?>
     </div>

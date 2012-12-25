@@ -12,11 +12,13 @@
 defined('_JEXEC') or die;
 
 
-require_once (JPATH_COMPONENT . '/lib/biblestudy.admin.class.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 require_once (JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
 require_once (JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
 require_once (JPATH_COMPONENT . '/helpers/related.php');
 require_once (JPATH_COMPONENT . '/helpers/biblegateway.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 
 /**
@@ -313,7 +315,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		JViewLegacy::loadHelper('share');
 
 		$this->page         = new stdClass();
-		$this->page->social = getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
+		$this->page->social = JBSMListing::getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');
 
 		// To add the icon class to JHTML

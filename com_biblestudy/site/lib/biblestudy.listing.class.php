@@ -928,11 +928,11 @@ class JBSMListing
 	 */
 	private static function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 	{
-		$input     = new JInput;
-		$Itemid    = $input->get('Itemid', '', 'int');
-		$column    = '';
-		$mime      = ' AND #__bsms_mediafiles.mime_type = 1';
-		$itemlink  = $params->get('itemidlinktype');
+		$input    = new JInput;
+		$Itemid   = $input->get('Itemid', '', 'int');
+		$column   = '';
+		$mime     = ' AND #__bsms_mediafiles.mime_type = 1';
+		$itemlink = $params->get('itemidlinktype');
 
 		switch ($islink)
 		{
@@ -1438,7 +1438,7 @@ class JBSMListing
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
 				->from('#__bsms_mediafiles')
-				->where('study_id = ' . (int) $db->q($id3))
+				->where('study_id = ' . $db->q($id3))
 				->where('#__bsms_mediafiles.published = 1');
 		$db->setQuery($query);
 		$db->query();
@@ -1478,6 +1478,100 @@ class JBSMListing
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Get Title
+	 *
+	 * @param   object  $params        System Params
+	 * @param   object  $row           Item info
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
+	 *
+	 * @return string
+	 */
+	public static function getTitle($params, $row, $admin_params, $template)
+	{
+
+		$title = null;
+
+		if ($params->get('title_line_1') > 0)
+		{
+			$title = '<table id="titletable" cellspacing="0"><tbody><tr><td class="titlefirstline">';
+
+			switch ($params->get('title_line_1'))
+			{
+				case 0:
+					$title .= null;
+					break;
+				case 1:
+					$title .= $row->studytitle;
+					break;
+				case 2:
+					$title .= $row->teachername;
+					break;
+				case 3:
+					$title .= $row->title . ' ' . $row->teachername;
+					break;
+				case 4:
+					$esv       = 0;
+					$scripture = JBSMElements::getScripture($params, $row, $esv, $scripturerow = 1);
+					$title .= $scripture;
+					break;
+				case 5:
+					$title .= $row->stext;
+					break;
+				case 6:
+					$title .= $row->topics_text;
+					break;
+				case 7:
+					$elementid = JBSMCustom::getCustom($rowid = null, $params->get('customtitle1'), $row, $params, $admin_params, $template);
+					$title .= $elementid->element;
+					break;
+			}
+			$title .= '</td></tr>';
+		}
+
+		if ($params->get('title_line_2') > 0)
+		{
+			$title .= '<tr><td class="titlesecondline" >';
+
+			switch ($params->get('title_line_2'))
+			{
+				case 0:
+					$title .= null;
+					break;
+				case 1:
+					$title .= $row->studytitle;
+					break;
+				case 2:
+					$title .= $row->teachername;
+					break;
+				case 3:
+					$title .= $row->title . ' ' . $row->teachername;
+					break;
+				case 4:
+					$esv   = 0;
+					$scripture = JBSMElements::getScripture($params, $row, $esv, $scripturerow = 1);
+					$title .= $scripture;
+					break;
+				case 5:
+					$title .= $row->stext;
+					break;
+				case 6:
+					$title .= $row->topics_text;
+					break;
+				case 7:
+					$elementid = JBSMCustom::getCustom($rowid = null, $params->get('customtitle2'), $row, $params, $admin_params, $template);
+					$title .= $elementid->element;
+					break;
+			}
+			$title .= '</td></tr>';
+
+		} // End of if title2
+		$title .= '</tbody></table>';
+
+		return $title;
 	}
 
 }

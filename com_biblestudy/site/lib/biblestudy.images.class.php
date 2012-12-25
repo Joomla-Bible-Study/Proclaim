@@ -23,19 +23,22 @@ class jbsImages
 	/**
 	 * Get Image Path
 	 *
-	 * @param string $path
+	 * @param   string  $path  ?
 	 *
 	 * @return object
 	 */
-	public function getImagePath($path)
+	public static function getImagePath($path)
 	{
-		$tmp = new stdClass();
+		$tmp = new stdClass;
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path)):
+
+		if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path))
+		{
 			$tmp->path = $path;
 			$tmp->size = filesize($tmp->path);
 			$ext       = strtolower(JFile::getExt($path));
+
 			switch ($ext)
 			{
 				// Image
@@ -51,23 +54,27 @@ class jbsImages
 					$tmp->height = $info[1];
 					$tmp->type   = $info[2];
 					$tmp->mime   = $info['mime'];
+
 					if (!$tmp->width)
 					{
 						$tmp->width = 0;
 					}
+
 					if (!$tmp->height)
 					{
 						$tmp->height = 0;
 					}
 			}
-		else:
+		}
+		else
+		{
 			$tmp->path   = null;
 			$tmp->size   = null;
 			$tmp->width  = 0;
 			$tmp->height = 0;
 			$tmp->type   = '';
 			$tmp->mime   = '';
-		endif;
+		}
 
 		return $tmp;
 	}
@@ -77,7 +84,7 @@ class jbsImages
 	 *
 	 * @return object
 	 */
-	function mainStudyImage()
+	public static function mainStudyImage()
 	{
 		$path     = null;
 		$image    = null;
@@ -99,7 +106,7 @@ class jbsImages
 			$path = $admin_params->get('default_main_image');
 		}
 
-		$mainimage = $this->getImagePath($path);
+		$mainimage = self::getImagePath($path);
 
 		return $mainimage;
 	}
@@ -109,7 +116,7 @@ class jbsImages
 	 *
 	 * @return string
 	 */
-	function getMediaImageFolder()
+	private static function getMediaImageFolder()
 	{
 
 		$mediaimagefolder = 'media/com_biblestudy/images';
@@ -123,7 +130,7 @@ class jbsImages
 	 *
 	 * @return string
 	 */
-	function getSeriesImageFolder()
+	private static function getSeriesImageFolder()
 	{
 
 		$seriesimagefolder = 'images';
@@ -136,7 +143,7 @@ class jbsImages
 	 *
 	 * @return string
 	 */
-	function getStudiesImageFolder()
+	private static function getStudiesImageFolder()
 	{
 
 		$studiesimagefolder = 'images';
@@ -147,9 +154,9 @@ class jbsImages
 	/**
 	 * Get TeacherImage Folder
 	 *
-     * @return string
+	 * @return string
 	 */
-	function getTeacherImageFolder()
+	private static function getTeacherImageFolder()
 	{
 
 		$teacherimagefolder = 'images';
@@ -160,19 +167,20 @@ class jbsImages
 	/**
 	 * Get Study Thumbnail
 	 *
-	 * @param string $image
+	 * @param   string  $image  ?
 	 *
 	 * @return object
 	 */
-	function getStudyThumbnail($image = 'openbible.png')
+	public static function getStudyThumbnail($image = 'openbible.png')
 	{
-		$folder = $this->getStudiesImageFolder();
+		$folder = self::getStudiesImageFolder();
 		$path   = $folder . '/' . $image;
+
 		if (substr_count($image, '/'))
 		{
 			$path = $image;
 		}
-		$imagepath = $this->getImagePath($path);
+		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
 	}
@@ -180,19 +188,20 @@ class jbsImages
 	/**
 	 * Get Series Thumbnail
 	 *
-	 * @param string $image
+	 * @param   string  $image  ?
 	 *
 	 * @return object
 	 */
-	function getSeriesThumbnail($image = 'openbible.png')
+	public static function getSeriesThumbnail($image = 'openbible.png')
 	{
-		$folder = $this->getSeriesImageFolder();
+		$folder = self::getSeriesImageFolder();
 		$path   = $folder . '/' . $image;
+
 		if (substr_count($image, '/'))
 		{
 			$path = $image;
 		}
-		$imagepath = $this->getImagePath($path);
+		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
 	}
@@ -200,18 +209,19 @@ class jbsImages
 	/**
 	 * Get Teacher Thumbnail
 	 *
-	 * @param string $image1
-	 * @param string $image2
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
 	 *
 	 * @return object
 	 */
-	function getTeacherThumbnail($image1 = null, $image2 = null)
+	public static function getTeacherThumbnail($image1 = null, $image2 = null)
 	{
-		$folder = $this->getTeacherImageFolder();
+		$folder = self::getTeacherImageFolder();
 
 		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
 		{
 			$path = $image2;
+
 			if (!substr_count($path, '/'))
 			{
 				$path = $folder . '/' . $image2;
@@ -220,13 +230,14 @@ class jbsImages
 		else
 		{
 			$path = $folder . '/' . $image1;
+
 			if (substr_count($image1, '/') > 0)
 			{
 				$path = $image1;
 			}
 		}
 
-		$imagepath = $this->getImagePath($path);
+		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
 	}
@@ -234,18 +245,20 @@ class jbsImages
 	/**
 	 * Get Teacher Image
 	 *
-	 * @param string $image1
-	 * @param string $image2
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
 	 *
 	 * @return object
 	 */
-	function getTeacherImage($image1 = null, $image2 = null)
+	public static function getTeacherImage($image1 = null, $image2 = null)
 	{
-		$folder = $this->getTeacherImageFolder();
+		$folder = self::getTeacherImageFolder();
 		$path   = null;
+
 		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
 		{
 			$path = $image2;
+
 			if (!substr_count($path, '/'))
 			{
 				$path = $folder . '/' . $image2;
@@ -254,12 +267,13 @@ class jbsImages
 		else
 		{
 			$path = $folder . '/' . $image1;
+
 			if (substr_count($image1, '/') > 0)
 			{
 				$path = $image1;
 			}
 		}
-		$imagepath = $this->getImagePath($path);
+		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
 	}
@@ -267,18 +281,20 @@ class jbsImages
 	/**
 	 * Get Media Image
 	 *
-	 * @param string $media1
-	 * @param string $media2
+	 * @param   string  $media1  ?
+	 * @param   string  $media2  ?
 	 *
 	 * @return object
 	 */
-	function getMediaImage($media1 = null, $media2 = null)
+	public static function getMediaImage($media1 = null, $media2 = null)
 	{
-		$folder = $this->getMediaImageFolder();
+		$folder = self::getMediaImageFolder();
 		$path   = null;
+
 		if (!$media1 || $media1 == '0' || strncmp($media1, '- ', 2) == 0)
 		{
 			$path = $media2;
+
 			if (!substr_count($path, '/'))
 			{
 				$path = $folder . '/' . $media2;
@@ -287,13 +303,14 @@ class jbsImages
 		else
 		{
 			$path = $folder . '/' . $media1;
+
 			if (substr_count($media1, '/') > 0)
 			{
 				$path = $media1;
 			}
 		}
-		$imagepath = $this->getImagePath($path);
 
+		$imagepath = self::getImagePath($path);
 		return $imagepath;
 	}
 
@@ -302,7 +319,7 @@ class jbsImages
 	 *
 	 * @return object
 	 */
-	function getShowHide()
+	public static function getShowHide()
 	{
 		$admin = JBSMParams::getAdmin();
 
@@ -315,7 +332,7 @@ class jbsImages
 			$path = $admin->params->get('default_showHide_image');
 		}
 
-		$imagepath = $this->getImagePath($path);
+		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
 	}
