@@ -283,8 +283,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
-			require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy'
-					. DIRECTORY_SEPARATOR . 'captcha' . DIRECTORY_SEPARATOR . 'recaptchalib.php';
+			require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/captcha/recaptchalib.php';
 			$privatekey = $params->get('private_key');
 			$resp       = recaptcha_check_answer(
 				$privatekey,

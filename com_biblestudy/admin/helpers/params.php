@@ -29,6 +29,7 @@ class JBSMParams
 	 */
 	public static function getAdmin()
 	{
+		$admin = new stdClass;
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -50,13 +51,14 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return mixed|boolean Return active template info
+	 * @return mixed Return active template info
 	 */
 	public static function getTemplateparams()
 	{
-		$db    = JFactory::getDbo();
-		$pk    = JFactory::getApplication()->input->getInt('t', '1');
-		$query = $db->getQuery(true);
+		$template = new stdClass;
+		$db       = JFactory::getDbo();
+		$pk       = JFactory::getApplication()->input->getInt('t', '1');
+		$query    = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bsms_templates')
 				->where('published = 1 AND id = ' . $db->q($pk));
@@ -68,11 +70,9 @@ class JBSMParams
 			$registry = new JRegistry;
 			$registry->loadString($template->params);
 			$template->params = $registry;
-
-			return $template;
 		}
 
-		return false;
+		return $template;
 	}
 
 }

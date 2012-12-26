@@ -43,6 +43,8 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	/**
 	 * Download?
 	 *
+	 * @return void
+	 *
 	 * @todo Fix ASAP Broken
 	 */
 	public function download()

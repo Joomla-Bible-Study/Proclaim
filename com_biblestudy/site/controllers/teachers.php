@@ -26,6 +26,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
 	 * @param   array   $config  Set ignore request
 	 *
 	 * @return JModel
+	 *
 	 * @since 7.0
 	 */
 	public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))

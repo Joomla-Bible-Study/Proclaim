@@ -22,11 +22,10 @@ if (!$t)
 {
 	$t = $input->get('t', 1, 'int');
 }
-$path1        = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 $admin_params = $this->admin_params;
-include_once($path1 . 'image.php');
-
-$listingcall = JViewLegacy::loadHelper('teacher');
+$JViewLegacy = new JViewLegacy;
+$JViewLegacy->loadHelper('teacher');
+$JBSMTeacher = new JBSMTeacher;
 ?>
 <div id="biblestudy" class="noRefTagger">
     <table id="bsm_teachertable">
@@ -58,7 +57,7 @@ $listingcall = JViewLegacy::loadHelper('teacher');
 
 	foreach ($this->items as $row)
 	{ //Run through each row of the data result from the model
-		$listing = getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
+		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
 		echo $listing;
 	}
 

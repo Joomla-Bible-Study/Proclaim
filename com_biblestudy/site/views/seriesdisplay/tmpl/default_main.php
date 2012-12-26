@@ -9,10 +9,12 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-$listingcall   = JViewLegacy::loadHelper('serieslist');
-$studylistcall = JViewLegacy::loadHelper('listing');
-$t             = $this->params->get('serieslisttemplateid');
-$input         = new JInput;
+$jview = new JViewLegacy;
+$jview->loadHelper('serieslist');
+$serieslisting = new JBSMSerieslist;
+$t     = $this->params->get('serieslisttemplateid');
+$input = new JInput;
+
 if (!$t)
 {
 
@@ -26,7 +28,7 @@ if (!$t)
     <table id="seriestable">
     <tbody>
 		<?php
-		$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
+		$listing = $serieslisting->getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
 		echo $listing;
 		?>
 		<?php
@@ -39,7 +41,7 @@ if (!$t)
 	<table id="seriesstudytable">
         <tbody>
 			<?php
-			$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
+			$studies = $serieslisting->getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
 			echo $studies;
 			?>
         </tbody>
@@ -52,8 +54,11 @@ if (!$t)
                 <table class="bslisttable">
                     <tr>
                         <td><?php
-							$headerCall = JViewLegacy::loadHelper('header');
-							$header     = JBSMHeader::getHeader($this->seriesstudies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
+							$jview->loadHelper('header');
+							$header = $serieslisting->getHeader(
+								$this->seriesstudies, $this->params, $this->admin_params, $this->template,
+								$showheader = $this->params->get('use_headers_list'), $ismodule = 0
+							);
 							echo $header;
 
 							$class1  = 'bsodd';
@@ -70,7 +75,7 @@ if (!$t)
 								{
 									$oddeven = $class1;
 								}
-								$studylisting = JBSMListing::getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+								$studylisting = $serieslisting->getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
 								echo $studylisting;
 							}
 							?>
@@ -86,7 +91,7 @@ if (!$t)
                 <table id="seriesstudytable">
                     <tr>
                         <td><?php
-							$studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
+							$studies = $serieslisting->getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
 							echo $studies;
 							?>
                         </td>
@@ -97,8 +102,9 @@ if (!$t)
 		if ($this->params->get('series_list_return') > 0)
 		{
 			echo '<table><tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t) . '"><< '
-					. JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series='
-					. $this->items->id . '&t=' . $t) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
+					. JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
+					. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
+					. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
 					. ' >></a></td></tr></table>';
 		}
 		?>

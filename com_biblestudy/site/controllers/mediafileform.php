@@ -22,7 +22,6 @@ jimport('joomla.application.component.controllerform');
 class BiblestudyControllerMediafileform extends JControllerForm
 {
 
-
 	/**
 	 * View item
 	 *
@@ -42,7 +41,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
-
 
 	/**
 	 * Method to add a new record.
@@ -143,7 +141,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		return $result;
 	}
-
 
 	/**
 	 * Method to get a model object, loading it if required.

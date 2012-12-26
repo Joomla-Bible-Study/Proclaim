@@ -37,5 +37,4 @@ class BiblestudyControllerTeachers extends JControllerLegacy
 		return $model;
 	}
 
-
 }

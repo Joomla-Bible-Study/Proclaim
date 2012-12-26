@@ -404,7 +404,7 @@ class BiblestudyController extends JControllerLegacy
 		}
 	}
 
-    /**
+    /*
      * Upload Flash System
      * @return text
      */

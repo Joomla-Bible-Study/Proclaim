@@ -23,6 +23,10 @@ $series_menu       = $series_menu1[0];
 $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu  = $messagetype_menu1[0];
 $params            = $this->params;
+
+$JViewLegacy = new JViewLegacy;
+$JViewLegacy->loadHelper('teacher');
+$JBSMTeacher = new JBSMTeacher;
 // @todo are we using these $teachers & $listingcall
 $teachers    = $params->get('teacher_id');
 ?>
@@ -41,9 +45,9 @@ $teachers    = $params->get('teacher_id');
 				?>
                 <img src="<?php echo JURI::base() . $this->main->path; ?>"
                      alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
-                     height="<?php echo $this->main->height; ?>"/>
+                     height="<?php echo $this->main->height; ?>" />
 				<?php
-				//End of column for logo
+				// End of column for logo
 			}
 			?>
 			<?php
@@ -56,8 +60,8 @@ $teachers    = $params->get('teacher_id');
 		<?php
 		if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 		{
-			JViewLegacy::loadHelper('teacher');
-			$teacher = getTeacher($params, $id = null, $this->admin_params);
+			$teacher = $JBSMTeacher->getTeacher($params, $id = null, $this->admin_params);
+
 			if ($teacher)
 			{
 				echo $teacher;
@@ -99,22 +103,18 @@ $teachers    = $params->get('teacher_id');
 			}
 			if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1)
 			{
-				//echo $this->lists['teacher_id'];
 				echo $this->page->teachers;
 			}
 			if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1)
 			{
-				//echo $this->lists['seriesid'];
 				echo $this->page->series;
 			}
 			if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1)
 			{
-				//echo $this->lists['messagetypeid'];
 				echo $this->page->messagetypes;
 			}
 			if ($this->params->get('show_year_search') > 0)
 			{
-				//echo $this->lists['studyyear'];
 				echo $this->page->years;
 			}
 
@@ -125,17 +125,14 @@ $teachers    = $params->get('teacher_id');
 
 			if ($this->params->get('show_order_search') > 0)
 			{
-				//echo $this->lists['orders'];
 				echo $this->page->order;
 			}
 			if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1)
 			{
-				// echo $this->lists['topics'];
 				echo $this->page->topics;
 			}
 			if ($this->params->get('show_popular') > 0)
 			{
-				//echo $this->popular;
 				echo $this->page->popular;
 			}
 			?>
@@ -146,24 +143,28 @@ $teachers    = $params->get('teacher_id');
     <table class="bslisttable" cellspacing="0">
         <thead>
 		<?php
-		if (isset($this->items['0'])):
-			JViewLegacy::loadHelper('header');
-			$header = JBSMHeader::getHeader($this->items['0'], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
+		if (isset($this->items['0']))
+		{
+			$header = $JBSMTeacher->getHeader(
+				$this->items['0'], $params, $this->admin_params, $this->template,
+				$showheader = $params->get('use_headers_list'), $ismodule = 0
+			);
 			echo $header;
-		endif;
+		}
 		?>
         </thead>
         <tbody>
 
 		<?php
-		//This sets the alternativing colors for the background of the table cells
+		// This sets the alternativing colors for the background of the table cells
 		$class1  = 'bsodd';
 		$class2  = 'bseven';
 		$oddeven = $class1;
+
 		foreach ($this->items as $row)
-		{ //Run through each row of the data result from the model
+		{ // Run through each row of the data result from the model
 			if ($oddeven == $class1)
-			{ //Alternate the color background
+			{ // Alternate the color background
 				$oddeven = $class2;
 			}
 			else
@@ -171,7 +172,7 @@ $teachers    = $params->get('teacher_id');
 				$oddeven = $class1;
 			}
 
-			$listing = JBSMListing::getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+			$listing = $JBSMTeacher->getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
 			echo $listing;
 		}
 		?>

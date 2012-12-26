@@ -207,6 +207,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 				return false;
 			}
 		}
+		return true;
 	}
 
 	/**

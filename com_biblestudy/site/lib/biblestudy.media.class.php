@@ -262,7 +262,7 @@ class jbsMedia
 	 *
 	 * @param   int  $id  ID of Row
 	 *
-	 * @return boolean
+	 * @return object|boolean
 	 */
 	public function getMediaRows2($id)
 	{
@@ -287,6 +287,7 @@ class jbsMedia
 				. ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
 		$db->setQuery($query);
 		$media = $db->loadObject();
+
 		if ($media)
 		{
 			return $media;

@@ -27,7 +27,7 @@ class JBSMCustom extends JBSMElements
 	 * @param   object     $row           Row info
 	 * @param   JRegistry  $params        Params for intro
 	 * @param   object     $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   object     $template      Template ID
 	 *
 	 * @return object
 	 */
@@ -46,7 +46,7 @@ class JBSMCustom extends JBSMElements
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid   = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
+			$elementid   = $this->getElementid($rowid, $row, $params, $admin_params, $template);
 			$custom      = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}

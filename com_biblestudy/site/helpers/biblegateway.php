@@ -63,6 +63,7 @@ class ShowScripture
 
 				break;
 		}
+		// --$passage = JBSMFilter::strip_only($passage);
 
 		return $passage;
 	}

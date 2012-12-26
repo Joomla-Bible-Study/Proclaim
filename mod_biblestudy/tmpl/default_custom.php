@@ -7,6 +7,8 @@
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
+ *
+ * @FIXME This looks like it is broken. Tom
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -14,6 +16,9 @@ $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+$JBSMListing = new JBSMListing;
+
+$params = $this->params;
 ?>
 <div id="biblestudy" class="noRefTagger">
     <!-- This div is the container for the whole page -->
@@ -39,15 +44,14 @@ if ($params->get('module_headercode'))
 }
 else
 {
-	include_once($path1 . 'header.php');
 	include_once($path1 . 'helper.php');
-	$header = JBSMHeader::getHeader($list[0], $params, $admin_params, $templatemenuid, $params->get('use_headers'), $ismodule);
+	$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $templatemenuid, $params->get('use_headers'), $ismodule);
 	echo $header;
 }
 
 foreach ($list as $row)
 {
-	$listing = JBSMListing::getListingExp($row, $params, $admin_params, $templatemenuid);
+	$listing = $JBSMListing->getListingExp($row, $params, $admin_params, $templatemenuid);
 	echo $listing;
 }
 
@@ -80,7 +84,7 @@ switch ($params->get('module_wrapcode'))
 
 		if (!$t)
 		{
-			$t = JRequest::getVar('t', 1, 'get', 'int');
+			$t = JFactory::getApplication()->input->getInt('t', '1');
 		}
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t=' . $t);
 		?>

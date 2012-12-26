@@ -223,7 +223,7 @@ class JBSMListing extends JBSMElements
 
 		if (isset($elementid))
 		{
-			$listing .= self::getCell(
+			$listing .= $this->getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),
 				$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -258,7 +258,7 @@ class JBSMListing extends JBSMElements
 
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -292,7 +292,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -327,7 +327,7 @@ class JBSMListing extends JBSMElements
 			if (isset($elementid))
 			{
 
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr1c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -384,7 +384,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= self::getCell(
+			$listing .= $this->getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'),
 				$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -416,7 +416,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -450,7 +450,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -484,7 +484,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -541,7 +541,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= self::getCell(
+			$listing .= $this->getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3,
 				$tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -573,7 +573,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -607,7 +607,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -641,7 +641,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -696,7 +696,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= self::getCell(
+			$listing .= $this->getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3,
 				$tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -729,7 +729,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -763,7 +763,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr4c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -797,7 +797,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= self::getCell(
+				$listing .= $this->getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $row, $template
 				);
@@ -869,7 +869,7 @@ class JBSMListing extends JBSMElements
 
 		if ($islink > 0)
 		{
-			$cell .= self::getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
+			$cell .= $this->getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
 		}
 		$cell .= $element;
 
@@ -993,17 +993,17 @@ class JBSMListing extends JBSMElements
 
 			case 6 :
 				// Case 6 is for a link to the 1st article in the media file records
-				$column .= '<a href="' . self::getOtherlinks($id3, $islink, $params) . '">';
+				$column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
 				break;
 
 			case 7 :
 				// Case 7 is for Virtuemart
-				$column .= '<a href="' . self::getOtherlinks($id3, $islink, $params) . '">';
+				$column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
 				break;
 
 			case 8 :
 				// Case 8 is for Docman
-				$column .= '<a href="' . self::getOtherlinks($id3, $islink, $params) . '">';
+				$column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
 				break;
 		}
 
@@ -1092,7 +1092,7 @@ class JBSMListing extends JBSMElements
 		// Passage
 		$link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$link .= '<div id="bsms_scripture" style="display:none;"></strong>';
-		$response = self::getPassage($params, $row);
+		$response = $this->getPassage($params, $row);
 		$link .= $response;
 		$link .= '</div>';
 		$label = str_replace('{{scripturelink}}', $link, $label);
@@ -1110,7 +1110,7 @@ class JBSMListing extends JBSMElements
 		$detailslink = JRoute::_($detailslink);
 
 		// End social networking
-		$share = self::getShare($detailslink, $row, $params, $admin_params);
+		$share = $this->getShare($detailslink, $row, $params, $admin_params);
 		$label = str_replace('{{share}}', $share, $label);
 
 		// PrintableView
@@ -1146,10 +1146,16 @@ class JBSMListing extends JBSMElements
 	 * @param   object     $admin_params  Admin Params
 	 *
 	 * @return null|string
+	 *
+	 * FIXME Look like this is missing the $template var
 	 */
 	public function getShare($link, $row, $params, $admin_params)
 	{
 		jimport('joomla.html.parameter');
+
+		// Finde a better way to do this.
+		$template = new stdClass;
+		$template->id = '1';
 
 		$sharetype = $admin_params->get('sharetype', 1);
 
@@ -1212,7 +1218,7 @@ class JBSMListing extends JBSMElements
 
 				if ($use_bitly == 1)
 				{
-					$url = self::make_bitly_url($link, $login, $appkey, 'json', '2.0.1');
+					$url = $this->make_bitly_url($link, $login, $appkey, 'json', '2.0.1');
 				}
 				else
 				{
@@ -1236,13 +1242,13 @@ class JBSMListing extends JBSMElements
 					elseif ($share_params->get('item1') == 24)
 					{
 						$element           = $custom->getCustom(
-							$share_params->get('item1'), $share_params->get('item1custom'), $row, $params, $admin_params, $template = 1
+							$share_params->get('item1'), $share_params->get('item1custom'), $row, $params, $admin_params, $template
 						);
 						$element1->element = $element->element;
 					}
 					else
 					{
-						$element1 = $this->getElementid($share_params->get('item1'), $row, $params, $admin_params, $template = 1);
+						$element1 = $this->getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item2'))
@@ -1254,13 +1260,13 @@ class JBSMListing extends JBSMElements
 					elseif ($share_params->get('item2') == 24)
 					{
 						$element           = $custom->getCustom(
-							$share_params->get('item2'), $share_params->get('item2custom'), $row, $params, $admin_params, $template = 1
+							$share_params->get('item2'), $share_params->get('item2custom'), $row, $params, $admin_params, $template
 						);
 						$element2->element = $element->element;
 					}
 					else
 					{
-						$element2 = $this->getElementid($share_params->get('item2'), $row, $params, $admin_params, $template = 1);
+						$element2 = $this->getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item3'))
@@ -1273,13 +1279,13 @@ class JBSMListing extends JBSMElements
 					{
 						$element           = $custom->getCustom(
 							$share_params->get('item3'), $share_params->get('item3custom'),
-							$row, $params, $admin_params, $template = 1
+							$row, $params, $admin_params, $template
 						);
 						$element3->element = $element->element;
 					}
 					else
 					{
-						$element3 = $this->getElementid($share_params->get('item3'), $row, $params, $admin_params, $template = 1);
+						$element3 = $this->getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item4'))
@@ -1291,13 +1297,13 @@ class JBSMListing extends JBSMElements
 					elseif ($share_params->get('item4') == 24)
 					{
 						$element           = $custom->getCustom(
-							$share_params->get('item4'), $share_params->get('item4custom'), $row, $params, $admin_params, $template = 1
+							$share_params->get('item4'), $share_params->get('item4custom'), $row, $params, $admin_params, $template
 						);
 						$element4->element = $element->element;
 					}
 					else
 					{
-						$element4 = $this->getElementid($share_params->get('item4'), $row, $params, $admin_params, $template = 1);
+						$element4 = $this->getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
 					}
 				}
 
@@ -1769,7 +1775,7 @@ class JBSMListing extends JBSMElements
 			{
 				$params->set('row1col1', 100);
 			}
-			$listing .= self::getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+			$listing .= $this->getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 
 
 			if ($columns > 1 && $params->get('r1c1span') < 2)
@@ -1787,7 +1793,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row1col2', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 2 && ($params->get('r1c1span') < 3 && $params->get('r1c2span') < 2))
 			{
@@ -1804,7 +1810,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row1col3', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 3 && ($params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
 			{
@@ -1821,7 +1827,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row1col4', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			$listing .= '</tr>';
 
@@ -1852,7 +1858,7 @@ class JBSMListing extends JBSMElements
 			{
 				$params->set('row2col1', 100);
 			}
-			$listing .= self::getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+			$listing .= $this->getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 
 			if ($columns > 1 && $params->get('r2c1span') < 2)
 			{
@@ -1869,7 +1875,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row1col2', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 2 && ($params->get('r2c1span') < 3 && $params->get('r2c2span') < 2))
 			{
@@ -1886,7 +1892,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row2col3', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 3 && ($params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
 			{
@@ -1903,7 +1909,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row2col4', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			$listing .= '</tr>';
 
@@ -1935,7 +1941,7 @@ class JBSMListing extends JBSMElements
 			{
 				$params->set('row3col1', 100);
 			}
-			$listing .= self::getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+			$listing .= $this->getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 
 			if ($columns > 1 && $params->get('r3c1span') < 2)
 			{
@@ -1952,7 +1958,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row3col2', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 2 && ($params->get('r3c1span') < 3 && $params->get('r3c2span') < 2))
 			{
@@ -1969,7 +1975,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row3col3', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 3 && ($params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
 			{
@@ -1986,7 +1992,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row3col4', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			$listing .= '</tr>';
 
@@ -2013,7 +2019,7 @@ class JBSMListing extends JBSMElements
 			{
 				$params->set('row4col1', 100);
 			}
-			$listing .= self::getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+			$listing .= $this->getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 
 			if ($columns > 1 && $params->get('r4c1span') < 2)
 			{
@@ -2030,7 +2036,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row4col2', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 2 && ($params->get('r4c1span') < 3 && $params->get('r4c2span') < 2))
 			{
@@ -2047,7 +2053,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row4col3', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			if ($columns > 3 && ($params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
 			{
@@ -2064,7 +2070,7 @@ class JBSMListing extends JBSMElements
 				{
 					$params->set('row4col4', 100);
 				}
-				$listing .= self::getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+				$listing .= $this->getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
 			$listing .= '</tr>';
 		}
@@ -2144,7 +2150,7 @@ class JBSMListing extends JBSMElements
 		}
 		else
 		{
-			$headercell .= self::getCustomhead($rowcolid, $params);
+			$headercell .= $this->getCustomhead($rowcolid, $params);
 		}
 		$headercell .= '</th>
 		';

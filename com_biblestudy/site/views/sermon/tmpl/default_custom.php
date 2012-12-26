@@ -39,7 +39,7 @@ $row = $this->studydetails;
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 <?php
-$details = JBSMListing::getStudyExp($row, $params, $admin_params, $this->template);
+$details = $JBSMListing->getStudyExp($row, $params, $admin_params, $this->template);
 echo $details;
 
 switch ($this->item->params->get('show_passage_view', '0')) {
@@ -53,8 +53,7 @@ switch ($this->item->params->get('show_passage_view', '0')) {
         </strong>
         <div id="scripture" style="display:none;">
 		<?php
-		JViewLegacy::loadHelper('passage');
-		$response = JBSMListing::getPassage($params, $row);
+		$response = $JBSMListing->getPassage($params, $row);
 		echo $response;
 		?>
         </div>
@@ -65,8 +64,7 @@ switch ($this->item->params->get('show_passage_view', '0')) {
 		?>
     <div id="scripture">
 		<?php
-		JViewLegacy::loadHelper('passage');
-		$response = JBSMListing::getPassage($params, $row);
+		$response = $JBSMListing->getPassage($params, $row);
 		echo $response;
 		?>
     </div>
