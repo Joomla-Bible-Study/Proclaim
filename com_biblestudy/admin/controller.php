@@ -11,6 +11,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * Bible Study Core Difines
+ */
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+
 JLoader::register('JBSMUpload', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/upload.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
