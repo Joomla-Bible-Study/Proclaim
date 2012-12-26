@@ -8,8 +8,12 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// --require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
-JLoader::register('JBSMUpload', dirname(__FILE__) . '/helpers/upload.php');
+/**
+ * Bible Study Core Difines
+ */
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+
+JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
 jimport('joomla.application.component.controller');
 
 /**
