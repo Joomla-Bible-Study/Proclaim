@@ -7,45 +7,47 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-JLoader::register('jbsImages', dirname(__FILE__) . '/lib/biblestudy.images.class.php.php');
-//JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+
+// @todo need to work over the JLoader
+JLoader::register('jbsImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
 JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
-//require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::registerPrefix('JBSM', BIBLESTUDY_PATH_HELPERS . '/');
+$JViewLegacy = new JViewLegacy;
+$JViewLegacy->loadHelper('image');
+$JViewLegacy->loadHelper('helper');
 
 /**
  *  Class for Series List
  *
- *
  * @package  BibleStudy.Site
  * @since    8.0.0
+ *
+ * @todo     Still need to fix up.
  */
 class JBSMSerieslist
 {
 	/**
 	 * Get SeriesList
 	 *
-	 * @param   object  $row
-	 * @param   object  $params
-	 * @param   string  $oddeven
-	 * @param   object  $admin_params
-	 * @param   object  $template
-	 * @param   string  $view
+	 * @param   object  $row           JTable
+	 * @param   object  $params        Item Params
+	 * @param   string  $oddeven       Odd Even
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
+	 * @param   string  $view          View
 	 *
 	 * @return string
 	 */
 	public function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	{
 		$listing = '';
-		$path1   = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-		include_once($path1 . 'elements.php');
-		include_once($path1 . 'custom.php');
-		$JViewLegacy = new JViewLegacy();
-		$JViewLegacy->loadHelper('image');
 
-		//Set the slug if not present
-		$row->slug = $row->alias ? ($row->id . ':' . $row->alias) : $row->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($row->series_text, ENT_QUOTES));
+		// Set the slug if not present
+		$row->slug = $row->alias ? ($row->id . ':' . $row->alias) : $row->id . ':'
+				. str_replace(' ', '-', htmlspecialchars_decode($row->series_text, ENT_QUOTES));
+
 		if ($params->get('series_show_description') == 0)
 		{
 			$listing .= '<tr class="onlyrow ' . $oddeven . '">';
@@ -59,8 +61,9 @@ class JBSMSerieslist
 		$listelementid = $params->get('serieselement1');
 		$islink        = $params->get('seriesislink1');
 		$r             = 'firstcol';
-		$listelement   = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+		$listelement   = self::seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 		$listing .= $listelement;
+
 		if (!$listelementid)
 		{
 			$listing .= '<td class="firstrow firstcol">';
@@ -71,8 +74,9 @@ class JBSMSerieslist
 		$listelementid = $params->get('serieselement2');
 		$islink        = $params->get('seriesislink2');
 		$r             = '';
-		$listelement   = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+		$listelement   = self::seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 		$listing .= $listelement;
+
 		if (!$listelementid)
 		{
 			$listing .= '<td >';
@@ -82,8 +86,9 @@ class JBSMSerieslist
 		$listelementid = $params->get('serieselement3');
 		$islink        = $params->get('seriesislink3');
 		$r             = '';
-		$listelement   = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+		$listelement   = self::seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 		$listing .= $listelement;
+
 		if (!$listelementid)
 		{
 			$listing .= '<td >';
@@ -94,24 +99,28 @@ class JBSMSerieslist
 		$listelementid = $params->get('serieselement4');
 		$islink        = $params->get('seriesislink4');
 		$r             = 'lastcol';
-		$listelement   = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+		$listelement   = self::seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 		$listing .= $listelement;
+
 		if (!$listelementid)
 		{
 			$listing .= '<td class="lastcol"></td>';
 		}
 		$listing .= '</tr>';
 
-		//add if last row to above
+		// Add if last row to above
 
 		if ($params->get('series_show_description') > 0)
 		{
 			$listing .= '<tr class="lastrow ' . $oddeven . '">';
 			$listing .= '<td colspan="4" class="description">';
+
 			if ($params->get('series_characters') && $view == 0)
 			{
 				$listing .= substr($row->description, 0, $params->get('series_characters'));
-				$listing .= ' - ' . '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1)) . '">' . JText::_('JBS_CMN_READ_MORE') . '</a>';
+				$listing .= ' - ' . '<a href="'
+						. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
+						. '">' . JText::_('JBS_CMN_READ_MORE') . '</a>';
 			}
 			else
 			{
@@ -127,23 +136,26 @@ class JBSMSerieslist
 	/**
 	 * Get SeriesLink
 	 *
-	 * @param string $islink
-	 * @param object $row
-	 * @param string $element
-	 * @param object $params
-	 * @param object $admin_params
+	 * @param   string  $islink        Is a link
+	 * @param   object  $row           Row Info
+	 * @param   string  $element       Element
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
-	function getSerieslink($islink, $row, $element, $params, $admin_params)
+	public function getSerieslink($islink, $row, $element, $params, $admin_params)
 	{
 		if ($islink == 1)
 		{
-			$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1)) . '">' . $element . '</a>';
+			$link = '<a href="'
+					. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
+					. '">' . $element . '</a>';
 		}
 		else
 		{
-			$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $row->id . '&t=' . $params->get('teachertemplateid', 1)) . '">' . $element . '</a>';
+			$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $row->id . '&t=' . $params->get('teachertemplateid', 1))
+					. '">' . $element . '</a>';
 		}
 
 		return $link;
@@ -152,17 +164,18 @@ class JBSMSerieslist
 	/**
 	 * Get StudiesLink
 	 *
-	 * @param string $islink
-	 * @param object $row
-	 * @param object $element
-	 * @param object $params
-	 * @param object $admin_params
+	 * @param   string  $islink        Is a Link
+	 * @param   object  $row           JTable
+	 * @param   object  $element       Element
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
-	function getStudieslink($islink, $row, $element, $params, $admin_params)
+	public function getStudieslink($islink, $row, $element, $params, $admin_params)
 	{
-		$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $params->get('detailstemplateid', 1)) . '">' . $element . '</a>';
+		$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $params->get('detailstemplateid', 1))
+				. '">' . $element . '</a>';
 
 		return $link;
 	}
@@ -170,51 +183,55 @@ class JBSMSerieslist
 	/**
 	 * Series Get Element
 	 *
-	 * @param string $r
-	 * @param object $row
-	 * @param int    $listelementid
-	 * @param string $custom
-	 * @param string $islink
-	 * @param object $admin_params
-	 * @param object $params
-	 * @param string $view
+	 * @param   string  $r              ?
+	 * @param   object  $row            JTable
+	 * @param   int     $listelementid  Elemint ID
+	 * @param   string  $custom         Costum
+	 * @param   string  $islink         Is a Link
+	 * @param   object  $admin_params   Admin Params
+	 * @param   object  $params         Item Params
+	 * @param   string  $view           View
 	 *
 	 * @return string
 	 */
-	function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
+	public function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
 	{
 		$element = '';
+
 		switch ($listelementid)
 		{
 			case 1:
 				$element = $row->series_text;
+
 				if ($islink > 0)
 				{
-					$element = getSerieslink($islink, $row, $element, $params, $admin_params);
+					$element = self::getSerieslink($islink, $row, $element, $params, $admin_params);
 				}
 				$element = '<td class="' . $r . ' title">' . $element . '</td>';
 				break;
 			case 2:
-				$images = new jbsImages();
+				$images = new jbsImages;
 				$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
 				$element = '<img src="test' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
+
 				if ($islink > 0 && $view == 0)
 				{
-					$element = getSerieslink($islink, $row, $element, $params, $admin_params);
+					$element = self::getSerieslink($islink, $row, $element, $params, $admin_params);
 				}
 				$element = '<td class="' . $r . ' thumbnail image">' . $element . '</td>';
 				break;
 			case 3:
-				$images   = new jbsImages();
+				$images   = new jbsImages;
 				$image    = $images->getSeriesThumbnail($row->series_thumbnail);
 				$element1 = '<td class="' . $r . ' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
 				$element3 = '</td></tr>';
 				$element4 = $row->series_text;
+
 				if ($islink > 0 && $view == 0)
 				{
-					$element4 = getSerieslink($islink, $row, $element4, $params, $admin_params);
+					$element4 = self::getSerieslink($islink, $row, $element4, $params, $admin_params);
 				}
 				$element = $element1 . $element2 . $element3 . '</td></tr>';
 				$element .= '<tr class="noborder"><td class="' . $r . ' title">' . $element4 . '</td>';
@@ -222,42 +239,46 @@ class JBSMSerieslist
 				break;
 			case 4:
 				$element = $row->teachertitle . ' - ' . $row->teachername;
+
 				if ($islink > 0)
 				{
-					$element = getSerieslink($islink, $row, $element, $params, $admin_params);
+					$element = self::getSerieslink($islink, $row, $element, $params, $admin_params);
 				}
 				$element = '<td class="' . $r . ' teacher">' . $element . '</td>';
 				break;
 			case 5:
-				$images = new jbsImages();
+				$images = new jbsImages;
 				$image  = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 				$element = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
+
 				if ($islink > 0)
 				{
-					$element = getSerieslink($islink, $row, $element, $params, $admin_params);
+					$element = self::getSerieslink($islink, $row, $element, $params, $admin_params);
 				}
 				$element = '<td class="' . $r . ' teacher image">' . $element . '</td>';
 				break;
 			case 6:
 				$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="' . $r . ' teacher">';
-				$images   = new jbsImages();
+				$images   = new jbsImages;
 				$image    = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
 				$element3 = '</td></tr><tr class="noborder"><td class="' . $r . ' teacher">';
 				$element4 = $row->teachertitle . ' - ' . $row->teachername;
+
 				if ($islink > 0)
 				{
-					$element4 = getSerieslink($islink, $row, $element4, $params, $admin_params);
+					$element4 = self::getSerieslink($islink, $row, $element4, $params, $admin_params);
 				}
 				$element = $element1 . $element2 . $element3 . $element4 . '</td></tr></table>';
 				$element = '<td class="' . $r . ' teacher image">' . $element . '</td>';
 				break;
 			case 7:
 				$element = $row->description;
+
 				if ($islink > 0)
 				{
-					$element = getSerieslink($islink, $row, $element, $params, $admin_params);
+					$element = self::getSerieslink($islink, $row, $element, $params, $admin_params);
 				}
 				$element = '<td class="' . $r . ' description"><p>' . $element . '</p></td>';
 				break;
@@ -269,29 +290,30 @@ class JBSMSerieslist
 	/**
 	 * Series Get Custom
 	 *
-	 * @param string $r
-	 * @param object $row
-	 * @param object $customelement
-	 * @param string $custom
-	 * @param string $islink
-	 * @param object $admin_params
-	 * @param object $params
+	 * @param   string  $r              ?
+	 * @param   object  $row            JTable
+	 * @param   object  $customelement  ?
+	 * @param   string  $custom         ?
+	 * @param   string  $islink         Is a Link
+	 * @param   object  $admin_params   Admin Params
+	 * @param   object  $params         Item Params
 	 *
 	 * @return string
 	 */
-	function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_params, $params)
+	public function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_params, $params)
 	{
 		$countbraces = substr_count($custom, '{');
 		$braceend    = 0;
+
 		while ($countbraces > 0)
 		{
 			$bracebegin    = strpos($custom, '{');
 			$braceend      = strpos($custom, '}');
 			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
-			$customelement = getseriesElementnumber($subcustom);
-			$element       = seriesGetelement($r, $row, $customelement, $custom, $islink, $admin_params, $params);
+			$customelement = self::getseriesElementnumber($subcustom);
+			$element       = self::seriesGetelement($r, $row, $customelement, $custom, $islink, $admin_params, $params, $view = null);
 			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
-			$countbraces   = $countbraces - 1;
+			$countbraces--;
 		}
 
 		return $custom;
@@ -300,12 +322,14 @@ class JBSMSerieslist
 	/**
 	 * Get Series ElementNumber
 	 *
-	 * @param string $subcustom
+	 * @param   string  $subcustom  ?
 	 *
 	 * @return int
 	 */
-	function getseriesElementnumber($subcustom)
+	public function getseriesElementnumber($subcustom)
 	{
+		$customelement = null;
+
 		switch ($subcustom)
 		{
 			case 'title':
@@ -336,19 +360,20 @@ class JBSMSerieslist
 				$customelement = 7;
 				break;
 		}
+
 		return $customelement;
 	}
 
 	/**
 	 * Get SeriesStudies DBO
 	 *
-	 * @param int    $id
-	 * @param object $params
-	 * @param string $limit
+	 * @param   int     $id      ID
+	 * @param   object  $params  Item Params
+	 * @param   string  $limit   Limit of Records
 	 *
-	 * @return string
+	 * @return object
 	 */
-	function getSeriesstudiesDBO($id, $params, $limit = '')
+	public function getSeriesstudiesDBO($id, $params, $limit = '')
 	{
 		$app      = JFactory::getApplication();
 		$db       = JFactory::getDBO();
@@ -356,6 +381,7 @@ class JBSMSerieslist
 		$menu     = $app->getMenu();
 		$item     = $menu->getActive();
 		$language = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+
 		if ($language == '*' || !$language)
 		{
 			$langlink = '';
@@ -371,7 +397,8 @@ class JBSMSerieslist
 				. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
 				. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
 				. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
+				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
+				. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
 				. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
 				. ' FROM #__bsms_studies AS s'
 				. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
@@ -388,9 +415,10 @@ class JBSMSerieslist
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 		$items   = $results;
+
 		foreach ($items as $item)
 		{
-			// concat topic_text and concat topic_params do not fit, so translate individually
+			// Concat topic_text and concat topic_params do not fit, so translate individually
 			$topics_text       = JBSMTranslated::getConcatTopicItemTranslated($item);
 			$item->topics_text = $topics_text;
 		}
@@ -401,18 +429,19 @@ class JBSMSerieslist
 	/**
 	 * Get SeriesStudies
 	 *
-	 * @param int    $id
-	 * @param object $params
-	 * @param object $admin_params
-	 * @param object $template
+	 * @param   int     $id            ID
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
 	 *
 	 * @return string
 	 */
-	function getSeriesstudies($id, $params, $admin_params, $template)
+	public function getSeriesstudies($id, $params, $admin_params, $template)
 	{
 		$limit   = '';
 		$input   = new JInput;
 		$nolimit = $input->get('nolimit', '', 'int');
+
 		if ($params->get('series_detail_limit'))
 		{
 			$limit = ' LIMIT ' . $params->get('series_detail_limit');
@@ -422,7 +451,7 @@ class JBSMSerieslist
 			$limit = '';
 		}
 
-		$result = getSeriesstudiesDBO($id, $params, $limit);
+		$result = self::getSeriesstudiesDBO($id, $params, $limit);
 
 		$studies = '';
 		$numrows = count($result);
@@ -430,10 +459,11 @@ class JBSMSerieslist
 		$class1  = 'bsodd';
 		$class2  = 'bseven';
 		$oddeven = $class1;
+
 		foreach ($result AS $row)
 		{
 			if ($oddeven == $class1)
-			{ //Alternate the color background
+			{ // Alternate the color background
 				$oddeven = $class2;
 			}
 			else
@@ -441,6 +471,7 @@ class JBSMSerieslist
 				$oddeven = $class1;
 			}
 			$studies .= '<tr class="' . $oddeven;
+
 			if ($numrows > 1)
 			{
 				$studies .= ' studyrow';
@@ -449,39 +480,39 @@ class JBSMSerieslist
 			{
 				$studies .= ' lastrow';
 			}
-			$studies .= '">
-		';
-			$element = getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
+			$studies .= '">';
+			$element = JBSMElements::getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
+
 			if ($params->get('series_detail_islink1') > 0)
 			{
-				$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
+				$element->element = self::getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
 			}
-			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>
-		';
-			$element = getElementid($params->get('series_detail_2'), $row, $params, $admin_params, $template);
+			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>';
+			$element = JBSMElements::getElementid($params->get('series_detail_2'), $row, $params, $admin_params, $template);
+
 			if ($params->get('series_detail_islink2') > 0)
 			{
-				$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
+				$element->element = self::getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
 			}
-			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>
-		';
-			$element = getElementid($params->get('series_detail_3'), $row, $params, $admin_params, $template);
+			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>';
+			$element = JBSMElements::getElementid($params->get('series_detail_3'), $row, $params, $admin_params, $template);
+
 			if ($params->get('series_detail_islink3') > 0)
 			{
-				$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
+				$element->element = self::getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
 			}
-			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>
-		';
-			$element = getElementid($params->get('series_detail_4'), $row, $params, $admin_params, $template);
+			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>';
+			$element = JBSMElements::getElementid($params->get('series_detail_4'), $row, $params, $admin_params, $template);
+
 			if ($params->get('series_detail_islink4') > 0)
 			{
-				$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
+				$element->element = self::getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);
 			}
-			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>
-		';
-			$numrows = $numrows - 1;
+			$studies .= '<td class="' . $element->id . '">' . $element->element . '</td>';
+			$numrows--;
 		}
 		$t = $params->get('serieslisttemplateid');
+
 		if (!$t)
 		{
 			$t = $input->get('t', 1, 'int');
@@ -494,20 +525,20 @@ class JBSMSerieslist
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param object $params
-	 * @param int    $id
-	 * @param object $admin_params
+	 * @param   object  $params        Item Params
+	 * @param   int     $id            ID
+	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
-	function getSeriesLandingPage($params, $id, $admin_params)
+	public function getSeriesLandingPage($params, $id, $admin_params)
 	{
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy();
+		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$JViewLegacy->loadHelper('helper');
 		$series   = null;
@@ -515,6 +546,7 @@ class JBSMSerieslist
 
 		$template = $params->get('serieslisttemplateid', 1);
 		$limit    = $params->get('landingserieslimit');
+
 		if (!$limit)
 		{
 			$limit = 10000;
@@ -523,6 +555,7 @@ class JBSMSerieslist
 		$menu           = $mainframe->getMenu();
 		$item           = $menu->getActive();
 		$registry       = new JRegistry;
+
 		if (isset($item->prams))
 		{
 			$registry->loadString($item->params);
@@ -575,7 +608,8 @@ class JBSMSerieslist
 		$items = $db->loadObjectList();
 		$count = count($items);
 
-		if ($count != 0):
+		if ($count != 0)
+		{
 			switch ($seriesuselimit)
 			{
 				case 0:
@@ -598,13 +632,11 @@ class JBSMSerieslist
 									$series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
 									$series .= "\n\t" . '</tr>';
 								}
-								;
 								if ($i == 2)
 								{
 									$series .= "\n\t\t" . '<td  class="landing_td"></td>';
 									$series .= "\n\t" . '</tr>';
 								}
-								;
 
 								$series .= "\n" . '</table>';
 								$series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
@@ -618,7 +650,10 @@ class JBSMSerieslist
 
 						if ($params->get('series_linkto') == '0')
 						{
-							$series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+							$series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id
+									. '&amp;filter_book=0&amp;filter_teacher=0'
+									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+									. $template . '">';
 						}
 						else
 						{
@@ -633,6 +668,7 @@ class JBSMSerieslist
 
 						$i++;
 						$t++;
+
 						if ($i == 3 && $t != $limit && $t != $count)
 						{
 							$series .= "\n\t" . '</tr><tr>';
@@ -648,12 +684,11 @@ class JBSMSerieslist
 					{
 						$series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
 					}
-					;
+
 					if ($i == 2)
 					{
 						$series .= "\n\t\t" . '<td  class="landing_td"></td>';
 					}
-					;
 
 					$series .= "\n" . '</table>' . "\n";
 
@@ -668,18 +703,23 @@ class JBSMSerieslist
 
 				case 1:
 					$series = '<div class="landingtable" style="display:inline;">';
+
 					foreach ($items as $b)
 					{
 						if ($b->landing_show == 1)
 						{
 							$series .= '<div class="landingrow">';
+
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
+										. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
+										. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
+										. $b->id . '&amp;t=' . $template . '">';
 							}
 
 							$series .= $numRows;
@@ -690,18 +730,24 @@ class JBSMSerieslist
 					}
 					$series .= '</div>';
 					$series .= '<div id="showhideseries" style="display:none;">';
+
 					foreach ($items as $b)
 					{
+
 						if ($b->landing_show == 2)
 						{
 							$series .= '<div class="landingrow">';
+
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id . '&amp;filter_book=0&amp;filter_teacher=0' . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
+										. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
+										. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
+										. $b->id . '&amp;t=' . $template . '">';
 							}
 
 							$series .= $numRows;
@@ -715,9 +761,11 @@ class JBSMSerieslist
 					$series .= '<div class="landing_separator"></div>';
 					break;
 			}
-		else:
+		}
+		else
+		{
 			$series = '<div class="landing_separator"></div>';
-		endif;
+		}
 
 		return $series;
 	}
@@ -725,23 +773,17 @@ class JBSMSerieslist
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param object $row
-	 * @param object $params
-	 * @param object $admin_params
-	 * @param object $template
+	 * @param   object  $row           JTable
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
 	 *
 	 * @return object
 	 */
-	function getSerieslistExp($row, $params, $admin_params, $template)
+	public function getSerieslistExp($row, $params, $admin_params, $template)
 	{
-		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-		include_once($path1 . 'elements.php');
-		include_once($path1 . 'custom.php');
-		$JViewLegacy = new JViewLegacy();
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$t      = $params->get('serieslisttemplateid');
-		$images = new jbsImages();
+		$images = new jbsImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
 		$label = $params->get('series_templatecode');
@@ -758,26 +800,16 @@ class JBSMSerieslist
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param object $row
-	 * @param object $params
-	 * @param object $admin_params
-	 * @param object $template
+	 * @param   object  $row           JTable
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
 	 *
 	 * @return object
 	 */
-	function getSeriesDetailsExp($row, $params, $admin_params, $template)
+	public function getSeriesDetailsExp($row, $params, $admin_params, $template)
 	{
-		//seriesdesc_template
-		$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-		include_once($path1 . 'elements.php');
-		include_once($path1 . 'custom.php');
-		//include_once($path1.'mediatable.php');
-		//This will eventually replace mediatable in this context.  Just for clarity.
-		include_once($path1 . 'media.php');
-		//include_once($path1.'comments.php');
-		$JViewLegacy = new JViewLegacy();
-		$JViewLegacy->loadHelper('image');
-		$images = new jbsImages();
+		$images = new jbsImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 		$label  = $params->get('series_detailcode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
@@ -794,21 +826,20 @@ class JBSMSerieslist
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param int    $id
-	 * @param object $params
-	 * @param object $admin_params
-	 * @param object $template
+	 * @param   int     $id            ID
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
 	 *
 	 * @return string
 	 */
-	function getSeriesstudiesExp($id, $params, $admin_params, $template)
+	public function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	{
-		JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
-		$path2   = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR;
 		$input   = new JInput;
 		$limit   = '';
 		$nolimit = $input->get('nolimit', '', 'int');
+
 		if ($params->get('series_detail_limit'))
 		{
 			$limit = ' LIMIT ' . $params->get('series_detail_limit');
@@ -818,7 +849,7 @@ class JBSMSerieslist
 			$limit = '';
 		}
 
-		$items   = getSeriesstudiesDBO($id, $params, $limit);
+		$items   = self::getSeriesstudiesDBO($id, $params, $limit);
 		$numrows = count($result);
 
 		$studies = '';
@@ -826,19 +857,20 @@ class JBSMSerieslist
 		switch ($params->get('series_wrapcode'))
 		{
 			case '0':
-				//Do Nothing
+				// Do Nothing
 				break;
 			case 'T':
-				//Table
+				// Table
 				$studies .= '<table id="bsms_seriestable" width="100%">';
 				break;
 			case 'D':
-				//DIV
+				// DIV
 				$studies .= '<div>';
 				break;
 		}
 		echo $params->get('series_headercode');
-		//check permissions for this view by running through the records and removing those the user doesn't have permission to see
+
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
@@ -863,14 +895,14 @@ class JBSMSerieslist
 		switch ($params->get('series_wrapcode'))
 		{
 			case '0':
-				//Do Nothing
+				// Do Nothing
 				break;
 			case 'T':
-				//Table
+				// Table
 				$studies .= '</table>';
 				break;
 			case 'D':
-				//DIV
+				// DIV
 				$studies .= '</div>';
 				break;
 		}
@@ -882,15 +914,20 @@ class JBSMSerieslist
 	/**
 	 * Get Series Footer
 	 *
-	 * @param object $template
-	 * @param int    $id
+	 * @param   object  $template  Template
+	 * @param   int     $id        ID
 	 *
 	 * @return string
+	 *
 	 * @deprecated since version 7.1.0
 	 */
-	function getSeriesFooter($template, $id)
+	public function getSeriesFooter($template, $id)
 	{
-		$seriesfooter = '<tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $id . '&amp;t=' . $template) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
+		$seriesfooter = '<tr class="seriesreturnlink"><td>
+		<a href="'
+				. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $id . '&amp;t=' . $template)
+				. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' '
+				. JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
 
 		return $seriesfooter;
 	}

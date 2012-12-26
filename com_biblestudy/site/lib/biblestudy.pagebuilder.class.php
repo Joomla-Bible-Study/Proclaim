@@ -29,7 +29,7 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 class JBSPagebuilder
 {
 
-	public static $extension = 'com_biblestudy';
+	public $extension = 'com_biblestudy';
 
 	public $event;
 
@@ -42,7 +42,7 @@ class JBSPagebuilder
 	 *
 	 * @return object
 	 */
-	public static function buildPage($item, $params, $admin_params)
+	public function buildPage($item, $params, $admin_params)
 	{
 
 		$item->tp_id = '1';
@@ -51,6 +51,7 @@ class JBSPagebuilder
 		// Media files image, links, download
 		$mids = $item->mids;
 		$page = new stdClass;
+		$JBSMElements = new JBSMElements;
 
 		if ($mids)
 		{
@@ -67,7 +68,7 @@ class JBSPagebuilder
 
 		if ($item->chapter_begin)
 		{
-			$page->scripture1 = JBSMElements::getScripture($params, $item, $esv, $scripturerow);
+			$page->scripture1 = $JBSMElements->getScripture($params, $item, $esv, $scripturerow);
 		}
 		else
 		{
@@ -83,7 +84,7 @@ class JBSPagebuilder
 
 		if (isset($item->chapter_begin2) && $item->booknumber2 >= 1)
 		{
-			$page->scripture2 = JBSMElements::getScripture($params, $item, $esv, $scripturerow);
+			$page->scripture2 = $JBSMElements->getScripture($params, $item, $esv, $scripturerow);
 		}
 		else
 		{
@@ -91,8 +92,8 @@ class JBSPagebuilder
 		}
 
 		// Duration
-		$page->duration  = JBSMElements::getDuration($params, $item);
-		$page->studydate = JBSMElements::getstudyDate($params, $item->studydate);
+		$page->duration  = $JBSMElements->getDuration($params, $item);
+		$page->studydate = $JBSMElements->getstudyDate($params, $item->studydate);
 
 		// @todo need to look at why i have to do this hear.
 		$item->topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
@@ -225,7 +226,7 @@ class JBSPagebuilder
 	 *
 	 * @return string
 	 */
-	private static function mediaBuilder($mediaids, $params, $admin_params)
+	private function mediaBuilder($mediaids, $params, $admin_params)
 	{
 		$images        = new jbsImages;
 		$mediaelements = new jbsMedia;
@@ -317,7 +318,7 @@ class JBSPagebuilder
 	 *
 	 * @return object
 	 */
-	public static function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order)
+	public function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order)
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDBO();
@@ -421,7 +422,7 @@ class JBSPagebuilder
 	 *
 	 * @return object
 	 */
-	public static function runContentPlugins($item, $params)
+	public function runContentPlugins($item, $params)
 	{
 		// We don't need offset but it is a required argument for the plugin dispatcher
 		$offset = '';

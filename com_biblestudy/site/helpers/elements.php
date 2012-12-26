@@ -40,7 +40,7 @@ class JBSMElements
 	 * @todo Redo to MVC Standers under a class
 	 * @return object
 	 */
-	public static function getElementid($rowid, $row, $params, $admin_params, $template)
+	public function getElementid($rowid, $row, $params, $admin_params, $template)
 	{
 		// Start Element ID
 		$elementid = new stdClass;
@@ -297,7 +297,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getScripture($params, $row, $esv, $scripturerow)
+	public function getScripture($params, $row, $esv, $scripturerow)
 	{
 		$scripture = '';
 
@@ -487,7 +487,7 @@ class JBSMElements
 	 *
 	 * @return  null|string
 	 */
-	public static function getDuration($params, $row)
+	public function getDuration($params, $row)
 	{
 
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
@@ -542,7 +542,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getstudyDate($params, $studydate)
+	public function getstudyDate($params, $studydate)
 	{
 		switch ($params->get('date_format'))
 		{
@@ -598,7 +598,7 @@ class JBSMElements
 	 *
 	 * @return null|string
 	 */
-	public static function getFilesize($file_size)
+	public function getFilesize($file_size)
 	{
 		if (!$file_size)
 		{
@@ -645,7 +645,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getTextlink($params, $row, $textorpdf, $admin_params, $template)
+	public function getTextlink($params, $row, $textorpdf, $admin_params, $template)
 	{
 		$linktext = null;
 
@@ -706,7 +706,7 @@ class JBSMElements
 	 *
 	 * @return boolean|null|string
 	 */
-	public static function getMediatable($params, $row, $admin_params)
+	public function getMediatable($params, $row, $admin_params)
 	{
 		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
@@ -1015,7 +1015,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getDocman($media, $width, $height, $src, $duration, $filesize)
+	public function getDocman($media, $width, $height, $src, $duration, $filesize)
 	{
 		$docman = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
@@ -1035,7 +1035,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getArticle($media, $width, $height, $src)
+	public function getArticle($media, $width, $height, $src)
 	{
 		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
@@ -1055,7 +1055,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getVirtuemart($media, $width, $height, $src, $params)
+	public function getVirtuemart($media, $width, $height, $src, $params)
 	{
 
 		$vm = '<a href="index.php?option=com_virtuemart&amp;page=shop.product_details&amp;flypage='
@@ -1073,7 +1073,7 @@ class JBSMElements
 	 *
 	 * @return object
 	 */
-	public static function getMediaRows($study_id)
+	public function getMediaRows($study_id)
 	{
 		$query = 'SELECT #_bsms_mediafiles.*,'
 				. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
@@ -1106,7 +1106,7 @@ class JBSMElements
 	 *
 	 *  Fixme look like this has missing info for the width and height
 	 */
-	private static function getStore($params, $row)
+	private function getStore($params, $row)
 	{
 
 		$mainframe = JFactory::getApplication();
@@ -1205,7 +1205,7 @@ class JBSMElements
 	 *
 	 * @return string
 	 */
-	public static function getFilepath($id3, $idfield, $mime)
+	public function getFilepath($id3, $idfield, $mime)
 	{
 
 		$mainframe = JFactory::getApplication();

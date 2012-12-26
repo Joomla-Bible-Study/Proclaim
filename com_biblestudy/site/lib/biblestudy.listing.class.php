@@ -38,7 +38,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	public static function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
+	public function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
 	{
 		/* Here we test to see if this is a sermon or list view. If details, we reset the params to the details.
 		   this keeps us from having to rewrite all this code. */
@@ -833,7 +833,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	private static function getCell(
+	private function getCell(
 		$elementid,
 		$element,
 		$rowcolid,
@@ -926,7 +926,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	private static function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
+	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 	{
 		$input    = new JInput;
 		$Itemid   = $input->get('Itemid', '', 'int');
@@ -1020,7 +1020,7 @@ class JBSMListing
 	 *
 	 * @return object
 	 */
-	public static function getListingExp($row, $params, $admin_params, $template)
+	public function getListingExp($row, $params, $admin_params, $template)
 	{
 		$Media  = new jbsMedia;
 		$images = new jbsImages;
@@ -1065,7 +1065,7 @@ class JBSMListing
 	 *
 	 * @return object
 	 */
-	public static function getStudyExp($row, $params, $admin_params, $template)
+	public function getStudyExp($row, $params, $admin_params, $template)
 	{
 		$Media = new jbsMedia;
 
@@ -1147,7 +1147,7 @@ class JBSMListing
 	 *
 	 * @return null|string
 	 */
-	public static function getShare($link, $row, $params, $admin_params)
+	public function getShare($link, $row, $params, $admin_params)
 	{
 		jimport('joomla.html.parameter');
 
@@ -1347,7 +1347,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	private static function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
+	private function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
 	{
 		// Create the URL
 
@@ -1381,7 +1381,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	public static function getPassage($params, $row)
+	public function getPassage($params, $row)
 	{
 		$esv          = 1;
 		$scripturerow = 1;
@@ -1431,7 +1431,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	public static function getOtherlinks($id3, $islink, $params)
+	public function getOtherlinks($id3, $islink, $params)
 	{
 		$link  = '';
 		$db    = JFactory::getDBO();
@@ -1490,7 +1490,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 */
-	public static function getTitle($params, $row, $admin_params, $template)
+	public function getTitle($params, $row, $admin_params, $template)
 	{
 
 		$title = null;

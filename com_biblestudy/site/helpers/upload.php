@@ -1,110 +1,118 @@
 <?php
-
 /**
- * Upload Helper
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 /**
  * JBS Upload class
- * @package BibleStudy.Site
- * @since   7.1.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.1.0
+ *
+ * @todo     still needs lots of work. bcc
  */
 class JBSMUpload
 {
-//    /**
-//     * Method to load javascript for squeezebox modal
-//     *
-//     * $param string $host the site base url
-//     *
-//     * @return	string
-//     */
-//    function uploadjs($host, $admin) {
-//        //when we send the files for upload, we have to tell Joomla our session, or we will get logged out
-//        $session = JFactory::getSession();
-//
-//        $val = ini_get('upload_max_filesize');
-//        $val = trim($val);
-//        $last = strtolower($val[strlen($val) - 1]);
-//        switch ($last) {
-//            // The 'G' modifier is available since PHP 5.1.0
-//            case 'g':
-//                $val *= 1024;
-//            case 'm':
-//                $val *= 1024;
-//            case 'k':
-//                $val *= 1024;
-//        }
-//        $valk = $val / 1024;
-//        $valm = $valk / 1024;
-//        $maxupload = $valm . ' MB';
-//        $swfUploadHeadJs = '
-//    var swfu;
-//
-//    window.onload = function()
-//    {
-//
-//    var settings =
-//    {
-//            //this is the path to the flash file, you need to put your components name into it
-//            flash_url : "' . $host . 'media/com_biblestudy/js/swfupload/swfupload.swf",
-//
-//            //we can not put any vars into the url for complicated reasons, but we can put them into the post...
-//            upload_url: "' . $host . $admin . 'index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
-//            post_params: {
-//            		"option" : "com_biblestudy",
-//           		"controller" : "Mediafile",
-//            		"task" : "upflash",
-//            		"' . $session->getName() . '" : "' . $session->getId() . '",
-//           		"format" : "raw"
-//           	},
-//            //you need to put the session and the "format raw" in there, the other ones are what you would normally put in the url
-//            file_size_limit : "' . $maxupload . '",
-//            //client side file checking is for usability only, you need to check server side for security
-//            file_types : "",
-//            file_types_description : "All Files",
-//            file_upload_limit : 100,
-//            file_queue_limit : 10,
-//            custom_settings :
-//            {
-//                    progressTarget : "fsUploadProgress",
-//                    cancelButtonId : "btnCancel"
-//            },
-//            debug: false,
-//
-//            // Button settings
-//            button_image_url: "' . $host . 'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
-//            button_width: "86",
-//            button_height: "33",
-//            button_placeholder_id: "spanButtonPlaceHolder",
-//            button_text: \'<span class="upbutton">' . JText::_('JBS_CMN_BROWSE') . '</span>\',
-//            button_text_style: ".upbutton { font-size: 14px; margin-left: 15px;}",
-//            button_text_left_padding: 5,
-//            button_text_top_padding: 5,
-//
-//            // The event handler functions are defined in handlers.js
-//            file_queued_handler : fileQueued,
-//            file_queue_error_handler : fileQueueError,
-//            file_dialog_complete_handler : fileDialogComplete,
-//            upload_start_handler : uploadStart,
-//            upload_progress_handler : uploadProgress,
-//            upload_error_handler : uploadError,
-//            upload_success_handler : uploadSuccess,
-//            upload_complete_handler : uploadComplete,
-//            queue_complete_handler : queueComplete     // Queue plugin event
-//    };
-//    swfu = new SWFUpload(settings);
-//    };
-//
-//    ';
-//
-//        return $swfUploadHeadJs;
-//    }
+	/**
+	 * Method to load javascript for squeezebox modal
+	 *
+	 * @param   string  $host   the site base url
+	 * @param   string  $admin  ?
+	 *
+	 * @return    string
+	 */
+	public function Uploadjs($host, $admin)
+	{
+		// When we send the files for upload, we have to tell Joomla our session, or we will get logged out
+		$session = JFactory::getSession();
+
+		$val  = ini_get('upload_max_filesize');
+		$val  = trim($val);
+		$last = strtolower($val[strlen($val) - 1]);
+
+		switch ($last)
+		{
+			// The 'G' modifier is available since PHP 5.1.0
+			case 'g':
+				$val *= 1024;
+				break;
+			case 'm':
+				$val *= 1024;
+				break;
+			case 'k':
+				$val *= 1024;
+				break;
+		}
+		$valk            = $val / 1024;
+		$valm            = $valk / 1024;
+		$maxupload       = $valm . ' MB';
+		$swfUploadHeadJs = '
+    var swfu;
+
+    window.onload = function()
+    {
+
+    var settings =
+    {
+            //this is the path to the flash file, you need to put your components name into it
+            flash_url : "' . $host . 'media/com_biblestudy/js/swfupload/swfupload.swf",
+
+            //we can not put any vars into the url for complicated reasons, but we can put them into the post...
+            upload_url: "' . $host . $admin . 'index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
+            post_params: {
+            		"option" : "com_biblestudy",
+           		"controller" : "Mediafile",
+            		"task" : "upflash",
+            		"' . $session->getName() . '" : "' . $session->getId() . '",
+           		"format" : "raw"
+           	},
+            //you need to put the session and the "format raw" in there, the other ones are what you would normally put in the url
+            file_size_limit : "' . $maxupload . '",
+            //client side file checking is for usability only, you need to check server side for security
+            file_types : "",
+            file_types_description : "All Files",
+            file_upload_limit : 100,
+            file_queue_limit : 10,
+            custom_settings :
+            {
+	    progressTarget : "fsUploadProgress",
+                    cancelButtonId : "btnCancel"
+            },
+            debug: false,
+
+           // Button settings
+            button_image_url: "' . $host . 'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
+          button_width: "86",
+          button_height: "33",
+            button_placeholder_id: "spanButtonPlaceHolder",
+            button_text: \'<span class="upbutton">' . JText::_('JBS_CMN_BROWSE') . '</span>\',
+            button_text_style: ".upbutton { font-size: 14px; margin-left: 15px;}",
+            button_text_left_padding: 5,
+            button_text_top_padding: 5,
+
+            // The event handler functions are defined in handlers.js
+            file_queued_handler : fileQueued,
+            file_queue_error_handler : fileQueueError,
+            file_dialog_complete_handler : fileDialogComplete,
+            upload_start_handler : uploadStart,
+            upload_progress_handler : uploadProgress,
+            upload_error_handler : uploadError,
+            upload_success_handler : uploadSuccess,
+            upload_complete_handler : uploadComplete,
+            queue_complete_handler : queueComplete     // Queue plugin event
+    };
+    swfu = new SWFUpload(settings);
+    };
+
+    ';
+
+		return $swfUploadHeadJs;
+	}
 
 	/**
 	 * Method to get temp file name from database
@@ -114,7 +122,7 @@ class JBSMUpload
 	public static function gettempfile()
 	{
 		$input = new JInput;
-        $temp = $input->get('flupfile', '', 'string');
+		$temp  = $input->get('flupfile', '', 'string');
 
 		return $temp;
 	}
@@ -126,8 +134,8 @@ class JBSMUpload
 	 */
 	public static function gettempfolder()
 	{
-		$abspath = JPATH_SITE;
-		$temp_folder = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+		$abspath     = JPATH_SITE;
+		$temp_folder = $abspath . DIRECTORY_SEPARATOR . 'media/com_biblestudy/tmp/';
 
 		return $temp_folder;
 	}
@@ -135,8 +143,8 @@ class JBSMUpload
 	/**
 	 * Method to get path variable
 	 *
-	 * @param    array  $url       message details.
-	 * @param    string $tempfile  Temp file path.
+	 * @param   array   $url       message details.
+	 * @param   string  $tempfile  Temp file path.
 	 * @param   string  $front     Front info
 	 *
 	 * @return    string
@@ -144,9 +152,10 @@ class JBSMUpload
 	public static function getpath($url, $tempfile, $front = '')
 	{
 		jimport('joomla.filesystem.file');
-        $input = new JInput;
-		$path = $input->get('upload_folder', '', 'int');
+		$input  = new JInput;
+		$path   = $input->get('upload_folder', '', 'int');
 		$server = $input->get('upload_server', '', 'int');
+
 		if ($server == '')
 		{
 			if ($tempfile)
@@ -154,13 +163,14 @@ class JBSMUpload
 				JFile::delete($tempfile);
 			}
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_NO_FOLDER');
+
 			if ($front)
 			{
-				JBSMUpload::setRedirect($url . $msg);
+				self::setRedirect($url . $msg);
 			}
 			else
 			{
-				JBSMUpload::setRedirect($url, $msg);
+				self::setRedirect($url, $msg);
 			}
 		}
 		$returnpath = $server . $path;
@@ -171,16 +181,16 @@ class JBSMUpload
 	/**
 	 * Method to delete temp file
 	 *
-	 * @param    string $tempfile  Temp file path.
+	 * @param   string  $tempfile  Temp file path.
 	 *
-	 * @return    bolean
+	 * @return    boolean
 	 */
 	public static function deletetempfile($tempfile)
 	{
 		$db = JFactory::getDBO();
 		jimport('joomla.filesystem.file');
 
-		// delete file
+		// Delete file
 		JFile::delete($tempfile);
 
 
@@ -190,13 +200,13 @@ class JBSMUpload
 	/**
 	 * Method to check upload file to see if it is allowed
 	 *
-	 * @param    array $file  File info
+	 * @param   array  $file  File info
 	 *
-	 * @return    bolean
+	 * @return    boolean
 	 */
 	public static function checkfile($file)
 	{
-		$allow = true;
+		$allow     = true;
 		$blacklist = array(".php", ".phtml", ".php3", ".php4", ".js", ".shtml", ".pl", ".py");
 
 		foreach ($blacklist as $ext)
@@ -213,8 +223,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param string   $tempfile tempfile location
-	 * @param    array $filename File info
+	 * @param   string   $tempfile  tempfile location
+	 * @param   object   $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -222,20 +232,21 @@ class JBSMUpload
 	{
 		jimport('joomla.filesystem.file');
 		$uploadmsg = '';
+
 		if ($filename->type == 1)
 		{
 			$uploadmsg = JText::_('JBS_MED_UPLOAD_FAILED_NOT_UPLOAD_THIS_FOLDER');
 		}
 		elseif ($filename->type == 2)
 		{
-			if (!$copy = JBSMUpload::ftp($tempfile, $filename, 1))
+			if (!$copy = self::ftp($tempfile, $filename, 1))
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');
 			}
 		}
 		elseif ($filename->type == 3)
 		{
-			if (!$copy = JBSMUpload::aws($tempfile, $filename, 1))
+			if (!$copy = self::aws($tempfile, $filename, 1))
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_AWS');
 			}
@@ -254,8 +265,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param array    $file     tempfile location
-	 * @param    array $filename File info
+	 * @param   array   $file      tempfile location
+	 * @param   object  $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -270,12 +281,13 @@ class JBSMUpload
 		}
 		elseif ($filename->type == 2)
 		{
-			$temp_folder = JBSMUpload::gettempfolder();
-			$tempfile = $temp_folder . $file['name'];
-			$uploadmsg = JBSMUpload::uploadftp($tempfile, $file);
+			$temp_folder = self::gettempfolder();
+			$tempfile    = $temp_folder . $file['name'];
+			$uploadmsg   = self::uploadftp($tempfile, $file);
+
 			if (!$uploadmsg)
 			{
-				if (!$copy = JBSMUpload::ftp($tempfile, $filename, 0))
+				if (!$copy = self::ftp($tempfile, $filename, 0))
 				{
 					$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');
 				}
@@ -285,12 +297,13 @@ class JBSMUpload
 		}
 		elseif ($filename->type == 3)
 		{
-			$temp_folder = JBSMUpload::gettempfolder();
-			$tempfile = $temp_folder . $file['name'];
-			$uploadmsg = JBSMUpload::uploadftp($tempfile, $file);
+			$temp_folder = self::gettempfolder();
+			$tempfile    = $temp_folder . $file['name'];
+			$uploadmsg   = self::uploadftp($tempfile, $file);
+
 			if (!$uploadmsg)
 			{
-				if (!$copy = JBSMUpload::aws($tempfile, $filename, 1))
+				if (!$copy = self::aws($tempfile, $filename, 1))
 				{
 					$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_AWS');
 				}
@@ -313,8 +326,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file
 	 *
-	 * @param    array $filename Destination file details.
-	 * @param    array $file     Source File details.
+	 * @param   object $filename  Destination file details.
+	 * @param   array  $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -333,8 +346,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file for ftp upload
 	 *
-	 * @param    array $filename Destination file details.
-	 * @param    array $file     Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -342,6 +355,7 @@ class JBSMUpload
 	{
 		$msg = '';
 		jimport('joomla.filesystem.file');
+
 		if (!JFILE::upload($file['tmp_name'], $filename))
 		{
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
@@ -353,31 +367,33 @@ class JBSMUpload
 	/**
 	 * Method to upload the file over ftp
 	 *
-	 * @param    array  $file     Source File details.
-	 * @param    array  $filename Destination file details.
-	 * @param    bolean $admin    Sets whether call is from Joomla admin or site.
+	 * @param   array    $file      Source File details.
+	 * @param   object   $filename  Destination file details.
+	 * @param   boolean  $admin     Sets whether call is from Joomla admin or site.
 	 *
-	 * @return    bolean
+	 * @return  boolean
 	 */
 	public static function ftp($file, $filename, $admin = 0)
 	{
 
-		$app = JFactory::getApplication();
-		$ftpsuccess = true;
+		$app         = JFactory::getApplication();
+		$ftpsuccess  = true;
 		$ftpsuccess1 = true;
 		$ftpsuccess2 = true;
 		$ftpsuccess3 = true;
 		$ftpsuccess4 = true;
+
 		// FTP access parameters
 		$host = $filename->ftphost;
-		$usr = $filename->ftpuser;
-		$pwd = $filename->ftppassword;
+		$usr  = $filename->ftpuser;
+		$pwd  = $filename->ftppassword;
 		$port = $filename->ftpport;
 
-		// file to move:
+		// File to move:
 		$local_file = $file;
-		$ftp_path = $filename->path;
-		// connect to FTP server (port 21)
+		$ftp_path   = $filename->path;
+
+		// Connect to FTP server (port 21)
 		if (!$conn_id = ftp_connect($host, $port))
 		{
 			if ($admin == 0)
@@ -387,7 +403,7 @@ class JBSMUpload
 			$ftpsuccess1 = false;
 		}
 
-		// send access parameters
+		// Send access parameters
 		if (!ftp_login($conn_id, $usr, $pwd))
 		{
 			if ($admin == 0)
@@ -397,12 +413,13 @@ class JBSMUpload
 			$ftpsuccess2 = false;
 		}
 
-		// turn on passive mode transfers (some servers need this)
-		// ftp_pasv ($conn_id, true);
-		// perform file upload
+		/* turn on passive mode transfers (some servers need this)
+		 ftp_pasv ($conn_id, true);
+		 perform file upload */
 		if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY))
 		{
 			$stop = 'stopped at ftp_put';
+
 			if ($admin == 0)
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error');
@@ -418,20 +435,7 @@ class JBSMUpload
 		// (because the "ftp_chmod" command is just available in PHP5+)
 		if (!function_exists('ftp_chmod'))
 		{
-
-			/**
-			 * FTP Chmod
-			 *
-			 * @param string $ftp_stream
-			 * @param string $mode
-			 * @param array  $filename
-			 *
-			 * @return \bolean|boolean
-			 */
-			function ftp_chmod($ftp_stream, $mode, $filename)
-			{
-				return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
-			}
+			return self::ftp_chmod($ftp_stream, $mode, $filename);
 
 		}
 
@@ -445,7 +449,7 @@ class JBSMUpload
 			$ftpsuccess4 = false;
 		}
 
-		// close the FTP stream
+		// Close the FTP stream
 		ftp_close($conn_id);
 
 		if (!$ftpsuccess1 || !$ftpsuccess2 || !$ftpsuccess3)
@@ -457,14 +461,28 @@ class JBSMUpload
 	}
 
 	/**
+	 * FTP Chmod
+	 *
+	 * @param   string  $ftp_stream  Ftp Stream
+	 * @param   string  $mode        Mode
+	 * @param   array   $filename    FileName
+	 *
+	 * @return boolean
+	 */
+	private static function ftp_chmod($ftp_stream, $mode, $filename)
+	{
+		return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
+	}
+
+	/**
 	 * Method to build filepath
 	 *
-	 * @param    array  $file     File details.
-	 * @param string    $type
-	 * @param int       $serverid
-	 * @param int       $folderid
-	 * @param    int    $path     The path id.
-	 * @param    bolean $flash    Sets whether this is a flash upload or normal php upload and chooses right path through function.
+	 * @param   array    $file      File details.
+	 * @param   string   $type      Type
+	 * @param   int      $serverid  Server ID
+	 * @param   int      $folderid  Folder Id
+	 * @param   int      $path      The path id.
+	 * @param   boolean  $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
 	 *
 	 * @return    array
 	 */
@@ -476,47 +494,75 @@ class JBSMUpload
 		$folderpath = JTable::getInstance('Folder', 'Table');
 		$folderpath->load($folderid);
 		//  $folder = $filepath->server_path.$folderpath->folderpath;
-		$folder = $folderpath->folderpath;
-		$filename->type = $filepath->type;
-		$filename->ftphost = $filepath->ftphost;
-		$filename->ftpuser = $filepath->ftpuser;
+		$folder                = $folderpath->folderpath;
+		$filename->type        = $filepath->type;
+		$filename->ftphost     = $filepath->ftphost;
+		$filename->ftpuser     = $filepath->ftpuser;
 		$filename->ftppassword = $filepath->ftppassword;
-		$filename->ftpport = $filepath->ftpport;
-		$filename->aws_key = $filepath->aws_key;
-		$filename->aws_secret = $filepath->aws_secret;
-		$filename->aws_bucket = $filepath->server_path . $folderpath->folderpath;
+		$filename->ftpport     = $filepath->ftpport;
+		$filename->aws_key     = $filepath->aws_key;
+		$filename->aws_secret  = $filepath->aws_secret;
+		$filename->aws_bucket  = $filepath->server_path . $folderpath->folderpath;
 
-		//sanitise folder
-		//remove last / if present from folder
+		// Sanitise folder
+		// Remove last / if present from folder
 
 		$last1 = substr($folder, -1);
+
 		if ($last1 == '/')
 		{
 			$folder = substr_replace($folder, "", -1);
 		}
 
-		//remove first / if present from folder
+		// Remove first / if present from folder
 
 		$first = substr($folder, 0, 1);
+
 		if ($first == '/')
 		{
 			$folder = substr_replace($folder, '', 0, 1);
 		}
 
-		//   $pre = PIHelperadmin::buildprefix($type, $media, $id);
-		//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
-		$badchars = array(' ', '\'', '"', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~',
-			'?', '>', '<', ',', '|', '\\', ';', '&', '_and_');
+		// This removes any characters that might cause headaches to browsers. This also does the same thing in the model
+		$badchars = array(
+			' ',
+			'\'',
+			'"',
+			'`',
+			'@',
+			'^',
+			'!',
+			'#',
+			'$',
+			'%',
+			'*',
+			'(',
+			')',
+			'[',
+			']',
+			'{',
+			'}',
+			'~',
+			'?',
+			'>',
+			'<',
+			',',
+			'|',
+			'\\',
+			';',
+			'&',
+			'_and_'
+		);
 
 		if ($flash == 0)
 		{
-			$file['name'] = str_replace($badchars, '_', $file['name']);
+			$file['name']   = str_replace($badchars, '_', $file['name']);
 			$filename->file = JFILE::makeSafe($file['name']);
 		}
 
 		if ($flash == 1)
 		{
-			$file = str_replace($badchars, '_', $file);
+			$file           = str_replace($badchars, '_', $file);
 			$filename->file = JFILE::makeSafe($file);
 		}
 		if ($filename->type == 2)
@@ -526,7 +572,6 @@ class JBSMUpload
 		else
 		{
 			$filename->path = JPATH_SITE . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename->file;
-			//   $filename->path =  $folder . '/' . $filename->file;
 		}
 
 		return $filename;
@@ -535,23 +580,23 @@ class JBSMUpload
 	/**
 	 * AWS
 	 *
-	 * @param string $file
-	 * @param string $filename
-	 * @param string $admin
+	 * @param   string  $file      File
+	 * @param   object  $filename  FileName
+	 * @param   int     $admin     Admin
 	 *
 	 * @return boolean
 	 */
 	public static function aws($file, $filename, $admin = 0)
 	{
-		$app = JFactory::getApplication();
-		$awssuccess = true;
+		$app         = JFactory::getApplication();
+		$awssuccess  = true;
 		$awssuccess5 = true;
 		$awssuccess1 = true;
 		$awssuccess2 = true;
 		$awssuccess3 = true;
 		$awssuccess4 = true;
-		$aws_key = $filename->aws_key;
-		$aws_secret = $filename->aws_secret;
+		$aws_key     = $filename->aws_key;
+		$aws_secret  = $filename->aws_secret;
 
 		$source_file = $file; // file to upload to S3
 
@@ -594,6 +639,7 @@ class JBSMUpload
 		else
 		{
 			$file_data = file_get_contents($source_file);
+
 			if ($file_data == false)
 			{
 				if ($admin == 0)
@@ -606,8 +652,9 @@ class JBSMUpload
 			{
 
 
-				// opening HTTP connection to Amazon S3
+				// Opening HTTP connection to Amazon S3
 				$fp = fsockopen("s3.amazonaws.com", 80, $errno, $errstr, 30);
+
 				if (!$fp)
 				{
 					if ($admin == 0)
@@ -622,22 +669,24 @@ class JBSMUpload
 
 					// Creating or updating bucket
 
-					$dt = gmdate('r'); // GMT based timestamp
-					// preparing String to Sign    (see AWS S3 Developer Guide)
+					// GMT based timestamp
+					$dt = gmdate('r');
+
+					// Preparing String to Sign    (see AWS S3 Developer Guide)
 					$string2sign = "PUT
 
 
         {$dt}
         /{$aws_bucket}";
 
-					// preparing HTTP PUT query
+					// Preparing HTTP PUT query
 					$query = "PUT /{$aws_bucket} HTTP/1.1
         Host: s3.amazonaws.com
         Connection: keep-alive
         Date: $dt
         Authorization: AWS {$aws_key}:" . JBSMUpload::amazon_hmac($string2sign, $aws_secret) . "\n\n";
 
-					$resp = JBSMUpload::sendREST($fp, $query);
+					$resp = self::sendREST($fp, $query);
 					if (strpos($resp, '<Error>') !== false)
 					{
 						if ($admin == 0)
@@ -648,12 +697,13 @@ class JBSMUpload
 					}
 					else
 					{
-						// done
-						// Uploading object
+						// Done, Uploading object
 						$file_length = strlen($file_data); // for Content-Length HTTP field
 
-						$dt = gmdate('r'); // GMT based timestamp
-						// preparing String to Sign    (see AWS S3 Developer Guide)
+						// GMT based timestamp
+						$dt = gmdate('r');
+
+						// Preparing String to Sign    (see AWS S3 Developer Guide)
 						$string2sign = "PUT
 
         {$file_type}
@@ -661,7 +711,7 @@ class JBSMUpload
         x-amz-acl:public-read
         /{$aws_bucket}/{$aws_object}";
 
-						// preparing HTTP PUT query
+						// Preparing HTTP PUT query
 						$query = "PUT /{$aws_bucket}/{$aws_object} HTTP/1.1
         Host: s3.amazonaws.com
         x-amz-acl: public-read
@@ -669,10 +719,11 @@ class JBSMUpload
         Content-Type: {$file_type}
         Content-Length: {$file_length}
         Date: $dt
-        Authorization: AWS {$aws_key}:" . JBSMUpload::amazon_hmac($string2sign, $aws_secret) . "\n\n";
+        Authorization: AWS {$aws_key}:" . self::amazon_hmac($string2sign, $aws_secret) . "\n\n";
 						$query .= $file_data;
 
-						$resp = JBSMUpload::sendREST($fp, $query);
+						$resp = self::sendREST($fp, $query);
+
 						if (strpos($resp, '<Error>') !== false)
 						{
 							if ($admin == 0)
@@ -699,21 +750,21 @@ class JBSMUpload
 	/**
 	 * Amazon HMAC
 	 *
-	 * @param string $stringToSign
-	 * @param string $aws_secret
+	 * @param   string  $stringToSign  Sign
+	 * @param   string  $aws_secret    Secret
 	 *
 	 * @return string
 	 */
 	public static function amazon_hmac($stringToSign, $aws_secret)
 	{
-		// helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
+		// Helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
 		if (!function_exists('binsha1'))
 		{
 
 			/**
 			 * BinSha1
 			 *
-			 * @param string $d
+			 * @param   string  $d  ?
 			 *
 			 * @return string
 			 */
@@ -749,9 +800,9 @@ class JBSMUpload
 	/**
 	 * Send Rest
 	 *
-	 * @param string $fp
-	 * @param string $q
-	 * @param string $debug
+	 * @param   string   $fp     ?
+	 * @param   string   $q      ?
+	 * @param   boolean  $debug  debug
 	 *
 	 * @return string
 	 */
@@ -763,11 +814,13 @@ class JBSMUpload
 		}
 
 		fwrite($fp, $q);
-		$r = '';
+		$r            = '';
 		$check_header = true;
+
 		while (!feof($fp))
 		{
 			$tr = fgets($fp, 256);
+
 			if ($debug)
 			{
 				echo "\nRESPONSE<<{$tr}>>";
@@ -776,7 +829,7 @@ class JBSMUpload
 
 			if (($check_header) && (strpos($r, "\r\n\r\n") !== false))
 			{
-				// if content-length == 0, return query result
+				// If content-length == 0, return query result
 				if (strpos($r, 'Content-Length: 0') !== false)
 				{
 					return $r;

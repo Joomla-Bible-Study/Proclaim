@@ -1,530 +1,545 @@
 <?php
-
 /**
- * Teacher Helper
- *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-JLoader::register('jbsImages', dirname(__FILE__) . '/lib/biblestudy.images.class.php');
-//JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
-JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
+
+JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
+JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
+JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
 
 /**
- * Get Teacher
+ * Class for Teachers Helper
  *
- * @param object $params
- * @param int    $id
- * @param object $admin_params
- *
- * @return string
+ * @package  BibleStudy.Site
+ * @since    8.0.0
  */
-function getTeacher($params, $id, $admin_params)
+class JBSMTeacher
 {
-	$mainframe   = JFactory::getApplication();
-	$input       = new JInput;
-	$option      = $input->get('option', '', 'cmd');
-	$JViewLegacy = new JViewLegacy();
-	$JViewLegacy->loadHelper('image');
-	$teacher    = null;
-	$teacherid  = null;
-	$teacherids = new stdClass();
-	$t          = $params->get('teachertemplateid');
-	if (!$t)
+	/**
+	 * Get Teacher
+	 *
+	 * @param   object  $params        Item Params
+	 * @param   int     $id            Item ID
+	 * @param   object  $admin_params  Admin Params
+	 *
+	 * @return string
+	 */
+	public function getTeacher($params, $id, $admin_params)
 	{
-		$t = $input->get('t', 1, 'int');
-	}
-	$viewtype = $input->get('view');
-	if ($viewtype == 'sermons')
-	{
-		$teacherid  = $params->get('listteachers');
-		$teacherids = explode(",", $params->get('listteachers'));
-	}
-	if ($viewtype == 'sermon' && $id)
-	{
-		$teacherids->id = $id;
-	}
-	$teacher = '<table id = "teacher"><tr>';
-	if (!isset($teacherids))
-	{
+		$mainframe   = JFactory::getApplication();
+		$input       = new JInput;
+		$option      = $input->get('option', '', 'cmd');
+		$JViewLegacy = new JViewLegacy;
+		$JViewLegacy->loadHelper('image');
+		$teacher    = null;
+		$teacherid  = null;
+		$teacherids = new stdClass;
+		$t          = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$t = $input->get('t', 1, 'int');
+		}
+		$viewtype = $input->get('view');
+
+		if ($viewtype == 'sermons')
+		{
+			$teacherid  = $params->get('listteachers');
+			$teacherids = explode(",", $params->get('listteachers'));
+		}
+		if ($viewtype == 'sermon' && $id)
+		{
+			$teacherids->id = $id;
+		}
+		$teacher = '<table id = "teacher"><tr>';
+
+		if (!isset($teacherids))
+		{
+			return $teacher;
+		}
+		foreach ($teacherids as $teachers)
+		{
+			$database = JFactory::getDBO();
+			$query    = 'SELECT * FROM #__bsms_teachers' .
+					'  WHERE id = ' . $teachers;
+			$database->setQuery($query);
+			$tresult = $database->loadObject();
+			$i_path  = null;
+
+			// Check to see if there is a teacher image, if not, skip this step
+			$images = new jbsImages;
+			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
+
+			if (!$image)
+			{
+				$image->path   = '';
+				$image->width  = 0;
+				$image->height = 0;
+			}
+			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+					. '" height="' . $image->height . '" alt="" /></td></tr>';
+
+			$teacher .= '<tr><td>';
+
+			if ($params->get('teacherlink') > 0)
+			{
+				$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+			}
+			$teacher .= $tresult->teachername;
+
+			if ($params->get('teacherlink') > 0)
+			{
+				$teacher .= '</a>';
+			}
+			$teacher .= '</td></tr></table></td>';
+		}
+		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
+		{
+			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
+		}
+		$teacher .= '</tr></table>';
+
 		return $teacher;
 	}
-	foreach ($teacherids as $teachers)
-	{
-		$database = JFactory::getDBO();
-		$query    = 'SELECT * FROM #__bsms_teachers' .
-				'  WHERE id = ' . $teachers;
-		$database->setQuery($query);
-		$tresult = $database->loadObject();
-		$i_path  = null;
-		//Check to see if there is a teacher image, if not, skip this step
-		$images = new jbsImages();
-		$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 
-		if (!$image)
+	/**
+	 * Get Teacher for LandingPage
+	 *
+	 * @param   object  $params        Item Params
+	 * @param   int     $id            Item ID
+	 * @param   object  $admin_params  Admin Params
+	 *
+	 * @return string
+	 */
+	public function getTeacherLandingPage($params, $id, $admin_params)
+	{
+		$input       = new JInput;
+		$mainframe   = JFactory::getApplication();
+		$db          = JFactory::getDBO();
+		$user        = JFactory::getUser();
+		$option      = $input->get('option', '', 'cmd');
+		$JViewLegacy = new JViewLegacy;
+		$JViewLegacy->loadHelper('image');
+		$JViewLegacy->loadHelper('helper');
+
+		$teacher   = null;
+		$teacherid = null;
+
+		$template        = $params->get('teachertemplateid', 1);
+		$limit           = $params->get('landingteacherslimit', 10000);
+		$teacheruselimit = $params->get('landingteachersuselimit', 0);
+		$menu            = $mainframe->getMenu();
+		$item            = $menu->getActive();
+		$registry        = new JRegistry;
+
+		if (isset($item->params))
 		{
-			$image->path   = '';
-			$image->width  = 0;
-			$image->height = 0;
+			$registry->loadString($item->params);
+			$m_params   = $registry;
+			$language   = $db->quote($item->language) . ',' . $db->quote('*');
+			$menu_order = $m_params->get('teachers_order');
 		}
-		$teacher .= '<td><table cellspacing ="0"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width . '" height="' . $image->height . '" alt="" /></td></tr>';
-
-		$teacher .= '<tr><td>';
-		if ($params->get('teacherlink') > 0)
+		else
 		{
-			$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$menu_order = null;
 		}
-		$teacher .= $tresult->teachername;
-		if ($params->get('teacherlink') > 0)
+		if ($language == '*' || !$language)
 		{
-			$teacher .= '</a>';
+			$langlink = '';
 		}
-		$teacher .= '</td></tr></table></td>';
-	}
-	if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
-	{
-		$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
-	}
-	$teacher .= '</tr></table>';
-
-	return $teacher;
-}
-
-/**
- * Get Teacher for LandingPage
- *
- * @param objcet $params
- * @param int    $id
- * @param object $admin_params
- *
- * @return string
- */
-function getTeacherLandingPage($params, $id, $admin_params)
-{
-	$input       = new JInput;
-	$mainframe   = JFactory::getApplication();
-	$db          = JFactory::getDBO();
-	$user        = JFactory::getUser();
-	$option      = $input->get('option', '', 'cmd');
-	$JViewLegacy = new JViewLegacy();
-	$JViewLegacy->loadHelper('image');
-	$JViewLegacy->loadHelper('helper');
-
-	$teacher   = null;
-	$teacherid = null;
-
-	$template        = $params->get('teachertemplateid', 1);
-	$limit           = $params->get('landingteacherslimit', 10000);
-	$teacheruselimit = $params->get('landingteachersuselimit', 0);
-	$menu            = $mainframe->getMenu();
-	$item            = $menu->getActive();
-	$registry        = new JRegistry;
-	if (isset($item->params))
-	{
-		$registry->loadString($item->params);
-		$m_params   = $registry;
-		$language   = $db->quote($item->language) . ',' . $db->quote('*');
-		$menu_order = $m_params->get('teachers_order');
-	}
-	else
-	{
-		$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
-		$menu_order = null;
-	}
-	if ($language == '*' || !$language)
-	{
-		$langlink = '';
-	}
-	elseif ($language != '*' && isset($item->language))
-	{
-		$langlink = '&amp;filter.languages=' . $item->language;
-	}
-	if ($menu_order)
-	{
-		switch ($menu_order)
+		elseif ($language != '*' && isset($item->language))
 		{
-			case 2:
-				$order = 'ASC';
-				break;
-			case 1:
-				$order = 'DESC';
-				break;
+			$langlink = '&amp;filter.languages=' . $item->language;
 		}
-	}
-	else
-	{
-		$order = $params->get('landing_default_order', 'ASC');
-	}
-	// Compute view access permissions.
-	$groups = implode(',', $user->getAuthorisedViewLevels());
-
-	$query = $db->getQuery(true);
-	$query->select('distinct a.*')
-			->from('#__bsms_teachers a')
-			->select('b.access')
-			->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-			->where('b.language in (' . $language . ')')
-			->where('a.list_show = 1 and a.published = 1')
-			->where('b.access IN (' . $groups . ')')
-			->where('a.landing_show > 0')
-			->order('a.ordering, a.teachername ' . $order);
-
-	$db->setQuery($query);
-
-	$tresult = $db->loadObjectList();
-	$count   = count($tresult);
-	$t       = 0;
-	$i       = 0;
-
-	if ($count > 0):
-		$teacher = "\n" . '<table class="landing_table" width="100%"><tr>';
-		$showdiv = 0;
-		switch ($teacheruselimit)
+		if ($menu_order)
 		{
-			case 0:
-				foreach ($tresult as $b)
-				{
-
-
-					if ($t >= $limit)
-					{
-						if ($showdiv < 1)
-						{
-							if ($i == 1)
-							{
-								$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-								$teacher .= "\n\t" . '</tr>';
-							}
-							;
-							if ($i == 2)
-							{
-								$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-								$teacher .= "\n\t" . '</tr>';
-							}
-							;
-
-							$teacher .= "\n" . '</table>';
-							$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
-							$teacher .= "\n" . '<table width = "100%" class="landing_table"><tr>';
-
-							$i       = 0;
-							$showdiv = 1;
-						}
-					}
-					$teacher .= "\n\t\t" . '<td class="landing_td">';
-
-					if ($params->get('linkto') == 0)
-					{
-						$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-					}
-					else
-					{
-
-						$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
-					}
-					;
-					$teacher .= $b->teachername;
-
-					$teacher .= '</a>';
-
-					$teacher .= '</td>';
-					$i++;
-					$t++;
-
-					if ($i == 3 && $t != $limit && $t != $count)
-					{
-						$teacher .= "\n\t" . '</tr><tr>';
-						$i = 0;
-					}
-					elseif ($i == 3 || $t == $count || $t == $limit)
-					{
-						$teacher .= "\n\t" . '</tr>';
-						$i = 0;
-					}
-				}
-				if ($i == 1)
-				{
-					$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-				}
-				;
-				if ($i == 2)
-				{
-					$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-				}
-				;
-
-				$teacher .= "\n" . '</table>' . "\n";
-
-				if ($showdiv == 1)
-				{
-
-					$teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
-					$showdiv = 2;
-				}
-				$teacher .= '<div class="landing_separator"></div>';
-				break;
-
-			case 1:
-
-				$teacher = '<div class="landingtable" style="display:inline;">';
-				foreach ($tresult as $b)
-				{
-					if ($b->landing_show == 1)
-					{
-						$teacher .= '<div class="landingrow">';
-						if ($params->get('linkto') == 0)
-						{
-							$teacher .= '<div class="landingcell"><a class="landinglink="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-						}
-						else
-						{
-
-							$teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
-						}
-						;
-						$teacher .= $b->teachername;
-
-						$teacher .= '</a></div></div>';
-					}
-				}
-				$teacher .= '</div>';
-				$teacher .= '<div id="showhideteachers" style="display:none;">';
-				foreach ($tresult as $b)
-				{
-					if ($b->landing_show == 2)
-					{
-						$teacher .= '<div class="landingrow">';
-						if ($params->get('linkto') == 0)
-						{
-							$teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template) . '&amp;filter_teacher=' . $b->id . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-						}
-						else
-						{
-
-							$teacher .= '<div class="landingcell"><a class="landinglink" href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
-						}
-						;
-						$teacher .= $b->teachername;
-
-						$teacher .= '</a></div></div>';
-					}
-				}
-
-				$teacher .= '</div>';
-				$teacher .= '<div class="landing_separator"></div>';
-				break;
-		}
-	else:
-		$teacher = '<div class="landing_separator"></div>';
-	endif;
-
-	return $teacher;
-}
-
-/**
- * Get TeacherList Exp
- *
- * @param object $row
- * @param object $params
- * @param string $oddeven
- * @param object $admin_params
- * @param object $template
- *
- * @return object
- */
-function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
-{
-	$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-	include_once($path1 . 'elements.php');
-	include_once($path1 . 'scripture.php');
-	include_once($path1 . 'custom.php');
-	$JViewLegacy = new JViewLegacy();
-	$JViewLegacy->loadHelper('image');
-	$images     = new jbsImages();
-	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
-
-	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-
-	$label = $params->get('teacher_templatecode');
-	$label = str_replace('{{teacher}}', $row->teachername, $label);
-	$label = str_replace('{{title}}', $row->title, $label);
-	$label = str_replace('{{phone}}', $row->phone, $label);
-	$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
-	$label = str_replace('{{information}}', $row->information, $label);
-	$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
-	$label = str_replace('{{short}}', $row->short, $label);
-	$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
-	$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id=' . $row->id . '&amp;t=' . $template), $label);
-
-	return $label;
-}
-
-/**
- * Get Teacher Details Exp
- *
- * @param object $row
- * @param object $params
- * @param object $template
- * @param object $admin_params
- *
- * @return object
- */
-function getTeacherDetailsExp($row, $params, $template, $admin_params)
-{
-	$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-	include_once($path1 . 'elements.php');
-	include_once($path1 . 'scripture.php');
-	include_once($path1 . 'custom.php');
-	$JViewLegacy = new JViewLegacy();
-	$JViewLegacy->loadHelper('image');
-
-
-	//Get the image folders and images
-	$images     = new jbsImages();
-	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
-
-	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-
-
-	$label = $params->get('teacher_detailtemplate');
-	$label = str_replace('{{teacher}}', $row->teachername, $label);
-	$label = str_replace('{{title}}', $row->title, $label);
-	$label = str_replace('{{phone}}', $row->phone, $label);
-	$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
-	$label = str_replace('{{information}}', $row->information, $label);
-	$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
-	$label = str_replace('{{short}}', $row->short, $label);
-	$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
-
-	// $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id='.$row->id .'&amp;t='.$template), $label);
-	return $label;
-}
-
-/**
- * Get Teacher Studies Exp
- *
- * @param int    $id
- * @param object $params
- * @param object $admin_params
- * @param object $template
- *
- * @return string
- */
-function getTeacherStudiesExp($id, $params, $admin_params, $template)
-{
-
-
-	JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
-	$path2 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR;
-
-
-	$limit   = '';
-	$input   = new JInput;
-	$nolimit = $input->get('nolimit', '', 'int');
-
-	if ($params->get('series_detail_limit'))
-	{
-		$limit = ' LIMIT ' . $params->get('series_detail_limit');
-	}
-	if ($nolimit == 1)
-	{
-		$limit = '';
-	}
-	$db    = JFactory::getDBO();
-	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = ' . $id;
-	$db->setQuery($query);
-	$allrows = $db->loadObjectList();
-	$rows    = $db->getAffectedRows();
-
-	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-			. ' FROM #__bsms_studies'
-			. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-			. ' where #__bsms_teachers.id = ' . $id . ' AND #__bsms_studies.published = 1 '
-			. ' GROUP BY #__bsms_studies.id'
-			. ' order by studydate desc'
-			. $limit;
-
-	$db->setQuery($query);
-	$items = $db->loadObjectList();
-
-	//check permissions for this view by running through the records and removing those the user doesn't have permission to see
-
-
-	$user   = JFactory::getUser();
-	$groups = $user->getAuthorisedViewLevels();
-	$count  = count($items);
-
-	for ($i = 0; $i < $count; $i++)
-	{
-
-		if ($items[$i]->access > 1)
-		{
-			if (!in_array($items[$i]->access, $groups))
+			switch ($menu_order)
 			{
-				unset($items[$i]);
+				case 2:
+					$order = 'ASC';
+					break;
+				case 1:
+					$order = 'DESC';
+					break;
 			}
 		}
-	}
-
-	$studieslimit = $params->get('studies', 10);
-
-	$studies = '';
-
-	switch ($params->get('wrapcode'))
-	{
-		case '0':
-			//Do Nothing
-			break;
-		case 'T':
-			//Table
-			$studies .= '<table id="bsms_studytable" width="100%">';
-			break;
-		case 'D':
-			//DIV
-			$studies .= '<div>';
-			break;
-	}
-
-	$params->get('headercode');
-	$j = 0;
-	foreach ($items AS $row)
-	{
-		if ($j > $studieslimit)
+		else
 		{
-			break;
+			$order = $params->get('landing_default_order', 'ASC');
 		}
-		$studies .= JBSMListing::getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));
-		$j++;
+		// Compute view access permissions.
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
+		$query = $db->getQuery(true);
+		$query->select('distinct a.*')
+				->from('#__bsms_teachers a')
+				->select('b.access')
+				->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
+				->where('b.language in (' . $language . ')')
+				->where('a.list_show = 1 and a.published = 1')
+				->where('b.access IN (' . $groups . ')')
+				->where('a.landing_show > 0')
+				->order('a.ordering, a.teachername ' . $order);
+
+		$db->setQuery($query);
+
+		$tresult = $db->loadObjectList();
+		$count   = count($tresult);
+		$t       = 0;
+		$i       = 0;
+
+		if ($count > 0)
+		{
+			$teacher = "\n" . '<table class="landing_table" width="100%"><tr>';
+			$showdiv = 0;
+
+			switch ($teacheruselimit)
+			{
+				case 0:
+					foreach ($tresult as $b)
+					{
+
+
+						if ($t >= $limit)
+						{
+							if ($showdiv < 1)
+							{
+								if ($i == 1)
+								{
+									$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+									$teacher .= "\n\t" . '</tr>';
+								}
+								if ($i == 2)
+								{
+									$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
+									$teacher .= "\n\t" . '</tr>';
+								}
+
+								$teacher .= "\n" . '</table>';
+								$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
+								$teacher .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+
+								$i       = 0;
+								$showdiv = 1;
+							}
+						}
+						$teacher .= "\n\t\t" . '<td class="landing_td">';
+
+						if ($params->get('linkto') == 0)
+						{
+							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
+									. '&amp;filter_teacher=' . $b->id
+									. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+						}
+						else
+						{
+
+							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
+						}
+						$teacher .= $b->teachername;
+
+						$teacher .= '</a>';
+
+						$teacher .= '</td>';
+						$i++;
+						$t++;
+
+						if ($i == 3 && $t != $limit && $t != $count)
+						{
+							$teacher .= "\n\t" . '</tr><tr>';
+							$i = 0;
+						}
+						elseif ($i == 3 || $t == $count || $t == $limit)
+						{
+							$teacher .= "\n\t" . '</tr>';
+							$i = 0;
+						}
+					}
+					if ($i == 1)
+					{
+						$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
+					}
+
+					if ($i == 2)
+					{
+						$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
+					}
+
+					$teacher .= "\n" . '</table>' . "\n";
+
+					if ($showdiv == 1)
+					{
+
+						$teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
+						$showdiv = 2;
+					}
+					$teacher .= '<div class="landing_separator"></div>';
+					break;
+
+				case 1:
+
+					$teacher = '<div class="landingtable" style="display:inline;">';
+
+					foreach ($tresult as $b)
+					{
+						if ($b->landing_show == 1)
+						{
+							$teacher .= '<div class="landingrow">';
+
+							if ($params->get('linkto') == 0)
+							{
+								$teacher .= '<div class="landingcell"><a class="landinglink="'
+										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
+										. '&amp;filter_teacher=' . $b->id
+										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+							}
+							else
+							{
+
+								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+							}
+							$teacher .= $b->teachername;
+
+							$teacher .= '</a></div></div>';
+						}
+					}
+					$teacher .= '</div>';
+					$teacher .= '<div id="showhideteachers" style="display:none;">';
+
+					foreach ($tresult as $b)
+					{
+
+						if ($b->landing_show == 2)
+						{
+							$teacher .= '<div class="landingrow">';
+
+							if ($params->get('linkto') == 0)
+							{
+								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
+										. '&amp;filter_teacher=' . $b->id
+										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+							}
+							else
+							{
+
+								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+							}
+							$teacher .= $b->teachername;
+
+							$teacher .= '</a></div></div>';
+						}
+					}
+
+					$teacher .= '</div>';
+					$teacher .= '<div class="landing_separator"></div>';
+					break;
+			}
+		}
+		else
+		{
+			$teacher = '<div class="landing_separator"></div>';
+		}
+
+		return $teacher;
 	}
 
-	switch ($params->get('wrapcode'))
+	/**
+	 * Get TeacherList Exp
+	 *
+	 * @param   object  $row           Table info
+	 * @param   object  $params        Item Params
+	 * @param   string  $oddeven       Odd Even
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
+	 *
+	 * @return object
+	 */
+	public function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	{
-		case '0':
-			//Do Nothing
-			break;
-		case 'T':
-			//Table
-			$studies .= '</table>';
-			break;
-		case 'D':
-			//DIV
-			$studies .= '</div>';
-			break;
+		$JViewLegacy = new JViewLegacy;
+		$JViewLegacy->loadHelper('image');
+		$images     = new jbsImages;
+		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
+
+		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+
+		$label = $params->get('teacher_templatecode');
+		$label = str_replace('{{teacher}}', $row->teachername, $label);
+		$label = str_replace('{{title}}', $row->title, $label);
+		$label = str_replace('{{phone}}', $row->phone, $label);
+		$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
+		$label = str_replace('{{information}}', $row->information, $label);
+		$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
+		$label = str_replace('{{short}}', $row->short, $label);
+		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
+		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id=' . $row->id . '&amp;t=' . $template), $label);
+
+		return $label;
 	}
 
-	return $studies;
+	/**
+	 * Get Teacher Details Exp
+	 *
+	 * @param   object  $row           Table Row
+	 * @param   object  $params        Item Params
+	 * @param   object  $template      Template
+	 * @param   object  $admin_params  Admin Params
+	 *
+	 * @return object
+	 */
+	public function getTeacherDetailsExp($row, $params, $template, $admin_params)
+	{
+		$JViewLegacy = new JViewLegacy;
+		$JViewLegacy->loadHelper('image');
+
+		// Get the image folders and images
+		$images     = new jbsImages;
+		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
+
+		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+
+
+		$label = $params->get('teacher_detailtemplate');
+		$label = str_replace('{{teacher}}', $row->teachername, $label);
+		$label = str_replace('{{title}}', $row->title, $label);
+		$label = str_replace('{{phone}}', $row->phone, $label);
+		$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
+		$label = str_replace('{{information}}', $row->information, $label);
+		$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
+		$label = str_replace('{{short}}', $row->short, $label);
+		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
+
+		return $label;
+	}
+
+	/**
+	 * Get Teacher Studies Exp
+	 *
+	 * @param   int     $id            Item ID
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
+	 * @param   object  $template      Template
+	 *
+	 * @return string
+	 *
+	 * @todo need to re-wright the sql.
+	 */
+	public function getTeacherStudiesExp($id, $params, $admin_params, $template)
+	{
+		$limit   = '';
+		$input   = new JInput;
+		$nolimit = $input->get('nolimit', '', 'int');
+
+		if ($params->get('series_detail_limit'))
+		{
+			$limit = ' LIMIT ' . $params->get('series_detail_limit');
+		}
+		if ($nolimit == 1)
+		{
+			$limit = '';
+		}
+		$db    = JFactory::getDBO();
+		$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = ' . $id;
+		$db->setQuery($query);
+		$allrows = $db->loadObjectList();
+		$rows    = $db->getAffectedRows();
+
+		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
+				. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+				. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+				. ' FROM #__bsms_studies'
+				. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
+				. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+				. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+				. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+				. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+				. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+				. ' where #__bsms_teachers.id = ' . $id . ' AND #__bsms_studies.published = 1 '
+				. ' GROUP BY #__bsms_studies.id'
+				. ' order by studydate desc'
+				. $limit;
+
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+
+
+		$user   = JFactory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
+		$count  = count($items);
+
+		for ($i = 0; $i < $count; $i++)
+		{
+
+			if ($items[$i]->access > 1)
+			{
+				if (!in_array($items[$i]->access, $groups))
+				{
+					unset($items[$i]);
+				}
+			}
+		}
+
+		$studieslimit = $params->get('studies', 10);
+
+		$studies = '';
+
+		switch ($params->get('wrapcode'))
+		{
+			case '0':
+				// Do Nothing
+				break;
+			case 'T':
+				// Table
+				$studies .= '<table id="bsms_studytable" width="100%">';
+				break;
+			case 'D':
+				// DIV
+				$studies .= '<div>';
+				break;
+		}
+
+		$params->get('headercode');
+		$j = 0;
+
+		foreach ($items AS $row)
+		{
+			if ($j > $studieslimit)
+			{
+				break;
+			}
+			$studies .= JBSMListing::getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));
+			$j++;
+		}
+
+		switch ($params->get('wrapcode'))
+		{
+			case '0':
+				// Do Nothing
+				break;
+			case 'T':
+				// Table
+				$studies .= '</table>';
+				break;
+			case 'D':
+				// DIV
+				$studies .= '</div>';
+				break;
+		}
+
+		return $studies;
+	}
 }

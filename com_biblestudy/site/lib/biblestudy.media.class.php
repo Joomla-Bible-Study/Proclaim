@@ -150,7 +150,7 @@ class jbsMedia
 		} // End of foreach mediaids
 		// End of row holding media image/link
 		$table .= '</tr>';
-
+		$JBSMElements = new JBSMElements;
 		// This is the last part of the table where we see if we need to display the file size
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
@@ -161,13 +161,13 @@ class jbsMedia
 				switch ($params->get('show_filesize'))
 				{
 					case 1:
-						$filesize = JBSMElements::getFilesize($media->size);
+						$filesize = $JBSMElements->getFilesize($media->size);
 						break;
 					case 2:
 						$filesize = $media->comment;
 						break;
 					case 3:
-						if ($media->comment ? $filesize = $media->comment : $filesize = JBSMElements::getFilesize($media->size))
+						if ($media->comment ? $filesize = $media->comment : $filesize = $JBSMElements->getFilesize($media->size))
 						{
 						}
 						break;
@@ -192,7 +192,7 @@ class jbsMedia
 	 *
 	 * @return object
 	 */
-	public static function getMediaid($id)
+	public function getMediaid($id)
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -212,7 +212,7 @@ class jbsMedia
 	 *
 	 * @return object|boolean
 	 */
-	public static function getMediaRows($id)
+	public function getMediaRows($id)
 	{
 		if (!$id)
 		{
@@ -264,7 +264,7 @@ class jbsMedia
 	 *
 	 * @return boolean
 	 */
-	public static function getMediaRows2($id)
+	public function getMediaRows2($id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
@@ -307,7 +307,7 @@ class jbsMedia
 	 *
 	 * @return object
 	 */
-	public static function getPlayerAttributes($admin_params, $params, $itemparams, $media)
+	public function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 	{
 		$player               = new stdClass;
 		$player->playerwidth  = $params->get('player_width');
@@ -415,12 +415,13 @@ class jbsMedia
 	 * @return string
 	 * FIXME ASAP getDuration is not working.
 	 */
-	function getDocman($media, $image)
+	public function getDocman($media, $image)
 	{
 		$src      = JURI::base() . $image->path;
 		$height   = $image->height;
 		$width    = $image->width;
-		$filesize = JBSMElements::getFilesize($media->size);
+		$JBSMElements = new JBSMElements;
+		$filesize = $JBSMElements->getFilesize($media->size);
 		$docman   = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
 				. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
@@ -438,7 +439,7 @@ class jbsMedia
 	 *
 	 * @return string
 	 */
-	public static function getArticle($media, $image)
+	public function getArticle($media, $image)
 	{
 
 		$src     = JURI::base() . $image->path;
@@ -460,7 +461,7 @@ class jbsMedia
 	 *
 	 * @return string
 	 */
-	public static function getVirtuemart($media, $params, $image)
+	public function getVirtuemart($media, $params, $image)
 	{
 		$src    = JURI::base() . $image->path;
 		$height = $image->height;
@@ -494,15 +495,15 @@ class jbsMedia
 		$lightcolor  = $params->get('lightcolor', '0x000000');
 		$screencolor = $params->get('screencolor', '0xFFFFFF');
 		$template    = $input->get('t', '1', 'int');
-
+		$JBSMElements = new JBSMElements;
 		// Here we get more information about the particular media file
-		$filesize = JBSMElements::getFilesize($media->size);
+		$filesize = $JBSMElements->getFilesize($media->size);
 		/**
 		 * @todo There is no $row referenced to this function so this will fail
 		 */
 
 		// This one IS needed
-		$duration = JBSMElements::getDuration($params, $media);
+		$duration = $JBSMElements->getDuration($params, $media);
 
 		$mimetype = $media->mimetext;
 		$path     = $media->spath . $media->fpath . $media->filename;
@@ -672,7 +673,7 @@ class jbsMedia
 	 *
 	 * @return string
 	 */
-	public static function getAVmediacode($mediacode, $media)
+	public function getAVmediacode($mediacode, $media)
 	{
 		$bracketpos   = strpos($mediacode, '}');
 		$bracketend   = strpos($mediacode, '{', $bracketpos);
@@ -698,7 +699,7 @@ class jbsMedia
 	 *
 	 * @return boolean
 	 */
-	public static function hitPlay($id)
+	public function hitPlay($id)
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);

@@ -19,6 +19,7 @@ JLoader::register('JBSMFilter', BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARA
  */
 class ShowScripture
 {
+	public $link;
 
 	/**
 	 * Passage Build system
@@ -94,7 +95,7 @@ class ShowScripture
 	 *
 	 * @return string
 	 */
-	function getShow($row, $reference)
+	public function getShow($row, $reference)
 	{
 		$passage = '<div class = "passage">' . file_get_contents($this->link) . '</div>';
 

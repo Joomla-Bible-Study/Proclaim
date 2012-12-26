@@ -44,6 +44,7 @@ class JBSMPodcast
 		$db->setQuery($query);
 		$podids = $db->loadObjectList();
 		$custom = new JBSMCustom;
+		$JBSMElements = new JBSMElements;
 		$title  = null;
 
 		// Now iterate through the podcasts, and pick up the mediafiles
@@ -151,7 +152,7 @@ class JBSMPodcast
 						$esv          = 0;
 						$scripturerow = 1;
 						$episode->id  = $episode->study_id;
-						$scripture    = JBSMElements::getScripture($params, $episode, $esv, $scripturerow);
+						$scripture    = $JBSMElements->getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
 
 						if (!$episode->size)
