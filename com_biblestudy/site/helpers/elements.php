@@ -10,7 +10,6 @@ defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
-JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
 
 // ???? not sure if we need to load this ???
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
@@ -18,10 +17,10 @@ JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php
 /**
  * Class for Elements
  *
- * @package    BibleStudy.Site
- * @since      8.0.0
+ * @package  BibleStudy.Site
+ * @since    8.0.0
  */
-class JBSMElements
+class JBSMElements extends JBSAdmin
 {
 	/**
 	 * @var string
@@ -54,14 +53,14 @@ class JBSMElements
 				$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 				$esv                   = 0;
 				$scripturerow          = 1;
-				$elementid->element    = self::getScripture($params, $row, $esv, $scripturerow);
+				$elementid->element    = $this->getScripture($params, $row, $esv, $scripturerow);
 				break;
 			case 2:
 				$elementid->id         = 'scripture2';
 				$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 				$esv                   = 0;
 				$scripturerow          = 2;
-				$elementid->element    = self::getScripture($params, $row, $esv, $scripturerow);
+				$elementid->element    = $this->getScripture($params, $row, $esv, $scripturerow);
 				break;
 			case 3:
 				$elementid->id         = 'secondary';
@@ -71,7 +70,7 @@ class JBSMElements
 			case 4:
 				$elementid->id         = 'duration';
 				$elementid->headertext = JText::_('JBS_CMN_DURATION');
-				$elementid->element    = self::getDuration($params, $row);
+				$elementid->element    = $this->getDuration($params, $row);
 				break;
 			case 5:
 				$elementid->id         = 'title';
@@ -167,16 +166,16 @@ class JBSMElements
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
-				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
+				$elementid->element    = $this->getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 18:
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
 				$elementid->element    = '<table class="detailstable"><tbody><tr><td>';
-				$elementid->element .= self::getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
+				$elementid->element .= $this->getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
 				$textorpdf = 'pdf';
-				$elementid->element .= self::getTextlink(
+				$elementid->element .= $this->getTextlink(
 					$params,
 					$row,
 					$textorpdf,
@@ -188,17 +187,17 @@ class JBSMElements
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'pdf';
-				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
+				$elementid->element    = $this->getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = self::getMediaTable($params, $row, $admin_params);
+				$elementid->element    = $this->getMediaTable($params, $row, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
 				$elementid->headertext = JText::_('JBS_CMN_STORE');
-				$elementid->element    = self::getStore($params, $row);
+				$elementid->element    = $this->getStore($params, $row);
 				break;
 			case 23:
 				$elementid->id         = 'filesize';
@@ -210,7 +209,7 @@ class JBSMElements
 
 				$db->setQuery($query_media1);
 				$media1             = $db->loadObject();
-				$elementid->element = self::getFilesize($media1->size);
+				$elementid->element = $this->getFilesize($media1->size);
 				break;
 			case 25:
 				$elementid->id         = 'thumbnail';
@@ -787,10 +786,10 @@ class JBSMElements
 
 
 			// @todo - not sure how much of this is needed
-			$filesize = self::getFilesize($media->size);
+			$filesize = $this->getFilesize($media->size);
 
 			// This one IS needed
-			$duration = self::getDuration($params, $row);
+			$duration = $this->getDuration($params, $row);
 			$mimetype = $media->mimetext;
 			$src      = JURI::base() . $image->path;
 			$height   = $image->height;
@@ -919,15 +918,15 @@ class JBSMElements
 
 			if ($media->docMan_id > 0)
 			{
-				$media1_link = self::getDocman($media, $width, $height, $src, $duration, $filesize);
+				$media1_link = $this->getDocman($media, $width, $height, $src, $duration, $filesize);
 			}
 			if ($media->article_id > 0)
 			{
-				$media1_link = self::getArticle($media, $width, $height, $src);
+				$media1_link = $this->getArticle($media, $width, $height, $src);
 			}
 			if ($media->virtueMart_id > 0)
 			{
-				$media1_link = self::getVirtuemart($media, $width, $height, $src, $params);
+				$media1_link = $this->getVirtuemart($media, $width, $height, $src, $params);
 			}
 
 			// Here is where we begin to build the mediatable variable
@@ -981,13 +980,13 @@ class JBSMElements
 				switch ($params->get('show_filesize'))
 				{
 					case 1:
-						$filesize = self::getFilesize($media->size);
+						$filesize = $this->getFilesize($media->size);
 						break;
 					case 2:
 						$filesize = $media->comment;
 						break;
 					case 3:
-						($media->comment ? $filesize = $media->comment : $filesize = self::getFilesize($media->size));
+						($media->comment ? $filesize = $media->comment : $filesize = $this->getFilesize($media->size));
 						break;
 				}
 

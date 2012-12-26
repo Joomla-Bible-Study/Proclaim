@@ -17,7 +17,7 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
  * @package  BibleStudy.Site
  * @since    8.0.0
  * */
-class JBSMCustom
+class JBSMCustom extends JBSMElements
 {
 	/**
 	 * Get Custom page
@@ -31,7 +31,7 @@ class JBSMCustom
 	 *
 	 * @return object
 	 */
-	public static function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
+	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
 	{
 		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
@@ -44,7 +44,7 @@ class JBSMCustom
 
 			if (!$rowid)
 			{
-				$rowid = self::getElementnumber($subcustom);
+				$rowid = $this->getElementnumber($subcustom);
 			}
 			$elementid   = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
 			$custom      = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));

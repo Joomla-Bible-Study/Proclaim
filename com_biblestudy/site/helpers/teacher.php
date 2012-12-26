@@ -10,9 +10,6 @@ defined('_JEXEC') or die;
 
 JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
 
 /**
  * Class for Teachers Helper
@@ -20,7 +17,7 @@ JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
  * @package  BibleStudy.Site
  * @since    8.0.0
  */
-class JBSMTeacher
+class JBSMTeacher extends JBSMListing
 {
 	/**
 	 * Get Teacher
@@ -105,251 +102,6 @@ class JBSMTeacher
 			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
 		$teacher .= '</tr></table>';
-
-		return $teacher;
-	}
-
-	/**
-	 * Get Teacher for LandingPage
-	 *
-	 * @param   object  $params        Item Params
-	 * @param   int     $id            Item ID
-	 * @param   object  $admin_params  Admin Params
-	 *
-	 * @return string
-	 */
-	public function getTeacherLandingPage($params, $id, $admin_params)
-	{
-		$input       = new JInput;
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
-		$user        = JFactory::getUser();
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
-
-		$teacher   = null;
-		$teacherid = null;
-
-		$template        = $params->get('teachertemplateid', 1);
-		$limit           = $params->get('landingteacherslimit', 10000);
-		$teacheruselimit = $params->get('landingteachersuselimit', 0);
-		$menu            = $mainframe->getMenu();
-		$item            = $menu->getActive();
-		$registry        = new JRegistry;
-
-		if (isset($item->params))
-		{
-			$registry->loadString($item->params);
-			$m_params   = $registry;
-			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('teachers_order');
-		}
-		else
-		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
-			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
-		}
-		if ($menu_order)
-		{
-			switch ($menu_order)
-			{
-				case 2:
-					$order = 'ASC';
-					break;
-				case 1:
-					$order = 'DESC';
-					break;
-			}
-		}
-		else
-		{
-			$order = $params->get('landing_default_order', 'ASC');
-		}
-		// Compute view access permissions.
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-
-		$query = $db->getQuery(true);
-		$query->select('distinct a.*')
-				->from('#__bsms_teachers a')
-				->select('b.access')
-				->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-				->where('b.language in (' . $language . ')')
-				->where('a.list_show = 1 and a.published = 1')
-				->where('b.access IN (' . $groups . ')')
-				->where('a.landing_show > 0')
-				->order('a.ordering, a.teachername ' . $order);
-
-		$db->setQuery($query);
-
-		$tresult = $db->loadObjectList();
-		$count   = count($tresult);
-		$t       = 0;
-		$i       = 0;
-
-		if ($count > 0)
-		{
-			$teacher = "\n" . '<table class="landing_table" width="100%"><tr>';
-			$showdiv = 0;
-
-			switch ($teacheruselimit)
-			{
-				case 0:
-					foreach ($tresult as $b)
-					{
-
-
-						if ($t >= $limit)
-						{
-							if ($showdiv < 1)
-							{
-								if ($i == 1)
-								{
-									$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-									$teacher .= "\n\t" . '</tr>';
-								}
-								if ($i == 2)
-								{
-									$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-									$teacher .= "\n\t" . '</tr>';
-								}
-
-								$teacher .= "\n" . '</table>';
-								$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
-								$teacher .= "\n" . '<table width = "100%" class="landing_table"><tr>';
-
-								$i       = 0;
-								$showdiv = 1;
-							}
-						}
-						$teacher .= "\n\t\t" . '<td class="landing_td">';
-
-						if ($params->get('linkto') == 0)
-						{
-							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-									. '&amp;filter_teacher=' . $b->id
-									. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-						}
-						else
-						{
-
-							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
-						}
-						$teacher .= $b->teachername;
-
-						$teacher .= '</a>';
-
-						$teacher .= '</td>';
-						$i++;
-						$t++;
-
-						if ($i == 3 && $t != $limit && $t != $count)
-						{
-							$teacher .= "\n\t" . '</tr><tr>';
-							$i = 0;
-						}
-						elseif ($i == 3 || $t == $count || $t == $limit)
-						{
-							$teacher .= "\n\t" . '</tr>';
-							$i = 0;
-						}
-					}
-					if ($i == 1)
-					{
-						$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-					}
-
-					if ($i == 2)
-					{
-						$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-					}
-
-					$teacher .= "\n" . '</table>' . "\n";
-
-					if ($showdiv == 1)
-					{
-
-						$teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
-						$showdiv = 2;
-					}
-					$teacher .= '<div class="landing_separator"></div>';
-					break;
-
-				case 1:
-
-					$teacher = '<div class="landingtable" style="display:inline;">';
-
-					foreach ($tresult as $b)
-					{
-						if ($b->landing_show == 1)
-						{
-							$teacher .= '<div class="landingrow">';
-
-							if ($params->get('linkto') == 0)
-							{
-								$teacher .= '<div class="landingcell"><a class="landinglink="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-										. '&amp;filter_teacher=' . $b->id
-										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-							}
-							else
-							{
-
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
-							}
-							$teacher .= $b->teachername;
-
-							$teacher .= '</a></div></div>';
-						}
-					}
-					$teacher .= '</div>';
-					$teacher .= '<div id="showhideteachers" style="display:none;">';
-
-					foreach ($tresult as $b)
-					{
-
-						if ($b->landing_show == 2)
-						{
-							$teacher .= '<div class="landingrow">';
-
-							if ($params->get('linkto') == 0)
-							{
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-										. '&amp;filter_teacher=' . $b->id
-										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-							}
-							else
-							{
-
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
-							}
-							$teacher .= $b->teachername;
-
-							$teacher .= '</a></div></div>';
-						}
-					}
-
-					$teacher .= '</div>';
-					$teacher .= '<div class="landing_separator"></div>';
-					break;
-			}
-		}
-		else
-		{
-			$teacher = '<div class="landing_separator"></div>';
-		}
 
 		return $teacher;
 	}
@@ -521,7 +273,7 @@ class JBSMTeacher
 			{
 				break;
 			}
-			$studies .= JBSMListing::getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));
+			$studies .= $this->getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));
 			$j++;
 		}
 
