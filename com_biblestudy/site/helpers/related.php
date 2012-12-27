@@ -110,6 +110,7 @@ class relatedStudies
 		$sourcearray    = array();
 		$comparearray   = array();
 		$this->score    = null;
+
 		if (substr_count($source, ','))
 		{
 			$sourcearray   = explode(',', $source);

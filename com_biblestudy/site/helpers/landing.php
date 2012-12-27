@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/translated.php');
-JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
  * Class for JBSMLanding

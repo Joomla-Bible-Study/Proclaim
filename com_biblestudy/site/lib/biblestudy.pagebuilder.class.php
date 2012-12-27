@@ -16,7 +16,7 @@ JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 
 // @todo need to lok and see if image helper and biblestudy.images.class.php are both needed.
-JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 
@@ -46,7 +46,7 @@ class JBSPagebuilder
 	{
 
 		$item->tp_id = '1';
-		$images      = new jbsImages;
+		$images      = new JBSMImages;
 
 		// Media files image, links, download
 		$mids = $item->mids;
@@ -228,7 +228,7 @@ class JBSPagebuilder
 	 */
 	private function mediaBuilder($mediaids, $params, $admin_params)
 	{
-		$images        = new jbsImages;
+		$images        = new JBSMImages;
 		$mediaelements = new jbsMedia;
 
 		$db    = JFactory::getDBO();

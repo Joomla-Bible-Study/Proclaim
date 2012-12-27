@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 
 // Helper file - master list creater for study lists
-JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
 JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
@@ -1023,7 +1023,7 @@ class JBSMListing extends JBSMElements
 	public function getListingExp($row, $params, $admin_params, $template)
 	{
 		$Media  = new jbsMedia;
-		$images = new jbsImages;
+		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
@@ -1069,7 +1069,7 @@ class JBSMListing extends JBSMElements
 	{
 		$Media = new jbsMedia;
 
-		$images = new jbsImages;
+		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);

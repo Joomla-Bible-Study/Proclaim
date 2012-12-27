@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 // @todo need to work over the JLoader
-JLoader::register('jbsImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
+JLoader::register('JBSMImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
 JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 $JViewLegacy = new JViewLegacy;
@@ -208,7 +208,7 @@ class JBSMSerieslist extends JBSMListing
 				$element = '<td class="' . $r . ' title">' . $element . '</td>';
 				break;
 			case 2:
-				$images = new jbsImages;
+				$images = new JBSMImages;
 				$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
 				$element = '<img src="test' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
@@ -220,7 +220,7 @@ class JBSMSerieslist extends JBSMListing
 				$element = '<td class="' . $r . ' thumbnail image">' . $element . '</td>';
 				break;
 			case 3:
-				$images   = new jbsImages;
+				$images   = new JBSMImages;
 				$image    = $images->getSeriesThumbnail($row->series_thumbnail);
 				$element1 = '<td class="' . $r . ' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
@@ -245,7 +245,7 @@ class JBSMSerieslist extends JBSMListing
 				$element = '<td class="' . $r . ' teacher">' . $element . '</td>';
 				break;
 			case 5:
-				$images = new jbsImages;
+				$images = new JBSMImages;
 				$image  = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 				$element = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
@@ -258,7 +258,7 @@ class JBSMSerieslist extends JBSMListing
 				break;
 			case 6:
 				$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="' . $r . ' teacher">';
-				$images   = new jbsImages;
+				$images   = new JBSMImages;
 				$image    = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
 				$element3 = '</td></tr><tr class="noborder"><td class="' . $r . ' teacher">';
@@ -533,7 +533,7 @@ class JBSMSerieslist extends JBSMListing
 	public function getSerieslistExp($row, $params, $admin_params, $template)
 	{
 		$t      = $params->get('serieslisttemplateid');
-		$images = new jbsImages;
+		$images = new JBSMImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
 		$label = $params->get('series_templatecode');
@@ -559,7 +559,7 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSeriesDetailsExp($row, $params, $admin_params, $template)
 	{
-		$images = new jbsImages;
+		$images = new JBSMImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 		$label  = $params->get('series_detailcode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);

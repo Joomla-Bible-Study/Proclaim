@@ -122,7 +122,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$pagebuilder   = new JBSPagebuilder;
 		$items         = $this->get('Items');
-		$images        = new jbsImages;
+		$images        = new JBSMImages;
 
 		// Adjust the slug if there is no alias in the row
 

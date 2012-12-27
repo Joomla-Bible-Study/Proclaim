@@ -9,7 +9,12 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+<<<<<<< HEAD
 JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+=======
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
+>>>>>>> Update the phpdoc calls.
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
 JLoader::register('JBSMElements', BIBLESTUDY_PATH_ADMIN_HELPERS . '/elements.php');
 
@@ -38,7 +43,7 @@ class jbsMedia
 		// First we get some items from GET and instantiate the images class
 		$input        = new JInput;
 		$template     = $input->get('t', '1', 'int');
-		$images       = new jbsImages;
+		$images       = new JBSMImages;
 		$filesize     = null;
 		$downloadlink = null;
 

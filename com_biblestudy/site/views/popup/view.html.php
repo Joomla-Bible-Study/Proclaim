@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
-JLoader::register('jbsImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
+JLoader::register('JBSMImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
 JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 
 // This is the popup window for the teachings.  We could put anything in this window.
@@ -130,7 +130,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$getMedia->hitPlay($mediaid);
 		$this->lenght = $JBSMElements->getDuration($this->params, $this->media);
 
-		$images                 = new jbsImages;
+		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
 		$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
 				. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';

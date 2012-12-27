@@ -7,11 +7,9 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-JLoader::register('jbsImages', dirname(__FILE__) . '/lib/biblestudy.images.class.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB . '/elements.php');
 
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * class for Media Helper
@@ -31,21 +29,29 @@ class JBSMMediaHelper
 	public function getMedia($id)
 	{
 		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
+					. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+					. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+					. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
+					. ' #__bsms_media.media_alttext AS malttext,'
+					. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
+		);
 
-		$query_media = 'SELECT #__bsms_mediafiles.*,'
-				. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-				. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-				. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-				. ' #__bsms_media.media_alttext AS malttext,'
-				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-				. ' FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-				. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-				. ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
+		$query->from('#__bsms_mediafiles');
 
-		$database->setQuery($query_media);
+		$query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
+
+		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
+
+		$query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
+
+		$query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+
+		$query->where('#__bsms_mediafiles.study_id = ' . (int) $id);
+		$query->where('#__bsms_mediafiles.published = 1');
+		$query->order('ordering ASC, #__bsms_mediafiles.mime_type ASC');
+		$database->setQuery($query);
 		$media = $database->loadObjectList('id');
 
 		return $media;
@@ -54,9 +60,9 @@ class JBSMMediaHelper
 	/**
 	 * Get Internal Player
 	 *
-	 * @param   object  $media         Media Info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object     $media         Media Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -68,26 +74,27 @@ class JBSMMediaHelper
 		$registry->loadString($media->params);
 		$itemparams = $registry;
 
-		$Itemid = $params->get('detailstemplateid', 1);
-		$images = new jbsImages();
-		$image  = $images->getMediaImage($media->path2, $media->impath);
+		$Itemid      = $params->get('detailstemplateid', 1);
+		$images      = new JBSMImages;
+		$JBSMListing = new JBSMListing;
+		$image       = $images->getMediaImage($media->path2, $media->impath);
 
 
 		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = JBSMElements::getFilesize($media->size);
-		$duration = JBSMElements::getDuration($params, $media);
+		$filesize = $JBSMListing->getFilesize($media->size);
+		$duration = $JBSMListing->getDuration($params, $media);
 		$mimetype = $media->mimetext;
 		$src      = JURI::base() . $image->path;
 		$height   = $image->height;
 		$width    = $image->width;
 		$ispath   = 0;
 		$mime     = '';
-		$path1    = JBSMElements::getFilepath($media->id, $idfield, $mime);
+		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$player_width = $params->get('player_width', 290);
-		$media1_link  =
-				'<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
-		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/player.swf" id="audioplayer' . $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
+		$media1_link  = '<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
+		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/player.swf" id="audioplayer'
+				. $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
 		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/player.swf" />
 		    <param name="FlashVars" value="playerID=audioplayer' . $media->id . '&soundFile=' . $path1 . '" />
 		    <param name="quality" value="high" />
@@ -101,48 +108,47 @@ class JBSMMediaHelper
 	/**
 	 * Get Download Link
 	 *
-	 * @param   object  $media         Media Info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Prams
+	 * @param   object     $media         Media Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Prams
 	 *
-	 * @return string
+	 * @return string|boolean
 	 *
-	 * @FIXME look like things are broken here.
+	 * FIXME need to fix up the problems. TOM
 	 */
 	public function getDownloadLink($media, $params, $admin_params)
 	{
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
 		$registry->loadString($media->params);
-		$itemparams = $registry;
-		$Itemid     = $params->get('detailstemplateid', 1);
-		$images     = new jbsImages;
-		$image      = $images->getMediaImage($media->path2, $media->impath);
-
+		$itemparams  = $registry;
+		$Itemid      = $params->get('detailstemplateid', 1);
+		$images      = new JBSMImages;
+		$JBSMListing = new JBSMListing;
+		$image       = $images->getMediaImage($media->path2, $media->impath);
 
 		$database = JFactory::getDBO();
 
 		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-		$database->query();
 		$admin = $database->loadObjectList();
 
 
-		$d_image        = ($admin[0]->params->default_download_image);
-		$images         = new jbsImages;
-		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media = null);
+		$d_image      = ($admin[0]->params->default_download_image);
+		$images       = new JBSMImages;
+		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media);
 
 		$download_image = $download_tmp->path;
 
 		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = JBSMElements::getFilesize($media->size);
-		$duration = JBSMElements::getDuration($params, $media);
+		$filesize = $JBSMListing->getFilesize($media->size);
+		$duration = $JBSMListing->getDuration($params, $media);
 		$mimetype = $media->mimetext;
 		$src      = JURI::base() . $image->path;
 		$height   = $image->height;
 		$width    = $image->width;
 		$ispath   = 0;
 		$mime     = '';
-		$path1    = JBSMElements::getFilepath($media->id, $idfield, $mime);
+		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$link_type = $media->link_type;
 
@@ -152,6 +158,10 @@ class JBSMMediaHelper
 			$height = $download_tmp->height;
 
 			$out = '';
+
+			// @todo need ot find where this variable needs to come from.
+			$compat_mode = '1';
+			$d_path      = null;
 
 			if ($compat_mode == 0)
 			{
@@ -168,24 +178,24 @@ class JBSMMediaHelper
 
 			return $out;
 		}
+
 		return false;
 	}
 
 	/**
 	 * Get Media File
 	 *
-	 * @param   object  $media         Media info
-	 * @param   object  $params        Item Params
-	 * @param   Object  $admin_params  Admin Params
+	 * @param   object     $media         Media info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
-	 *
-	 * @FIXME look like there is problems with this.
 	 */
 	public function getMediaFile($media, $params, $admin_params)
 	{
-		$images = new jbsImages();
-		$image  = $images->getMediaImage($media->path2, $media->impath);
+		$images      = new JBSMImages;
+		$JBSMListing = new JBSMListing;
+		$image       = $images->getMediaImage($media->path2, $media->impath);
 
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
@@ -197,27 +207,29 @@ class JBSMMediaHelper
 		$database = JFactory::getDBO();
 
 		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-		$database->query();
 		$admin = $database->loadObjectList();
 
 
 		$d_image = ($admin[0]->params->default_download_image);
-		$images  = new jbsImages();
 
-		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media = null);
+		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media);
 
 		$download_image = $download_tmp->path;
 
 		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = JBSMElements::getFilesize($media->size);
-		$duration = JBSMElements::getDuration($params, $row);
+		$filesize = $JBSMListing->getFilesize($media->size);
+		$duration = $JBSMListing->getDuration($params, $media);
 		$mimetype = $media->mimetext;
 		$src      = JURI::base() . $image->path;
 		$height   = $image->height;
 		$width    = $image->width;
 		$ispath   = 0;
 		$mime     = '';
-		$path1    = JBSMElements::getFilepath($media->id, $idfield, $mime);
+
+		// @todo need ot find where this variable needs to come from.
+		$d_path = null;
+
+		$path1 = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$media_link = '<div class="bsms_mediafile"><a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 				. $filesize . '" target="' . $media->special . '"><img src="' . $d_path
@@ -230,9 +242,9 @@ class JBSMMediaHelper
 	/**
 	 * Get Type Icon
 	 *
-	 * @param object $media
-	 * @param object $params
-	 * @param object $admin_params
+	 * @param   object     $media         JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -243,20 +255,21 @@ class JBSMMediaHelper
 		$registry->loadString($media->params);
 		$itemparams = $registry;
 
-		$Itemid = $params->get('detailstemplateid', 1);
-		$images = new jbsImages();
-		$image  = $images->getMediaImage($media->path2, $media->impath);
+		$Itemid      = $params->get('detailstemplateid', 1);
+		$images      = new JBSMImages;
+		$JBSMListing = new JBSMListing;
+		$image       = $images->getMediaImage($media->path2, $media->impath);
 
 		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = JBSMElements::getFilesize($media->size);
-		$duration = JBSMElements::getDuration($params, $row);
+		$filesize = $JBSMListing->getFilesize($media->size);
+		$duration = $JBSMListing->getDuration($params, $media);
 		$mimetype = $media->mimetext;
 		$src      = JURI::base() . $image->path;
 		$height   = $image->height;
 		$width    = $image->width;
 		$ispath   = 0;
 		$mime     = '';
-		$path1    = JBSMElements::getFilepath($media->id, $idfield, $mime);
+		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$media_link = '<img src="' . $src
 				. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
@@ -268,9 +281,9 @@ class JBSMMediaHelper
 	/**
 	 * Get PDF
 	 *
-	 * @param   object  $row           Media Info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object     $row           Media Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -291,9 +304,11 @@ class JBSMMediaHelper
 	/**
 	 * Get Media For List
 	 *
-	 * @param   object  $row           Media Info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object     $row           Media Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 *
+	 * @return void
 	 *
 	 * @deprecated since version 7.0.4
 	 */

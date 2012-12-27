@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
+ *
+ * @property $template->params JRegistry
  */
 class JBSMParams
 {
@@ -25,11 +27,10 @@ class JBSMParams
 	/**
 	 * Gets the settings from Admin
 	 *
-	 * @return mixed Return Admin table
+	 * @return object Return Admin table
 	 */
 	public static function getAdmin()
 	{
-		$admin = new stdClass;
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -51,14 +52,13 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return mixed Return active template info
+	 * @return object Return active template info
 	 */
 	public static function getTemplateparams()
 	{
-		$template = new stdClass;
-		$db       = JFactory::getDbo();
-		$pk       = JFactory::getApplication()->input->getInt('t', '1');
-		$query    = $db->getQuery(true);
+		$db    = JFactory::getDbo();
+		$pk    = JFactory::getApplication()->input->getInt('t', '1');
+		$query = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bsms_templates')
 				->where('published = 1 AND id = ' . $db->q($pk));

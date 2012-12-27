@@ -108,7 +108,7 @@ $params = $this->params;
 
 			if ($params->get('landing' . $showIt . 'limit'))
 			{
-				$images       = new jbsImages;
+				$images       = new JBSMImages;
 				$showhide_tmp = $images->getShowHide();
 
 				$showhideall = "<div id='showhide" . $i . "'>";

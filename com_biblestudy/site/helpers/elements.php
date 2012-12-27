@@ -217,7 +217,7 @@ class JBSMElements extends JBSAdmin
 
 				if ($row->thumbnailm)
 				{
-					$images             = new jbsImages;
+					$images             = new JBSMImages;
 					$image              = $images->getStudyThumbnail($row->thumbnailm);
 					$elementid->element = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width
 							. '" height="' . $image->height . '" alt="' . $row->studytitle . '">';
@@ -233,7 +233,7 @@ class JBSMElements extends JBSAdmin
 
 				if ($row->series_thumbnail)
 				{
-					$images             = new jbsImages;
+					$images             = new JBSMImages;
 					$image              = $images->getSeriesThumbnail($row->series_thumbnail);
 					$elementid->element = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="'
 							. $image->height . '" alt="' . $row->series_text . '">';
@@ -259,7 +259,7 @@ class JBSMElements extends JBSAdmin
 				$elementid->element    = $row->totaldownloads;
 				break;
 			case 30:
-				$timages              = new jbsImages;
+				$timages              = new JBSMImages;
 				$elementid->id        = 'teacher-image';
 				$elementid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
 				$query                = "SELECT thumb, teacher_thumbnail FROM #__bsms_teachers WHERE id = $row->teacher_id";
@@ -648,7 +648,7 @@ class JBSMElements extends JBSAdmin
 	{
 		$linktext = null;
 
-		$images = new jbsImages;
+		$images = new JBSMImages;
 		$input  = new JInput;
 		$t      = $input->get('t', 1, 'int');
 
@@ -719,7 +719,7 @@ class JBSMElements extends JBSAdmin
 
 		$database = JFactory::getDBO();
 
-		$images = new jbsImages;
+		$images = new JBSMImages;
 
 		if (!isset($admin_params->default_download_image))
 		{
@@ -778,7 +778,7 @@ class JBSMElements extends JBSAdmin
 			$input      = new JInput;
 			$Itemid     = $input->get('Itemid', '1', 'int');
 			$template   = $input->get('t', '1', 'int');
-			$images     = new jbsImages;
+			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
 
 

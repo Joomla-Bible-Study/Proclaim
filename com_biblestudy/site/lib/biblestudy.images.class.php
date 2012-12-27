@@ -1,8 +1,5 @@
 <?php
-
 /**
- * BibleStudy images class
- *
  * @package    BibleStudy.Site
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,10 +11,10 @@ JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestud
 /**
  * BibleStudy images class
  *
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
-class jbsImages
+class JBSMImages
 {
 
 	/**
@@ -120,7 +117,6 @@ class jbsImages
 	{
 
 		$mediaimagefolder = 'media/com_biblestudy/images';
-
 
 		return $mediaimagefolder;
 	}
@@ -311,6 +307,7 @@ class jbsImages
 		}
 
 		$imagepath = self::getImagePath($path);
+
 		return $imagepath;
 	}
 
@@ -338,5 +335,3 @@ class jbsImages
 	}
 
 }
-
-// End of class

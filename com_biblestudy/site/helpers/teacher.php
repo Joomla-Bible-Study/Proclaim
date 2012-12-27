@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbsImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
@@ -71,7 +71,7 @@ class JBSMTeacher extends JBSMListing
 			$i_path  = null;
 
 			// Check to see if there is a teacher image, if not, skip this step
-			$images = new jbsImages;
+			$images = new JBSMImages;
 			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 
 			if (!$image)
@@ -121,7 +121,7 @@ class JBSMTeacher extends JBSMListing
 	{
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
-		$images     = new jbsImages;
+		$images     = new JBSMImages;
 		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 
 		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
@@ -156,7 +156,7 @@ class JBSMTeacher extends JBSMListing
 		$JViewLegacy->loadHelper('image');
 
 		// Get the image folders and images
-		$images     = new jbsImages;
+		$images     = new JBSMImages;
 		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 
 		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);

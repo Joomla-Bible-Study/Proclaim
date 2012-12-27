@@ -92,7 +92,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items       = $this->get('Item');
 
 		// Get the series image
-		$images              = new jbsImages;
+		$images              = new JBSMImages;
 		$image               = $images->getSeriesThumbnail($items->series_thumbnail);
 		$items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
 		$teacherimage        = $images->getTeacherThumbnail($items->thumb, $image2 = null);
