@@ -30,7 +30,6 @@ $messagetype_menu  = $messagetype_menu1[0];
 $params            = $this->params;
 $teachers          = $params->get('teacher_id');
 $jview             = new JViewLegacy;
-// @todo need to rework to be proper php and html outside php
 $jview->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
@@ -44,7 +43,8 @@ $JBSMTeacher = new JBSMTeacher;
 				{
 					?>
                     <img src="<?php echo JURI::base() . $this->main->path; ?>"
-                         alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
+                         alt="<?php echo $this->params->get('page_title'); ?>"
+                         width="<?php echo $this->main->width; ?>"
                          height="<?php echo $this->main->height; ?>"/>
 					<?php
 					// End of column for logo
@@ -71,22 +71,20 @@ $JBSMTeacher = new JBSMTeacher;
         </div>
         <!--header-->
 
-        <div id="listintro">
-            <table id="listintro">
-                <tr>
-                    <td>
-                        <p>
-							<?php
-							if ($params->get('intro_show') == 1)
-							{
-								echo $params->get('list_intro');
-							}
-							?>
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <table id="listintro">
+            <tr>
+                <td>
+                    <p>
+						<?php
+						if ($params->get('intro_show') == 1)
+						{
+							echo $params->get('list_intro');
+						}
+						?>
+                    </p>
+                </td>
+            </tr>
+        </table>
 
         <div id="bsdropdownmenu">
 			<?php

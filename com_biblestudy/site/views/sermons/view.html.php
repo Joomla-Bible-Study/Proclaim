@@ -8,6 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+// @todo redo the require_once to JLoader
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.stats.class.php');
 JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
@@ -28,61 +29,138 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $items;
 
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $pagination;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var JRegistry
 	 */
 	protected $state;
 
+	/**
+	 * @var string
+	 */
 	public $pagelinks;
 
+	/**
+	 * @var string
+	 */
 	public $limitbox;
 
+	/**
+	 * @var JRegistry
+	 */
 	protected $admin;
 
+	/**
+	 * @var JRegistry
+	 */
 	protected $admin_params;
 
+	/**
+	 * @var JRegistry
+	 */
+	public $params;
+
+	/**
+	 * @var object
+	 */
 	public $study;
 
+	/**
+	 * @var string
+	 */
 	public $subscribe;
 
+	/**
+	 * @var string
+	 */
 	public $series;
 
+	/**
+	 * @var string
+	 */
 	public $teachers;
 
+	/**
+	 * @var string
+	 */
 	public $messageTypes;
 
+	/**
+	 * @var string
+	 */
 	public $years;
 
+	/**
+	 * @var string
+	 */
 	public $locations;
 
+	/**
+	 * @var string
+	 */
 	public $topics;
 
+	/**
+	 * @var string
+	 */
 	public $orders;
 
+	/**
+	 * @var string
+	 */
 	public $books;
 
+	/**
+	 * @var object
+	 */
 	public $template;
 
+	/**
+	 * @var string
+	 */
 	public $order;
 
+	/**
+	 * @var array
+	 */
 	public $topic;
 
+	/**
+	 * @var object
+	 */
 	public $main;
 
+	/**
+	 * @var object
+	 */
 	public $page;
+
+	/**
+	 * @var string
+	 */
+	public $request_url;
+
+	/**
+	 * @var object
+	 */
+	public $document;
+
+	/**
+	 * @var int
+	 */
+	public $limitstart;
 
 	/**
 	 * Execute and display a template script.
@@ -132,11 +210,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		}
 		$template = JBSMParams::getTemplateparams();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$params = $registry;
+		$params = $$template->params;
 
 		$a_params           = JBSMParams::getAdmin();
 		$this->admin_params = $a_params->params;
@@ -161,17 +235,24 @@ class BiblestudyViewSermons extends JViewLegacy
 			$studies[$i]->studydate  = $pelements->studydate;
 			$studies[$i]->topics     = $pelements->topics;
 
-			if (isset($pelements->study_thumbnail)):
+			if (isset($pelements->study_thumbnail))
+			{
 				$studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-			else:
+			}
+			else
+			{
 				$studies[$i]->study_thumbnail = null;
-			endif;
+			}
 
-			if (isset($pelements->series_thumbnail)):
+			if (isset($pelements->series_thumbnail))
+			{
+
 				$studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-			else:
+			}
+			else
+			{
 				$studies[$i]->series_thumbnail = null;
-			endif;
+			}
 			$studies[$i]->detailslink = $pelements->detailslink;
 
 			if (!isset($pelements->studyintro))
@@ -238,11 +319,12 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		$css = $params->get('css');
 
-		if ($css <= "-1"):
+		if ($css <= "-1"){
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		else:
+		}
+		else{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		endif;
+		}
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 		// Errors when using local swfobject.js file.  IE 6 doesn't work
@@ -290,7 +372,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->pagination = $pagination;
 		$this->order      = $this->orders;
 		$this->topic      = $this->topics;
-		$images           = new jbsImages;
+		$images           = new JBSMImages;
 		$main             = $images->mainStudyImage();
 		$this->main       = $main;
 
@@ -316,6 +398,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$used     = JLanguageHelper::getLanguages();
 		$langtemp = array();
 		$lang     = array();
+
 		foreach ($used as $use)
 		{
 			$langtemp = array(
@@ -351,30 +434,34 @@ class BiblestudyViewSermons extends JViewLegacy
 				. $go, 'value', 'text', "$filter_messagetype"
 		);
 
-		//build study years
+		// Build study years
 		$years[]           = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_YEAR'));
 		$years             = array_merge($years, $this->years);
 		$this->page->years = JHTML::_('select.genericlist', $years, 'filter_year', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_year");
 
-		//build locations
+		// Build locations
 		$loc[]                 = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_LOCATION'));
 		$loc                   = array_merge($loc, $this->locations);
-		$this->page->locations = JHTML::_('select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_location");
+		$this->page->locations = JHTML::_(
+			'select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" '
+				. $go, 'value', 'text', "$filter_location"
+		);
 
-		//Build Topics
+		// Build Topics
 		$top[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TOPIC'));
+
 		if ($top && $this->topics)
 		{
 			$top = array_merge($top, $this->topics);
 		}
 		$this->page->topics = JHTML::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_topic");
 
-		//Build Books
+		// Build Books
 		$boo[]             = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_BOOK'));
 		$boo               = array_merge($boo, $this->books);
 		$this->page->books = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_book");
 
-		//Build order
+		// Build order
 		$ordervalues       = array(
 			array(
 				'value' => "DESC",
@@ -401,6 +488,8 @@ class BiblestudyViewSermons extends JViewLegacy
 
 	/**
 	 * Prepares the document
+	 *
+	 * @return void
 	 */
 	protected function _prepareDocument()
 	{
@@ -423,6 +512,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		$title = $this->params->def('page_title', '');
 		$title .= ' : ' . JText::_('JBS_CMN_MESSAGES_LIST');
+
 		if ($app->getCfg('sitename_pagetitles', 0) == 1)
 		{
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);

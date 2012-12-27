@@ -9,19 +9,13 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-include_once($path1 . 'teacher.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
 
 $JBSMTeacher = new JBSMTeacher;
 
 $admin_params = $this->admin_params;
 $input        = new JInput;
-$t            = $input->get('t', 1, 'int');
-
-if (!$t)
-{
-	$t = 1;
-}
 $t = $this->params->get('teachertemplateid');
 
 if (!$t)
@@ -41,7 +35,7 @@ if (!$studieslisttemplateid)
         <tr>
             <td class="bsm_teacherthumbnail">
 				<?php
-				if (isset($item->title))
+				if (isset($this->item->title))
 				{
 					$teacherdisplay = $this->item->teachername . ' - ' . $this->item->title;
 				}
@@ -264,7 +258,8 @@ if (!$studieslisttemplateid)
 	            <?php
 				if ($this->params->get('teacherlink', '1') > 0)
 				{
-					echo ' | <a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . (int) $this->item->id . '&amp;t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
+					echo ' | <a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . (int) $this->item->id
+							. '&amp;t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
 				}
 				?>
             </td>

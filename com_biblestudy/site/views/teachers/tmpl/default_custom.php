@@ -2,10 +2,10 @@
 /**
  * Default Custom
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -23,7 +23,7 @@ if (!$t)
 	$t = $input->get('t', 1, 'int');
 }
 $admin_params = $this->admin_params;
-$JViewLegacy = new JViewLegacy;
+$JViewLegacy  = new JViewLegacy;
 $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
@@ -56,7 +56,7 @@ $JBSMTeacher = new JBSMTeacher;
 
 
 	foreach ($this->items as $row)
-	{ //Run through each row of the data result from the model
+	{ // Run through each row of the data result from the model
 		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
 		echo $listing;
 	}

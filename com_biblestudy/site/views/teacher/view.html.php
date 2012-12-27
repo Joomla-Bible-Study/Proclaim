@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Teacher JViewLegacy
- *
  * @package    BibleStudy.Site
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,25 +8,24 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// @todo need to clean up all the includes with better calling in the whay we need the healpers.
-JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
-$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-include_once($path1 . 'teacher.php');
-
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
 
 /**
  * View class for Teacher
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
+ *
+ * @todo need to make the title block. BCC
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
-
+	/**
+	 * @var object
+	 */
 	protected $item;
 
 	protected $contact;
@@ -51,29 +47,22 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
-	 *
-	 * @see     fetch()
-	 * @since   11.1
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
 
 		$app         = JFactory::getApplication();
 		$pagebuilder = new JBSPagebuilder;
-		JViewLegacy::loadHelper('image');
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$pathway = $app->getPathWay();
-		$images  = new jbsImages;
+		$images  = new JBSMImages;
 
-		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 		$this->admin        = JBSMParams::getAdmin();
 		$this->admin_params = $this->admin->params;
 
@@ -107,10 +96,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$template = JBSMParams::getTemplateparams();
 
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$params = $registry;
+		$params = $template->params;
 
 		$css = $params->get('css');
 
@@ -261,6 +247,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $template;
+
 		parent::display($tpl);
 	}
 

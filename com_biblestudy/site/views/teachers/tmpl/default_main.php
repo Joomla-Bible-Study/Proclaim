@@ -9,15 +9,14 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'route.php');
-//$params = $this->params;
+
 ?>
 <div id="biblestudy" class="noRefTagger">
     <table id="bsm_teachertable_list">
         <tbody>
         <tr class="titlerow">
             <td style="text-align: center" colspan="3" class="title">
-	            <?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+				<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
             </td>
         </tr>
 		<?php
@@ -47,7 +46,11 @@ defined('_JEXEC') or die;
 
         <tr class="<?php echo $oddeven; ?> ">
             <td class="bsm_teacherthumbnail_list">
-				<?php if ($item->thumb || $item->teacher_thumbnail){ echo $item->image; }?>
+				<?php if ($item->thumb || $item->teacher_thumbnail)
+			{
+				echo $item->image;
+			}
+				?>
             </td>
             <td class="bsm_teachername">
                 <table>

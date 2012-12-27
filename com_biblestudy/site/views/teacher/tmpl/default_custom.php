@@ -18,9 +18,11 @@ $database     = JFactory::getDBO();
 $teacher      = $this->teacher;
 $admin_params = $this->admin_params;
 $params       = $this->params;
-
-$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/';
-include_once($path1 . 'teacher.php');
+$image        = new stdClass;
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
+$JBSMTeacher = new JBSMTeacher;
+$JBSMImage = new JBSMImage;
 $input = new JInput;
 $t     = $input->get('t', 1, 'int');
 
@@ -52,7 +54,7 @@ else
 	{
 		$i_path = 'images' . $teacher->teacher_image;
 	}
-	$image = JBSMImage::getImage($i_path);
+	$image = $JBSMImage->getImage($i_path);
 }
 ?>
 <div id="biblestudy" class="noRefTagger">
@@ -69,18 +71,17 @@ else
 		{
 			$i_path = 'images' . $teacher->teacher_image;
 		}
-		$image = JBSMImage::getImage($i_path);
+		$image = $JBSMImage->getImage($i_path);
 	}
 	?>
     <table class="bslisttable">
 		<?php
-	    $teacher = new JBSMTeacher;
-		$listing = $teacher->getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
+		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
 		echo $listing;
 
 		if ($this->params->get('show_teacher_studies') > 0)
 		{
-			$studies = $teacher->getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
 			echo $studies;
 		}
 
