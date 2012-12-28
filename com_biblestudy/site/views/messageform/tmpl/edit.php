@@ -2,14 +2,15 @@
 /**
  * Form
  *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-if (BIBLESTUDY_CHECKREL) {
+if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::_('behavior.keepalive');
 	JHtml::_('behavior.tooltip');
 	JHtml::_('behavior.calendar');
@@ -400,7 +401,8 @@ $input  = $app->input;
 
             </tr>
 				<?php
-			endforeach; else:
+			endforeach;
+		else:
 			?>
         <tr>
             <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
@@ -413,10 +415,13 @@ $input  = $app->input;
             <td colspan="4">
 				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 				<?php
-				if (empty($this->item->id)) {
+				if (empty($this->item->id))
+				{
 					?> <a onClick="Joomla.submitbutton('messageform.apply');"
                           href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
-				} else {
+				}
+				else
+				{
 					?>
                     <a class="btn btn-primary"
                        onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"

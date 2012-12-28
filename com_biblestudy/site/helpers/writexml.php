@@ -3,10 +3,10 @@
 /**
  * WrteXML Helper
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,6 +15,8 @@ defined('_JEXEC') or die;
  * Write XML
  *
  * @return boolean
+ *
+ * @todo need to redo this right to MVC Standers. BCC TOM
  */
 function writeXML()
 {
@@ -23,8 +25,8 @@ function writeXML()
 	$files          = array();
 	$path1          = JPATH_SITE . '/components/com_biblestudy/helpers/';
 	include_once($path1 . 'custom.php');
-	include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'helper.php');
-	include_once($path1 . 'scripture.php');
+	$JBSMCustom = new JBSMCustom;
+	include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/helper.php');
 	$admin_params = JBSMParams::getAdmin();
 	$config       = JFactory::getConfig();
 	$lb_abspath   = JPATH_SITE;
@@ -210,7 +212,7 @@ function writeXML()
 					$esv          = 0;
 					$scripturerow = 1;
 					$episode->id  = $episode->study_id;
-					$scripture    = getScripture($params, $episode, $esv, $scripturerow);
+					$scripture    = $JBSMCustom->getScripture($params, $episode, $esv, $scripturerow);
 					$pod_title    = $podinfo->episodetitle;
 
 					if (!$episode->size)
@@ -235,7 +237,7 @@ function writeXML()
 							$title = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
 							break;
 						case 5:
-							$custom = new JBSMCustom;
+							$custom  = new JBSMCustom;
 							$element = $custom->getCustom($rowid = 'row1col1', $podinfo->custom, $episode, $params, $admin_params, $detailstemplateid);
 
 							$title = $element->element;
@@ -341,5 +343,3 @@ function writeXML()
 
 	return $return;
 }
-
-// end of function

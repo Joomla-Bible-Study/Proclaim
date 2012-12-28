@@ -1,11 +1,9 @@
 <?php
-
 /**
- * BibleStudy Page Builder class
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -49,8 +47,8 @@ class JBSPagebuilder
 		$images      = new JBSMImages;
 
 		// Media files image, links, download
-		$mids = $item->mids;
-		$page = new stdClass;
+		$mids         = $item->mids;
+		$page         = new stdClass;
 		$JBSMElements = new JBSMElements;
 
 		if ($mids)
@@ -438,11 +436,11 @@ class JBSPagebuilder
 			$dispatcher = JDispatcher::getInstance();
 		}
 		$dispatcher->trigger('onContentPrepare', array(
-		                                                         'com_biblestudy.sermon',
-		                                                         & $item,
-		                                                         & $params,
-		                                                         $offset
-		                                                    )
+		                                              'com_biblestudy.sermon',
+		                                              & $item,
+		                                              & $params,
+		                                              $offset
+		                                         )
 		);
 
 		$item->event = new stdClass;

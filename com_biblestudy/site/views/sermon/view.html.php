@@ -185,7 +185,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
-		$relatedstudies = new relatedStudies;
+		$relatedstudies = new RelatedStudies;
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);

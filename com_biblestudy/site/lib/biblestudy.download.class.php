@@ -189,7 +189,7 @@ class Dump_File
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param   object  $mid  Media ID
+	 * @param   int  $mid  Media ID
 	 *
 	 * @return  boolean
 	 *

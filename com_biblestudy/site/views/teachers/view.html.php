@@ -1,9 +1,9 @@
 <?php
 /**
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -196,12 +196,12 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app        = JFactory::getApplication('site');
-		$menus      = $app->getMenu();
+		$app   = JFactory::getApplication('site');
+		$menus = $app->getMenu();
 
 		/** @var $itemparams JRegistry */
 		$itemparams = $app->getParams();
-		$title = null;
+		$title      = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

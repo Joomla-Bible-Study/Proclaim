@@ -7,7 +7,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
+require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/biblestudy.php';
 JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
@@ -27,7 +27,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var JObject
 	 */
 	protected $items;
 
@@ -41,14 +41,26 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $state;
+
 	public $canDo;
+
 	public $mediatypes;
-	public $admin;
-	public $params;
+
+	/**
+	 * @var object
+	 */
+	protected  $admin;
+
+	/**
+	 * @var JRegistry
+	 */
+	protected  $params;
+
 	public $pageclass_sfx;
+	public $newlink;
 
 	/**
 	 * Execute and display a template script.
@@ -59,7 +71,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
+		$app              = JFactory::getApplication();
 		$this->canDo      = JBSMHelper::getActions('', 'mediafilesedit');
 		$this->state      = $this->get('State');
 		$this->items      = $this->get('Items');
@@ -89,18 +101,15 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$params->merge($this->admin->params);
 		$this->admin->params->merge($params);
 		$this->params = $params;
-		// Load the toolbar helper
-		require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'toolbar.php');
 
-
-		// render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
-		//Puts a new record link at the top of the form
+		// Render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
+		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit">' . JText::_('JBS_CMN_NEW') . '</a>';
 		}
 
-		//Escape strings for HTML output
+		// Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
 		$this->_prepareDocument();
@@ -110,6 +119,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 
 	/**
 	 * Prepares the document
+	 *
+	 * @return void
 	 */
 	protected function _prepareDocument()
 	{
@@ -121,6 +132,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
+
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
@@ -132,6 +144,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 
 		$title = $this->params->def('page_title', '');
 		$title .= ' : ' . JText::_('JBS_TITLE_MEDIA_FILES');
+
 		if ($app->getCfg('sitename_pagetitles', 0) == 1)
 		{
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);

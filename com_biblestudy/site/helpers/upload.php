@@ -223,8 +223,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param   string   $tempfile  tempfile location
-	 * @param   object   $filename  File info
+	 * @param   string  $tempfile  tempfile location
+	 * @param   object  $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -326,8 +326,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file
 	 *
-	 * @param   object $filename  Destination file details.
-	 * @param   array  $file      Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -335,6 +335,7 @@ class JBSMUpload
 	{
 		$msg = '';
 		jimport('joomla.filesystem.file');
+
 		if (!JFILE::upload($file['tmp_name'], $filename->path))
 		{
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
@@ -346,7 +347,7 @@ class JBSMUpload
 	/**
 	 * Method to upload the file for ftp upload
 	 *
-	 * @param   object  $filename  Destination file details.
+	 * @param   string  $filename  Destination file details.
 	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
@@ -358,7 +359,7 @@ class JBSMUpload
 
 		if (!JFILE::upload($file['tmp_name'], $filename))
 		{
-			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
+			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
 		}
 
 		return $msg;
@@ -367,9 +368,9 @@ class JBSMUpload
 	/**
 	 * Method to upload the file over ftp
 	 *
-	 * @param   array    $file      Source File details.
-	 * @param   object   $filename  Destination file details.
-	 * @param   boolean  $admin     Sets whether call is from Joomla admin or site.
+	 * @param   array   $file      Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   int     $admin     Sets whether call is from Joomla admin or site.
 	 *
 	 * @return  boolean
 	 */
@@ -413,7 +414,7 @@ class JBSMUpload
 			$ftpsuccess2 = false;
 		}
 
-		/* turn on passive mode transfers (some servers need this)
+		/* Turn on passive mode transfers (some servers need this)
 		 ftp_pasv ($conn_id, true);
 		 perform file upload */
 		if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY))
@@ -427,9 +428,8 @@ class JBSMUpload
 			$ftpsuccess3 = false;
 		}
 
-		/*
-		 * * Chmod the file (just as example)
-		 */
+		// Chmod the file (just as example)
+
 
 		// If you are using PHP4 then you need to use this code:
 		// (because the "ftp_chmod" command is just available in PHP5+)
@@ -439,7 +439,7 @@ class JBSMUpload
 
 		}
 
-		// try to chmod the new file to 666 (writeable)
+		// Try to chmod the new file to 666 (writeable)
 		if (ftp_chmod($conn_id, 0755, $ftp_path) == false)
 		{
 			if ($admin == 0)
@@ -465,7 +465,7 @@ class JBSMUpload
 	 *
 	 * @param   string  $ftp_stream  Ftp Stream
 	 * @param   string  $mode        Mode
-	 * @param   array   $filename    FileName
+	 * @param   object  $filename    FileName
 	 *
 	 * @return boolean
 	 */
@@ -477,23 +477,24 @@ class JBSMUpload
 	/**
 	 * Method to build filepath
 	 *
-	 * @param   array    $file      File details.
-	 * @param   string   $type      Type
-	 * @param   int      $serverid  Server ID
-	 * @param   int      $folderid  Folder Id
-	 * @param   int      $path      The path id.
-	 * @param   boolean  $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
+	 * @param   array   $file      File details.
+	 * @param   string  $type      Type
+	 * @param   int     $serverid  Server ID
+	 * @param   int     $folderid  Folder Id
+	 * @param   int     $path      The path id.
+	 * @param   int     $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
 	 *
-	 * @return    array
+	 * @return    object
 	 */
 	public static function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
 	{
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/tables');
 		$filepath = JTable::getInstance('Server', 'Table');
 		$filepath->load($serverid);
 		$folderpath = JTable::getInstance('Folder', 'Table');
 		$folderpath->load($folderid);
-		//  $folder = $filepath->server_path.$folderpath->folderpath;
+		$filename = new stdClass;
+
 		$folder                = $folderpath->folderpath;
 		$filename->type        = $filepath->type;
 		$filename->ftphost     = $filepath->ftphost;
@@ -761,26 +762,7 @@ class JBSMUpload
 		if (!function_exists('binsha1'))
 		{
 
-			/**
-			 * BinSha1
-			 *
-			 * @param   string  $d  ?
-			 *
-			 * @return string
-			 */
-			function binsha1($d)
-			{
-				if (version_compare(phpversion(), "5.0.0", ">="))
-				{
-
-
-					return sha1($d, true);
-				}
-				else
-				{
-					return pack('H*', sha1($d));
-				}
-			}
+			self::binsha1($d);
 
 		}
 
@@ -798,11 +780,32 @@ class JBSMUpload
 	}
 
 	/**
+	 * BinSha1
+	 *
+	 * @param   string  $d  ?
+	 *
+	 * @return string
+	 */
+	public static function binsha1($d)
+	{
+		if (version_compare(phpversion(), "5.0.0", ">="))
+		{
+
+
+			return sha1($d, true);
+		}
+		else
+		{
+			return pack('H*', sha1($d));
+		}
+	}
+
+	/**
 	 * Send Rest
 	 *
-	 * @param   string   $fp     ?
-	 * @param   string   $q      ?
-	 * @param   boolean  $debug  debug
+	 * @param   resource  $fp     ?
+	 * @param   string    $q      ?
+	 * @param   boolean   $debug  debug
 	 *
 	 * @return string
 	 */

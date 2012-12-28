@@ -2,10 +2,10 @@
 /**
  * Default Custom
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -60,7 +60,7 @@ $JBSMTeacher = new JBSMTeacher;
 			<?php
 			if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 			{
-				$teacher = $JBSMTeacher->getTeacher($params, $id = null, $this->admin_params);
+				$teacher = $JBSMTeacher->getTeacher($params, (int) $id = 0, $this->admin_params);
 
 				if ($teacher)
 				{

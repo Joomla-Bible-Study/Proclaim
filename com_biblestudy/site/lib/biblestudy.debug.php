@@ -122,7 +122,7 @@ class JBSDebug
 	 */
 	public function Trigger_dbwarning($text = '')
 	{
-		$biblestudy_db = & JFactory::getDBO();
+		$biblestudy_db = JFactory::getDBO();
 		biblestudy_error($text . '<br />' . $biblestudy_db->stderr(true), E_USER_WARNING);
 	}
 

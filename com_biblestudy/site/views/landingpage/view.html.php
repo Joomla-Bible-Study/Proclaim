@@ -24,7 +24,15 @@ class BiblestudyViewLandingpage extends JViewLegacy
 {
 	public $request_url;
 
+	/**
+	 * @var JRegistry
+	 */
 	public $params;
+
+	/**
+	 * @var JRegistry
+	 */
+	public $admin_params;
 
 	/**
 	 * Execute and display a template script.

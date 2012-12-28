@@ -2,10 +2,10 @@
 /**
  * Default
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -64,43 +64,43 @@ $params = $this->params;
 
 				case 'teachers':
 					$jview->loadHelper('teacher');
-					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_TEACHERS');
 					break;
 
 				case 'series':
 					$jview->loadHelper('serieslist');
-					$heading       = $JBSMLanding->getSeriesLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getSeriesLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_SERIES');
 					break;
 
 				case 'locations':
 					$jview->loadHelper('location');
-					$heading       = $JBSMLanding->getLocationsLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getLocationsLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
 					break;
 
 				case 'messagetypes':
 					$jview->loadHelper('messagetype');
-					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
 					break;
 
 				case 'topics':
 					$jview->loadHelper('topics');
-					$heading       = $JBSMLanding->getTopicsLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getTopicsLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_TOPICS');
 					break;
 
 				case 'books':
 					$jview->loadHelper('book');
-					$heading       = $JBSMLanding->getBooksLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getBooksLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_BOOKS');
 					break;
 
 				case 'years':
 					$jview->loadHelper('year');
-					$heading       = $JBSMLanding->getYearsLandingPage($params, $id = null, $this->admin_params);
+					$heading       = $JBSMLanding->getYearsLandingPage($params, $id = 0, $this->admin_params);
 					$showIt_phrase = JText::_('JBS_CMN_YEARS');
 					break;
 			}

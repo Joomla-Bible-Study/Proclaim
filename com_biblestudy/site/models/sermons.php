@@ -808,7 +808,9 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param int $id
+	 * @param   int  $id  ID
+	 *
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
@@ -864,11 +866,11 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @todo Need to see if we can use this out of a helper to reduce code.
-	 *
 	 * @param   int  $id  ID of Download
 	 *
 	 * @return string
+	 *
+	 * @todo Need to see if we can use this out of a helper to reduce code.
 	 */
 	public function getDownloads($id)
 	{
@@ -895,7 +897,7 @@ class BiblestudyModelSermons extends JModelList
 	{
 		/* @todo Tom commented this out because it caused the query to fail - needs work. */
 		$mediaFiles = null;
-		$db         = & JFactory::getDBO();
+		$db         = JFactory::getDBO();
 		$i          = 0;
 
 		foreach ($this->_data as $sermon)

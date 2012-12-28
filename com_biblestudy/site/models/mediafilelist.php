@@ -55,7 +55,7 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 		if (empty($this->_data))
 		{
 			$query       = $this->_buildQuery();
-			$this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
+			$this->_data = $this->_getList($query, (int) $this->getState('limitstart'), (int) $this->getState('limit'));
 		}
 
 		return $this->_data;

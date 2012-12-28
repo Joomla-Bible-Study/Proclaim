@@ -2,10 +2,10 @@
 /**
  * Default Custom
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ if ($url)
 $jview = new JViewLegacy;
 $jview->loadHelper('serieslist');
 $JBSMSerieslist = new JBSMSerieslist;
-$t = $this->params->get('serieslisttemplateid');
+$t              = $this->params->get('serieslisttemplateid');
 
 if (!$t)
 {

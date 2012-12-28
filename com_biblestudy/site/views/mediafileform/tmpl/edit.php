@@ -2,10 +2,10 @@
 /**
  * Edit
  *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -14,10 +14,13 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 // Load the tooltip behavior.
-if (BIBLESTUDY_CHECKREL) {
+if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::_('bootstrap.tooltip');
 	JHtml::_('formbehavior.chosen', 'select');
-} else {
+}
+else
+{
 	JHtml::_('behavior.tooltip');
 	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
 	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
@@ -35,14 +38,11 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 
 // Create shortcut to parameters.
-//$params = $this->state->get('params');
-//$params = $params->toArray();
 $params = $this->item->params;
 $app    = JFactory::getApplication();
 $input  = $app->input;
 
-//$params = $this->form->getFieldsets('params');
-//Get the studyid if this is coming to us in a modal form
+// Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
 $option = $input->get('option', '', 'cmd');
@@ -50,24 +50,34 @@ $input  = new JInput;
 $study  = $app->getUserState($option . 'sid');
 $sdate  = $app->getUserState($option . 'sdate');
 
-//$study = $input->get('sid','','int');
-//$sdate = $input->get('sdate','','string'); 
 $size     = $app->getUserState($option . 'size');
 $fname    = $app->getUserState($option . 'fname');
 $serverid = $app->getUserState($option . 'serverid');
-if ($this->item->server) {
+
+if ($this->item->server)
+{
 	$server = $this->item->server;
-} elseif ($serverid) {
+}
+elseif ($serverid)
+{
 	$server = $serverid;
-} elseif (empty($this->item->study_id)) {
+}
+elseif (empty($this->item->study_id))
+{
 	$server = $this->admin_params->get('server');
 }
 $folderid = $app->getUserState('folderid');
-if ($this->item->path) {
+
+if ($this->item->path)
+{
 	$folder = $this->item->path;
-} elseif ($folderid) {
+}
+elseif ($folderid)
+{
 	$folder = $folderid;
-} elseif (empty($this->item->study_id)) {
+}
+elseif (empty($this->item->study_id))
+{
 	$folder = $this->admin_params->get('path');
 }
 ?>
@@ -78,7 +88,8 @@ if ($this->item->path) {
         var winl = (screen.width - Wwidth) / 2;
         var wint = (screen.height - Wheight) / 2;
 
-        var msg1 = window.open("components/com_biblestudy/convert1.htm", "Window", "scrollbars=1,width=" + Wwidth + ",height=" + Wheight + ",top=" + wint + ",left=" + winl);
+        var msg1 = window.open("components/com_biblestudy/convert1.htm", "Window", "scrollbars=1,width=" + Wwidth + ",height=" + Wheight + "" +
+                ",top=" + wint + ",left=" + winl);
         if (!msg1.closed) {
             msg1.focus();
         }
@@ -180,9 +191,13 @@ if ($this->item->path) {
 <form
         action="<?php
 		$input = new JInput;
-		if ($input->get('layout', '', 'string') == 'modal') {
+
+		if ($input->get('layout', '', 'string') == 'modal')
+		{
 			$url = 'index.php?option=com_biblestudy&layout=mediafileform&tmpl=component&layout=modal&a_id=' . (int) $this->item->id;
-		} else {
+		}
+		else
+		{
 			$url = 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&a_id=' . (int) $this->item->id;
 		} echo $url;
 		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
@@ -190,14 +205,21 @@ if ($this->item->path) {
     <legend>
 		<?php
 		echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
-		if ($input->get('layout', '', 'string') == 'modal') {
+
+		if ($input->get('layout', '', 'string') == 'modal')
+		{
 			?>
             <div class="fltlft">
                 <button type="button" onclick="submitbutton('mediafileform.save');  ">
 					<?php echo JText::_('JSAVE'); ?></button>
                 <button type="button" onclick="window.parent.SqueezeBox.close();  ">
 					<?php echo JText::_('JCANCEL'); ?></button>
-            </div> <?php } else { ?>
+            </div>
+			<?php
+		}
+		else
+		{
+			?>
             <div class="fltlft">
                 <button type="button" onclick="submitbutton('mediafileform.save');  ">
 					<?php echo JText::_('JSAVE'); ?></button>
@@ -235,7 +257,9 @@ if ($this->item->path) {
 <div class="tab-content">
 <div class="tab-pane active" id="general">
 
-	<?php if ($input->get('layout', '', 'string') == 'modal') { ?>
+	<?php if ($input->get('layout', '', 'string') == 'modal')
+{
+	?>
     <div class="control-group  form-inline">
         <button type="button" onclick="submitbutton('mediafile.save');  ">
 			<?php echo JText::_('JSAVE'); ?></button>
@@ -508,8 +532,6 @@ if ($this->item->path) {
         </div>
 		<?php endforeach; ?>
 	<?php endforeach; ?>
-
-
 </div>
 <div class="tab-pane" id="state">
     <fieldset>
@@ -539,8 +561,6 @@ if ($this->item->path) {
 				<?php echo $this->form->getInput('language'); ?>
             </div>
         </div>
-
-
 </div>
 <?php if ($this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
@@ -550,9 +570,7 @@ if ($this->item->path) {
 			<?php echo $this->form->getInput('rules'); ?>
         </div>
     </div>
-
 </div>
-
 	<?php endif; ?>
 </fieldset>
 <input type="hidden" name="flupfile" value=""/>
@@ -560,8 +578,6 @@ if ($this->item->path) {
 <input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 <?php echo JHtml::_('form.token'); ?>
 <input type="hidden" name="controller" value="mediafile"/>
-
-
 </div>
 </fieldset>
 </div>

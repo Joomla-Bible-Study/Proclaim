@@ -29,12 +29,12 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesList
 	 *
-	 * @param   object  $row           JTable
-	 * @param   object  $params        Item Params
-	 * @param   string  $oddeven       Odd Even
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
-	 * @param   string  $view          View
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   string     $oddeven       Odd Even
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $template      Template
+	 * @param   string     $view          View
 	 *
 	 * @return string
 	 */
@@ -134,11 +134,11 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesLink
 	 *
-	 * @param   string  $islink        Is a link
-	 * @param   object  $row           Row Info
-	 * @param   string  $element       Element
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   string     $islink        Is a link
+	 * @param   object     $row           Row Info
+	 * @param   string     $element       Element
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -162,11 +162,11 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get StudiesLink
 	 *
-	 * @param   string  $islink        Is a Link
-	 * @param   object  $row           JTable
-	 * @param   object  $element       Element
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   string     $islink        Is a Link
+	 * @param   object     $row           JTable
+	 * @param   object     $element       Element
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -181,14 +181,14 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Element
 	 *
-	 * @param   string  $r              ?
-	 * @param   object  $row            JTable
-	 * @param   int     $listelementid  Elemint ID
-	 * @param   string  $custom         Costum
-	 * @param   string  $islink         Is a Link
-	 * @param   object  $admin_params   Admin Params
-	 * @param   object  $params         Item Params
-	 * @param   string  $view           View
+	 * @param   string     $r              ?
+	 * @param   object     $row            JTable
+	 * @param   int        $listelementid  Elemint ID
+	 * @param   string     $custom         Costum
+	 * @param   string     $islink         Is a Link
+	 * @param   JRegistry  $admin_params   Admin Params
+	 * @param   JRegistry  $params         Item Params
+	 * @param   string     $view           View
 	 *
 	 * @return string
 	 */
@@ -288,13 +288,13 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string  $r              ?
-	 * @param   object  $row            JTable
-	 * @param   object  $customelement  ?
-	 * @param   string  $custom         ?
-	 * @param   string  $islink         Is a Link
-	 * @param   object  $admin_params   Admin Params
-	 * @param   object  $params         Item Params
+	 * @param   string     $r              ?
+	 * @param   object     $row            JTable
+	 * @param   object     $customelement  ?
+	 * @param   string     $custom         ?
+	 * @param   string     $islink         Is a Link
+	 * @param   JRegistry  $admin_params   Admin Params
+	 * @param   JRegistry  $params         Item Params
 	 *
 	 * @return string
 	 */
@@ -365,11 +365,11 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesStudies DBO
 	 *
-	 * @param   int     $id      ID
-	 * @param   object  $params  Item Params
-	 * @param   string  $limit   Limit of Records
+	 * @param   int        $id      ID
+	 * @param   JRegistry  $params  Item Params
+	 * @param   string     $limit   Limit of Records
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = '')
 	{
@@ -427,10 +427,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesStudies
 	 *
-	 * @param   int     $id            ID
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   int        $id            ID
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $template      Template
 	 *
 	 * @return string
 	 */
@@ -523,10 +523,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object  $row           JTable
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $template      Template
 	 *
 	 * @return object
 	 */
@@ -550,10 +550,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object  $row           JTable
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $template      Template
 	 *
 	 * @return object
 	 */
@@ -576,10 +576,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int     $id            ID
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   int        $id            ID
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $template      Template
 	 *
 	 * @return string
 	 */
@@ -600,7 +600,7 @@ class JBSMSerieslist extends JBSMListing
 		}
 
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
-		$numrows = count($result);
+		$numrows = count($items);
 
 		$studies = '';
 

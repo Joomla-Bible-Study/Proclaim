@@ -51,7 +51,7 @@ class JBSMTeacher extends JBSMListing
 			$teacherid  = $params->get('listteachers');
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
-		if ($viewtype == 'sermon' && $id)
+		if ($viewtype == 'sermon' && $id != 0)
 		{
 			$teacherids->id = $id;
 		}
@@ -143,10 +143,10 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object  $row           Table Row
-	 * @param   object  $params        Item Params
-	 * @param   object  $template      Template
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object     $row           Table Row
+	 * @param   JRegistry  $params        Item Params
+	 * @param   int        $template      Template
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return object
 	 */
@@ -161,16 +161,21 @@ class JBSMTeacher extends JBSMListing
 
 		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
-
 		$label = $params->get('teacher_detailtemplate');
 		$label = str_replace('{{teacher}}', $row->teachername, $label);
 		$label = str_replace('{{title}}', $row->title, $label);
 		$label = str_replace('{{phone}}', $row->phone, $label);
 		$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
 		$label = str_replace('{{information}}', $row->information, $label);
-		$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
+		$label = str_replace(
+			'{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="'
+				. $imagelarge->height . '" />', $label
+		);
 		$label = str_replace('{{short}}', $row->short, $label);
-		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
+		$label = str_replace(
+			'{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="'
+				. $imagesmall->height . '" />', $label
+		);
 
 		return $label;
 	}
@@ -178,10 +183,10 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int     $id            Item ID
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   int        $id            Item ID
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template
 	 *
 	 * @return string
 	 *
@@ -227,7 +232,6 @@ class JBSMTeacher extends JBSMListing
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-
 
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();

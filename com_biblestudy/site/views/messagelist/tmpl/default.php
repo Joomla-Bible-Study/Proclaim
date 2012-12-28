@@ -2,20 +2,23 @@
 /**
  * Default
  *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL) {
+if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 	JHtml::_('bootstrap.tooltip');
 	JHtml::_('dropdown.init');
 	JHtml::_('formbehavior.chosen', 'select');
-} else {
+}
+else
+{
 	JHtml::_('behavior.tooltip');
 	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
@@ -89,7 +92,8 @@ $saveOrder = $listOrder == 'ordering';
             <thead>
             <tr>
                 <th width="1%" class="hidden-phone">
-                    <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+                    <input type="checkbox" name="checkall-toggle" value=""
+                           title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                 </th>
                 <th width="1%" class="nowrap hidden-phone">
 					<?php echo 'id'; ?>
@@ -124,7 +128,7 @@ $saveOrder = $listOrder == 'ordering';
 				?>
             <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id; ?>">
                 <td class="center hidden-phone">
-		            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center hidden-phone">
 					<?php echo (int) $item->id; ?>
@@ -148,22 +152,26 @@ $saveOrder = $listOrder == 'ordering';
                     </div>
                     <div class="pull-left">
 						<?php
-						if (BIBLESTUDY_CHECKREL) {
+						if (BIBLESTUDY_CHECKREL)
+						{
 							// Create dropdown items
 							if ($item->published) :
-								JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagelist.'); else :
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
+							else :
 								JHtml::_('dropdown.publish', 'cb' . $i, 'messagelist.');
 							endif;
 
 							JHtml::_('dropdown.divider');
 
 							if ($archived) :
-								JHtml::_('dropdown.unarchive', 'cb' . $i, 'messagelist.'); else :
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'messagelist.');
+							else :
 								JHtml::_('dropdown.archive', 'cb' . $i, 'messagelist.');
 							endif;
 
 							if ($trashed) :
-								JHtml::_('dropdown.untrash', 'cb' . $i, 'messagelist.'); else :
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'messagelist.');
+							else :
 								JHtml::_('dropdown.trash', 'cb' . $i, 'messagelist.');
 							endif;
 

@@ -2,20 +2,23 @@
 /**
  * Default
  *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL) {
+if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 	JHtml::_('bootstrap.tooltip');
 	JHtml::_('dropdown.init');
 	JHtml::_('formbehavior.chosen', 'select');
-} else {
+}
+else
+{
 	JHtml::_('behavior.tooltip');
 	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
@@ -68,7 +71,8 @@ $sortFields = $this->getSortFields();
                         onclick="document.id('filter_search').value='';this.form.submit();"
                         title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
             </div>
-			<?php if (BIBLESTUDY_CHECKREL) { ?>
+			<?php if (BIBLESTUDY_CHECKREL)
+		{ ?>
             <div class="btn-group pull-right hidden-phone">
                 <label for="limit"
                        class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
@@ -79,8 +83,12 @@ $sortFields = $this->getSortFields();
                        class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
                 <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                     <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-                    <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
-                    <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
+                    <option value="asc" <?php if ($listDirn == 'asc') {
+	                    echo 'selected="selected"';
+                    } ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
+                    <option value="desc" <?php if ($listDirn == 'desc') {
+	                    echo 'selected="selected"';
+                    } ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
                 </select>
             </div>
 			<?php } ?>
@@ -165,24 +173,28 @@ $sortFields = $this->getSortFields();
                     </div>
                     <div class="pull-left">
 						<?php
-						if (BIBLESTUDY_CHECKREL) {
+						if (BIBLESTUDY_CHECKREL)
+						{
 							// Create dropdown items
 							JHtml::_('dropdown.edit', $item->id, 'article.');
 							JHtml::_('dropdown.divider');
 							if ($item->published) :
-								JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.'); else :
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+							else :
 								JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
 							endif;
 
 							JHtml::_('dropdown.divider');
 
 							if ($archived) :
-								JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.'); else :
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+							else :
 								JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
 							endif;
 
 							if ($trashed) :
-								JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.'); else :
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+							else :
 								JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
 							endif;
 

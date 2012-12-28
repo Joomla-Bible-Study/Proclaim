@@ -10,6 +10,7 @@ defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 // ???? not sure if we need to load this ???
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
@@ -34,7 +35,7 @@ class JBSMElements extends JBSAdmin
 	 * @param   object     $row           Table info
 	 * @param   JRegistry  $params        Component / System Params
 	 * @param   object     $admin_params  Admin Settings
-	 * @param   object     $template      Template
+	 * @param   int        $template      Template ID
 	 *
 	 * @todo Redo to MVC Standers under a class
 	 * @return object
@@ -640,7 +641,7 @@ class JBSMElements extends JBSAdmin
 	 * @param   object  $row           JTable
 	 * @param   string  $textorpdf     Text Or PDF location
 	 * @param   object  $admin_params  Admin info
-	 * @param   object  $template      Template info
+	 * @param   int     $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -650,7 +651,13 @@ class JBSMElements extends JBSAdmin
 
 		$images = new JBSMImages;
 		$input  = new JInput;
+
+		if (!$template)
+		{
 		$t      = $input->get('t', 1, 'int');
+			$template = JBSMParams::getTemplateparams();
+		}
+
 
 		if (!$template->text || !substr_count($template->text, '/'))
 		{

@@ -3,10 +3,10 @@
 /**
  * Message JViewLegacy
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -19,8 +19,8 @@ JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params
  * View class for Message
  *
  * @property mixed document
- * @package BibleStudy.Site
- * @since   7.0.0
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
 class BiblestudyViewMessageform extends JViewLegacy
 {

@@ -2,20 +2,23 @@
 /**
  * Default
  *
- * @package BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL) {
+if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 	JHtml::_('bootstrap.tooltip');
 	JHtml::_('dropdown.init');
 	JHtml::_('formbehavior.chosen', 'select');
-} else {
+}
+else
+{
 	JHtml::_('behavior.tooltip');
 	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
@@ -77,8 +80,14 @@ $sortFields = $this->getSortFields();
                        class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
                 <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                     <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-                    <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
-                    <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
+                    <option value="asc" <?php if ($listDirn == 'asc')
+                    {
+	                    echo 'selected="selected"';
+                    } ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
+                    <option value="desc" <?php if ($listDirn == 'desc')
+                    {
+	                    echo 'selected="selected"';
+                    } ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
                 </select>
             </div>
             <div class="btn-group pull-right">
@@ -158,35 +167,37 @@ $sortFields = $this->getSortFields();
 						<?php else : ?>
 						<?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
 						<?php endif; ?>
-                    </div><div class="pull-left">
-	                <?php
-	                if (BIBLESTUDY_CHECKREL) {
-		                // Create dropdown items
-		                if ($item->published) :
-			                JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafilelist.');
-		                else :
-			                JHtml::_('dropdown.publish', 'cb' . $i, 'mediafilelist.');
-		                endif;
+                    </div>
+                    <div class="pull-left">
+						<?php
+						if (BIBLESTUDY_CHECKREL)
+						{
+							// Create dropdown items
+							if ($item->published) :
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafilelist.');
+							else :
+								JHtml::_('dropdown.publish', 'cb' . $i, 'mediafilelist.');
+							endif;
 
-		                JHtml::_('dropdown.divider');
+							JHtml::_('dropdown.divider');
 
-		                if ($archived) :
-			                JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediafilelist.');
-		                else :
-			                JHtml::_('dropdown.archive', 'cb' . $i, 'mediafilelsit.');
-		                endif;
+							if ($archived) :
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediafilelist.');
+							else :
+								JHtml::_('dropdown.archive', 'cb' . $i, 'mediafilelsit.');
+							endif;
 
-		                if ($trashed) :
-			                JHtml::_('dropdown.untrash', 'cb' . $i, 'mediafilelist.');
-		                else :
-			                JHtml::_('dropdown.trash', 'cb' . $i, 'mediafilelist.');
-		                endif;
+							if ($trashed) :
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'mediafilelist.');
+							else :
+								JHtml::_('dropdown.trash', 'cb' . $i, 'mediafilelist.');
+							endif;
 
-		                // Render dropdown list
-		                echo JHtml::_('dropdown.render');
-	                }
-	                ?>
-                </div>
+							// Render dropdown list
+							echo JHtml::_('dropdown.render');
+						}
+						?>
+                    </div>
                 </td>
                 <td class="nowrap has-context">
                     <div class="pull-left">

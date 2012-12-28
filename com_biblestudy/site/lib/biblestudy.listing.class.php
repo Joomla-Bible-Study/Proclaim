@@ -828,8 +828,8 @@ class JBSMListing extends JBSMElements
 	 * @param   string     $allow_entry   Allow Entry
 	 * @param   JRegistry  $params        Itom Params
 	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   string     $row           Row info
-	 * @param   object     $template      Template info
+	 * @param   object     $row           Row info
+	 * @param   int        $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -1154,7 +1154,7 @@ class JBSMListing extends JBSMElements
 		jimport('joomla.html.parameter');
 
 		// Finde a better way to do this.
-		$template = new stdClass;
+		$template     = new stdClass;
 		$template->id = '1';
 
 		$sharetype = $admin_params->get('sharetype', 1);
@@ -1490,10 +1490,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Title
 	 *
-	 * @param   object  $params        System Params
-	 * @param   object  $row           Item info
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template
+	 * @param   JRegistry  $params        System Params
+	 * @param   object     $row           Item info
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template
 	 *
 	 * @return string
 	 */
@@ -1533,7 +1533,7 @@ class JBSMListing extends JBSMElements
 					$title .= $row->topics_text;
 					break;
 				case 7:
-					$elementid = $custom->getCustom($rowid = null, $params->get('customtitle1'), $row, $params, $admin_params, $template);
+					$elementid = $custom->getCustom($rowid = 0, $params->get('customtitle1'), $row, $params, $admin_params, $template);
 					$title .= $elementid->element;
 					break;
 			}
@@ -1570,7 +1570,7 @@ class JBSMListing extends JBSMElements
 					$title .= $row->topics_text;
 					break;
 				case 7:
-					$elementid = $custom->getCustom($rowid = null, $params->get('customtitle2'), $row, $params, $admin_params, $template);
+					$elementid = $custom->getCustom($rowid = 0, $params->get('customtitle2'), $row, $params, $admin_params, $template);
 					$title .= $elementid->element;
 					break;
 			}
@@ -1585,12 +1585,12 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Header
 	 *
-	 * @param object $row
-	 * @param object $params
-	 * @param object $admin_params
-	 * @param object $template
-	 * @param int    $showheader
-	 * @param int    $ismodule
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template ID
+	 * @param   int        $showheader    Show Hide item
+	 * @param   int        $ismodule      ?
 	 *
 	 * @return string
 	 */
@@ -2080,18 +2080,18 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * Get Heder Cell
+	 * Get Header Cell
 	 *
-	 * @param   int     $rowid         Table Row ID
-	 * @param   object  $row           Item info
-	 * @param   object  $params        Item Params
-	 * @param   int     $lastcol       Last Column
-	 * @param   int     $colspan       Column Span
-	 * @param   int     $rowspan       Row Span
-	 * @param   int     $rowcolid      RowCol Id
-	 * @param   string  $nh            ?
-	 * @param   object  $admin_params  Admin Params
-	 * @param   object  $template      Template Params
+	 * @param   int        $rowid         Table Row ID
+	 * @param   object     $row           Item info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   int        $lastcol       Last Column
+	 * @param   int        $colspan       Column Span
+	 * @param   int        $rowspan       Row Span
+	 * @param   int        $rowcolid      RowCol Id
+	 * @param   string     $nh            ?
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -2152,8 +2152,7 @@ class JBSMListing extends JBSMElements
 		{
 			$headercell .= $this->getCustomhead($rowcolid, $params);
 		}
-		$headercell .= '</th>
-		';
+		$headercell .= '</th>';
 
 		return $headercell;
 	}
@@ -2161,8 +2160,8 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int     $rowcolid  Row ID Column
-	 * @param   object  $params    Item Params
+	 * @param   int        $rowcolid  Row ID Column
+	 * @param   JRegistry  $params    Item Params
 	 *
 	 * @return string
 	 */

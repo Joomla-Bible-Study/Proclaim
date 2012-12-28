@@ -122,7 +122,9 @@ class BiblestudyController extends JControllerLegacy
 		if ($vName == 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
-			return JError::raiseError(403, JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
+			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
+
+			return false;
 		}
 
 		parent::display($cachable, $safeurlparams);
@@ -173,7 +175,7 @@ class BiblestudyController extends JControllerLegacy
 
 				$cap = 0;
 
-				return null;
+				return;
 			}
 			else
 			{
@@ -198,7 +200,7 @@ class BiblestudyController extends JControllerLegacy
 
 			if ($params->get('email_comments') > 0)
 			{
-				$EmailResult = $this->commentsEmail($params);
+				$this->commentsEmail($params);
 			}
 			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
@@ -235,10 +237,9 @@ class BiblestudyController extends JControllerLegacy
 		$comment_abspath   = JPATH_SITE;
 		$comment_mailfrom  = $config->getValue('config.mailfrom');
 		$comment_fromname  = $config->getValue('config.fromname');
-		;
-		$comment_livesite = JURI::root();
-		$db               = JFactory::getDBO();
-		$query            = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE id = ' . $comment_study_id;
+		$comment_livesite  = JURI::root();
+		$db                = JFactory::getDBO();
+		$query             = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE id = ' . $comment_study_id;
 		$db->setQuery($query);
 		$comment_details    = $db->loadObject();
 		$comment_title      = $comment_details->studytitle;
@@ -277,9 +278,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function download()
 	{
-		$abspath = JPATH_SITE;
-		// --require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-		JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
+		JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
 		$task = $this->input->get('task');
 
 		if ($task == 'download')
@@ -320,8 +319,7 @@ class BiblestudyController extends JControllerLegacy
 	public function playHit()
 	{
 		$input = new JInput;
-		// --require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-		JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
+		JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 		$getMedia = new jbsMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
@@ -346,10 +344,11 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function uploadflash()
 	{
-		//JRequest::checktoken() or jexit('Invalid Token');
+		// JRequest::checktoken() or jexit('Invalid Token');
 		$option = $this->input->get('option', '', 'cmd');
 		jimport('joomla.filesystem.file');
-		//get the server and folder id from the request
+
+		// Get the server and folder id from the request
 		$serverid = $this->input->get('upload_server', '', 'int');
 		$folderid = $this->input->get('upload_folder', '', 'int');
 		$app      = JFactory::getApplication();
@@ -357,12 +356,15 @@ class BiblestudyController extends JControllerLegacy
 		$app->setUserState($option . 'folderid', $folderid);
 		$form     = $this->input->get('jform', '', 'array');
 		$returnid = $form['id'];
-		// get temp file details
+
+		// Get temp file details
 		$temp        = JBSMUpload::gettempfile();
 		$temp_folder = JBSMUpload::gettempfolder();
 		$tempfile    = $temp_folder . $temp;
-		// get path and abort if none
+
+		// Get path and abort if none
 		$layout = $this->input->get('layout', '', 'string');
+
 		if ($layout == 'modal')
 		{
 			$url = 'index.php?option=' . $option . '&view=mediafileform&task=edit&tmpl=component&layout=modal&a_id=' . $returnid;
@@ -373,18 +375,20 @@ class BiblestudyController extends JControllerLegacy
 		}
 		$path = JBSMUpload::getpath($url, $tempfile);
 
-		// check filetype is allowed
+		// Check filetype is allowed
 		$allow = JBSMUpload::checkfile($temp);
+
 		if ($allow)
 		{
 			$filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
 
-			// process file
+			// Process file
 			$uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
+
 			if (!$uploadmsg)
 			{
-				// set folder and link entries
+				// Set folder and link entries
 
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
@@ -398,6 +402,7 @@ class BiblestudyController extends JControllerLegacy
 
 		JBSMUpload::deletetempfile($tempfile);
 		$mediafileid = $this->input->get('id', '', 'int');
+
 		if ($layout == 'modal')
 		{
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&tmpl=component&layout=modal&a_id=' . $returnid, $uploadmsg);
@@ -408,81 +413,81 @@ class BiblestudyController extends JControllerLegacy
 		}
 	}
 
-    /*
-     * Upload Flash System
-     * @return text
-     */
-/*    function upflash() {
-       jimport('joomla.filesystem.file');
-        jimport('joomla.filesystem.folder');
-        $serverid = JRequest::getInt('upload_server', '', 'post');
-        $folderid = JRequest::getInt('upload_folder', '', 'post');
-        //import joomla filesystem functions, we will do all the filewriting with joomlas functions,
-        //so if the ftp layer is on, joomla will write with that, not the apache user, which might
-        //not have the correct permissions
-        $abspath = JPATH_SITE;
-        //this is the name of the field in the html form, filedata is the default name for swfupload
-        //so we will leave it as that
-        $fieldName = 'Filedata';
-        //any errors the server registered on uploading
-        $fileError = $_FILES[$fieldName]['error'];
-        if ($fileError > 0) {
-            switch ($fileError) {
-               case 1:
-                    echo JText::_('JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS');
-                    return;
+	/*
+	 * Upload Flash System
+	 * @return text
+	 */
+	/*    function upflash() {
+		   jimport('joomla.filesystem.file');
+			jimport('joomla.filesystem.folder');
+			$serverid = JRequest::getInt('upload_server', '', 'post');
+			$folderid = JRequest::getInt('upload_folder', '', 'post');
+			//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
+			//so if the ftp layer is on, joomla will write with that, not the apache user, which might
+			//not have the correct permissions
+			$abspath = JPATH_SITE;
+			//this is the name of the field in the html form, filedata is the default name for swfupload
+			//so we will leave it as that
+			$fieldName = 'Filedata';
+			//any errors the server registered on uploading
+			$fileError = $_FILES[$fieldName]['error'];
+			if ($fileError > 0) {
+				switch ($fileError) {
+				   case 1:
+						echo JText::_('JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS');
+						return;
 
-               case 2:
-                    echo JText::_('JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS');
-                    return;
+				   case 2:
+						echo JText::_('JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS');
+						return;
 
-                case 3:
-                    echo JText::_('JBS_MED_ERROR_PARTIAL_UPLOAD');
-                    return;
+					case 3:
+						echo JText::_('JBS_MED_ERROR_PARTIAL_UPLOAD');
+						return;
 
-                case 4:
-                    echo JText::_('JBS_MED_ERROR_NO_FILE');
-                    return;
-            }
-        }
+					case 4:
+						echo JText::_('JBS_MED_ERROR_NO_FILE');
+						return;
+				}
+			}
 
-        // Check for filesize
-        $fileSize = $_FILES[$fieldName]['size'];
-        if ($fileSize > 500000000) {
-            echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
-        }
+			// Check for filesize
+			$fileSize = $_FILES[$fieldName]['size'];
+			if ($fileSize > 500000000) {
+				echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
+			}
 
-        // Check the file extension is ok
-        $fileName = $_FILES[$fieldName]['name'];
-        $extOk = JBSMUpload::checkfile($fileName);
-        $app = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
-        $app->setUserState($option.'size', $_FILES[$fieldName]['size']);
-        $app->setUserState($option.'serverid', $serverid);
-        $app->setUserState($option.'folderid', $folderid);
-        if ($extOk == false) {
-            echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
-            return;
-        }
+			// Check the file extension is ok
+			$fileName = $_FILES[$fieldName]['name'];
+			$extOk = JBSMUpload::checkfile($fileName);
+			$app = JFactory::getApplication();
+			$option = JRequest::getCmd('option');
+			$app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
+			$app->setUserState($option.'size', $_FILES[$fieldName]['size']);
+			$app->setUserState($option.'serverid', $serverid);
+			$app->setUserState($option.'folderid', $folderid);
+			if ($extOk == false) {
+				echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
+				return;
+			}
 
-        // The name of the file in PHP's temp directory that we are going to move to our folder
-        $fileTemp = $_FILES[$fieldName]['tmp_name'];
+			// The name of the file in PHP's temp directory that we are going to move to our folder
+			$fileTemp = $_FILES[$fieldName]['tmp_name'];
 
-        // Always use constants when making file paths, to avoid the possibilty of remote file inclusion
+			// Always use constants when making file paths, to avoid the possibilty of remote file inclusion
 
-        $uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
+			$uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
 
 
-        if (!JFile::upload($fileTemp, $uploadPath)) {
-            echo JText::_('JBS_MED_ERROR_MOVING_FILE');
-            return;
-        } else {
+			if (!JFile::upload($fileTemp, $uploadPath)) {
+				echo JText::_('JBS_MED_ERROR_MOVING_FILE');
+				return;
+			} else {
 
-            // success, exit with code 0 for Mac users, otherwise they receive an IO Error
-            exit(0);
-        }
-    } */
+				// success, exit with code 0 for Mac users, otherwise they receive an IO Error
+				exit(0);
+			}
+		} */
 
 	/**
 	 * Upload function
@@ -518,7 +523,7 @@ class BiblestudyController extends JControllerLegacy
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
 		}
-		$app         = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$app->setUserState($option . 'fname', $file['name']);
 		$app->setUserState($option . 'size', $file['size']);
 		$app->setUserState($option . 'serverid', $serverid);

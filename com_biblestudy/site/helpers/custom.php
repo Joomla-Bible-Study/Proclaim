@@ -27,7 +27,7 @@ class JBSMCustom extends JBSMElements
 	 * @param   object     $row           Row info
 	 * @param   JRegistry  $params        Params for intro
 	 * @param   object     $admin_params  Admin Params
-	 * @param   object     $template      Template ID
+	 * @param   int        $template      Template ID
 	 *
 	 * @return object
 	 */

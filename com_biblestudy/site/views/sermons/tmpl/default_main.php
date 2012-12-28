@@ -2,10 +2,10 @@
 /**
  * Default Main
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -28,7 +28,7 @@ $JViewLegacy = new JViewLegacy;
 $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 // @todo are we using these $teachers & $listingcall
-$teachers    = $params->get('teacher_id');
+$teachers = $params->get('teacher_id');
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsheader">
@@ -45,7 +45,7 @@ $teachers    = $params->get('teacher_id');
 				?>
                 <img src="<?php echo JURI::base() . $this->main->path; ?>"
                      alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
-                     height="<?php echo $this->main->height; ?>" />
+                     height="<?php echo $this->main->height; ?>"/>
 				<?php
 				// End of column for logo
 			}
@@ -60,7 +60,7 @@ $teachers    = $params->get('teacher_id');
 		<?php
 		if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 		{
-			$teacher = $JBSMTeacher->getTeacher($params, $id = null, $this->admin_params);
+			$teacher = $JBSMTeacher->getTeacher($params, $id = 0, $this->admin_params);
 
 			if ($teacher)
 			{

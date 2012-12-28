@@ -3,10 +3,10 @@
 /**
  * Related Helper
  *
- * @package   BibleStudy.Site
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  **/
 
 defined('_JEXEC') or die;
@@ -14,33 +14,35 @@ defined('_JEXEC') or die;
 /**
  * helper to get related studies to the current one
  *
- * @package BibleStudy.Site
- * @since   7.1.0
+ * @package  BibleStudy.Site
+ * @since    7.1.0
  */
-class relatedStudies
+class RelatedStudies
 {
 	public $score;
 
 	/**
 	 * Get Related
 	 *
-	 * @param object $row
-	 * @param object $params
+	 * @param   object  $row     JTable
+	 * @param   object  $params  Item Params
 	 *
 	 * @return boolean
+	 *
 	 * @todo need to look if all is needed.
 	 */
-	function getRelated($row, $params)
+	public function getRelated($row, $params)
 	{
 		$this->score = array();
 		$keygo       = true;
 		$topicsgo    = true;
-		$registry    = new JRegistry();
+		$registry    = new JRegistry;
 		$registry->loadString($row->params);
 		$params     = $registry;
 		$keywords   = $params->get('metakey');
 		$topics     = $row->topics_id;
 		$topicslist = $this->getTopics();
+
 		if (!$keywords)
 		{
 			if ($row->studyintro)
@@ -63,9 +65,10 @@ class relatedStudies
 			return false;
 		}
 		$studies = $this->getStudies();
+
 		foreach ($studies as $study)
 		{
-			$registry = new JRegistry();
+			$registry = new JRegistry;
 			$registry->loadString($study->params);
 			$sparams = $registry;
 			$compare = $sparams->get('metakey');
@@ -97,13 +100,13 @@ class relatedStudies
 	/**
 	 * Parse keys
 	 *
-	 * @param string $source
-	 * @param string $compare
-	 * @param int    $id
+	 * @param   string  $source   ?
+	 * @param   string  $compare  ?
+	 * @param   int     $id       ?
 	 *
 	 * @return boolean
 	 */
-	function parseKeys($source, $compare, $id)
+	public function parseKeys($source, $compare, $id)
 	{
 		$sourceisarray  = false;
 		$compareisarray = false;
@@ -163,7 +166,7 @@ class relatedStudies
 	 *
 	 * @return JObject
 	 */
-	function getStudies()
+	public function getStudies()
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
@@ -175,9 +178,9 @@ class relatedStudies
 		$query->group('s.id');
 		$query->where('s.published = 1');
 		$db->setQuery($query);
-		//$db->query();
 		$studies = $db->loadObjectList();
-		//check permissions for this view by running through the records and removing those the user doesn't have permission to see
+
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($studies);
@@ -200,12 +203,12 @@ class relatedStudies
 	/**
 	 * Look for Related Links.
 	 *
-	 * @param array $scored
-	 * @param object $params
+	 * @param   array      $scored  ?
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return string
 	 */
-	function getRelatedLinks($scored, $params)
+	public function getRelatedLinks($scored, $params)
 	{
 		$db           = JFactory::getDBO();
 		$scored       = array_count_values($scored);
@@ -214,6 +217,7 @@ class relatedStudies
 		$links        = array();
 		$studyrecords = array();
 		$studyrecord  = '';
+
 		foreach ($output as $key => $value)
 		{
 			$links[] = $key;
@@ -227,15 +231,18 @@ class relatedStudies
 			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
 			$query->where('s.id = ' . $link);
 			$db->setQuery($query);
-			//$db->query();
 			$studyrecords[] = $db->loadObject();
 		}
 
 		$related = '<select onchange="goTo()" id="urlList"><option value="">' . JText::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = new JInput;
+
 		foreach ($studyrecords as $studyrecord)
 		{
-			$related .= '<option value="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int')) . '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin . '</option>';
+			$related .= '<option value="'
+					. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+					. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
+					. ' ' . $studyrecord->chapter_begin . '</option>';
 		}
 		$related .= '</select>';
 
@@ -249,7 +256,7 @@ class relatedStudies
 	 *
 	 * @return string
 	 */
-	function getTopics()
+	public function getTopics()
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
@@ -259,6 +266,7 @@ class relatedStudies
 		$db->setQuery($query);
 		$topics     = $db->loadObjectList();
 		$topicslist = array();
+
 		foreach ($topics as $key => $value)
 		{
 			foreach ($value as $v)
@@ -274,11 +282,11 @@ class relatedStudies
 	/**
 	 * Remove Common Words form render.
 	 *
-	 * @param string $input
+	 * @param   string  $input  Home
 	 *
 	 * @return array
 	 */
-	function removeCommonWords($input)
+	public function removeCommonWords($input)
 	{
 
 		$commonWords  = array(
