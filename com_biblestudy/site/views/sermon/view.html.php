@@ -29,13 +29,21 @@ JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.clas
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
-
+	/**
+	 * @var object
+	 */
 	protected $item;
 
+	/**
+	 * @var JRegistry
+	 */
 	protected $params;
 
 	protected $print;
 
+	/**
+	 * @var JRegistry
+	 */
 	protected $state;
 
 	protected $user;
@@ -146,6 +154,7 @@ class BiblestudyViewSermon extends JViewLegacy
 				// Check for alternative layouts (since we are not in a single-article menu item)
 				// Single-article menu item layout takes priority over alt layout for an article
 				$layout = $item->params->get('sermon_layout');
+
 				if ($layout)
 				{
 					$this->setLayout($layout);
@@ -526,7 +535,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param string $tpl
+	 * @param   string  $tpl  ?
 	 *
 	 * @return void
 	 */

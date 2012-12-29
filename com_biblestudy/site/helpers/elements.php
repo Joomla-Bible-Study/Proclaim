@@ -651,13 +651,13 @@ class JBSMElements extends JBSAdmin
 
 		$images = new JBSMImages;
 		$input  = new JInput;
+		$t      = null;
 
 		if (!$template)
 		{
-		$t      = $input->get('t', 1, 'int');
+			$t        = $input->get('t', 1, 'int');
 			$template = JBSMParams::getTemplateparams();
 		}
-
 
 		if (!$template->text || !substr_count($template->text, '/'))
 		{
@@ -767,7 +767,6 @@ class JBSMElements extends JBSAdmin
 
 			return $mediatable;
 		}
-
 
 		$mediatable = '<div><table class="mediatable"><tbody><tr>';
 		$row_count  = 0;
@@ -1201,7 +1200,6 @@ class JBSMElements extends JBSAdmin
 		return $store;
 	}
 
-
 	/**
 	 * Get File Path
 	 *
@@ -1213,7 +1211,6 @@ class JBSMElements extends JBSAdmin
 	 */
 	public function getFilepath($id3, $idfield, $mime)
 	{
-
 		$mainframe = JFactory::getApplication();
 
 		$database = JFactory::getDBO();
@@ -1247,5 +1244,19 @@ class JBSMElements extends JBSAdmin
 		}
 
 		return $filepath;
+	}
+
+	/**
+	 * Only Return the Body of a html doc.
+	 *
+	 * @param   string  $html  Html document
+	 *
+	 * @return string
+	 *
+	 * @since 8.0.0
+	 */
+	public function body_only($html)
+	{
+		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
 	}
 }
