@@ -1,13 +1,9 @@
 <?php
-
 /**
- * Bible Study Component
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * @todo       Need to redisign to show progress stages.
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -50,16 +46,15 @@ class Com_BiblestudyInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string  $type    Type of install
-	 * @param   string  $parent  Where it is coming from
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 */
 	public function preflight($type, $parent)
 	{
-		// This component does not work with Joomla releases prior to 1.6
+		// This component does not work with Joomla releases prior to 2.5
 		// abort if the current Joomla release is older
-		$jversion = new JVersion;
 
 		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
 		/** @noinspection PhpUndefinedMethodInspection */
@@ -99,13 +94,13 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Only allow to install on Joomla! 2.5.0 or later
-		return version_compare(JVERSION, '2.5.0', 'ge');
+		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
 	}
 
 	/**
 	 * Install
 	 *
-	 * @param   string  $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
 	 * @return  void
 	 */
@@ -141,9 +136,9 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall
 	 *
-	 * @param   string  $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function uninstall($parent)
 	{
@@ -195,15 +190,15 @@ class Com_BiblestudyInstallerScript
 		{
 			$drop_result = '<H3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</H3>';
 		}
-		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->release . '</h2> <div>' . $drop_result . '</div>';
+		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
 	}
 
 	/**
 	 * Update
 	 *
-	 * @param   string  $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function update($parent)
 	{
@@ -216,10 +211,10 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string  $type    Type of install
-	 * @param   string  $parent  Where it is coming from
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function postflight($type, $parent)
 	{
@@ -245,7 +240,7 @@ class Com_BiblestudyInstallerScript
 			{
 				$query = $db->getQuery(true);
 				$query->update('#__schemas')
-						->set('version_id = ' . $db->q($this->release))
+						->set('version_id = ' . $db->q($this->_release))
 						->where('extension_id = ' . (int) $db->q($extensionid));
 				$db->setQuery($query);
 				$db->execute();
@@ -253,14 +248,14 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Set initial values for component parameters
-		$params['my_param0'] = 'Component version ' . $this->release;
+		$params['my_param0'] = 'Component version ' . $this->_release;
 		$params['my_param1'] = 'Start';
 		$params['my_param2'] = '1';
 		$this->setParams($params);
 
-		// Set installstate
+		// Set install state
 		$query1 = "UPDATE `#__bsms_admin` SET installstate =
-		'{\"release\":\"" . $this->release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type
+		'{\"release\":\"" . $this->_release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type
 				. "\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
 		$db->setQuery($query1);
 		$db->execute();
@@ -292,9 +287,9 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * sets parameter values in the component's row of the extension table
 	 *
-	 * @param   array  $param_array  Array of prarams to set.
+	 * @param   array  $param_array  Array of params to set.
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function setParams($param_array)
 	{
@@ -331,7 +326,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @since 7.1.0
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function deleteUnexistingFiles()
 	{
@@ -559,7 +554,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @since 7.1.0
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function fixMenus()
 	{
@@ -594,7 +589,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @since 7.1.0
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function fixImagePaths()
 	{
@@ -646,11 +641,11 @@ class Com_BiblestudyInstallerScript
 	}
 
 	/**
-	 * Funciton to find empty language field and set them to "*"
+	 * Function to find empty language field and set them to "*"
 	 *
 	 * @since 7.1.0
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function fixemptylanguage()
 	{
@@ -681,7 +676,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @since 7.1.0
 	 *
-	 * @return   null
+	 * @return   void
 	 */
 	public function fixemptyaccess()
 	{
@@ -723,6 +718,4 @@ class Com_BiblestudyInstallerScript
 			$db->execute();
 		}
 	}
-
 }
-
