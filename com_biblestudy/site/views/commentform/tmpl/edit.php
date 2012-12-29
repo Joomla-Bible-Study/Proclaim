@@ -37,10 +37,6 @@ JHtml::script(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 
-// Create shortcut to parameters.
-//$params = $this->state->get('params');
-//$params = $params->toArray();
-
 $app   = JFactory::getApplication();
 $input = $app->input;
 ?>

@@ -377,8 +377,8 @@ $input  = $app->input;
     <table class="adminlist">
         <thead>
         <tr>
-            <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-            <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
+            <th class="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+            <th class="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -387,7 +387,7 @@ $input  = $app->input;
 			foreach ($this->mediafiles as $i => $item) :
 				?>
             <tr class="row<?php echo $i % 2; ?>">
-                <td align="center">
+                <td class="center">
 					<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
                     <a class="btn btn-primary"
                        onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
@@ -395,7 +395,7 @@ $input  = $app->input;
 						<?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
                     </a>
                 </td>
-                <td align="center">
+                <td class="center">
 					<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                 </td>
 
@@ -405,7 +405,7 @@ $input  = $app->input;
 		else:
 			?>
         <tr>
-            <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
+            <td colspan="4" class="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
         </tr>
 			<?php endif; ?>
 

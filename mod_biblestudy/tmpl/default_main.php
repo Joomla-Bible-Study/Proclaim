@@ -24,7 +24,7 @@ $JBSMListing = new JBSMListing;
 <div id="biblestudy" class="noRefTagger">
     <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
     <!-- This div is the container for the whole page -->
-    <table id="bsmsmoduletable" cellspacing="0">
+    <table id="bsmsmoduletable">
 		<?php
 		$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
 		echo $header;

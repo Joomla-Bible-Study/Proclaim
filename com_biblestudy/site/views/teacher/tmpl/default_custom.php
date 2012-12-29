@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 
 $pathway      = $mainframe->getPathWay();
-$uri          = JFactory::getURI();
+$uri          = new JUri;
 $database     = JFactory::getDBO();
 $teacher      = $this->teacher;
 $admin_params = $this->admin_params;

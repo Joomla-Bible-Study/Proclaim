@@ -39,7 +39,6 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 */
 	protected $item;
 
-
 	/**
 	 * Return Page
 	 *

@@ -22,19 +22,30 @@ JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestud
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
-	public $admin;
+	/**
+	 * @var object
+	 */
+	protected $admin;
 
-	public $admin_params;
+	/**
+	 * @var JRegistry
+	 */
+	protected $admin_params;
 
-	public $items;
+	protected $items;
 
-	public $template;
+	protected $template;
 
-	public $pagination;
+	protected $pagination;
 
-	public $request_url;
+	protected $request_url;
 
-	public $params;
+	/**
+	 * @var JRegistry
+	 */
+	protected $params;
+
+	protected $page;
 
 	/**
 	 * Execute and display a template script.
@@ -71,7 +82,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$params             = $template->params;
 		$a_params           = JBSMParams::getAdmin();
 		$this->admin_params = $a_params->params;
-
+		/** @var $itemparams JRegistry */
 		$itemparams = $mainframe->getPageParameters();
 
 		// Prepare meta information (under development)
@@ -94,11 +105,15 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		}
 
 		$css = $params->get('css');
-		if ($css <= "-1"):
+
+		if ($css <= "-1")
+		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		else:
+		}
+		else
+		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		endif;
+		}
 
 
 		// Import Scripts
@@ -118,7 +133,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$document->addStyleSheet($url);
 		}
 
-		$uri           = JFactory::getURI();
+		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$pagebuilder   = new JBSPagebuilder;
 		$items         = $this->get('Items');
@@ -197,6 +212,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		// $this->lists = $lists;
 		$this->request_url = $uri_tostring;
 		$this->params      = $params;
+
 		parent::display($tpl);
 	}
 

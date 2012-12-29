@@ -140,7 +140,7 @@ $teachers = $params->get('teacher_id');
         <!--dropdownmenu-->
     </fieldset>
     <div class="clr"></div>
-    <table class="bslisttable" cellspacing="0">
+    <table class="bslisttable">
         <thead>
 		<?php
 		if (isset($this->items['0']))

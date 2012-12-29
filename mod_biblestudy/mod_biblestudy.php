@@ -21,7 +21,7 @@ $document = JFactory::getDocument();
 $document->addScript('media/com_biblestudy/js/tooltip.js');
 $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
-/** @var $params object */
+/** @var $params JRegistry */
 $templatemenuid = $params->get('t');
 $template       = modJBSMHelper::getTemplate($params);
 

@@ -123,7 +123,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 			$document->addStyleSheet($url);
 		}
 
-		$uri                = JFactory::getURI();
+		$uri                = new JUri;
 		$filter_topic       = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
 		$filter_book        = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
 		$filter_teacher     = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');

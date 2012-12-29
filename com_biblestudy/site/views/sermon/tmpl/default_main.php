@@ -22,7 +22,7 @@ $JViewLegacy = new JViewLegacy;
 $JViewLegacy->loadHelper('title');
 $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
-$row = $this->item;
+$row         = $this->item;
 ?>
 <div id="bsmHeader">
 	<?php
@@ -56,7 +56,9 @@ $row = $this->item;
 			echo $this->page->social;
 			?>
         </div>
-		<?php } //End Social Networking     ?>
+		<?php
+	} // End Social Networking
+	?>
 	<?php
 	if ($this->item->params->get('show_teacher_view') > 0)
 	{

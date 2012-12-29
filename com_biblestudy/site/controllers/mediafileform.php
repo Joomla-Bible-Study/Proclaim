@@ -305,9 +305,9 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	}
 
 	/**
-	 * Link to Articals Category Items
+	 * Link to Articles Category Items
 	 *
-	 * @todo This is brocken and not sure if needed.
+	 * @todo This is bracken and not sure if needed.
 	 * @return object
 	 */
 	public function articlesCategoryItems()

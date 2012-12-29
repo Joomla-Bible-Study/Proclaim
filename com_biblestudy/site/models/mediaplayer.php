@@ -93,7 +93,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 			$this->_data     = new stdClass;
 			$this->_data->id = 0;
 
-			//TF added these
+			// TF added these
 			$this->_data->published       = 0;
 			$this->_data->media_image     = null;
 			$this->_data->server          = null;
@@ -216,7 +216,9 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	 * @param   string  $direction  ACS or DEC
 	 *
 	 * @access    public
+	 *
 	 * @return    boolean    True on success
+	 *
 	 * @since    1.5
 	 */
 	public function move($direction)

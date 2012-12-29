@@ -52,16 +52,26 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 * @var array
 	 */
 	protected $pagination = null;
-	public $admin;
-	public $admin_params;
-	public $page;
-	public $seriesstudies;
-	public $template;
-	public $params;
-	public $article;
-	public $passage_link;
-	public $studies;
-	public $request_url;
+
+	protected $admin;
+
+	protected $admin_params;
+
+	protected $page;
+
+	protected $seriesstudies;
+
+	protected $template;
+
+	protected $params;
+
+	protected $article;
+
+	protected $passage_link;
+
+	protected $studies;
+
+	protected $request_url;
 
 	/**
 	 * Execute and display a template script.
@@ -240,10 +250,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$this->template = $template;
 		$this->params = $params;
 		$this->items = $items;
-		$this->article = $article;
-		$this->passage_link = $passage_link;
+
+		// --$this->article = $article;
+		// --$this->passage_link = $passage_link;
 		$this->studies = $studies;
-		$uri       = JFactory::getURI();
+		$uri       = new JUri;
 		$stringuri = $uri->toString();
 		$this->request_url = $stringuri;
 

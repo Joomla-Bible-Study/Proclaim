@@ -43,6 +43,6 @@ defined('_JEXEC') or die;
 			$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
 		}
 		?>
-        <a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0 ?>
+        <a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
 </div><!--end of footer div-->
 

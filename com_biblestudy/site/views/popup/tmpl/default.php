@@ -63,10 +63,7 @@ if (!$this->player)
             <div class=\'direct\'>
                 <iframe src="<?php echo $this->path1; ?>" width="100%" height="100%" scrolling="no" frameborder="1"
                         marginheight="0" marginwidth="0">
-                    <p>
 		                <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
-                    </p>
-
                 </iframe>
             </div>
             <?php

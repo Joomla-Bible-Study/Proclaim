@@ -33,7 +33,7 @@ class JBSMListing extends JBSMElements
 	 * @param   JRegistry  $params        Item Params
 	 * @param   string     $oddeven       ?Number patten?
 	 * @param   object     $admin_params  Admin info
-	 * @param   object     $template      Template info
+	 * @param   int        $template      Template ID
 	 * @param   string     $ismodule      If coming form a Module
 	 *
 	 * @return string
@@ -922,7 +922,7 @@ class JBSMListing extends JBSMElements
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 * @param   object     $row           Item Info
-	 * @param   object     $template      Template
+	 * @param   int        $template      Template
 	 *
 	 * @return string
 	 */
@@ -1143,7 +1143,7 @@ class JBSMListing extends JBSMElements
 	 * @param   string     $link          Link
 	 * @param   object     $row           Item Info
 	 * @param   JRegistry  $params        Item Params
-	 * @param   object     $admin_params  Admin Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return null|string
 	 *
@@ -1154,8 +1154,7 @@ class JBSMListing extends JBSMElements
 		jimport('joomla.html.parameter');
 
 		// Finde a better way to do this.
-		$template     = new stdClass;
-		$template->id = '1';
+		$template = (int) '1';
 
 		$sharetype = $admin_params->get('sharetype', 1);
 
@@ -1505,7 +1504,7 @@ class JBSMListing extends JBSMElements
 
 		if ($params->get('title_line_1') > 0)
 		{
-			$title = '<table id="titletable" cellspacing="0"><tbody><tr><td class="titlefirstline">';
+			$title = '<table id="titletable"><tbody><tr><td class="titlefirstline">';
 
 			switch ($params->get('title_line_1'))
 			{

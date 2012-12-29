@@ -309,9 +309,9 @@ class JBSPagebuilder
 	 *
 	 * @param   string  $whereitem     ?
 	 * @param   string  $wherefield    ?
-	 * @param   object  $params        Itom params
+	 * @param   object  $params        Item params
 	 * @param   object  $admin_params  Admin params
-	 * @param   int     $limit         Limet of Records
+	 * @param   int     $limit         Limit of Records
 	 * @param   string  $order         DESC or ASC
 	 *
 	 * @return object

@@ -37,7 +37,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	protected $item;
 
-
 	/**
 	 * Return Page
 	 *

@@ -80,7 +80,7 @@ class JBSMTeacher extends JBSMListing
 				$image->width  = 0;
 				$image->height = 0;
 			}
-			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+			$teacher .= '<td><table class="cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
 					. '" height="' . $image->height . '" alt="" /></td></tr>';
 
 			$teacher .= '<tr><td>';

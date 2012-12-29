@@ -34,7 +34,7 @@ class JBSMElements extends JBSAdmin
 	 * @param   int        $rowid         ID
 	 * @param   object     $row           Table info
 	 * @param   JRegistry  $params        Component / System Params
-	 * @param   object     $admin_params  Admin Settings
+	 * @param   JRegistry  $admin_params  Admin Settings
 	 * @param   int        $template      Template ID
 	 *
 	 * @todo Redo to MVC Standers under a class
@@ -637,11 +637,11 @@ class JBSMElements extends JBSAdmin
 	/**
 	 * Get Textlink
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   object  $row           JTable
-	 * @param   string  $textorpdf     Text Or PDF location
-	 * @param   object  $admin_params  Admin info
-	 * @param   int     $template      Template ID
+	 * @param   JRegistry  $params        Item Params
+	 * @param   object     $row           JTable
+	 * @param   string     $textorpdf     Text Or PDF location
+	 * @param   JRegistry  $admin_params  Admin info
+	 * @param   int        $template      Template ID
 	 *
 	 * @return string
 	 */

@@ -162,7 +162,7 @@ if (!$studieslisttemplateid)
     </tbody>
 </table>
 <?php ?>
-<table class="bslisttable" cellspacing="0">
+<table class="bslisttable">
     <tbody>
     <tr>
         <td> <?php
@@ -170,7 +170,7 @@ if (!$studieslisttemplateid)
 			{
 				case 1:
 					?>
-                    <table id="bsm_teachertable_studies" cellspacing="0">
+                    <table id="bsm_teachertable_studies">
                         <tbody>
                         <tr class="titlerow">
                             <td class="title" colspan="3"><?php echo $this->params->get('label_teacher'); ?></td>
@@ -211,7 +211,7 @@ if (!$studieslisttemplateid)
 					break;
 				case 2:
 					?>
-                    <table id="bsm_teachertable_lable" cellspacing="0">
+                    <table id="bsm_teachertable_lable">
                         <tbody>
                         <tr class="titlerow">
                             <td class="title" colspan="3">
@@ -220,7 +220,7 @@ if (!$studieslisttemplateid)
                         </tr>
                         </tbody>
                     </table>
-                    <table class="bslisttable" cellspacing="0">
+                    <table class="bslisttable">
                         <tbody>
 							<?php
 							foreach ($this->teacherstudies as $row)
@@ -260,7 +260,7 @@ if (!$studieslisttemplateid)
         </td>
     </tr>
     <tr>
-        <td align="center" colspan="0" class="bsm_teacherfooter">
+        <td colspan="0" class="bsm_teacherfooter center">
             <a href="index.php?option=com_biblestudy&amp;view=teachers&amp;t=<?php echo $t; ?>">
 				<?php echo '&lt;-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?>
             </a>

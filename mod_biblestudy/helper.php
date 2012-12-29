@@ -327,7 +327,7 @@ class modJBSMHelper
 	/**
 	 * Get Template Setting
 	 *
-	 * @param   JObject  $params  Item params
+	 * @param   JRegistry  $params  Item params
 	 *
 	 * @return object
 	 */

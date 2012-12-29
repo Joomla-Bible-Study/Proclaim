@@ -40,21 +40,21 @@ class BiblestudyViewSermon extends JViewLegacy
 
 	protected $user;
 
-	public $passage;
+	protected $passage;
 
-	public $related;
+	protected $related;
 
-	public $subscribe;
+	protected $subscribe;
 
-	public $menuid;
+	protected $menuid;
 
-	public $detailslink;
+	protected $detailslink;
 
-	public $page;
+	protected $page;
 
-	public $template;
+	protected $template;
 
-	public $article;
+	protected $article;
 
 	/**
 	 * Execute and display a template script.
@@ -145,7 +145,8 @@ class BiblestudyViewSermon extends JViewLegacy
 
 				// Check for alternative layouts (since we are not in a single-article menu item)
 				// Single-article menu item layout takes priority over alt layout for an article
-				if ($layout = $item->params->get('sermon_layout'))
+				$layout = $item->params->get('sermon_layout');
+				if ($layout)
 				{
 					$this->setLayout($layout);
 				}
@@ -159,7 +160,9 @@ class BiblestudyViewSermon extends JViewLegacy
 
 			// Check for alternative layouts (since we are not in a single-article menu item)
 			// Single-article menu item layout takes priority over alt layout for an article
-			if ($layout = $item->params->get('article_layout'))
+			$layout = $item->params->get('article_layout');
+
+			if ($layout)
 			{
 				$this->setLayout($layout);
 			}
@@ -179,6 +182,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		if ($this->item->access > 1)
 		{
+
 			if (!in_array($this->item->access, $groups))
 			{
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
@@ -198,19 +202,24 @@ class BiblestudyViewSermon extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$css = $this->item->params->get('css');
-		if ($css <= "-1"):
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		else:
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		endif;
 
-		$pagebuilder            = new JBSPagebuilder();
+		if ($css <= "-1")
+		{
+			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+		}
+
+		$pagebuilder            = new JBSPagebuilder;
 		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
 		$this->item->scripture1 = $pelements->scripture1;
 		$this->item->scripture2 = $pelements->scripture2;
 		$this->item->media      = $pelements->media;
 		$this->item->duration   = $pelements->duration;
 		$this->item->studydate  = $pelements->studydate;
+
 		if (isset($pelements->secondary_reference))
 		{
 			$this->item->secondary_reference = $pelements->secondary_reference;
@@ -219,72 +228,87 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->item->secondary_reference = '';
 		}
-		if (isset($pelements->topics)):
+		if (isset($pelements->topics))
+		{
 			$this->item->topics = $pelements->topics;
-		else:
+		}
+		else
+		{
 			$this->item->topics = '';
-		endif;
-		if (isset($pelements->study_thumbnail)):
+		}
+		if (isset($pelements->study_thumbnail))
+		{
 			$this->item->study_thumbnail = $pelements->study_thumbnail;
-		else:
+		}
+		else
+		{
 			$this->item->study_thumbnail = null;
-		endif;
-		if (isset($pelements->series_thumbnail)):
+		}
+		if (isset($pelements->series_thumbnail))
+		{
 			$this->item->series_thumbnail = $pelements->series_thumbnail;
-		else:
+		}
+		else
+		{
 			$this->item->series_thumbnail = null;
-		endif;
+		}
 		$this->item->detailslink = $pelements->detailslink;
-		if (isset($pelements->teacherimage)):
+
+		if (isset($pelements->teacherimage))
+		{
 			$this->item->teacherimage = $pelements->teacherimage;
-		else:
+		}
+		else
+		{
 			$this->item->teacherimage = null;
-		endif;
-		$article                         = new stdClass();
-		$article->text                   = $this->item->scripture1;
-		$results                         = $dispatcher->trigger('onContentPrepare', array(
-		                                                                                 'com_biblestudy.sermons',
-		                                                                                 & $article,
-		                                                                                 & $this->item->params,
-		                                                                                 $limitstart = null
-		                                                                            ));
-		$this->item->scripture1          = $article->text;
-		$article->text                   = $this->item->scripture2;
-		$results                         = $dispatcher->trigger('onContentPrepare', array(
-		                                                                                 'com_biblestudy.sermons',
-		                                                                                 & $article,
-		                                                                                 & $this->item->params,
-		                                                                                 $limitstart = null
-		                                                                            ));
-		$this->item->scripture2          = $article->text;
-		$article->text                   = $this->item->studyintro;
-		$results                         = $dispatcher->trigger('onContentPrepare', array(
-		                                                                                 'com_biblestudy.sermons',
-		                                                                                 & $article,
-		                                                                                 & $this->item->params,
-		                                                                                 $limitstart = null
-		                                                                            ));
-		$this->item->studyintro          = $article->text;
-		$article->text                   = $this->item->secondary_reference;
-		$results                         = $dispatcher->trigger('onContentPrepare', array(
-		                                                                                 'com_biblestudy.sermons',
-		                                                                                 & $article,
-		                                                                                 & $this->item->params,
-		                                                                                 $limitstart = null
-		                                                                            ));
+		}
+		$article       = new stdClass;
+		$article->text = $this->item->scripture1;
+		$dispatcher->trigger('onContentPrepare', array(
+		                                              'com_biblestudy.sermons',
+		                                              & $article,
+		                                              & $this->item->params,
+		                                              $limitstart = null
+		                                         ));
+		$this->item->scripture1 = $article->text;
+		$article->text          = $this->item->scripture2;
+		$dispatcher->trigger('onContentPrepare', array(
+		                                              'com_biblestudy.sermons',
+		                                              & $article,
+		                                              & $this->item->params,
+		                                              $limitstart = null
+		                                         ));
+		$this->item->scripture2 = $article->text;
+		$article->text          = $this->item->studyintro;
+		$dispatcher->trigger('onContentPrepare', array(
+		                                              'com_biblestudy.sermons',
+		                                              & $article,
+		                                              & $this->item->params,
+		                                              $limitstart = null
+		                                         ));
+		$this->item->studyintro = $article->text;
+		$article->text          = $this->item->secondary_reference;
+		$dispatcher->trigger('onContentPrepare', array(
+		                                              'com_biblestudy.sermons',
+		                                              & $article,
+		                                              & $this->item->params,
+		                                              $limitstart = null
+		                                         ));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 
-		//get the podcast subscription
-		$podcast         = new podcastSubscribe();
+		// Get the podcast subscription
+		$podcast         = new podcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
-		//Passage link to BibleGateway
+		// Passage link to BibleGateway
 		$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+
 		if ($plugin)
 		{
 			$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+
 			// Convert parameter fields to objects.
 			$registry = new JRegistry;
 			$registry->loadString($plugin->params);
@@ -293,7 +317,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 		}
 
-		//Added database queries from the default template - moved here instead
+		// Added database queries from the default template - moved here instead
 		$database = JFactory::getDBO();
 		$query    = "SELECT id"
 				. "\nFROM #__menu"
@@ -315,6 +339,7 @@ class BiblestudyViewSermon extends JViewLegacy
          */
 		$article->text = $this->item->studytext;
 		$linkit        = $this->item->params->get('show_scripture_link');
+
 		if ($linkit)
 		{
 			switch ($linkit)
@@ -328,18 +353,19 @@ class BiblestudyViewSermon extends JViewLegacy
 					JPluginHelper::importPlugin('content', 'scripturelinks');
 					break;
 			}
-			$limitstart            = $app->input->get('limitstart', 'int');
-			$results               = $dispatcher->trigger('onContentPrepare', array(
-			                                                                       'com_biblestudy.sermon',
-			                                                                       & $article,
-			                                                                       & $this->item->params,
-			                                                                       $limitstart
-			                                                                  ));
+			$limitstart = $app->input->get('limitstart', 'int');
+			$dispatcher->trigger('onContentPrepare', array(
+			                                              'com_biblestudy.sermon',
+			                                              & $article,
+			                                              & $this->item->params,
+			                                              $limitstart
+			                                         ));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
+
 		} // End if $linkit
 
-		$Biblepassage  = new showScripture();
+		$Biblepassage  = new showScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Prepares a link string for use in social networking
@@ -349,7 +375,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->detailslink = $detailslink;
 
 		$JBSMListing        = new JBSMListing;
-		$this->page         = new stdClass();
+		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');
 
@@ -375,6 +401,8 @@ class BiblestudyViewSermon extends JViewLegacy
 
 	/**
 	 * Prepares the document
+	 *
+	 * @return void
 	 */
 	protected function _prepareDocument()
 	{
@@ -388,8 +416,10 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
+
 		if ($menu)
 		{
+			$id = (int) $menu->query['id'];
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 		}
 		else
@@ -399,8 +429,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		$title = $this->params->get('page_title', '');
 
-		$id = (int) @$menu->query['id'];
-		// if the menu item does not concern this article
+		// If the menu item does not concern this article
 		if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id))
 		{
 			// If this is not a single article menu item, set the page title to the article title
@@ -416,6 +445,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			);
 
 			$path = array_reverse($path);
+
 			foreach ($path as $item)
 			{
 				$pathway->addItem($item['studytitle'], $item['link']);
@@ -483,7 +513,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		if (!empty($this->item->page_title))
 		{
 			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
-			$this->document->setTitle($this->item->page_title . ' - ' . JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1));
+			$this->document->setTitle($this->item->page_title . ' - '
+					. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1));
 		}
 
 		if ($this->print)

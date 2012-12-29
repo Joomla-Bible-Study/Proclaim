@@ -39,6 +39,10 @@ $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
+    var table;
+    var direction;
+    var order;
+    var dirn;
     Joomla.orderTable = function () {
         table = document.getElementById("sortTable");
         direction = document.getElementById("directionTable");

@@ -50,12 +50,12 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * @var string
 	 */
-	public $pagelinks;
+	protected $pagelinks;
 
 	/**
 	 * @var string
 	 */
-	public $limitbox;
+	protected $limitbox;
 
 	/**
 	 * @var JRegistry
@@ -70,97 +70,97 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * @var JRegistry
 	 */
-	public $params;
+	protected $params;
 
 	/**
 	 * @var object
 	 */
-	public $study;
+	protected $study;
 
 	/**
 	 * @var string
 	 */
-	public $subscribe;
+	protected $subscribe;
 
 	/**
 	 * @var string
 	 */
-	public $series;
+	protected $series;
 
 	/**
 	 * @var string
 	 */
-	public $teachers;
+	protected $teachers;
 
 	/**
 	 * @var string
 	 */
-	public $messageTypes;
+	protected $messageTypes;
 
 	/**
 	 * @var string
 	 */
-	public $years;
+	protected $years;
 
 	/**
 	 * @var string
 	 */
-	public $locations;
+	protected $locations;
 
 	/**
 	 * @var string
 	 */
-	public $topics;
+	protected $topics;
 
 	/**
 	 * @var string
 	 */
-	public $orders;
+	protected $orders;
 
 	/**
 	 * @var string
 	 */
-	public $books;
+	protected $books;
 
 	/**
 	 * @var object
 	 */
-	public $template;
+	protected $template;
 
 	/**
 	 * @var string
 	 */
-	public $order;
+	protected $order;
 
 	/**
 	 * @var array
 	 */
-	public $topic;
+	protected $topic;
 
 	/**
 	 * @var object
 	 */
-	public $main;
+	protected $main;
 
 	/**
 	 * @var object
 	 */
-	public $page;
+	protected $page;
 
 	/**
 	 * @var string
 	 */
-	public $request_url;
+	protected $request_url;
 
 	/**
 	 * @var object
 	 */
-	public $document;
+	protected $document;
 
 	/**
 	 * @var int
 	 */
-	public $limitstart;
+	protected $limitstart;
 
 	/**
 	 * Execute and display a template script.
@@ -210,7 +210,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		}
 		$template = JBSMParams::getTemplateparams();
-		$params = $$template->params;
+		$params = $template->params;
 
 		$a_params           = JBSMParams::getAdmin();
 		$this->admin_params = $a_params->params;
@@ -339,7 +339,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		// Styles from tooltip.css moved to css/biblestudy.css
 		// Import Stylesheets
 		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
-		$uri = JFactory::getURI();
+		$uri = new JUri;
 
 		$filter_topic       = $this->state->get('filter.topic');
 		$filter_book        = $this->state->get('filter.book');

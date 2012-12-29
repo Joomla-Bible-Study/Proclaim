@@ -40,7 +40,8 @@ if (!empty($limit))
 if (isset($limitstart))
 {
 	shRemoveFromGETVarsList('limitstart');
-} // limitstart can be zero
+
+} // Limitstart can be zero
 
 // All urls will start with Biblestudy.  The "B" need to be uppercase
 $title[] = "Biblestudy";
@@ -52,6 +53,7 @@ switch ($view)
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		break;
+
 	case 'sermon': // Need to keep the id because of the number of teachings
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');

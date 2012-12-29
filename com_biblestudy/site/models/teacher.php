@@ -53,6 +53,7 @@ class BiblestudyModelTeacher extends JModelItem
 
 		// TODO: Tune these values based on other permissions.
 		$user = JFactory::getUser();
+
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 		{
 			$this->setState('filter.published', 1);
@@ -71,6 +72,8 @@ class BiblestudyModelTeacher extends JModelItem
 	 */
 	public function &getItem($pk = null)
 	{
+		$app = JFactory::getApplication();
+
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('teacher.id');
 
@@ -89,7 +92,8 @@ class BiblestudyModelTeacher extends JModelItem
 
 				if (empty($data))
 				{
-					return JError::raiseError(404, JText::_('JBS_CMN_TEACHER_NOT_FOUND'));
+					$app->enqueueMessage(JText::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
+					return false;
 				}
 
 				$this->_item[$pk] = $data;
@@ -98,8 +102,8 @@ class BiblestudyModelTeacher extends JModelItem
 			{
 				if ($e->getCode() == 404)
 				{
-					// Need to go thru the error handler to allow Redirect to work.
-					JError::raiseError(404, $e->getMessage());
+					// Need to go through the error handler to allow Redirect to work.
+					$app->enqueueMessage($e->getMessage(), 'error');
 				}
 				else
 				{

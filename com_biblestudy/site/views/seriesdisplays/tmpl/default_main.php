@@ -57,7 +57,7 @@ if ($url)
 				?>
             </div>
             <!--dropdownmenu-->
-            <table id="seriestable" cellspacing="0">
+            <table id="seriestable">
                 <tbody>
 				<?php
 				// This sets the alternativing colors for the background of the table cells

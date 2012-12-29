@@ -222,7 +222,7 @@ class JBSMSerieslist extends JBSMListing
 			case 3:
 				$images   = new JBSMImages;
 				$image    = $images->getSeriesThumbnail($row->series_thumbnail);
-				$element1 = '<td class="' . $r . ' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
+				$element1 = '<td class="' . $r . ' thumbnail"> <table id="seriestable"><tr class="noborder"><td>';
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
 				$element3 = '</td></tr>';
 				$element4 = $row->series_text;
@@ -257,7 +257,7 @@ class JBSMSerieslist extends JBSMListing
 				$element = '<td class="' . $r . ' teacher image">' . $element . '</td>';
 				break;
 			case 6:
-				$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="' . $r . ' teacher">';
+				$element1 = '<table id="seriestable"><tr class="noborder"><td class="' . $r . ' teacher">';
 				$images   = new JBSMImages;
 				$image    = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
@@ -430,7 +430,7 @@ class JBSMSerieslist extends JBSMListing
 	 * @param   int        $id            ID
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   int        $template      Template ID
 	 *
 	 * @return string
 	 */
