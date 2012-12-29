@@ -430,15 +430,6 @@ class JBSMUpload
 
 		// Chmod the file (just as example)
 
-
-		// If you are using PHP4 then you need to use this code:
-		// (because the "ftp_chmod" command is just available in PHP5+)
-		if (!function_exists('ftp_chmod'))
-		{
-			return self::ftp_chmod($ftp_stream, $mode, $filename);
-
-		}
-
 		// Try to chmod the new file to 666 (writeable)
 		if (ftp_chmod($conn_id, 0755, $ftp_path) == false)
 		{
@@ -458,20 +449,6 @@ class JBSMUpload
 		}
 
 		return $ftpsuccess;
-	}
-
-	/**
-	 * FTP Chmod
-	 *
-	 * @param   string  $ftp_stream  Ftp Stream
-	 * @param   string  $mode        Mode
-	 * @param   object  $filename    FileName
-	 *
-	 * @return boolean
-	 */
-	private static function ftp_chmod($ftp_stream, $mode, $filename)
-	{
-		return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
 	}
 
 	/**
@@ -598,8 +575,10 @@ class JBSMUpload
 		$awssuccess4 = true;
 		$aws_key     = $filename->aws_key;
 		$aws_secret  = $filename->aws_secret;
+		$file_type   = null;
 
-		$source_file = $file; // file to upload to S3
+		// File to upload to S3
+		$source_file = $file;
 
 		jimport('joomla.filesystem.file');
 		$ext = JFile::getExt($filename->file);
@@ -625,9 +604,11 @@ class JBSMUpload
 			}
 		}
 
-		$aws_bucket = $filename->aws_bucket; // AWS bucket
-		$aws_object = $filename->file; // AWS object name (file name)
+		// AWS bucket
+		$aws_bucket = $filename->aws_bucket;
 
+		// AWS object name (file name)
+		$aws_object = $filename->file;
 
 		if (strlen($aws_secret) != 40)
 		{
@@ -652,7 +633,6 @@ class JBSMUpload
 			else
 			{
 
-
 				// Opening HTTP connection to Amazon S3
 				$fp = fsockopen("s3.amazonaws.com", 80, $errno, $errstr, 30);
 
@@ -666,7 +646,6 @@ class JBSMUpload
 				}
 				else
 				{
-
 
 					// Creating or updating bucket
 
@@ -685,9 +664,10 @@ class JBSMUpload
         Host: s3.amazonaws.com
         Connection: keep-alive
         Date: $dt
-        Authorization: AWS {$aws_key}:" . JBSMUpload::amazon_hmac($string2sign, $aws_secret) . "\n\n";
+        Authorization: AWS {$aws_key}:" . self::amazon_hmac($string2sign, $aws_secret) . "\n\n";
 
 					$resp = self::sendREST($fp, $query);
+
 					if (strpos($resp, '<Error>') !== false)
 					{
 						if ($admin == 0)
@@ -758,14 +738,6 @@ class JBSMUpload
 	 */
 	public static function amazon_hmac($stringToSign, $aws_secret)
 	{
-		// Helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
-		if (!function_exists('binsha1'))
-		{
-
-			self::binsha1($d);
-
-		}
-
 		if (strlen($aws_secret) == 40)
 		{
 			$aws_secret = $aws_secret . str_repeat(chr(0), 24);
@@ -774,7 +746,7 @@ class JBSMUpload
 		$ipad = str_repeat(chr(0x36), 64);
 		$opad = str_repeat(chr(0x5c), 64);
 
-		$hmac = binsha1(($aws_secret ^ $opad) . binsha1(($aws_secret ^ $ipad) . $stringToSign));
+		$hmac = self::binsha1(($aws_secret ^ $opad) . self::binsha1(($aws_secret ^ $ipad) . $stringToSign));
 
 		return base64_encode($hmac);
 	}
@@ -790,7 +762,6 @@ class JBSMUpload
 	{
 		if (version_compare(phpversion(), "5.0.0", ">="))
 		{
-
 
 			return sha1($d, true);
 		}
