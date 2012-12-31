@@ -45,7 +45,7 @@ class BiblestudyControllerComment extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// In the absense of better information, revert to the component permissions.
+		// In the absence of better information, revert to the component permissions.
 		return parent::allowAdd();
 	}
 

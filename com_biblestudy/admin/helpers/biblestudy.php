@@ -144,65 +144,67 @@ class JBSMBibleStudyHelper
 	 *
 	 * @param   string  $vName  The name of the active view.
 	 *
+	 * @return void
+	 *
 	 * @since    1.6
 	 */
 	public static function addSubmenu($vName)
 	{
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=admin.edit&id=1', $vName == 'admin'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=messages', $vName == 'messages'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_biblestudy&view=mediafiles', $vName == 'mediafiles'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_TEACHERS'), 'index.php?option=com_biblestudy&view=teachers', $vName == 'teachers'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_MESSAGE_TYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_FOLDERS'), 'index.php?option=com_biblestudy&view=folders', $vName == 'folders'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'index.php?option=com_biblestudy&view=shares', $vName == 'shares'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
 		);
-		JBSMHelper::rendermenu(
+		self::rendermenu(
 			JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
 		);
 	}
@@ -402,7 +404,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function debug()
 	{
-		include_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
+		include_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php';
 		$admin_params = JBSMParams::getAdmin();
 
 		return $admin_params->debug;
@@ -435,9 +437,8 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
-
 
 		return $options;
 	}
@@ -469,7 +470,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;
@@ -504,7 +505,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;
@@ -537,7 +538,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;
@@ -572,7 +573,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;
@@ -607,11 +608,8 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
-		JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-
-		$translate = new JBSMTranslated;
 
 		foreach ($options as $option)
 		{
@@ -650,7 +648,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;
@@ -683,7 +681,7 @@ class JBSMBibleStudyHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $e->getMessage());
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
 		}
 
 		return $options;

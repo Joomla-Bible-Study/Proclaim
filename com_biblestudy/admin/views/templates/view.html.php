@@ -53,7 +53,7 @@ class BiblestudyViewTemplates extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = JBSMHelper::getActions('', 'template');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'template');
         $templates = $this->get('templates');
         $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
         $types = array_merge($types, $templates);

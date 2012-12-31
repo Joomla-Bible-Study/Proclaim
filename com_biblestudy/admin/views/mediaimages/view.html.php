@@ -53,9 +53,9 @@ class BiblestudyViewMediaimages extends JViewLegacy {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         if(isset($this->items[0]->id)){
-        $this->canDo = JBSMHelper::getActions($this->items[0]->id, 'mediaimages');
+        $this->canDo = JBSMBibleStudyHelper::getActions($this->items[0]->id, 'mediaimages');
         } else {
-           $this->canDo = JBSMHelper::getActions();
+           $this->canDo = JBSMBibleStudyHelper::getActions();
         }
         //Check for errors
         if (count($errors = $this->get('Errors'))) {

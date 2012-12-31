@@ -53,7 +53,7 @@ class BiblestudyViewTemplate extends JViewLegacy {
         $this->state = $this->get('State');
         $this->types = $this->get('Types');
         $this->form = $this->get("Form");
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'template');
+        $this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'template');
 
         $this->setLayout("edit");
         // Set the toolbar

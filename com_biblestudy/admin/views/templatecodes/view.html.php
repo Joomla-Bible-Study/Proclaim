@@ -32,7 +32,7 @@ class BiblestudyViewTemplatecodes extends JViewLegacy {
      * @since   11.1
      */
     public function display($tpl = null) {
-        $this->canDo = JBSMHelper::getActions('', 'templatecode');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'templatecode');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         foreach ($this->items as $item) {

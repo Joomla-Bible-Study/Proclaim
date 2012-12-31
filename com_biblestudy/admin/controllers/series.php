@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Controller for Series
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,17 +13,16 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * Series list controller class.
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyControllerSeries extends JControllerAdmin
 {
 	/**
 	 * Constructor.
 	 *
-	 * @param    array    $config    An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @return    BiblestudyControllerSeries
 	 * @see        JController
 	 * @since      1.6
 	 */
@@ -38,9 +34,9 @@ class BiblestudyControllerSeries extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param string $name    The name of the model
-	 * @param string $prefix  The prefix for the PHP class name
-	 * @param array  $config
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return JModel
 	 *
@@ -62,7 +58,7 @@ class BiblestudyControllerSeries extends JControllerAdmin
 	 */
 	public function saveOrderAjax()
 	{
-		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks   = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('ordering', array(), 'array');
 
 		// Sanitize the input
@@ -75,7 +71,8 @@ class BiblestudyControllerSeries extends JControllerAdmin
 		// Save the ordering
 		$return = $model->saveorder($pks, $order);
 
-		if ($return) {
+		if ($return)
+		{
 			echo "1";
 		}
 

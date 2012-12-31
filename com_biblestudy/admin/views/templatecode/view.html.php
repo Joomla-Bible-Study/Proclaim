@@ -69,7 +69,7 @@ class biblestudyViewTemplatecode extends JViewLegacy {
         if ($item->id !== 0){$this->type = $this->get('Type');}
         $this->item = $item;
         $this->state = $this->get("State");
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'templatecode');
+        $this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'templatecode');
        
         $this->setLayout("edit");
         $this->addToolbar();

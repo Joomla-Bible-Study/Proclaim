@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 //require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-JLoader::register('JBSMHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
 
 /**
  * Template model class

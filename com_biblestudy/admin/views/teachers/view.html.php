@@ -53,7 +53,7 @@ class BiblestudyViewTeachers extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = JBSMHelper::getActions('', 'teacher');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'teacher');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

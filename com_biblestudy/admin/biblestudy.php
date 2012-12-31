@@ -24,7 +24,7 @@ if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 	return;
 }
 
-include_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 
 
 if (version_compare(JVERSION, '3.0', 'ge'))
@@ -38,7 +38,7 @@ else
 
 
 // Register helper class
-JLoader::register('JBSMHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
 
 addCSS();
 addJS();
@@ -56,7 +56,7 @@ $controller->redirect();
  */
 function addCSS()
 {
-	if (JBSMHelper::debug() === '1')
+	if (JBSMBibleStudyHelper::debug() === '1')
 	{
 		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
 	}

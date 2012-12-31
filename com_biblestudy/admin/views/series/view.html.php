@@ -61,7 +61,7 @@ class BiblestudyViewSeries extends JViewLegacy
 		$this->items = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
-		$this->canDo = JBSMHelper::getActions('', 'serie');
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'serie');
 		//Check for errors
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);

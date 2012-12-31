@@ -60,7 +60,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->form = $this->get("Form");
 		$this->item = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		//Load the Admin settings
 		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin(); 

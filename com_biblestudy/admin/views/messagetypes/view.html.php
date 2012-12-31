@@ -48,12 +48,12 @@ class BiblestudyViewMessagetypes extends JViewLegacy {
      */
     public function display($tpl = null) {
         if ($this->getLayout() !== 'modal') {
-            JBSMHelper::addSubmenu('messagetypes');
+            JBSMBibleStudyHelper::addSubmenu('messagetypes');
         }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = JBSMHelper::getActions('', 'messagetype');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'messagetype');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

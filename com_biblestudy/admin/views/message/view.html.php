@@ -56,7 +56,7 @@ class BiblestudyViewMessage extends JViewLegacy {
     public function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'mediafile');
+        $this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
         $input = new JInput;
         $option = $input->get('option','','cmd');
         $input->set('sid',$this->item->id);
@@ -71,7 +71,7 @@ class BiblestudyViewMessage extends JViewLegacy {
         $registry = new JRegistry();
         $registry->loadString($this->admin->params);
         $this->admin_params = $registry;
-        $this->canDo = JBSMHelper::getActions($type = 'message', $Itemid = $this->item->id);
+        $this->canDo = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
         $host = JURI::base();
         $document = JFactory::getDocument();
         

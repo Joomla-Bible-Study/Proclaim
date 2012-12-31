@@ -56,7 +56,7 @@ class BiblestudyViewMessagetype extends JViewLegacy {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo = JBSMHelper::getActions($this->item->id, 'messagetype');
+        $this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'messagetype');
         $this->setLayout("edit");
         // Set the toolbar
         $this->addToolbar();

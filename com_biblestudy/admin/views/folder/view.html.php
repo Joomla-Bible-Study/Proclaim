@@ -64,7 +64,7 @@ class BibleStudyViewFolder extends JViewLegacy
 		$this->form = $this->get("Form");
 		$this->item = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMHelper::getActions($this->item->id, 'folder');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'folder');
 
 		$this->setLayout("edit");
 		// Set the toolbar

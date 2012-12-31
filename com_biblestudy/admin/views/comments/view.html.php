@@ -95,7 +95,7 @@ class BiblestudyViewComments extends JViewLegacy {
         $user = JFactory::getUser();
         // Get the toolbar object instance
         $bar = JToolBar::getInstance('toolbar');
-        $canDo = JBSMHelper::getActions('', 'comment');
+        $canDo = JBSMBibleStudyHelper::getActions('', 'comment');
         JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
         if ($canDo->get('core.create')) {
             JToolBarHelper::addNew('comment.add');

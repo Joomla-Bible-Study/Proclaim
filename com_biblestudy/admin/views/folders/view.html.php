@@ -58,7 +58,7 @@ class BibleStudyViewFolders extends JViewLegacy
 		$this->items = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
-		$this->canDo = JBSMHelper::getActions('', 'folder');
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'folder');
 		//Check for errors
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);

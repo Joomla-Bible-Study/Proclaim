@@ -51,7 +51,7 @@ class BiblestudyViewPodcasts extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = JBSMHelper::getActions('', 'podcast');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'podcast');
         $this->addToolbar();
 
         // Levels filter.

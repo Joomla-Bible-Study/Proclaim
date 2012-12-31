@@ -62,7 +62,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->form = $this->get("Form");
 		$this->item = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMHelper::getActions($this->item->id);
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
 		// Get data from the model for database
 		$this->changeSet = $this->get('Items');

@@ -50,7 +50,7 @@ class BiblestudyViewLocations extends JViewLegacy {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo = JBSMHelper::getActions('', 'location');
+        $this->canDo = JBSMBibleStudyHelper::getActions('', 'location');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

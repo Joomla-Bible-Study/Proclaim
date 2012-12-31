@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 // --require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-JLoader::register('JBSMHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
 
 // --include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 JLoader::register('JBSMTranslated', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
