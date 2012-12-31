@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Image Libs Helper
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,13 +12,13 @@ defined('_JEXEC') or die;
  * Creates an instance of the necessary library class, as specified in the admin
  * params.
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class JBSMImageLib
 {
 
-	//public abstract static function resize($img);
+	// Public abstract static function resize($img);
 
 	public static $extension = 'com_biblestudy';
 
@@ -30,8 +27,8 @@ class JBSMImageLib
 /**
  * Abstraction layer for the ImageMagick PHP library
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class ImageMagickLib extends ImageLib
 {
@@ -41,17 +38,24 @@ class ImageMagickLib extends ImageLib
 	/**
 	 * Resize Image
 	 *
-	 * @param string $image
+	 * @param   string  $image  Image Path
+	 *
+	 * @return void
+	 *
+	 * @todo look like this si not working yet. bcc
 	 */
 	public static function resize($image)
 	{
-		try {
-			/*             * * a file that does not exist ** */
+		try
+		{
+			/* ** a file that does not exist ** */
 			$image = '$image';
 
-			/*             * * a new imagick object ** */
+			/* * * a new imagick object ** */
 			$im = new Imagick($image);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			echo $e->getMessage();
 		}
 	}
@@ -61,8 +65,8 @@ class ImageMagickLib extends ImageLib
 /**
  * Abstraction layer for the GD PHP library
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class GDLib extends ImageLib
 {
@@ -74,9 +78,11 @@ class GDLib extends ImageLib
 	 */
 	public function __construct()
 	{
-		//Check that the library exists
+		// Check that the library exists
 		if (!function_exists("gd_info"))
+		{
 			die("GD is not found");
+		}
 	}
 
 }

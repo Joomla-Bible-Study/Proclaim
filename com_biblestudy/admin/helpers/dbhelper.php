@@ -1,20 +1,17 @@
 <?php
-
 /**
- * Database Helper
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
 /**
  * Database Helper class for version 7.1.0
  *
- * @package BibleStudy.Admin
- * @since   7.1.0
+ * @package  BibleStudy.Admin
+ * @since    7.1.0
  */
 class JBSMDbHelper
 {
@@ -40,19 +37,17 @@ class JBSMDbHelper
 			{
 				return true;
 			}
-			else
-			{
-				return false;
-			}
 		}
+
+		return false;
 	}
 
 	/**
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY tables.
 	 *
-	 * @param   array     $tables  tables is an array of tables, fields, type of query and optional command line
-	 * @param   boolean   $form    Where the query is coming from for msg
+	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
+	 * @param   string  $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
 	 */
@@ -141,7 +136,7 @@ class JBSMDbHelper
 
 		if (!$db->execute())
 		{
-			JError::raiseWarning(1, $from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+			JFactory::getApplication()->enqueueMessage($from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
 
 			return false;
 		}
@@ -154,19 +149,19 @@ class JBSMDbHelper
 	/**
 	 * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
 	 *
-	 * @param         string table is the table you are checking
-	 * @param         string field you are checking
-	 * @param boolean $description
+	 * @param   string   $table        table is the table you are checking
+	 * @param   string   $field        field you are checking
+	 * @param   boolean  $description  ?
 	 *
 	 * @return boolean
 	 */
-	static function checkDB($table, $field, $description = null)
+	public static function checkDB($table, $field, $description = null)
 	{
 		$done = self::checkTables($table, $field);
 
 		if (!$done)
 		{
-			$admin = JModel::getInstance('Admin', 'biblestudyModel');
+			$admin = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 			$admin->fix();
 
 			return true;
@@ -214,8 +209,7 @@ class JBSMDbHelper
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('*')
-				->from('#__bsms_admin');
+		$query->select('*')->from('#__bsms_admin');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -245,7 +239,7 @@ class JBSMDbHelper
 	{
 		$query = 'UPDATE #__bsms_admin SET installstate = NULL WHERE id = 1';
 
-		if (!JBSMDbHelper::performDB($query, null))
+		if (!self::performDB($query, null))
 		{
 			return false;
 		}
@@ -273,8 +267,7 @@ class JBSMDbHelper
 		/* Start by getting exesting Style */
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('*')
-				->from('#__bsms_styles');
+		$query->select('*')->from('#__bsms_styles');
 
 		if ($filename)
 		{
@@ -290,24 +283,12 @@ class JBSMDbHelper
 
 		/* Now the arrays of changes that need to be done. */
 		$oldlines = array(
-			".bsm_teachertable_list",
-			"#bslisttable",
-			"#bslisttable",
-			"#landing_table",
-			"#landing_separator",
-			"#landing_item",
-			"#landing_title",
-			"#landinglist"
+			".bsm_teachertable_list", "#bslisttable", "#bslisttable", "#landing_table", "#landing_separator",
+			"#landing_item", "#landing_title", "#landinglist"
 		);
 		$newlines = array(
-			"#bsm_teachertable_list",
-			".bslisttable",
-			".bslisttable",
-			".landing_table",
-			".landing_separator",
-			".landing_item",
-			".landing_title",
-			".landinglist"
+			"#bsm_teachertable_list", ".bslisttable", ".bslisttable", ".landing_table", ".landing_separator",
+			".landing_item", ".landing_title", ".landinglist"
 		);
 		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
 
@@ -323,8 +304,7 @@ class JBSMDbHelper
 
 		/* no apply the new css back to the table */
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_styles')
-				->set('stylecode="' . $newcss . '"');
+		$query->update('#__bsms_styles')->set('stylecode="' . $newcss . '"');
 
 		if ($filename)
 		{
@@ -367,7 +347,7 @@ class JBSMDbHelper
 	{
 		$db = JFactory::getDBO();
 
-		// Store new Recorde so it can be seen.
+		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 		$table = JTable::getInstance($table, 'Table', array('dbo' => $db));
 
@@ -440,7 +420,7 @@ class JBSMDbHelper
 				}
 			}
 		}
-		$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'error');
+		$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
 
 		return true;
 	}

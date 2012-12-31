@@ -47,7 +47,10 @@ class JBSMTranslated
 			// Second choice: language file
 			$jtextString = JText::_($topicItem->topic_text);
 
-			if (strncmp($jtextString, 'JBS_TOP_', 8) == 0 || strncmp($jtextString, '??JBS_TOP_', 10) == 0 || strlen($jtextString) == 0 || strcmp($jtextString, '????') == 0)
+			$string1 = strncmp($jtextString, 'JBS_TOP_', 8) == 0 || strncmp($jtextString, '??JBS_TOP_', 10) == 0;
+			$string2 = strlen($jtextString) == 0 || strcmp($jtextString, '????') == 0;
+
+			if ($string1 || $string2)
 			{
 				// Third choice: string in default language selected for site
 				$defaultLanguage = JComponentHelper::getParams('com_languages')->get('site');
@@ -104,10 +107,9 @@ class JBSMTranslated
 			if ($topicItem->tp_id)
 			{
 				$db    = JFactory::getDBO();
-				$query = 'SELECT #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params '
-						. 'FROM #__bsms_topics '
-						. 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $topicItem->id . ') '
-						. 'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
+				$query = 'SELECT #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params ' .
+					'FROM #__bsms_topics ' . 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = ' .
+					$topicItem->id . ') ' . 'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
 				$db->setQuery($query);
 				$results = $db->loadObjectList();
 				$output  = '';
