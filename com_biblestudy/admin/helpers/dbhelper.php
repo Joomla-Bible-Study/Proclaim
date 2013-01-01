@@ -261,7 +261,7 @@ class JBSMDbHelper
 	 *
 	 * @since 7.1.0
 	 */
-	public static function fixupcss($filename, $parent, $newcss, $id)
+	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
 		$app = JFactory::getApplication();
 		/* Start by getting exesting Style */

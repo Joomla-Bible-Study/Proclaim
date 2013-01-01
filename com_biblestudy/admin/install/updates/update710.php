@@ -55,14 +55,19 @@ class JBS710Update
 		}
 		if ($old_css)
 		{
-			$query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+			$query = $db->getQuery(true);
+			$query->select('*')
+					->from('#__bsms_styles')
+					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 			$db->setQuery($query);
 			$result = $db->loadObject();
 
 			if ($result)
 			{
-				$query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($old_css) . '" WHERE `id` = ' .
-					$result->id;
+				$query = $db->getQuery('true');
+				$query->update('#__bsms_styles')
+						->set($db->qn('stylecode') . '=' . $db->q($db->escape($old_css)))
+						->where($db->qn('id') . '=' . (int) $db->q($result->id));
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -74,12 +79,13 @@ class JBS710Update
 			}
 			else
 			{
-				$query =
-					'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' .
-						$db->escape($old_css) . '",0)';
-				$db->setQuery($query);
+				$data            = new stdClass;
+				$data->published = 1;
+				$data->filename  = 'biblstudy';
+				$data->stylecode = $db->escape($old_css);
+				$data->asset_id  = 0;
 
-				if (!$db->execute())
+				if (!$db->insertObject('#__bsms_styles', $data, 'id'))
 				{
 					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
 
@@ -312,7 +318,10 @@ div.listingfooter ul li {
 
 			if (JBSMDbHelper::fixupcss('biblestudy', true, $new710css, null))
 			{
-				$query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+				$query = $db->getQuery(true);
+				$query->select('*')
+						->from('#__bsms_styles')
+						->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 				$db->setQuery($query);
 				$result = $db->loadObject();
 				JBSMDbHelper::reloadtable($result, 'Style');
@@ -327,7 +336,10 @@ div.listingfooter ul li {
 		}
 		else
 		{
-			$query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+			$query = $db->getQuery(true);
+			$query->select('*')
+					->from('#__bsms_styles')
+					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 			$db->setQuery($query);
 			$result = $db->loadObject();
 
@@ -386,7 +398,6 @@ div.listingfooter ul li {
 				$table->load($result->id);
 				$registry = new JRegistry;
 				$registry->loadString($table->params);
-				$css = $registry->get('css');
 				$registry->set('css', 'biblestudy.css');
 
 				// Now write the params back into the $table array and store.
