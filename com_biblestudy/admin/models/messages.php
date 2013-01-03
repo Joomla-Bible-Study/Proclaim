@@ -26,6 +26,9 @@ if (version_compare(JVERSION, '2.5', 'ge'))
  */
 class BiblestudyModelMessages extends JModelList
 {
+	private $_data;
+
+	private $_files;
 
 	/**
 	 * Constructor.
@@ -40,36 +43,21 @@ class BiblestudyModelMessages extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'id',
-				'study.id',
-				'published',
-				'study.published',
-				'studydate',
-				'study.studydate',
-				'studytitle',
-				'study.studytitle',
-				'ordering',
-				'study.ordering',
-				'bookname',
-				'book.bookname',
-				'teachername',
-				'teacher.teachername',
-				'message_type',
-				'messageType.message_type',
-				'series_text',
-				'series.series_text',
+				'id', 'study.id',
+				'published', 'study.published',
+				'studydate', 'study.studydate',
+				'studytitle', 'study.studytitle',
+				'ordering', 'study.ordering',
+				'bookname', 'book.bookname',
+				'teachername', 'teacher.teachername',
+				'message_type', 'messageType.message_type',
+				'series_text', 'series.series_text',
 				'study.series_id',
-				'hits',
-				'study.hits',
-				'plays',
-				'mediafile.plays',
-				'access',
-				'series.access',
-				'access_level',
-				'downloads',
-				'mediafile.downloads',
-				'locations',
-				'locations.location_text'
+				'hits', 'study.hits',
+				'plays', 'mediafile.plays',
+				'access', 'series.access', 'access_level',
+				'downloads', 'mediafile.downloads',
+				'locations', 'locations.location_text'
 			);
 		}
 
@@ -138,16 +126,17 @@ class BiblestudyModelMessages extends JModelList
 		$mediaFiles = null;
 		$db         = JFactory::getDBO();
 		$i          = 0;
+
 		foreach ($this->_data as $sermon)
 		{
 			$i++;
 			$sermon_id = $sermon->id;
 			$query     = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-					. ' FROM #__bsms_mediafiles'
-					. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-					. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-					. ' WHERE `study_id` ='
-					. $sermon_id;
+				. ' FROM #__bsms_mediafiles'
+				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
+				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
+				. ' WHERE `study_id` ='
+				. $sermon_id;
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
@@ -175,13 +164,14 @@ class BiblestudyModelMessages extends JModelList
 
 		// Adjust the context to support modal layouts.
 		$input = new JInput;
+
 		if ($layout = $input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params = JComponentHelper::getParams('com_biblestudy');
 		$this->setState('params', $params);
 
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
@@ -214,7 +204,6 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-
 		parent::populateState('study.studydate', 'DESC');
 	}
 
@@ -244,28 +233,27 @@ class BiblestudyModelMessages extends JModelList
 		$query->select('l.title AS language_title');
 		$query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = study.language');
 
-		//Join over Message Types
+		// Join over Message Types
 		$query->select('messageType.message_type AS messageType');
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
-		//Join over Teachers
+		// Join over Teachers
 		$query->select('teacher.teachername AS teachername');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
-		//Join over Series
+		// Join over Series
 		$query->select('series.series_text, series.id AS series_id');
 		$query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
-		//Join over Location
+		// Join over Location
 		$query->select('locations.location_text');
 		$query->join('LEFT', '#__bsms_locations AS locations ON locations.id = study.location_id');
 
-
-		//Join over Books
+		// Join over Books
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
-		//Join over Plays/Downloads
+		// Join over Plays/Downloads
 		$query->select(
 			'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
 		);
@@ -279,29 +267,33 @@ class BiblestudyModelMessages extends JModelList
 			$query->where('study.access IN (' . $groups . ')');
 		}
 
-		//Filter by teacher
+		// Filter by teacher
 		$teacher = $this->getState('filter.teacher');
+
 		if (is_numeric($teacher))
 		{
 			$query->where('study.teacher_id = ' . (int) $teacher);
 		}
 
-		//Filter by series
+		// Filter by series
 		$series = $this->getState('filter.series');
+
 		if (is_numeric($series))
 		{
 			$query->where('study.series_id = ' . (int) $series);
 		}
 
-		//Filter by message type
+		// Filter by message type
 		$messageType = $this->getState('filter.messageType');
+
 		if (is_numeric($messageType))
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
 		}
 
-		//Filter by Year
+		// Filter by Year
 		$year = $this->getState('filter.year');
+
 		if (!empty($year))
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
@@ -309,6 +301,7 @@ class BiblestudyModelMessages extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
+
 		if (is_numeric($published))
 		{
 			$query->where('study.published = ' . (int) $published);
@@ -318,8 +311,9 @@ class BiblestudyModelMessages extends JModelList
 			$query->where('(study.published = 0 OR study.published = 1)');
 		}
 
-		//Filter by studytitle
+		// Filter by studytitle
 		$studytitle = $this->getState('filter.studytitle');
+
 		if (!empty($studytitle))
 		{
 			if (stripos($studytitle, 'id:') === 0)
@@ -333,21 +327,23 @@ class BiblestudyModelMessages extends JModelList
 			}
 		}
 
-		//Filter by book
+		// Filter by book
 		$book = $this->getState('filter.book');
+
 		if (is_numeric($book))
 		{
 			$query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
 		}
 
-		//Filter by location
+		// Filter by location
 		$location = $this->getState('filter.location');
+
 		if (is_numeric($location))
 		{
 			$query->where('study.location_id = ' . (int) $location);
 		}
 
-		//Add the list ordering clause
+		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -365,11 +361,13 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-		$translate = new JBSMTranslated();
+		$translate = new JBSMTranslated;
+
 		foreach ($items as $item)
 		{
 			$item->bookname = JText::_($item->bookname);
-			//$item->topic_text = $translate->getTopicItemTranslated($item);
+
+			// $item->topic_text = $translate->getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -395,6 +393,7 @@ class BiblestudyModelMessages extends JModelList
 		$db->setQuery($query->__toString());
 
 		$db_result = $db->loadAssocList();
+
 		foreach ($db_result as $i => $value)
 		{
 			$db_result[$i]['text'] = JText::_($value['text']);
@@ -472,6 +471,8 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * get a list of all used years
 	 *
+	 * @return object
+	 *
 	 * @since 7.0
 	 */
 	public function getYears()
@@ -495,10 +496,10 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int  $id ID for plays
+	 * @param   int  $id  ID for plays
 	 *
 	 * @since 7.0
-	 * @return mixed
+	 * @return array
 	 */
 	public function getPlays($id)
 	{
@@ -524,12 +525,14 @@ class BiblestudyModelMessages extends JModelList
 	 * Overridden to add a check for access levels.
 	 *
 	 * @return    mixed    An array of data items on success, false on failure.
+	 *
 	 * @since    1.6.1
 	 */
 	public function getItems()
 	{
 		$items = parent::getItems();
 		$app   = JFactory::getApplication();
+
 		if ($app->isSite())
 		{
 			$user   = JFactory::getUser();
@@ -537,7 +540,7 @@ class BiblestudyModelMessages extends JModelList
 
 			for ($x = 0, $count = count($items); $x < $count; $x++)
 			{
-				//Check the access level. Remove articles the user shouldn't see
+				// Check the access level. Remove articles the user shouldn't see
 				if (!in_array($items[$x]->access, $groups))
 				{
 					unset($items[$x]);
