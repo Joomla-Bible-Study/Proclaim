@@ -70,6 +70,8 @@ class JBSExport
 				return $file;
 				break;
 		}
+
+		return true;
 	}
 
 	/**
@@ -242,6 +244,7 @@ class JBSExport
 			list($range) = explode(",", $range, 2);
 			list($range, $range_end) = explode("-", $range);
 			$range = intval($range);
+
 			if (!$range_end)
 			{
 				$range_end = $size - 1;

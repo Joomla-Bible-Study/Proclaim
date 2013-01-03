@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -9,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams',JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
+JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
 
 /**
  * Admin Class
@@ -30,7 +29,10 @@ class JBSAdmin
 	public function getMediaPlayer()
 	{
 		$db    = JFactory::getDBO();
-		$query = "Select #__components.name FROM #__components WHERE #__components.name LIKE '%AvReloaded%'";
+		$query = $db->getQuery(true);
+		$query->select('#__components.name')
+			->from('#__components')
+			->where('#__components.name LIKE ' . $db->q('%AvReloaded%'));
 		$db->setQuery($query);
 		$db->query();
 		$num_rows = $db->getNumRows();
@@ -43,7 +45,10 @@ class JBSAdmin
 		{
 			$player = false;
 		}
-		$query = 'SELECT element, published FROM #__plugins WHERE #__plugins.element LIKE "%jw_allvideos%"';
+		$query = $db->getQuery(true);
+		$query->select('element, published')
+				->from('#__plugins')
+				->where('#__plugins.element LIKE ' . $db->q('%jw_allvideos%'));
 		$db->setQuery($query);
 		$db->query();
 		$num_rows = $db->getNumRows();
@@ -69,6 +74,8 @@ class JBSAdmin
 
 		// Get the level at which users can enter studies
 		$admin        = JBSMParams::getAdmin();
+
+		/** @var $params JRegistry */
 		$params       = $admin->params;
 		$entry_access = $params->get('entry_access');
 
@@ -278,5 +285,3 @@ class JBSAdmin
 	}
 
 }
-
-// End of class

@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Params Helper
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -35,7 +32,7 @@ class JBSMParams
 		$query = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bsms_admin')
-				->where("`id` = '1'");
+				->where($db->qn('id') . ' = ' . (int) $db->q('1'));
 		$db->setQuery($query);
 		$admin    = $db->loadObject();
 		$registry = new JRegistry;
@@ -61,7 +58,7 @@ class JBSMParams
 		$query = $db->getQuery(true);
 		$query->select('*')
 				->from('#__bsms_templates')
-				->where('published = 1 AND id = ' . $db->q($pk));
+				->where('published = 1 AND id = ' . (int) $db->q($pk));
 		$db->setQuery($query);
 		$template = $db->loadObject();
 

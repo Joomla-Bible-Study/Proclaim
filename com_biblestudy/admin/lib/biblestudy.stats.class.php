@@ -31,8 +31,8 @@ class jbStats
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m')
-			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
-			->where('m.study_id = ' . (int) $db->q($id));
+				->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
+				->where('m.study_id = ' . (int) $db->q($id));
 		$db->setQuery($query);
 		$plays = $db->loadResult();
 
@@ -49,8 +49,8 @@ class jbStats
 	 */
 	public static function get_total_messages($start = '', $end = '')
 	{
-		$db = JFactory::getDBO();
-		$where         = array();
+		$db    = JFactory::getDBO();
+		$where = array();
 
 		if (!empty($start))
 		{
@@ -62,8 +62,8 @@ class jbStats
 		}
 		$query = $db->getQuery(true);
 		$query->select('COUNT(*)')
-			->from('#__bsms_studies')
-			->where('published =' . (int) $db->q('1'));
+				->from('#__bsms_studies')
+				->where('published =' . (int) $db->q('1'));
 
 		if (count($where) > 0)
 		{
@@ -85,26 +85,21 @@ class jbStats
 	 */
 	public static function get_total_topics($start = '', $end = '')
 	{
-		$db = JFactory::getDBO();
-		$where         = array();
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')
+			->from('#__bsms_studies')
+			->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
+			->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
+			->where('#__bsms_topics.published = ' . (int) $db->q('1'));
 
 		if (!empty($start))
 		{
-			$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
+			$query->where('time > UNIX_TIMESTAMP(\'' . $start . '\')');
 		}
 		if (!empty($end))
 		{
-			$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
-		}
-		$query = 'SELECT COUNT(*) '
-				. 'FROM #__bsms_studies '
-				. 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id) '
-				. 'LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id) '
-				. 'WHERE #__bsms_topics.published = "1"';
-
-		if (count($where) > 0)
-		{
-			$query .= ' AND ' . implode(' AND ', $where);
+			$query->where('time < UNIX_TIMESTAMP(\'' . $end . '\')');
 		}
 		$db->setQuery($query);
 
@@ -118,10 +113,15 @@ class jbStats
 	 */
 	public static function get_top_studies()
 	{
-		$biblestudy_db = JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT * FROM #__bsms_studies WHERE published = 1 ' .
-				'AND hits > 0  ORDER BY hits DESC LIMIT 5');
-		$results     = $biblestudy_db->loadObjectList();
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_studies')
+			->where('published = ' . (int) $db->q('1'))
+			->where('hits > ' . (int) $db->q('0'))
+			->order('hits desc');
+		$db->setQuery($query, 0, 1);
+		$results     = $db->loadObjectList();
 		$top_studies = null;
 
 		foreach ($results as $result)
@@ -140,10 +140,14 @@ class jbStats
 	 */
 	public static function get_total_categories()
 	{
-		$biblestudy_db = JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT COUNT(*) FROM #__bsms_mediafiles WHERE published = 1');
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_mediafiles')
+			->where('published = ' . $db->q('1'));
+		$db->setQuery($query);
 
-		return intval($biblestudy_db->loadResult());
+		return intval($db->loadResult());
 	}
 
 	/**
@@ -156,16 +160,20 @@ class jbStats
 	 */
 	public static function get_top_books()
 	{
-		$biblestudy_db = JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5');
-		$results = $biblestudy_db->loadObjectList();
-		$results = $biblestudy_db->query();
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('booknumber, COUNT( hits ) AS totalmsg')
+			->from('jos_bsms_studies')
+			->group('booknumber')
+			->order('totalmsg DESC');
+		$db->setQuery($query, 0, 5);
+		$results = $db->loadObjectList();
 
 		if (count($results) > 0)
 		{
 			$ids = implode(',', $results);
-			$biblestudy_db->setQuery('SELECT bookname FROM #__bsms_books WHERE booknumber IN (' . $ids . ') ORDER BY booknumber');
-			$names = $biblestudy_db->loadResultArray();
+			$db->setQuery('SELECT bookname FROM #__bsms_books WHERE booknumber IN (' . $ids . ') ORDER BY booknumber');
+			$names = $db->loadResult();
 			$i     = 0;
 
 			foreach ($results as $result)
@@ -204,7 +212,8 @@ class jbStats
 		$month         = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$lastmonth     = date("Y-m-d 00:00:01", $month);
 		$biblestudy_db = JFactory::getDBO();
-		$query         = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "' . $lastmonth . '" )ORDER BY hits DESC LIMIT 5 ';
+		$query         = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "'
+				. $lastmonth . '" )ORDER BY hits DESC LIMIT 5 ';
 		$biblestudy_db->setQuery($query);
 		$results     = $biblestudy_db->loadObjectList();
 		$top_studies = null;
@@ -245,10 +254,18 @@ class jbStats
 	 */
 	public static function get_top_downloads()
 	{
-		$biblestudy_db = JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = 1 ' .
-				'AND downloads > 0  ORDER BY downloads DESC LIMIT 5');
-		$results     = $biblestudy_db->loadObjectList();
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,'
+				. '#__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
+				->from('#__bsms_mediafiles')
+				->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
+				->where('#__bsms_mediafiles.published = 1 ')
+				->where('downloads > 0')
+				->order('downloads desc');
+
+		$db->setQuery($query, 0, 5);
+		$results     = $db->loadObjectList();
 		$top_studies = null;
 
 		foreach ($results as $result)
@@ -269,10 +286,18 @@ class jbStats
 	{
 		$month         = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$lastmonth     = date("Y-m-d 00:00:01", $month);
-		$biblestudy_db = JFactory::getDBO();
-		$query         = 'SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = "1" AND downloads >0 AND UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( "' . $lastmonth . '" )ORDER BY downloads DESC LIMIT 5 ';
-		$biblestudy_db->setQuery($query);
-		$results     = $biblestudy_db->loadObjectList();
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,'
+				. ' #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
+			->where('#__bsms_mediafiles.published = ' . (int) $db->q('1'))
+			->where('downloads > ' . (int) $db->q('0'))
+			->where('UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( ' . $db->q($lastmonth) . ' )')
+			->order('downloads DESC');
+		$db->setQuery($query, 0, 5);
+		$results     = $db->loadObjectList();
 		$top_studies = null;
 
 		if (!$results)
