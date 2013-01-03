@@ -54,7 +54,7 @@ class FixJBSAssets
 			$query = $db->getQuery(true);
 			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
 				->from($db->qn($object['name']) . ' as j')
-				->leftJoin('#__assets as a ON (a.id = j.asset_id');
+				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
 			$results = $db->loadObjectList();
 
@@ -108,7 +108,7 @@ class FixJBSAssets
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
 			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
-				->from($db->qn($object['name'] . ' as j'))
+				->from($db->qn($object['name']) . ' as j')
 				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
 			$results     = $db->loadObjectList();

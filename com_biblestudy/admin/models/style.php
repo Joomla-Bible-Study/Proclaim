@@ -193,11 +193,12 @@ class BiblestudyModelStyle extends JModelAdmin
 		}
 		try
 		{
-			foreach ($pks AS $id):
+			foreach ($pks AS $id)
+			{
 				$parent   = false;
 				$filename = null;
 				JBSMDbHelper::fixupcss($filename, $parent, null, $id);
-			endforeach;
+			}
 		}
 		catch (Exception $e)
 		{

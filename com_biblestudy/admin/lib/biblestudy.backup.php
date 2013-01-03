@@ -219,8 +219,10 @@ class JBSExport
 			}
 		}
 
-		@ob_end_clean(); // Turn off output buffering to decrease cpu usage
-		// required for IE, otherwise Content-Disposition may be ignored
+		// Turn off output buffering to decrease cpu usage
+		@ob_end_clean();
+
+		// Required for IE, otherwise Content-Disposition may be ignored
 		if (ini_get('zlib.output_compression'))
 		{
 			ini_set('zlib.output_compression', 'Off');

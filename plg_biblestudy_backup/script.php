@@ -62,7 +62,7 @@ class plgSystemjbsbackupInstallerScript {
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
 	PRIMARY KEY (`timeset`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8";
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $db->setQuery($query);
             $db->query();
             $query = "INSERT INTO `#__jbsbackup_timeset` (`timeset`, `backup`) VALUES

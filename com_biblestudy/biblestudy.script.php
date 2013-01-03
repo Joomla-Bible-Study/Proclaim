@@ -165,7 +165,7 @@ class Com_BiblestudyInstallerScript
 			$query     = $db->getQuery(true);
 			$query->delete()
 				->from('#__assets')
-				->where('perent_id = ' . (int) $db->quote($parent_id));
+				->where('perent_id = ' . (int) $db->q($parent_id));
 			$db->setQuery($query);
 			$db->execute();
 			$query = $db->getQuery(true);

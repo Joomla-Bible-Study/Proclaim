@@ -15,9 +15,9 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @package  BibleStudy.Admin
  * @since    7.0.1
  *
- * @todo see if this is a duplicate of install/update701.php
+ * @todo     see if this is a duplicate of install/update701.php
  */
-class updatejbs701
+class Updatejbs701
 {
 
 	/**
@@ -27,7 +27,8 @@ class updatejbs701
 	 */
 	public function do701update()
 	{
-		$db          = JFactory::getDBO();
+		$db = JFactory::getDBO();
+
 		// FIXME Tom;
 		$tables      = $db->getTableFields('#__bsms_topics');
 		$languagetag = 0;
@@ -79,7 +80,8 @@ class updatejbs701
 	 */
 	public function updatetopics()
 	{
-		$query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
+		$query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, ' .
+			'#__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
 
 		if (!JBSMDbHelper::performdb($query, "Build 701: "))
 		{
@@ -97,7 +99,9 @@ class updatejbs701
 	public function updateUpdatedb()
 	{
 		$query = "INSERT INTO `#__bsms_update` (id,version) VALUES (1, '7.0.0'), (2, '7.0.1'), (3,'7.0.1.1')";
-		$query = "DELETE FROM `#__assets` WHERE name LIKE '%com_biblestudy.%'";
+
+		// @todo not sure if this is needed Tom
+		// $query = "DELETE FROM `#__assets` WHERE name LIKE '%com_biblestudy.%'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 701: "))
 		{

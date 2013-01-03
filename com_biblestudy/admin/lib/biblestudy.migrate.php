@@ -134,7 +134,7 @@ class JBSMigrate
                       `build` varchar(20) NOT NULL,
                       `versionname` varchar(40) DEFAULT NULL,
                       PRIMARY KEY (`id`)
-                    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
+                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
 				$db->setQuery($query);
 
 				if (!$db->execute())

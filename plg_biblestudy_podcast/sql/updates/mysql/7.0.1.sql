@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
 	PRIMARY KEY (`timeset`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `#__jbspodcast_timeset`

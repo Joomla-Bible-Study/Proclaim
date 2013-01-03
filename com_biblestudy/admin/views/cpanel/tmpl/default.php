@@ -162,13 +162,13 @@ if ($msg)
                         <td><?php echo JText::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
                         <td><strong><?php echo jbStats::get_total_topics(); ?></strong></td>
                         <td><?php echo JText::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
-                        <td><strong><?php echo jbStats::total_mediafiles(); ?></strong></td>
+                        <td><strong><?php echo jbStats::total_media_files(); ?></strong></td>
                     </tr>
                     <tr>
                         <td><?php echo JText::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
                         <td><strong><?php echo jbStats::get_top_studies(); ?></strong></td>
                         <td><?php echo JText::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
-                        <td><strong><?php echo jbStats::get_topthirtydays(); ?></strong></td>
+                        <td><strong><?php echo jbStats::get_top_thirty_days(); ?></strong></td>
                     </tr>
                     <tr>
                         <td><?php echo JText::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>

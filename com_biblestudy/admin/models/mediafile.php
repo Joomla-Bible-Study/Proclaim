@@ -6,19 +6,20 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
-defined('_JEXEC') or die;
+defined('_JEXEC')
+	or die;
 
 jimport('joomla.application.component.modeladmin');
 
 /**
  * MediaFile model class
  *
+ * @property mixed _id
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
 class BiblestudyModelMediafile extends JModelAdmin
 {
-
 
 	/**
 	 * Admin
@@ -46,7 +47,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		// Check specific edit permission then general edit permission.
-		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafile.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafile.' . ((int) isset($data[$key]) ? $data[$key] : 0))
+			or
+			parent::allowEdit($data, $key);
 	}
 
 	/**
@@ -70,6 +73,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
 		}
+
+		return false;
 	}
 
 	/**
@@ -84,7 +89,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function move($direction)
 	{
-		$row = & $this->getTable();
+		$row = $this->getTable();
 
 		if (!$row->load($this->_id))
 		{
@@ -172,10 +177,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array(
-		                                                                      'control'   => 'jform',
-		                                                                      'load_data' => $loadData
-		                                                                 ));
+		$array = array('control' => 'jform', 'load_data' => $loadData);
+		$form  = $this->loadForm('com_biblestudy.mediafile', 'mediafile', $array);
 
 		if (empty($form))
 		{
@@ -198,9 +201,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
-				|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id)) || ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');

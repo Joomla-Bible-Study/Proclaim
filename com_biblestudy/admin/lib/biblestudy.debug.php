@@ -33,7 +33,7 @@ function Debug_Assert_callback($script, $line, $message)
         Condition: <br /><pre>$message</pre>";
 
 	// Now display the call stack
-	echo debug_callstackinfo();
+	echo Debug_Call_Stack_info();
 }
 
 /**
@@ -44,16 +44,17 @@ function Debug_Assert_callback($script, $line, $message)
  *
  * @return void
  */
-function Trigger_dberror($text = '', $back = 0)
+function Trigger_Db_error($text = '', $back = 0)
 {
-	$biblestudy_db = JFactory::getDBO();
-	$dberror       = $biblestudy_db->stderr(true);
-	echo debug_callstackinfo($back + 1);
+	$db = JFactory::getDBO();
+	$dberror       = $db->stderr(true);
+	echo Debug_Call_Stack_info($back + 1);
 
 	JLoader::register('CBiblestudyVersion', dirname(__FILE__) . '/lib/version.php');
-	$biblestudyVersion      = CBiblestudyVersion::version();
-	$biblestudyPHPVersion   = CBiblestudyVersion::PHPVersion();
-	$biblestudyMySQLVersion = CBiblestudyVersion::MySQLVersion();
+	$CBiblestudyVersion = new CBiblestudyVersion;
+	$biblestudyVersion      = $CBiblestudyVersion->version();
+	$biblestudyPHPVersion   = $CBiblestudyVersion->PHPVersion();
+	$biblestudyMySQLVersion = $CBiblestudyVersion->MySQLVersion();
 	?>
 <!-- Version Info -->
 <div class="fbfooter">
@@ -78,13 +79,13 @@ function Trigger_dberror($text = '', $back = 0)
  *
  * @return void
  */
-function Check_dberror($text = '', $back = 0)
+function Check_Db_error($text = '', $back = 0)
 {
-	$biblestudy_db = JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	if ($biblestudy_db->getErrorNum() != 0)
+	if ($db->getErrorNum() != 0)
 	{
-		trigger_dberror($text, $back + 1);
+		Trigger_Db_error($text, $back + 1);
 	}
 }
 
@@ -95,12 +96,13 @@ function Check_dberror($text = '', $back = 0)
  *
  * @return void
  */
-function check_dbwarning($text = '')
+function Check_Db_warning($text = '')
 {
-	$biblestudy_db = JFactory::getDBO();
-	if ($biblestudy_db->getErrorNum() != 0)
+	$db = JFactory::getDBO();
+
+	if ($db->getErrorNum() != 0)
 	{
-		trigger_dbwarning($text);
+		Trigger_Db_warning($text);
 	}
 }
 
@@ -111,10 +113,10 @@ function check_dbwarning($text = '')
  *
  * @return void
  */
-function Trigger_dbwarning($text = '')
+function Trigger_Db_warning($text = '')
 {
-	$biblestudy_db = JFactory::getDBO();
-	biblestudy_error($text . '<br />' . $biblestudy_db->stderr(true), E_USER_WARNING);
+	$db = JFactory::getDBO();
+	biblestudy_error($text . '<br />' . $db->stderr(true), E_USER_WARNING);
 }
 
 /**
@@ -196,7 +198,7 @@ function Debug_vars($varlist)
  *
  * @return object
  */
-function Debug_callstackinfo($back = 1)
+function Debug_Call_Stack_info($back = 1)
 {
 	$trace = array_slice(debug_backtrace(), $back);
 

@@ -31,10 +31,10 @@ class JBSMParams
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_admin')
-				->where($db->qn('id') . ' = ' . (int) $db->q('1'));
+			->from('#__bsms_admin')
+			->where($db->qn('id') . ' = ' . $db->q('1'));
 		$db->setQuery($query);
-		$admin    = $db->loadObject();
+		$admin = $db->loadObject();
 		$registry = new JRegistry;
 		$registry->loadString($admin->params);
 		$admin->params = $registry;
@@ -57,8 +57,9 @@ class JBSMParams
 		$pk    = JFactory::getApplication()->input->getInt('t', '1');
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_templates')
-				->where('published = 1 AND id = ' . (int) $db->q($pk));
+			->from('#__bsms_templates')
+			->where('published = ' . $db->q('1'))
+			->where('id = ' . (int) $db->q($pk));
 		$db->setQuery($query);
 		$template = $db->loadObject();
 

@@ -3,10 +3,10 @@
 /**
  * Comment Model
  *
- * @package BibleStudy.Admin
+ * @package   BibleStudy.Admin
  * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link      http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -54,32 +54,38 @@ class BiblestudyModelComment extends JModelAdmin
 		$categoryId = null;
 
 		$table = $this->getTable();
-		$i     = 0;
+		$i = 0;
 
 		// Check that the user has create permission for the component
 		$extension = JFactory::getApplication()->input->get('option', '');
-		$user      = JFactory::getUser();
-		if (!$user->authorise('core.create', $extension)) {
+		$user = JFactory::getUser();
+		if (!$user->authorise('core.create', $extension))
+		{
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 
 			return false;
 		}
 
 		// Parent exists so we let's proceed
-		while (!empty($pks)) {
+		while (!empty($pks))
+		{
 			// Pop the first ID off the stack
 			$pk = array_shift($pks);
 
 			$table->reset();
 
 			// Check that the row actually exists
-			if (!$table->load($pk)) {
-				if ($error = $table->getError()) {
+			if (!$table->load($pk))
+			{
+				if ($error = $table->getError())
+				{
 					// Fatal error
 					$this->setError($error);
 
 					return false;
-				} else {
+				}
+				else
+				{
 					// Not fatal error
 					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
@@ -87,7 +93,7 @@ class BiblestudyModelComment extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data         = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
 			$table->title = $data['0'];
 			$table->alias = $data['1'];
 
@@ -95,14 +101,16 @@ class BiblestudyModelComment extends JModelAdmin
 			$table->id = 0;
 
 			// Check the row.
-			if ($error = $table->getError()) {
+			if ($error = $table->getError())
+			{
 				throw new Exception($error);
 
 				return false;
 			}
 
 			// Store the row.
-			if (!$table->store()) {
+			if (!$table->store())
+			{
 				throw new Exception($error);
 
 				return false;
@@ -132,14 +140,17 @@ class BiblestudyModelComment extends JModelAdmin
 	 */
 	protected function canDelete($record)
 	{
-		if (!empty($record->id)) {
-			if ($record->state != -2) {
-				return;
+		if (!empty($record->id))
+		{
+			if ($record->state != -2)
+			{
+				return false;
 			}
 			$user = JFactory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
 		}
+		return false;
 	}
 
 	/**
@@ -152,9 +163,12 @@ class BiblestudyModelComment extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		if (parent::save($data)) {
+		if (parent::save($data))
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -172,7 +186,8 @@ class BiblestudyModelComment extends JModelAdmin
 		$user = JFactory::getUser();
 
 		// Check for existing article.
-		if (!empty($record->id)) {
+		if (!empty($record->id))
+		{
 			return $user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $record->id);
 		}
 
@@ -219,19 +234,21 @@ class BiblestudyModelComment extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.comment', 'comment', array('control'   => 'jform',
-		                                                                   'load_data' => $loadData
-		));
-		if (empty($form)) {
+		$form = $this->loadForm('com_biblestudy.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
 			return false;
 		}
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id')) {
+		if ($jinput->get('a_id'))
+		{
 			$id = $jinput->get('a_id', 0);
 		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
-		else {
+		else
+		{
 			$id = $jinput->get('id', 0);
 		}
 
@@ -240,8 +257,9 @@ class BiblestudyModelComment extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $id))
-				|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		) {
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
+		)
+		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
 			$form->setFieldAttribute('state', 'disabled', 'true');
