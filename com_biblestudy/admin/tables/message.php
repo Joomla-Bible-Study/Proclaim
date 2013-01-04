@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Message JTable
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -14,8 +11,8 @@ defined('_JEXEC') or die;
 /**
  * Table class for Message
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class TableMessage extends JTable
 {
@@ -25,252 +22,252 @@ class TableMessage extends JTable
 	 *
 	 * @var int
 	 */
-	var $id = null;
+	public $id = null;
 
 	/**
 	 * Published
 	 *
 	 * @var int
 	 */
-	var $published = 1;
+	public $published = 1;
 
 	/**
 	 * Teacher id
 	 *
 	 * @var int
 	 */
-	var $teacher_id = null;
+	public $teacher_id = null;
 
 	/**
 	 * Study Date
 	 *
 	 * @var string
 	 */
-	var $studydate = null;
+	public $studydate = null;
 
 	/**
 	 * Study Number
 	 *
 	 * @var int
 	 */
-	var $studynumber = null;
+	public $studynumber = null;
 
 	/**
 	 * Book Number
 	 *
 	 * @var int
 	 */
-	var $booknumber = null;
+	public $booknumber = null;
 
 	/**
 	 * Scripture
 	 *
 	 * @var string
 	 */
-	var $scripture = null;
+	public $scripture = null;
 
 	/**
 	 * Chapter Begin
 	 *
 	 * @var int
 	 */
-	var $chapter_begin = null;
+	public $chapter_begin = null;
 
 	/**
 	 * Chapter End
 	 *
 	 * @var int
 	 */
-	var $chapter_end = null;
+	public $chapter_end = null;
 
 	/**
 	 * Verse Begin
 	 *
 	 * @var int
 	 */
-	var $verse_begin = null;
+	public $verse_begin = null;
 
 	/**
 	 * Verse End
 	 *
 	 * @var int
 	 */
-	var $verse_end = null;
+	public $verse_end = null;
 
 	/**
 	 * Study Title
 	 *
 	 * @var string
 	 */
-	var $studytitle = null;
+	public $studytitle = null;
 
 	/**
 	 * Study Intro
 	 *
 	 * @var string
 	 */
-	var $studyintro = null;
+	public $studyintro = null;
 
 	/**
 	 * MessageType
 	 *
 	 * @var string
 	 */
-	var $messagetype = null;
+	public $messagetype = null;
 
 	/**
 	 * Series ID
 	 *
 	 * @var int
 	 */
-	var $series_id = null;
+	public $series_id = null;
 
 	/**
 	 * Study Text
 	 *
 	 * @var string
 	 */
-	var $studytext = null;
+	public $studytext = null;
 
 	/**
 	 * Topics ID
 	 *
 	 * @var int
 	 */
-	var $topics_id = null;
+	public $topics_id = null;
 
 	/**
 	 * Secondary Reference
 	 *
 	 * @var string
 	 */
-	var $secondary_reference = null;
+	public $secondary_reference = null;
 
 	/**
 	 * Media Hours
 	 *
 	 * @var int
 	 */
-	var $media_hours = null;
+	public $media_hours = null;
 
 	/**
 	 * Media Minutes
 	 *
 	 * @var int
 	 */
-	var $media_minutes = null;
+	public $media_minutes = null;
 
 	/**
 	 * Media seconds
 	 *
 	 * @var int
 	 */
-	var $media_seconds = null;
+	public $media_seconds = null;
 
 	/**
 	 * Book Number 2
 	 *
 	 * @var string
 	 */
-	var $booknumber2 = null;
+	public $booknumber2 = null;
 
 	/**
 	 * Chapter Begin2
 	 *
 	 * @var int
 	 */
-	var $chapter_begin2 = null;
+	public $chapter_begin2 = null;
 
 	/**
 	 * Chapter End2
 	 *
 	 * @var int
 	 */
-	var $chapter_end2 = null;
+	public $chapter_end2 = null;
 
 	/**
 	 * Verse Begin2
 	 *
 	 * @var int
 	 */
-	var $verse_begin2 = null;
+	public $verse_begin2 = null;
 
 	/**
 	 * Verse End2
 	 *
 	 * @var int
 	 */
-	var $verse_end2 = null;
+	public $verse_end2 = null;
 
 	/**
 	 * Comments
 	 *
 	 * @var int
 	 */
-	var $comments = 1;
+	public $comments = 1;
 
 	/**
 	 * Hits
 	 *
 	 * @var int
 	 */
-	var $hits = 0;
+	public $hits = 0;
 
 	/**
 	 * User ID
 	 *
 	 * @var int
 	 */
-	var $user_id = null;
+	public $user_id = null;
 
 	/**
 	 * User Name
 	 *
 	 * @var string
 	 */
-	var $user_name = null;
+	public $user_name = null;
 
 	/**
 	 * Show Level
 	 *
 	 * @var int
 	 */
-	var $show_level = null;
+	public $show_level = null;
 
 	/**
 	 * Location ID
 	 *
 	 * @var int
 	 */
-	var $location_id = null;
+	public $location_id = null;
 
 	/**
 	 * ThumbNail Media
 	 *
 	 * @var string
 	 */
-	var $thumbnailm = null;
+	public $thumbnailm = null;
 
 	/**
-	 * ThumbNail Hight
+	 * ThumbNail Height
 	 *
 	 * @var int
 	 */
-	var $thumbhm = null;
+	public $thumbhm = null;
 
 	/**
 	 * ThumbNail Width
 	 *
 	 * @var int
 	 */
-	var $thumbwm = null;
+	public $thumbwm = null;
 
 	/**
 	 * Params
 	 *
 	 * @var string
 	 */
-	var $params = null;
+	public $params = null;
 
 	/**
 	 * The rules associated with this record.
@@ -282,7 +279,7 @@ class TableMessage extends JTable
 	/**
 	 * Constructor.
 	 *
-	 * @param object Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function TableMessage(& $db)
 	{
@@ -304,9 +301,9 @@ class TableMessage extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
-		if (key_exists('params', $array) && is_array($array['params']))
+		if (array_key_exists('params', $array) && is_array($array['params']))
 		{
-			$registry = new JRegistry();
+			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = $registry->toString();
 		}
@@ -372,7 +369,12 @@ class TableMessage extends JTable
 		return $asset->id;
 	}
 
-	public  function ordering()
+	/**
+	 * Ordering.
+	 *
+	 * @return void
+	 */
+	public function ordering()
 	{
 
 	}

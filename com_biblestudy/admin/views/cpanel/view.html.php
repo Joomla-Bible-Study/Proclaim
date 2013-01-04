@@ -84,7 +84,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 *
 	 * @since 7.0.0
 	 *
-	 * @return vid
+	 * @return void
 	 */
 	protected function addToolbar()
 	{
@@ -96,7 +96,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 *
 	 * @since    7.1.0
 	 *
-	 * @return vid
+	 * @return void
 	 */
 	protected function setDocument()
 	{

@@ -17,14 +17,13 @@ defined('_JEXEC') or die;
 class TableStyle extends JTable
 {
 	public $filename;
+
 	public $stylecode;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   object  &$db  Database connector object
-	 *
-	 * @return void
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function __construct(&$db)
 	{
@@ -63,6 +62,7 @@ class TableStyle extends JTable
 	 * where id is the value of the primary key of the table.
 	 *
 	 * @return      string
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetName()
@@ -76,6 +76,7 @@ class TableStyle extends JTable
 	 * Method to return the title to use for the asset table.
 	 *
 	 * @return      string
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetTitle()
@@ -109,15 +110,17 @@ class TableStyle extends JTable
 	/**
 	 * Overriden JTable::store to set modified data and user id.
 	 *
-	 * @param    boolean    $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return    boolean    True on success.
+	 *
 	 * @since    1.6
 	 */
 	public function store($updateNulls = false)
 	{
 		$table = JTable::getInstance('Style', 'Table');
-		//write the css file
+
+		// Write the css file
 		jimport('joomla.client.helper');
 		jimport('joomla.filesystem.file');
 		JClientHelper::setCredentialsFromRequest('ftp');
@@ -153,15 +156,17 @@ class TableStyle extends JTable
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp      = JClientHelper::getCredentials('ftp');
 		$filename = $this->filename . '.css';
-		$file     = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filename;
-		if (JFile::exists($file)):
+		$file     = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/site' . DIRECTORY_SEPARATOR . $filename;
+
+		if (JFile::exists($file))
+		{
 			if (!JFile::delete($file))
 			{
 				$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
 
 				return false;
 			}
-		endif;
+		}
 
 		return parent::delete($pk);
 	}

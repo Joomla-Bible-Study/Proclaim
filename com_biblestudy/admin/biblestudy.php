@@ -2,6 +2,7 @@
 
 /**
  * Core Admin BibleStudy file
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -16,11 +17,12 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
-//require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-JLoader::register('LiveUpdate', dirname(__FILE__) . '/liveupdate/liveupdate.php');
+JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
+
 if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 {
 	LiveUpdate::handleRequest();
+
 	return;
 }
 
@@ -35,7 +37,6 @@ else
 {
 	define('BIBLESTUDY_CHECKREL', false);
 }
-
 
 // Register helper class
 JLoader::register('JBSMBibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');

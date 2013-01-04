@@ -12,14 +12,14 @@
 defined('_JEXEC') or die;
 
 /**
- * Bible Study Core Difines
+ * Bible Study Core Defines
  */
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 
 JLoader::register('JBSMUpload', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/upload.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
-JLoader::register('JBSMServer', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
 
 
 /**
@@ -134,14 +134,16 @@ class BiblestudyController extends JControllerLegacy
 	public function getFileList()
 	{
 		$app      = JFactory::getApplication();
+		$server = new JBSMServer;
 		$serverId = $app->input->get('server');
 		$folderId = $app->input->get('path');
 
-		$server = getServer($serverId);
-		$folder = getFolder($folderId);
+		$server = $server->getServer($serverId);
+		$folder = $server->getFolder($folderId);
 
 		$type  = $server->server_type;
 		$files = null;
+
 		switch ($type)
 		{
 			case 'ftp':
@@ -180,6 +182,7 @@ class BiblestudyController extends JControllerLegacy
 		$data = $app->input->get('jform', array(), 'post  ', ' array');
 		$from = $data['params']['from'];
 		$to   = $data['params']['to'];
+
 		switch ($from)
 		{
 			case '100':
@@ -191,6 +194,7 @@ class BiblestudyController extends JControllerLegacy
 				break;
 		}
 		$db->setQuery($query);
+
 		if (!$db->execute())
 		{
 			$msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
@@ -220,6 +224,7 @@ class BiblestudyController extends JControllerLegacy
 
 		$query = 'UPDATE #__bsms_mediafiles SET ' . $db->quoteName('popup') . ' = ' . $db->quote($to) . ' WHERE `popup` = ' . $db->quote($from);
 		$db->setQuery($query);
+
 		if (!$db->execute())
 		{
 			$msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
@@ -240,7 +245,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function writeXMLFile()
 	{
-		$podcasts = new JBSPodcast;
+		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 		$this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
 	}
@@ -256,6 +261,7 @@ class BiblestudyController extends JControllerLegacy
 		$id  = $app->input->getInt('id', 0, 'get');
 		$db  = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+
 		if (!$db->execute())
 		{
 			$error = $db->getErrorMsg();
@@ -270,7 +276,7 @@ class BiblestudyController extends JControllerLegacy
 	}
 
 	/**
-	 * Resets Donwnloads
+	 * Resets Downloads
 	 *
 	 * @return null
 	 */
@@ -280,6 +286,7 @@ class BiblestudyController extends JControllerLegacy
 		$id  = $app->input->getInt('id', 0, 'get');
 		$db  = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
+
 		if (!$db->execute())
 		{
 			$error = $db->getErrorMsg();
@@ -304,6 +311,7 @@ class BiblestudyController extends JControllerLegacy
 		$id     = $jinput->getInt('id', 0, 'get');
 		$db     = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
+
 		if (!$db->execute())
 		{
 			$error = $db->getErrorMsg();
@@ -318,7 +326,7 @@ class BiblestudyController extends JControllerLegacy
 	}
 
 	/**
-	 * Adds the ability to uploade with flash
+	 * Adds the ability to upload with flash
 	 *
 	 * @return null
 	 *
@@ -349,6 +357,7 @@ class BiblestudyController extends JControllerLegacy
 
 		// Get path and abort if none
 		$layout = $jinput->getWord('layout');
+
 		if ($layout == 'modal')
 		{
 			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
@@ -361,12 +370,14 @@ class BiblestudyController extends JControllerLegacy
 
 		// Check filetype is allowed
 		$allow = JBSMUpload::checkfile($temp);
+
 		if ($allow)
 		{
 			$filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
 			// Process file
 			$uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
+
 			if (!$uploadmsg)
 			{
 				// Set folder and link entries
@@ -383,6 +394,7 @@ class BiblestudyController extends JControllerLegacy
 		// Delete temp file
 		JBSMUpload::deletetempfile($tempfile);
 		$mediafileid = $jinput->getInt('id', '', 'post');
+
 		if ($layout == ' modal')
 		{
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
@@ -404,7 +416,7 @@ class BiblestudyController extends JControllerLegacy
             $input = new JInput;
 			$serverid = $input->get('upload_server', '', 'int');
 			$folderid = $input->get('upload_folder', '', 'int');
-			/* Import joomla filesystem functions, we will do all the filewriting with joomlas functions,
+			/* Import joomla filesystem functions, we will do all the filewriting with joomla's functions,
 			 * so if the ftp layer is on, joomla will write with that, not the apache user, which might
 	         * not have the correct permissions
 			 *
@@ -500,6 +512,7 @@ class BiblestudyController extends JControllerLegacy
 
 		// Check filetype allowed
 		$allow = JBSMUpload::checkfile($file['name']);
+
 		if ($allow)
 		{
 			$filename = JBSMUpload::buildpath($file, 1, $serverid, $folderid, $path);
@@ -518,6 +531,7 @@ class BiblestudyController extends JControllerLegacy
 		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
 		$layout = $jinput->getWord('layout');
+
 		if ($layout == 'modal')
 		{
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);

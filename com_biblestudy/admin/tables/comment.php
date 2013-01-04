@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Comment JTable
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -14,8 +11,8 @@ defined('_JEXEC') or die;
 /**
  * Table class for Comment
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class TableComment extends JTable
 {
@@ -81,7 +78,7 @@ class TableComment extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function TableComment(& $db)
 	{
@@ -108,7 +105,7 @@ class TableComment extends JTable
 	 * Method to return the title to use for the asset table.
 	 *
 	 * @return      string
-	 * 
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetTitle()
@@ -128,7 +125,7 @@ class TableComment extends JTable
 	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
-	 * 
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetParentId($table = null, $id = null)

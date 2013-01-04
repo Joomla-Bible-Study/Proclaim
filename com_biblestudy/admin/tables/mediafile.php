@@ -1,20 +1,17 @@
 <?php
-
 /**
- * MediaFile JTable
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
 /**
  * Table class for MediaFile
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class TableMediafile extends JTable
 {
@@ -190,7 +187,7 @@ class TableMediafile extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param object Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function Tablemediafile(& $db)
 	{
@@ -211,15 +208,15 @@ class TableMediafile extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry();
+			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
 
-		//Bind the podcast_id
+		// Bind the podcast_id
 		if (isset($array['podcast_id']) && is_array($array['podcast_id']))
 		{
-			$registry = new JRegistry();
+			$registry = new JRegistry;
 			$registry->loadArray($array['podcast_id']);
 			$array['podcast_id'] = (string) $registry;
 		}
@@ -239,6 +236,7 @@ class TableMediafile extends JTable
 	 * where id is the value of the primary key of the table.
 	 *
 	 * @return      string
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetName()
@@ -252,6 +250,7 @@ class TableMediafile extends JTable
 	 * Method to return the title to use for the asset table.
 	 *
 	 * @return      string
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetTitle()
@@ -271,6 +270,7 @@ class TableMediafile extends JTable
 	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
+	 *
 	 * @since       1.6
 	 */
 	protected function _getAssetParentId($table = null, $id = null)
@@ -284,10 +284,11 @@ class TableMediafile extends JTable
 	/**
 	 * Overloaded load function
 	 *
-	 * @param       int     $pk    primary key
-	 * @param       boolean $reset reset data
+	 * @param   int      $pk     primary key
+	 * @param   boolean  $reset  reset data
 	 *
 	 * @return      boolean
+	 *
 	 * @see JTable:load
 	 */
 	public function load($pk = null, $reset = true)
