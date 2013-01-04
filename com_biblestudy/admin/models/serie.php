@@ -25,7 +25,6 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
-
 	/**
 	 * Batch copy items to a new category or current.
 	 *
@@ -163,7 +162,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		}
 
 		// Default to component settings if serie known.
-		return parent::canEditState('com_biblestudy');
+		return parent::canEditState($record);
 	}
 
 	/**
@@ -231,9 +230,10 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		if ($item = parent::getItem($pk))
-		{
+		$item = parent::getItem($pk);
 
+		if ($item)
+		{
 			$item->admin = JBSMParams::getAdmin();
 		}
 
@@ -297,7 +297,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Get Teacher data
 	 *
-	 * @return abject
+	 * @return object
 	 */
 	public function getTeacher()
 	{
@@ -378,7 +378,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	}
 
 	/**
-	 * Method to allow derived classes to preprocess the form.
+	 * Method to allow derived classes to prepossess the form.
 	 *
 	 * @param   JForm   $form   A JForm object.
 	 * @param   mixed   $data   The data expected for the form.
@@ -392,7 +392,6 @@ class BiblestudyModelSerie extends JModelAdmin
 	{
 		parent::preprocessForm($form, $data, $group);
 	}
-
 
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules

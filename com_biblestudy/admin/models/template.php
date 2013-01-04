@@ -1,45 +1,25 @@
 <?php
-
 /**
- * Template model
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
-//require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-JLoader::register('JBSMBibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+
+JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
 
 /**
  * Template model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelTemplate extends JModelAdmin
 {
-
-	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return      boolean
-	 *
-	 * @since       1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Check specific edit permission then general edit permission.
-		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.template.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-	}
-
 	/**
 	 * Store record
 	 *
@@ -51,11 +31,11 @@ class BiblestudyModelTemplate extends JModelAdmin
 	public function store($data = null, $tmpl = null)
 	{
 		$row = $this->getTable();
+		$input = new JInput;
 
 		// @todo Clean this up
 		if (!isset($data))
 		{
-			$input = new JInput;
 			$data  = $input->get('post');
 		}
 		$data['tmpl'] = $input->get('tmpl', '', 'string');
@@ -88,7 +68,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 	/**
 	 * Copy Template
 	 *
-	 * @param   int  $cid  ID of template
+	 * @param   array  $cid  ID of template
 	 *
 	 * @return boolean
 	 */
@@ -149,7 +129,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Load Forme Date
+	 * Load Form Date
 	 *
 	 * @return  array    The default data is an empty array.
 	 *

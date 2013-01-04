@@ -22,14 +22,14 @@ class JFormFieldFilesize extends JFormField
 {
 
 	/**
-	 *  Set Neming of type
+	 *  Set Naming of type
 	 *
 	 * @var string
 	 */
 	public $type = 'Filesize';
 
 	/**
-	 * Get inpute of form
+	 * Get impute of form
 	 *
 	 * @return string
 	 */

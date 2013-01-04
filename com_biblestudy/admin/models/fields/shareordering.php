@@ -53,7 +53,6 @@ class JFormFieldShareOrdering extends JFormField
 		// Get some field values from the form.
 		$messagetypeId = (int) $this->form->getValue('id');
 
-
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, name AS text' .
 			' FROM #__bsms_share' .

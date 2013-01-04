@@ -28,22 +28,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return      boolean
-	 *
-	 * @since       1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Check specific edit permission then general edit permission.
-		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.teacher.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-	}
-
-	/**
 	 * Method to get a table object, load it if necessary.
 	 *
 	 * @param   string  $name     The table name. Optional.
@@ -70,7 +54,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		if ($item = parent::getItem($pk))
+		$item = parent::getItem($pk);
+
+		if ($item)
 		{
 			// Convert the params field to an array.
 		}
@@ -95,6 +81,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 
 		// Get the form.
 		$form = $this->loadForm('com_biblestudy.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
+
 		if (empty($form))
 		{
 			return false;
@@ -206,6 +193,5 @@ class BiblestudyModelTeacher extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 
 }

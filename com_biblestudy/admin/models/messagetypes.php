@@ -94,8 +94,9 @@ class BiblestudyModelMessagetypes extends JModelList
 	{
 		// Adjust the context to support modal layouts.
 		$input = new JInput;
+		$layout = $input->get('layout');
 
-		if ($layout = $input->get('layout'))
+		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}

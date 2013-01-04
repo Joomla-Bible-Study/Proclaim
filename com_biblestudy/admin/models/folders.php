@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Folders Model
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,8 +13,8 @@ jimport('joomla.application.component.modellist');
 /**
  * Folders model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelFolders extends JModelList
 {
@@ -29,7 +26,8 @@ class BiblestudyModelFolders extends JModelList
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields'])) {
+		if (empty($config['filter_fields']))
+		{
 			$config['filter_fields'] = array(
 				'id', 'folder.id',
 				'published', 'folder.published',
@@ -54,12 +52,16 @@ class BiblestudyModelFolders extends JModelList
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
+	 *
 	 * @since   7.0.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$layout = JFactory::getApplication()->input->get('layout');
+
 		// Adjust the context to support modal layouts.
-		if ($layout = JFactory::getApplication()->input->get('layout')) {
+		if ($layout)
+		{
 			$this->context .= '.' . $layout;
 		}
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -81,9 +83,10 @@ class BiblestudyModelFolders extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param    string        $id    A prefix for the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
-	 * @return    string        A store id.
+	 * @return  string  A store id.
+	 *
 	 * @since    1.6
 	 */
 	protected function getStoreId($id = '')
@@ -99,62 +102,82 @@ class BiblestudyModelFolders extends JModelList
 	/**
 	 * Get List Query
 	 *
+	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 *
 	 * @since   7.0.0
 	 */
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
+		$user  = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
-				'list.select', 'folder.id, folder.foldername, folder.folderpath, folder.published, folder.access'));
+				'list.select', 'folder.id, folder.foldername, folder.folderpath, folder.published, folder.access')
+		);
 		$query->from('#__bsms_folders AS folder');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = folder.access');
+		$access = $this->getState('filter.access');
 
 		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
-			$query->where('folder.access = ' . (int)$access);
+		if ($access)
+		{
+			$query->where('folder.access = ' . (int) $access);
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin')) {
+		if (!$user->authorise('core.admin'))
+		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('folder.access IN (' . $groups . ')');
 		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('folder.published = ' . (int)$published);
-		} else if ($published === '') {
+
+		if (is_numeric($published))
+		{
+			$query->where('folder.published = ' . (int) $published);
+		}
+		elseif ($published === '')
+		{
 			$query->where('(folder.published = 0 OR folder.published = 1)');
 		}
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
-		if (!empty($search)) {
-			if (stripos($search, 'id:') === 0) {
-				$query->where('folder.id = ' . (int)substr($search, 3));
-			} else {
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('folder.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
 				$search = $db->Quote('%' . $db->escape($search, true) . '%');
 				$query->where('(folder.foldername LIKE ' . $search . ')');
 			}
 		}
 
-		//Add the list ordering clause
-		$orderCol = $this->state->get('list.ordering', 'folder.id');
+		// Add the list ordering clause
+		$orderCol  = $this->state->get('list.ordering', 'folder.id');
 		$orderDirn = $this->state->get('list.direction', 'acs');
-		//sqlsrv change
+
+		// Sqlsrv change
 		if ($orderCol == 'language')
+		{
 			$orderCol = 'l.title';
+		}
 		if ($orderCol == 'access_level')
+		{
 			$orderCol = 'ag.title';
+		}
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

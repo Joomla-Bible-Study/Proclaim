@@ -53,7 +53,6 @@ class JFormFieldMessageTypeOrdering extends JFormField
 		// Get some field values from the form.
 		$messagetypeId = (int) $this->form->getValue('id');
 
-
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, filename AS text' .
 			' FROM #__bsms_message_type' .

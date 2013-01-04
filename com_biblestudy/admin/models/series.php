@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Series model
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,8 +13,8 @@ jimport('joomla.application.component.modellist');
 /**
  * Series model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelSeries extends JModelList
 {
@@ -71,10 +68,11 @@ class BiblestudyModelSeries extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
+		$app    = JFactory::getApplication();
+		$layout = $app->input->get('layout');
 
 		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout'))
+		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -96,6 +94,7 @@ class BiblestudyModelSeries extends JModelList
 
 		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
+
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
@@ -112,7 +111,7 @@ class BiblestudyModelSeries extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param    string        $id    A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return    string        A store id.
 	 *
@@ -161,13 +160,17 @@ class BiblestudyModelSeries extends JModelList
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access');
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language'))
+		$language = $this->getState('filter.language');
+
+		if ($language)
 		{
 			$query->where('series.language = ' . $db->quote($language));
 		}
 
 		// Filter by access level.
-		if ($access = $this->getState('filter.access'))
+		$access = $this->getState('filter.access');
+
+		if ($access)
 		{
 			$query->where('series.access = ' . (int) $access);
 		}
@@ -181,19 +184,19 @@ class BiblestudyModelSeries extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
+
 		if (is_numeric($published))
 		{
 			$query->where('series.published = ' . (int) $published);
 		}
-		else {
-			if ($published === '')
-			{
-				$query->where('(series.published = 0 OR series.published = 1)');
-			}
+		elseif ($published === '')
+		{
+			$query->where('(series.published = 0 OR series.published = 1)');
 		}
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
+
 		if (!empty($search))
 		{
 			if (stripos($search, 'id:') === 0)
@@ -208,15 +211,18 @@ class BiblestudyModelSeries extends JModelList
 		}
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language'))
+		$language = $this->getState('filter.language');
+
+		if ($language)
 		{
 			$query->where('series.language = ' . $db->quote($language));
 		}
 
-		//Add the list ordering clause
+		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'series.series_text');
 		$orderDirn = $this->state->get('list.direction', 'asc');
-		//sqlsrv change
+
+		// Sqlsrv change
 		if ($orderCol == 'language')
 		{
 			$orderCol = 'l.title';
@@ -235,12 +241,14 @@ class BiblestudyModelSeries extends JModelList
 	 * Overridden to add a check for access levels.
 	 *
 	 * @return    mixed    An array of data items on success, false on failure.
+	 *
 	 * @since    1.6.1
 	 */
 	public function getItems()
 	{
 		$items = parent::getItems();
 		$app   = JFactory::getApplication();
+
 		if ($app->isSite())
 		{
 			$user   = JFactory::getUser();
@@ -248,7 +256,7 @@ class BiblestudyModelSeries extends JModelList
 
 			for ($x = 0, $count = count($items); $x < $count; $x++)
 			{
-				//Check the access level. Remove articles the user shouldn't see
+				// Check the access level. Remove articles the user shouldn't see
 				if (!in_array($items[$x]->access, $groups))
 				{
 					unset($items[$x]);

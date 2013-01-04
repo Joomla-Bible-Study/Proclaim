@@ -1,26 +1,22 @@
 <?php
-
 /**
- * Comment Model
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-//require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php';
 JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
 
 /**
  * Comment model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelComment extends JModelAdmin
 {
@@ -30,7 +26,7 @@ class BiblestudyModelComment extends JModelAdmin
 	 *
 	 * @var string
 	 */
-	private  $_admin;
+	private $_admin;
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -51,7 +47,7 @@ class BiblestudyModelComment extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$categoryId = null;
+		$categoryId = (int) '';
 
 		$table = $this->getTable();
 		$i     = 0;
@@ -159,7 +155,9 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param string $data
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success, False on error.
 	 *
 	 * @since 7.0.1
 	 * @todo  This may need to be optimized
@@ -170,10 +168,8 @@ class BiblestudyModelComment extends JModelAdmin
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 	/**
@@ -196,7 +192,7 @@ class BiblestudyModelComment extends JModelAdmin
 		}
 
 		// Default to component settings if serie known.
-		return parent::canEditState('com_biblestudy');
+		return parent::canEditState($record);
 	}
 
 	/**
@@ -225,7 +221,6 @@ class BiblestudyModelComment extends JModelAdmin
 	{
 		return JTable::getInstance($name, $prefix, $options);
 	}
-
 
 	/**
 	 * Get the form data
@@ -301,7 +296,7 @@ class BiblestudyModelComment extends JModelAdmin
 	}
 
 	/**
-	 * Method to allow derived classes to preprocess the form.
+	 * Method to allow derived classes to prepossess the form.
 	 *
 	 * @param   JForm   $form   A JForm object.
 	 * @param   mixed   $data   The data expected for the form.

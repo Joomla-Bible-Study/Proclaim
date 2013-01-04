@@ -35,11 +35,7 @@ class JFormFieldTopics extends JFormField
 	 */
 	protected function getInput()
 	{
-
-		return '
-            <input type="hidden" id="topics" name="jform[topics]"/>
-            ';
+		return '<input type="hidden" id="topics" name="jform[topics]"/>';
 	}
 
 }
-

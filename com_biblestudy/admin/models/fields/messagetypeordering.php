@@ -12,11 +12,11 @@ jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
 /**
- * Get Ording for Message class
+ * Get Ordering for Message class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.4
- * @todo     neet to test and see if the is still needed
+ * @todo     need to test and see if the is still needed
  */
 class JFormFieldMessageTypeOrdering extends JFormField
 {
@@ -32,7 +32,8 @@ class JFormFieldMessageTypeOrdering extends JFormField
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return    string    The field input markup.
+	 * @return   string    The field input markup.
+	 *
 	 * @since    1.6
 	 */
 	protected function getInput()
@@ -51,7 +52,6 @@ class JFormFieldMessageTypeOrdering extends JFormField
 
 		// Get some field values from the form.
 		$messagetypeId = (int) $this->form->getValue('id');
-
 
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, filename AS text' .

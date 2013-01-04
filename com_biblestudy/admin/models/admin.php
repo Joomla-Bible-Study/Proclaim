@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Admin Model
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -18,8 +15,8 @@ jimport('joomla.application.component.modeladmin');
 /**
  * Admin admin model class
  *
- * @package BibleStudy.Admin
- * @since   7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class BiblestudyModelAdmin extends JModelAdmin
 {
@@ -36,8 +33,10 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param string $ordering
-	 * @param string $direction
+	 * @param   string  $ordering   ?
+	 * @param   string  $direction  ?
+	 *
+	 * @return  void
 	 *
 	 * @since    1.7.2
 	 */
@@ -54,25 +53,24 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
-	 * @var  string  Prefix Component decleraion
+	 * @var  string  Prefix Component deceleration
 	 * @access    public
 	 * @return    void
 	 */
-	var $_text_prefix = 'COM_BIBLESTUDY';
+	protected  $text_prefix = 'COM_BIBLESTUDY';
+
+	private $_id;
+
+	private $_data;
 
 	/**
-	 * Conctruter that retrives the id from the admin section
+	 * Constructor.
 	 *
-	 * @var string Admin section decleration
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
-	var $_admin;
-
-	/**
-	 * Cuncructer
-	 */
-	public function __construct()
+	public function __construct($config = array())
 	{
-		parent::__construct();
+		parent::__construct($config);
 
 		$array = JFactory::getApplication()->input->get('cid', 0, '', 'array');
 		$this->setId((int) $array[0]);
@@ -81,12 +79,14 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Set ID of admin
 	 *
-	 * @param int $id
+	 * @param   int  $id  ?
+	 *
+	 * @return void
 	 */
 	public function setId($id)
 	{
 		// Set id and wipe data
-		$this->_id = $id;
+		$this->_id   = $id;
 		$this->_data = null;
 	}
 
@@ -99,7 +99,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		// Load the data
 		$query = ' SELECT * FROM #__bsms_admin ' .
-				'  WHERE id = 1';
+			'  WHERE id = 1';
 		$this->_db->setQuery($query);
 		$this->_data = $this->_db->loadObject();
 
@@ -111,7 +111,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @access    public
 	 *
-	 * @param bool|string $updateNulls
+	 * @param   bool|string  $updateNulls  ?
 	 *
 	 * @return    boolean    True on success
 	 */
@@ -119,24 +119,27 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$row = $this->getTable();
 
-
 		$data = JFactory::getApplication()->input->get('post');
+
 		// Bind the form fields to the hello table
-		if (!$row->bind($data)) {
+		if (!$row->bind($data))
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
 
 		// Make sure the record is valid
-		if (!$row->check()) {
+		if (!$row->check())
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
 
 		// Store the web link table to the database
-		if (!$row->store()) {
+		if (!$row->store())
+		{
 			$this->setError($this->_db->getErrorMsg());
 
 			return false;
@@ -148,31 +151,34 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param    string   $type   The table type to instantiate
-	 * @param    string   $prefix A prefix for the table class name. Optional.
-	 * @param    array    $config Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
-	 * @return    JTable    A database object
+	 * @return  JTable  A JTable object
+	 *
 	 * @since    1.6
 	 */
-	public function getTable($type = 'admin', $prefix = 'Table', $config = array())
+	public function getTable($name = 'admin', $prefix = 'Table', $options = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**
 	 * Gets the form from the XML file.
 	 *
-	 * @param  Array $data
-	 * @param  Boolean $loadData
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return JForm Form Object
+	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
+
+		if (empty($form))
+		{
 			return false;
 		}
 
@@ -187,8 +193,11 @@ class BiblestudyModelAdmin extends JModelAdmin
 	protected function loadFormData()
 	{
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
+
 		if (empty($data))
+		{
 			$data = $this->getItem();
+		}
 
 		return $data;
 	}
@@ -210,8 +219,10 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param string $group
-	 * @param int    $client_id
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
 	 *
 	 * @since    1.6
 	 */
@@ -222,18 +233,20 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 *
 	 * Fixes database problems
+	 *
+	 * @return boolean
 	 */
 	public function fix()
 	{
-		if (!$changeSet = $this->getItems()) {
+		if (!$changeSet = $this->getItems())
+		{
 			return false;
 		}
 		$changeSet->fix();
 		$this->fixSchemaVersion();
 		$this->fixUpdateVersion();
-		$installer = new Com_BiblestudyInstallerScript();
+		$installer = new Com_BiblestudyInstallerScript;
 		$installer->deleteUnexistingFiles();
 		$installer->fixMenus();
 		$installer->fixImagePaths();
@@ -245,7 +258,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 *
 	 * Gets the changeset object
 	 *
 	 * @return string JSchema  Changeset
@@ -254,12 +266,17 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/';
 
-		try {
+		try
+		{
 			$changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
-		} catch (RuntimeException $e) {
+		}
+		catch (RuntimeException $e)
+		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+
 			return false;
 		}
+
 		return $changeSet;
 	}
 
@@ -277,15 +294,16 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Get version from #__schemas table
 	 *
 	 * @return  mixed  the return value from the query, or null if the query fails
+	 *
 	 * @throws Exception
 	 */
 	public function getSchemaVersion()
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$db              = JFactory::getDbo();
+		$query           = $db->getQuery(true);
 		$extensionresult = $this->getExtentionId();
 		$query->select('version_id')->from($db->qn('#__schemas'))
-				->where('extension_id = "' . $extensionresult . '"');
+			->where('extension_id = "' . $extensionresult . '"');
 		$db->setQuery($query);
 		$result = $db->loadResult();
 
@@ -300,16 +318,20 @@ class BiblestudyModelAdmin extends JModelAdmin
 	public function fixSchemaVersion()
 	{
 		// Get correct schema version -- last file in array
-		$schema = $this->getCompVersion();
-		$db = JFactory::getDbo();
-		$result = false;
+		$schema          = $this->getCompVersion();
+		$db              = JFactory::getDbo();
+		$result          = false;
 		$extensionresult = $this->getExtentionId();
 
 		// Check value. If ok, don't do update
 		$version = $this->getSchemaVersion();
-		if ($version == $schema) {
+
+		if ($version == $schema)
+		{
 			$result = $version;
-		} else {
+		}
+		else
+		{
 			// Delete old row
 			$query = $db->getQuery(true);
 			$query->delete($db->qn('#__schemas'));
@@ -323,7 +345,9 @@ class BiblestudyModelAdmin extends JModelAdmin
 			$query->set($db->qn('extension_id') . '= ' . $db->q($extensionresult));
 			$query->set($db->qn('version_id') . '= ' . $db->q($schema));
 			$db->setQuery($query);
-			if ($db->execute()) {
+
+			if ($db->execute())
+			{
 				$result = $schema;
 			}
 		}
@@ -354,16 +378,24 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$table = JTable::getInstance('Extension');
 		$table->load($this->getExtentionId());
-		$cache = new JRegistry($table->manifest_cache);
+		$cache         = new JRegistry($table->manifest_cache);
 		$updateVersion = $cache->get('version');
-		if ($updateVersion == $this->getCompVersion()) {
+
+		if ($updateVersion == $this->getCompVersion())
+		{
 			return $updateVersion;
-		} else {
+		}
+		else
+		{
 			$cache->set('version', $this->getCompVersion());
 			$table->manifest_cache = $cache->toString();
-			if ($table->store()) {
+
+			if ($table->store())
+			{
 				return $this->getCompVersion();
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -393,11 +425,14 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$table->load($table->find(array('name' => 'com_biblestudy')));
 
 		// Check for empty $config and non-empty content filters
-		if (!$table->params) {
+		if (!$table->params)
+		{
 			// Get filters from com_content and store if you find them
 			$contentParams = JComponentHelper::getParams('com_biblestudy');
-			if ($contentParams->get('filters')) {
-				$newParams = new JRegistry();
+
+			if ($contentParams->get('filters'))
+			{
+				$newParams = new JRegistry;
 				$newParams->set('filters', $contentParams->get('filters'));
 				$table->params = (string) $newParams;
 				$table->store();
@@ -410,42 +445,48 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
+	 * To retrieve component extension_id
 	 *
-	 * To retreave component extention_id
+	 * @return string extension_id
 	 *
-	 * @return string extention_id
 	 * @since 7.1.0
 	 * @throws Exception
 	 */
 	public function getExtentionId()
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
-				->where('element = "com_biblestudy"');
+			->where('element = "com_biblestudy"');
 		$db->setQuery($query);
 		$result = $db->loadResult();
-		if ($db->getErrorNum()) {
+
+		if ($db->getErrorNum())
+		{
 			throw new Exception('Database error - getExtentionId');
 		}
+
 		return $result;
 	}
 
 	/**
-	 * To retreave component version
+	 * To retrieve component version
 	 *
 	 * @return string Version of component
+	 *
 	 * @since 1.7.3
 	 */
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$xml = null;
-		$file = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
-		$xml = JFactory::getXML($file);
-		if ($xml):
+		$xml      = null;
+		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
+		$xml      = simplexml_load_file($file, 'JXMLElement');
+
+		if ($xml)
+		{
 			$jversion = (string) $xml->version;
-		endif;
+		}
 
 		return $jversion;
 	}

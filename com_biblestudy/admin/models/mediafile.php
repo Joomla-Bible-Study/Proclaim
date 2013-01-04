@@ -35,24 +35,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return      boolean
-	 *
-	 * @since       1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Check specific edit permission then general edit permission.
-		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafile.' . ((int) isset($data[$key]) ? $data[$key] : 0))
-			or
-			parent::allowEdit($data, $key);
-	}
-
-	/**
 	 * Method to test whether a record can be deleted.
 	 *
 	 * @param   object  $record  A record object.
@@ -113,7 +95,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @param   array  $data  The form data.
 	 *
-	 * @return  boolean True on sucessfull save
+	 * @return  boolean True on successfully save
 	 *
 	 * @since   7.0
 	 */
@@ -126,7 +108,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			/* This code could be uncommented and would remove spaces from filename
 			// $data['filename'] = str_replace(' ','_',$data['filename']);
-			// Remove starting and traling spaces */
+			// Remove starting and trailing spaces */
 			$data['filename'] = trim($data['filename']);
 
 			return true;
@@ -201,7 +183,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id)) || ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
+		)
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -478,7 +462,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 		}
 
 		$done = false;
-
 
 		if (strlen($commands['player']) > 0)
 		{

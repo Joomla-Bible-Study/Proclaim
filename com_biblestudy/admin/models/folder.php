@@ -26,22 +26,6 @@ class BiblestudyModelFolder extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return      boolean
-	 *
-	 * @since       1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Check specific edit permission then general edit permission.
-		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.folder.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-	}
-
-	/**
 	 * Batch copy items to a new category or current.
 	 *
 	 * @param   integer  $value     The new category.
@@ -157,7 +141,7 @@ class BiblestudyModelFolder extends JModelAdmin
 		{
 			$folderpath = $folderpath . '/';
 		}
-		// Remove starting and traling spaces
+		// Remove starting and trailing spaces
 		$data['folderpath'] = trim($folderpath);
 
 		// Bind the form fields to the series table

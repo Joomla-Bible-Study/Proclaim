@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Messages model
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
+JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . 'translated.php');
 
 if (version_compare(JVERSION, '2.5', 'ge'))
 {
@@ -159,13 +156,13 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
 		$app = JFactory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		$input = new JInput;
+		$layout = $input->get('layout');
 
-		if ($layout = $input->get('layout'))
+		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -354,7 +351,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array  $items  Items for entris
+	 * @param   array  $items  Items for entries
 	 *
 	 * @since 7.0
 	 * @return object

@@ -45,14 +45,17 @@ class BiblestudyModelTopics extends JModelList
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
+	 * @return  void
+	 *
 	 * @since   7.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
 		$input = new JInput;
+		$layout = $input->get('layout');
 
-		if ($layout = $input->get('layout'))
+		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -135,7 +138,7 @@ class BiblestudyModelTopics extends JModelList
 	/**
 	 * translate item entries: books, topics
 	 *
-	 * @param   array  $items  Items for entris
+	 * @param   array  $items  Items for entries
 	 *
 	 * @return object
 	 *

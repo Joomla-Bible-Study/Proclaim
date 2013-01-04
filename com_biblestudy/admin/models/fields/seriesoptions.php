@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// import the list field type
+// Import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 

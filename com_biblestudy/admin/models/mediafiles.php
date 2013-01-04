@@ -18,7 +18,7 @@ jimport('joomla.application.component.modellist');
  */
 class BiblestudyModelMediafiles extends JModelList
 {
-	private  $_deletes;
+	private $_deletes;
 
 	/**
 	 * Constructor.
@@ -88,9 +88,10 @@ class BiblestudyModelMediafiles extends JModelList
 		$session = JFactory::getSession();
 
 		// Adjust the context to support modal layouts.
-		$input = new JInput;
+		$input  = new JInput;
+		$layout = $input->get('layout');
 
-		if ($layout = $input->get('layout'))
+		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -213,7 +214,6 @@ class BiblestudyModelMediafiles extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
 
-
 		// Filter by published state
 		$published = $this->getState('filter.published');
 
@@ -226,7 +226,9 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
 		}
 		// Filter by access level.
-		if ($access = $this->getState('filter.access'))
+		$access = $this->getState('filter.access');
+
+		if ($access)
 		{
 			$query->where('mediafile.access = ' . (int) $access);
 		}

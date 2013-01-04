@@ -134,7 +134,6 @@ class BiblestudyModelMediaimage extends JModelAdmin
 			$data = $this->getItem();
 		}
 
-
 		return $data;
 	}
 

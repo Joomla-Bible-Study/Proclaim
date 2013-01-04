@@ -10,10 +10,8 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-// --require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
 
-// --include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 JLoader::register('JBSMTranslated', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
 
 /**
@@ -76,7 +74,6 @@ class BiblestudyModelMessage extends JModelAdmin
 
 			return false;
 		}
-
 
 		// Make sure the record is valid
 		if (!$row->check())
@@ -332,7 +329,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		if (parent::save($data))
 		{
-			$this->setTopics($this->getState($this->getName() . '.id'), $data);
+			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
 
 			return true;
 		}

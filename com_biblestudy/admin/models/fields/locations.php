@@ -13,7 +13,7 @@ jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Lodation List Form Field class for the Joomla Bible Study component
+ * Location List Form Field class for the Joomla Bible Study component
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
