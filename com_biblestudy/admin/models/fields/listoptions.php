@@ -1,24 +1,23 @@
 <?php
-
 /**
- * List options field
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 
 // No Direct Access
 defined('_JEXEC') or die;
 
-// import the list field type
+// Import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
  * Books List Form Field class for the Joomla Bible Study component
- * @package BibleStudy.Admin
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
 class JFormFieldListoptions extends JFormFieldList
 {
@@ -46,7 +45,7 @@ class JFormFieldListoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_INTRODUCTION_BRACE'));
 		$options[] = JHtml::_('select.option', '7', JText::_('JBS_TPL_TEACHER_BRACE'));
 		$options[] = JHtml::_('select.option', '8', JText::_('JBS_TPL_TITLE_TEACHER_BRACE'));
-                $options[] = JHtml::_('select.option', '30', JText::_('JBS_TPL_TITLE_TEACHER_THUMBNAIL'));
+		$options[] = JHtml::_('select.option', '30', JText::_('JBS_TPL_TITLE_TEACHER_THUMBNAIL'));
 		$options[] = JHtml::_('select.option', '9', JText::_('JBS_TPL_SERIES_BRACE'));
 		$options[] = JHtml::_('select.option', '26', JText::_('JBS_TPL_SERIES_THUMBNAIL_BRACE'));
 		$options[] = JHtml::_('select.option', '27', JText::_('JBS_TPL_SERIES_DESCRIPTION_BRACE'));
@@ -64,7 +63,8 @@ class JFormFieldListoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '28', JText::_('JBS_TPL_MEDIA_PLAYS'));
 		$options[] = JHtml::_('select.option', '29', JText::_('JBS_TPL_MEDIA_DOWNLOADS'));
 		$options[] = JHtml::_('select.option', '24', JText::_('JBS_CMN_CUSTOM'));
-		$options = array_merge(parent::getOptions(), $options);
+		$options   = array_merge(parent::getOptions(), $options);
+
 		return $options;
 	}
 }

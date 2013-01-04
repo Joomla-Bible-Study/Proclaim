@@ -30,7 +30,7 @@ class BiblestudyModelComment extends JModelAdmin
 	 *
 	 * @var string
 	 */
-	var $_admin;
+	private  $_admin;
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -54,11 +54,12 @@ class BiblestudyModelComment extends JModelAdmin
 		$categoryId = null;
 
 		$table = $this->getTable();
-		$i = 0;
+		$i     = 0;
 
 		// Check that the user has create permission for the component
 		$extension = JFactory::getApplication()->input->get('option', '');
-		$user = JFactory::getUser();
+		$user      = JFactory::getUser();
+
 		if (!$user->authorise('core.create', $extension))
 		{
 			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -93,7 +94,7 @@ class BiblestudyModelComment extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
+			$data         = $this->generateNewTitle($categoryId, $table->alias, $table->title);
 			$table->title = $data['0'];
 			$table->alias = $data['1'];
 
@@ -101,9 +102,9 @@ class BiblestudyModelComment extends JModelAdmin
 			$table->id = 0;
 
 			// Check the row.
-			if ($error = $table->getError())
+			if (!$table->check())
 			{
-				throw new Exception($error);
+				$this->setError($table->getError());
 
 				return false;
 			}
@@ -111,7 +112,7 @@ class BiblestudyModelComment extends JModelAdmin
 			// Store the row.
 			if (!$table->store())
 			{
-				throw new Exception($error);
+				$this->setError($table->getError());
 
 				return false;
 			}
@@ -133,9 +134,10 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param    object    $record    A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
 	 * @since    1.6
 	 */
 	protected function canDelete($record)
@@ -150,6 +152,7 @@ class BiblestudyModelComment extends JModelAdmin
 
 			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
 		}
+
 		return false;
 	}
 
@@ -176,9 +179,10 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to test whether a record can have its state edited.
 	 *
-	 * @param    object    $record    A record object.
+	 * @param   object  $record  A record object.
 	 *
-	 * @return    boolean    True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 *
 	 * @since    1.6
 	 */
 	protected function canEditState($record)
@@ -198,9 +202,10 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param    JTable    $table
+	 * @param   JTable  $table  A reference to a JTable object.
 	 *
-	 * @return    void
+	 * @return  void
+	 *
 	 * @since    1.6
 	 */
 	protected function prepareTable($table)
@@ -208,27 +213,28 @@ class BiblestudyModelComment extends JModelAdmin
 	}
 
 	/**
-	 * Returns a Table object, always creating it.
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param    type      The table type to instantiate
-	 * @param    string    A prefix for the table class name. Optional.
-	 * @param    array     Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
-	 * @return    JTable    A database object
+	 * @return  JTable  A JTable object
 	 */
-	public function getTable($type = 'Comment', $prefix = 'Table', $config = array())
+	public function getTable($name = 'Comment', $prefix = 'Table', $options = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $options);
 	}
 
 
 	/**
 	 * Get the form data
 	 *
-	 * @param array   $data
-	 * @param boolean $loadData
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return boolean|object
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -246,6 +252,7 @@ class BiblestudyModelComment extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0);
+
 		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
 		else
 		{
@@ -278,23 +285,30 @@ class BiblestudyModelComment extends JModelAdmin
 	 * Load Form Data
 	 *
 	 * @return object
+	 *
 	 * @since   7.0
 	 */
 	protected function loadFormData()
 	{
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.comment.data', array());
+
 		if (empty($data))
+		{
 			$data = $this->getItem();
+		}
 
 		return $data;
 	}
 
 	/**
-	 * Auto-populate the model state.
+	 * Method to allow derived classes to preprocess the form.
 	 *
-	 * Note. Calling getState in this method will result in recursion.
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
 	 *
-	 * @return    void
+	 * @return  void
+	 *
 	 * @since    3.0
 	 */
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
@@ -303,10 +317,12 @@ class BiblestudyModelComment extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Clean the cache
 	 *
-	 * @param string $group
-	 * @param int    $client_id
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
 	 *
 	 * @since    1.6
 	 */

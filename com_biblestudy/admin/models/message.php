@@ -1,9 +1,9 @@
 <?php
 /**
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -30,7 +30,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @var string
 	 */
-	var $_admin = null;
+	private $_admin = null;
 
 	/**
 	 * @var    string  The prefix to use with controller messages.
@@ -48,9 +48,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Fix up special html fields
 
-		$row   = & $this->getTable();
-		$input = new JInput;
-		$data  = $input->post;
+		$row        = & $this->getTable();
+		$input      = new JInput;
+		$data       = $input->post;
 		$scriptures = null;
 
 		// Allows HTML content to come through to the database row
@@ -289,8 +289,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		if (empty($this->_admin))
 		{
 			$query        = 'SELECT *'
-					. ' FROM #__bsms_admin'
-					. ' WHERE id = 1';
+				. ' FROM #__bsms_admin'
+				. ' WHERE id = 1';
 			$this->_admin = $this->_getList($query);
 		}
 
@@ -397,6 +397,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				throw new Exception($db->getErrorMsg());
 			}
 		}
+
 		return true;
 	}
 
@@ -417,8 +418,8 @@ class BiblestudyModelMessage extends JModelAdmin
 			'com_biblestudy.message',
 			'message',
 			array(
-					'control'   => 'jform',
-					'load_data' => $loadData
+				'control'   => 'jform',
+				'load_data' => $loadData
 			)
 		);
 
@@ -444,7 +445,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
+		)
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -561,7 +563,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
-		$row       = & $this->getTable();
+		$row        = & $this->getTable();
 		$conditions = array();
 
 		// Update ordering values
@@ -585,7 +587,7 @@ class BiblestudyModelMessage extends JModelAdmin
 
 				// Remember to reorder within position and client_id
 				$condition = $this->getReorderConditions($row);
-				$found = false;
+				$found     = false;
 
 				foreach ($conditions as $cond)
 				{
@@ -598,7 +600,7 @@ class BiblestudyModelMessage extends JModelAdmin
 
 				if (!$found)
 				{
-					$key = $row->getKeyName();
+					$key          = $row->getKeyName();
 					$conditions[] = array($row->$key, $condition);
 				}
 			}

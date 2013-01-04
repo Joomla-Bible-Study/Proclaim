@@ -1,11 +1,9 @@
 <?php
-
 /**
- * Folder model
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -14,196 +12,237 @@ jimport('joomla.application.component.modeladmin');
 
 /**
  * Folder model class
- * @package BibleStudy.Admin
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
-class BiblestudyModelFolder extends JModelAdmin {
+class BiblestudyModelFolder extends JModelAdmin
+{
 
-    /**
-     * @var        string    The prefix to use with controller messages.
-     * @since    1.6
-     */
-    protected $text_prefix = 'COM_BIBLESTUDY';
-    /**
-     * Method override to check if you can edit an existing record.
-     *
-     * @param       array   $data   An array of input data.
-     * @param       string  $key    The name of the key for the primary key.
-     *
-     * @return      boolean
-     * @since       1.6
-     */
-    protected function allowEdit($data = array(), $key = 'id') {
-        // Check specific edit permission then general edit permission.
-        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.folder.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-    }
+	/**
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
 
-    /**
-     * Batch copy items to a new category or current.
-     *
-     * @param   integer  $value     The new category.
-     * @param   array    $pks       An array of row IDs.
-     * @param   array    $contexts  An array of item contexts.
-     *
-     * @return  mixed  An array of new IDs on success, boolean false on failure.
-     *
-     * @since    11.1
-     */
-    protected function batchCopy($value, $pks, $contexts)
-    {
-        $app = JFactory::getApplication();
-        $table = $this->getTable();
-        $i = 0;
+	/**
+	 * Method override to check if you can edit an existing record.
+	 *
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
+	 *
+	 * @return      boolean
+	 *
+	 * @since       1.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		// Check specific edit permission then general edit permission.
+		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.folder.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+	}
 
-        // Check that the user has create permission for the component
-        $extension = $app->input->get('option', '');
-        $user = JFactory::getUser();
-        if (!$user->authorise('core.create', $extension)) {
-            $app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
-            return false;
-        }
+	/**
+	 * Batch copy items to a new category or current.
+	 *
+	 * @param   integer  $value     The new category.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
+	 *
+	 * @return  mixed  An array of new IDs on success, boolean false on failure.
+	 *
+	 * @since    11.1
+	 */
+	protected function batchCopy($value, $pks, $contexts)
+	{
+		$app   = JFactory::getApplication();
+		$table = $this->getTable();
+		$i     = 0;
 
-        // Parent exists so we let's proceed
-        while (!empty($pks)) {
-            // Pop the first ID off the stack
-            $pk = array_shift($pks);
+		// Check that the user has create permission for the component
+		$extension = $app->input->get('option', '');
+		$user      = JFactory::getUser();
 
-            $table->reset();
+		if (!$user->authorise('core.create', $extension))
+		{
+			$app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
 
-            // Check that the row actually exists
-            if (!$table->load($pk)) {
-                if ($error = $table->getError()) {
-                    // Fatal error
-                    $app->enqueueMessage($error, 'error');
-                    return false;
-                } else {
-                    // Not fatal error
-                    $app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-                    continue;
-                }
-            }
+			return false;
+		}
 
-            // Alter the title & alias
-            $data = $this->generateNewTitle('', $table->alias, $table->title);
-            $table->title = $data['0'];
-            $table->alias = $data['1'];
+		// Parent exists so we let's proceed
+		while (!empty($pks))
+		{
+			// Pop the first ID off the stack
+			$pk = array_shift($pks);
 
-            // Reset the ID because we are making a copy
-            $table->id = 0;
+			$table->reset();
 
-            // Check the row.
-            if (!$table->check()) {
-                $app->enqueueMessage($table->getError(), 'error');
-                return false;
-            }
+			// Check that the row actually exists
+			if (!$table->load($pk))
+			{
+				if ($error = $table->getError())
+				{
+					// Fatal error
+					$app->enqueueMessage($error, 'error');
 
-            // Store the row.
-            if (!$table->store()) {
-                $app->enqueueMessage($table->getError(), 'error');
-                return false;
-            }
+					return false;
+				}
+				else
+				{
+					// Not fatal error
+					$app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					continue;
+				}
+			}
 
-            // Get the new item ID
-            $newId = $table->get('id');
+			// Alter the title & alias
+			$data         = $this->generateNewTitle('', $table->alias, $table->title);
+			$table->title = $data['0'];
+			$table->alias = $data['1'];
 
-            // Add the new ID to the array
-            $newIds[$i] = $newId;
-            $i++;
-        }
+			// Reset the ID because we are making a copy
+			$table->id = 0;
 
-        // Clean the cache
-        $this->cleanCache();
+			// Check the row.
+			if (!$table->check())
+			{
+				$app->enqueueMessage($table->getError(), 'error');
 
-        return $newIds;
-    }
+				return false;
+			}
 
-    /**
-     * Method to store a record
-     *
-     * @access	public
-     * @return	boolean	True on success
-     */
-    public function store() {
-        $row = & $this->getTable();
-        $input = new JInput;
-        $data = $input->post;
-        //$data = JRequest::get('post');
+			// Store the row.
+			if (!$table->store())
+			{
+				$app->enqueueMessage($table->getError(), 'error');
 
-        $folderpath = $data['folderpath'];
-        $slash_begining = substr($folderpath, 0, 1);
-        $slash_ending = substr($folderpath, -1, 1);
-        if ($slash_begining != '/') {
-            $folderpath = '/' . $folderpath;
-        }
-        if ($slash_ending != '/') {
-            $folderpath = $folderpath . '/';
-        }
-        // Remove starting and traling spaces
-        $data['folderpath'] = trim($folderpath);
+				return false;
+			}
 
-        // Bind the form fields to the series table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+			// Get the new item ID
+			$newId = $table->get('id');
 
-        // Make sure the hello record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+			// Add the new ID to the array
+			$newIds[$i] = $newId;
+			$i++;
+		}
 
-        // Store the web link table to the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-            //			$this->setError( $row->getErrorMsg() );
-            return false;
-        }
+		// Clean the cache
+		$this->cleanCache();
 
-        return true;
-    }
+		return $newIds;
+	}
 
-    /**
-     * Get the form data
-     *
-     * @param array $data
-     * @param boolean $loadData
-     * @return array
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true) {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.folder', 'folder', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
+	/**
+	 * Method to store a record
+	 *
+	 * @access    public
+	 * @return    boolean    True on success
+	 */
+	public function store()
+	{
+		$row   = & $this->getTable();
+		$input = new JInput;
+		$data  = $input->get('post');
 
-        return $form;
-    }
+		$folderpath     = $data['folderpath'];
+		$slash_begining = substr($folderpath, 0, 1);
+		$slash_ending   = substr($folderpath, -1, 1);
 
-    /**
-     * Load Form Data
-     * @return array
-     * @since   7.0
-     */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.folder.data', array());
-        if (empty($data))
-            $data = $this->getItem();
+		if ($slash_begining != '/')
+		{
+			$folderpath = '/' . $folderpath;
+		}
+		if ($slash_ending != '/')
+		{
+			$folderpath = $folderpath . '/';
+		}
+		// Remove starting and traling spaces
+		$data['folderpath'] = trim($folderpath);
 
-        return $data;
-    }
+		// Bind the form fields to the series table
+		if (!$row->bind($data))
+		{
+			$this->setError($this->_db->getErrorMsg());
 
-    /**
-     * Custom clean the cache of com_biblestudy and biblestudy modules
-     * @param string $group
-     * @param int $client_id
-     *
-     * @since	1.6
-     */
-    protected function cleanCache($group = null, $client_id = 0) {
-        parent::cleanCache('com_biblestudy');
-        parent::cleanCache('mod_biblestudy');
-    }
+			return false;
+		}
+
+		// Make sure the hello record is valid
+		if (!$row->check())
+		{
+			$this->setError($this->_db->getErrorMsg());
+
+			return false;
+		}
+
+		// Store the web link table to the database
+		if (!$row->store())
+		{
+			$this->setError($this->_db->getErrorMsg());
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the form data
+	 *
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.folder', 'folder', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Load Form Data
+	 *
+	 * @return array
+	 *
+	 * @since   7.0
+	 */
+	protected function loadFormData()
+	{
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.folder.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Clean the cache
+	 *
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
+	}
 
 }
