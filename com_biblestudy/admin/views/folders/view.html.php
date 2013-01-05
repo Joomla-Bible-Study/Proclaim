@@ -1,22 +1,18 @@
 <?php
-
 /**
- * JView html
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for Folders
  *
- * @package     BibleStudy.Admin
- * @since       7.0
+ * @package  BibleStudy.Admin
+ * @since    7.0
  */
 class BibleStudyViewFolders extends JViewLegacy
 {
@@ -24,23 +20,38 @@ class BibleStudyViewFolders extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $items;
 
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $pagination;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $state;
+
+	/**
+	 * @var object
+	 */
+	public $canDo;
+
+	/**
+	 * @var array
+	 */
+	public $f_levels;
+
+	/**
+	 * @var string
+	 */
+	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -55,18 +66,21 @@ class BibleStudyViewFolders extends JViewLegacy
 	public function display($tpl = null)
 	{
 
-		$this->items = $this->get('Items');
+		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
-		$this->state = $this->get('State');
-		$this->canDo = JBSMBibleStudyHelper::getActions('', 'folder');
-		//Check for errors
-		if (count($errors = $this->get('Errors'))) {
-			throw new Exception(implode("\n", $errors), 500);
+		$this->state      = $this->get('State');
+		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'folder');
+
+		// Check for errors
+		if (count($errors = $this->get('Errors')))
+		{
+			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+
 			return false;
 		}
 
 		// Levels filter.
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
 		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
 		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
@@ -81,66 +95,86 @@ class BibleStudyViewFolders extends JViewLegacy
 		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
-		if ($this->getLayout() !== 'modal') {
+		if ($this->getLayout() !== 'modal')
+		{
 			$this->addToolbar();
+
 			if (BIBLESTUDY_CHECKREL)
+			{
 				$this->sidebar = JHtmlSidebar::render();
+			}
 		}
-		// Display the template
-		parent::display($tpl);
 
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar
+	 *
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{
 		$user = JFactory::getUser();
+
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 		JToolBarHelper::title(JText::_('JBS_CMN_FOLDERS'), 'folder.png');
-		if ($this->canDo->get('core.create')) {
+
+		if ($this->canDo->get('core.create'))
+		{
 			JToolBarHelper::addNew('folder.add');
 		}
-		if ($this->canDo->get('core.edit')) {
+		if ($this->canDo->get('core.edit'))
+		{
 			JToolBarHelper::editList('folder.edit');
 		}
-		if ($this->canDo->get('core.edit.state')) {
+		if ($this->canDo->get('core.edit.state'))
+		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('folders.publish');
 			JToolBarHelper::unpublishList('folders.unpublish');
 			JToolBarHelper::archiveList('folders.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete')) {
+		if ($this->canDo->get('core.delete'))
+		{
 			JToolBarHelper::trash('folders.trash');
 		}
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
 			JToolBarHelper::deleteList('', 'folders.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		// Add a batch button
-		if ($user->authorise('core.edit')) {
+		if ($user->authorise('core.edit'))
+		{
 			if (BIBLESTUDY_CHECKREL)
+			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
+			}
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if (BIBLESTUDY_CHECKREL) {
+		if (BIBLESTUDY_CHECKREL)
+		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=folders');
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access', JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
 			);
 
 
@@ -149,6 +183,8 @@ class BibleStudyViewFolders extends JViewLegacy
 
 	/**
 	 * Add the page title to browser.
+	 *
+	 * @return void
 	 *
 	 * @since    7.1.0
 	 */
@@ -169,8 +205,8 @@ class BibleStudyViewFolders extends JViewLegacy
 	{
 		return array(
 			'folders.foldername' => JText::_('JGRID_HEADING_ORDERING'),
-			'folders.published' => JText::_('JSTATUS'),
-			'folders.id' => JText::_('JGRID_HEADING_ID')
+			'folders.published'  => JText::_('JSTATUS'),
+			'folders.id'         => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

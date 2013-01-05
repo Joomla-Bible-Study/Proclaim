@@ -20,24 +20,27 @@ class BiblestudyViewStyles extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $items;
 
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $pagination;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $state;
 
+	/**
+	 * @var object
+	 */
 	public $canDo;
 
 	public $f_levels;
@@ -64,7 +67,7 @@ class BiblestudyViewStyles extends JViewLegacy
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode("\n", $errors));
+			JFactory::getApplication()->enqueueMessage(implode("\n", $errors) . 'error');
 
 			return false;
 		}
@@ -95,11 +98,11 @@ class BiblestudyViewStyles extends JViewLegacy
 			}
 		}
 
-		// Display the template
-		parent::display($tpl);
-
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
@@ -152,11 +155,13 @@ class BiblestudyViewStyles extends JViewLegacy
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=styles');
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_MAX_LEVELS'), 'filter_level', JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
+				JText::_('JOPTION_SELECT_MAX_LEVELS'), 'filter_level',
+				JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
 			);
 		}
 	}

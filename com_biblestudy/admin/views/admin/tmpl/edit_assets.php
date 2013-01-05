@@ -1,6 +1,7 @@
 <?php
 /**
  * Admin Form
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -34,7 +35,7 @@ defined('_JEXEC') or die;
             <div class="clearfix"></div>
             <div class="table">
 				<?php
-                $input = new JInput;
+				$input        = new JInput;
 				$checkassets2 = $input->get('checkassets', null, 'array');
 
 				if ($checkassets2)

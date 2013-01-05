@@ -1,11 +1,9 @@
 <?php
 /**
- * Form
- *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,7 +22,7 @@ if (BIBLESTUDY_CHECKREL)
 $params = $this->state->get('params');
 $params = $params->toArray();
 
-$app = JFactory::getApplication();
+$app   = JFactory::getApplication();
 $input = $app->input;
 ?>
 
@@ -38,7 +36,7 @@ $input = $app->input;
     }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int)$this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="row-fluid">
         <!-- Begin Content -->
@@ -74,7 +72,9 @@ $input = $app->input;
 									<?php echo $this->form->getInput('alias'); ?>
                                 </div>
                             </div>
-							<?php if (!BIBLESTUDY_CHECKREL) { ?>
+							<?php if (!BIBLESTUDY_CHECKREL)
+						{
+							?>
                             <div class="control-group">
                                 <div class="control-label">
 									<?php echo $this->form->getLabel('ordering'); ?>

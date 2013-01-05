@@ -2,28 +2,28 @@
 /**
  * Modal
  *
- * @package BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link    http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 $app = JFactory::getApplication();
 
-if ($app->isSite()) {
+if ($app->isSite())
+{
 	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 }
 
-//require_once JPATH_ROOT . '/components/com_biblestudy/helpers/route.php';
-JLoader::register('JBSMHelperRoute', dirname(__FILE__) . '/helpers/route.php');
+JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 
-$function = $app->input->getCmd('function', 'jSelectStudy');
+$function  = $app->input->getCmd('function', 'jSelectStudy');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
       method="post" name="adminForm" id="adminForm" class="form-inline">
@@ -52,23 +52,30 @@ $listDirn = $this->escape($this->state->get('list.direction'));
         </thead>
         <tbody>
 		<?php foreach ($this->items as $i => $item) : ?>
-			<?php if ($item->language && JLanguageMultilang::isEnabled()) {
+			<?php if ($item->language && JLanguageMultilang::isEnabled())
+			{
 				$tag = strlen($item->language);
-				if ($tag == 5) {
+				if ($tag == 5)
+				{
 					$lang = substr($item->language, 0, 2);
-				} elseif ($tag == 6) {
+				}
+				elseif ($tag == 6)
+				{
 					$lang = substr($item->language, 0, 3);
-				} else {
+				}
+				else
+				{
 					$lang = "";
 				}
-			} elseif (!JLanguageMultilang::isEnabled()) {
+			}
+			elseif (!JLanguageMultilang::isEnabled())
+			{
 				$lang = "";
 			}
 			?>
         <tr class="row<?php echo $i % 2; ?>">
             <td>
-                <a class="pointer"
-                   onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->series_text)); ?>');">
+                <a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->series_text)); ?>');">
 					<?php echo $this->escape($item->series_text); ?>
                 </a>
             </td>
@@ -80,7 +87,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<?php endif; ?>
             </td>
             <td align="center">
-				<?php echo (int)$item->id; ?>
+				<?php echo (int) $item->id; ?>
             </td>
         </tr>
 			<?php endforeach; ?>

@@ -1,12 +1,11 @@
 <?php
 /**
  * Form
- * @package BibleStudy.Admin
- * @since 7.1.0
- * @desc Form for style
- * @copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -19,67 +18,69 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 ?>
 <script type="text/javascript">
-    Joomla.submitbutton = function(task)
-    {
+    Joomla.submitbutton = function (task) {
         if (task == 'style.cancel' || document.formvalidator.isValid(document.id('style-form'))) {
             Joomla.submitform(task, document.getElementById('style-form'));
         }
     }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="style-form" class="form-validate form-horizontal" enctype="multipart/form-data">
-     <div class="row-fluid form-horizontal">
-            <fieldset>
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
+      method="post" name="adminForm" id="style-form" class="form-validate form-horizontal"
+      enctype="multipart/form-data">
+    <div class="row-fluid form-horizontal">
+        <fieldset>
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
+                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+                </li>
 
-                <?php if ($this->canDo->get('core.admin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
                 <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-                <?php endif ?>
+				<?php endif ?>
             </ul>
             <div class="tab-content">
                 <!-- Begin Tabs -->
                 <div class="tab-pane active" id="general">
                     <div class="control-group">
                         <div class="control-label">
-                            <?php echo $this->form->getLabel('published'); ?>
+							<?php echo $this->form->getLabel('published'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('published'); ?>
+							<?php echo $this->form->getInput('published'); ?>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="control-label">
-                            <?php echo $this->form->getLabel('filename'); ?>
+							<?php echo $this->form->getLabel('filename'); ?>
                         </div>
                         <div class="controls">
-                            <?php echo $this->form->getInput('filename'); ?>
+							<?php echo $this->form->getInput('filename'); ?>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="control-label">
-                            <?php echo $this->form->getLabel('stylecode'); ?>
+							<?php echo $this->form->getLabel('stylecode'); ?>
                         </div>
                     </div>
                     <div class="clr"></div>
-                    <hr />
+                    <hr/>
                     <div class="editor-border">
-                        <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
+						<?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
                     </div>
                 </div>
-                <?php if ($this->canDo->get('core.admin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
                 <div class="tab-pane" id="permissions">
                     <fieldset>
-                        <?php echo $this->form->getInput('rules'); ?>
+						<?php echo $this->form->getInput('rules'); ?>
                     </fieldset>
                 </div>
-                <?php endif; ?>
+				<?php endif; ?>
 
             </div>
         </fieldset>
     </div>
-    
-    <input type="hidden" name="task" value="" />
-    <?php echo JHtml::_('form.token'); ?>
-    
+
+    <input type="hidden" name="task" value=""/>
+	<?php echo JHtml::_('form.token'); ?>
+
 </form>

@@ -42,6 +42,42 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	protected $state;
 
+	public $version;
+
+	public $canDo;
+
+	public $changeSet;
+
+	public $errors;
+
+	public $results;
+
+	public $schemaVersion;
+
+	public $updateVersion;
+
+	public $filterParams;
+
+	public $pagination;
+
+	public $errorCount;
+
+	public $jversion;
+
+	public $tmp_dest;
+
+	public $playerstats;
+
+	public $assets;
+
+	public $popups;
+
+	public $ss;
+
+	public $lists;
+
+	public $pi;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -59,39 +95,39 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$language->load('com_installer');
 
 		// Get data from the model
-		$this->form = $this->get("Form");
-		$this->item = $this->get("Item");
+		$this->form  = $this->get("Form");
+		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
 		// Get data from the model for database
-		$this->changeSet = $this->get('Items');
-		$this->errors = $this->changeSet->check();
-		$this->results = $this->changeSet->getStatus();
+		$this->changeSet     = $this->get('Items');
+		$this->errors        = $this->changeSet->check();
+		$this->results       = $this->changeSet->getStatus();
 		$this->schemaVersion = $this->get('SchemaVersion');
 		$this->updateVersion = $this->get('UpdateVersion');
-		$this->filterParams = $this->get('DefaultTextFilters');
+		$this->filterParams  = $this->get('DefaultTextFilters');
 		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
 		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-		$this->pagination = $this->get('Pagination');
-		$this->errorCount = count($this->errors);
-		$this->jversion = $this->get('CompVersion');
+		$this->pagination    = $this->get('Pagination');
+		$this->errorCount    = count($this->errors);
+		$this->jversion      = $this->get('CompVersion');
 
 		// End for database
 		$this->loadHelper('params');
-		$config = JFactory::getApplication();
+		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->getCfg('tmp_path');
 
-		$stats = new jbStats;
+		$stats             = new jbStats;
 		$this->playerstats = $stats->players();
-		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
-		$popups = $stats->popups();
-		$this->popups = $popups;
+		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
+		$popups            = $stats->popups();
+		$this->popups      = $popups;
 
-		// Get the list of backupfiles
-		$backedupfiles = array();
+		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
 		$path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+
 		if (JFolder::exists($path))
 		{
 			if (!$files = JFolder::files($path, '.sql'))
@@ -102,14 +138,15 @@ class BiblestudyViewAdmin extends JViewLegacy
 			{
 				asort($files, SORT_STRING);
 				$filelist = array();
-				foreach ($files as $i => $value)
+
+				foreach ($files as $value)
 				{
 					$filelisttemp = array('value' => $value, 'text' => $value);
-					$filelist[] = $filelisttemp;
+					$filelist[]   = $filelisttemp;
 				}
 
-				$types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
-				$types = array_merge($types, $filelist);
+				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
+				$types                        = array_merge($types, $filelist);
 				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}
 		}
@@ -119,17 +156,18 @@ class BiblestudyViewAdmin extends JViewLegacy
 		}
 
 		// Check for SermonSpeaker and PreachIt
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = 'SELECT extension_id, name, element FROM #__extensions';
 		$db->setQuery($query);
 		$db->query();
 		$extensions = $db->loadObjectList();
+
 		foreach ($extensions as $extension)
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
 				$this->ss = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertSermonSpeaker">'
-						. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
+					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
 			{
@@ -138,7 +176,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 			if ($extension->element == 'com_preachit')
 			{
 				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'
-						. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
+					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
 			{
@@ -146,10 +184,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 			}
 		}
 
-		$jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
+		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
-		//$errors = count($this->errors);
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
 		{
 			$this->errorCount++;
@@ -168,11 +205,11 @@ class BiblestudyViewAdmin extends JViewLegacy
 		// Set the toolbar
 		$this->addToolbar();
 
-		// Display the template
-		parent::display($tpl);
-
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
@@ -229,7 +266,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				$data = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+
 				if ($data)
 				{
 					return $data['version'];
@@ -241,7 +279,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 				break;
 
 			case 'preachit':
-				$data = JApplicationHelper::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+
 				if ($data)
 				{
 					return $data['version'];
@@ -252,7 +291,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 				}
 				break;
 		}
-		return;
+		return false;
 	}
 
 }

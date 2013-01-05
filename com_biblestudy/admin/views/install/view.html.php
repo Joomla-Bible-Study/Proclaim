@@ -1,8 +1,5 @@
 <?php
-
 /**
- * View html
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,7 +10,7 @@ defined('_JEXEC') or die;
 
 JLoader::register(
 	'Com_BiblestudyInstallerScript',
-		JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php'
+	JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php'
 );
 
 /**
@@ -59,18 +56,17 @@ class BiblestudyViewInstall extends JViewLegacy
 		// Install systems setup files
 		$this->installsetup();
 
-
 		// Remove old files
 		$installer = new Com_BiblestudyInstallerScript;
 		$installer->deleteUnexistingFiles();
 
 		$this->addToolbar();
 
-		// Display the template
-		parent::display($tpl);
-
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 /**
  * Form sub backup
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,17 +20,19 @@ defined('_JEXEC') or die;
                     <img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
                          alt="Export" height="48" width="48"/></div>
                 <div class="controls">
-                    <a href="index.php?option=com_biblestudy&task=migration.export&run=1"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
-                    <?php echo '<br /><br />'; ?>
-                    <a href="index.php?option=com_biblestudy&task=migration.export&run=2"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
+                    <!--suppress HtmlUnknownTarget -->
+	                <a href="index.php?option=com_biblestudy&task=migration.export&run=1"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
+					<?php echo '<br /><br />'; ?>
+                    <!--suppress HtmlUnknownTarget -->
+	                <a href="index.php?option=com_biblestudy&task=migration.export&run=2"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
                 </div>
             </div>
             <hr/>
             <h3><?php echo JText::_('JBS_CMN_IMPORT'); ?></h3>
 
             <div class="control-group">
-                <?php echo JText::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
-                <?php echo JText::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
+				<?php echo JText::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
+				<?php echo JText::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
             </div>
             <div class="control-group">
                 <div class="control-label">
@@ -38,7 +41,7 @@ defined('_JEXEC') or die;
                 </div>
                 <div class="controls">
                     <input class="input_box" id="importdb" name="importdb" type="file" size="57"/>
-                    <?php echo ' - ' . JText::_('JBS_IBM_IMPORT_ONLY'); ?>
+					<?php echo ' - ' . JText::_('JBS_IBM_IMPORT_ONLY'); ?>
                 </div>
             </div>
             <div class="control-group">
@@ -48,7 +51,7 @@ defined('_JEXEC') or die;
 
                 </div>
                 <div class="controls">
-                    <?php echo $this->lists['backedupfiles'] . ' - ' . JText::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
+					<?php echo $this->lists['backedupfiles'] . ' - ' . JText::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
                 </div>
             </div>
             <div class="control-group">
@@ -57,7 +60,7 @@ defined('_JEXEC') or die;
                          alt="Tmp Folder" height="48" width="48"/>
                 </div>
                 <div class="controls">
-                    <?php echo ' - ' . JText::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
+					<?php echo ' - ' . JText::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
                     <input type="text" id="install_directory" name="install_directory" class="input_box" size="70"
                            value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
                 </div>

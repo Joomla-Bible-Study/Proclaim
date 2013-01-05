@@ -1,6 +1,7 @@
 <?php
 /**
  * Admin Form
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,12 +13,13 @@ defined('_JEXEC') or die;
 // Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+
 if (BIBLESTUDY_CHECKREL)
 {
 	JHtml::_('formbehavior.chosen', 'select');
 }
 
-$app = JFactory::getApplication();
+$app   = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
@@ -81,7 +83,8 @@ $input = $app->input;
         </div>
         <div class="control-group">
             <label style="max-width: 100%; padding: 0 5px 0 0;">
-                <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
+                <!--suppress HtmlUnknownTarget -->
+	            <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
 					<?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
                 </a>
             </label>

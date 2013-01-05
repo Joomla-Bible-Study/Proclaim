@@ -1,12 +1,9 @@
 <?php
-
 /**
- * JView html
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,8 +12,8 @@ defined('_JEXEC') or die;
 /**
  * View class for Locations
  *
- * @package     BibleStudy.Admin
- * @since       7.0
+ * @package  BibleStudy.Admin
+ * @since    7.0
  */
 class BiblestudyViewLocations extends JViewLegacy
 {
@@ -24,23 +21,38 @@ class BiblestudyViewLocations extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $items;
 
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $pagination;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $state;
+
+	/**
+	 * @var object
+	 */
+	protected $canDo;
+
+	/**
+	 * @var object
+	 */
+	protected $f_levels;
+
+	/**
+	 * @var string
+	 */
+	protected $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -62,7 +74,7 @@ class BiblestudyViewLocations extends JViewLegacy
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode("\n", $errors));
+			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
@@ -92,24 +104,29 @@ class BiblestudyViewLocations extends JViewLegacy
 				$this->sidebar = JHtmlSidebar::render();
 			}
 		}
-		// Display the template
-		parent::display($tpl);
 
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar
+	 *
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{
 		$user = JFactory::getUser();
+
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 		JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'locations.png');
+
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('location.add');
@@ -137,7 +154,9 @@ class BiblestudyViewLocations extends JViewLegacy
 		if ($user->authorise('core.edit'))
 		{
 			if (BIBLESTUDY_CHECKREL)
+			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
+			}
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -149,19 +168,22 @@ class BiblestudyViewLocations extends JViewLegacy
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=locations');
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access', JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
 			);
-
 
 		}
 	}
 
 	/**
 	 * Add the page title to browser.
+	 *
+	 * @return void
 	 *
 	 * @since    7.1.0
 	 */

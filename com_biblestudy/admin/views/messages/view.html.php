@@ -1,12 +1,9 @@
 <?php
-
 /**
- * JView html
- *
- * @package   BibleStudy.Admin
- * @copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link      http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,8 +12,8 @@ defined('_JEXEC') or die;
 /**
  * View class for a list of Messages.
  *
- * @package BibleStudy.Admin
- * @since   7.1.0
+ * @package  BibleStudy.Admin
+ * @since    7.1.0
  */
 class BiblestudyViewMessages extends JViewLegacy
 {
@@ -24,23 +21,63 @@ class BiblestudyViewMessages extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $items;
 
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $pagination;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var object
 	 */
 	protected $state;
+
+	/**
+	 * @var object
+	 */
+	public $canDo;
+
+	/**
+	 * @var object
+	 */
+	public $books;
+
+	/**
+	 * @var object
+	 */
+	public $teachers;
+
+	/**
+	 * @var object
+	 */
+	public $series;
+
+	/**
+	 * @var object
+	 */
+	public $messageTypes;
+
+	/**
+	 * @var object
+	 */
+	public $years;
+
+	/**
+	 * @var array
+	 */
+	public $f_levels;
+
+	/**
+	 * @var object
+	 */
+	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -69,10 +106,10 @@ class BiblestudyViewMessages extends JViewLegacy
 		$this->messageTypes = $this->get('MessageTypes');
 		$this->years        = $this->get('Years');
 
-		//Check for errors
+		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode("\n", $errors));
+			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
@@ -96,18 +133,24 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
+
 			if (BIBLESTUDY_CHECKREL)
+			{
 				$this->sidebar = JHtmlSidebar::render();
+			}
 		}
 
-		// Display the template
-		parent::display($tpl);
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar
+	 *
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
@@ -151,7 +194,9 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($user->authorise('core.edit'))
 		{
 			if (BIBLESTUDY_CHECKREL)
+			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
+			}
 			$title = JText::_('JTOOLBAR_BATCH');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -163,11 +208,13 @@ class BiblestudyViewMessages extends JViewLegacy
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published', JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access', JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
 			);
 
 			JHtmlSidebar::addFilter(
@@ -187,7 +234,6 @@ class BiblestudyViewMessages extends JViewLegacy
 				'filter_book',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
 			);
-
 
 			JHtmlSidebar::addFilter(
 				JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'),

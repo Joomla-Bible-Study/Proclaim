@@ -21,7 +21,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	/**
 	 * Form
 	 *
-	 * @var array
+	 * @var JForm
 	 */
 	protected $form;
 
@@ -49,7 +49,11 @@ class BiblestudyViewMessage extends JViewLegacy
 	/**
 	 * @var object
 	 */
-	public $canDo;
+	protected $canDo;
+
+	protected $mediafiles;
+
+	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
@@ -70,14 +74,11 @@ class BiblestudyViewMessage extends JViewLegacy
 		$option      = $input->get('option', '', 'cmd');
 		$input->set('sid', $this->item->id);
 		$input->set('sdate', $this->item->studydate);
-
-		//JApplication::setUserState($option . 'sid', $this->item->id);
-		//JApplication::setUserState($option . 'sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 
 		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
-		$registry    = new JRegistry();
+		$registry    = new JRegistry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
 		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
@@ -129,6 +130,8 @@ class BiblestudyViewMessage extends JViewLegacy
 
 	/**
 	 * Add Toolbar
+	 *
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */

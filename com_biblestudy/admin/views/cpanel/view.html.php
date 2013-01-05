@@ -30,6 +30,14 @@ class BiblestudyViewCpanel extends JViewLegacy
 
 	protected $state;
 
+	public $version;
+
+	public $versiondate;
+
+	public $total_messages;
+
+	public $sidebar;
+
 	/**
 	 * Display
 	 *
@@ -62,7 +70,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 			$this->version     = $registry->get('version');
 			$this->versiondate = $registry->get('creationDate');
 		}
-		/* @todo need to convert to a statec call */
+
 		$this->total_messages = jbStats::get_total_messages();
 
 		$this->addToolbar();
