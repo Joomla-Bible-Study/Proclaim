@@ -43,9 +43,9 @@ class JBSConvert
 		}
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_servers')
-				->where('published = 1')
-				->order($db->qn('id') . ' desc');
+			->from('#__bsms_servers')
+			->where('published = 1')
+			->order($db->qn('id') . ' desc');
 		$db->setQuery($query, 0, 1);
 		$server   = $db->loadAssoc();
 		$serverid = $server['id'];
@@ -53,8 +53,8 @@ class JBSConvert
 		// Series Records
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__sermon_series')
-				->where('state = 1');
+			->from('#__sermon_series')
+			->where('state = 1');
 		$db->setQuery($query);
 		$num_rows = $db->getNumRows();
 
@@ -104,7 +104,7 @@ class JBSConvert
 		// Teacher Records
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__sermon_speakers');
+			->from('#__sermon_speakers');
 		$db->setQuery($query);
 		$numrows = $db->getNumRows();
 
@@ -157,9 +157,9 @@ class JBSConvert
 
 			$query = $db->getQuery(true);
 			$query->select('s.*, se.id AS sid, se.teacher AS teacher')
-					->from('#__sermon_sermons AS s')
-					->leftJoin('#__bsms_series AS se ON (s.series_id = se.teacher)')
-					->where('s.speaker_id = ' . (int) $db->q($teacher->id));
+				->from('#__sermon_sermons AS s')
+				->leftJoin('#__bsms_series AS se ON (s.series_id = se.teacher)')
+				->where('s.speaker_id = ' . (int) $db->q($teacher->id));
 			$db->setQuery($query);
 			$num_rows = $db->getNumRows();
 

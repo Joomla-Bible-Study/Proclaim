@@ -62,9 +62,9 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 */
 	public function makeDefault()
 	{
-		$app = JFactory::getApplication();
-		$input     = new JInput;
-		$cid       = $input->get('cid', array(0), 'array');
+		$app   = JFactory::getApplication();
+		$input = new JInput;
+		$cid   = $input->get('cid', array(0), 'array');
 
 		if (!is_array($cid) || count($cid) < 1)
 		{

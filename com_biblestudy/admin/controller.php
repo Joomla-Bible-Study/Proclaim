@@ -134,7 +134,7 @@ class BiblestudyController extends JControllerLegacy
 	public function getFileList()
 	{
 		$app      = JFactory::getApplication();
-		$server = new JBSMServer;
+		$server   = new JBSMServer;
 		$serverId = $app->input->get('server');
 		$folderId = $app->input->get('path');
 
@@ -506,7 +506,7 @@ class BiblestudyController extends JControllerLegacy
 		$form      = $jinput->getArray('jform');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' .
-				$returnid;
+			$returnid;
 		$path      = JBSMUpload::getpath($url, '');
 		$file      = $jinput->getArray('uploadfile');
 

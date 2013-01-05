@@ -34,7 +34,7 @@ class JBSMParams
 			->from('#__bsms_admin')
 			->where($db->qn('id') . ' = ' . $db->q('1'));
 		$db->setQuery($query);
-		$admin = $db->loadObject();
+		$admin    = $db->loadObject();
 		$registry = new JRegistry;
 		$registry->loadString($admin->params);
 		$admin->params = $registry;

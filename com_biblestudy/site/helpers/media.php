@@ -31,11 +31,11 @@ class JBSMMediaHelper
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-					. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-					. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-					. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-					. ' #__bsms_media.media_alttext AS malttext,'
-					. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
+				. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+				. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+				. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
+				. ' #__bsms_media.media_alttext AS malttext,'
+				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
 		);
 
 		$query->from('#__bsms_mediafiles');
@@ -94,7 +94,7 @@ class JBSMMediaHelper
 		$player_width = $params->get('player_width', 290);
 		$media1_link  = '<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
 		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/player.swf" id="audioplayer'
-				. $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
+			. $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
 		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/player.swf" />
 		    <param name="FlashVars" value="playerID=audioplayer' . $media->id . '&soundFile=' . $path1 . '" />
 		    <param name="quality" value="high" />
@@ -170,11 +170,11 @@ class JBSMMediaHelper
 			else
 			{
 				$out .= '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename .
-						'&amp;size=' . $media->size . '">';
+					'&amp;size=' . $media->size . '">';
 			}
 
 			$out .= '<img src="' . $d_path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width
-					. '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+				. '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 
 			return $out;
 		}
@@ -232,9 +232,9 @@ class JBSMMediaHelper
 		$path1 = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$media_link = '<div class="bsms_mediafile"><a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-				. $filesize . '" target="' . $media->special . '"><img src="' . $d_path
-				. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-				. '" height="' . $height . '" border="0" /></a></div>';
+			. $filesize . '" target="' . $media->special . '"><img src="' . $d_path
+			. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
+			. '" height="' . $height . '" border="0" /></a></div>';
 
 		return $media_link;
 	}
@@ -272,8 +272,8 @@ class JBSMMediaHelper
 		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
 
 		$media_link = '<img src="' . $src
-				. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-				. '" height="' . $height . '" border="0" />';
+			. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
+			. '" height="' . $height . '" border="0" />';
 
 		return $media_link;
 	}

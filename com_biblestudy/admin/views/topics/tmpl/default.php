@@ -102,7 +102,7 @@ $sortFields = $this->getSortFields();
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
             <th width="8%" class="nowrap center hidden-phone">
-	            <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
             </th>
             <th alicn="center">
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>

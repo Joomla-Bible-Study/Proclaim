@@ -25,7 +25,7 @@ class BiblestudyControllerSeriesdisplay extends JControllerLegacy
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
-	 * 							'view_path' (this list is not meant to be comprehensive).
+	 *                             'view_path' (this list is not meant to be comprehensive).
 	 *
 	 * @see JControllerLagacy
 	 */

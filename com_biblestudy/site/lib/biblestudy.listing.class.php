@@ -1035,7 +1035,7 @@ class JBSMListing extends JBSMElements
 		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
 		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-				. $image->height . '" id="bsms_studyThumbnail" />', $label
+			. $image->height . '" id="bsms_studyThumbnail" />', $label
 		);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
@@ -1080,7 +1080,7 @@ class JBSMListing extends JBSMElements
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
 		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-				. $image->height . '" id="bsms_studyThumbnail" />', $label
+			. $image->height . '" id="bsms_studyThumbnail" />', $label
 		);
 		$label  = str_replace('{{seriestext}}', $row->seriestext, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
@@ -1307,7 +1307,7 @@ class JBSMListing extends JBSMElements
 				}
 
 				$sharelink = $element1->element . ' ' . $share_params->get('item2prefix') . $element2->element . ' ' . $share_params->get('item3prefix')
-						. $element3->element . ' ' . $share_params->get('item4prefix') . $element4->element;
+					. $element3->element . ' ' . $share_params->get('item4prefix') . $element4->element;
 
 				// Added to see if would make Facebook sharer work
 				$sharelink = urlencode($sharelink);
@@ -1331,7 +1331,7 @@ class JBSMListing extends JBSMElements
 				$shareit .= '<td id="bsmsshareicons">
 							<a href="' . $mainlink . $share_params->get('item1prefix') . $sharelink . '" target="_blank">
 							<img src="' . JURI::base() . $image . '" alt="' . $share_params->get('alttext') . '" title="'
-						. $share_params->get('alttext') . '" width="' . $width . '" height="' . $height . '" border="0">
+					. $share_params->get('alttext') . '" width="' . $width . '" height="' . $height . '" border="0">
 							</a></td>';
 
 			} // End of foreach
@@ -1358,7 +1358,7 @@ class JBSMListing extends JBSMElements
 		// Create the URL
 
 		$bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
-				. $login . '&apiKey=' . $appkey . '&format=' . $format;
+			. $login . '&apiKey=' . $appkey . '&format=' . $format;
 
 		// Get the url
 		// Could also use cURL here
@@ -1443,9 +1443,9 @@ class JBSMListing extends JBSMElements
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
-				->from('#__bsms_mediafiles')
-				->where('study_id = ' . $db->q($id3))
-				->where('#__bsms_mediafiles.published = 1');
+			->from('#__bsms_mediafiles')
+			->where('study_id = ' . $db->q($id3))
+			->where('#__bsms_mediafiles.published = 1');
 		$db->setQuery($query);
 		$db->query();
 		$num_rows = $db->getNumRows();
@@ -1469,7 +1469,7 @@ class JBSMListing extends JBSMElements
 						if ($media->virtueMart_id > 0)
 						{
 							$link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
-									. $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
+								. $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
 						}
 						break;
 

@@ -19,7 +19,7 @@ JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
  * @package  BibleStudy.Site
  * @since    7.0.0
  *
- * @todo need to make the title block. BCC
+ * @todo     need to make the title block. BCC
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
@@ -54,7 +54,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$app         = JFactory::getApplication();
 		$pagebuilder = new JBSPagebuilder;
-		$document = JFactory::getDocument();
+		$document    = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');

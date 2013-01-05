@@ -85,13 +85,13 @@ $sortFields = $this->getSortFields();
                 <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                     <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
                     <option value="asc" <?php if ($listDirn == 'asc')
-                    {
-	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+					{
+						echo 'selected="selected"';
+					} ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
                     <option value="desc" <?php if ($listDirn == 'desc')
-                    {
-	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
+					{
+						echo 'selected="selected"';
+					} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
                 </select>
             </div>
             <div class="btn-group pull-right">

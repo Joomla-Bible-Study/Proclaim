@@ -22,9 +22,9 @@ $image        = new stdClass;
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
 $JBSMTeacher = new JBSMTeacher;
-$JBSMImage = new JBSMImage;
-$input = new JInput;
-$t     = $input->get('t', 1, 'int');
+$JBSMImage   = new JBSMImage;
+$input       = new JInput;
+$t           = $input->get('t', 1, 'int');
 
 if (!$t)
 {
@@ -87,7 +87,7 @@ else
 
 		echo '<table><tr><td id="bsmsteacherstudyfooter">
 		<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">'
-				. JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
+			. JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
 		?>
         <tr>
             <td style="text-align: center" colspan="0" class="bsm_teacherfooter">

@@ -96,17 +96,17 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
-				->from('#__bsms_locations a')
-				->select('b.access AS study_access')
-				->innerJoin('#__bsms_studies b on a.id = b.location_id')
-				->innerJoin('#__bsms_series s on b.series_id = s.id')
-				->where('b.location_id > 0')
-				->where('a.published = 1')
-				->where('b.language in (' . $language . ')')
-				->where('b.access IN (' . $groups . ')')
-				->where('s.access IN (' . $groups . ')')
-				->where('a.landing_show > 0')
-				->order('a.location_text ' . $order);
+			->from('#__bsms_locations a')
+			->select('b.access AS study_access')
+			->innerJoin('#__bsms_studies b on a.id = b.location_id')
+			->innerJoin('#__bsms_series s on b.series_id = s.id')
+			->where('b.location_id > 0')
+			->where('a.published = 1')
+			->where('b.language in (' . $language . ')')
+			->where('b.access IN (' . $groups . ')')
+			->where('s.access IN (' . $groups . ')')
+			->where('a.landing_show > 0')
+			->order('a.location_text ' . $order);
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -155,8 +155,8 @@ class JBSMLanding
 						}
 						$location .= "\n\t\t" . '<td class="landing_td">';
 						$location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
-								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-								. $template . '">';
+							. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+							. $template . '">';
 
 						$location .= $b->location_text;
 
@@ -208,8 +208,8 @@ class JBSMLanding
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
-									. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-									. $template . '">';
+								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+								. $template . '">';
 							$location .= $b->location_text;
 							$location .= '</a></div>';
 							$location .= '</div>';
@@ -226,8 +226,8 @@ class JBSMLanding
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
-									. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-									. $template . '">';
+								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+								. $template . '">';
 							$location .= $b->location_text;
 							$location .= '</a></div>';
 							$location .= '</div>';
@@ -318,14 +318,14 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
-				->from('#__bsms_teachers a')
-				->select('b.access')
-				->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-				->where('b.language in (' . $language . ')')
-				->where('a.list_show = 1 and a.published = 1')
-				->where('b.access IN (' . $groups . ')')
-				->where('a.landing_show > 0')
-				->order('a.ordering, a.teachername ' . $order);
+			->from('#__bsms_teachers a')
+			->select('b.access')
+			->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
+			->where('b.language in (' . $language . ')')
+			->where('a.list_show = 1 and a.published = 1')
+			->where('b.access IN (' . $groups . ')')
+			->where('a.landing_show > 0')
+			->order('a.ordering, a.teachername ' . $order);
 
 		$db->setQuery($query);
 
@@ -374,8 +374,8 @@ class JBSMLanding
 						if ($params->get('linkto') == 0)
 						{
 							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-									. '&amp;filter_teacher=' . $b->id
-									. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+								. '&amp;filter_teacher=' . $b->id
+								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
 						{
@@ -435,15 +435,15 @@ class JBSMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="landingcell"><a class="landinglink="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-										. '&amp;filter_teacher=' . $b->id
-										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
+									. '&amp;filter_teacher=' . $b->id
+									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 							$teacher .= $b->teachername;
 
@@ -463,15 +463,15 @@ class JBSMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-										. '&amp;filter_teacher=' . $b->id
-										. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
+									. '&amp;filter_teacher=' . $b->id
+									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-										. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 							$teacher .= $b->teachername;
 
@@ -567,12 +567,12 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
-				->from('#__bsms_series a')
-				->select('b.access')
-				->innerJoin('#__bsms_studies b on a.id = b.series_id')
-				->where('a.language in (' . $language . ')')
-				->where('b.access IN (' . $groups . ')')
-				->order('a.series_text ' . $order);
+			->from('#__bsms_series a')
+			->select('b.access')
+			->innerJoin('#__bsms_studies b on a.id = b.series_id')
+			->where('a.language in (' . $language . ')')
+			->where('b.access IN (' . $groups . ')')
+			->order('a.series_text ' . $order);
 		$db->setQuery($query);
 
 		$items = $db->loadObjectList();
@@ -621,9 +621,9 @@ class JBSMLanding
 						if ($params->get('series_linkto') == '0')
 						{
 							$series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id
-									. '&amp;filter_book=0&amp;filter_teacher=0'
-									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-									. $template . '">';
+								. '&amp;filter_book=0&amp;filter_teacher=0'
+								. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+								. $template . '">';
 						}
 						else
 						{
@@ -683,13 +683,13 @@ class JBSMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
-										. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
-										. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
+									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
 								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
-										. $b->id . '&amp;t=' . $template . '">';
+									. $b->id . '&amp;t=' . $template . '">';
 							}
 
 							$series .= $numRows;
@@ -711,13 +711,13 @@ class JBSMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
-										. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
-										. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
+									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
 								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
-										. $b->id . '&amp;t=' . $template . '">';
+									. $b->id . '&amp;t=' . $template . '">';
 							}
 
 							$series .= $numRows;
@@ -813,10 +813,10 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct year(studydate) as theYear')
-				->from('#__bsms_studies')
-				->where('language in (' . $language . ')')
-				->where('access IN (' . $groups . ')')
-				->order('year(studydate) ' . $order);
+			->from('#__bsms_studies')
+			->where('language in (' . $language . ')')
+			->where('access IN (' . $groups . ')')
+			->order('year(studydate) ' . $order);
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -857,9 +857,9 @@ class JBSMLanding
 				$year .= "\n\t\t" . '<td class="landing_td">';
 
 				$year .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year='
-						. $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
-						. 'filter_book=0&amp;filter_messagetype=0&amp;t='
-						. $template . '">';
+					. $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
+					. 'filter_book=0&amp;filter_messagetype=0&amp;t='
+					. $template . '">';
 
 				$year .= $b->theYear;
 
@@ -980,13 +980,13 @@ class JBSMLanding
 
 		$query = $db->getQuery('true');
 		$query->select('DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
-				->from('#__bsms_studies')
-				->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-				->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-				->where('#__bsms_topics.published = 1')
-				->order('#__bsms_topics.topic_text ' . $order)
-				->where('#__bsms_studies.language in (' . $language . ')')
-				->where('#__bsms_studies.access IN (' . $groups . ')');
+			->from('#__bsms_studies')
+			->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
+			->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
+			->where('#__bsms_topics.published = 1')
+			->order('#__bsms_topics.topic_text ' . $order)
+			->where('#__bsms_studies.language in (' . $language . ')')
+			->where('#__bsms_studies.access IN (' . $groups . ')');
 
 		$db->setQuery($query);
 
@@ -1027,7 +1027,7 @@ class JBSMLanding
 				}
 				$topic .= "\n\t\t" . '<td class="landing_td">';
 				$topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0'
-						. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
+					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 				$trans = new JBSMTranslated;
 				$topic .= $trans->getTopicItemTranslated($b);
 
@@ -1151,13 +1151,13 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
-				->from('#__bsms_message_type a')
-				->select('b.access AS study_access')
-				->innerJoin('#__bsms_studies b on a.id = b.messagetype')
-				->where('b.language in (' . $language . ')')
-				->where('b.access IN (' . $groups . ')')
-				->where('a.landing_show > 0')
-				->order('a.message_type ' . $order);
+			->from('#__bsms_message_type a')
+			->select('b.access AS study_access')
+			->innerJoin('#__bsms_studies b on a.id = b.messagetype')
+			->where('b.language in (' . $language . ')')
+			->where('b.access IN (' . $groups . ')')
+			->where('a.landing_show > 0')
+			->order('a.message_type ' . $order);
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -1201,8 +1201,8 @@ class JBSMLanding
 						$messagetype .= "\n\t\t" . '<td class="landing_td">';
 
 						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id
-								. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
-								. $template . '">';
+							. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
+							. $template . '">';
 
 						$messagetype .= $b->message_type;
 
@@ -1256,8 +1256,8 @@ class JBSMLanding
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype='
-									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
-									. $template . '">';
+								. $b->id . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
+								. $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
 							$messagetype .= '</div>';
@@ -1274,8 +1274,8 @@ class JBSMLanding
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id
-									. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
-									. $template . '">';
+								. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
+								. $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
 							$messagetype .= '</div>';
@@ -1364,12 +1364,12 @@ class JBSMLanding
 
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
-				->from('#__bsms_books a')
-				->select('b.access AS access')
-				->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
-				->where('b.language in (' . $language . ')')
-				->where('b.access IN (' . $groups . ')')
-				->order('a.booknumber ' . $order);
+			->from('#__bsms_books a')
+			->select('b.access AS access')
+			->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
+			->where('b.language in (' . $language . ')')
+			->where('b.access IN (' . $groups . ')')
+			->order('a.booknumber ' . $order);
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -1410,8 +1410,8 @@ class JBSMLanding
 				}
 				$book .= "\n\t\t" . '<td class="landing_td">';
 				$book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber
-						. '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-						. $template . '">';
+					. '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+					. $template . '">';
 
 				$book .= JText::sprintf($b->bookname);
 

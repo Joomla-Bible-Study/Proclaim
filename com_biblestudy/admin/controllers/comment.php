@@ -62,8 +62,8 @@ class BiblestudyControllerComment extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
+		$user     = JFactory::getUser();
+		$userId   = $user->get('id');
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_biblestudy.comment.' . $recordId))

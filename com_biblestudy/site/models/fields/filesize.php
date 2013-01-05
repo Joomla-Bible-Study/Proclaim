@@ -49,8 +49,8 @@ class JFormFieldFilesize extends JFormField
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
-				' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-				$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
+			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
+			$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
 	}
 
 	/**
@@ -69,7 +69,7 @@ class JFormFieldFilesize extends JFormField
 			var wint = (screen.height - Wheight) / 2;
 
 			var msg1=window.open("' . JURI::base() .
-				'components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
+			'components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
 			if (!msg1.closed) {
 				msg1.focus();
 			}

@@ -21,10 +21,10 @@ defined('_JEXEC') or die;
                          alt="Export" height="48" width="48"/></div>
                 <div class="controls">
                     <!--suppress HtmlUnknownTarget -->
-	                <a href="index.php?option=com_biblestudy&task=migration.export&run=1"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
+                    <a href="index.php?option=com_biblestudy&task=migration.export&run=1"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
 					<?php echo '<br /><br />'; ?>
                     <!--suppress HtmlUnknownTarget -->
-	                <a href="index.php?option=com_biblestudy&task=migration.export&run=2"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
+                    <a href="index.php?option=com_biblestudy&task=migration.export&run=2"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
                 </div>
             </div>
             <hr/>

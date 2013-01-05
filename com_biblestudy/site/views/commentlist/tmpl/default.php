@@ -39,10 +39,10 @@ $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
-	var table;
-	var direction;
-	var order;
-	var dirn;
+    var table;
+    var direction;
+    var order;
+    var dirn;
     Joomla.orderTable = function () {
         table = document.getElementById("sortTable");
         direction = document.getElementById("directionTable");
@@ -76,7 +76,8 @@ $sortFields = $this->getSortFields();
                         title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
             </div>
 			<?php if (BIBLESTUDY_CHECKREL)
-		{ ?>
+		{
+			?>
             <div class="btn-group pull-right hidden-phone">
                 <label for="limit"
                        class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
@@ -87,12 +88,14 @@ $sortFields = $this->getSortFields();
                        class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
                 <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                     <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-                    <option value="asc" <?php if ($listDirn == 'asc') {
-	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
-                    <option value="desc" <?php if ($listDirn == 'desc') {
-	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
+                    <option value="asc" <?php if ($listDirn == 'asc')
+					{
+						echo 'selected="selected"';
+					} ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+                    <option value="desc" <?php if ($listDirn == 'desc')
+					{
+						echo 'selected="selected"';
+					} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
                 </select>
             </div>
 			<?php } ?>

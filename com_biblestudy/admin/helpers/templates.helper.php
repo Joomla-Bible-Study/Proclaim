@@ -56,25 +56,25 @@ class JBSMTemplate extends JObject
 
 		// Creates array of all the tags and their associated field names
 		$tagsStudy       = array(
-			'[studyDate]' => array('fieldName' => 'studydate'), '[studyTeacher]' => array('fieldName' => 'teacher_id'),
-			'[studyNumber]' => array('fieldName' => 'studynumber'), '[studyScripture1]' => array(
+			'[studyDate]'             => array('fieldName' => 'studydate'), '[studyTeacher]' => array('fieldName' => 'teacher_id'),
+			'[studyNumber]'           => array('fieldName' => 'studynumber'), '[studyScripture1]' => array(
 				'fieldName' => array(
 					'booknumber', 'chapter_begin', 'verse_begin', 'chapter_end'
 				)
-			), '[studyScripture2]' => array(
+			), '[studyScripture2]'    => array(
 				'fieldName' => array(
 					'booknumber2', 'chapter_begin2', 'verse_begin2', 'chapter_end2'
 				)
 			), '[secondaryReference]' => array('fieldName' => 'secondary_reference'),
-			'[studyDVD]' => array('fieldName' => 'prod_dvd'), '[studyCD]' => array('fieldName' => 'prod_cd'),
-			'[studyTitle]' => array('fieldName' => 'studytitle'), '[studyIntro]' => array('fieldName' => 'studyintro'),
-			'[studyComments]' => array('fieldName' => 'comments'), '[studyHits]' => array('fieldName' => 'hits'),
-			'[studyUserAdded]' => array('fieldName' => 'user_id'),
-			'[studyLocation]' => array('fieldName' => 'location_id'),
-			'[studyMediaDuration]' => array('fieldName' => array('media_hours', 'media_minutes', 'media_seconds')),
-			'[studyMessageType]' => array('fieldName' => 'messagetype'),
-			'[studySeries]' => array('fieldName' => 'series_id'), '[studyTopic]' => array('fieldName' => 'topic_id'),
-			'[studyText]' => array('fieldName' => 'studytext'), '[studyMedia]'
+			'[studyDVD]'              => array('fieldName' => 'prod_dvd'), '[studyCD]' => array('fieldName' => 'prod_cd'),
+			'[studyTitle]'            => array('fieldName' => 'studytitle'), '[studyIntro]' => array('fieldName' => 'studyintro'),
+			'[studyComments]'         => array('fieldName' => 'comments'), '[studyHits]' => array('fieldName' => 'hits'),
+			'[studyUserAdded]'        => array('fieldName' => 'user_id'),
+			'[studyLocation]'         => array('fieldName' => 'location_id'),
+			'[studyMediaDuration]'    => array('fieldName' => array('media_hours', 'media_minutes', 'media_seconds')),
+			'[studyMessageType]'      => array('fieldName' => 'messagetype'),
+			'[studySeries]'           => array('fieldName' => 'series_id'), '[studyTopic]' => array('fieldName' => 'topic_id'),
+			'[studyText]'             => array('fieldName' => 'studytext'), '[studyMedia]'
 		);
 		$tagsStudyList   = array(
 			'[filterLocation]', '[filterBook]', '[filterTeacher]', '[filterSeries]', '[filterType]', '[filterYear]',

@@ -65,7 +65,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			$database = JFactory::getDBO();
 			$query    = 'SELECT * FROM #__bsms_teachers' .
-					'  WHERE id = ' . $teachers;
+				'  WHERE id = ' . $teachers;
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path  = null;
@@ -81,7 +81,7 @@ class JBSMTeacher extends JBSMListing
 				$image->height = 0;
 			}
 			$teacher .= '<td><table class="cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
-					. '" height="' . $image->height . '" alt="" /></td></tr>';
+				. '" height="' . $image->height . '" alt="" /></td></tr>';
 
 			$teacher .= '<tr><td>';
 
@@ -169,12 +169,12 @@ class JBSMTeacher extends JBSMListing
 		$label = str_replace('{{information}}', $row->information, $label);
 		$label = str_replace(
 			'{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="'
-				. $imagelarge->height . '" />', $label
+			. $imagelarge->height . '" />', $label
 		);
 		$label = str_replace('{{short}}', $row->short, $label);
 		$label = str_replace(
 			'{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="'
-				. $imagesmall->height . '" />', $label
+			. $imagesmall->height . '" />', $label
 		);
 
 		return $label;
@@ -213,20 +213,20 @@ class JBSMTeacher extends JBSMListing
 		$rows    = $db->getAffectedRows();
 
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-				. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-				. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-				. ' FROM #__bsms_studies'
-				. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-				. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-				. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-				. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-				. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-				. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-				. ' where #__bsms_teachers.id = ' . $id . ' AND #__bsms_studies.published = 1 '
-				. ' GROUP BY #__bsms_studies.id'
-				. ' order by studydate desc'
-				. $limit;
+			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+			. ' FROM #__bsms_studies'
+			. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
+			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+			. ' where #__bsms_teachers.id = ' . $id . ' AND #__bsms_studies.published = 1 '
+			. ' GROUP BY #__bsms_studies.id'
+			. ' order by studydate desc'
+			. $limit;
 
 		$db->setQuery($query);
 		$items = $db->loadObjectList();

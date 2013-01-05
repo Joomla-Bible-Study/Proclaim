@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 // -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php';
 JLoader::register(
 	'BiblestudyControllerMessages',
-		JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php'
+	JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php'
 );
 
 /**

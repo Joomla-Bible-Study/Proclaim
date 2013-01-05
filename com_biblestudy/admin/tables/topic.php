@@ -209,7 +209,7 @@ class TableTopic extends JTable
 			$topic = 'JBS_TOP_' . $topic;
 		}
 		// And form well
-		$topic            = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic)); // replace all non a-Z 0-9 by '_'
+		$topic              = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic)); // replace all non a-Z 0-9 by '_'
 		$data['topic_text'] = $topic;
 
 		return $data;

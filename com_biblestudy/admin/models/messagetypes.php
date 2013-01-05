@@ -24,16 +24,16 @@ class BiblestudyModelMessagetypes extends JModelList
 	 *
 	 * @var array
 	 */
-	private  $_data;
+	private $_data;
 
 	/**
 	 * Allow Deletes
 	 *
 	 * @var string
 	 */
-	private  $_allow_deletes = null;
+	private $_allow_deletes = null;
 
-	private  $_deletes;
+	private $_deletes;
 
 	/**
 	 * Constructor.
@@ -93,7 +93,7 @@ class BiblestudyModelMessagetypes extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input = new JInput;
+		$input  = new JInput;
 		$layout = $input->get('layout');
 
 		if ($layout)

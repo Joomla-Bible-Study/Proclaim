@@ -20,7 +20,7 @@
         <language tag="en-GB">en-GB.plg_xmap_com_biblestudy.ini</language>
     </languages>
     <config>
-        <fields name="params" >
+        <fields name="params">
             <fieldset name="advanced" addfieldpath="/administrator/components/com_biblestudy/models/fields">
                 <field name="t" type="sql"
                        description="XMAP_JBS_DISPLAY_TEMPLATE_DESC"
@@ -30,7 +30,7 @@
                        key_field="id"
                        value_field="title"
                        required="true"
-            />
+                        />
                 <field name="order" type="list"
                        description="XMAP_JBS_DISPLAY_ORDER_DESC"
                        label="XMAP_JBS_DISPLAY_ORDER"
@@ -38,11 +38,11 @@
                     <option value="desc">XMAP_JBS_DESCENDING</option>
                     <option value="asc">XMAP_JBS_ASCENDING</option>
                 </field>
-                <field  name="displaytype"
-                        type="list"
-                        label="XMAP_JBS_TYPE_OF_LIST"
-                        description="XMAP_JBS_TYPE_OF_LIST_DESC"
-                        default="1">
+                <field name="displaytype"
+                       type="list"
+                       label="XMAP_JBS_TYPE_OF_LIST"
+                       description="XMAP_JBS_TYPE_OF_LIST_DESC"
+                       default="1">
                     <option value="1">XMAP_JBS_YEAR</option>
                     <option value="2">XMAP_JBS_BOOK</option>
                     <option value="3">XMAP_JBS_TEACHER</option>
@@ -69,7 +69,7 @@
                        label="XMAP_JBS_MEDIA_FILE_LIMIT"
                        description="XMAP_JBS_MEDIA_FILE_LIMIT_DESC"
                        size="10"
-                />
+                        />
                 <field name="description"
                        type="list"
                        label="XMAP_JBS_DESCRIPTION"
@@ -84,14 +84,15 @@
                        label="XMAP_JBS_NO_FILE_NAME"
                        description="XMAP_JBS_NO_FILE_NAME_DESC"
                        size="50"
-                />
+                        />
             </fieldset>
         </fields>
     </config>
     <!-- UPDATESERVER DEFINITION -->
     <updateservers>
         <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="plugin" priority="1" name="Joomla Bible Study Xmap Plugin"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=9&dummy=extension.xml]]>
+        <server type="plugin" priority="1" name="Joomla Bible Study Xmap Plugin">
+            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=9&dummy=extension.xml]]>
         </server>
     </updateservers>
 

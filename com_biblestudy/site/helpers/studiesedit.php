@@ -28,12 +28,12 @@ function getStudiesedit($row, $params)
 	<tr>
 		<td><a
 			href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'
-			. JText::_('JBS_CMN_ADD_STUDY') . '</a></td>
+		. JText::_('JBS_CMN_ADD_STUDY') . '</a></td>
 	</tr>
 	<tr>
 		<td><a
 			href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'
-			. JText::_('JBS_CMN_ADD_MEDIA') . '</a></td>
+		. JText::_('JBS_CMN_ADD_MEDIA') . '</a></td>
 	</tr>';
 
 	$studiesedit .= '<tr><td>

@@ -42,10 +42,10 @@ class JBSMPodcast
 		// First get all of the podcast that are published
 		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
 		$db->setQuery($query);
-		$podids = $db->loadObjectList();
-		$custom = new JBSMCustom;
+		$podids       = $db->loadObjectList();
+		$custom       = new JBSMCustom;
 		$JBSMElements = new JBSMElements;
-		$title  = null;
+		$title        = null;
 
 		// Now iterate through the podcasts, and pick up the mediafiles
 		if ($podids)
@@ -230,39 +230,39 @@ class JBSMPodcast
 						if ($episode->article_id > 1)
 						{
 							$episodedetailtemp .=
-									'<enclosure url="http://' . $episode->server_path .
-											'/index.php?option=com_content&amp;view=article&amp;id=' .
-											$episode->article_id . '" length="' . $episode->size . '" type="' .
-											$episode->mimetype . '" />
+								'<enclosure url="http://' . $episode->server_path .
+									'/index.php?option=com_content&amp;view=article&amp;id=' .
+									$episode->article_id . '" length="' . $episode->size . '" type="' .
+									$episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path .
-											'/index.php?option=com_content&amp;view=article&amp;id=' .
-											$episode->article_id . '</guid>';
+									'/index.php?option=com_content&amp;view=article&amp;id=' .
+									$episode->article_id . '</guid>';
 						}
 						if ($episode->docMan_id > 1)
 						{
 							$episodedetailtemp .=
-									'<enclosure url="http://' . $episode->server_path .
-											'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-											$episode->docMan_id . '" length="' . $episode->size . '" type="' .
-											$episode->mimetype . '" />
+								'<enclosure url="http://' . $episode->server_path .
+									'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
+									$episode->docMan_id . '" length="' . $episode->size . '" type="' .
+									$episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path .
-											'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-											$episode->docMan_id . '</guid>';
+									'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
+									$episode->docMan_id . '</guid>';
 						}
 						else
 						{
 							$episodedetailtemp .=
-									'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(
-										' ',
-										"%20",
-										$episode->filename
-									) . '" length="' . $episode->size . '" type="'
-											. $episode->mimetype . '" />
+								'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(
+									' ',
+									"%20",
+									$episode->filename
+								) . '" length="' . $episode->size . '" type="'
+									. $episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(
-										' ',
-										"%20",
-										$episode->filename
-									) . '</guid>';
+									' ',
+									"%20",
+									$episode->filename
+								) . '</guid>';
 						}
 						$episodedetailtemp .= '
                         		<itunes:explicit>no</itunes:explicit>
@@ -319,28 +319,28 @@ class JBSMPodcast
 		// Here's where we look at each mediafile to see if they are connected to this podcast
 		$db    = JFactory::getDBO();
 		$query = 'SELECT p.id AS pid, p.podcastlimit,'
-				. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
-				. ' mf.published AS mfpub, mf.createdate, mf.params,'
-				. ' mf.docMan_id, mf.article_id,'
-				. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-				. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-				. ' s.media_hours, s.media_minutes, s.media_seconds,'
-				. ' se.series_text,'
-				. ' sr.id AS srid, sr.server_path,'
-				. ' f.id AS fid, f.folderpath,'
-				. ' t.id AS tid, t.teachername,'
-				. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-				. ' mt.id AS mtid, mt.mimetype'
-				. ' FROM #__bsms_mediafiles AS mf'
-				. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-				. ' LEFT JOIN #__bsms_series AS se ON (se.id = s.series_id)'
-				. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-				. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-				. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-				. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-				. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-				. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-				. ' WHERE mf.podcast_id LIKE "%' . $id . '%" AND mf.published = 1 ORDER BY createdate DESC ' . $limit;
+			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
+			. ' mf.published AS mfpub, mf.createdate, mf.params,'
+			. ' mf.docMan_id, mf.article_id,'
+			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+			. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+			. ' s.media_hours, s.media_minutes, s.media_seconds,'
+			. ' se.series_text,'
+			. ' sr.id AS srid, sr.server_path,'
+			. ' f.id AS fid, f.folderpath,'
+			. ' t.id AS tid, t.teachername,'
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+			. ' mt.id AS mtid, mt.mimetype'
+			. ' FROM #__bsms_mediafiles AS mf'
+			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
+			. ' LEFT JOIN #__bsms_series AS se ON (se.id = s.series_id)'
+			. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
+			. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
+			. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
+			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
+			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
+			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
+			. ' WHERE mf.podcast_id LIKE "%' . $id . '%" AND mf.published = 1 ORDER BY createdate DESC ' . $limit;
 
 		$db->setQuery($query);
 		$episodes = $db->loadObjectList();
@@ -382,7 +382,7 @@ class JBSMPodcast
 		if (!$fileit)
 		{
 			JFactory::getApplication()
-					->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+				->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
 
 			return false;
 		}
@@ -390,7 +390,7 @@ class JBSMPodcast
 		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
 		{
 			JFactory::getApplication()
-					->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+				->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
 
 			return false;
 		}

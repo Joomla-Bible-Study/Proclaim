@@ -28,8 +28,8 @@ class JBSMFreshInstall
 		$dest  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/site/biblestudy.css';
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_styles')
-				->where($db->qn('filename') . '=' . $db->q('biblestudy'));
+			->from('#__bsms_styles')
+			->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 		$db->setQuery($query);
 		$result = $db->loadObject();
 		$newcss = $result->stylecode;

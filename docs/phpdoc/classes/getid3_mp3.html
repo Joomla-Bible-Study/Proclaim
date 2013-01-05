@@ -1,557 +1,843 @@
-<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<!DOCTYPE html>
+<html xmlns:date="http://exslt.org/dates-and-times" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>JoomlaBibleStudy » \getid3_mp3</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta charset="utf-8">
+    <title>JoomlaBibleStudy » \getid3_mp3</title>
+    <meta name="author" content="Mike van Riel">
+    <meta name="description" content="">
+    <link href="../css/template.css" rel="stylesheet" media="all">
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/template.js" type="text/javascript"></script>
+    <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a></li>
-<li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla Bible Study</a></li>
-<li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2076</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">20</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">5</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a
+                class="brand" href="../index.html">JoomlaBibleStudy</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a>Packages</a></li>
+                            <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a>
+                            </li>
+                            <li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a>
+                            </li>
+                            <li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a>
+                            </li>
+                            <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+                            <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla
+                                Bible Study</a></li>
+                            <li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                                <span class="label label-info">2076</span></a></li>
+                            <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                                <ul>
+                                    <li>todo 
+                                        <span class="label label-info">20</span>
+                                    </li>
+                                    <li>fixme 
+                                        <span class="label label-info">1</span>
+                                    </li>
+                                </ul>
+                            </a></li>
+                            <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                                <span class="label label-info">5</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a>
+    </div>
 </div>
 <div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#ClosestStandardMP3Bitrate" title="ClosestStandardMP3Bitrate :: "><span class="description">ClosestStandardMP3Bitrate()
-        </span><pre>ClosestStandardMP3Bitrate()</pre></a></li>
-<li class="method public "><a href="#FreeFormatFrameLength" title="FreeFormatFrameLength :: "><span class="description">FreeFormatFrameLength()
-        </span><pre>FreeFormatFrameLength()</pre></a></li>
-<li class="method public "><a href="#GuessEncoderOptions" title="GuessEncoderOptions :: "><span class="description">GuessEncoderOptions()
-        </span><pre>GuessEncoderOptions()</pre></a></li>
-<li class="method public "><a href="#LAMEmiscSourceSampleFrequencyLookup" title="LAMEmiscSourceSampleFrequencyLookup :: "><span class="description">LAMEmiscSourceSampleFrequencyLookup()
-        </span><pre>LAMEmiscSourceSampleFrequencyLookup()</pre></a></li>
-<li class="method public "><a href="#LAMEmiscStereoModeLookup" title="LAMEmiscStereoModeLookup :: "><span class="description">LAMEmiscStereoModeLookup()
-        </span><pre>LAMEmiscStereoModeLookup()</pre></a></li>
-<li class="method public "><a href="#LAMEpresetUsedLookup" title="LAMEpresetUsedLookup :: "><span class="description">LAMEpresetUsedLookup()
-        </span><pre>LAMEpresetUsedLookup()</pre></a></li>
-<li class="method public "><a href="#LAMEsurroundInfoLookup" title="LAMEsurroundInfoLookup :: "><span class="description">LAMEsurroundInfoLookup()
-        </span><pre>LAMEsurroundInfoLookup()</pre></a></li>
-<li class="method public "><a href="#LAMEvbrMethodLookup" title="LAMEvbrMethodLookup :: "><span class="description">LAMEvbrMethodLookup()
-        </span><pre>LAMEvbrMethodLookup()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioBitrateArray" title="MPEGaudioBitrateArray :: "><span class="description">MPEGaudioBitrateArray()
-        </span><pre>MPEGaudioBitrateArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioChannelModeArray" title="MPEGaudioChannelModeArray :: "><span class="description">MPEGaudioChannelModeArray()
-        </span><pre>MPEGaudioChannelModeArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioEmphasisArray" title="MPEGaudioEmphasisArray :: "><span class="description">MPEGaudioEmphasisArray()
-        </span><pre>MPEGaudioEmphasisArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioFrameLength" title="MPEGaudioFrameLength :: "><span class="description">MPEGaudioFrameLength()
-        </span><pre>MPEGaudioFrameLength()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioFrequencyArray" title="MPEGaudioFrequencyArray :: "><span class="description">MPEGaudioFrequencyArray()
-        </span><pre>MPEGaudioFrequencyArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioHeaderBytesValid" title="MPEGaudioHeaderBytesValid :: "><span class="description">MPEGaudioHeaderBytesValid()
-        </span><pre>MPEGaudioHeaderBytesValid()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioHeaderDecode" title="MPEGaudioHeaderDecode :: "><span class="description">MPEGaudioHeaderDecode()
-        </span><pre>MPEGaudioHeaderDecode()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioHeaderValid" title="MPEGaudioHeaderValid :: "><span class="description">MPEGaudioHeaderValid()
-        </span><pre>MPEGaudioHeaderValid()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioLayerArray" title="MPEGaudioLayerArray :: "><span class="description">MPEGaudioLayerArray()
-        </span><pre>MPEGaudioLayerArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioModeExtensionArray" title="MPEGaudioModeExtensionArray :: "><span class="description">MPEGaudioModeExtensionArray()
-        </span><pre>MPEGaudioModeExtensionArray()</pre></a></li>
-<li class="method public "><a href="#MPEGaudioVersionArray" title="MPEGaudioVersionArray :: "><span class="description">MPEGaudioVersionArray()
-        </span><pre>MPEGaudioVersionArray()</pre></a></li>
-<li class="method public "><a href="#RecursiveFrameScanning" title="RecursiveFrameScanning :: "><span class="description">RecursiveFrameScanning()
-        </span><pre>RecursiveFrameScanning()</pre></a></li>
-<li class="method public "><a href="#XingVBRidOffset" title="XingVBRidOffset :: "><span class="description">XingVBRidOffset()
-        </span><pre>XingVBRidOffset()</pre></a></li>
-<li class="method public "><a href="#decodeMPEGaudioHeader" title="decodeMPEGaudioHeader :: "><span class="description">decodeMPEGaudioHeader()
-        </span><pre>decodeMPEGaudioHeader()</pre></a></li>
-<li class="method public "><a href="#getOnlyMPEGaudioInfo" title="getOnlyMPEGaudioInfo :: "><span class="description">getOnlyMPEGaudioInfo()
-        </span><pre>getOnlyMPEGaudioInfo()</pre></a></li>
-<li class="method public "><a href="#getOnlyMPEGaudioInfoBruteForce" title="getOnlyMPEGaudioInfoBruteForce :: "><span class="description">getOnlyMPEGaudioInfoBruteForce()
-        </span><pre>getOnlyMPEGaudioInfoBruteForce()</pre></a></li>
-<li class="method public "><a href="#getid3_mp3" title="getid3_mp3 :: "><span class="description">getid3_mp3()
-        </span><pre>getid3_mp3()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="property public "><a href="#%24allow_bruteforce" title="$allow_bruteforce :: "><span class="description">$allow_bruteforce</span><pre>$allow_bruteforce</pre></a></li>
-</ul>
+    <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
+                                                                              title="Show public elements">Public
+    </button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private"
+                                                                                                     title="Show private elements">
+        Private
+    </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
+
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+        </li>
+        <li class="method public "><a href="#ClosestStandardMP3Bitrate" title="ClosestStandardMP3Bitrate :: "><span
+                class="description">ClosestStandardMP3Bitrate()
+        </span>
+            <pre>ClosestStandardMP3Bitrate()</pre>
+        </a></li>
+        <li class="method public "><a href="#FreeFormatFrameLength" title="FreeFormatFrameLength :: "><span
+                class="description">FreeFormatFrameLength()
+        </span>
+            <pre>FreeFormatFrameLength()</pre>
+        </a></li>
+        <li class="method public "><a href="#GuessEncoderOptions" title="GuessEncoderOptions :: "><span
+                class="description">GuessEncoderOptions()
+        </span>
+            <pre>GuessEncoderOptions()</pre>
+        </a></li>
+        <li class="method public "><a href="#LAMEmiscSourceSampleFrequencyLookup"
+                                      title="LAMEmiscSourceSampleFrequencyLookup :: "><span class="description">LAMEmiscSourceSampleFrequencyLookup()
+        </span>
+            <pre>LAMEmiscSourceSampleFrequencyLookup()</pre>
+        </a></li>
+        <li class="method public "><a href="#LAMEmiscStereoModeLookup" title="LAMEmiscStereoModeLookup :: "><span
+                class="description">LAMEmiscStereoModeLookup()
+        </span>
+            <pre>LAMEmiscStereoModeLookup()</pre>
+        </a></li>
+        <li class="method public "><a href="#LAMEpresetUsedLookup" title="LAMEpresetUsedLookup :: "><span
+                class="description">LAMEpresetUsedLookup()
+        </span>
+            <pre>LAMEpresetUsedLookup()</pre>
+        </a></li>
+        <li class="method public "><a href="#LAMEsurroundInfoLookup" title="LAMEsurroundInfoLookup :: "><span
+                class="description">LAMEsurroundInfoLookup()
+        </span>
+            <pre>LAMEsurroundInfoLookup()</pre>
+        </a></li>
+        <li class="method public "><a href="#LAMEvbrMethodLookup" title="LAMEvbrMethodLookup :: "><span
+                class="description">LAMEvbrMethodLookup()
+        </span>
+            <pre>LAMEvbrMethodLookup()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioBitrateArray" title="MPEGaudioBitrateArray :: "><span
+                class="description">MPEGaudioBitrateArray()
+        </span>
+            <pre>MPEGaudioBitrateArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioChannelModeArray" title="MPEGaudioChannelModeArray :: "><span
+                class="description">MPEGaudioChannelModeArray()
+        </span>
+            <pre>MPEGaudioChannelModeArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioEmphasisArray" title="MPEGaudioEmphasisArray :: "><span
+                class="description">MPEGaudioEmphasisArray()
+        </span>
+            <pre>MPEGaudioEmphasisArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioFrameLength" title="MPEGaudioFrameLength :: "><span
+                class="description">MPEGaudioFrameLength()
+        </span>
+            <pre>MPEGaudioFrameLength()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioFrequencyArray" title="MPEGaudioFrequencyArray :: "><span
+                class="description">MPEGaudioFrequencyArray()
+        </span>
+            <pre>MPEGaudioFrequencyArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioHeaderBytesValid" title="MPEGaudioHeaderBytesValid :: "><span
+                class="description">MPEGaudioHeaderBytesValid()
+        </span>
+            <pre>MPEGaudioHeaderBytesValid()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioHeaderDecode" title="MPEGaudioHeaderDecode :: "><span
+                class="description">MPEGaudioHeaderDecode()
+        </span>
+            <pre>MPEGaudioHeaderDecode()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioHeaderValid" title="MPEGaudioHeaderValid :: "><span
+                class="description">MPEGaudioHeaderValid()
+        </span>
+            <pre>MPEGaudioHeaderValid()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioLayerArray" title="MPEGaudioLayerArray :: "><span
+                class="description">MPEGaudioLayerArray()
+        </span>
+            <pre>MPEGaudioLayerArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioModeExtensionArray" title="MPEGaudioModeExtensionArray :: "><span
+                class="description">MPEGaudioModeExtensionArray()
+        </span>
+            <pre>MPEGaudioModeExtensionArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#MPEGaudioVersionArray" title="MPEGaudioVersionArray :: "><span
+                class="description">MPEGaudioVersionArray()
+        </span>
+            <pre>MPEGaudioVersionArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#RecursiveFrameScanning" title="RecursiveFrameScanning :: "><span
+                class="description">RecursiveFrameScanning()
+        </span>
+            <pre>RecursiveFrameScanning()</pre>
+        </a></li>
+        <li class="method public "><a href="#XingVBRidOffset" title="XingVBRidOffset :: "><span class="description">XingVBRidOffset()
+        </span>
+            <pre>XingVBRidOffset()</pre>
+        </a></li>
+        <li class="method public "><a href="#decodeMPEGaudioHeader" title="decodeMPEGaudioHeader :: "><span
+                class="description">decodeMPEGaudioHeader()
+        </span>
+            <pre>decodeMPEGaudioHeader()</pre>
+        </a></li>
+        <li class="method public "><a href="#getOnlyMPEGaudioInfo" title="getOnlyMPEGaudioInfo :: "><span
+                class="description">getOnlyMPEGaudioInfo()
+        </span>
+            <pre>getOnlyMPEGaudioInfo()</pre>
+        </a></li>
+        <li class="method public "><a href="#getOnlyMPEGaudioInfoBruteForce" title="getOnlyMPEGaudioInfoBruteForce :: "><span
+                class="description">getOnlyMPEGaudioInfoBruteForce()
+        </span>
+            <pre>getOnlyMPEGaudioInfoBruteForce()</pre>
+        </a></li>
+        <li class="method public "><a href="#getid3_mp3" title="getid3_mp3 :: "><span class="description">getid3_mp3()
+        </span>
+            <pre>getid3_mp3()</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-property"></i> Properties
+        </li>
+        <li class="property public "><a href="#%24allow_bruteforce" title="$allow_bruteforce :: "><span
+                class="description">$allow_bruteforce</span>
+            <pre>$allow_bruteforce</pre>
+        </a></li>
+    </ul>
 </div>
 <div class="span8">
-<a name="%5Cgetid3_mp3" id="\getid3_mp3"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/getid3_mp3.html">getid3_mp3</a>
-</li>
+<a name="%5Cgetid3_mp3" id="\getid3_mp3"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/getid3_mp3.html">getid3_mp3</a>
+    </li>
 </ul>
-<div href="../classes/getid3_mp3.html" class="element class"><div class="details">
+<div href="../classes/getid3_mp3.html" class="element class">
+<div class="details">
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="ClosestStandardMP3Bitrate" id="ClosestStandardMP3Bitrate"></a><div class="element clickable method public ClosestStandardMP3Bitrate" data-toggle="collapse" data-target=".ClosestStandardMP3Bitrate .collapse">
-<h2>ClosestStandardMP3Bitrate()
-        </h2>
-<pre>ClosestStandardMP3Bitrate($bitrate) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$bitrate</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="FreeFormatFrameLength" id="FreeFormatFrameLength"></a><div class="element clickable method public FreeFormatFrameLength" data-toggle="collapse" data-target=".FreeFormatFrameLength .collapse">
-<h2>FreeFormatFrameLength()
-        </h2>
-<pre>FreeFormatFrameLength($fd, $offset, $ThisFileInfo, $deepscan) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$offset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$deepscan</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="GuessEncoderOptions" id="GuessEncoderOptions"></a><div class="element clickable method public GuessEncoderOptions" data-toggle="collapse" data-target=".GuessEncoderOptions .collapse">
-<h2>GuessEncoderOptions()
-        </h2>
-<pre>GuessEncoderOptions($ThisFileInfo) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="LAMEmiscSourceSampleFrequencyLookup" id="LAMEmiscSourceSampleFrequencyLookup"></a><div class="element clickable method public LAMEmiscSourceSampleFrequencyLookup" data-toggle="collapse" data-target=".LAMEmiscSourceSampleFrequencyLookup .collapse">
-<h2>LAMEmiscSourceSampleFrequencyLookup()
-        </h2>
-<pre>LAMEmiscSourceSampleFrequencyLookup($SourceSampleFrequencyID) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$SourceSampleFrequencyID</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="LAMEmiscStereoModeLookup" id="LAMEmiscStereoModeLookup"></a><div class="element clickable method public LAMEmiscStereoModeLookup" data-toggle="collapse" data-target=".LAMEmiscStereoModeLookup .collapse">
-<h2>LAMEmiscStereoModeLookup()
-        </h2>
-<pre>LAMEmiscStereoModeLookup($StereoModeID) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$StereoModeID</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="LAMEpresetUsedLookup" id="LAMEpresetUsedLookup"></a><div class="element clickable method public LAMEpresetUsedLookup" data-toggle="collapse" data-target=".LAMEpresetUsedLookup .collapse">
-<h2>LAMEpresetUsedLookup()
-        </h2>
-<pre>LAMEpresetUsedLookup($LAMEtag) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$LAMEtag</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="LAMEsurroundInfoLookup" id="LAMEsurroundInfoLookup"></a><div class="element clickable method public LAMEsurroundInfoLookup" data-toggle="collapse" data-target=".LAMEsurroundInfoLookup .collapse">
-<h2>LAMEsurroundInfoLookup()
-        </h2>
-<pre>LAMEsurroundInfoLookup($SurroundInfoID) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$SurroundInfoID</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="LAMEvbrMethodLookup" id="LAMEvbrMethodLookup"></a><div class="element clickable method public LAMEvbrMethodLookup" data-toggle="collapse" data-target=".LAMEvbrMethodLookup .collapse">
-<h2>LAMEvbrMethodLookup()
-        </h2>
-<pre>LAMEvbrMethodLookup($VBRmethodID) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$VBRmethodID</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="MPEGaudioBitrateArray" id="MPEGaudioBitrateArray"></a><div class="element clickable method public MPEGaudioBitrateArray" data-toggle="collapse" data-target=".MPEGaudioBitrateArray .collapse">
-<h2>MPEGaudioBitrateArray()
-        </h2>
-<pre>MPEGaudioBitrateArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioChannelModeArray" id="MPEGaudioChannelModeArray"></a><div class="element clickable method public MPEGaudioChannelModeArray" data-toggle="collapse" data-target=".MPEGaudioChannelModeArray .collapse">
-<h2>MPEGaudioChannelModeArray()
-        </h2>
-<pre>MPEGaudioChannelModeArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioEmphasisArray" id="MPEGaudioEmphasisArray"></a><div class="element clickable method public MPEGaudioEmphasisArray" data-toggle="collapse" data-target=".MPEGaudioEmphasisArray .collapse">
-<h2>MPEGaudioEmphasisArray()
-        </h2>
-<pre>MPEGaudioEmphasisArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioFrameLength" id="MPEGaudioFrameLength"></a><div class="element clickable method public MPEGaudioFrameLength" data-toggle="collapse" data-target=".MPEGaudioFrameLength .collapse">
-<h2>MPEGaudioFrameLength()
-        </h2>
-<pre>MPEGaudioFrameLength($bitrate, $version, $layer, $padding, $samplerate) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$bitrate</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$version</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$layer</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$padding</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$samplerate</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="MPEGaudioFrequencyArray" id="MPEGaudioFrequencyArray"></a><div class="element clickable method public MPEGaudioFrequencyArray" data-toggle="collapse" data-target=".MPEGaudioFrequencyArray .collapse">
-<h2>MPEGaudioFrequencyArray()
-        </h2>
-<pre>MPEGaudioFrequencyArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioHeaderBytesValid" id="MPEGaudioHeaderBytesValid"></a><div class="element clickable method public MPEGaudioHeaderBytesValid" data-toggle="collapse" data-target=".MPEGaudioHeaderBytesValid .collapse">
-<h2>MPEGaudioHeaderBytesValid()
-        </h2>
-<pre>MPEGaudioHeaderBytesValid($head4, $allowBitrate15) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$head4</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$allowBitrate15</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="MPEGaudioHeaderDecode" id="MPEGaudioHeaderDecode"></a><div class="element clickable method public MPEGaudioHeaderDecode" data-toggle="collapse" data-target=".MPEGaudioHeaderDecode .collapse">
-<h2>MPEGaudioHeaderDecode()
-        </h2>
-<pre>MPEGaudioHeaderDecode($Header4Bytes) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$Header4Bytes</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="MPEGaudioHeaderValid" id="MPEGaudioHeaderValid"></a><div class="element clickable method public MPEGaudioHeaderValid" data-toggle="collapse" data-target=".MPEGaudioHeaderValid .collapse">
-<h2>MPEGaudioHeaderValid()
-        </h2>
-<pre>MPEGaudioHeaderValid($rawarray, $echoerrors, $allowBitrate15) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$rawarray</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$echoerrors</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$allowBitrate15</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="MPEGaudioLayerArray" id="MPEGaudioLayerArray"></a><div class="element clickable method public MPEGaudioLayerArray" data-toggle="collapse" data-target=".MPEGaudioLayerArray .collapse">
-<h2>MPEGaudioLayerArray()
-        </h2>
-<pre>MPEGaudioLayerArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioModeExtensionArray" id="MPEGaudioModeExtensionArray"></a><div class="element clickable method public MPEGaudioModeExtensionArray" data-toggle="collapse" data-target=".MPEGaudioModeExtensionArray .collapse">
-<h2>MPEGaudioModeExtensionArray()
-        </h2>
-<pre>MPEGaudioModeExtensionArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="MPEGaudioVersionArray" id="MPEGaudioVersionArray"></a><div class="element clickable method public MPEGaudioVersionArray" data-toggle="collapse" data-target=".MPEGaudioVersionArray .collapse">
-<h2>MPEGaudioVersionArray()
-        </h2>
-<pre>MPEGaudioVersionArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="RecursiveFrameScanning" id="RecursiveFrameScanning"></a><div class="element clickable method public RecursiveFrameScanning" data-toggle="collapse" data-target=".RecursiveFrameScanning .collapse">
-<h2>RecursiveFrameScanning()
-        </h2>
-<pre>RecursiveFrameScanning($fd, $ThisFileInfo, $offset, $nextframetestoffset, $ScanAsCBR) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$offset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$nextframetestoffset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ScanAsCBR</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="XingVBRidOffset" id="XingVBRidOffset"></a><div class="element clickable method public XingVBRidOffset" data-toggle="collapse" data-target=".XingVBRidOffset .collapse">
-<h2>XingVBRidOffset()
-        </h2>
-<pre>XingVBRidOffset($version, $channelmode) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$version</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$channelmode</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="decodeMPEGaudioHeader" id="decodeMPEGaudioHeader"></a><div class="element clickable method public decodeMPEGaudioHeader" data-toggle="collapse" data-target=".decodeMPEGaudioHeader .collapse">
-<h2>decodeMPEGaudioHeader()
-        </h2>
-<pre>decodeMPEGaudioHeader($fd, $offset, $ThisFileInfo, $recursivesearch, $ScanAsCBR, $FastMPEGheaderScan) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$offset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$recursivesearch</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ScanAsCBR</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$FastMPEGheaderScan</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="getOnlyMPEGaudioInfo" id="getOnlyMPEGaudioInfo"></a><div class="element clickable method public getOnlyMPEGaudioInfo" data-toggle="collapse" data-target=".getOnlyMPEGaudioInfo .collapse">
-<h2>getOnlyMPEGaudioInfo()
-        </h2>
-<pre>getOnlyMPEGaudioInfo($fd, $ThisFileInfo, $avdataoffset, $BitrateHistogram) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$avdataoffset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$BitrateHistogram</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="getOnlyMPEGaudioInfoBruteForce" id="getOnlyMPEGaudioInfoBruteForce"></a><div class="element clickable method public getOnlyMPEGaudioInfoBruteForce" data-toggle="collapse" data-target=".getOnlyMPEGaudioInfoBruteForce .collapse">
-<h2>getOnlyMPEGaudioInfoBruteForce()
-        </h2>
-<pre>getOnlyMPEGaudioInfoBruteForce($fd, $ThisFileInfo) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="getid3_mp3" id="getid3_mp3"></a><div class="element clickable method public getid3_mp3" data-toggle="collapse" data-target=".getid3_mp3 .collapse">
-<h2>getid3_mp3()
-        </h2>
-<pre>getid3_mp3($fd, $ThisFileInfo) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fd</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ThisFileInfo</h4>
-<code></code>
-</div>
-</div></div>
+    <i class="icon-custom icon-method"></i> Methods</h3>
+<a name="ClosestStandardMP3Bitrate" id="ClosestStandardMP3Bitrate"></a>
+
+<div class="element clickable method public ClosestStandardMP3Bitrate" data-toggle="collapse"
+     data-target=".ClosestStandardMP3Bitrate .collapse">
+    <h2>ClosestStandardMP3Bitrate()
+    </h2>
+    <pre>ClosestStandardMP3Bitrate($bitrate) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$bitrate</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="FreeFormatFrameLength" id="FreeFormatFrameLength"></a>
+
+<div class="element clickable method public FreeFormatFrameLength" data-toggle="collapse"
+     data-target=".FreeFormatFrameLength .collapse">
+    <h2>FreeFormatFrameLength()
+    </h2>
+    <pre>FreeFormatFrameLength($fd, $offset, $ThisFileInfo, $deepscan) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$offset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$deepscan</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="GuessEncoderOptions" id="GuessEncoderOptions"></a>
+
+<div class="element clickable method public GuessEncoderOptions" data-toggle="collapse"
+     data-target=".GuessEncoderOptions .collapse">
+    <h2>GuessEncoderOptions()
+    </h2>
+    <pre>GuessEncoderOptions($ThisFileInfo) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="LAMEmiscSourceSampleFrequencyLookup" id="LAMEmiscSourceSampleFrequencyLookup"></a>
+
+<div class="element clickable method public LAMEmiscSourceSampleFrequencyLookup" data-toggle="collapse"
+     data-target=".LAMEmiscSourceSampleFrequencyLookup .collapse">
+    <h2>LAMEmiscSourceSampleFrequencyLookup()
+    </h2>
+    <pre>LAMEmiscSourceSampleFrequencyLookup($SourceSampleFrequencyID) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$SourceSampleFrequencyID</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="LAMEmiscStereoModeLookup" id="LAMEmiscStereoModeLookup"></a>
+
+<div class="element clickable method public LAMEmiscStereoModeLookup" data-toggle="collapse"
+     data-target=".LAMEmiscStereoModeLookup .collapse">
+    <h2>LAMEmiscStereoModeLookup()
+    </h2>
+    <pre>LAMEmiscStereoModeLookup($StereoModeID) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$StereoModeID</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="LAMEpresetUsedLookup" id="LAMEpresetUsedLookup"></a>
+
+<div class="element clickable method public LAMEpresetUsedLookup" data-toggle="collapse"
+     data-target=".LAMEpresetUsedLookup .collapse">
+    <h2>LAMEpresetUsedLookup()
+    </h2>
+    <pre>LAMEpresetUsedLookup($LAMEtag) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$LAMEtag</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="LAMEsurroundInfoLookup" id="LAMEsurroundInfoLookup"></a>
+
+<div class="element clickable method public LAMEsurroundInfoLookup" data-toggle="collapse"
+     data-target=".LAMEsurroundInfoLookup .collapse">
+    <h2>LAMEsurroundInfoLookup()
+    </h2>
+    <pre>LAMEsurroundInfoLookup($SurroundInfoID) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$SurroundInfoID</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="LAMEvbrMethodLookup" id="LAMEvbrMethodLookup"></a>
+
+<div class="element clickable method public LAMEvbrMethodLookup" data-toggle="collapse"
+     data-target=".LAMEvbrMethodLookup .collapse">
+    <h2>LAMEvbrMethodLookup()
+    </h2>
+    <pre>LAMEvbrMethodLookup($VBRmethodID) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$VBRmethodID</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="MPEGaudioBitrateArray" id="MPEGaudioBitrateArray"></a>
+
+<div class="element clickable method public MPEGaudioBitrateArray" data-toggle="collapse"
+     data-target=".MPEGaudioBitrateArray .collapse">
+    <h2>MPEGaudioBitrateArray()
+    </h2>
+    <pre>MPEGaudioBitrateArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioChannelModeArray" id="MPEGaudioChannelModeArray"></a>
+
+<div class="element clickable method public MPEGaudioChannelModeArray" data-toggle="collapse"
+     data-target=".MPEGaudioChannelModeArray .collapse">
+    <h2>MPEGaudioChannelModeArray()
+    </h2>
+    <pre>MPEGaudioChannelModeArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioEmphasisArray" id="MPEGaudioEmphasisArray"></a>
+
+<div class="element clickable method public MPEGaudioEmphasisArray" data-toggle="collapse"
+     data-target=".MPEGaudioEmphasisArray .collapse">
+    <h2>MPEGaudioEmphasisArray()
+    </h2>
+    <pre>MPEGaudioEmphasisArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioFrameLength" id="MPEGaudioFrameLength"></a>
+
+<div class="element clickable method public MPEGaudioFrameLength" data-toggle="collapse"
+     data-target=".MPEGaudioFrameLength .collapse">
+    <h2>MPEGaudioFrameLength()
+    </h2>
+    <pre>MPEGaudioFrameLength($bitrate, $version, $layer, $padding, $samplerate) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$bitrate</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$version</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$layer</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$padding</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$samplerate</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="MPEGaudioFrequencyArray" id="MPEGaudioFrequencyArray"></a>
+
+<div class="element clickable method public MPEGaudioFrequencyArray" data-toggle="collapse"
+     data-target=".MPEGaudioFrequencyArray .collapse">
+    <h2>MPEGaudioFrequencyArray()
+    </h2>
+    <pre>MPEGaudioFrequencyArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioHeaderBytesValid" id="MPEGaudioHeaderBytesValid"></a>
+
+<div class="element clickable method public MPEGaudioHeaderBytesValid" data-toggle="collapse"
+     data-target=".MPEGaudioHeaderBytesValid .collapse">
+    <h2>MPEGaudioHeaderBytesValid()
+    </h2>
+    <pre>MPEGaudioHeaderBytesValid($head4, $allowBitrate15) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$head4</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$allowBitrate15</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="MPEGaudioHeaderDecode" id="MPEGaudioHeaderDecode"></a>
+
+<div class="element clickable method public MPEGaudioHeaderDecode" data-toggle="collapse"
+     data-target=".MPEGaudioHeaderDecode .collapse">
+    <h2>MPEGaudioHeaderDecode()
+    </h2>
+    <pre>MPEGaudioHeaderDecode($Header4Bytes) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$Header4Bytes</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="MPEGaudioHeaderValid" id="MPEGaudioHeaderValid"></a>
+
+<div class="element clickable method public MPEGaudioHeaderValid" data-toggle="collapse"
+     data-target=".MPEGaudioHeaderValid .collapse">
+    <h2>MPEGaudioHeaderValid()
+    </h2>
+    <pre>MPEGaudioHeaderValid($rawarray, $echoerrors, $allowBitrate15) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$rawarray</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$echoerrors</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$allowBitrate15</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="MPEGaudioLayerArray" id="MPEGaudioLayerArray"></a>
+
+<div class="element clickable method public MPEGaudioLayerArray" data-toggle="collapse"
+     data-target=".MPEGaudioLayerArray .collapse">
+    <h2>MPEGaudioLayerArray()
+    </h2>
+    <pre>MPEGaudioLayerArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioModeExtensionArray" id="MPEGaudioModeExtensionArray"></a>
+
+<div class="element clickable method public MPEGaudioModeExtensionArray" data-toggle="collapse"
+     data-target=".MPEGaudioModeExtensionArray .collapse">
+    <h2>MPEGaudioModeExtensionArray()
+    </h2>
+    <pre>MPEGaudioModeExtensionArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="MPEGaudioVersionArray" id="MPEGaudioVersionArray"></a>
+
+<div class="element clickable method public MPEGaudioVersionArray" data-toggle="collapse"
+     data-target=".MPEGaudioVersionArray .collapse">
+    <h2>MPEGaudioVersionArray()
+    </h2>
+    <pre>MPEGaudioVersionArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="RecursiveFrameScanning" id="RecursiveFrameScanning"></a>
+
+<div class="element clickable method public RecursiveFrameScanning" data-toggle="collapse"
+     data-target=".RecursiveFrameScanning .collapse">
+    <h2>RecursiveFrameScanning()
+    </h2>
+    <pre>RecursiveFrameScanning($fd, $ThisFileInfo, $offset, $nextframetestoffset, $ScanAsCBR) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$offset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$nextframetestoffset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ScanAsCBR</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="XingVBRidOffset" id="XingVBRidOffset"></a>
+
+<div class="element clickable method public XingVBRidOffset" data-toggle="collapse"
+     data-target=".XingVBRidOffset .collapse">
+    <h2>XingVBRidOffset()
+    </h2>
+    <pre>XingVBRidOffset($version, $channelmode) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$version</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$channelmode</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="decodeMPEGaudioHeader" id="decodeMPEGaudioHeader"></a>
+
+<div class="element clickable method public decodeMPEGaudioHeader" data-toggle="collapse"
+     data-target=".decodeMPEGaudioHeader .collapse">
+    <h2>decodeMPEGaudioHeader()
+    </h2>
+    <pre>decodeMPEGaudioHeader($fd, $offset, $ThisFileInfo, $recursivesearch, $ScanAsCBR, $FastMPEGheaderScan) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$offset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$recursivesearch</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ScanAsCBR</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$FastMPEGheaderScan</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="getOnlyMPEGaudioInfo" id="getOnlyMPEGaudioInfo"></a>
+
+<div class="element clickable method public getOnlyMPEGaudioInfo" data-toggle="collapse"
+     data-target=".getOnlyMPEGaudioInfo .collapse">
+    <h2>getOnlyMPEGaudioInfo()
+    </h2>
+    <pre>getOnlyMPEGaudioInfo($fd, $ThisFileInfo, $avdataoffset, $BitrateHistogram) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$avdataoffset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$BitrateHistogram</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="getOnlyMPEGaudioInfoBruteForce" id="getOnlyMPEGaudioInfoBruteForce"></a>
+
+<div class="element clickable method public getOnlyMPEGaudioInfoBruteForce" data-toggle="collapse"
+     data-target=".getOnlyMPEGaudioInfoBruteForce .collapse">
+    <h2>getOnlyMPEGaudioInfoBruteForce()
+    </h2>
+    <pre>getOnlyMPEGaudioInfoBruteForce($fd, $ThisFileInfo) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
+</div>
+<a name="getid3_mp3" id="getid3_mp3"></a>
+
+<div class="element clickable method public getid3_mp3" data-toggle="collapse" data-target=".getid3_mp3 .collapse">
+    <h2>getid3_mp3()
+    </h2>
+    <pre>getid3_mp3($fd, $ThisFileInfo) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$fd</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$ThisFileInfo</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24allow_bruteforce" id="$allow_bruteforce"> </a><div class="element clickable property public $allow_bruteforce" data-toggle="collapse" data-target=".$allow_bruteforce .collapse">
-<h2>$allow_bruteforce</h2>
-<pre>$allow_bruteforce </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+    <i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24allow_bruteforce" id="$allow_bruteforce"> </a>
+
+<div class="element clickable property public $allow_bruteforce" data-toggle="collapse"
+     data-target=".$allow_bruteforce .collapse">
+    <h2>$allow_bruteforce</h2>
+    <pre>$allow_bruteforce </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
 </div>
 </div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
-            generated on 2012-07-22T16:50:57-05:00.<br></footer></div>
+</div>
+</div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+        generated on 2012-07-22T16:50:57-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>

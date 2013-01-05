@@ -20,7 +20,7 @@ include_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
  * @package  BibleStudy.Site
  * @since    7.0.0
  *
- * @todo need to recode to JBSM/MVC Standers and update the way we do params.  bcc
+ * @todo     need to recode to JBSM/MVC Standers and update the way we do params.  bcc
  */
 class BiblestudyViewSeriesdisplay extends JViewLegacy
 {
@@ -107,7 +107,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
 		$teacherimage        = $images->getTeacherThumbnail($items->thumb, $image2 = null);
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
-				. $teacherimage->width . '" alt="" />';
+			. $teacherimage->width . '" alt="" />';
 		$t                   = $input->get('t', '1', 'int');
 
 		if (!$t)
@@ -120,13 +120,14 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
 		$registry->loadString($template[0]->params);
-		$params   = $registry;
+		$params = $registry;
 
 		// Convert parameter fields to objects.
 		$this->admin_params = $this->admin->params;
 		$css                = $params->get('css');
 
-		if ($css <= "-1"){
+		if ($css <= "-1")
+		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 		}
 		else
@@ -135,7 +136,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		}
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
-				. ':' . $items->id;
+			. ':' . $items->id;
 		$itemparams  = $mainframe->getPageParameters();
 
 		// Get studies associated with the series
@@ -248,14 +249,14 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		}
 		// End process prepare content plugins
 		$this->template = $template;
-		$this->params = $params;
-		$this->items = $items;
+		$this->params   = $params;
+		$this->items    = $items;
 
 		// --$this->article = $article;
 		// --$this->passage_link = $passage_link;
-		$this->studies = $studies;
-		$uri       = new JUri;
-		$stringuri = $uri->toString();
+		$this->studies     = $studies;
+		$uri               = new JUri;
+		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
 
 		parent::display($tpl);

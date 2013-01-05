@@ -44,7 +44,7 @@ class JBSMSerieslist extends JBSMListing
 
 		// Set the slug if not present
 		$row->slug = $row->alias ? ($row->id . ':' . $row->alias) : $row->id . ':'
-				. str_replace(' ', '-', htmlspecialchars_decode($row->series_text, ENT_QUOTES));
+			. str_replace(' ', '-', htmlspecialchars_decode($row->series_text, ENT_QUOTES));
 
 		if ($params->get('series_show_description') == 0)
 		{
@@ -117,8 +117,8 @@ class JBSMSerieslist extends JBSMListing
 			{
 				$listing .= substr($row->description, 0, $params->get('series_characters'));
 				$listing .= ' - ' . '<a href="'
-						. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
-						. '">' . JText::_('JBS_CMN_READ_MORE') . '</a>';
+					. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
+					. '">' . JText::_('JBS_CMN_READ_MORE') . '</a>';
 			}
 			else
 			{
@@ -147,13 +147,13 @@ class JBSMSerieslist extends JBSMListing
 		if ($islink == 1)
 		{
 			$link = '<a href="'
-					. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
-					. '">' . $element . '</a>';
+				. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1))
+				. '">' . $element . '</a>';
 		}
 		else
 		{
 			$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $row->id . '&t=' . $params->get('teachertemplateid', 1))
-					. '">' . $element . '</a>';
+				. '">' . $element . '</a>';
 		}
 
 		return $link;
@@ -173,7 +173,7 @@ class JBSMSerieslist extends JBSMListing
 	public function getStudieslink($islink, $row, $element, $params, $admin_params)
 	{
 		$link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $params->get('detailstemplateid', 1))
-				. '">' . $element . '</a>';
+			. '">' . $element . '</a>';
 
 		return $link;
 	}
@@ -392,20 +392,20 @@ class JBSMSerieslist extends JBSMListing
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
-				. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
-				. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
-				. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
-				. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-				. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
-				. ' FROM #__bsms_studies AS s'
-				. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
-				. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
-				. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
-				. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
-				. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
-				. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-				. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)';
+			. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
+			. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
+			. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
+			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
+			. ' FROM #__bsms_studies AS s'
+			. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
+			. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
+			. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
+			. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
+			. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
+			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+			. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)';
 		$query .= ' WHERE s.series_id = ' . $id . ' AND s.published = 1 AND s.language in (' . $language . ') AND s.access IN (' . $groups . ')';
 		$query .= ' GROUP BY s.id';
 		$query .= ' ORDER BY ' . $params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'DESC');
@@ -675,9 +675,9 @@ class JBSMSerieslist extends JBSMListing
 	{
 		$seriesfooter = '<tr class="seriesreturnlink"><td>
 		<a href="'
-				. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $id . '&amp;t=' . $template)
-				. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' '
-				. JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
+			. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $id . '&amp;t=' . $template)
+			. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' '
+			. JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
 
 		return $seriesfooter;
 	}

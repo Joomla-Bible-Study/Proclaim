@@ -114,14 +114,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 						// Get new  record insert to change name
 						$query = $db->getQuery(true);
 						$query->select('filename, id')
-								->from('#__bsms_styles')
-								->order('id DESC');
+							->from('#__bsms_styles')
+							->order('id DESC');
 						$db->setQuery($query, 0, 1);
 						$data  = $db->loadObject();
 						$query = $db->getQuery(true);
 						$query->update('#__bsms_styles')
-								->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-								->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
+							->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
+							->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
 						$db->setQuery($query);
 						$db->execute();
 
@@ -148,14 +148,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 						// Get new  record insert to change name
 						$query = $db->getQuery(true);
 						$query->select('filename, id, type')
-								->from('#__bsms_templatecode')
-								->order($db->q('id') . ' DESC');
+							->from('#__bsms_templatecode')
+							->order($db->q('id') . ' DESC');
 						$db->setQuery($query, 0, 1);
 						$data  = $db->loadObject();
 						$query = $db->getQuery(true);
 						$query->update('#__bsms_styles')
-								->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-								->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
+							->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
+							->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
 						$this->performDB($query);
 
 						$tc++;
@@ -182,14 +182,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 						// Get new  record insert to change name
 						$query = $db->getQuery(true);
 						$query->select('id, title, params')
-								->from('#__bsms_templates')
-								->order($db->q('id') . ' DESC');
+							->from('#__bsms_templates')
+							->order($db->q('id') . ' DESC');
 						$db->setQuery($query, 0, 1);
 						$data  = $db->loadObject();
 						$query = $db->getQuery(true);
 						$query->update('#__bsms_templates')
-								->set($db->qn('title') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-								->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
+							->set($db->qn('title') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
+							->where($db->qn('id') . ' = ' . (int) $db->q($data->id));
 						$this->performDB($query);
 					}
 				}
@@ -199,8 +199,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		// Get Last Style record
 		$query = $db->getQuery(true);
 		$query->select('filename, id')
-				->from('#__bsms_styles')
-				->order($db->q('id') . ' DESC');
+			->from('#__bsms_styles')
+			->order($db->q('id') . ' DESC');
 		$db->setQuery($query, 0, 1);
 		$data = $db->loadObject();
 		$css  = $data->filename . ".css";
@@ -208,8 +208,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		// Get new  record insert to change name
 		$query = $db->getQuery(true);
 		$query->select('id, type, filename')
-				->from('#__bsms_templatecode')
-				->order($db->q('id') . ' DESC');
+			->from('#__bsms_templatecode')
+			->order($db->q('id') . ' DESC');
 		$db->setQuery($query, 0, $tc);
 		$data = $db->loadObjectlist();
 
@@ -368,7 +368,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$db->query();
 			$cssresult = $db->loadObject();
 			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->getEscaped($cssresult->filename)
-					. "',\n`stylecode` = '" . $db->getEscaped($cssresult->stylecode) . "';\n";
+				. "',\n`stylecode` = '" . $db->getEscaped($cssresult->stylecode) . "';\n";
 		}
 
 		// Get the individual template files

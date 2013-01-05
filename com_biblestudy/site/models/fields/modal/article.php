@@ -56,8 +56,8 @@ class JFormFieldModal_Article extends JFormField
 		$db = JFactory::getDBO();
 		$db->setQuery(
 			'SELECT title' .
-					' FROM #__content' .
-					' WHERE id = ' . (int) $this->value
+				' FROM #__content' .
+				' WHERE id = ' . (int) $this->value
 		);
 		$title = $db->loadResult();
 
@@ -76,7 +76,7 @@ class JFormFieldModal_Article extends JFormField
 		$html[] = '<div class="button2-left">';
 		$html[] = '  <div class="blank">';
 		$html[] = '	<a class="modal" title="' . JText::_('JBS_MED_SELECT_ARTICLE') . '"  href="' . $link .
-				'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_MED_SELECT_ARTICLE') . '</a>';
+			'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_MED_SELECT_ARTICLE') . '</a>';
 		$html[] = '  </div>';
 		$html[] = '</div>';
 

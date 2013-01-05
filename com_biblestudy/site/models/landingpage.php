@@ -89,7 +89,7 @@ class BiblestudyModelLandingpage extends JModelList
 		$app        = JFactory::getApplication('site');
 		$params     = $app->getParams();
 		$menuparams = new JRegistry;
-		$menu = $app->getMenu()->getActive();
+		$menu       = $app->getMenu()->getActive();
 
 		if ($menu)
 		{

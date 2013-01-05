@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 $jview = new JViewLegacy;
 $jview->loadHelper('serieslist');
 $serieslisting = new JBSMSerieslist;
-$t     = $this->params->get('serieslisttemplateid');
-$input = new JInput;
+$t             = $this->params->get('serieslisttemplateid');
+$input         = new JInput;
 
 if (!$t)
 {
@@ -102,10 +102,10 @@ if (!$t)
 		if ($this->params->get('series_list_return') > 0)
 		{
 			echo '<table><tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t) . '"><< '
-					. JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
-					. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
-					. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
-					. ' >></a></td></tr></table>';
+				. JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
+				. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
+				. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
+				. ' >></a></td></tr></table>';
 		}
 		?>
 

@@ -44,7 +44,7 @@ class BiblestudyViewPopup extends JViewLegacy
 
 	public $playerheight;
 
-	protected  $extraparams;
+	protected $extraparams;
 
 	public $flashvars;
 
@@ -98,9 +98,9 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		jimport('joomla.application.component.helper');
 
-		$getMedia    = new jbsMedia;
-		$this->media = $getMedia->getMediaRows2($mediaid);
-		$template    = JBSMParams::getTemplateparams();
+		$getMedia     = new jbsMedia;
+		$this->media  = $getMedia->getMediaRows2($mediaid);
+		$template     = JBSMParams::getTemplateparams();
 		$this->params = $template->params;
 
 		/*
@@ -120,7 +120,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
 		$this->loadHelper('elements');
-		$JBSMElements = new JBSMElements;
+		$JBSMElements    = new JBSMElements;
 		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
 		$this->date      = $JBSMElements->getstudyDate($this->params, $this->media->studydate);
@@ -133,10 +133,10 @@ class BiblestudyViewPopup extends JViewLegacy
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
 		$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
-				. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
+			. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
 		$image                  = $images->getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
 		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
-				. '" alt="' . $this->media->teachername . '" />';
+			. '" alt="' . $this->media->teachername . '" />';
 		$this->path1            = $this->media->spath . $this->media->fpath . $this->media->filename;
 
 		if (preg_match('@^(?:http://)?([^/]+)@i', $this->path1))

@@ -57,7 +57,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @access    public
 	 * @return    void
 	 */
-	protected  $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	private $_id;
 

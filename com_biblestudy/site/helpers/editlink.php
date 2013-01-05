@@ -30,9 +30,8 @@ function getEditlink($id, $params)
 
 	if ($allow)
 	{
-		$editlink .= '<a href="' . JURI::base(
-		) . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=' .
-				$id . '">[' . JText::_('JBS_CMN_EDIT') . ']</a>';
+		$editlink .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=' .
+			$id . '">[' . JText::_('JBS_CMN_EDIT') . ']</a>';
 	}
 
 	return $editlink;

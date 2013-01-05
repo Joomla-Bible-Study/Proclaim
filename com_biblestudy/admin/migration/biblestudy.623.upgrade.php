@@ -65,10 +65,10 @@ class Jbs623Install
 				}
 			}
 		}
-		$data = new stdClass;
-		$data->version = '6.2.3';
+		$data              = new stdClass;
+		$data->version     = '6.2.3';
 		$data->installdate = '2010-11-03';
-		$data->build    = '623';
+		$data->build       = '623';
 		$data->versionname = '1Samuel';
 		$data->versiondate = '2010-11-03';
 
@@ -77,10 +77,10 @@ class Jbs623Install
 			return false;
 		}
 
-		$data1 = new stdClass;
-		$data1->version = '6.2.4';
+		$data1              = new stdClass;
+		$data1->version     = '6.2.4';
 		$data1->installdate = '2010-11-09';
-		$data1->build    = '623';
+		$data1->build       = '623';
 		$data1->versionname = '2Samuel';
 		$data1->versiondate = '2010-11-09';
 

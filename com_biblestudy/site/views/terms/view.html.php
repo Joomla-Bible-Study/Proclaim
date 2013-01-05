@@ -55,12 +55,12 @@ class BiblestudyViewTerms extends JViewLegacy
 		if ($compat_mode == 1)
 		{
 			echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename
-					. '&size=' . $media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
+				. '&size=' . $media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 		}
 		else
 		{
 			echo '<a href="index.php?option=com_biblestudy&mid=' . $media->id . '&view=sermons&task=download">'
-					. JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
+				. JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 		}
 		?>
 

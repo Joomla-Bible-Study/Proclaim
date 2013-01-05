@@ -71,7 +71,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 			case 'popups':
 				$this->changePopup();
-				$msg    = JText::_('JBS_CMN_OPERATION_FAILED');
+				$msg = JText::_('JBS_CMN_OPERATION_FAILED');
 				$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
 				break;
 		}
@@ -88,7 +88,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
-				->set('hits = ' . $db->q('0'));
+			->set('hits = ' . $db->q('0'));
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -114,7 +114,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-				->set('downloads = ' . $db->q('0'));
+			->set('downloads = ' . $db->q('0'));
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -140,7 +140,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-				->set('plays = ' . $db->q('0'));
+			->set('plays = ' . $db->q('0'));
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -204,8 +204,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$to     = $jinput->getInt('pto', '', 'post');
 		$query  = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-				->set('popup = ' . $db->q($to))
-				->where('popup = ' . $db->q($from));
+			->set('popup = ' . $db->q($to))
+			->where('popup = ' . $db->q($from));
 		$db->setQuery($query);
 
 		if (!$db->execute())

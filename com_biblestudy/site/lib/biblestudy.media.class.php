@@ -112,12 +112,12 @@ class jbsMedia
 				if ($compat_mode == 0)
 				{
 					$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
-							$media->id . '&amp;view=sermons&amp;task=download">';
+						$media->id . '&amp;view=sermons&amp;task=download">';
 				}
 				else
 				{
 					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-							$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
+						$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
 
 				// Check to see if they want to use a popup
@@ -125,10 +125,10 @@ class jbsMedia
 				{
 
 					$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
-							. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+						. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 				}
 				$downloadlink .= '<img src="' . $download_image->path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
-						$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+					$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type)
 			{
@@ -197,8 +197,8 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('m.id as mid, m.study_id, s.id as sid')
-				->from('#__bsms_mediafiles AS m')
-				->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . (int) $db->q($id));
+			->from('#__bsms_mediafiles AS m')
+			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . (int) $db->q($id));
 		$db->setQuery($query);
 		$mediaids = $db->loadObjectList();
 
@@ -221,11 +221,11 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-				. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-				. ' #__bsms_media.media_image_name AS imname,'
-				. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-				. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-				. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+			. ' #__bsms_media.media_image_name AS imname,'
+			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
 
 		$query->from('#__bsms_mediafiles');
 
@@ -269,22 +269,22 @@ class jbsMedia
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
 		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-				. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
-				. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
-				. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-				. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-				. ' #__bsms_media.media_alttext AS malttext,'
-				. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
-				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-				. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-				. ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
-				. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-				. ' LEFT JOIN #__bsms_series as se ON (s.series_id = se.id)'
-				. ' WHERE #__bsms_mediafiles.id = ' . (int) $id . ' AND #__bsms_mediafiles.published = 1'
-				. ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
+			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
+			. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
+			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
+			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
+			. ' #__bsms_media.media_alttext AS malttext,'
+			. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype FROM #__bsms_mediafiles'
+			. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
+			. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
+			. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
+			. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
+			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
+			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
+			. ' LEFT JOIN #__bsms_series as se ON (s.series_id = se.id)'
+			. ' WHERE #__bsms_mediafiles.id = ' . (int) $id . ' AND #__bsms_mediafiles.published = 1'
+			. ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
 		$db->setQuery($query);
 		$media = $db->loadObject();
 
@@ -418,15 +418,15 @@ class jbsMedia
 	 */
 	public function getDocman($media, $image)
 	{
-		$src      = JURI::base() . $image->path;
-		$height   = $image->height;
-		$width    = $image->width;
+		$src          = JURI::base() . $image->path;
+		$height       = $image->height;
+		$width        = $image->width;
 		$JBSMElements = new JBSMElements;
-		$filesize = $JBSMElements->getFilesize($media->size);
-		$docman   = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
+		$filesize     = $JBSMElements->getFilesize($media->size);
+		$docman       = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
-				. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
-				. '" height="' . $height . '" border="0" /></a>';
+			. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
+			. '" height="' . $height . '" border="0" /></a>';
 
 
 		return $docman;
@@ -448,7 +448,7 @@ class jbsMedia
 		$width   = $image->width;
 		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-				. '" height="' . $height . '" border="0" /></a>';
+			. '" height="' . $height . '" border="0" /></a>';
 
 		return $article;
 	}
@@ -469,7 +469,7 @@ class jbsMedia
 		$width  = $image->width;
 		$vm     = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
 		alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-				. '" height="' . $height . '" border="0" /></a>';
+			. '" height="' . $height . '" border="0" /></a>';
 
 		return $vm;
 	}
@@ -487,15 +487,15 @@ class jbsMedia
 	 */
 	public function getPlayerCode($params, $itemparams, $player, $image, $media)
 	{
-		$input       = new JInput;
-		$src         = JURI::base() . $image->path;
-		$height      = $image->height;
-		$width       = $image->width;
-		$backcolor   = $params->get('backcolor', '0x287585');
-		$frontcolor  = $params->get('frontcolor', '0xFFFFFF');
-		$lightcolor  = $params->get('lightcolor', '0x000000');
-		$screencolor = $params->get('screencolor', '0xFFFFFF');
-		$template    = $input->get('t', '1', 'int');
+		$input        = new JInput;
+		$src          = JURI::base() . $image->path;
+		$height       = $image->height;
+		$width        = $image->width;
+		$backcolor    = $params->get('backcolor', '0x287585');
+		$frontcolor   = $params->get('frontcolor', '0xFFFFFF');
+		$lightcolor   = $params->get('lightcolor', '0x000000');
+		$screencolor  = $params->get('screencolor', '0xFFFFFF');
+		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
@@ -528,10 +528,10 @@ class jbsMedia
 					case 2: // New window
 
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
-								$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
+							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' .
-								$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
-								' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
+							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
 
 						return $playercode;
 						break;
@@ -539,8 +539,8 @@ class jbsMedia
 					case 1: // Popup window
 
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=0&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
-								$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
-								"' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
+							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 						break;
 				}
 
@@ -554,9 +554,9 @@ class jbsMedia
 				{
 					case 2: // Inline
 						$playercode = "<video height='" . $player->playerheight . "' poster='" . JURI::base()
-								. $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "' width='"
-								. $player->playerwidth . "' id='placeholder'> <source src='" . $path . "' /><a href='http://www.adobe.com/go/getflashplayer'>"
-								. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
+							. $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "' width='"
+							. $player->playerwidth . "' id='placeholder'> <source src='" . $path . "' /><a href='http://www.adobe.com/go/getflashplayer'>"
+							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
 									<script type='text/javascript'>
 									jwplayer('placeholder').setup({
 						                                flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
@@ -570,9 +570,9 @@ class jbsMedia
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
 
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
-								. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
-								$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
-								"' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
+							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
+							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
+							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
 						break;
 				}
 
@@ -587,10 +587,10 @@ class jbsMedia
 				{
 					case 1: // This goes to the popup view
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
-								"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-								. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='"
-								. $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
-								"' alt='" . $media->malttext . "' /></a>";
+							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
+							. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='"
+							. $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
+							"' alt='" . $media->malttext . "' /></a>";
 						break;
 
 					case 2: // This plays the video inline
@@ -628,7 +628,7 @@ class jbsMedia
 					case 2:
 						$playercode = '<script type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
         		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id
-								. '" border="0" height="24" width="' . $player->playerwidth . '">
+							. '" border="0" height="24" width="' . $player->playerwidth . '">
 				                <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" />
 				                <param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path . '" />
 				                <param name="quality" value="high" />
@@ -643,9 +643,9 @@ class jbsMedia
 
 					case 1:
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=7&amp;t=" . $template .
-								"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight
-								. "'); return false\"> <img src='" . $src . "' border='0' height='" . $height . "' width='" . $width . "' title='" . $mimetype
-								. " " . $duration . " " . $filesize . "' alt='' /></a>";
+							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight
+							. "'); return false\"> <img src='" . $src . "' border='0' height='" . $height . "' width='" . $width . "' title='" . $mimetype
+							. " " . $duration . " " . $filesize . "' alt='' /></a>";
 
 						return $playercode;
 						break;
@@ -655,9 +655,9 @@ class jbsMedia
 			case 8: // Embed code
 
 				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
-						"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-						. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
-						. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
+					. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
+					. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
 
 				return $playercode;
 				break;
@@ -705,8 +705,8 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-				->set('plays + 1')
-				->where('id = ' . (int) $db->q($id));
+			->set('plays + 1')
+			->where('id = ' . (int) $db->q($id));
 		$db->setQuery($query);
 
 		if ($db->execute())

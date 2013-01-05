@@ -55,7 +55,7 @@ $pagebuilder = new JBSPagebuilder;
 foreach ($items AS $item)
 {
 	$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+		. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 	$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
 	$item->scripture1 = $pelements->scripture1;
 	$item->scripture2 = $pelements->scripture2;

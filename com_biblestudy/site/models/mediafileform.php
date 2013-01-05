@@ -346,9 +346,9 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	public function getServers()
 	{
 		$query = 'SELECT id AS value, server_path AS text, published'
-				. ' FROM #__bsms_servers'
-				. ' WHERE published = 1'
-				. ' ORDER BY server_path';
+			. ' FROM #__bsms_servers'
+			. ' WHERE published = 1'
+			. ' ORDER BY server_path';
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadObjectList();
@@ -362,9 +362,9 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	public function getFolders()
 	{
 		$query = 'SELECT id AS value, folderpath AS text, published'
-				. ' FROM #__bsms_folders'
-				. ' WHERE published = 1'
-				. ' ORDER BY folderpath';
+			. ' FROM #__bsms_folders'
+			. ' WHERE published = 1'
+			. ' ORDER BY folderpath';
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadObjectList();
@@ -391,9 +391,9 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	public function getMediaImages()
 	{
 		$query = 'SELECT id AS value, media_image_name AS text, published'
-				. ' FROM #__bsms_media'
-				. ' WHERE published = 1'
-				. ' ORDER BY media_image_name';
+			. ' FROM #__bsms_media'
+			. ' WHERE published = 1'
+			. ' ORDER BY media_image_name';
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadObjectList();
@@ -420,9 +420,9 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	public function getOrdering()
 	{
 		$query = 'SELECT ordering AS value, ordering AS text'
-				. ' FROM #__bsms_mediafiles'
-				. ' WHERE study_id = ' . $this->_id
-				. ' ORDER BY ordering';
+			. ' FROM #__bsms_mediafiles'
+			. ' WHERE study_id = ' . $this->_id
+			. ' ORDER BY ordering';
 
 		return $query;
 	}

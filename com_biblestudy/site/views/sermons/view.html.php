@@ -210,7 +210,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		}
 		$template = JBSMParams::getTemplateparams();
-		$params = $template->params;
+		$params   = $template->params;
 
 		$a_params           = JBSMParams::getAdmin();
 		$this->admin_params = $a_params->params;
@@ -218,7 +218,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		foreach ($items AS $item)
 		{
 			$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-					. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+				. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 		}
 
 		$studies     = $items;
@@ -319,10 +319,12 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		$css = $params->get('css');
 
-		if ($css <= "-1"){
+		if ($css <= "-1")
+		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 		}
-		else{
+		else
+		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
@@ -410,28 +412,28 @@ class BiblestudyViewSermons extends JViewLegacy
 		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JBS_SELECT_LANGUAGE'));
 		$langdropdown          = array_merge($langdropdown, $lang);
 		$this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox" size="1" '
-				. $go, 'value', 'text', "$filter_languages"
+			. $go, 'value', 'text', "$filter_languages"
 		);
 
 		// Build the teacher dropdown
 		$types[]              = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
 		$types                = array_merge($types, $this->teachers);
 		$this->page->teachers = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" '
-				. $go, 'value', 'text', "$filter_teacher"
+			. $go, 'value', 'text', "$filter_teacher"
 		);
 
 		// Build Series List for drop down menu
 		$types3[]           = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_SERIES'));
 		$types3             = array_merge($types3, $this->series);
 		$this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" '
-				. $go, 'value', 'text', "$filter_series"
+			. $go, 'value', 'text', "$filter_series"
 		);
 
 		// Build message types
 		$types4[]                 = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGE_TYPE'));
 		$types4                   = array_merge($types4, $this->messageTypes);
 		$this->page->messagetypes = JHTML::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox" size="1" '
-				. $go, 'value', 'text', "$filter_messagetype"
+			. $go, 'value', 'text', "$filter_messagetype"
 		);
 
 		// Build study years
@@ -444,7 +446,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$loc                   = array_merge($loc, $this->locations);
 		$this->page->locations = JHTML::_(
 			'select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" '
-				. $go, 'value', 'text', "$filter_location"
+			. $go, 'value', 'text', "$filter_location"
 		);
 
 		// Build Topics

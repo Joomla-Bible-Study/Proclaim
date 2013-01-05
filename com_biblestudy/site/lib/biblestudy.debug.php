@@ -226,8 +226,8 @@ class JBSDebug
 		$caller = $trace[$back];
 		trigger_error(
 			$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' .
-					$caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong>' .
-					"\n<br /><br />Error reported",
+				$caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong>' .
+				"\n<br /><br />Error reported",
 			$level
 		);
 	}

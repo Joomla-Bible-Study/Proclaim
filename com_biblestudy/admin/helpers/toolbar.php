@@ -26,7 +26,7 @@ class JBSMToolbar extends JObject
 	 * @return object
 	 *
 	 * @deprecated 7.1.3
-	 * @todo need to see about this use.
+	 * @todo       need to see about this use.
 	 */
 	public function getToolbar()
 	{

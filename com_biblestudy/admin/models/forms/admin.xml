@@ -2,43 +2,60 @@
 <form>
     <fields name="params">
 
-        <field name="metakey" type="text" class="inputbox" size="30" rows="3" label="JBS_STY_METAKEYWORDS" description="JBS_STY_METAKEYWORDS_DESC" labelclass="control-label" />
-        <field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION" description="JBS_STY_METADESCRIPTION_DESC" labelclass="control-label" />
-        <field name="compat_mode" type="list" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE" description="JBS_ADM_MEDIA_COMPAT_MODE_DESC" class="btn-group" labelclass="control-label">
+        <field name="metakey" type="text" class="inputbox" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
+               description="JBS_STY_METAKEYWORDS_DESC" labelclass="control-label"/>
+        <field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
+               description="JBS_STY_METADESCRIPTION_DESC" labelclass="control-label"/>
+        <field name="compat_mode" type="list" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
+               description="JBS_ADM_MEDIA_COMPAT_MODE_DESC" class="btn-group" labelclass="control-label">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="jbsmigrationshow" type="radio" class="btn-group" default="0" label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC" labelclass="control-label">
+        <field name="jbsmigrationshow" type="radio" class="btn-group" default="0"
+               label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC"
+               labelclass="control-label">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="studylistlimit" type="text" size="3" label="JBS_ADM_STUDYLISTLIMIT" description="JBS_ADM_STUDYLISTLIMIT_DESC" default="" labelclass="control-label" />
-        <field name="show_location_media" type="list" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA" description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC" labelclass="control-label">
+        <field name="studylistlimit" type="text" size="3" label="JBS_ADM_STUDYLISTLIMIT"
+               description="JBS_ADM_STUDYLISTLIMIT_DESC" default="" labelclass="control-label"/>
+        <field name="show_location_media" type="list" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA"
+               description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC" labelclass="control-label">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT" description="JBS_ADM_POPULAR_LIMIT_DESC" />
-        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER" description="JBS_ADM_CHARACTER_FILTER_DESC" labelclass="control-label">
+        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT"
+               description="JBS_ADM_POPULAR_LIMIT_DESC"/>
+        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER"
+               description="JBS_ADM_CHARACTER_FILTER_DESC" labelclass="control-label">
             <option value="0">JBS_ADM_NO_FILTER</option>
             <option value="1">JBS_ADM_FILTER</option>
         </field>
-        <field name="format_popular" default="0"  type="list" label="JBS_ADM_FORMAT_POPULAR" description="JBS_ADM_FORMAT_POPULAR_DESC" labelclass="control-label">
+        <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
+               description="JBS_ADM_FORMAT_POPULAR_DESC" labelclass="control-label">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
         </field>
-        <field name="socialnetworking"  type="list" default="1" label="JBS_ADM_SOCIALNETWORKING" description="JBS_ADM_SOCIALNETWORKING_DESC" labelclass="control-label">
+        <field name="socialnetworking" type="list" default="1" label="JBS_ADM_SOCIALNETWORKING"
+               description="JBS_ADM_SOCIALNETWORKING_DESC" labelclass="control-label">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_DESC" labelclass="control-label">
+        <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_DESC"
+               labelclass="control-label">
             <option value="0">JBS_ADM_INTERNAL_SHARE</option>
             <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
         </field>
-        <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
-        <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC" labelclass="control-label"/>
-        <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC" labelclass="control-label"/>
-        <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
-        <field name="default_showHide_image" type="media" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC" labelclass="control-label">
+        <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE"
+               description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
+        <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE"
+               description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC" labelclass="control-label"/>
+        <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE"
+               description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC" labelclass="control-label"/>
+        <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE"
+               description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
+        <field name="default_showHide_image" type="media" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE"
+               description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC" labelclass="control-label">
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
 
@@ -78,12 +95,14 @@
                label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC" labelclass="control-label"/>
 
         <field name="download" type="radio" default="0"
-               label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC" class="btn-group" labelclass="control-label">
+               label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC"
+               class="btn-group" labelclass="control-label">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
         <field name="target" type="list" default="0"
-               label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC"  class="span12 small" labelclass="control-label">
+               label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC"
+               class="span12 small" labelclass="control-label">
             <option value=" ">JBS_ADM_NO_DEFAULT</option>
             <option value="_blank">JBS_ADM_NEW_WINDOW</option>
             <option value="_self">JBS_ADM_SAME_WINDOW</option>
@@ -167,12 +186,14 @@
         <!-- End of Eugen Note -->
     </fields>
     <fieldset>
-        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC" class="btn-group" labelclass="control-label">
+        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES"
+               description="JBS_ADM_DROP_TABLES_DESC" class="btn-group" labelclass="control-label">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
 
-        <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC" class="btn-group" labelclass="control-label">
+        <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
+               class="btn-group" labelclass="control-label">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>

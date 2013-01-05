@@ -89,9 +89,9 @@ class Updatejbs701
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->insert('#__bsms_studytopics (study_id, topic_id)')
-				->select('#__bsms_studies.id, #__bsms_studies.topics_id ')
-				->from('__bsms_studies')
-				->where('#__bsms_studies.topics_id > 0');
+			->select('#__bsms_studies.id, #__bsms_studies.topics_id ')
+			->from('__bsms_studies')
+			->where('#__bsms_studies.topics_id > 0');
 		/* Need to test this out.
 		* $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id,
 		* #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0'; */

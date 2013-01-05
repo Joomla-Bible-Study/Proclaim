@@ -47,20 +47,20 @@
                     <option value="1">JYES</option>
                 </field>
                 <field name="recipients" type="text" default="" size="80"
-                       label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC" />
+                       label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC"/>
                 <field name="subject" type="text" default="Joomla Bible Study Backup"
-                       size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
+                       size="60" label="PLG_JBSBACKUP_SUBJECT" description=""/>
                 <field name="body" type="text" default="Backup status:" size="60"
-                       label="PLG_JBSBACKUP_BODY" description="" />
+                       label="PLG_JBSBACKUP_BODY" description=""/>
                 <field name="method" type="list" default="0"
                        label="PLG_JBSBACKUP_PUBLISH_METHOD" description="PLG_JBSBACKUP_PUBLISH_METHOD_DESC">
                     <option value="0">PLG_JBSBACKUP_HOURS</option>
                     <option value="1">PLG_JBSBACKUP_SCHEDULE</option>
                 </field>
                 <field name="filestokeep" type="text" default="5" size="3"
-                       label="PLG_JBSBACKUP_FILES" description="PLG_JBSBACKUP_FILES_DESC" />
+                       label="PLG_JBSBACKUP_FILES" description="PLG_JBSBACKUP_FILES_DESC"/>
                 <field name="xhours" type="text" default="24" size="3"
-                       label="PLG_JBSBACKUP_PUBLISH_EVERY" description="PLG_JBSBACKUP_PUBLISH_EVERY_DESC" />
+                       label="PLG_JBSBACKUP_PUBLISH_EVERY" description="PLG_JBSBACKUP_PUBLISH_EVERY_DESC"/>
                 <field name="day1" type="list" default="0" label="PLG_JBSBACKUP_DAY1"
                        description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
@@ -459,10 +459,11 @@
             </fieldset>
         </fields>
     </config>
-	<!-- UPDATESERVER DEFINITION -->
+    <!-- UPDATESERVER DEFINITION -->
     <updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Backup Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml]]>
+        <!-- Note: No spaces or linebreaks allowed between the server tags -->
+        <server type="extension" priority="1" name="Joomla Bible Study Backup Plg">
+            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml]]>
         </server>
     </updateservers>
 </extension>

@@ -274,35 +274,35 @@ class BiblestudyViewSermon extends JViewLegacy
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
 		$dispatcher->trigger('onContentPrepare', array(
-		                                              'com_biblestudy.sermons',
-		                                              & $article,
-		                                              & $this->item->params,
-		                                              $limitstart = null
-		                                         ));
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
 		$dispatcher->trigger('onContentPrepare', array(
-		                                              'com_biblestudy.sermons',
-		                                              & $article,
-		                                              & $this->item->params,
-		                                              $limitstart = null
-		                                         ));
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
 		$dispatcher->trigger('onContentPrepare', array(
-		                                              'com_biblestudy.sermons',
-		                                              & $article,
-		                                              & $this->item->params,
-		                                              $limitstart = null
-		                                         ));
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
 		$dispatcher->trigger('onContentPrepare', array(
-		                                              'com_biblestudy.sermons',
-		                                              & $article,
-		                                              & $this->item->params,
-		                                              $limitstart = null
-		                                         ));
+			'com_biblestudy.sermons',
+			& $article,
+			& $this->item->params,
+			$limitstart = null
+		));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
@@ -329,8 +329,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Added database queries from the default template - moved here instead
 		$database = JFactory::getDBO();
 		$query    = "SELECT id"
-				. "\nFROM #__menu"
-				. "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
@@ -364,11 +364,11 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 			$limitstart = $app->input->get('limitstart', 'int');
 			$dispatcher->trigger('onContentPrepare', array(
-			                                              'com_biblestudy.sermon',
-			                                              & $article,
-			                                              & $this->item->params,
-			                                              $limitstart
-			                                         ));
+				'com_biblestudy.sermon',
+				& $article,
+				& $this->item->params,
+				$limitstart
+			));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 
@@ -523,7 +523,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
 			$this->document->setTitle($this->item->page_title . ' - '
-					. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1));
+				. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1));
 		}
 
 		if ($this->print)

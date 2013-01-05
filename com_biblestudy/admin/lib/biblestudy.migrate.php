@@ -174,8 +174,8 @@ class JBSMigrate
 				/* Find Last updated Version in Update table */
 				$query = $db->getQuery(true);
 				$query->select('*')
-						->from('#__bsms_update')
-						->order($db->qn('version') . ' desc');
+					->from('#__bsms_update')
+					->order($db->qn('version') . ' desc');
 				$db->setQuery($query);
 				$updates = $db->loadObject();
 				$version = $updates->version;
@@ -706,7 +706,7 @@ class JBSMigrate
 		/* Find Last updated Version in Update table */
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_update');
+			->from('#__bsms_update');
 		$db->setQuery($query);
 		$updates = $db->loadObjectlist();
 

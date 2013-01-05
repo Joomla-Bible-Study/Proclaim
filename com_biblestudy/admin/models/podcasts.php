@@ -81,7 +81,7 @@ class BiblestudyModelPodcasts extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input = new JInput;
+		$input  = new JInput;
 		$layout = $input->get('layout');
 
 		if ($layout)

@@ -45,9 +45,9 @@ function getEditlisting($admin_params, $params)
 		$editlisting .= '<div id="studyheader">' . JText::_('JBS_CMN_STUDIES') . '</div>';
 		$editlisting .= '<div class="studyedit">';
 		$editlisting .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'
-				. JText::_('JBS_CMN_ADD_STUDY') . '</a><br />';
+			. JText::_('JBS_CMN_ADD_STUDY') . '</a><br />';
 		$editlisting .= '<a href="' . JURI::base() . 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'
-				. JText::_('JBS_CMN_ADD_MEDIA') . '</a><br />';
+			. JText::_('JBS_CMN_ADD_MEDIA') . '</a><br />';
 
 		if ($params->get('show_comments') > 0)
 		{

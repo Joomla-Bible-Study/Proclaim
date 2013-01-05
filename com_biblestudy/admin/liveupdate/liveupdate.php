@@ -57,7 +57,7 @@ class LiveUpdate
 
 		// Load the controller and let it run the show
 		//require_once dirname(__FILE__) . '/classes/controller.php';
-        JLoader::register('LiveUpdateController', dirname(__FILE__) . '/classes/controller.php');
+		JLoader::register('LiveUpdateController', dirname(__FILE__) . '/classes/controller.php');
 		$controller = new LiveUpdateController();
 		$input      = new JInput;
 		$controller = $input->get('task', 'overview', 'cmd');
@@ -73,7 +73,7 @@ class LiveUpdate
 	public static function getUpdateInformation($force = false)
 	{
 		//require_once dirname(__FILE__) . '/classes/updatefetch.php';
-        JLoader::register('LiveUpdateFetch', dirname(__FILE__) . '/classes/updatefetch.php');
+		JLoader::register('LiveUpdateFetch', dirname(__FILE__) . '/classes/updatefetch.php');
 		$update           = new LiveUpdateFetch();
 		$info             = $update->getUpdateInformation($force);
 		$hasUpdates       = $update->hasUpdates();
@@ -104,22 +104,29 @@ class LiveUpdate
 		$img = $c['mediaurl'];
 
 		$updateInfo = self::getUpdateInformation();
-		if (!$updateInfo->supported) {
+		if (!$updateInfo->supported)
+		{
 			// Unsupported
 			$class = 'liveupdate-icon-notsupported';
 			$img .= 'nosupport-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_UNSUPPORTED');
-		} elseif ($updateInfo->stuck) {
+		}
+		elseif ($updateInfo->stuck)
+		{
 			// Stuck
 			$class = 'liveupdate-icon-crashed';
 			$img .= 'nosupport-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_CRASHED');
-		} elseif ($updateInfo->hasUpdates) {
+		}
+		elseif ($updateInfo->hasUpdates)
+		{
 			// Has updates
 			$class = 'liveupdate-icon-updates';
 			$img .= 'update-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_UPDATES');
-		} else {
+		}
+		else
+		{
 			// Already in the latest release
 			$class = 'liveupdate-icon-noupdates';
 			$img .= 'current-32.png';
@@ -127,7 +134,7 @@ class LiveUpdate
 		}
 
 		return '<div class="icon"><a href="' . $url . '">' .
-				'<div><img src="' . $img . '" width="32" height="32" border="0" align="middle" style="float: none" /></div>' .
-				'<span class="' . $class . '">' . $lbl . '</span></a></div>';
+			'<div><img src="' . $img . '" width="32" height="32" border="0" align="middle" style="float: none" /></div>' .
+			'<span class="' . $class . '">' . $lbl . '</span></a></div>';
 	}
 }

@@ -17,7 +17,7 @@ jimport('joomla.application.component.model');
  * @property mixed _id
  * @package  BibleStudy.Site
  * @since    7.0.0
- * @todo looks like some of the functions are not needed any longer. bcc
+ * @todo     looks like some of the functions are not needed any longer. bcc
  */
 class BiblestudyModelMediaplayer extends JModelLegacy
 {
@@ -64,26 +64,26 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 		if (empty($this->_data))
 		{
 			$query = ' SELECT mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type,'
-					. 'mf.podcast_id, mf.published AS mfpub, mf.createdate,'
-					. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-					. 's.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-					. ' s.media_hours, s.media_minutes, s.media_seconds, s.series_id, s.studynumber, s.studytext,'
-					. 's.booknumber2, s.chapter_begin2, s.chapter_end2, s.verse_begin2, s.verse_end2,'
-					. ' sr.id AS srid, sr.server_path,'
-					. ' f.id AS fid, f.folderpath,'
-					. ' t.id AS tid, t.teachername,'
-					. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-					. ' st.id AS stid, st.series_text AS stext,'
-					. ' mt.id AS mtid, mt.mimetype'
-					. ' FROM #__bsms_mediafiles AS mf'
-					. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-					. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-					. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-					. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-					. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-					. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-					. ' LEFT JOIN #__bsms_series AS st ON (st.id = s.series_id)'
-					. ' WHERE mf.id = ' . $this->_id;
+				. 'mf.podcast_id, mf.published AS mfpub, mf.createdate,'
+				. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+				. 's.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+				. ' s.media_hours, s.media_minutes, s.media_seconds, s.series_id, s.studynumber, s.studytext,'
+				. 's.booknumber2, s.chapter_begin2, s.chapter_end2, s.verse_begin2, s.verse_end2,'
+				. ' sr.id AS srid, sr.server_path,'
+				. ' f.id AS fid, f.folderpath,'
+				. ' t.id AS tid, t.teachername,'
+				. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+				. ' st.id AS stid, st.series_text AS stext,'
+				. ' mt.id AS mtid, mt.mimetype'
+				. ' FROM #__bsms_mediafiles AS mf'
+				. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
+				. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
+				. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
+				. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
+				. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
+				. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
+				. ' LEFT JOIN #__bsms_series AS st ON (st.id = s.series_id)'
+				. ' WHERE mf.id = ' . $this->_id;
 
 			$this->_db->setQuery($query);
 			$this->_data = $this->_db->loadObject();
@@ -196,8 +196,8 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 			$cids = implode(',', $cid);
 
 			$query = 'UPDATE #__bsms_mediafiles'
-					. ' SET published = ' . intval($publish)
-					. ' WHERE id IN ( ' . $cids . ' )';
+				. ' SET published = ' . intval($publish)
+				. ' WHERE id IN ( ' . $cids . ' )';
 			$this->_db->setQuery($query);
 
 			if (!$this->_db->query())
@@ -207,6 +207,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 				return false;
 			}
 		}
+
 		return true;
 	}
 

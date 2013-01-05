@@ -81,7 +81,7 @@ class CBiblestudyVersion
 		$version = self::versionObject();
 
 		return '<table><tr><td><strong>' . JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY') . '</strong></td></tr><tr><td>' . JText::_('JBS_CPL_CURRENT_VERSION')
-				. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
+			. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
 	}
 
 	/**

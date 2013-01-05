@@ -30,13 +30,13 @@ class BiblestudyModelTemplate extends JModelAdmin
 	 */
 	public function store($data = null, $tmpl = null)
 	{
-		$row = $this->getTable();
+		$row   = $this->getTable();
 		$input = new JInput;
 
 		// @todo Clean this up
 		if (!isset($data))
 		{
-			$data  = $input->get('post');
+			$data = $input->get('post');
 		}
 		$data['tmpl'] = $input->get('tmpl', '', 'string');
 

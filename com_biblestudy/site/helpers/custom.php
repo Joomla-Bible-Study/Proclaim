@@ -46,8 +46,8 @@ class JBSMCustom extends JBSMElements
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid   = $this->getElementid($rowid, $row, $params, $admin_params, $template);
-			$custom      = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$elementid = $this->getElementid($rowid, $row, $params, $admin_params, $template);
+			$custom    = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
 		$elementid->element = $custom;

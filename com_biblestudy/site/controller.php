@@ -82,8 +82,8 @@ class BiblestudyController extends JControllerLegacy
 		}
 
 		if ($user->get('id') ||
-				($_SERVER['REQUEST_METHOD'] == 'POST' &&
-						($vName == 'archive'))
+			($_SERVER['REQUEST_METHOD'] == 'POST' &&
+				($vName == 'archive'))
 		)
 		{
 			$cachable = false;
@@ -254,7 +254,7 @@ class BiblestudyController extends JControllerLegacy
 			$ToEmail = $comment_mailfrom;
 		}
 		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title . ' - ' . $comment_study_date . ' '
-				. JText::_('JBS_STY_ON') . ': ' . $comment_date;
+			. JText::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
 		{

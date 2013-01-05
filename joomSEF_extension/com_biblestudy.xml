@@ -16,19 +16,19 @@
     </files>
     <params>
         <param name="ignoreSource" type="radio" default="2"
-                       label="Ignore multiple sources:"
-                       description="You can choose to override the default behaviour of this option.">
+               label="Ignore multiple sources:"
+               description="You can choose to override the default behaviour of this option.">
             <option value="2">Use global config</option>
             <option value="0">No</option>
             <option value="1">Yes</option>
         </param>
         <param name="itemid" type="radio" default="0" label="Itemid handling:"
-                       description="You can choose to override the default behaviour with your own Itemid.">
+               description="You can choose to override the default behaviour with your own Itemid.">
             <option value="0">Use global config</option>
             <option value="1">Override</option>
         </param>
         <param name="overrideId" type="text" default="" label="Override Itemid:"
-                       description="Itemid to always use with this component. Leave blank to use the default one.">
+               description="Itemid to always use with this component. Leave blank to use the default one.">
         </param>
     </params>
 </install>

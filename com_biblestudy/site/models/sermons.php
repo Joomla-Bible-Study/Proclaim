@@ -172,7 +172,7 @@ class BiblestudyModelSermons extends JModelList
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$template_params = JBSMParams::getTemplateparams();
-		$t_params = $template_params->params;
+		$t_params        = $template_params->params;
 		$query->select(
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
@@ -180,7 +180,7 @@ class BiblestudyModelSermons extends JModelList
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
 		                study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
 		                study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2, study.verse_end2, study.verse_begin2 ') . ','
-					. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+				. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -498,9 +498,9 @@ class BiblestudyModelSermons extends JModelList
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
-							' AND study.chapter_begin >= ' . $chb .
-							' AND study.chapter_end <= ' . $che . ')' .
-							'OR study.booknumber2 = ' . (int) $book
+						' AND study.chapter_begin >= ' . $chb .
+						' AND study.chapter_end <= ' . $che . ')' .
+						'OR study.booknumber2 = ' . (int) $book
 				);
 			}
 			else
@@ -644,11 +644,11 @@ class BiblestudyModelSermons extends JModelList
 			$db    = $this->getDBO();
 			$query = $db->getQuery(true);
 			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
-					->from('#__bsms_studies')
-					->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-					->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-					->where('#__bsms_topics.published = 1')
-					->order('#__bsms_topics.topic_text ASC');
+				->from('#__bsms_studies')
+				->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
+				->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
+				->where('#__bsms_topics.published = 1')
+				->order('#__bsms_topics.topic_text ASC');
 			$db->setQuery($query);
 			$db_result = $db->loadObjectList();
 
@@ -905,11 +905,11 @@ class BiblestudyModelSermons extends JModelList
 			$i++;
 			$sermon_id = $sermon->id;
 			$query     = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-					. ' FROM #__bsms_mediafiles'
-					. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-					. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-					. ' WHERE `study_id` ='
-					. $sermon_id;
+				. ' FROM #__bsms_mediafiles'
+				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
+				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
+				. ' WHERE `study_id` ='
+				. $sermon_id;
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}

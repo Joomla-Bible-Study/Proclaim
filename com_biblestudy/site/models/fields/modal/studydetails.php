@@ -69,8 +69,8 @@ class JFormFieldModal_studydetails extends JFormField
 		$db = JFactory::getDBO();
 		$db->setQuery(
 			'SELECT studytitle AS name' .
-					' FROM #__bsms_studies' .
-					' WHERE id = ' . (int) $this->value
+				' FROM #__bsms_studies' .
+				' WHERE id = ' . (int) $this->value
 		);
 		$title = $db->loadResult();
 
@@ -83,9 +83,9 @@ class JFormFieldModal_studydetails extends JFormField
 
 		JHTML::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
-				htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
+			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
 		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_STUDY') .
-				'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_STUDY') . '</a></div></div>' . "\n";
+			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_STUDY') . '</a></div></div>' . "\n";
 
 		// The active study id field.
 		if (0 == (int) $this->value)

@@ -18,7 +18,7 @@ JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestud
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- * @todo finish titles
+ * @todo     finish titles
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
@@ -149,7 +149,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$item->serieslink   = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
 			$teacherimage       = $images->getTeacherImage($item->thumb, $image2 = null);
 			$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
-					'" width="' . $teacherimage->width . '" alt="" />';
+				'" width="' . $teacherimage->width . '" alt="" />';
 
 			if (isset($item->description))
 			{

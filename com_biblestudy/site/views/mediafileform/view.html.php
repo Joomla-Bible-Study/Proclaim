@@ -140,7 +140,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$serverlist          = array_merge($server, $db->loadObjectList());
 		$idsel               = "'SWFUpload_0'";
 		$ref1                = JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"'
-				. '', 'value', 'text', ''
+			. '', 'value', 'text', ''
 		);
 		$this->upload_server = $ref1;
 
@@ -157,7 +157,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$folderlist          = array_merge($folder, $db->loadObjectList());
 		$idsel               = "'SWFUpload_0'";
 		$ref2                = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"'
-				. '', 'value', 'text', ''
+			. '', 'value', 'text', ''
 		);
 		$this->upload_folder = $ref2;
 

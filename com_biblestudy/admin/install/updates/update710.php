@@ -57,8 +57,8 @@ class JBS710Update
 		{
 			$query = $db->getQuery(true);
 			$query->select('*')
-					->from('#__bsms_styles')
-					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
+				->from('#__bsms_styles')
+				->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 			$db->setQuery($query);
 			$result = $db->loadObject();
 
@@ -66,8 +66,8 @@ class JBS710Update
 			{
 				$query = $db->getQuery('true');
 				$query->update('#__bsms_styles')
-						->set($db->qn('stylecode') . '=' . $db->q($db->escape($old_css)))
-						->where($db->qn('id') . '=' . (int) $db->q($result->id));
+					->set($db->qn('stylecode') . '=' . $db->q($db->escape($old_css)))
+					->where($db->qn('id') . '=' . (int) $db->q($result->id));
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -320,8 +320,8 @@ div.listingfooter ul li {
 			{
 				$query = $db->getQuery(true);
 				$query->select('*')
-						->from('#__bsms_styles')
-						->where($db->qn('filename') . '=' . $db->q('biblestudy'));
+					->from('#__bsms_styles')
+					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 				$db->setQuery($query);
 				$result = $db->loadObject();
 				JBSMDbHelper::reloadtable($result, 'Style');
@@ -338,8 +338,8 @@ div.listingfooter ul li {
 		{
 			$query = $db->getQuery(true);
 			$query->select('*')
-					->from('#__bsms_styles')
-					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
+				->from('#__bsms_styles')
+				->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 			$db->setQuery($query);
 			$result = $db->loadObject();
 

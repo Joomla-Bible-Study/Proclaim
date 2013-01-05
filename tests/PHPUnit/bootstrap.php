@@ -6,30 +6,33 @@
  * Joomla is assumed to include the /unittest/ directory.
  * eg, /path/to/joomla/unittest/
  *
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://www.phpunit.de/manual/current/en/installation.html
+ * @copyright      Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           http://www.phpunit.de/manual/current/en/installation.html
  */
 // Load the custom initialisation file if it exists.
 //if (file_exists('config.php')) {
-    include 'config.php';
+include 'config.php';
 //}
 
 // Define expected Joomla constants.
 define('_JEXEC', 1);
 
-if (!defined('JPATH_BASE')) {
-    // JPATH_BASE can be defined in init.php
-    // This gets around problems with soft linking the unittest folder into a Joomla tree,
-    // or using the unittest framework from a central location.
-    define('JPATH_BASE', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/www/joomla_development');
+if (!defined('JPATH_BASE'))
+{
+	// JPATH_BASE can be defined in init.php
+	// This gets around problems with soft linking the unittest folder into a Joomla tree,
+	// or using the unittest framework from a central location.
+	define('JPATH_BASE', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/www/joomla_development');
 }
 
-if (!defined('JPATH_TESTS_JBS')) {
-    define('JPATH_TESTS_JBS', dirname(dirname(dirname(__FILE__))));
+if (!defined('JPATH_TESTS_JBS'))
+{
+	define('JPATH_TESTS_JBS', dirname(dirname(dirname(__FILE__))));
 }
-if (!defined('JPATH_TESTS')) {
-    define('JPATH_TESTS', JPATH_BASE . '/tests/unit');
+if (!defined('JPATH_TESTS'))
+{
+	define('JPATH_TESTS', JPATH_BASE . '/tests/unit');
 }
 
 // Fix magic quotes.
@@ -63,6 +66,7 @@ JError::setErrorHandling(E_NOTICE, 'ignore');
 JError::setErrorHandling(E_WARNING, 'ignore');
 JError::setErrorHandling(E_ERROR, 'ignore');
 
-class bootstrap {
+class bootstrap
+{
 
 }

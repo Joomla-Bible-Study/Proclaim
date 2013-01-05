@@ -56,8 +56,8 @@ class JFormFieldModal_Study extends JFormField
 		$db = JFactory::getDBO();
 		$db->setQuery(
 			'SELECT studytitle AS title' .
-					' FROM #__bsms_studies' .
-					' WHERE id = ' . (int) $this->value
+				' FROM #__bsms_studies' .
+				' WHERE id = ' . (int) $this->value
 		);
 		$title = $db->loadResult();
 
@@ -76,7 +76,7 @@ class JFormFieldModal_Study extends JFormField
 		$html[] = '<div class="button2-left">';
 		$html[] = '  <div class="blank">';
 		$html[] = '	<a class="modal" title="' . JText::_('JBS_CMN_STUDY_CHANGE') . '"  href="' . $link .
-				'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_STUDY_CHANGE') . '</a>';
+			'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_STUDY_CHANGE') . '</a>';
 		$html[] = '  </div>';
 		$html[] = '</div>';
 

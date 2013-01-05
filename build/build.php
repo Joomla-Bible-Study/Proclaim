@@ -116,7 +116,8 @@ for ($num = $release - 1; $num >= 0; $num--)
 	foreach ($files AS $file)
 	{
 		if (substr($file, 2, 5) != 'tests' && substr($file, 2, 12) != 'installation' && substr($file, 2, 5) != 'build'
-			&& substr($file, 2, 4) != '.git' && substr($file, 2, 4) != 'docs')
+			&& substr($file, 2, 4) != '.git' && substr($file, 2, 4) != 'docs'
+		)
 		{
 			// Don't add deleted files to the list
 			if (substr($file, 0, 1) != 'D')
@@ -150,15 +151,15 @@ for ($num = $release - 1; $num >= 0; $num--)
 	);
 	system(
 		'tar --create --gzip  --no-recursion --directory ' . $full . ' --file packages' . $version .
-				'/Joomla_' . $version . '.' . $num . '_to_' . $full .
-				'-Stable-Patch_Package.tar.gz  --files-from diffconvert/' .
-				$version . '.' . $num . '> /dev/null'
+			'/Joomla_' . $version . '.' . $num . '_to_' . $full .
+			'-Stable-Patch_Package.tar.gz  --files-from diffconvert/' .
+			$version . '.' . $num . '> /dev/null'
 	);
 
 	chdir('' . $full);
 	system(
 		'zip ../packages' . $version . '/Joomla_' . $version . '.' . $num . '_to_' . $full .
-				'-Stable-Patch_Package.zip -@ < ../diffconvert/' . $version . '.' . $num . '> /dev/null'
+			'-Stable-Patch_Package.zip -@ < ../diffconvert/' . $version . '.' . $num . '> /dev/null'
 	);
 	chdir('..');
 }

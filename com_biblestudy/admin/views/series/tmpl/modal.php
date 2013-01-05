@@ -75,7 +75,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			?>
         <tr class="row<?php echo $i % 2; ?>">
             <td>
-                <a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->series_text)); ?>');">
+                <a class="pointer"
+                   onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->series_text)); ?>');">
 					<?php echo $this->escape($item->series_text); ?>
                 </a>
             </td>

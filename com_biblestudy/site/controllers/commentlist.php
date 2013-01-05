@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 // -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/comments.php';
 JLoader::register(
 	'BiblestudyControllerComments',
-		JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/comments.php'
+	JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/comments.php'
 );
 
 /**

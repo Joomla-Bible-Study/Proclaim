@@ -35,12 +35,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (extension_loaded('xdebug')) {
-    ini_set('xdebug.show_exception_trace', 0);
+if (extension_loaded('xdebug'))
+{
+	ini_set('xdebug.show_exception_trace', 0);
 }
 
-if (strpos('C:\xampp\php\.\php.exe', '@php_bin') === 0) {
-    set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
+if (strpos('C:\xampp\php\.\php.exe', '@php_bin') === 0)
+{
+	set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 }
 
 require_once 'PHPUnit/Util/Filter.php';

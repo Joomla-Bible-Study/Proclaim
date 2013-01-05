@@ -72,7 +72,7 @@ class modJBSMHelper
                         study.media_seconds, study.series_id, study.chapter_begin2, study.chapter_end2, study.verse_begin2,
 						study.verse_end2, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
                         study.user_id, study.studynumber,'
-				. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 
 		// Join over mediafile ids
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
@@ -336,8 +336,8 @@ class modJBSMHelper
 		$db         = JFactory::getDBO();
 		$templateid = $params->get('modulemenuid', 1);
 		$query      = 'SELECT *'
-				. ' FROM #__bsms_templates'
-				. ' WHERE published = 1 AND id = ' . $templateid;
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = ' . $templateid;
 		$db->setQuery($query);
 		$template = $db->loadObjectList();
 
@@ -353,8 +353,8 @@ class modJBSMHelper
 	{
 		$db    = JFactory::getDBO();
 		$query = 'SELECT *'
-				. ' FROM #__bsms_admin'
-				. ' WHERE id = 1';
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
 		$db->setQuery($query);
 		$admin = $db->loadObjectList();
 

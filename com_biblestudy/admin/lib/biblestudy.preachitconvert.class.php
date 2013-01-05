@@ -138,7 +138,7 @@ class JBSPIconvert
 			foreach ($piservers AS $pi)
 			{
 				$query = 'INSERT INTO #__bsms_servers SET `server_path` = "' . $pi->server . '", `server_name` = "' . $pi->server
-						. '", `published` = "' . $pi->published . '"';
+					. '", `published` = "' . $pi->published . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -156,7 +156,7 @@ class JBSPIconvert
 					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
 				}
 				$query = 'INSERT INTO #__bsms_folders SET `foldername` = "' . $pi->name . '", `folderpath` = "' . $pi->server
-						. '/' . $pi->folder . '/", `published` = "' . $pi->published . '"';
+					. '/' . $pi->folder . '/", `published` = "' . $pi->published . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -217,10 +217,10 @@ class JBSPIconvert
 				$object         = $db->loadObject();
 				$newfolderlarge = $object->folderpath;
 				$query          = 'INSERT INTO #__bsms_teachers SET `teachername` = "' . $pi->teacher_name . '", `alias` = "' . $pi->alias
-						. '", `title` = "' . $pi->teacher_role . '", `image` = "' . $newfolderlarge . $pi->teacher_image_lrg . '", `thumb` = "'
-						. $newfoldersmall . $pi->teacher_image_sm . '", `email` = "' . $pi->teacher_email . '", `website` = "' . $pi->teacher_website . '",
+					. '", `title` = "' . $pi->teacher_role . '", `image` = "' . $newfolderlarge . $pi->teacher_image_lrg . '", `thumb` = "'
+					. $newfoldersmall . $pi->teacher_image_sm . '", `email` = "' . $pi->teacher_email . '", `website` = "' . $pi->teacher_website . '",
                     `short` = "' . $db->escape($pi->teacher_description) . '", `list_show` = "' . $pi->teacher_view . '", `published` = "'
-						. $pi->published . '"';
+					. $pi->published . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -319,7 +319,7 @@ class JBSPIconvert
 				$newfolderlarge = $object->folderpath;
 				$query          = 'INSERT INTO #__bsms_series SET `series_text` = "' . $pi->series_name . '", `alias` = "' . $pi->series_alias . '",
                     `description` = "' . $pi->series_description . '", `series_thumbnail` = "' . $newfoldersmall . $pi->series_image_sm
-						. '", `published` = "' . $pi->published . '"';
+					. '", `published` = "' . $pi->published . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -355,10 +355,10 @@ class JBSPIconvert
 			{
 				$query = 'INSERT INTO #__bsms_podcast SET `title` = "' . $pi->name . '", `website` = "' . $pi->website . '",
                     `description` = "' . $pi->description . '", `image` = "' . $pi->image . '", `imageh` = "' . $pi->imagehgt . '", `imagew` = "'
-						. $pi->imagewth . '", `author` = "' . $pi->author . '", `filename` = "' . $pi->filename . '", `language` = "' . $pi->language . '",
+					. $pi->imagewth . '", `author` = "' . $pi->author . '", `filename` = "' . $pi->filename . '", `language` = "' . $pi->language . '",
                     `editor_name` = "' . $pi->editor . '", `editor_email` = "' . $pi->email . '", `podcastlimit` = "' . $pi->records . '",
                     `episodetitle` = "' . $pi->itunestitle . '", `detailstemplateid` = "1", `published` = "' . $pi->published
-						. '", `podcastsearch` = "' . $pi->search . '"';
+					. '", `podcastsearch` = "' . $pi->search . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -510,7 +510,7 @@ class JBSPIconvert
                      `alias` = "' . $alias . '", `studyintro` = "' . $studyintro . '", `media_hours` = "' . $media_hours . '",
                      `media_minutes` = "' . $media_minutes . '", `media_seconds` = "' . $media_seconds . '", `series_id` = "' . $series_id . '",
                      `studytext` = "' . $studytext . '", `thumbnailm` = "' . $thumbnailm . '", `params` = "' . $params
-						. '", `access` = "' . $access . '"';
+					. '", `access` = "' . $access . '"';
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -581,16 +581,16 @@ class JBSPIconvert
 		}
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
-				. $this->cnoadd . '</td></tr>'
-				. '</table>';
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
+			. $this->cnoadd . '</td></tr>'
+			. '</table>';
 
 		return $piconversion;
 	}
@@ -676,8 +676,8 @@ class JBSPIconvert
 				case 4:
 					// Bliptv
 					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
-							. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-							. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
+						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
+						. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -738,7 +738,7 @@ class JBSPIconvert
 				case 3:
 					// Youtube
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
-							. '" frameborder="0" allowfullscreen></iframe>';
+						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '13';
@@ -928,8 +928,8 @@ class JBSPIconvert
 				if ($pi->id == $oldid)
 				{
 					$query = 'INSERT INTO #__bsms_comments SET `published` = "' . $pi->published . '", `study_id` = "' . $newid .
-							'", `user_id` = "' . $pi->user_id . '", `full_name` = "' . $pi->full_name . '", `comment_date` = "'
-							. $pi->comment_date . '", `comment_text` = "' . $db->escape($pi->comment_text) . '"';
+						'", `user_id` = "' . $pi->user_id . '", `full_name` = "' . $pi->full_name . '", `comment_date` = "'
+						. $pi->comment_date . '", `comment_text` = "' . $db->escape($pi->comment_text) . '"';
 					$db->setQuery($query);
 
 					if (!$db->execute())

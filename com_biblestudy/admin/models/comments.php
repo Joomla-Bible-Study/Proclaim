@@ -55,7 +55,7 @@ class BiblestudyModelComments extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
+		$app    = JFactory::getApplication();
 		$layout = $app->input->get('layout');
 
 		// Adjust the context to support modal layouts.

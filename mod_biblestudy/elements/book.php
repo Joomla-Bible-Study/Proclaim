@@ -45,10 +45,10 @@ public var $_name = 'book';
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT DISTINCT #__bsms_studies.booknumber, #__bsms_books.bookname, #__bsms_books.booknumber AS bnum, #__bsms_books.id AS bid' .
-				' FROM #__bsms_studies' .
-				' LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)' .
-				' WHERE #__bsms_books.published = 1' .
-				' ORDER BY #__bsms_books.booknumber ASC';
+			' FROM #__bsms_studies' .
+			' LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)' .
+			' WHERE #__bsms_books.published = 1' .
+			' ORDER BY #__bsms_books.booknumber ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
 		array_unshift($options, JHTML::_('select.option', '0', '- ' . JText::_('Select a Book') . ' -', 'booknumber', 'bookname'));

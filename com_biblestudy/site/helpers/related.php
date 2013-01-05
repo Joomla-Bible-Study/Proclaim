@@ -240,9 +240,9 @@ class RelatedStudies
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-					. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
-					. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
-					. ' ' . $studyrecord->chapter_begin . '</option>';
+				. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
+				. ' ' . $studyrecord->chapter_begin . '</option>';
 		}
 		$related .= '</select>';
 

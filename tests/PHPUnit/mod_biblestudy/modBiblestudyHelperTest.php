@@ -4,85 +4,85 @@
  */
 class modJBSMHelperTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var modJBSMHelper
-     */
-    protected $object;
+	/**
+	 * @var modJBSMHelper
+	 */
+	protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-        $this->object = new modJBSMHelper;
-    }
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		$this->object = new modJBSMHelper;
+	}
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+	}
 
-    /**
-     * @covers modJBSMHelper::getLatest
-     * @todo   Implement testGetLatest().
-     */
-    public function testGetLatest()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+	/**
+	 * @covers modJBSMHelper::getLatest
+	 * @todo   Implement testGetLatest().
+	 */
+	public function testGetLatest()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-    /**
-     * @covers modJBSMHelper::_buildContentWhere
-     * @todo   Implement test_buildContentWhere().
-     */
-    public function test_buildContentWhere()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+	/**
+	 * @covers modJBSMHelper::_buildContentWhere
+	 * @todo   Implement test_buildContentWhere().
+	 */
+	public function test_buildContentWhere()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-    /**
-     * @covers modJBSMHelper::getTemplate
-     * @todo   Implement testGetTemplate().
-     */
-    public function testGetTemplate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+	/**
+	 * @covers modJBSMHelper::getTemplate
+	 * @todo   Implement testGetTemplate().
+	 */
+	public function testGetTemplate()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-    /**
-     * @covers modJBSMHelper::getAdmin
-     * @todo   Implement testGetAdmin().
-     */
-    public function testGetAdmin()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+	/**
+	 * @covers modJBSMHelper::getAdmin
+	 * @todo   Implement testGetAdmin().
+	 */
+	public function testGetAdmin()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 
-    /**
-     * @covers modJBSMHelper::renderStudy
-     * @todo   Implement testRenderStudy().
-     */
-    public function testRenderStudy()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+	/**
+	 * @covers modJBSMHelper::renderStudy
+	 * @todo   Implement testRenderStudy().
+	 */
+	public function testRenderStudy()
+	{
+		// Remove the following lines when you implement this test.
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+	}
 }

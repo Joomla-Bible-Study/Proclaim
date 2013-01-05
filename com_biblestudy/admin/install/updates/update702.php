@@ -68,6 +68,7 @@ position:static !important;}';
 				return false;
 			}
 		}
+
 		return true;
 	}
 

@@ -49,10 +49,10 @@ if (!$t)
                 <tr class="seriesreturnlink">
                     <td>
 						<?php echo '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t)
-							. '"><< ' . JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
-							. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
-							. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >>'
-							. '</a>';
+						. '"><< ' . JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
+						. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
+						. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >>'
+						. '</a>';
 						?>
                     </td>
                 </tr>

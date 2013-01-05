@@ -114,7 +114,7 @@ class JBSPagebuilder
 		{
 			$image                 = $images->getStudyThumbnail($item->thumbnailm);
 			$page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
-					. '" alt="' . $item->studytitle . '" />';
+				. '" alt="' . $item->studytitle . '" />';
 		}
 		else
 		{
@@ -124,7 +124,7 @@ class JBSPagebuilder
 		{
 			$image                  = $images->getSeriesThumbnail($item->series_thumbnail);
 			$page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
-					. '" alt="' . $item->series_text . '" />';
+				. '" alt="' . $item->series_text . '" />';
 		}
 		else
 		{
@@ -146,7 +146,7 @@ class JBSPagebuilder
 		{
 			$image              = $images->getTeacherImage($item->image, $item->thumb);
 			$page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
-					. $item->teachername . '" />';
+				. $item->teachername . '" />';
 		}
 		else
 		{
@@ -274,15 +274,15 @@ class JBSPagebuilder
 				if ($compat_mode == 0)
 				{
 					$downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
-							(int) $mediaid . '&view=sermons&task=download">';
+						(int) $mediaid . '&view=sermons&task=download">';
 				}
 				else
 				{
 					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-							$media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
+						$media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
 				}
 				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
-						$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+					$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type)
 			{
@@ -436,37 +436,37 @@ class JBSPagebuilder
 			$dispatcher = JDispatcher::getInstance();
 		}
 		$dispatcher->trigger('onContentPrepare', array(
-		                                              'com_biblestudy.sermon',
-		                                              & $item,
-		                                              & $params,
-		                                              $offset
-		                                         )
+				'com_biblestudy.sermon',
+				& $item,
+				& $params,
+				$offset
+			)
 		);
 
 		$item->event = new stdClass;
 
 		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
-		                                                                                   'com_biblestudy.sermon',
-		                                                                                   &$item,
-		                                                                                   &$params,
-		                                                                                   $offset
-		                                                                              ));
+			'com_biblestudy.sermon',
+			&$item,
+			&$params,
+			$offset
+		));
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
 		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
-		                                                                                         'com_biblestudy.sermon',
-		                                                                                         &$item,
-		                                                                                         &$params,
-		                                                                                         $offset
-		                                                                                    ));
+			'com_biblestudy.sermon',
+			&$item,
+			&$params,
+			$offset
+		));
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
 		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
-		                                                                                       'com_biblestudy.sermon',
-		                                                                                       &$item,
-		                                                                                       &$params,
-		                                                                                       $offset
-		                                                                                  ));
+			'com_biblestudy.sermon',
+			&$item,
+			&$params,
+			$offset
+		));
 		$item->event->afterDisplayContent = trim(implode("\n", $results));
 
 		return $item;

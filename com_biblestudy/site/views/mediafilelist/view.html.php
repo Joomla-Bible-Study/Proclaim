@@ -52,12 +52,12 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/**
 	 * @var object
 	 */
-	protected  $admin;
+	protected $admin;
 
 	/**
 	 * @var JRegistry
 	 */
-	protected  $params;
+	protected $params;
 
 	public $pageclass_sfx;
 	public $newlink;

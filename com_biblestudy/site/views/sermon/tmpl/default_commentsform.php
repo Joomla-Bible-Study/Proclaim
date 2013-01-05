@@ -33,7 +33,7 @@ switch ($this->item->params->get('link_comments', 0))
 {
 	case 0:
 		echo '<strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
-				. JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
+			. JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
 		?>
         <div id="comments" style="display:none;">
             <br/>

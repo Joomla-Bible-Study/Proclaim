@@ -52,14 +52,14 @@ class Dump_File
 
 		$protocol = $params->get('protocol', 'http://');
 		$query    = 'SELECT #__bsms_mediafiles.*,'
-				. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-				. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype'
-				. ' FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-				. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-				. ' WHERE #__bsms_mediafiles.id = ' . $mid . ' LIMIT 1';
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype'
+			. ' FROM #__bsms_mediafiles'
+			. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
+			. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
+			. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
+			. ' WHERE #__bsms_mediafiles.id = ' . $mid . ' LIMIT 1';
 		$db->setQuery($query);
 
 		$media = $db->LoadObject();
@@ -200,7 +200,7 @@ class Dump_File
 		$db = JFactory::getDBO();
 		$db->setQuery(
 			'UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('downloads') .
-					' = ' . $db->qn('downloads') . ' + 1 ' . ' WHERE id = ' . (int) $db->q($mid)
+				' = ' . $db->qn('downloads') . ' + 1 ' . ' WHERE id = ' . (int) $db->q($mid)
 		);
 		$db->execute();
 

@@ -84,7 +84,7 @@ $input = $app->input;
         <div class="control-group">
             <label style="max-width: 100%; padding: 0 5px 0 0;">
                 <!--suppress HtmlUnknownTarget -->
-	            <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
+                <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
 					<?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
                 </a>
             </label>

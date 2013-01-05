@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="biblestudy_package" basedir="." default="build">
-    <echo description="Build for Joomla Bible Study, Please modify location as you need." />
+    <echo description="Build for Joomla Bible Study, Please modify location as you need."/>
     <!-- set global properties for this build -->
     <property name="src" value="src"/>
     <property name="build" value="/Users/bcordis/NetBeansProjects/Joomla-Bible-Study/"/>

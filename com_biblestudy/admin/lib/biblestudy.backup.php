@@ -17,7 +17,7 @@ JLoader::register('JBSMDbHelper', BIBLESTUDY_PATH_ADMIN_HELPERS, '/dbhelpser.php
  * @package  BibleStudy.Admin
  * @since    7.1.0
  *
- * @todo Look like we are duplicating the Class
+ * @todo     Look like we are duplicating the Class
  */
 class JBSExport
 {
@@ -281,8 +281,8 @@ class JBSExport
 			}
 
 			while (!feof($file) &&
-					(!connection_aborted()) &&
-					($bytes_send < $new_length)
+				(!connection_aborted()) &&
+				($bytes_send < $new_length)
 			)
 			{
 				$buffer = fread($file, $chunksize);

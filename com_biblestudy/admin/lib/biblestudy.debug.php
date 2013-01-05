@@ -46,12 +46,12 @@ function Debug_Assert_callback($script, $line, $message)
  */
 function Trigger_Db_error($text = '', $back = 0)
 {
-	$db = JFactory::getDBO();
-	$dberror       = $db->stderr(true);
+	$db      = JFactory::getDBO();
+	$dberror = $db->stderr(true);
 	echo Debug_Call_Stack_info($back + 1);
 
 	JLoader::register('CBiblestudyVersion', dirname(__FILE__) . '/lib/version.php');
-	$CBiblestudyVersion = new CBiblestudyVersion;
+	$CBiblestudyVersion     = new CBiblestudyVersion;
 	$biblestudyVersion      = $CBiblestudyVersion->version();
 	$biblestudyPHPVersion   = $CBiblestudyVersion->PHPVersion();
 	$biblestudyMySQLVersion = $CBiblestudyVersion->MySQLVersion();
@@ -220,6 +220,6 @@ function Biblestudy_error($message, $level = E_USER_NOTICE, $back = 1)
 	$caller = $trace[$back];
 	trigger_error(
 		$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' . $caller['file']
-				. '</strong> on line <strong>' . $caller['line'] . '</strong>' . "\n<br /><br />Error reported", $level
+			. '</strong> on line <strong>' . $caller['line'] . '</strong>' . "\n<br /><br />Error reported", $level
 	);
 }

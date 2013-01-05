@@ -178,7 +178,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$this->input = new JInput;
 
 		// Need to override the parent method completely.
-		$tmpl = $this->input->get('tmpl');
+		$tmpl   = $this->input->get('tmpl');
 		$layout = $this->input->get('layout', 'edit');
 		$append = '';
 

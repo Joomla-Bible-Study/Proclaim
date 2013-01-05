@@ -47,8 +47,8 @@ class JBSAdmin
 		}
 		$query = $db->getQuery(true);
 		$query->select('element, published')
-				->from('#__plugins')
-				->where('#__plugins.element LIKE ' . $db->q('%jw_allvideos%'));
+			->from('#__plugins')
+			->where('#__plugins.element LIKE ' . $db->q('%jw_allvideos%'));
 		$db->setQuery($query);
 		$db->query();
 		$num_rows = $db->getNumRows();
@@ -73,7 +73,7 @@ class JBSAdmin
 		$results = array();
 
 		// Get the level at which users can enter studies
-		$admin        = JBSMParams::getAdmin();
+		$admin = JBSMParams::getAdmin();
 
 		/** @var $params JRegistry */
 		$params       = $admin->params;

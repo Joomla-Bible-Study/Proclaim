@@ -268,7 +268,7 @@ if (!$studieslisttemplateid)
 			if ($this->params->get('teacherlink', '1') > 0)
 			{
 				echo ' | <a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . (int) $this->item->id
-						. '&amp;t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
+					. '&amp;t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
 			}
 			?>
         </td>

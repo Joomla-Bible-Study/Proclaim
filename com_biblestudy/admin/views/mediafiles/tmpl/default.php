@@ -23,14 +23,15 @@ else
 }
 JHtml::_('behavior.multiselect');
 
-$app        = JFactory::getApplication();
-$user       = JFactory::getUser();
-$userId     = $user->get('id');
-$listOrder  = $this->escape($this->state->get('list.ordering'));
-$listDirn   = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'ordering';if ($saveOrder && BIBLESTUDY_CHECKREL)
+$app       = JFactory::getApplication();
+$user      = JFactory::getUser();
+$userId    = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$archived  = $this->state->get('filter.published') == 2 ? true : false;
+$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$saveOrder = $listOrder == 'ordering';
+if ($saveOrder && BIBLESTUDY_CHECKREL)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
@@ -50,7 +51,8 @@ $sortFields = $this->getSortFields();
         Joomla.tableOrdering(order, dirn, '');
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post"
+      name="adminForm" id="adminForm">
 <?php if (!empty($this->sidebar)): ?>
 <div id="j-sidebar-container" class="span2">
 	<?php echo $this->sidebar; ?>
@@ -182,7 +184,8 @@ foreach ($this->items as $i => $item) :
                   title="<?php echo $disabledLabel ?>">
                                             <i class="icon-menu"></i>
                                         </span>
-            <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
+            <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>"
+                   class="width-10 text-area-order "/>
 			<?php else : ?>
             <span class="sortable-handler inactive">
                                             <i class="icon-menu"></i>

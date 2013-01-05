@@ -36,7 +36,7 @@ class JFormFieldVirtuemart extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$params   = JComponentHelper::getParams('com_languages');
+		$params = JComponentHelper::getParams('com_languages');
 
 		// Use default joomla
 		$siteLang = $params->get('site', 'en-GB');

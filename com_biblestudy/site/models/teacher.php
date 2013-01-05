@@ -93,6 +93,7 @@ class BiblestudyModelTeacher extends JModelItem
 				if (empty($data))
 				{
 					$app->enqueueMessage(JText::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
+
 					return false;
 				}
 
