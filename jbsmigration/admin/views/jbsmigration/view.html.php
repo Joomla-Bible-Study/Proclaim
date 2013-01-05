@@ -1,13 +1,10 @@
 <?php
-
 /**
- * View for Html
- *
- * @package    BibleStudy
- * @subpackage JBSMigration.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @package     BibleStudy
+ * @subpackage  JBSMigration.Admin
+ * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -19,9 +16,9 @@ jimport('joomla.i18n.help');
 /**
  * View class for JBSMigration
  *
- * @package    BibleStudy
- * @subpackage JBSMigration
- * @since      7.0.2
+ * @package     BibleStudy
+ * @subpackage  JBSMigration
+ * @since       7.0.2
  */
 class jbsmigrationViewjbsmigration extends JView
 {
@@ -29,7 +26,9 @@ class jbsmigrationViewjbsmigration extends JView
 	/**
 	 * Set Display for the view
 	 *
-	 * @param string $tpl
+	 * @param   string  $tpl  ?
+	 *
+	 * @return void
 	 */
 	public function display($tpl = null)
 	{
@@ -43,6 +42,8 @@ class jbsmigrationViewjbsmigration extends JView
 
 	/**
 	 * Add the Toolbar to the view
+	 *
+	 * @return void
 	 */
 	public function addToolbar()
 	{

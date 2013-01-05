@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @subpackage  Model.BibleStudy
  * @since       7.1.0
  */
-class modJBSMHelper
+class ModJBSMHelper
 {
 
 	/**

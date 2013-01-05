@@ -1,13 +1,10 @@
 <?php
-
 /**
- * Install Script
- *
- * @package    BibleStudy
- * @subpackage Plugin.JBSPodcast
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSPodcast
+ * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
  * */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -15,21 +12,22 @@ defined('_JEXEC') or die;
 /**
  * Script file of jbspodcast component
  *
- * @package    BibleStudy
- * @subpackage Plugin.JBSPodcast
- * @since      7.0.4
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSPodcast
+ * @since       7.0.4
  */
 class plgSystemjbspodcastInstallerScript
 {
+	public $is700;
 
 	/**
 	 * method to install the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function install($parent)
+	public function install($parent)
 	{
 
 	}
@@ -37,11 +35,11 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function uninstall($parent)
+	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
@@ -50,21 +48,23 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to update the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function update($parent)
+	public function update($parent)
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
 		$db = JFactory::getDBO();
+
 		// First see if there is an update table
 		$tables      = $db->getTableList();
 		$prefix      = $db->getPrefix();
 		$updatetable = $prefix . 'jbspodcast_timeset';
 		$updatefound = false;
 		$this->is700 = false;
+
 		foreach ($tables as $table)
 		{
 			if ($table == $updatetable)
@@ -74,7 +74,7 @@ class plgSystemjbspodcastInstallerScript
 		}
 		if (!$updatefound)
 		{
-			//Do the query here to create the table. This will tell Joomla to update the db from this version on
+			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
@@ -93,24 +93,23 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param string $type
-	 * @param string $parent
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, $parent)
 	{
-		// $parent is the class calling this method
-		// $type is the type of change (install, update or discover_install)
-		//
-		// check to see if we are dealing with version 7.0.0 and create the update table if needed
+		// Check to see if we are dealing with version 7.0.0 and create the update table if needed
 		$db = JFactory::getDBO();
+
 		// First see if there is an update table
 		$tables      = $db->getTableList();
 		$prefix      = $db->getPrefix();
 		$updatetable = $prefix . 'jbspodcast_update';
 		$updatefound = false;
 		$this->is700 = false;
+
 		foreach ($tables as $table)
 		{
 			if ($table == $updatetable)
@@ -120,7 +119,7 @@ class plgSystemjbspodcastInstallerScript
 		}
 		if (!$updatefound)
 		{
-			//Do the query here to create the table. This will tell Joomla to update the db from this version on
+			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = 'CREATE TABLE IF NOT EXISTS #__jbspodcast_update (
                               id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                               version VARCHAR(255) DEFAULT NULL,
@@ -137,12 +136,12 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param string $type
-	 * @param string $parent
+	 * @param   string  $type    ?
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function postflight($type, $parent)
+	public function  postflight($type, $parent)
 	{
 		// $parent is the class calling this method
 		// $type is the type of change (install, update or discover_install)

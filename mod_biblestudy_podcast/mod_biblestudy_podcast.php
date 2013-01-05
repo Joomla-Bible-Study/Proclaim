@@ -1,21 +1,22 @@
 <?php
-
 /**
  * Podcast Model
  *
- * @package    BibleStudy
- * @subpackage Model.Podcast
- * @author     Joomla Bible Study Team
- * @copyright  2012
- * @desc a module to display the podcast subscription table
+ * @package     BibleStudy
+ * @subpackage  Model.Podcast
+ * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
  */
-// no direct access
+// No direct access
 defined('_JEXEC') or die;
 
 // Include the syndicate functions only once
 require_once dirname(__FILE__) . '/helper.php';
 
-$go = modBibleStudyPodcast::checkforcombiblestudy($params);
+$go             = modBibleStudyPodcast::checkforcombiblestudy($params);
+$templateparams = null;
+
 if (!$go)
 {
 	echo "Extension Bible Study not present or enabled";
@@ -24,20 +25,25 @@ else
 {
 	$templateparams = modBibleStudyPodcast::getTemplateParams($params);
 }
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
+JLoader::register('PodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 
-//load the css
+// Load the css
 $document = JFactory::getDocument();
 $css      = $templateparams->get('css');
-if (!$css || $css == "-1"):
+
+if (!$css || $css == "-1")
+{
 	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-else:
+}
+else
+{
 	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-endif;
+}
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-//run the podcast subscription
-$podcast   = new podcastSubscribe();
+
+// Run the podcast subscription
+$podcast   = new podcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-//display the module
+// Display the module
 require JModuleHelper::getLayoutPath('mod_biblestudy_podcast', 'default');

@@ -13,6 +13,6 @@ $row = $study;
 //FIXME not working;
 
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
-$listing = JBSMListing::getListing($row, $params, $oddeven, $admin_params);
+$JBSMListing = new JBSMListing;
+$listing     = $JBSMListing->getListing($row, $params, $oddeven, $admin_params, $template, $ismodule);
 echo $listing;

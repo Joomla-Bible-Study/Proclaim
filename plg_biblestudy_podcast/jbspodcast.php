@@ -1,13 +1,12 @@
 <?php
-
 /**
  * Podcast Plugin
  *
- * @package    BibleStudy
- * @subpackage Plugin.JBSPodcast
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSPodcast
+ * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
@@ -17,9 +16,9 @@ jimport('joomla.plugin.plugin');
 /**
  * Podcast plugin class
  *
- * @package    BibleStudy
- * @subpackage Plugin.JBSPodcast
- * @since      7.0.0
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSPodcast
+ * @since       7.0.0
  */
 class PlgSystemJbspodcast extends JPlugin
 {
@@ -27,13 +26,10 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @access      protected
-	 *
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 *
-	 * @since       1.5
-	 *              based on plg_weblinks
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
 	 */
 	public function __construct(& $subject, $config)
 	{
@@ -46,16 +42,19 @@ class PlgSystemJbspodcast extends JPlugin
 
 	/**
 	 * Initialise
+	 *
+	 * @return void
 	 */
-	function onAfterInitialise()
+	public function onAfterInitialise()
 	{
 
 
 		$plugin = JPluginHelper::getPlugin('system', 'jbspodcast');
 		$params = $this->params;
 
-		//First check to see what method of updating the podcast we are using
+		// First check to see what method of updating the podcast we are using
 		$method = $params->get('method', '0');
+
 		if ($method == '0')
 		{
 			$check = $this->checktime($params);
@@ -66,28 +65,24 @@ class PlgSystemJbspodcast extends JPlugin
 		}
 		if ($check)
 		{
-			//perform the podcast and email and update time
+			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
 
-			//If we have run the podcastcheck and it returned no errors then the last thing we do is reset the time we did it to current
-			//	if ($dopodcast)
-			//	{
-			$updatetime = $this->updatetime();
-			//	}
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
 				if ($params->get('email') > 1)
 				{
 					$iserror = substr_count($dopodcast, 'not');
+
 					if ($iserror)
 					{
-						$email = $this->doEmail($params, $dopodcast);
+						$this->doEmail($params, $dopodcast);
 					}
 				}
 				else
 				{
-					$email = $this->doEmail($params, $dopodcast);
+					$this->doEmail($params, $dopodcast);
 				}
 			}
 		}
@@ -96,11 +91,11 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param array $params
+	 * @param   object  $params  ?
 	 *
 	 * @return boolean
 	 */
-	function checktime($params)
+	public function checktime($params)
 	{
 
 		$now = time();
@@ -111,6 +106,7 @@ class PlgSystemJbspodcast extends JPlugin
 		$frequency  = $params->get('xhours', '86400');
 		$difference = $frequency * 3600;
 		$checkit    = $now - $lasttime;
+
 		if ($checkit > $difference)
 		{
 			return true;
@@ -124,15 +120,15 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param array $params
+	 * @param   object  $params  ?
 	 *
 	 * @return boolean
 	 */
-	function checkdays($params)
+	public function checkdays($params)
 	{
 		$checkdays = false;
 		$config    = & JFactory::getConfig();
-		$offset    = $config->getValue('config.offset');
+		$offset    = $config->get('config.offset');
 
 		$now = time();
 		$db  = JFactory::getDBO();
@@ -143,6 +139,7 @@ class PlgSystemJbspodcast extends JPlugin
 		$date       = getdate($now);
 		$day        = $date['wday'];
 		$systemhour = $date['hours'];
+
 		if ($params->get('offset', '0') > 0)
 		{
 			$hour = $systemhour + $offset;
@@ -228,13 +225,14 @@ class PlgSystemJbspodcast extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	function updatetime()
+	public function updatetime()
 	{
 		$time = time();
 		$db   = JFactory::getDBO();
 		$db->setQuery('UPDATE `#__jbspodcast_timeset` SET `timeset` = ' . $time);
 		$db->query();
 		$updateresult = $db->getAffectedRows();
+
 		if ($updateresult > 0)
 		{
 			return true;
@@ -250,11 +248,11 @@ class PlgSystemJbspodcast extends JPlugin
 	 *
 	 * @return object
 	 */
-	function doPodcast()
+	public function doPodcast()
 	{
 		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
-		require_once($path1 . 'biblestudy.podcast.class.php');
-		$podcasts = new JBSPodcast();
+		require_once $path1 . 'biblestudy.podcast.class.php';
+		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 
 		return $result;
@@ -263,16 +261,18 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Do Email
 	 *
-	 * @param array  $params
-	 * @param object $dopodcast
+	 * @param   JRegistry  $params     ?
+	 * @param   object     $dopodcast  ?
+	 *
+	 * @return void
 	 */
-	function doEmail($params, $dopodcast)
+	public function doEmail($params, $dopodcast)
 	{
 
 		$livesite = JURI::root();
 		$config   = JFactory::getConfig();
-		$mailfrom = $config->getValue('config.mailfrom');
-		$fromname = $config->getValue('config.fromname');
+		$mailfrom = $config->get('config.mailfrom');
+		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
@@ -289,6 +289,7 @@ class PlgSystemJbspodcast extends JPlugin
 		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));
+
 		foreach ($recipients AS $recipient)
 		{
 			$mail->addRecipient($recipient);

@@ -1,14 +1,11 @@
 <?php
-
 /**
- * Export
- *
- * @package    BibleStudy
- * @subpackage JBSMigration.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
- * @since      7.0.2
+ * @package     BibleStudy
+ * @subpackage  JBSMigration.Admin
+ * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
+ * @since       7.0.2
  * */
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.file');
@@ -16,15 +13,17 @@ jimport('joomla.filesystem.file');
 /**
  * Export Class
  *
- * @package    BibleStudy
- * @subpackage JBSMigration.Admin
- * @since      7.0.2
+ * @package     BibleStudy
+ * @subpackage  JBSMigration.Admin
+ * @since       7.0.2
  */
 class JBSExport
 {
 
 	/**
 	 * Export Db function
+	 *
+	 * @return boolean
 	 */
 	public function exportdb()
 	{
@@ -49,20 +48,22 @@ class JBSExport
 	/**
 	 * Creates Backup File.
 	 *
-	 * @param string $localfilename
+	 * @param   string  $localfilename  File Name on local server
 	 *
 	 * @return boolean
 	 */
-	function createBackup($localfilename)
+	public function createBackup($localfilename)
 	{
 		$objects    = $this->getObjects();
 		$serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
-		$export     = '';
+		$tables     = '';
+
 		foreach ($objects as $object)
 		{
 			$tables[] = $this->getExportTable($object['name'], $localfilename);
 		}
 		$export = implode(' ', $tables);
+
 		if (!JFile::write($serverfile, $export))
 		{
 			return false;
@@ -74,11 +75,11 @@ class JBSExport
 	/**
 	 * Get Export Table
 	 *
-	 * @param string $table
+	 * @param   string  $table  Table Name exp: #__bsms_admin
 	 *
 	 * @return boolean
 	 */
-	function getExportTable($table)
+	public function getExportTable($table)
 	{
 		if (!$table)
 		{
@@ -96,18 +97,20 @@ class JBSExport
 		$export = '';
 
 		$db = JFactory::getDBO();
-		//Get the prefix
-		$prefix = $db->getPrefix();
 
+		// Get the prefix
+		$prefix = $db->getPrefix();
 		$export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
-		//Drop the existing table
+
+		// Drop the existing table
 		$export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
 
-		//Create a new table defintion based on the incoming database
+		// Create a new table defintion based on the incoming database
 		$query = 'SHOW CREATE TABLE `' . $table . '`';
 		$db->setQuery($query);
 		$db->query();
 		$table_def = $db->loadObject();
+
 		foreach ($table_def as $key => $value)
 		{
 			if (substr_count($value, 'CREATE'))
@@ -118,24 +121,29 @@ class JBSExport
 		}
 		$export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
 
-		//Get the table rows and create insert statements from them
+		// Get the table rows and create insert statements from them
 		$query = 'SELECT * FROM ' . $table;
 		$db->setQuery($query);
 		$db->query();
 		$results = $db->loadObjectList();
+
 		if ($results)
 		{
 			foreach ($results as $result)
 			{
 				$data = array();
 				$export .= 'INSERT INTO ' . $table . ' SET ';
+
 				foreach ($result as $key => $value)
 				{
-					if ($value === null):
+					if ($value === null)
+					{
 						$data[] = "`" . $key . "`=NULL";
-					else:
+					}
+					else
+					{
 						$data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
-					endif;
+					}
 				}
 				$export .= implode(',', $data);
 				$export .= ";\n";
@@ -149,11 +157,13 @@ class JBSExport
 	/**
 	 * File output
 	 *
-	 * @param string $file
-	 * @param string $name
-	 * @param string $mime_type
+	 * @param   string  $file       ?
+	 * @param   string  $name       ?
+	 * @param   string  $mime_type  ?
+	 *
+	 * @return boolean
 	 */
-	function output_file($file, $name, $mime_type = '')
+	public function output_file($file, $name, $mime_type = '')
 	{
 		/*
 		  This function takes a path to a file to output ($file),
@@ -164,10 +174,15 @@ class JBSExport
 		  register_shutdown_function('function_name');
 		 */
 		if (!is_readable($file))
-			die('File not found or inaccessible!');
+		{
+			JFactory::getApplication()->enqueueMessage('File not found or inaccessible!', 'error');
 
-		$size = filesize($file);
-		$name = rawurldecode($name);
+			return false;
+		}
+
+		$size  = filesize($file);
+		$name  = rawurldecode($name);
+		$range = null;
 
 		/* Figure out the MIME type (if not specified) */
 		$known_mime_types = array(
@@ -191,6 +206,7 @@ class JBSExport
 		if ($mime_type == '')
 		{
 			$file_extension = strtolower(substr(strrchr($file, "."), 1));
+
 			if (array_key_exists($file_extension, $known_mime_types))
 			{
 				$mime_type = $known_mime_types[$file_extension];
@@ -199,14 +215,16 @@ class JBSExport
 			{
 				$mime_type = "application/force-download";
 			}
-			;
 		}
-		;
 
-		@ob_end_clean(); //turn off output buffering to decrease cpu usage
-		// required for IE, otherwise Content-Disposition may be ignored
+		// Turn off output buffering to decrease cpu usage
+		@ob_end_clean();
+
+		// Required for IE, otherwise Content-Disposition may be ignored
 		if (ini_get('zlib.output_compression'))
+		{
 			ini_set('zlib.output_compression', 'Off');
+		}
 
 		header('Content-Type: ' . $mime_type);
 		header('Content-Disposition: attachment; filename="' . $name . '"');
@@ -219,13 +237,14 @@ class JBSExport
 		header('Pragma: private');
 		header("Expires: Mon, 26 Jul 2014 05:00:00 GMT");
 
-		// multipart-download and download resuming support
+		// Multipart-download and download resuming support
 		if (isset($_SERVER['HTTP_RANGE']))
 		{
 			list($a, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
 			list($range) = explode(",", $range, 2);
 			list($range, $range_end) = explode("-", $range);
 			$range = intval($range);
+
 			if (!$range_end)
 			{
 				$range_end = $size - 1;
@@ -247,12 +266,16 @@ class JBSExport
 		}
 
 		/* output the file itself */
-		$chunksize  = 1 * (1024 * 1024); //you may want to change this
+		// You may want to change this
+		$chunksize  = 1 * (1024 * 1024);
 		$bytes_send = 0;
+
 		if ($file = fopen($file, 'r'))
 		{
 			if (isset($_SERVER['HTTP_RANGE']))
+			{
 				fseek($file, $range);
+			}
 
 			while (!feof($file) &&
 				(!connection_aborted()) &&
@@ -260,17 +283,22 @@ class JBSExport
 			)
 			{
 				$buffer = fread($file, $chunksize);
-				print($buffer); //echo($buffer); // is also possible
+
+				// Is also possible
+				print($buffer);
 				flush();
 				$bytes_send += strlen($buffer);
 			}
 			fclose($file);
 		}
 		else
+		{
 			die('Error - can not open file.');
+		}
 
-		die();
 		unlink($file);
+
+		return true;
 	}
 
 	/**
@@ -286,6 +314,7 @@ class JBSExport
 		$prelength = strlen($prefix);
 		$prefix . $bsms = 'bsms_';
 		$objects = array();
+
 		foreach ($tables as $table)
 		{
 			if (substr_count($table, $bsms))
@@ -299,5 +328,3 @@ class JBSExport
 	}
 
 }
-
-// end of class

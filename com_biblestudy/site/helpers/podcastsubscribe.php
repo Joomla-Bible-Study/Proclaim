@@ -15,7 +15,7 @@ JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.
  * @since    7.1.0
  *
  */
-class podcastSubscribe
+class PodcastSubscribe
 {
 
 	/**

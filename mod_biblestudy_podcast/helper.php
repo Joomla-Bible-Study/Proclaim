@@ -1,12 +1,9 @@
 <?php
-
 /**
- * Podcast Model Helper
- *
- * @package    BibleStudy
- * @subpackage Model.Podcast
- * @author     Joomla Bible Study Team
- * @copyright  2012
+ * @package     BibleStudy
+ * @subpackage  Model.Podcast
+ * @author      Joomla Bible Study Team
+ * @copyright   2012
  * @desc a module to display the podcast subscription table
  */
 // no direct access
@@ -15,11 +12,11 @@ defined('_JEXEC') or die;
 /**
  * A module to display the podcast subscription table
  *
- * @package    BibleStudy
- * @subpackage Model.Podcast
- * @since      7.1.0
+ * @package     BibleStudy
+ * @subpackage  Model.Podcast
+ * @since       7.1.0
  */
-class modBibleStudyPodcast
+class ModBibleStudyPodcast
 {
 
 	/**
@@ -27,8 +24,9 @@ class modBibleStudyPodcast
 	 *
 	 * @return boolean
 	 */
-	static function checkforcombiblestudy()
+	public static function checkforcombiblestudy()
 	{
+		$go    = null;
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
 		$query->select('element, enabled');
@@ -37,6 +35,7 @@ class modBibleStudyPodcast
 		$db->setQuery($query);
 		$db->query();
 		$results = $db->loadObjectList();
+
 		if (!$results)
 		{
 			echo 'Extension Bible Study not found';
@@ -63,11 +62,11 @@ class modBibleStudyPodcast
 	/**
 	 * Get BibleStudy Template Params
 	 *
-	 * @param object $params
+	 * @param   object  $params  ?
 	 *
 	 * @return \JRegistry
 	 */
-	static function getTemplateParams($params)
+	public static function getTemplateParams($params)
 	{
 		$t     = $params->get('t', 1);
 		$db    = JFactory::getDBO();

@@ -15,9 +15,7 @@ $show_link = $params->get('show_link', 1);
 $pagetext  = $params->get('pagetext');
 $ismodule  = 1;
 
-$path2 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/';
-include_once($path2 . 'helper.php');
-
+JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 $JBSMListing = new JBSMListing;
 ?>

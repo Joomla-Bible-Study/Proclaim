@@ -103,7 +103,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderCategoryChangeState($extension, $pks, $value)
 	{
-		//we probably dont' need this
+		// We probably don't need this
 		if ($extension == 'com_biblestudy')
 		{
 
@@ -251,7 +251,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		// Initialize the item parameters.
 		$registry = new JRegistry;
 		$registry->loadString($item->params);
-		$item->params = $registry;
+		$item->params = JComponentHelper::getParams('com_biblestudy', true);
+		$item->params->merge($registry);
 
 
 		// Trigger the onContentPrepare event.
@@ -299,7 +300,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		FinderIndexer::index($item);
+		$this->indexer->index($item);
 	}
 
 	/**
@@ -313,8 +314,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	{
 		// Load dependent classes.
 		require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
-		$params       = JComponentHelper::getParams('com_biblestudy');
-		$this->access = $params->get('access', 1);
 
 		return true;
 	}
@@ -372,25 +371,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$sql->select('u.teachername AS author');
 		$sql->from('#__bsms_studies AS a');
 		$sql->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
-
-		return $sql;
-	}
-
-	/**
-	 * Method to get the query clause for getting items to update by time.
-	 *
-	 * @param   string  $time  The modified timestamp.
-	 *
-	 * @return  JDatabaseQuery  A database object.
-	 *
-	 * @since      7.1.0
-	 * @deprecated since version 7.1.1
-	 */
-	protected function getUpdateQueryByTime($time)
-	{
-		// Build an SQL query based on the modified time.
-		// We don't have a modified time, so we just give the query back unchanged.
-		$sql = $this->db->getQuery(true);
 
 		return $sql;
 	}

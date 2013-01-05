@@ -3,11 +3,11 @@
 /**
  * Xmap Plugin for BibleStudy
  *
- * @package    BibleStudy
- * @subpackage Xmap.BibleStudy
- * @license    GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ * @package     BibleStudy
+ * @subpackage  Xmap.BibleStudy
+ * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  * @description Xmap plugin for Bible Study Component
- *             adapted for Bible Study by TOm Fuller
+ *              adapted for Bible Study by TOm Fuller
  *
  * Plugin tested with Xmap 2.0 and Joomla Bible Study 7.0.1 on Joomla 1.7.0
  *
@@ -19,9 +19,9 @@ jimport('joomla.plugin.plugin');
 /**
  * Class for xmap biblestudy
  *
- * @package    BibleStudy
- * @subpackage Xamp.BibleStudy
- * @since      7.0.4
+ * @package     BibleStudy
+ * @subpackage  Xamp.BibleStudy
+ * @since       7.0.4
  */
 class xmap_com_biblestudy
 {
@@ -29,12 +29,12 @@ class xmap_com_biblestudy
 	/**
 	 * Type
 	 *
-	 * @param array $xmap
-	 * @param array $parent
+	 * @param   array  &$xmap    ?
+	 * @param   array  &$parent  ?
 	 *
 	 * @return boolean
 	 */
-	function isOfType(&$xmap, &$parent)
+	public function isOfType(&$xmap, &$parent)
 	{
 		if (strpos($parent->link, 'option=com_biblestudy'))
 		{
@@ -47,12 +47,12 @@ class xmap_com_biblestudy
 	/**
 	 * Prepare Menu
 	 *
-	 * @param array $node
-	 * @param array $params
+	 * @param   array  $node    ?
+	 * @param   array  $params  ?
 	 *
 	 * @return string
 	 */
-	static function prepareMenuItem($node, $params)
+	public static function prepareMenuItem($node, $params)
 	{
 		$db         = JFactory::getDbo();
 		$link_query = parse_url($node->link);
@@ -70,13 +70,13 @@ class xmap_com_biblestudy
 	/**
 	 * Get Tree
 	 *
-	 * @param array $xmap
-	 * @param array $parent
-	 * @param array $params
+	 * @param   object   $xmap     ?
+	 * @param   object   $parent   ?
+	 * @param   array    &$params  ?
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	function &getTree($xmap, $parent, &$params)
+	public function &getTree($xmap, $parent, &$params)
 	{
 		@set_time_limit(300);
 		$db  = JFactory::getDBO();
@@ -85,9 +85,10 @@ class xmap_com_biblestudy
 		$list = array();
 
 		$link_query = parse_url($parent->link);
+
 		if (!isset($link_query['query']))
 		{
-			return;
+			return false;
 		}
 
 		$lang = JFactory::getLanguage();
@@ -95,18 +96,20 @@ class xmap_com_biblestudy
 		$lang->load('plg_xmap_com_biblestudy', JPATH_ADMINISTRATOR);
 
 		parse_str(html_entity_decode($link_query['query']), $link_vars);
-		$view        = JArrayHelper::getValue($link_vars, 'view', '');
-		$id          = intval(JArrayHelper::getValue($link_vars, 'id', ''));
-		$t           = $params['t'];
-		$order       = $params['order'];
-		$displaytype = $params['displaytype'];
-		//  $expand = $params['expand'];
+		$view             = JArrayHelper::getValue($link_vars, 'view', '');
+		$id               = intval(JArrayHelper::getValue($link_vars, 'id', ''));
+		$t                = $params['t'];
+		$order            = $params['order'];
+		$displaytype      = $params['displaytype'];
+		$node             = new stdClass;
 		$node->expandible = true;
+
 		if (!$order)
 		{
 			$order = 'desc';
 		}
 		$limit = $params['limit'];
+
 		if ($limit > 0)
 		{
 			$limit = 'LIMIT ' . $limit;
@@ -118,7 +121,7 @@ class xmap_com_biblestudy
 		$showmedia = $params['showmedia'];
 		$db        = JFactory::getDBO();
 
-		//1=year 2=book 3=teacher 4=location
+		// 1=year 2=book 3=teacher 4=location
 		switch ($displaytype)
 		{
 			case 1:
@@ -126,6 +129,7 @@ class xmap_com_biblestudy
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
+
 				foreach ($results AS $result)
 				{
 					$node             = new stdclass;
@@ -145,6 +149,7 @@ class xmap_com_biblestudy
 					$query = 'SELECT id, studytitle, alias, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = ' . $result->theYear;
 					$db->setQuery($query);
 					$studies = $db->loadObjectList();
+
 					foreach ($studies AS $study)
 					{
 						self::showStudies($study, $xmap, $t, $limit, $order, $params, $parent);
@@ -159,6 +164,7 @@ class xmap_com_biblestudy
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
+
 				foreach ($results AS $result)
 				{
 					$field            = 'booknumber';
@@ -188,6 +194,7 @@ class xmap_com_biblestudy
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
+
 				foreach ($results AS $result)
 				{
 					$field            = 'teacher_id';
@@ -197,7 +204,7 @@ class xmap_com_biblestudy
 					$node->uid        = $parent->uid . 'a' . $result->teachername;
 					$node->name       = $result->teachername;
 					$node->parent     = 1;
-					$node->browsNav   = 1; //open new window
+					$node->browsNav   = 1; // Open new window
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -229,7 +236,7 @@ class xmap_com_biblestudy
 					$node->uid        = $parent->uid . 'a' . $result->location_text;
 					$node->name       = $result->location_text;
 					$node->parent     = 1;
-					$node->browsNav   = 1; //open new window
+					$node->browsNav   = 1; // Open new window
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -251,18 +258,20 @@ class xmap_com_biblestudy
 	/**
 	 * Show Media Files
 	 *
-	 * @param int    $id
-	 * @param array  $xmap
-	 * @param string $limit
-	 * @param string $order
-	 * @param array  $params
-	 * @param array  $parent
+	 * @param   int     $id      ?
+	 * @param   object  $xmap    ?
+	 * @param   string  $limit   ?
+	 * @param   string  $order   ?
+	 * @param   array   $params  ?
+	 * @param   object  $parent  ?
+	 *
+	 * @return void
 	 */
-	function showMediaFiles($id, $xmap, $limit, $order, $params, $parent)
+	public function showMediaFiles($id, $xmap, $limit, $order, $params, $parent)
 	{
 		$t         = $params['t'];
 		$showmedia = $params['showmedia'];
-		// $showmedia = 1;
+
 		if ($showmedia == 1)
 		{
 			$xmap->changeLevel(1);
@@ -274,8 +283,7 @@ class xmap_com_biblestudy
 				. ' LEFT JOIN #__bsms_folders AS f ON (f.id = m.path)'
 				. ' LEFT JOIN #__bsms_mimetype as mime on (mime.id = m.mime_type)'
 				. ' WHERE m.published = 1 AND m.study_id = ' . $id . ' ORDER BY createdate ' . $order . ' ' . $limit;
-			;
-			$db = JFactory::getDBO();
+			$db    = JFactory::getDBO();
 			$db->setQuery($query);
 			$medias = $db->loadObjectList();
 
@@ -290,9 +298,11 @@ class xmap_com_biblestudy
 				$node->ordering   = 2;
 				$node->priority   = $parent->priority;
 				$node->changefreq = $parent->changefreq;
+
 				if ($media->filename)
 				{
 					$node->name = $media->filename;
+
 					if ($params['filelink'] == 1)
 					{
 						$node->link = $media->folderpath . $media->filename;
@@ -325,13 +335,13 @@ class xmap_com_biblestudy
 	/**
 	 * Show Studies
 	 *
-	 * @param array  $study
-	 * @param array  $xmap
-	 * @param int    $t
-	 * @param string $limit
-	 * @param string $order
-	 * @param array  $params
-	 * @param array  $parent
+	 * @param   object  $study   ?
+	 * @param   object  $xmap    ?
+	 * @param   int     $t       ?
+	 * @param   string  $limit   ?
+	 * @param   string  $order   ?
+	 * @param   array   $params  ?
+	 * @param   object  $parent  ?
 	 */
 	function showStudies($study, $xmap, $t, $limit, $order, $params, $parent)
 	{
@@ -348,6 +358,7 @@ class xmap_com_biblestudy
 		$node->type       = 'component';
 		$node->menutype   = 'mainmenu';
 		$node->link       = 'index.php?option=com_biblestudy&amp;view=sermon&amp;id=' . $study->id . '&amp;t=' . $t;
+
 		if ($params['description'] == 1)
 		{
 			$node->name .= ' - ' . $study->studyintro;
@@ -359,20 +370,23 @@ class xmap_com_biblestudy
 	/**
 	 * Show Years
 	 *
-	 * @param array  $result
-	 * @param array  $xmap
-	 * @param int    $t
-	 * @param string $limit
-	 * @param string $order
-	 * @param array  $params
-	 * @param int    $field
-	 * @param int    $record
-	 * @param array  $parent
+	 * @param   array   $result  ?
+	 * @param   object  $xmap    ?
+	 * @param   int     $t       ?
+	 * @param   string  $limit   ?
+	 * @param   string  $order   ?
+	 * @param   array   $params  ?
+	 * @param   int     $field   ?
+	 * @param   int     $record  ?
+	 * @param   object  $parent  ?
+	 *
+	 * @return void
 	 */
-	function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent)
+	public function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent)
 	{
 		$db    = JFactory::getDBO();
-		$query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND ' . $field . ' = ' . $record . ' order by theYear ' . $order;
+		$query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND ' .
+			$field . ' = ' . $record . ' order by theYear ' . $order;
 		$db->setQuery($query);
 		$years = $db->loadObjectList();
 		foreach ($years as $year)
@@ -394,6 +408,7 @@ class xmap_com_biblestudy
 			$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = ' . $year->theYear . ' and ' . $field . ' = ' . $record;
 			$db->setQuery($query);
 			$studies = $db->loadObjectList();
+
 			foreach ($studies AS $study)
 			{
 				self::showStudies($study, $xmap, $t, $limit, $order, $params, $parent);

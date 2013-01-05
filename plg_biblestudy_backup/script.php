@@ -15,21 +15,22 @@ defined('_JEXEC') or die;
 /**
  * Script file of JBSBACKUP component
  *
- * @package    BibleStudy
- * @subpackage Plugin.JBSBackup
- * @since      7.1.0
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSBackup
+ * @since       7.1.0
  */
 class plgSystemjbsbackupInstallerScript
 {
+	public $is700;
 
 	/**
 	 * method to install the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function install($parent)
+	public function install($parent)
 	{
 
 	}
@@ -37,11 +38,11 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function uninstall($parent)
+	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_JBSBACKUP_UNINSTALL_TEXT') . '</p>';
@@ -50,19 +51,21 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to update the component
 	 *
-	 * @param string $parent
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function update($parent)
+	public function update($parent)
 	{
 		$db = JFactory::getDBO();
+
 		// First see if there is an update table
 		$tables      = $db->getTableList();
 		$prefix      = $db->getPrefix();
 		$updatetable = $prefix . 'jbsbackup_timeset';
 		$updatefound = false;
 		$this->is700 = false;
+
 		foreach ($tables as $table)
 		{
 			if ($table == $updatetable)
@@ -72,7 +75,7 @@ class plgSystemjbsbackupInstallerScript
 		}
 		if (!$updatefound)
 		{
-			//Do the query here to create the table. This will tell Joomla to update the db from this version on
+			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
@@ -92,30 +95,30 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param string $type
-	 * @param string $parent
+	 * @param   string  $type    ?
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, $parent)
 	{
 		// $type is the type of change (install, update or discover_install)
-		//echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+		// echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param string $type
-	 * @param string $parent
+	 * @param   string  $type    ?
+	 * @param   string  $parent  ?
 	 *
 	 * @return void
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
 		// $parent is the class calling this method
 		// $type is the type of change (install, update or discover_install)
-		//echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+		// echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 }

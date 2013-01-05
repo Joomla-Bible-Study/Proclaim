@@ -3,10 +3,10 @@
 /**
  * User SEF extension for Joomla!
  *
- * @author      $Author: Nick Fossen $
  * @package     SefExt
  * @subpackage  Pugin.BibleStudy
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @author      $Author: Nick Fossen $
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */

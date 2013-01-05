@@ -23,11 +23,11 @@ $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobje
 
 /** @var $params JRegistry */
 $templatemenuid = $params->get('t');
-$template       = modJBSMHelper::getTemplate($params);
+$template       = ModJBSMHelper::getTemplate($params);
 
-$admin        = modJBSMHelper::getAdmin();
+$admin        = ModJBSMHelper::getAdmin();
 $admin_params = new JRegistry($admin[0]->params);
-$items        = modJBSMHelper::getLatest($params);
+$items        = ModJBSMHelper::getLatest($params);
 
 // Attempt to change mysql for error in large select
 $db = JFactory::getDBO();
@@ -101,10 +101,10 @@ foreach ($items AS $item)
 }
 $list      = $items;
 $link_text = $params->get('pagetext', 'More Bible Studies');
-
+$jinput = new JInput;
 if (!$templatemenuid)
 {
-	$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '">' . $link_text . '</a>';
