@@ -86,21 +86,21 @@ $sortFields = $this->getSortFields();
                class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
         <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
             <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-            <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
-            <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
+            <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+            <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
         </select>
     </div>
     <div class="btn-group pull-right">
-        <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+        <label for="sortTable" class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-            <option value=""><?php echo JText::_('JGLOBAL_SORT_BY'); ?></option>
+            <option value=""><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></option>
 			<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
         </select>
     </div>
 	<?php if (!BIBLESTUDY_CHECKREL): ?>
     <div class="btn-group pull-right">
         <label for="filter_published" id="filter_published"
-               class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+               class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_published" class="input-medium" onchange="this.form.submit()">
             <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
 			<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
@@ -108,7 +108,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="btn-group pull-right">
         <label for="filter_language" id="filter_language"
-               class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+               class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_language" class="input-medium" onchange="this.form.submit()">
             <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
 			<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
@@ -122,8 +122,7 @@ $sortFields = $this->getSortFields();
     <thead>
     <tr>
         <th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'series.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING');
-			if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'series.saveorder');?>
+			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'series.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING');?>
         </th>
         <th width="1%">
             <input type="checkbox" name="checkall-toggle" value=""
@@ -172,9 +171,7 @@ $sortFields = $this->getSortFields();
                       title="<?php echo $disabledLabel ?>">
                                             <i class="icon-menu"></i>
                                         </span>
-                <input type="text" style="<?php if (BIBLESTUDY_CHECKREL): ?>display:none<?php endif; ?>"
-                       name="order[]"
-                       size="5" value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
+                <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
 				<?php else : ?>
                 <span class="sortable-handler inactive">
                                             <i class="icon-menu"></i>

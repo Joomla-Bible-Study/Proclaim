@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . 'translated.php');
+JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 
 if (version_compare(JVERSION, '2.5', 'ge'))
 {

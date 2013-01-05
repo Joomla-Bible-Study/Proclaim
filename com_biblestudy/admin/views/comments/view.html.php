@@ -148,7 +148,7 @@ class BiblestudyViewComments extends JViewLegacy
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
 			}
-			$title = JText::_('JTOOLBAR_BATCH');
+			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";

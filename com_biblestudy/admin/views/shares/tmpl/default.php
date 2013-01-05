@@ -80,14 +80,14 @@ $sortFields = $this->getSortFields();
                    class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
             <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                 <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-                <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
-                <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
+                <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+                <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
             </select>
         </div>
         <div class="btn-group pull-right">
-            <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+            <label for="sortTable" class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
             <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-                <option value=""><?php echo JText::_('JGLOBAL_SORT_BY'); ?></option>
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></option>
 				<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
             </select>
         </div>
@@ -101,9 +101,8 @@ $sortFields = $this->getSortFields();
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th width="1%" class="nowrap center hidden-phone">
-				<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'share.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
-				if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'share.saveorder');?>
+            <th width="8%" class="nowrap center hidden-phone">
+	            <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'share.published', $listDirn, $listOrder); ?>
             </th>
 
             <th>

@@ -9,16 +9,18 @@
 defined('_JEXEC') or die;
 
 $published = $this->state->get('filter.published');
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 ?>
 <div class="modal hide fade" id="collapseModal">
     <div class="modal-header">
 		<?php if (BIBLESTUDY_CHECKREL)
-	{ ?>
+	{
+		?>
         <button type="button" role="presentation" class="close" data-dismiss="modal">x</button><?php } ?>
         <h3><?php echo JText::_('JBS_CMN_BATCH_OPTIONS'); ?></h3>
     </div>
     <div class="modal-body">
-        <p><?php echo JText::_('JBS_CMN_BATCH_TIP'); ?></p>
+        <p><?php echo JText::_('JBS_CMN_BATCH_TIP_MEDIAFILES'); ?></p>
 
         <div class="control-group">
             <div class="controls">
@@ -45,7 +47,6 @@ $published = $this->state->get('filter.published');
 				<?php echo JHtml::_('batch.access'); ?>
             </div>
         </div>
-
     </div>
     <div class="modal-footer">
         <button class="btn" type="button"

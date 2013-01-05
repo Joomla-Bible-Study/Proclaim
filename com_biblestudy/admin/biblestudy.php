@@ -63,10 +63,9 @@ function addCSS()
 	}
 	if (!BIBLESTUDY_CHECKREL)
 	{
-		JHTML::stylesheet('media/com_biblestudy/css/z2.5.css');
+		JHTML::stylesheet('/media/com_biblestudy/jui/css/icomoon.css');
 		JHTML::stylesheet('/media/com_biblestudy/jui/css/bootstrap.css');
-		JHTML::stylesheet('/media/com_biblestudy/jui/css/chosen.css');
-		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+		JHTML::stylesheet('/media/com_biblestudy/css/biblestudy-j2.5.css');
 	}
 	JHTML::stylesheet('media/com_biblestudy/css/general.css');
 	JHTML::stylesheet('media/com_biblestudy/css/icons.css');
@@ -85,11 +84,12 @@ function addJS()
 {
 	if (!BIBLESTUDY_CHECKREL)
 	{
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery-ui.core.min.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.min.js');
 		JHTML::script('/media/com_biblestudy/jui/js/bootstrap.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
 		JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.sortable.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
 	}
 
 	return null;

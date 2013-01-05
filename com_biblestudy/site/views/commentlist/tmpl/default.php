@@ -89,24 +89,24 @@ $sortFields = $this->getSortFields();
                     <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
                     <option value="asc" <?php if ($listDirn == 'asc') {
 	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
+                    } ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
                     <option value="desc" <?php if ($listDirn == 'desc') {
 	                    echo 'selected="selected"';
-                    } ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
+                    } ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
                 </select>
             </div>
 			<?php } ?>
             <div class="btn-group pull-right">
-                <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+                <label for="sortTable" class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
                 <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-                    <option value=""><?php echo JText::_('JGLOBAL_SORT_BY'); ?></option>
+                    <option value=""><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></option>
 					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
                 </select>
             </div>
 			<?php if (!BIBLESTUDY_CHECKREL): ?>
             <div class="btn-group pull-right">
                 <label for="filter_published" id="filter_published"
-                       class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
+                       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
                 <select name="filter_published" class="input-medium" onchange="this.form.submit()">
                     <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
 					<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>

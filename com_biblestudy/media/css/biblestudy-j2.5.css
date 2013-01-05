@@ -6,20 +6,23 @@
         Purpose of the stylesheet follows.
 */
 
-form .controls label{
+form .controls label {
     float: left;
-    clear:none;
+    clear: none;
     padding-left: 10px;
     padding-right: 10px;
     border: none;
 }
+
 .control-group label {
     margin-right: 2em;
 }
-form .controls fieldset{
 
-	border: none;
+form .controls fieldset {
+
+    border: none;
 }
+
 .element-invisible {
     position: absolute;
     padding: 0;
@@ -29,31 +32,36 @@ form .controls fieldset{
     width: 1px;
     overflow: hidden;
 }
+
 label {
     display: block;
     margin-bottom: 5px;
 }
+
 label, input, button, select, textarea {
     font-size: 13px;
     font-weight: normal;
     line-height: 18px;
 }
+
 .modal-footer {
     float: right;
     clear: left;
 }
-[class^="icon-16"],[class*=" icon-16"] {
+
+[class^="icon-16"], [class*=" icon-16"] {
     width: auto;
     height: 100%;
 }
-[class^="icon-32"],[class*=" icon-32"] {
+
+[class^="icon-32"], [class*=" icon-32"] {
     width: 32px;
     height: 32px;
     background-position: 0px 0px;
     display: block;
 }
 
-[class^="icon-48"],[class*=" icon-48"] {
+[class^="icon-48"], [class*=" icon-48"] {
     width: 48px;
     height: 48px;
     background-position: 0px 0px;
@@ -70,23 +78,29 @@ label, input, button, select, textarea {
     margin: 0px;
     float: right;
 }
+
 #j-main-container .container {
     width: auto;
 }
+
 div.pagetitle {
     width: auto;
 }
+
 .form-horizontal .control-label {
- width: auto;
+    width: auto;
 }
+
 form .btn-group label {
-	font-size: 12px;
-	}
+    font-size: 12px;
+}
+
 input, select {
-	font-size: 0.909em;
-	/* border: none; */
-	background: none;
-	}
+    font-size: 0.909em;
+    /* border: none; */
+    background: none;
+}
+
 .table td.center {
     text-align: center;
 }
