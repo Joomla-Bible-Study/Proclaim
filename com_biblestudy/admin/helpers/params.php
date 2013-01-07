@@ -53,14 +53,15 @@ class JBSMParams
 	 */
 	public static function getTemplateparams()
 	{
-		$db    = JFactory::getDbo();
-		$pk    = JFactory::getApplication()->input->getInt('t', '1');
+		$db = JFactory::getDbo();
+		$pk = JFactory::getApplication()->input->getInt('t', '1');
+
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_templates')
 			->where('published = ' . $db->q('1'))
-			->where('id = ' . (int) $db->q($pk));
-		$db->setQuery($query);
+			->where('id = ' . $db->q($pk));
+		$db->setQuery($query, 0, 1);
 		$template = $db->loadObject();
 
 		if ($template)

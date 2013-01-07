@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
@@ -18,8 +18,6 @@ JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- *
- * @todo     need to make the title block. BCC
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
@@ -30,6 +28,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 	protected $contact;
 
+	/**
+	 * @var JRegistry
+	 */
 	protected $admin_params;
 
 	protected $admin;
@@ -38,9 +39,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 	protected $template;
 
-	public $teacherstudies;
+	protected $teacherstudies;
 
-	public $print;
+	protected $print;
 
 	/**
 	 * Execute and display a template script.
@@ -60,39 +61,11 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$pathway = $app->getPathWay();
 		$images  = new JBSMImages;
 
 		$this->admin        = JBSMParams::getAdmin();
 		$this->admin_params = $this->admin->params;
-
-		$itemparams = $app->getPageParameters();
-
-		// Prepare meta information (under development)
-		if ($itemparams->get('metakey'))
-		{
-			$document->setMetadata('keywords', $itemparams->get('metakey'));
-		}
-		elseif (!$itemparams->get('metakey'))
-		{
-			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
-		}
-
-		if ($itemparams->get('metadesc'))
-		{
-			$document->setDescription($itemparams->get('metadesc'));
-		}
-		elseif (!$itemparams->get('metadesc'))
-		{
-			$document->setDescription($this->admin_params->get('metadesc'));
-		}
 		$input = new JInput;
-		$t     = $input->get('t', 1, 'int');
-
-		if (!$t)
-		{
-			$t = 1;
-		}
 
 		$template = JBSMParams::getTemplateparams();
 
@@ -248,7 +221,85 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->params   = $params;
 		$this->template = $template;
 
+		$this->_prepareDocument();
+
 		parent::display($tpl);
+	}
+
+	/**
+	 * Prepares the document;
+	 *
+	 * @return void
+	 */
+	protected function _prepareDocument()
+	{
+		$app   = JFactory::getApplication('site');
+		$menus = $app->getMenu();
+
+		/** @var $itemparams JRegistry */
+		$itemparams = $app->getParams();
+		$title      = null;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		}
+		else
+		{
+			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
+		}
+		$title = $this->params->get('page_title', '');
+		$title .= ' : ' . $this->item->teachername . ' - ' . $this->item->title;
+
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+		$this->document->setTitle($title);
+
+		// Prepare meta information (under development)
+		if ($itemparams->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+		}
+		elseif ($this->params->get('menu-meta_keywords'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+		else
+		{
+			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
+		}
+
+		if ($itemparams->get('metadesc'))
+		{
+			$this->document->setDescription($itemparams->get('metadesc'));
+		}
+		elseif ($this->params->get('menu-meta_description'))
+		{
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+		}
+		else
+		{
+			$this->document->setDescription($this->admin_params->get('metadesc'));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
 	}
 
 }

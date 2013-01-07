@@ -19,6 +19,20 @@ JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
  */
 class BiblestudyViewTerms extends JViewLegacy
 {
+	/**
+	 * @var JRegistry
+	 */
+	protected $params;
+
+	/**
+	 * @var JDocument
+	 */
+	protected $document;
+
+	/**
+	 * @var Object
+	 */
+	public $media;
 
 	/**
 	 * Execute and display a template script.
@@ -35,15 +49,15 @@ class BiblestudyViewTerms extends JViewLegacy
 		$compat_mode = $input->get('compat_mode', '0', 'int');
 
 		$template  = JBSMParams::getTemplateparams();
-		$params    = $template->params;
-		$termstext = $params->get('terms');
+		$this->params    = $template->params;
+		$termstext = $this->params->get('terms');
 		$db        = JFactory::getDbo();
 		$query     = $db->getQuery('true');
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
 		$query->where('id= ' . (int) $db->q($mid));
 		$db->setQuery($query);
-		$media = $db->loadObject();
+		$this->media = $db->loadObject();
 		?>
     <div class="termstext">
 		<?php
@@ -54,18 +68,86 @@ class BiblestudyViewTerms extends JViewLegacy
 		<?php
 		if ($compat_mode == 1)
 		{
-			echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename
-				. '&size=' . $media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
+			echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $this->media->spath . $this->media->fpath . $this->media->filename
+				. '&size=' . $this->media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 		}
 		else
 		{
-			echo '<a href="index.php?option=com_biblestudy&mid=' . $media->id . '&view=sermons&task=download">'
+			echo '<a href="index.php?option=com_biblestudy&mid=' . $this->media->id . '&view=sermons&task=download">'
 				. JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 		}
 		?>
-
     </div>
 	<?php
+
+		$this->_prepareDocument();
+	}
+
+	/**
+	 * Prepares the document;
+	 *
+	 * @return void
+	 */
+	protected function _prepareDocument()
+	{
+		$app   = JFactory::getApplication();
+		$menus = $app->getMenu();
+
+		$itemparams = JComponentHelper::getParams('com_biblestudy');
+		$title      = null;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		}
+		else
+		{
+			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
+		}
+		$title = $this->params->get('page_title', '');
+		$title .= ' : ' . $this->media->filename;
+
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+		$this->document->setTitle($title);
+
+		// Prepare meta information (under development)
+		if ($itemparams->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+		}
+		elseif ($this->params->get('menu-meta_keywords'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+
+		if ($itemparams->get('metadesc'))
+		{
+			$this->document->setDescription($itemparams->get('metadesc'));
+		}
+		elseif ($this->params->get('menu-meta_description'))
+		{
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
 	}
 
 }
