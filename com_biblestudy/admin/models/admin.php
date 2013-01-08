@@ -22,6 +22,12 @@ class BiblestudyModelAdmin extends JModelAdmin
 {
 
 	/**
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	/**
 	 * Context
 	 *
 	 * @var string
@@ -51,101 +57,22 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Constructor that retrieves the ID from the request
+	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @var  string  Prefix Component deceleration
-	 * @access    public
-	 * @return    void
-	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
-
-	private $_id;
-
-	private $_data;
-
-	/**
-	 * Constructor.
+	 * @param   JTable  $table  A JTable object.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @return   void
+	 *
+	 * @since    1.6
 	 */
-	public function __construct($config = array())
+	protected function prepareTable($table)
 	{
-		parent::__construct($config);
 
-		$array = JFactory::getApplication()->input->get('cid', 0, '', 'array');
-		$this->setId((int) $array[0]);
-	}
-
-	/**
-	 * Set ID of admin
-	 *
-	 * @param   int  $id  ?
-	 *
-	 * @return void
-	 */
-	public function setId($id)
-	{
-		// Set id and wipe data
-		$this->_id   = $id;
-		$this->_data = null;
-	}
-
-	/**
-	 * Get Date
-	 *
-	 * @return object
-	 */
-	public function &getData()
-	{
-		// Load the data
-		$query = ' SELECT * FROM #__bsms_admin ' .
-			'  WHERE id = 1';
-		$this->_db->setQuery($query);
-		$this->_data = $this->_db->loadObject();
-
-		return $this->_data;
-	}
-
-	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 *
-	 * @param   bool|string  $updateNulls  ?
-	 *
-	 * @return    boolean    True on success
-	 */
-	public function store($updateNulls = 'false')
-	{
-		$row = $this->getTable();
-
-		$data = JFactory::getApplication()->input->get('post');
-
-		// Bind the form fields to the hello table
-		if (!$row->bind($data))
+		// Reorder the articles within the category so the new article is first
+		if (empty($table->id))
 		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
+			$table->id = 1;
 		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the web link table to the database
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -159,7 +86,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @since    1.6
 	 */
-	public function getTable($name = 'admin', $prefix = 'Table', $options = array())
+	public function getTable($name = 'Admin', $prefix = 'Table', $options = array())
 	{
 		return JTable::getInstance($name, $prefix, $options);
 	}
@@ -200,6 +127,28 @@ class BiblestudyModelAdmin extends JModelAdmin
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return    boolean    True on success.
+	 *
+	 * @since    1.6
+	 */
+	public function save($data)
+	{
+		$app = JFactory::getApplication();
+
+		if (parent::save($data))
+		{
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
