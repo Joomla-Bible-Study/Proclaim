@@ -260,9 +260,25 @@ class JBSMSerieslist extends JBSMListing
 				$element1 = '<table id="seriestable"><tr class="noborder"><td class="' . $r . ' teacher">';
 				$images   = new JBSMImages;
 				$image    = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
+
+				if ($image->height != 0 && $image->width != 0)
+				{
+					$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->teachername . '">';
+				}
+				else
+				{
+					$element2 = '';
+				}
 				$element3 = '</td></tr><tr class="noborder"><td class="' . $r . ' teacher">';
-				$element4 = $row->teachertitle . ' - ' . $row->teachername;
+
+				if ($row->teachertitle && $row->teachername)
+				{
+					$element4 = $row->teachertitle . ' - ' . $row->teachername;
+				}
+				else
+				{
+					$element4 = null;
+				}
 
 				if ($islink > 0)
 				{

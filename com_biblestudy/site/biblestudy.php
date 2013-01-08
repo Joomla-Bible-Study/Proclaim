@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Core BibleStudy Site File
  *
@@ -12,8 +11,7 @@
 defined('_JEXEC') or die;
 
 // Include dependancies
-// --require_once JPATH_COMPONENT.'/helpers/route.php';
-JLoader::register('JBSMHelperRoute', dirname(__FILE__) . '/helpers/route.php');
+JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Difines
  */

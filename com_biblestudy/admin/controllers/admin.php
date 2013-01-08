@@ -26,7 +26,6 @@ jimport('joomla.application.component.controllerform');
  */
 class BiblestudyControllerAdmin extends JControllerForm
 {
-
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
@@ -47,9 +46,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		parent::__construct($config);
 
-		// Register Extra tasks
-		$this->registerTask('add', 'edit');
-		$this->registerTask('apply', 'save');
 	}
 
 	/**

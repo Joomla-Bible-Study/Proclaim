@@ -705,8 +705,8 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('plays + 1')
-			->where('id = ' . (int) $db->q($id));
+			->set('plays = plays + 1')
+			->where('id = ' . $db->q($id));
 		$db->setQuery($query);
 
 		if ($db->execute())

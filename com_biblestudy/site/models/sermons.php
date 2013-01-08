@@ -82,7 +82,25 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$app = JFactory::getApplication();
 
-		$this->setState('filter.language', $app->getLanguageFilter());
+		// Load the parameters. Merge Global and Menu Item params into new object
+		$params     = $app->getParams();
+		$menuParams = new JRegistry;
+
+		if ($menu = $app->getMenu()->getActive())
+		{
+			$menuParams->loadString($menu->params);
+		}
+
+		$template = JBSMParams::getTemplateparams();
+		$this->setState('template', $template);
+
+		$mergedParams = clone $menuParams;
+		$mergedParams->merge($params);
+		$mergedParams->merge($template->params);
+
+		$this->setState('params', $mergedParams);
+
+		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
 		$this->setState('filter.studytitle', $studytitle);
@@ -118,7 +136,7 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.languages', $languages);
 
 		/**
-		 * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
+		 * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
 		parent::populateState('study.studydate', 'DESC');
 		$input      = new JInput;

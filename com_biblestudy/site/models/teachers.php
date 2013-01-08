@@ -69,11 +69,27 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
 	{
-		$app = JFactory::getApplication();
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->getInt('id');
+		$this->setState('sermon.id', $pk);
+
+		$offset = $app->input->getUInt('limitstart');
+		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
 		$params = $app->getParams();
 		$this->setState('params', $params);
+
+		// TODO: Tune these values based on other permissions.
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 	}

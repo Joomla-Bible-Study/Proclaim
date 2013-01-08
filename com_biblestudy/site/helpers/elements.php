@@ -11,8 +11,7 @@ defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
-// ???? not sure if we need to load this ???
+JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 
 /**
@@ -867,7 +866,7 @@ class JBSMElements extends JBSAdmin
 					if ($params->get('direct_internal', 0) == 1)
 					{
 						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
 							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
 							. $media->malttext . "' /></a>";
@@ -899,8 +898,8 @@ class JBSMElements extends JBSAdmin
 
 					if ($type == 1)
 					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=2&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
+						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 					}

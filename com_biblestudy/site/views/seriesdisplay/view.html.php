@@ -7,8 +7,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-require_once (BIBLESTUDY_PATH_LIB . 'biblestudy.pagebuilder.class.php');
-require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . 'translated.php');
+require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
 JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
@@ -100,6 +99,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$items       = $this->get('Item');
+		$this->state = $this->get('State');
 
 		// Get the series image
 		$images              = new JBSMImages;
@@ -110,17 +110,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. $teacherimage->width . '" alt="" />';
 		$t                   = $input->get('t', '1', 'int');
 
-		if (!$t)
-		{
-			$t = 1;
-		}
-
-		$template = $this->get('template');
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template[0]->params);
-		$params = $registry;
+		$params = $this->state->get('params');
 
 		// Convert parameter fields to objects.
 		$this->admin_params = $this->admin->params;
@@ -137,7 +127,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
-		$itemparams  = $mainframe->getPageParameters();
 
 		// Get studies associated with the series
 		$pagebuilder = new JBSPagebuilder;
@@ -158,19 +147,29 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			$studies[$i]->studydate  = $pelements->studydate;
 			$studies[$i]->topics     = $pelements->topics;
 
-			if (isset($pelements->study_thumbnail)):
+			if (isset($pelements->study_thumbnail))
+			{
 				$studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-			else:
+			}
+			else
+			{
 				$studies[$i]->study_thumbnail = null;
-			endif;
+			}
 
-			if (isset($pelements->series_thumbnail)):
+			if (isset($pelements->series_thumbnail))
+			{
 				$studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-			else:
+			}
+			else
+			{
 				$studies[$i]->series_thumbnail = null;
-			endif;
+			}
 			$studies[$i]->detailslink = $pelements->detailslink;
-			$studies[$i]->studyintro  = $pelements->studyintro;
+
+			if (isset($pelements->studyintro))
+			{
+				$studies[$i]->studyintro = $pelements->studyintro;
+			}
 
 			if (isset($pelements->secondary_reference))
 			{
@@ -194,20 +193,20 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$this->page          = $items;
 
 		// Prepare meta information (under development)
-		if ($itemparams->get('metakey'))
+		if ($params->get('metakey'))
 		{
-			$document->setMetadata('keywords', $itemparams->get('metakey'));
+			$document->setMetadata('keywords', $params->get('metakey'));
 		}
-		elseif (!$itemparams->get('metakey'))
+		elseif (!$params->get('metakey'))
 		{
 			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
 		}
 
-		if ($itemparams->get('metadesc'))
+		if ($params->get('metadesc'))
 		{
-			$document->setDescription($itemparams->get('metadesc'));
+			$document->setDescription($params->get('metadesc'));
 		}
-		elseif (!$itemparams->get('metadesc'))
+		elseif (!$params->get('metadesc'))
 		{
 			$document->setDescription($this->admin_params->get('metadesc'));
 		}
@@ -248,7 +247,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			$items->description = $description->text;
 		}
 		// End process prepare content plugins
-		$this->template = $template;
+		$this->template = $this->state->get('template');
 		$this->params   = $params;
 		$this->items    = $items;
 

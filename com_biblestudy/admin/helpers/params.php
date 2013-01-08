@@ -59,7 +59,7 @@ class JBSMParams
 		$query->select('*')
 			->from('#__bsms_templates')
 			->where('published = ' . $db->q('1'))
-			->where('id = ' . (int) $db->q($pk));
+			->where('id = ' . $db->q($pk));
 		$db->setQuery($query);
 		$template = $db->loadObject();
 

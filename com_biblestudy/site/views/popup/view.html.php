@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
 JLoader::register('JBSMImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
 JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 // This is the popup window for the teachings.  We could put anything in this window.
 
@@ -73,10 +74,6 @@ class BiblestudyViewPopup extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		/*
-		 * Load Helpers
-		 */
-		$this->loadHelper('params');
 		$input = new JInput;
 		$input->get('tmpl', 'component', 'string');
 		$mediaid      = $input->get('mediaid', '', 'int');
