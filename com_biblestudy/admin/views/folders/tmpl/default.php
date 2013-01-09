@@ -112,7 +112,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="foldersList">
+    <table class="table table-striped adminlist" id="foldersList">
         <thead>
         <tr>
             <th width="1%">

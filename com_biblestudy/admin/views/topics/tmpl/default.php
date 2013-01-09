@@ -94,20 +94,20 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clr"></div>
 
-    <table class="table table-striped" id="messagetypeslist">
+    <table class="table table-striped adminlist" id="topics">
         <thead>
         <tr>
-            <th width="1%">
+            <th width="1%" class="nowrap center hidden-phone">
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th width="8%" class="nowrap center hidden-phone">
+            <th width="1%" class="hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
             </th>
-            <th alicn="center">
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
             </th>
-            <th width="1%" class="nowrap">
+            <th width="1%" class="nowrap center hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
             </th>
         </tr>

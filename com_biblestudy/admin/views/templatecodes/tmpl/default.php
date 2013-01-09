@@ -106,7 +106,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped adminlist" id="templatecodes">
         <thead>
         <tr>
 

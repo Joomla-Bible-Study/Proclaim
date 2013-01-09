@@ -105,12 +105,11 @@ $sortFields = $this->getSortFields();
 </div>
 <div class="clearfix"></div>
 
-<table class="table table-striped" id="locations">
+<table class="table table-striped adminlist" id="teachers">
     <thead>
     <tr>
         <th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'teacher.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');
-			if (!BIBLESTUDY_CHECKREL) echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teacher.saveorder');?>
+			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'teacher.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
         </th>
         <th width="1%">
             <input type="checkbox" name="checkall-toggle" value=""
@@ -151,28 +150,23 @@ $sortFields = $this->getSortFields();
 		?>
     <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
         <td class="order nowrap center hidden-phone">
-			<?php
-			if ($canChange) :
-				$disableClassName = '';
-				$disabledLabel    = '';
-
-				if (!$saveOrder) :
-					$disabledLabel    = JText::_('JORDERINGDISABLED');
-					$disableClassName = 'inactive tip-top';
-				endif;
-				?>
-                <span class="sortable-handler hasTooltip <?php echo $disableClassName ?>"
-                      title="<?php echo $disabledLabel ?>">
-                                            <i class="icon-menu"></i>
-                                        </span>
-                <input type="text" style="<?php if (BIBLESTUDY_CHECKREL): ?>display:none<?php endif; ?>"
-                       name="order[]"
-                       size="5" value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
-				<?php else : ?>
-                <span class="sortable-handler inactive">
-                                            <i class="icon-menu"></i>
-                                        </span>
-				<?php endif; ?>
+			<?php if ($canChange) :
+			$disableClassName = '';
+			$disabledLabel    = '';
+			if (!$saveOrder) :
+				$disabledLabel    = JText::_('JORDERINGDISABLED');
+				$disableClassName = 'inactive tip-top';
+			endif; ?>
+            <span class="sortable-handler hasTooltip<?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
+								<i class="icon-menu"></i>
+							</span>
+            <input type="text" style="display:none" name="order[]" size="5"
+                   value="<?php echo $item->ordering;?>" class="width-20 text-area-order "/>
+			<?php else : ?>
+            <span class="sortable-handler inactive">
+								<i class="icon-menu"></i>
+							</span>
+			<?php endif; ?>
         </td>
         <td class="center hidden-phone">
 			<?php echo JHtml::_('grid.id', $i, $item->id); ?>
@@ -189,43 +183,44 @@ $sortFields = $this->getSortFields();
                 <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=teacher.edit&id=' . (int) $item->id); ?>">
 					<?php echo ($this->escape($item->teachername) ? $this->escape($item->teachername) : 'ID: ' . $this->escape($item->id)); ?>
                 </a>
-                <div class="pull-left">
-					<?php
-					if (BIBLESTUDY_CHECKREL)
-					{
-						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'article.');
-						JHtml::_('dropdown.divider');
-						if ($item->published) :
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
-						else :
-							JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
-						endif;
-
-						JHtml::_('dropdown.divider');
-
-						if ($archived) :
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
-						else :
-							JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
-						endif;
-
-						if ($trashed) :
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
-						else :
-							JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
-						endif;
-
-						// Render dropdown list
-						echo JHtml::_('dropdown.render');
-					}
-					?>
-                </div>
-                <p class="smallsub">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
 				<?php else : ?>
 				<?php echo ($this->escape($item->teachername) ? $this->escape($item->teachername) : 'ID: ' . $this->escape($item->id)); ?>
 				<?php endif; ?>
+                <span class="small">
+					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?>
+				</span>
+            </div>
+            <div class="pull-left">
+				<?php
+				if (BIBLESTUDY_CHECKREL)
+				{
+					// Create dropdown items
+					JHtml::_('dropdown.edit', $item->id, 'article.');
+					JHtml::_('dropdown.divider');
+					if ($item->published) :
+						JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+					else :
+						JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+					endif;
+
+					JHtml::_('dropdown.divider');
+
+					if ($archived) :
+						JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+					else :
+						JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+					endif;
+
+					if ($trashed) :
+						JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+					else :
+						JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+					endif;
+
+					// Render dropdown list
+					echo JHtml::_('dropdown.render');
+				}
+				?>
             </div>
         </td>
         <td class="small hidden-phone">

@@ -170,26 +170,23 @@ elseif (empty($this->item->study_id))
     }
 
 </script>
-<form
-        action="<?php
-		$input = new JInput;
-		if ($input->get('layout', '', 'string') == 'modal')
-		{
-			$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
-		}
-		else
-		{
-			$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
-		} echo $url;
-		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-
-<!-- Begin Content -->
+<form action="<?php
+$input = new JInput;
+if ($input->get('layout', '', 'string') == 'modal')
+{
+	$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
+}
+else
+{
+	$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+} echo $url;
+?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+<div class="row-fluid">
+<!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-    </li>
-    <li><a href="#state" data-toggle="tab"><?php echo JText::_('JBS_CMN_ITEM_PUBLISHED'); ?></a>
     </li>
     <li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
     </li>
@@ -223,30 +220,6 @@ elseif (empty($this->item->study_id))
 
     <div class="control-group">
         <div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('plays'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('plays'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('downloads'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('downloads'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
 			<?php echo $this->form->getLabel('createdate'); ?>
         </div>
         <div class="controls">
@@ -275,14 +248,6 @@ elseif (empty($this->item->study_id))
         </div>
         <div class="controls">
 			<?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->admin_params->get('download') : $this->item->link_type); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('ordering'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('ordering'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -491,8 +456,65 @@ elseif (empty($this->item->study_id))
 
 
 </div>
-<div class="tab-pane" id="state">
-    <fieldset>
+<?php if ($this->canDo->get('core.admin')): ?>
+<div class="tab-pane" id="permissions">
+
+    <div class="control-group">
+        <div class="controls">
+			<?php echo $this->form->getInput('rules'); ?>
+        </div>
+    </div>
+
+</div>
+
+	<?php endif; ?>
+</fieldset>
+<input type="hidden" name="flupfile" value=""/>
+<input type="hidden" name="task" value=""/>
+<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+<?php echo JHtml::_('form.token'); ?>
+<input type="hidden" name="controller" value="mediafile"/>
+</div>
+<!-- Begin Sidebar -->
+<div class="span2">
+    <h4><?php echo JText::_('JDETAILS');?></h4>
+    <hr/>
+    <fieldset class="form-vertical">
+
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('id'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('id'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('plays'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('plays'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('downloads'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('downloads'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('ordering'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('ordering'); ?>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="form-vertical">
         <div class="control-group">
             <div class="control-label">
 				<?php echo $this->form->getLabel('published'); ?>
@@ -519,31 +541,8 @@ elseif (empty($this->item->study_id))
 				<?php echo $this->form->getInput('language'); ?>
             </div>
         </div>
-
-
+    </fieldset>
 </div>
-<?php if ($this->canDo->get('core.admin')): ?>
-<div class="tab-pane" id="permissions">
-
-    <div class="control-group">
-        <div class="controls">
-			<?php echo $this->form->getInput('rules'); ?>
-        </div>
-    </div>
-
-</div>
-
-	<?php endif; ?>
-</fieldset>
-<input type="hidden" name="flupfile" value=""/>
-<input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-<?php echo JHtml::_('form.token'); ?>
-<input type="hidden" name="controller" value="mediafile"/>
-
-
-</div>
-</fieldset>
+<!-- End Sidebar -->
 </div>
 </form>
-

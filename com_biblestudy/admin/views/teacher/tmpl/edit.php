@@ -46,7 +46,7 @@ $input  = $app->input;
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
-
+<div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
 <fieldset>
@@ -65,58 +65,18 @@ $input  = $app->input;
 
     <div class="control-group">
         <div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('published'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('published'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('list_show'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('list_show'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('ordering'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('ordering'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('landing_show'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('landing_show'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('language'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('language'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
 			<?php echo $this->form->getLabel('teachername'); ?>
         </div>
         <div class="controls">
 			<?php echo $this->form->getInput('teachername'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('alias'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('alias'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -144,14 +104,6 @@ $input  = $app->input;
                 </div>
             </div>
 			<?php } ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('alias'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('alias'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -332,12 +284,80 @@ $input  = $app->input;
 	<?php endif; ?>
 
 </div>
+</fieldset>
 <input type="hidden" name="task" value=""/>
 <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 <?php echo JHtml::_('form.token'); ?>
-
-
-</fieldset>
 </div>
+
+<!-- Begin Sidebar -->
+<div class="span2">
+    <h4><?php echo JText::_('JDETAILS');?></h4>
+    <hr />
+    <fieldset class="form-vertical">
+        <div class="control-group">
+            <div class="control-group">
+                <div class="controls">
+					<?php echo $this->form->getValue('teachername'); ?>
+                </div>
+            </div>
+            <div class="control-label">
+		        <?php echo $this->form->getLabel('id'); ?>
+            </div>
+            <div class="controls">
+		        <?php echo $this->form->getInput('id'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+		        <?php echo $this->form->getLabel('published'); ?>
+            </div>
+            <div class="controls">
+		        <?php echo $this->form->getInput('published'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('access'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('access'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+			    <?php echo $this->form->getLabel('list_show'); ?>
+            </div>
+            <div class="controls">
+			    <?php echo $this->form->getInput('list_show'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+			    <?php echo $this->form->getLabel('ordering'); ?>
+            </div>
+            <div class="controls">
+			    <?php echo $this->form->getInput('ordering'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+			    <?php echo $this->form->getLabel('landing_show'); ?>
+            </div>
+            <div class="controls">
+			    <?php echo $this->form->getInput('landing_show'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+			    <?php echo $this->form->getLabel('language'); ?>
+            </div>
+            <div class="controls">
+			    <?php echo $this->form->getInput('language'); ?>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<!-- End Sidebar -->
 
 </form>

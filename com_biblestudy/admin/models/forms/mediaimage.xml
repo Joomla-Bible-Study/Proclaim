@@ -10,19 +10,9 @@
             size="1"
             default="1"
             filter="integer">
-        <option
-                value="1">
-            JPUBLISHED
-        </option>
-        <option
-                value="0">
-            JUNPUBLISHED
-        </option>
-
-        <option
-                value="-2">
-            JTRASHED
-        </option>
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+        <option value="-2">JTRASHED</option>
     </field>
     <field name="media_image_name" type="text" class="inputbox" size="60"
            label="JBS_MDI_NAME_IMAGE" required="true"/>

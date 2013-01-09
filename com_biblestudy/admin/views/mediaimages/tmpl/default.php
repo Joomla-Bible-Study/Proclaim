@@ -106,14 +106,14 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped adminlist" id="locations">
         <thead>
         <tr>
             <th width="1%">
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th>
+            <th width="1%" style="min-width:55px" class="nowrap center">
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'media.published', $listDirn, $listOrder); ?>
             </th>
 
@@ -122,12 +122,12 @@ $sortFields = $this->getSortFields();
 				echo JHtml::_('grid.sort', 'JBS_CMN_IMAGE', 'media.path2', $listDirn, $listOrder);
 				?>
             </th>
-            <th width="77%">
+            <th>
 				<?php
 				echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA', 'media.media_image_name', $listDirn, $listOrder);
 				?>
             </th>
-            <th>
+            <th  width="1%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'media.id', $listDirn, $listOrder); ?>
             </th>
         </tr>

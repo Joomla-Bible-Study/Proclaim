@@ -10,10 +10,15 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+// Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
+// Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('behavior.keepalive');
+if (BIBLESTUDY_CHECKREL)
+	JHtml::_('formbehavior.chosen', 'select');
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function (task) {
@@ -41,86 +46,101 @@ JHtml::_('formbehavior.chosen', 'select');
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="mediaimage-form" class="form-validate form-horizontal">
-    <div class="span10 form-horizontal">
+      method="post" name="adminForm" id="mediaimage-form" class="form-validate">
+    <div class="row-fluid">
+        <div class="span10 form-horizontal">
+            <fieldset>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#details"
+                                          data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS');?></a>
+                    </li>
+                    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES');?></a>
+                    </li>
 
-        <fieldset>
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#details" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS');?></a>
-                </li>
-                <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES');?></a></li>
-
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane active" id="details">
-
-
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="details">
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('media_image_name'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('media_image_name'); ?>
+                            </div>
                         </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('media_text'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('media_text'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('path2'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('path2'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('media_image_path'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('media_image_path'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('media_alttext'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('media_alttext'); ?>
+                            </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('media_image_name'); ?>
+					<?php if ($this->canDo->get('core.admin')): ?>
+                    <div class="tab-pane" id="permissions">
+
+                        <div class="control-group">
+                            <div class="controls">
+								<?php echo $this->form->getInput('rules'); ?>
+                            </div>
                         </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('media_image_name'); ?>
-                        </div>
+
                     </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('media_text'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('media_text'); ?>
-                        </div>
+
+					<?php endif; ?>
+                    <input type="hidden" name="task" value=""/>
+					<?php echo JHtml::_('form.token'); ?>
+                </div>
+            </fieldset>
+        </div>
+        <!-- Begin Sidebar -->
+        <div class="span2">
+            <h4><?php echo JText::_('JDETAILS');?></h4>
+            <hr/>
+            <fieldset class="form-vertical">
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('id'); ?>
                     </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('path2'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('path2'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('media_image_path'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('media_image_path'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('media_alttext'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('media_alttext'); ?>
-                        </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('id'); ?>
                     </div>
                 </div>
-				<?php if ($this->canDo->get('core.admin')): ?>
-                <div class="tab-pane" id="permissions">
-
-                    <div class="control-group">
-                        <div class="controls">
-							<?php echo $this->form->getInput('rules'); ?>
-                        </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
                     </div>
-
+                    <div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
+                    </div>
                 </div>
-
-				<?php endif; ?>
-                <input type="hidden" name="task" value=""/>
-				<?php echo JHtml::_('form.token'); ?>
-            </div>
-        </fieldset>
+            </fieldset>
+        </div>
+        <!-- End Sidebar -->
     </div>
-
 </form>

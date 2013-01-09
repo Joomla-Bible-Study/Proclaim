@@ -36,8 +36,9 @@ $input  = $app->input;
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
+<div class="row-fluid">
 <!-- Begin Content -->
-<div class="span10 form-horizontal">
+<div class="span12 form-horizontal">
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_TPL_GENERAL'); ?></a></li>
@@ -75,7 +76,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('title'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('title'); ?></li>
+			<?php echo $this->form->getInput('title'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -83,7 +84,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('text'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('text'); ?></li>
+			<?php echo $this->form->getInput('text'); ?>
         </div>
     </div>
 	<?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
@@ -106,7 +107,6 @@ $input  = $app->input;
         </div>
     </div>
 	<?php endforeach; ?>
-
 </div>
 <div class="tab-pane" id="media">
 	<?php foreach ($this->form->getFieldset('MEDIA') as $field): ?>
@@ -133,243 +133,264 @@ $input  = $app->input;
 	<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="list">
-	<?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_VERSES_DATES_CSS'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_VERSES_DATES_CSS'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('VERSES') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
-                </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
-            </div>
-			<?php endforeach; ?>
+    <div id="list-sliders" class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#list-1" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_VERSES_DATES_CSS'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-2" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-3" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_FILTERS'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-4" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_TOOLTIP_ITEMS'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-5" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_STUDY_LIST_ROW1'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-6" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_STUDY_LIST_ROW2'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-7" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_STUDY_LIST_ROW3'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-8" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_STUDY_LIST_ROW4'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-9" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_STUDY_LIST_CUSTOM'); ?></a>
+            </li>
         </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_LIST_ITEMS'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('LISTITEMS') as $field): ?>
-			<?php
-			$thename = $field->label;
-			if (substr_count($thename, 'jform_params_list_intro-lbl'))
-			{
-				echo '<div class="clr"></div>';
-			}
-			?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+        <div class="tab-content">
+            <div class="tab-pane active" id="list-1">
+				<?php foreach ($this->form->getFieldset('VERSES') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_FILTERS'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_FILTERS'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('FILTERS') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-2">
+				<?php foreach ($this->form->getFieldset('LISTITEMS') as $field): ?>
+				<?php
+				$thename = $field->label;
+				if (substr_count($thename, 'jform_params_list_intro-lbl'))
+				{
+					echo '<div class="clr"></div>';
+				}
+				?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_TOOLTIP_ITEMS'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_TOOLTIP_ITEMS'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('TOOLTIP') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-3">
+				<?php foreach ($this->form->getFieldset('FILTERS') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW1'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW1'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('ROW1') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-4">
+				<?php foreach ($this->form->getFieldset('TOOLTIP') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW2'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW1'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('ROW2') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-5">
+				<?php foreach ($this->form->getFieldset('ROW1') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW3'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW3'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('ROW3') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-6">
+				<?php foreach ($this->form->getFieldset('ROW2') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW4'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW4'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('ROW4') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-7">
+				<?php foreach ($this->form->getFieldset('ROW3') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_CUSTOM'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_CUSTOM'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('STUDIESVIEW') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="list-8">
+				<?php foreach ($this->form->getFieldset('ROW4') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.end'); ?>
+            <div class="tab-pane" id="list-9">
+				<?php foreach ($this->form->getFieldset('STUDIESVIEW') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
+                </div>
+				<?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="tab-pane" id="details">
-	<?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_VIEW'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('DETAILS') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
-                </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
-            </div>
-			<?php endforeach; ?>
+    <div id="details-sliders" class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#details-1" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#details-2" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW1'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#details-3" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW2'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#details-4" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW3'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#details-5" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW4'); ?>
+                </a>
+            </li>
         </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_LIST_ROW1'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW1'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('DETAILSROW1') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+        <div class="tab-content">
+            <div class="tab-pane active" id="details-1">
+				<?php foreach ($this->form->getFieldset('DETAILS') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_LIST_ROW2'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW2'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('DETAILSROW2') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="details-2">
+				<?php foreach ($this->form->getFieldset('DETAILSROW1') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_LIST_ROW3'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW3'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('DETAILSROW3') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="details-3">
+				<?php foreach ($this->form->getFieldset('DETAILSROW2') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_LIST_ROW4'), 'publishing-details'); ?>
-    <fieldset class="panelform">
-        <legend><?php echo JText::_('JBS_TPL_DETAILS_LIST_ROW4'); ?></legend>
-        <ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('DETAILSROW4') as $field): ?>
-            <div class="control-group">
-                <div class="control-label">
-					<?php echo $field->label;?>
+            <div class="tab-pane" id="details-4">
+				<?php foreach ($this->form->getFieldset('DETAILSROW3') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
                 </div>
-                <div class="controls">
-					<?php echo $field->input; ?>
-                </div>
+				<?php endforeach; ?>
             </div>
-			<?php endforeach; ?>
-        </ul>
-    </fieldset>
-	<?php echo JHtml::_('sliders.end'); ?>
+            <div class="tab-pane" id="details-5">
+				<?php foreach ($this->form->getFieldset('DETAILSROW4') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
+                </div>
+				<?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="tab-pane" id="teacher">
 	<?php foreach ($this->form->getFieldset('TEACHER') as $field): ?>
@@ -384,8 +405,6 @@ $input  = $app->input;
 	<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="series">
-	<?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_SERIES_LIST'), 'publishing-details'); ?>
     <ul class="adminformlist">
 		<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
         <div class="control-group">
@@ -398,7 +417,6 @@ $input  = $app->input;
         </div>
 		<?php endforeach; ?>
     </ul>
-	<?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_SERIES_DETAIL_VIEW'), 'publishing-details'); ?>
     <ul class="adminformlist">
 		<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
         <div class="control-group">
@@ -411,20 +429,17 @@ $input  = $app->input;
         </div>
 		<?php endforeach; ?>
     </ul>
-	<?php echo JHtml::_('sliders.end'); ?>
 </div>
-
 
 <?php if ($this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
-
 	<?php echo $this->form->getInput('rules'); ?>
-
 </div>
 	<?php endif; ?>
-<input type="hidden" name="task" value=""/>
+</div>
 </fieldset>
-</div>
-</div>
+<input type="hidden" name="task" value=""/>
 <?php echo JHtml::_('form.token'); ?>
+</div>
+</div>
 </form>

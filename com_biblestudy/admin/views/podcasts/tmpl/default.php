@@ -94,7 +94,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clr"></div>
 
-    <table class="table table-striped" id="messagetypeslist">
+    <table class="table table-striped adminlist" id="podcasts">
         <thead>
         <tr>
             <th width="1%">

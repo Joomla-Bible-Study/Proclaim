@@ -33,9 +33,9 @@ $input  = $app->input;
     }
 </script>
 
-
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
+	<div class="row-fluid">
     <!-- Begin Content -->
     <div class="span10 form-horizontal">
         <fieldset>
@@ -51,26 +51,10 @@ $input  = $app->input;
                 <div class="tab-pane active" id="general">
                     <div class="control-group">
                         <div class="control-label">
-							<?php echo $this->form->getLabel('id'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('id'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
 							<?php echo $this->form->getLabel('filename'); ?>
                         </div>
                         <div class="controls">
-							<?php echo $this->form->getInput('filename'); ?></li>
+							<?php echo $this->form->getInput('filename'); ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -111,9 +95,33 @@ $input  = $app->input;
 
                 </div>
 				<?php endif; ?>
-                <input type="hidden" name="task" value=""/>
+        </fieldset>
+        <input type="hidden" name="task" value=""/>
+	    <?php echo JHtml::_('form.token'); ?>
+    </div>
+    <!-- Begin Sidebar -->
+    <div class="span2">
+        <h4><?php echo JText::_('JDETAILS');?></h4>
+        <hr/>
+        <fieldset class="form-vertical">
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('id'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('id'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('published'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('published'); ?>
+                </div>
+            </div>
         </fieldset>
     </div>
+    <!-- End Sidebar -->
     </div>
-	<?php echo JHtml::_('form.token'); ?>
 </form>

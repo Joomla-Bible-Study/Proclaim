@@ -106,33 +106,32 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped adminlist" id="comments">
         <thead>
         <tr>
-            <th width="1%">
+            <th width="1%" class="hidden-phone">
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th>
+            <th width="1%" style="min-width:55px" class="nowrap center">
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
             </th>
-
             <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
             </th>
-            <th class="nowrap hidden-phone">
+            <th width="10%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'comment.access', $listDirn, $listOrder); ?>
             </th>
-            <th>
+            <th class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
             </th>
-            <th>
+            <th class="nowrap hidden-phone">
 				<?php echo JText::_('JBS_CMT_TEXT'); ?>
             </th>
-            <th>
+            <th class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
             </th>
-            <th class="nowrap hidden-phone">
+            <th width="5%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap hidden-phone">
@@ -155,9 +154,7 @@ $sortFields = $this->getSortFields();
 				<?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
             <td class="center">
-                <div class="btn-group">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
-                </div>
+				<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
             </td>
 
             <td class="nowrap has-context">
@@ -205,28 +202,20 @@ $sortFields = $this->getSortFields();
 				<?php echo $this->escape($item->access_level); ?>
             </td>
             <td class="nowrap has-context">
-                <div class="pull-left">
-					<?php echo $item->full_name; ?>
-                </div>
+				<?php echo $item->full_name; ?>
             </td>
             <td>
-                <div class="pull-left">
-					<?php echo substr($item->comment_text, 0, 50); ?>
-                </div>
+				<?php echo substr($item->comment_text, 0, 50); ?>
             </td>
             <td class="nowrap has-context">
-                <div class="pull-left">
-					<?php echo $item->comment_date; ?>
-                </div>
+				<?php echo $item->comment_date; ?>
             </td>
             <td class="small hidden-phone">
-                <div class="pull-left">
-					<?php if ($item->language == '*'): ?>
-					<?php echo JText::alt('JALL', 'language'); ?>
-					<?php else: ?>
-					<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-					<?php endif; ?>
-                </div>
+				<?php if ($item->language == '*'): ?>
+				<?php echo JText::alt('JALL', 'language'); ?>
+				<?php else: ?>
+				<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+				<?php endif; ?>
             </td>
 
             </td>

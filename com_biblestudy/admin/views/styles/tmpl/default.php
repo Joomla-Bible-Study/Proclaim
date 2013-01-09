@@ -51,7 +51,7 @@ $listDirn  = $this->state->get('list.direction');
     <table class="table table-striped adminlist" id="articleList">
         <thead>
         <tr>
-            <th width="1%">
+            <th width="1%" class="hidden-phone">
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
@@ -72,16 +72,18 @@ $listDirn  = $this->state->get('list.direction');
 			$link = JRoute::_('index.php?option=com_biblestudy&task=style.edit&id=' . (int) $item->id);
 			?>
         <tr class="row<?php echo $i % 2; ?>">
-            <td width="20">
+            <td class="center hidden-phone">
 				<?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
-            <td width="20" align="center">
+            <td class="center">
 				<?php echo JHtml::_('jgrid.published', $item->published, $i, 'styles.', true, 'cb', '', ''); ?>
             </td>
-            <td>
-                <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
+            <td class="nowrap has-context">
+                <a href="<?php echo $link; ?>">
+	                <?php echo $item->filename; ?>
+                </a>
             </td>
-            <td>
+            <td class="center hidden-phone">
 				<?php echo $item->id; ?>
             </td>
         </tr>

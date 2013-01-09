@@ -112,7 +112,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="foldersList">
+    <table class="table table-striped adminlist" id="mimetypes">
         <thead>
         <tr>
             <th width="1%">
@@ -122,7 +122,7 @@ $sortFields = $this->getSortFields();
             <th width="1%" style="min-width:55px" class="nowrap center">
 				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mimetype.published', $listDirn, $listOrder); ?>
             </th>
-            <th width="20%">
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_MMT_MIME_TEXT', 'mimetype.mimetext', $listDirn, $listOrder); ?>
             </th>
             <th width="10%" class="nowrap hidden-phone">

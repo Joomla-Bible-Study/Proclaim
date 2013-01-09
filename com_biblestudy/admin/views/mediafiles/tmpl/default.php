@@ -116,45 +116,44 @@ $sortFields = $this->getSortFields();
     <th width="1%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
     </th>
-    <th width="1%">
+    <th width="1%" class="hidden-phone">
         <input type="checkbox" name="checkall-toggle" value=""
                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
     </th>
-    <th width="5%">
+    <th width="1%" style="min-width:55px" class="nowrap center">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
     </th>
-
-    <th width="20%">
+    <th>
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_FILENAME', 'mediafile.filename', $listDirn, $listOrder); ?>
     </th>
-    <th width="20%">
+    <th width="20%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
     </th>
-    <th width="10%">
+    <th width="10%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th width="5%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_PLAYERLABEL', 'mediafile.player', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th width="5%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_POPUPLABEL', 'mediafile.popup', $listDirn, $listOrder); ?>
     </th>
-    <th width="15%">
+    <th width="15%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th width="5%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_DOWNLOAD', 'mediafile.link_type', $listDirn, $listOrder); ?>
     </th>
     <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
     </th>
-    <th width="5%">
+    <th width="5%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
     </th>
-    <th width="5%">
+    <th width="5%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
     </th>
-    <th width="1%" class="nowrap">
+    <th width="1%" class="nowrap center hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mediafile.id', $listDirn, $listOrder); ?>
     </th>
 </tr>
@@ -174,7 +173,6 @@ foreach ($this->items as $i => $item) :
 		if ($canChange) :
 			$disableClassName = '';
 			$disabledLabel    = '';
-
 			if (!$saveOrder) :
 				$disabledLabel    = JText::_('JORDERINGDISABLED');
 				$disableClassName = 'inactive tip-top';
@@ -196,9 +194,7 @@ foreach ($this->items as $i => $item) :
 		<?php echo JHtml::_('grid.id', $i, $item->id); ?>
     </td>
     <td class="center">
-        <div class="btn-group">
 			<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', $canChange, 'cb', '', ''); ?>
-        </div>
     </td>
 
     <td class="nowrap has-context">
@@ -244,111 +240,104 @@ foreach ($this->items as $i => $item) :
 			?>
         </div>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php echo $this->escape($item->studytitle); ?>
-        </div>
+    <td class="center hidden-phone">
+		<?php echo $this->escape($item->studytitle); ?>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php
-			//echo $this->directory;
-			$path = JURI::base() . '../';
-			if ($item->path2)
+    <td class="center hidden-phone">
+		<?php
+		$path = JURI::base() . '../';
+
+		if ($item->path2)
+		{
+			if (!substr_count($item->path2, '/'))
 			{
-				if (!substr_count($item->path2, '/'))
-				{
-					$image = '/media/com_biblestudy/images/' . $item->path2;
-				}
-				else
-				{
-					$image = $item->path2;
-				}
+				$image = '/media/com_biblestudy/images/' . $item->path2;
 			}
 			else
 			{
-				$image = $item->media_image_path;
-				$path  = '../';
+				$image = $item->path2;
 			}
+		}
+		elseif ($item->media_image_path)
+		{
+			$image = $item->media_image_path;
+			$path  = '../';
+		}
+		else
+		{
+			$image = false;
+		}
+		if ($image)
+		{
 			?>
             <img src=" <?php echo $path . $image; ?>" alt="<?php echo $item->mediaType; ?>"
                  title="<?php echo $item->mediaType; ?>"/>
-        </div>
+			<?php
+		}
+		?>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php switch ($this->escape($item->player))
-		{
-			case 100:
-				echo JText::_('JBS_MED_GLOBAL');
-				break;
-			case 0:
-				echo JText::_('JBS_MED_DIRECT_LINK');
-				break;
-			case 1:
-				echo JText::_('JBS_MED_INTERNAL_PLAYER');
-				break;
-			case 3:
-				echo JText::_('JBS_MED_AV');
-				break;
-			case 7:
-				echo JText::_('JBS_MED_LEGACY_PLAYER');
-				break;
-			case 8:
-				echo JText::_('JBS_MED_EMBED_CODE');
-				break;
-		} ?>
-        </div>
+    <td class="center hidden-phone">
+		<?php switch ($this->escape($item->player))
+	{
+		case 100:
+			echo JText::_('JBS_MED_GLOBAL');
+			break;
+		case 0:
+			echo JText::_('JBS_MED_DIRECT_LINK');
+			break;
+		case 1:
+			echo JText::_('JBS_MED_INTERNAL_PLAYER');
+			break;
+		case 3:
+			echo JText::_('JBS_MED_AV');
+			break;
+		case 7:
+			echo JText::_('JBS_MED_LEGACY_PLAYER');
+			break;
+		case 8:
+			echo JText::_('JBS_MED_EMBED_CODE');
+			break;
+	} ?>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php switch ($this->escape($item->popup))
-		{
-			case 3:
-				echo JText::_('JBS_MED_GLOBAL');
-				break;
-			case 1:
-				echo JText::_('JBS_MED_POPUPLABEL');
-				break;
-			case 2:
-				echo JText::_('JBS_MED_INLINELABEL');
-				break;
-		}?>
-        </div>
+    <td class="center hidden-phone">
+		<?php switch ($this->escape($item->popup))
+	{
+		case 3:
+			echo JText::_('JBS_MED_GLOBAL');
+			break;
+		case 1:
+			echo JText::_('JBS_MED_POPUPLABEL');
+			break;
+		case 2:
+			echo JText::_('JBS_MED_INLINELABEL');
+			break;
+	}?>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
-        </div>
+    <td class="center hidden-phone">
+		<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
     </td>
-    <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php switch ($this->escape($item->link_type))
-		{
-			case 0:
-				echo JText::_('JNO');
-				break;
-			case 1:
-				echo JText::_('JYES');
-				break;
-			case 2:
-				echo JText::_('JBS_CMN_ONLY');
-				break;
-		}?>
-        </div>
+    <td class="center hidden-phone">
+		<?php switch ($this->escape($item->link_type))
+	{
+		case 0:
+			echo JText::_('JNO');
+			break;
+		case 1:
+			echo JText::_('JYES');
+			break;
+		case 2:
+			echo JText::_('JBS_CMN_ONLY');
+			break;
+	}?>
     </td>
     <td class="small hidden-phone">
 		<?php echo $this->escape($item->access_level); ?>
     </td>
     <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php echo $this->escape($item->plays); ?>
-        </div>
+		<?php echo $this->escape($item->plays); ?>
     </td>
     <td class="nowrap has-context">
-        <div class="pull-left">
-			<?php echo $this->escape($item->downloads); ?>
-        </div>
+		<?php echo $this->escape($item->downloads); ?>
     </td>
     <td class="center hidden-phone">
 		<?php echo (int) $item->id; ?>

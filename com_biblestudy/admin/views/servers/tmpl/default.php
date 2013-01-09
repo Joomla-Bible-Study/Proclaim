@@ -178,10 +178,6 @@ $sortFields = $this->getSortFields();
 					?>
                 </div>
             </td>
-
-            <td class="small hidden-phone">
-
-            </td>
             <td class="center hidden-phone">
 				<?php echo (int) $item->id; ?>
             </td>
