@@ -135,7 +135,7 @@ class JBSDebug
 	 */
 	public function Debug_vars($varlist)
 	{
-		$output = '<table border=1><tr> <th>variable</th> <th>value</th> </tr>';
+		$output = '<table class="table" border=1><tr> <th>variable</th> <th>value</th> </tr>';
 
 		foreach ($varlist as $key => $value)
 		{
@@ -146,7 +146,7 @@ class JBSDebug
 
 				if (count($value) > 0)
 				{
-					$output .= '"<table border=1><tr> <th>key</th> <th>value</th> </tr>';
+					$output .= '"<table class="table" border=1><tr> <th>key</th> <th>value</th> </tr>';
 
 					foreach ($value as $skey => $svalue)
 					{

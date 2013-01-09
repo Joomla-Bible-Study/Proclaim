@@ -69,7 +69,7 @@ $JBSMSerieslist = new JBSMSerieslist;
 					break;
 				case 'T':
 					// Table
-					echo '<table id="bsms_studytable" style="width: 100%">';
+					echo '<table class="table table-striped" id="bsms_studytable" style="width: 100%">';
 					break;
 				case 'D':
 					// DIV

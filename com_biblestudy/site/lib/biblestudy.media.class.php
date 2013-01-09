@@ -78,7 +78,7 @@ class jbsMedia
 		}
 
 		// Here is where we begin to build the table
-		$table = '<table class="mediatable"><tbody><tr>';
+		$table = '<table class="table mediatable"><tbody><tr>';
 
 		// Now we look at each mediaid, and get the rest of the media information
 		foreach ($mediaids AS $media)

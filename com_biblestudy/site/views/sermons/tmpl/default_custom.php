@@ -71,7 +71,7 @@ $JBSMTeacher = new JBSMTeacher;
         </div>
         <!--header-->
 
-        <table id="listintro">
+        <table class="table table-striped" id="listintro">
             <tr>
                 <td>
                     <p>
@@ -150,7 +150,7 @@ $JBSMTeacher = new JBSMTeacher;
 				break;
 			case 'T':
 				// Table
-				echo '<table id="bsms_studytable" width="100%">';
+				echo '<table class="table table-striped" id="bsms_studytable" width="100%">';
 				break;
 			case 'D':
 				// DIV

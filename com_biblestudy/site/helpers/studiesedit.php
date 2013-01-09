@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 function getStudiesedit($row, $params)
 {
 
-	$studiesedit = '<table><tr>
+	$studiesedit = '<table class="table"><tr>
 		<td><strong>' . JText::_('JBS_CMN_STUDIES') . '</strong></td>
 	</tr>
 	<tr>

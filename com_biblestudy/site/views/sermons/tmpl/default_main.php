@@ -30,7 +30,7 @@ $JBSMTeacher = new JBSMTeacher;
 // @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');
 ?>
-<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+<div id="biblestudy" class="row-fluid noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsheader">
 		<?php
 		if ($this->params->get('showpodcastsubscribelist') == 1)
@@ -140,7 +140,7 @@ $teachers = $params->get('teacher_id');
         <!--dropdownmenu-->
     </fieldset>
     <div class="clr"></div>
-    <table class="bslisttable">
+    <table class="table table-striped bslisttable">
         <thead>
 		<?php
 		if (isset($this->items['0']))

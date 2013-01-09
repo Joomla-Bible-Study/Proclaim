@@ -30,7 +30,7 @@ if (!$studieslisttemplateid)
 }
 ?>
 <div id="biblestudy" class="noRefTagger">
-<table id="bsm_teachertable">
+<table class="table table-striped" id="bsm_teachertable">
     <tbody>
     <tr>
         <td class="bsm_teacherthumbnail">
@@ -47,7 +47,7 @@ if (!$studieslisttemplateid)
 			<?php echo $this->item->largeimage; ?>
         </td>
         <td class="bsm_teachername">
-            <table id="bsm_teachertable_info">
+            <table class="table table-striped" id="bsm_teachertable_info">
                 <tbody>
                 <tr>
                     <td class="bsm_teachername">
@@ -162,7 +162,7 @@ if (!$studieslisttemplateid)
     </tbody>
 </table>
 <?php ?>
-<table class="bslisttable">
+<table class="table table-striped bslisttable">
     <tbody>
     <tr>
         <td> <?php
@@ -170,7 +170,7 @@ if (!$studieslisttemplateid)
 			{
 				case 1:
 					?>
-                    <table id="bsm_teachertable_studies">
+                    <table class="table table-striped" id="bsm_teachertable_studies">
                         <tbody>
                         <tr class="titlerow">
                             <td class="title" colspan="3"><?php echo $this->params->get('label_teacher'); ?></td>
@@ -211,7 +211,7 @@ if (!$studieslisttemplateid)
 					break;
 				case 2:
 					?>
-                    <table id="bsm_teachertable_lable">
+                    <table class="table table-striped" id="bsm_teachertable_lable">
                         <tbody>
                         <tr class="titlerow">
                             <td class="title" colspan="3">
@@ -220,7 +220,7 @@ if (!$studieslisttemplateid)
                         </tr>
                         </tbody>
                     </table>
-                    <table class="bslisttable">
+                    <table class="table table-striped bslisttable">
                         <tbody>
 							<?php
 							foreach ($this->teacherstudies as $row)

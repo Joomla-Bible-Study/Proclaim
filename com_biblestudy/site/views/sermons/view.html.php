@@ -155,7 +155,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * @var object
 	 */
-	protected $document;
+	public $document;
 
 	/**
 	 * @var int

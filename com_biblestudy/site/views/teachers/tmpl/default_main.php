@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <table id="bsm_teachertable_list">
+    <table class="table table-striped" id="bsm_teachertable_list">
         <tbody>
         <tr class="titlerow">
             <td style="text-align: center" colspan="3" class="title">
@@ -53,7 +53,7 @@ defined('_JEXEC') or die;
 				?>
             </td>
             <td class="bsm_teachername">
-                <table>
+                <table class="table table-striped">
                     <tr>
                         <td>
                             <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>

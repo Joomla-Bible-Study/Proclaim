@@ -172,7 +172,7 @@ class JBSMElements extends JBSAdmin
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
-				$elementid->element    = '<table class="detailstable"><tbody><tr><td>';
+				$elementid->element    = '<table class="table detailstable"><tbody><tr><td>';
 				$elementid->element .= $this->getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
 				$textorpdf = 'pdf';
 				$elementid->element .= $this->getTextlink(
@@ -767,7 +767,7 @@ class JBSMElements extends JBSAdmin
 			return $mediatable;
 		}
 
-		$mediatable = '<div><table class="mediatable"><tbody><tr>';
+		$mediatable = '<div><table class="table mediatable"><tbody><tr>';
 		$row_count  = 0;
 
 		foreach ($media1 as $media)
@@ -967,7 +967,7 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 2:
-					$mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
+					$mediatable = '<div><table class="table mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
 					break;
 			}
 			$mediatable .= '</td>';
@@ -1136,7 +1136,7 @@ class JBSMElements extends JBSAdmin
                         WHERE s.id =' . $row->id;
 		$database->setQuery($query);
 		$dvd   = $database->loadObject();
-		$store = '<table id="detailstable"><tr><td>';
+		$store = '<table class="table" id="detailstable"><tr><td>';
 
 		if (($cd->mid + $dvd->mid) > 0)
 		{

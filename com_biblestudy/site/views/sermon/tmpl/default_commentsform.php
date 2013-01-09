@@ -45,7 +45,7 @@ switch ($this->item->params->get('link_comments', 0))
 }
 ?>
 <div id="commentstable">
-<table class="bslisttable" border="0">
+<table class="table table-striped bslisttable" border="0">
     <thead>
     <tr class="lastrow">
         <th id="commentshead" class="row1col1">
@@ -126,7 +126,7 @@ if ($allow > 9)
 {
 	?>
 <form action="index.php" method="post">
-    <table id="commentssubmittable" border="0">
+    <table class="table table-striped" id="commentssubmittable" border="0">
 		<?php
 		if ($allow < 10)
 		{

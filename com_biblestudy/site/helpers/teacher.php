@@ -55,7 +55,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			$teacherids->id = $id;
 		}
-		$teacher = '<table id = "teacher"><tr>';
+		$teacher = '<table class="table" id="teacher"><tr>';
 
 		if (!isset($teacherids))
 		{
@@ -80,7 +80,7 @@ class JBSMTeacher extends JBSMListing
 				$image->width  = 0;
 				$image->height = 0;
 			}
-			$teacher .= '<td><table class="cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
 				. '" height="' . $image->height . '" alt="" /></td></tr>';
 
 			$teacher .= '<tr><td>';
@@ -99,7 +99,7 @@ class JBSMTeacher extends JBSMListing
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
-			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
+			$teacher .= '<td><div id="listintro"><table class="table" id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
 		$teacher .= '</tr></table>';
 
@@ -260,7 +260,7 @@ class JBSMTeacher extends JBSMListing
 				break;
 			case 'T':
 				// Table
-				$studies .= '<table id="bsms_studytable" width="100%">';
+				$studies .= '<table class="table" id="bsms_studytable" width="100%">';
 				break;
 			case 'D':
 				// DIV

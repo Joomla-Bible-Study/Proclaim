@@ -222,7 +222,7 @@ class JBSMSerieslist extends JBSMListing
 			case 3:
 				$images   = new JBSMImages;
 				$image    = $images->getSeriesThumbnail($row->series_thumbnail);
-				$element1 = '<td class="' . $r . ' thumbnail"> <table id="seriestable"><tr class="noborder"><td>';
+				$element1 = '<td class="' . $r . ' thumbnail"> <table class="table" id="seriestable"><tr class="noborder"><td>';
 				$element2 = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
 				$element3 = '</td></tr>';
 				$element4 = $row->series_text;
@@ -257,7 +257,7 @@ class JBSMSerieslist extends JBSMListing
 				$element = '<td class="' . $r . ' teacher image">' . $element . '</td>';
 				break;
 			case 6:
-				$element1 = '<table id="seriestable"><tr class="noborder"><td class="' . $r . ' teacher">';
+				$element1 = '<table class="table" id="seriestable"><tr class="noborder"><td class="' . $r . ' teacher">';
 				$images   = new JBSMImages;
 				$image    = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
@@ -627,7 +627,7 @@ class JBSMSerieslist extends JBSMListing
 				break;
 			case 'T':
 				// Table
-				$studies .= '<table id="bsms_seriestable" width="100%">';
+				$studies .= '<table class="table" id="bsms_seriestable" width="100%">';
 				break;
 			case 'D':
 				// DIV

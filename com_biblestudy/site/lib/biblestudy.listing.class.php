@@ -1160,7 +1160,7 @@ class JBSMListing extends JBSMElements
 
 		if ($sharetype == 1)
 		{
-			$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
+			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
 						<tr class="bsmssharetitlerow">
 						<th id="bsmssharetitle" </th></tr></thead>
 						<tbody><tr class="bsmsshareiconrow">';
@@ -1192,7 +1192,7 @@ class JBSMListing extends JBSMElements
 			}
 
 			// Begin to form the table
-			$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
+			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
 						<tr class="bsmssharetitlerow">
 						<th id="bsmssharetitle" colspan=' . $sharerows . '>' . $sharetitle . '</th></tr></thead>
 						<tbody><tr class="bsmsshareiconrow">';
@@ -1504,7 +1504,7 @@ class JBSMListing extends JBSMElements
 
 		if ($params->get('title_line_1') > 0)
 		{
-			$title = '<table id="titletable"><tbody><tr><td class="titlefirstline">';
+			$title = '<table class="table" id="titletable"><tbody><tr><td class="titlefirstline">';
 
 			switch ($params->get('title_line_1'))
 			{

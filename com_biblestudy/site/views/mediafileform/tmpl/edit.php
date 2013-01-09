@@ -472,7 +472,7 @@ elseif (empty($this->item->study_id))
 			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
         </div>
         <div class="controls">
-            <table class="adminlist">
+            <table class="table table-striped adminlist">
 
                 <tbody>
                 <tr>

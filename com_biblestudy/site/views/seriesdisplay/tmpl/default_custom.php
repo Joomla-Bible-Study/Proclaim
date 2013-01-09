@@ -36,7 +36,7 @@ if (!$t)
 		<?php
 		echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
 		?>
-        <table class="bslisttable"> <?php
+        <table class="table table-striped bslisttable"> <?php
 			$studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
 			echo $listing;
 			echo $studies;
@@ -45,7 +45,7 @@ if (!$t)
 		if ($this->params->get('series_list_return') > 0)
 		{
 			?>
-            <table>
+            <table class="table table-striped">
                 <tr class="seriesreturnlink">
                     <td>
 						<?php echo '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t)
