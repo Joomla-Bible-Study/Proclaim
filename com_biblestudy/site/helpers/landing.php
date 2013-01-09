@@ -11,7 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/translated.php');
+JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
@@ -266,6 +266,7 @@ class JBSMLanding
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$JViewLegacy->loadHelper('helper');
+		$langlink = JLanguageMultilang::isEnabled();
 
 		$teacher   = null;
 		$teacherid = null;
