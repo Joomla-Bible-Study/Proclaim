@@ -858,6 +858,7 @@ class JBSMElements extends JBSAdmin
 			{
 				$type = $item;
 			}
+			$media1_link = null;
 
 			switch ($playertype)
 			{
@@ -875,7 +876,7 @@ class JBSMElements extends JBSAdmin
 						if ($type == 0)
 						{
 							// FIXME look like this function is no longer in teh code table need to find what it did.
-							$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+							//$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 						}
 					}
 					else
@@ -895,7 +896,6 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 1:
-
 					if ($type == 1)
 					{
 						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
@@ -906,7 +906,7 @@ class JBSMElements extends JBSAdmin
 					else
 					{
 						// FIXME Looks like this is not in code need to find.
-						$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+						//$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 					}
 
 					break;
@@ -941,8 +941,9 @@ class JBSMElements extends JBSAdmin
 
 			if ($link_type > 0)
 			{
-				$width  = $download_tmp->width;
-				$height = $download_tmp->height;
+				$width        = $download_tmp->width;
+				$height       = $download_tmp->height;
+				$downloadlink = null;
 
 				if ($compat_mode == 0)
 				{
@@ -950,11 +951,9 @@ class JBSMElements extends JBSAdmin
 				}
 				else
 				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath
-						. $media->filename . '&amp;size=' . $media->size . '">';
+					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
-				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="'
-					. $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '"   alt"' . $media->malttext . '"  /></a>';
+				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type)
 			{
@@ -967,7 +966,7 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 2:
-					$mediatable = '<div><table class="table mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
+					$mediatable .= '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
 					break;
 			}
 			$mediatable .= '</td>';
@@ -1002,7 +1001,7 @@ class JBSMElements extends JBSAdmin
 
 		} // End of if show_filesize
 
-		$mediatable .= '</td></tr></tbody></table></div>';
+		$mediatable .= '</tbody></table></div>';
 
 		return $mediatable;
 	}
