@@ -2094,17 +2094,7 @@ class JBSMListing extends JBSMElements
 	 *
 	 * @return string
 	 */
-	private function getHeadercell(
-		$rowid,
-		$row,
-		$params,
-		$lastcol,
-		$colspan,
-		$rowspan,
-		$rowcolid,
-		$nh,
-		$admin_params,
-		$template)
+	private function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 	{
 		$headercell = '<th ';
 		$elementid  = new stdClass;
@@ -2122,10 +2112,12 @@ class JBSMListing extends JBSMElements
 		if (!isset($elementid->id))
 		{
 			// @todo need to see if this need to be removed.
-			// $headercell .= 'customhead';
+			$headercell .= 'customhead';
 		}
-
-		$headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
+		else
+		{
+			$headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
+		}
 
 		if ($lastcol == 1)
 		{
