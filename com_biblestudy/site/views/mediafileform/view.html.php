@@ -8,6 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
 JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_HELPERS . '/biblestudy.php');
 JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
@@ -87,7 +88,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->form        = $this->get('Form');
 		$this->return_page = $this->get('ReturnPage');
 
-		$this->canDo = JBSMHelper::getActions($this->item->id, 'mediafilesedit');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
 		// Create a shortcut to the parameters.
 		$params = & $this->state->params;
@@ -107,7 +108,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->params = $params;
 
 		$user = JFactory::getUser();
-
 
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -230,6 +230,5 @@ class BiblestudyViewMediafileform extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 	}
-
 
 }
