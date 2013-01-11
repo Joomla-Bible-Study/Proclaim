@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 $jbsMedia = new jbsMedia;
 ?>
-<div class="popupwindow">
+<div id="popupwindow" class="popupwindow">
     <body style="background-color:<?php echo $this->params->get('popupbackground', 'black') ?>">
         <div class="popuptitle"><p class="popuptitle"><?php echo $this->headertext ?>
         </p>
@@ -92,10 +92,11 @@ if ($this->player == 8)
 }
 ?>
 </body>
-</div>
+
 <div class="popupfooter">
     <p class="popupfooter">
 		<?php echo $this->footertext; ?>
     </p>
+</div>
 </div>
 

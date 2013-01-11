@@ -183,8 +183,13 @@ class PodcastSubscribe
 	{
 		$images       = new JBSMImages;
 		$image        = $images->getMediaImage($podcastimagefromdb);
-		$podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="'
-			. $image->height . '" alt="' . $words . '" title="' . $words . '" />';
+		$podcastimage = null;
+
+		if ($image->path)
+		{
+			$podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="'
+				. $image->height . '" alt="' . $words . '" title="' . $words . '" />';
+		}
 
 		return $podcastimage;
 	}
