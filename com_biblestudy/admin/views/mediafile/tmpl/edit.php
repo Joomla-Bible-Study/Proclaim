@@ -183,7 +183,7 @@ else
 ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
-<div class="span10 form-horizontal">
+<div class="span9 form-horizontal">
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
