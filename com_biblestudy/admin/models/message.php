@@ -278,24 +278,6 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
-	 * Get admin info
-	 *
-	 * @return object
-	 */
-	public function getAdmin()
-	{
-		if (empty($this->_admin))
-		{
-			$query        = 'SELECT *'
-				. ' FROM #__bsms_admin'
-				. ' WHERE id = 1';
-			$this->_admin = $this->_getList($query);
-		}
-
-		return $this->_admin;
-	}
-
-	/**
 	 * Returns a list of mediafiles associated with this study
 	 *
 	 * @since   7.0
@@ -531,6 +513,20 @@ class BiblestudyModelMessage extends JModelAdmin
 				$table->ordering = $max + 1;
 			}
 		}
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer  $pk  The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
 	}
 
 	/**
