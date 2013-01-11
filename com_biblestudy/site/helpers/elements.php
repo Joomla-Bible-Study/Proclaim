@@ -755,9 +755,9 @@ class JBSMElements extends JBSAdmin
 			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
 			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
-			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type')
+			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
 			->where('#__bsms_mediafiles.study_id = ' . $row->id)
-			->where('#__bsms_mediafiles.published = ' . 1)
+			->where('#__bsms_mediafiles.published = 1')
 			->order('ordering asc, #__bsms_mediafiles.mime_type asc');
 		$database->setQuery($query);
 		$media1 = $database->loadObjectList('id');
@@ -881,7 +881,8 @@ class JBSMElements extends JBSAdmin
 						if ($type == 0)
 						{
 							// FIXME look like this function is no longer in teh code table need to find what it did.
-							//$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+							// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+							$media1_link = "<p>Need to Fixme</p>";
 						}
 					}
 					else
@@ -911,7 +912,8 @@ class JBSMElements extends JBSAdmin
 					else
 					{
 						// FIXME Looks like this is not in code need to find.
-						//$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+						// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+						$media1_link = "<p>Need to Fixme</p>";
 					}
 
 					break;

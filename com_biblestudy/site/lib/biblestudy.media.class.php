@@ -45,7 +45,7 @@ class jbsMedia
 
 		// Here we get the administration row from the component, and determine the download image to use
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_admin');
 		$db->setQuery($query);
@@ -153,6 +153,7 @@ class jbsMedia
 		// End of row holding media image/link
 		$table .= '</tr>';
 		$JBSMElements = new JBSMElements;
+
 		// This is the last part of the table where we see if we need to display the file size
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
@@ -183,6 +184,7 @@ class jbsMedia
 		} // End of if show_file size
 
 		$table .= '</tbody></table>';
+		var_dump($table);
 
 		return $table;
 	}
@@ -533,7 +535,8 @@ class jbsMedia
 
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
-                                        return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' .
+                                        return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							. $filesize . '" target="' .
 							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
 
@@ -542,7 +545,8 @@ class jbsMedia
 
 					case 1: // Popup window
 
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=0&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=0&amp;view=popup&amp;t="
+							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 						break;
@@ -608,30 +612,31 @@ class jbsMedia
 				return $playercode;
 				break;
 
-			case 4: //Docman
+			case 4: // Docman
 				$playercode = $this->getDocman($media, $image);
 
 				return $playercode;
 				break;
 
-			case 5: //article
+			case 5: // Article
 				$playercode = $this->getArticle($media, $image);
 
 				return $playercode;
 				break;
 
-			case 6: //Virtuemart
+			case 6: // Virtuemart
 				$playercode = $this->getVirtuemart($media, $params, $image);
 
 				return $playercode;
 				break;
 
-			case 7: //Legacy internal player
+			case 7: // Legacy internal player
 				switch ($player->type)
 				{
 					case 2:
 						$playercode = '<script type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
-        		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id
+        		            <object type="application/x-shockwave-flash" data="' . JURI::base()
+							. 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id
 							. '" border="0" height="24" width="' . $player->playerwidth . '">
 				                <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" />
 				                <param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path . '" />
