@@ -16,14 +16,14 @@ defined('_JEXEC') or die;
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.4
  */
-class plgSystemjbspodcastInstallerScript
+class PlgSystemjbspodcastInstallerScript
 {
 	public $is700;
 
 	/**
 	 * method to install the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -35,7 +35,7 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -48,7 +48,7 @@ class plgSystemjbspodcastInstallerScript
 	/**
 	 * method to update the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -81,11 +81,11 @@ class plgSystemjbspodcastInstallerScript
 	PRIMARY KEY (`timeset`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
-			$db->query();
-			$query = "INSERT INTO `#__jbspodcast_timeset` (`timeset`, `backup`) VALUES
-	( '1281646339', '1281646339')";
-			$db->setQuery($query);
-			$db->query();
+			$db->execute();
+			$data          = new stdClass;
+			$data->timeset = 1281646339;
+			$data->backup  = 1281646339;
+			$db->insertObject('#__jbspodcast_timeset', $data);
 		}
 		echo '<p>' . JText::_('PLG_PODCAST_UPDATE_TEXT') . '</p>';
 	}
@@ -126,25 +126,24 @@ class plgSystemjbspodcastInstallerScript
                               PRIMARY KEY (id)
                             ) DEFAULT CHARSET=utf8';
 			$db->setQuery($query);
-			$db->query();
-			$query = "INSERT INTO #__jbspodcast_update (id,version) VALUES(1,'7.0.0')";
+			$db->execute();
+			$query = $db->getQuery(true);
+			$query->insert('#__jbspodcast_update')->set('id = ' . 1 . ', version = 7.0.0');
 			$db->setQuery($query);
-			$db->query();
+			$db->execute();
 		}
 	}
 
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string  $type    ?
-	 * @param   string  $parent  ?
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function  postflight($type, $parent)
 	{
-		// $parent is the class calling this method
-		// $type is the type of change (install, update or discover_install)
 	}
 
 }

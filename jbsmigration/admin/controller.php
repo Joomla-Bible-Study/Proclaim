@@ -62,8 +62,7 @@ class jbsmigrationController extends JController
 	 */
 	public function performdb($query)
 	{
-		$db      = JFactory::getDBO();
-		$results = false;
+		$db = JFactory::getDBO();
 		$db->setQuery($query);
 		$db->query();
 
@@ -75,10 +74,8 @@ class jbsmigrationController extends JController
 
 			return $results;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 }

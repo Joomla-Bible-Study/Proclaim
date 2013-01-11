@@ -54,11 +54,9 @@ class JFormFieldModal_Study extends JFormField
 		$link = 'index.php?option=com_biblestudy&amp;view=messagelist&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
 		$db = JFactory::getDBO();
-		$db->setQuery(
-			'SELECT studytitle AS title' .
-				' FROM #__bsms_studies' .
-				' WHERE id = ' . (int) $this->value
-		);
+		$query = $db->getQuery(true);
+		$query->select('studytitle AS title')->from('#__bsms_studies')->where('id = ' . (int) $this->value);
+		$db->setQuery($query);
 		$title = $db->loadResult();
 
 		if (empty($title))

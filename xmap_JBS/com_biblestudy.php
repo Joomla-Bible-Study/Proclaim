@@ -23,7 +23,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Xamp.BibleStudy
  * @since       7.0.4
  */
-class xmap_com_biblestudy
+class Xmap_Com_Biblestudy
 {
 
 	/**
@@ -56,6 +56,7 @@ class xmap_com_biblestudy
 	{
 		$db         = JFactory::getDbo();
 		$link_query = parse_url($node->link);
+
 		if (!isset($link_query['query']))
 		{
 			return;
@@ -70,9 +71,9 @@ class xmap_com_biblestudy
 	/**
 	 * Get Tree
 	 *
-	 * @param   object   $xmap     ?
-	 * @param   object   $parent   ?
-	 * @param   array    &$params  ?
+	 * @param   object  $xmap     ?
+	 * @param   object  $parent   ?
+	 * @param   array   &$params  ?
 	 *
 	 * @return mixed
 	 */
@@ -112,20 +113,20 @@ class xmap_com_biblestudy
 
 		if ($limit > 0)
 		{
-			$limit = 'LIMIT ' . $limit;
+			// $limit = 'LIMIT ' . $limit;
 		}
 		else
 		{
 			$limit = '';
 		}
 		$showmedia = $params['showmedia'];
-		$db        = JFactory::getDBO();
 
 		// 1=year 2=book 3=teacher 4=location
 		switch ($displaytype)
 		{
 			case 1:
-				$query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 order by year(studydate) ' . $order;
+				$query = $db->getQuery(true);
+				$query->select('distinct year(studydate) as theYear')->from('#__bsms_studies')->where('published = 1')->order('year(studydate) ' . $order);
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
@@ -137,7 +138,7 @@ class xmap_com_biblestudy
 					$node->uid        = $parent->uid . 'a' . $result->theYear;
 					$node->name       = $result->theYear;
 					$node->parent     = 1;
-					$node->browsNav   = 1; //open new window
+					$node->browsNav   = 1; /* Open new window */
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -146,7 +147,8 @@ class xmap_com_biblestudy
 					$node->link       = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $result->theYear . '&amp;t=' . $t;
 					$xmap->printNode($node);
 					$xmap->changeLevel(1);
-					$query = 'SELECT id, studytitle, alias, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = ' . $result->theYear;
+					$query = $db->getQuery(true);
+					$query->select('id, studytitle, alias, studydate, studyintro')->from('#__bsms_studies')->where('year(studydate) = ' . $result->theYear);
 					$db->setQuery($query);
 					$studies = $db->loadObjectList();
 
@@ -159,8 +161,11 @@ class xmap_com_biblestudy
 				break;
 
 			case 2:
-				$query = 'select distinct s.booknumber, b.bookname, b.booknumber as bnumber, s.studyintro from #__bsms_studies '
-					. ' as s LEFT JOIN #__bsms_books as b on (s.booknumber = b.booknumber) where s.published = 1 order by s.booknumber asc';
+				$query = $db->getQuery(true);
+				$query->select('distinct s.booknumber, b.bookname, b.booknumber as bnumber, s.studyintro')
+					->from('#__bsms_studies as s')
+					->leftJoin('#__bsms_books as b on (s.booknumber = b.booknumber)')
+					->where('s.published = 1')->order('s.booknumber asc');
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
@@ -174,7 +179,7 @@ class xmap_com_biblestudy
 					$node->uid        = $parent->uid . 'a' . JText::_($result->bookname);
 					$node->name       = JText::_($result->bookname);
 					$node->parent     = 1;
-					$node->browsNav   = 1; //open new window
+					$node->browsNav   = 1; /* Open new window */
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -190,7 +195,8 @@ class xmap_com_biblestudy
 				break;
 
 			case 3:
-				$query = 'select id, teachername from #__bsms_teachers where published = 1 order by ordering asc';
+				$query = $db->getQuery(true);
+				$query->select('id, teachername')->from('#__bsms_teachers')->where('published = 1')->order('ordering asc');
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
@@ -204,7 +210,7 @@ class xmap_com_biblestudy
 					$node->uid        = $parent->uid . 'a' . $result->teachername;
 					$node->name       = $result->teachername;
 					$node->parent     = 1;
-					$node->browsNav   = 1; // Open new window
+					$node->browsNav   = 1; /* Open new window */
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -220,23 +226,22 @@ class xmap_com_biblestudy
 				break;
 
 			case 4:
-				$query = 'select id, location_text from #__bsms_locations where published = 1 order by location_text asc';
+				$query = $db->getQuery(true);
+				$query->select('id, location_text')->from('#__bsms_locations')->where('published = 1')->order('location_text asc');
 				$db->setQuery($query);
 				$results          = $db->loadObjectList();
 				$node->expandable = true;
 
 				foreach ($results AS $result)
 				{
-					$field  = 'location_id';
-					$record = $result->id;
-
-
+					$field            = 'location_id';
+					$record           = $result->id;
 					$node             = new stdclass;
 					$node->id         = $parent->location_text;
 					$node->uid        = $parent->uid . 'a' . $result->location_text;
 					$node->name       = $result->location_text;
 					$node->parent     = 1;
-					$node->browsNav   = 1; // Open new window
+					$node->browsNav   = 1; /* Open new window */
 					$node->ordering   = 2;
 					$node->priority   = $parent->priority;
 					$node->changefreq = $parent->changefreq;
@@ -275,16 +280,17 @@ class xmap_com_biblestudy
 		if ($showmedia == 1)
 		{
 			$xmap->changeLevel(1);
-			$query = 'SELECT m.id, m.server, m.path, m.filename, m.published, m.player,'
-				. ' sr.id AS srid, sr.server_path,'
-				. ' f.id AS fid, f.folderpath, mime.id as mimeid, mime.mimetext'
-				. ' FROM #__bsms_mediafiles AS m'
-				. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = m.server)'
-				. ' LEFT JOIN #__bsms_folders AS f ON (f.id = m.path)'
-				. ' LEFT JOIN #__bsms_mimetype as mime on (mime.id = m.mime_type)'
-				. ' WHERE m.published = 1 AND m.study_id = ' . $id . ' ORDER BY createdate ' . $order . ' ' . $limit;
 			$db    = JFactory::getDBO();
-			$db->setQuery($query);
+			$query = $db->getQuery(true);
+			$query->select('m.id, m.server, m.path, m.filename, m.published, m.player,'
+				. ' sr.id AS srid, sr.server_path,'
+				. ' f.id AS fid, f.folderpath, mime.id as mimeid, mime.mimetext')
+				->from('#__bsms_mediafiles AS m')
+				->leftJoin('#__bsms_servers AS sr ON (sr.id = m.server)')
+				->leftJoin('#__bsms_folders AS f ON (f.id = m.path)')
+				->leftJoin('#__bsms_mimetype as mime on (mime.id = m.mime_type)')
+				->where('m.published = 1')->where('m.study_id = ' . $id)->order('createdate ' . $order);
+			$db->setQuery($query, 0, $limit);
 			$medias = $db->loadObjectList();
 
 			foreach ($medias AS $media)
@@ -294,7 +300,7 @@ class xmap_com_biblestudy
 				$node->uid = $parent->uid . 'a' . $media->id;
 
 				$node->parent     = 1;
-				$node->browsNav   = 1; //open new window
+				$node->browsNav   = 1; /* Open new window */
 				$node->ordering   = 2;
 				$node->priority   = $parent->priority;
 				$node->changefreq = $parent->changefreq;
@@ -342,8 +348,10 @@ class xmap_com_biblestudy
 	 * @param   string  $order   ?
 	 * @param   array   $params  ?
 	 * @param   object  $parent  ?
+	 *
+	 * @return void
 	 */
-	function showStudies($study, $xmap, $t, $limit, $order, $params, $parent)
+	public function showStudies($study, $xmap, $t, $limit, $order, $params, $parent)
 	{
 		$node             = new stdclass;
 		$node->id         = $parent->id;
@@ -351,7 +359,7 @@ class xmap_com_biblestudy
 		$study->name      = $study->alias ? ($study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES));
 		$node->name       = $study->name;
 		$node->parent     = 1;
-		$node->browsNav   = 1; //open new window
+		$node->browsNav   = 1; /* Open new window */
 		$node->ordering   = 2;
 		$node->priority   = $parent->priority;
 		$node->changefreq = $parent->changefreq;
@@ -385,10 +393,12 @@ class xmap_com_biblestudy
 	public function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent)
 	{
 		$db    = JFactory::getDBO();
-		$query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND ' .
-			$field . ' = ' . $record . ' order by theYear ' . $order;
+		$query = $db->getQuery(true);
+		$query->select('distinct year(studydate) as theYear')->from('#__bsms_studies')->where('published = 1')->where($field . ' = ' . $record)
+			->order('theYear ' . $order);
 		$db->setQuery($query);
 		$years = $db->loadObjectList();
+
 		foreach ($years as $year)
 		{
 			$node             = new stdclass;
@@ -396,7 +406,7 @@ class xmap_com_biblestudy
 			$node->uid        = $parent->uid . 'a' . $year->theYear;
 			$node->name       = $year->theYear;
 			$node->parent     = 1;
-			$node->browsNav   = 1; //open new window
+			$node->browsNav   = 1; /* Open new window */
 			$node->ordering   = 2;
 			$node->priority   = $parent->priority;
 			$node->changefreq = $parent->changefreq;
@@ -405,7 +415,9 @@ class xmap_com_biblestudy
 			$node->link       = 'index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year=' . $year->theYear . '&amp;t=' . $t;
 			$xmap->printNode($node);
 			$xmap->changeLevel(1);
-			$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = ' . $year->theYear . ' and ' . $field . ' = ' . $record;
+			$query = $db->getQuery(true);
+			$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('year(studydate) = ' . $year->theYear)
+				->where($field . ' = ' . $record);
 			$db->setQuery($query);
 			$studies = $db->loadObjectList();
 

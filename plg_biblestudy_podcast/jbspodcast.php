@@ -100,7 +100,9 @@ class PlgSystemJbspodcast extends JPlugin
 
 		$now = time();
 		$db  = JFactory::getDBO();
-		$db->setQuery('SELECT `timeset` FROM `#__jbspodcast_timeset`', 0, 1);
+		$query = $db->getQuery(true);
+		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
 		$frequency  = $params->get('xhours', '86400');
@@ -132,7 +134,9 @@ class PlgSystemJbspodcast extends JPlugin
 
 		$now = time();
 		$db  = JFactory::getDBO();
-		$db->setQuery('SELECT `timeset` FROM `#__jbspodcast_timeset`', 0, 1);
+		$query = $db->getQuery(true);
+		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
 		$difference = $now - $lasttime;
@@ -229,8 +233,9 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 		$time = time();
 		$db   = JFactory::getDBO();
-		$db->setQuery('UPDATE `#__jbspodcast_timeset` SET `timeset` = ' . $time);
-		$db->query();
+		$query = $db->getQuery(true);
+		$query->update('#__jbspodcast_timeset')->set('timeset = ' . $time);
+		$db->setQuery($query);
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)

@@ -308,9 +308,8 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		// Added database queries from the default template - moved here instead
 		$database = JFactory::getDBO();
-		$query    = "SELECT id"
-			. "\nFROM #__menu"
-			. "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
+		$query    = $database->getQuery(true);
+		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;

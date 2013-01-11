@@ -22,7 +22,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class plgSystemjbsbackup extends JPlugin
+class PlgSystemjbsbackup extends JPlugin
 {
 
 	/**
@@ -79,7 +79,7 @@ class plgSystemjbsbackup extends JPlugin
 				{
 					$this->doEmail($params, $dobackup);
 				}
-				$updatefiles = $this->updatefiles($params);
+				$this->updatefiles($params);
 			}
 		}
 	}
@@ -96,7 +96,9 @@ class plgSystemjbsbackup extends JPlugin
 
 		$now = time();
 		$db  = JFactory::getDBO();
-		$db->setQuery('SELECT `backup` FROM `#__jbsbackup_timeset`', 0, 1);
+		$query = $db->getQuery(true);
+		$query->select('backup')->from('#__jbsbackup_timeset');
+		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->backup;
 		$frequency  = $params->get('xhours', '86400');
@@ -128,7 +130,9 @@ class plgSystemjbsbackup extends JPlugin
 
 		$now = time();
 		$db  = JFactory::getDBO();
-		$db->setQuery('SELECT `backup` FROM `#__jbsbackup_timeset`', 0, 1);
+		$query = $db->getQuery(true);
+		$query->select('backup')->from('#__jbsbackup_timeset');
+		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
 		$difference = $now - $lasttime;
@@ -224,8 +228,9 @@ class plgSystemjbsbackup extends JPlugin
 	{
 		$time = time();
 		$db   = JFactory::getDBO();
-		$db->setQuery('UPDATE `#__jbsbackup_timeset` SET `backup` = ' . $time);
-		$db->query();
+		$query = $db->getQuery(true);
+		$query->update('#__jbsbackup_timeset')->set('backup = ' . $time);
+		$db->setQuery($query);
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)

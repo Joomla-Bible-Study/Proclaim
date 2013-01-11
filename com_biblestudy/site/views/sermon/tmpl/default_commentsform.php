@@ -60,9 +60,10 @@ if (!$this->item->id)
 {
 	$this->item->id = $input->get('id', '', 'int');
 }
+// ToDo look like this should not be in this file. need to move this out to the model, TOM BCC
 $db    = JFactory::getDBO();
-$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->item->id . ' ORDER BY c.comment_date ASC';
-
+$query = $db->getQuery(true);
+$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $this->item->id)->order('c.comment_date asc');
 $db->setQuery($query);
 $comments = $db->loadObjectList();
 

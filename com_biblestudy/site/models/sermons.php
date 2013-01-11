@@ -892,7 +892,8 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getDownloads($id)
 	{
-		$query  = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
+		$query = $this->_db->getQuery(true);
+		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
 		$result = $this->_getList($query);
 
 		if (!$result)
@@ -913,7 +914,6 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getFiles()
 	{
-		/* @todo Tom commented this out because it caused the query to fail - needs work. */
 		$mediaFiles = null;
 		$db         = JFactory::getDBO();
 		$i          = 0;
@@ -922,12 +922,12 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$i++;
 			$sermon_id = $sermon->id;
-			$query     = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-				. ' FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-				. ' WHERE `study_id` ='
-				. $sermon_id;
+			$query     = $db->getQuery(true);
+			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+				->from('#__bsms_mediafiles')
+				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
+				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
+				->where('study_id` = ' . $sermon_id);
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}

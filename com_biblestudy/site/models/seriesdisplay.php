@@ -126,5 +126,4 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		return $this->_item[$pk];
 	}
 
-//end class
 }
