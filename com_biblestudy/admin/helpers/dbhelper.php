@@ -271,11 +271,11 @@ class JBSMDbHelper
 
 		if ($filename)
 		{
-			$query->where('`filename` = "' . $filename . '"');
+			$query->where($db->qn('filename') . ' = ' . $db->q($filename));
 		}
 		else
 		{
-			$query->where('`id` = "' . $id . '"');
+			$query->where($db->qn('id') . ' = ' . (int) $id);
 		}
 		$db->setQuery($query);
 		$result = $db->loadObject();
@@ -308,11 +308,11 @@ class JBSMDbHelper
 
 		if ($filename)
 		{
-			$query->where('`filename` = "' . $filename . '"');
+			$query->where($db->qn('filename') . ' = ' . $db->q($filename));
 		}
 		else
 		{
-			$query->where('`id` = "' . $id . '"');
+			$query->where($db->qn('id') . ' = ' . (int) $id);
 		}
 		$db->setQuery($query);
 

@@ -129,7 +129,9 @@ class BiblestudyModelMessagetype extends JModelAdmin
 			if (empty($table->ordering))
 			{
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_message_type');
+				$query = $db->getQuery(true);
+				$query->select('MAX(ordering)')->from('#__bsms_message_type');
+				$db->setQuery($query);
 				$max = $db->loadResult();
 
 				$table->ordering = $max + 1;

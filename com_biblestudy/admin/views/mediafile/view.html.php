@@ -88,10 +88,9 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$db = JFactory::getDBO();
 
 		// Get server for upload dropdown
-		$query = 'SELECT id as value, server_name as text FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC';
+		$query = $db->getQuery(true);
+		$query->select('id as value, server_name as text')->from('#__bsms_servers')->where('published = ' . 1)->order('server_name asc');
 		$db->setQuery($query);
-		$db->query();
-
 		$server     = array(
 			array('value' => '', 'text' => JText::_('JBS_MED_SELECT_SERVER')),
 		);
@@ -106,9 +105,9 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->$ref1com = $ref1;
 
 		// Get folders for upload dropdown
-		$query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
+		$query = $db->getQuery(true);
+		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published = ' . 1)->order('foldername asc');
 		$db->setQuery($query);
-		$db->query();
 		$folder     = array(
 			array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
 		);

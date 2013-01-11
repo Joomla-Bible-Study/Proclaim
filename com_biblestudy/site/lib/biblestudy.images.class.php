@@ -86,7 +86,9 @@ class JBSMImages
 		$path     = null;
 		$image    = null;
 		$database = JFactory::getDBO();
-		$database->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
+		$query    = $database->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+		$database->setQuery($query);
 		$admin = $database->loadObject();
 
 		// Convert parameter fields to objects.

@@ -107,9 +107,12 @@ class JBSMTranslated
 			if ($topicItem->tp_id)
 			{
 				$db    = JFactory::getDBO();
-				$query = 'SELECT #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params ' .
-					'FROM #__bsms_topics ' . 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = ' .
-					$topicItem->id . ') ' . 'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
+				$query = $db->getQuery(true);
+				$query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
+					->from('#__bsms_topics')
+					->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $db->q($topicItem->id) . ') ')
+					->where('published = ' . 1)
+					->where('#__bsms_topics.id = #__bsms_studytopics.topic_id');
 				$db->setQuery($query);
 				$results = $db->loadObjectList();
 				$output  = '';

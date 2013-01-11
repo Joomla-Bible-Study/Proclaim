@@ -239,7 +239,8 @@ class BiblestudyController extends JControllerLegacy
 		$comment_fromname  = $config->getValue('config.fromname');
 		$comment_livesite  = JURI::root();
 		$db                = JFactory::getDBO();
-		$query             = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE id = ' . $comment_study_id;
+		$query             = $db->getQuery(true);
+		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . $comment_study_id);
 		$db->setQuery($query);
 		$comment_details    = $db->loadObject();
 		$comment_title      = $comment_details->studytitle;

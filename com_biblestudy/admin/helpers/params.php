@@ -32,7 +32,7 @@ class JBSMParams
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_admin')
-			->where($db->qn('id') . ' = ' . $db->q('1'));
+			->where($db->qn('id') . ' = ' . (int) 1);
 		$db->setQuery($query);
 		$admin    = $db->loadObject();
 		$registry = new JRegistry;
@@ -58,8 +58,8 @@ class JBSMParams
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_templates')
-			->where('published = ' . $db->q('1'))
-			->where('id = ' . $db->q($pk));
+			->where('published = ' . (int) 1)
+			->where('id = ' . (int) $pk);
 		$db->setQuery($query);
 		$template = $db->loadObject();
 

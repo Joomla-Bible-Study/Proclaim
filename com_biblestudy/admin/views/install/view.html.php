@@ -147,7 +147,8 @@ class BiblestudyViewInstall extends JViewLegacy
 					foreach ($modules as $module => $modulePreferences)
 					{
 						// Was the module already installed?
-						$sql = 'SELECT COUNT(*) FROM #__modules WHERE `module`=' . $db->Quote('mod_' . $module);
+						$sql = $db->getQuery(true);
+						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->Quote('mod_' . $module));
 						$db->setQuery($sql);
 						$result                  = $db->loadResult();
 						$this->status->modules[] = array(
@@ -168,9 +169,8 @@ class BiblestudyViewInstall extends JViewLegacy
 				{
 					foreach ($plugins as $plugin => $published)
 					{
-						$query = "SELECT COUNT(*) FROM  #__extensions WHERE element=" . $db->Quote(
-							$plugin
-						) . " AND folder=" . $db->Quote($folder);
+						$query = $db->getQuery(true);
+						$query->select('COUNT(*)')->from('#__extensions')->where('module=' . $db->q($plugin))->where('folder = ' . $db->q($folder));
 						$db->setQuery($query);
 						$result                  = $db->loadResult();
 						$this->status->plugins[] = array(

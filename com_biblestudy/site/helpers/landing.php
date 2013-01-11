@@ -327,7 +327,6 @@ class JBSMLanding
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
 			->order('a.ordering, a.teachername ' . $order);
-
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -501,6 +500,8 @@ class JBSMLanding
 	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @todo look like $numRows was not defined not sure if needed.
 	 */
 	public function getSeriesLandingPage($params, $id, $admin_params)
 	{
@@ -514,6 +515,7 @@ class JBSMLanding
 		$JViewLegacy->loadHelper('helper');
 		$series   = null;
 		$seriesid = null;
+		$numRows  = null;
 
 		$template = $params->get('serieslisttemplateid', 1);
 		$limit    = $params->get('landingserieslimit');
@@ -988,7 +990,6 @@ class JBSMLanding
 			->order('#__bsms_topics.topic_text ' . $order)
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
-
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();

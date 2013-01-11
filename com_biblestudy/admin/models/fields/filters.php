@@ -119,13 +119,13 @@ class JFormFieldFilters extends JFormField
 		$db = JFactory::getDBO();
 
 		// Get the user groups from the database.
-		$db->setQuery(
-			'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level' .
-				' FROM #__usergroups AS a' .
-				' LEFT JOIN `#__usergroups` AS b ON a.lft > b.lft AND a.rgt < b.rgt' .
-				' GROUP BY a.id' .
-				' ORDER BY a.lft ASC'
-		);
+		$query = $db->getQuery(true);
+		$query->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
+			->from('#__usergroups AS a')
+			->leftJoin('#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt')
+			->group('a.id')
+			->order('a.lft asc');
+		$db->setQuery($query);
 		$options = $db->loadObjectList();
 
 		return $options;

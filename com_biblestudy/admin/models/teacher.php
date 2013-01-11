@@ -170,7 +170,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 			if (empty($table->ordering))
 			{
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_teachers');
+				$query = $db->getQuery(true);
+				$query->select('MAX(ordering)')->from('#__bsms_teachers');
+				$db->setQuery($query);
 				$max = $db->loadResult();
 
 				$table->ordering = $max + 1;

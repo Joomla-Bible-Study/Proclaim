@@ -157,9 +157,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// Check for SermonSpeaker and PreachIt
 		$db    = JFactory::getDBO();
-		$query = 'SELECT extension_id, name, element FROM #__extensions';
+		$query = $db->getQuery(true);
+		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);
-		$db->query();
 		$extensions = $db->loadObjectList();
 
 		foreach ($extensions as $extension)

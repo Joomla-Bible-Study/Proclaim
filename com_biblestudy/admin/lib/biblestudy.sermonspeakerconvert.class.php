@@ -218,10 +218,9 @@ class JBSConvert
 						$updateds = $db->getAffectedRows();
 						$adds     = $adds + $updateds;
 					}
-
-					$query = 'SELECT id from #__bsms_studies WHERE published = 1 ORDER BY id DESC LIMIT 1 ';
-					$db->setQuery($query);
-					$db->query();
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_studies')->where('published = ' . 1)->where('id desc');
+					$db->setQuery($query, 0, 1);
 					$study              = $db->loadAssoc();
 					$data1              = new stdClass;
 					$data1->study_id    = $study['id'];

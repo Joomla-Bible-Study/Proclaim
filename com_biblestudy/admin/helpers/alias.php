@@ -81,7 +81,9 @@ class JBSMFixAlias
 			return false;
 		}
 		$db    = JFactory::getDBO();
-		$query = 'SELECT id, alias,' . $title . ' FROM ' . $table;
+		$query = $db->getQuery(true);
+		$query->select('id, alias, ' . $title)
+			->from($table);
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 

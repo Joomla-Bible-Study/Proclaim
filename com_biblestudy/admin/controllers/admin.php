@@ -84,7 +84,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
-			->set('hits = ' . $db->q('0'));
+			->set('hits = ' . 0);
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -110,7 +110,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('downloads = ' . $db->q('0'));
+			->set('downloads = ' . 0);
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -136,7 +136,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('plays = ' . $db->q('0'));
+			->set('plays = ' . 0);
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -167,11 +167,17 @@ class BiblestudyControllerAdmin extends JControllerForm
 		switch ($from)
 		{
 			case '100':
-				$query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($to) . " WHERE `player` IS NULL";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set('player = ' . $db->quote($to))
+					->where('player IS NULL');
 				break;
 
 			default:
-				$query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($to) . " WHERE `player` = " . $db->quote($from);
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set('player = ' . $db->quote($to))
+					->where('player = ' . $db->quote($from));
 		}
 		$db->setQuery($query);
 

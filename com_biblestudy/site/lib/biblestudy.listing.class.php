@@ -1179,7 +1179,8 @@ class JBSMListing extends JBSMElements
 
 			// Get the information from the database on what social networking sites to use
 			$db    = JFactory::getDBO();
-			$query = 'SELECT * FROM #__bsms_share where published = 1 ORDER BY name ASC';
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_share')->where('published = ' . 1)->order('name asc');
 			$db->setQuery($query);
 			$rows      = $db->loadObjectList();
 			$sharerows = count($rows);

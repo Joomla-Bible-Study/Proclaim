@@ -61,8 +61,9 @@ class CBiblestudyVersion
 	{
 		static $biblestudyversion;
 		$db    = JFactory::getDBO();
-		$query = 'SELECT * FROM #__extensions WHERE element = "com_biblestudy" LIMIT 1';
-		$db->setQuery($query);
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__extensions')->where('element = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query, 0, 1);
 		$extension                      = $db->loadObject();
 		$manifestvariable               = json_decode($extension->manifest_cache);
 		$biblestudyversion->version     = $manifestvariable->version;
@@ -95,7 +96,7 @@ class CBiblestudyVersion
 
 		if (!$mysqlversion)
 		{
-			$biblestudy_db = & JFactory::getDBO();
+			$biblestudy_db = JFactory::getDBO();
 			$biblestudy_db->setQuery("SELECT VERSION() AS mysql_version");
 			$mysqlversion = $biblestudy_db->loadResult();
 

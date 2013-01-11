@@ -193,7 +193,10 @@ class JBSMTemplate extends JObject
 	 */
 	public function queryTemplate($id)
 	{
-		$query = 'SELECT * FROM #__bsms_templates WHERE `id`=' . $id;
+		$query = $this->_DBO->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_templates')
+			->from('id = ' . (int) $id);
 		$this->_DBO->setQuery($query);
 
 		return $this->_DBO->loadObject();

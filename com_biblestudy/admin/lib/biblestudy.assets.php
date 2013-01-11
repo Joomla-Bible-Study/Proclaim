@@ -323,7 +323,9 @@ class FixJBSAssets
 
 		if ($data->jasset_id >= 2)
 		{
-			$query = "DELETE FROM `#__assets` WHERE `id` = " . (int) $db->quote($data->jasset_id);
+			$query = $db->getQuery(true);
+			$query->delete('#__assets')
+				->where('id = ' . $db->quote($data->jasset_id));
 			$db->setQuery($query);
 
 			if (!$db->execute())

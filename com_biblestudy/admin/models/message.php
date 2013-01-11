@@ -178,14 +178,15 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @param   int  $topic_id  Topic ID
 	 *
 	 * @return boolean
+	 *
+	 * @todo look like this was not emplemented need to look into this, TOM
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db    = & JFactory::getDBO();
-		$query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
-
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_studytopics')->where('study_id = ' . (int) $study_id)->where('topic_id = ' . (int) $topic_id);
 		$db->setQuery($query);
-
 		$tresult = $db->loadObject();
 
 		if (empty($tresult))

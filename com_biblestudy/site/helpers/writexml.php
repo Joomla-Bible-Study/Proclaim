@@ -40,7 +40,8 @@ function writeXML()
 	$year  = '(' . date('Y') . ')';
 	$date  = date('r');
 	$db    = JFactory::getDBO();
-	$query = 'SELECT id, title FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
+	$query = $db->getQuery(true);
+	$query->select('id, title')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
 	$db->setQuery($query);
 	$podid = $db->loadObjectList();
 
@@ -55,7 +56,8 @@ function writeXML()
 		foreach ($podid as $podids)
 		{
 			// Let's get the data from the podcast
-			$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.id = ' . $podids->id;
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.id = ' . $podids->id);
 			$db->setQuery($query);
 			$podinfo           = $db->loadObject();
 			$description       = str_replace("&", "and", $podinfo->description);
@@ -105,17 +107,14 @@ function writeXML()
 			// Now let's get the podcast episodes
 			$limit = $podinfo->podcastlimit;
 
-			if ($limit > 0)
+			if ($limit <= 0)
 			{
-				$limit = 'LIMIT ' . $limit;
-			}
-			else
-			{
-				$limit = '';
+				$limit = null;
 			}
 
 			// Here's where we look at each mediafile to see if they are connected to this podcast
-			$query = "SELECT id, params, podcast_id, published FROM `#__bsms_mediafiles` WHERE published = '1'";
+			$query = $db->getQuery(true);
+			$query->select('id, params, podcast_id, published')->from('#__bsms_mediafiles')->where('published = ' . 1);
 			$db->setQuery($query);
 			$results = $db->loadObjectList();
 			$where   = array();
@@ -155,15 +154,13 @@ function writeXML()
 			}
 			$where = (count($where) ? ' ' . implode(' OR ', $where) : '');
 
-			if ($where)
-			{
-				$where = ' WHERE ' . $where . ' AND ';
-			}
-			else
+			if (!$where)
 			{
 				return $msg = ' No media files were associated with a podcast. ';
 			}
-			$query = 'SELECT p.id AS pid, p.podcastlimit,'
+
+			$query = $db->getQuery(true);
+			$query->select('p.id AS pid, p.podcastlimit,'
 				. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
 				. ' mf.published AS mfpub, mf.createdate, mf.params,'
 				. ' mf.docMan_id, mf.article_id,'
@@ -174,17 +171,18 @@ function writeXML()
 				. ' f.id AS fid, f.folderpath,'
 				. ' t.id AS tid, t.teachername,'
 				. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-				. ' mt.id AS mtid, mt.mimetype'
-				. ' FROM #__bsms_mediafiles AS mf'
-				. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-				. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-				. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-				. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-				. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-				. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-				. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-				. $where . 's.published = 1 AND mf.published = 1 ORDER BY createdate DESC ' . $limit;
-			$db->setQuery($query);
+				. ' mt.id AS mtid, mt.mimetype')
+				->from('#__bsms_mediafiles AS mf')
+				->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
+				->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
+			->leftJoin('#__bsms_folders AS f ON (f.id = mf.path)')
+			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
+			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
+			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
+			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
+				->where($where)->where('s.published = ' . 1)->where('mf.published = ' . 1)
+				->order('createdate desc');
+			$db->setQuery($query, 0, $limit);
 			$episodes      = $db->loadObjectList();
 			$episodedetail = '';
 

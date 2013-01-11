@@ -41,7 +41,8 @@ class Dump_File
 		$db       = JFactory::getDBO();
 
 		// Get the template so we can find a protocol
-		$query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = ' . $template;
+		$query = $db->getQuery(true);
+		$query->select('id, params')->from('#__bsms_templates')->where('id = ' . $template);
 		$db->setQuery($query);
 		$template = $db->loadObject();
 
@@ -51,16 +52,17 @@ class Dump_File
 		$params = $registry;
 
 		$protocol = $params->get('protocol', 'http://');
-		$query    = 'SELECT #__bsms_mediafiles.*,'
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
 			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
 			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype'
-			. ' FROM #__bsms_mediafiles'
-			. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-			. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-			. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-			. ' WHERE #__bsms_mediafiles.id = ' . $mid . ' LIMIT 1';
-		$db->setQuery($query);
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
+			->leftJoin('JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
+			->where('#__bsms_mediafiles.id = ' . $mid);
+		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
 		JResponse::clearHeaders();
@@ -198,10 +200,9 @@ class Dump_File
 	protected function hitDownloads($mid)
 	{
 		$db = JFactory::getDBO();
-		$db->setQuery(
-			'UPDATE ' . $db->qn('#__bsms_mediafiles') . 'SET ' . $db->qn('downloads') .
-				' = ' . $db->qn('downloads') . ' + 1 ' . ' WHERE id = ' . (int) $db->q($mid)
-		);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')->set($db->qn('downloads') . ' = ' . $db->q('downloads') . ' + 1 ')->where('id = ' . (int) $db->q($mid));
+		$db->setQuery($query);
 		$db->execute();
 
 		return true;

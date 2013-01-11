@@ -387,14 +387,21 @@ class JBSMSerieslist extends JBSMListing
 	 *
 	 * @return array
 	 */
-	public function getSeriesstudiesDBO($id, $params, $limit = '')
+	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$app      = JFactory::getApplication();
-		$db       = JFactory::getDBO();
-		$user     = JFactory::getUser();
-		$menu     = $app->getMenu();
-		$item     = $menu->getActive();
-		$language = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+		$app       = JFactory::getApplication();
+		$db        = JFactory::getDBO();
+		$user      = JFactory::getUser();
+		$menu      = $app->getMenu();
+		$item      = $menu->getActive();
+		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+		$set_limit = null;
+
+		if ($limit)
+		{
+			preg_match_all('!\d+!', $limit, $set_limit);
+			$set_limit = implode(' ', $set_limit[0]);
+		}
 
 		if ($language == '*' || !$language)
 		{
@@ -406,27 +413,29 @@ class JBSMSerieslist extends JBSMListing
 		}
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
-
-		$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
+		$query  = $db->getQuery(true);
+		$query->select('s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
 			. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
 			. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
 			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
 			. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
-			. ' FROM #__bsms_studies AS s'
-			. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
-			. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
-			. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
-			. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
-			. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
-			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-			. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)';
-		$query .= ' WHERE s.series_id = ' . $id . ' AND s.published = 1 AND s.language in (' . $language . ') AND s.access IN (' . $groups . ')';
-		$query .= ' GROUP BY s.id';
-		$query .= ' ORDER BY ' . $params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'DESC');
-		$query .= $limit;
-		$db->setQuery($query);
+			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text ')
+			->from('#__bsms_studies AS s')
+			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
+			->leftJoin('#__bsms_teachers AS t ON (s.teacher_id = t.id)')
+			->leftJoin('#__bsms_books ON (s.booknumber = #__bsms_books.booknumber)')
+			->leftJoin('#__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)')
+			->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)')
+			->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
+			->leftJoin('#__bsms_locations ON (s.location_id = #__bsms_locations.id)')
+			->where('s.series_id = ' . $id)
+			->where('s.published = ' . 1)
+			->where('s.language in (' . $language . ')')
+			->where('s.access IN (' . $groups . ')')
+			->group('s.id')
+			->group($params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'desc'));
+		$db->setQuery($query, 0, $set_limit);
 		$results = $db->loadObjectList();
 		$items   = $results;
 

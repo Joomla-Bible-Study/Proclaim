@@ -14,6 +14,8 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  *
  * @package  BibleStudy.Admin
  * @since    7.0.2
+ *
+ * @todo need to redo to support other DB. BCC TOM
  */
 class Jbs614Install
 {
@@ -25,6 +27,7 @@ class Jbs614Install
 	 */
 	public function upgrade614()
 	{
+		$db    = JFactory::getDBO();
 		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 				  `id` int(3) NOT NULL AUTO_INCREMENT,
 				  `study_id` int(3) NOT NULL DEFAULT '0',
@@ -48,29 +51,26 @@ class Jbs614Install
 		{
 			return false;
 		}
-
 		$query = "ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-
 		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN downloads int(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-
 		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN plays int(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-
-		$query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339'";
+		$query = $db->getQuery(true);
+		$query->insert('#__bsms_timeset')->set('timeset = ' . 1281646339);
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
@@ -78,10 +78,9 @@ class Jbs614Install
 		}
 
 		// This updates the mediafiles table to reflect the new way of associating files to podcasts
-		$db    = JFactory::getDBO();
-		$query = 'SELECT id, params, podcast_id FROM #__bsms_mediafiles WHERE podcast_id > 0';
+		$query = $db->getQuery(true);
+		$query->select('id, params, podcast_id')->from('#__bsms_mediafiles')->where('podcast_id > ' . 0);
 		$db->setQuery($query);
-		$db->query();
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
@@ -94,8 +93,8 @@ class Jbs614Install
 				$podcast = 'podcasts=' . $result->podcast_id . '\n';
 				$params  = $result->params;
 				$update  = $podcast . ' ' . $params;
-				$query   = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($update) .
-					", `podcast_id`='0' WHERE `id` = " . (int) $db->quote($result->id);
+				$query   = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')->set('params = ' . $db->q($update) . 'podcast_id = ' . 0)->where('id = ' . (int) $result->id);
 
 				if (!JBSMDbHelper::performdb($query, "Build 614: "))
 				{

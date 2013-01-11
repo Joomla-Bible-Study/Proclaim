@@ -252,7 +252,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$query           = $db->getQuery(true);
 		$extensionresult = $this->getExtentionId();
 		$query->select('version_id')->from($db->qn('#__schemas'))
-			->where('extension_id = "' . $extensionresult . '"');
+			->where('extension_id = ' . $db->q($extensionresult));
 		$db->setQuery($query);
 		$result = $db->loadResult();
 
@@ -406,11 +406,11 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
-			->where('element = "com_biblestudy"');
+			->where('element = ' . $db->q('com_biblestudy'));
 		$db->setQuery($query);
 		$result = $db->loadResult();
 
-		if ($db->getErrorNum())
+		if (!$result)
 		{
 			throw new Exception('Database error - getExtentionId');
 		}

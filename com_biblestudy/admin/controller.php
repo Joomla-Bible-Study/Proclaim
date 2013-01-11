@@ -186,11 +186,17 @@ class BiblestudyController extends JControllerLegacy
 		switch ($from)
 		{
 			case '100':
-				$query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '0' OR `player` = '100' or `player` IS NULL";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set($db->qn('player') . ' = ' . $db->q($to))
+					->where($db->qn('player') . ' = ' . (int) 0 . ' OR ' . $db->qn('player') . ' = ' . (int) 100 . ' OR ' . $db->qn('player') . ' IS NULL');
 				break;
 
 			default:
-				$query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set($db->qn('player') . ' = ' . $db->q($to))
+					->where($db->qn('player') . ' = ' . $db->q($from));
 				break;
 		}
 		$db->setQuery($query);
@@ -222,7 +228,10 @@ class BiblestudyController extends JControllerLegacy
 		$from = $data['params']['pFrom'];
 		$to   = $data['params']['pTo'];
 
-		$query = 'UPDATE #__bsms_mediafiles SET ' . $db->quoteName('popup') . ' = ' . $db->quote($to) . ' WHERE `popup` = ' . $db->quote($from);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set($db->quoteName('popup') . ' = ' . $db->quote($to))
+			->where($db->qn('popup') . ' = ' . $db->quote($from));
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -260,12 +269,15 @@ class BiblestudyController extends JControllerLegacy
 		$app = JFactory::getApplication();
 		$id  = $app->input->getInt('id', 0, 'get');
 		$db  = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_studies')
+			->set('hits=' . 0)
+			->where('id = ' . (int) $id);
+		$db->setQuery($query);
 
 		if (!$db->execute())
 		{
-			$error = $db->getErrorMsg();
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
+			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_HITS');
 		}
 		else
 		{
@@ -285,12 +297,15 @@ class BiblestudyController extends JControllerLegacy
 		$app = JFactory::getApplication();
 		$id  = $app->input->getInt('id', 0, 'get');
 		$db  = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('downloads = ' . 0)
+			->where('id = ' . (int) $id);
+		$db->setQuery($query);
 
 		if (!$db->execute())
 		{
-			$error = $db->getErrorMsg();
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
+			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS');
 		}
 		else
 		{
@@ -310,7 +325,11 @@ class BiblestudyController extends JControllerLegacy
 		$jinput = new JInput;
 		$id     = $jinput->getInt('id', 0, 'get');
 		$db     = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('plays = ' . 0)
+			->where('id = ' . (int) $id);
+		$db->setQuery($query);
 
 		if (!$db->execute())
 		{
