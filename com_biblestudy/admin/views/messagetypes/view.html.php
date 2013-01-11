@@ -101,6 +101,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 				$this->sidebar = JHtmlSidebar::render();
 			}
 		}
+
 		// Preprocess the list of items to find ordering divisions.
 		// TODO: Complete the ordering stuff with nested sets
 		foreach ($this->items as &$item)
@@ -163,18 +164,29 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=folders');
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messagetypes');
 
 			JHtmlSidebar::addFilter(
 				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
-		}
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+			);
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
+				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
+			);
 		}
 	}
 

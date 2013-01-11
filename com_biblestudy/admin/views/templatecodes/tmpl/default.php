@@ -51,7 +51,7 @@ $sortFields = $this->getSortFields();
     <div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
     </div>
-    <div id="j-main-container" class="span10">
+        <div id="j-main-container" class="span10">
         <?php else : ?>
             <div id="j-main-container">
             <?php endif; ?>

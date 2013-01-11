@@ -163,6 +163,21 @@ class BiblestudyViewTeachers extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+		if (BIBLESTUDY_CHECKREL)
+		{
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=teachers');
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+			);
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+			);
+
+		}
 	}
 
 	/**

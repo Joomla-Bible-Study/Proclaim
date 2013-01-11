@@ -86,12 +86,16 @@ class BiblestudyViewMimetypes extends JViewLegacy
 
 		$this->f_levels = $options;
 
-		if (BIBLESTUDY_CHECKREL)
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
 		{
-			$this->sidebar = JHtmlSidebar::render();
+			$this->addToolbar();
+
+			if (BIBLESTUDY_CHECKREL)
+			{
+				$this->sidebar = JHtmlSidebar::render();
+			}
 		}
-		// Set the toolbar
-		$this->addToolbar();
 
 		// Set the document
 		$this->setDocument();
@@ -133,6 +137,26 @@ class BiblestudyViewMimetypes extends JViewLegacy
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'mimetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
+
+		if (BIBLESTUDY_CHECKREL)
+		{
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mimetypes');
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+			);
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+			);
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
+				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
+			);
 		}
 	}
 
