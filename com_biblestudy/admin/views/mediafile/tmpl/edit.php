@@ -174,11 +174,11 @@ elseif (empty($this->item->study_id))
 $input = new JInput;
 if ($input->get('layout', '', 'string') == 'modal')
 {
-	$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
+	$url = 'index.php?option=com_biblestudy&amp;layout=mediafile&amp;tmpl=component&amp;layout=modal&amp;id=' . (int) $this->item->id;
 }
 else
 {
-	$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+	$url = 'index.php?option=com_biblestudy&amp;view=mediafile&amp;layout=edit&amp;id=' . (int) $this->item->id;
 } echo $url;
 ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 <div class="row-fluid">
