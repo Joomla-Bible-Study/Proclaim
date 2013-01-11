@@ -150,26 +150,26 @@ $sortFields = $this->getSortFields();
 					if (BIBLESTUDY_CHECKREL)
 					{
 						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'article.');
+						JHtml::_('dropdown.edit', $item->id, 'server.');
 						JHtml::_('dropdown.divider');
 						if ($item->published) :
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unpublish', 'cb' . $i, 'servers.');
 						else :
-							JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.publish', 'cb' . $i, 'servers.');
 						endif;
 
 						JHtml::_('dropdown.divider');
 
 						if ($archived) :
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unarchive', 'cb' . $i, 'servers.');
 						else :
-							JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.archive', 'cb' . $i, 'servers.');
 						endif;
 
 						if ($trashed) :
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.untrash', 'cb' . $i, 'servers.');
 						else :
-							JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.trash', 'cb' . $i, 'servers.');
 						endif;
 
 						// Render dropdown list

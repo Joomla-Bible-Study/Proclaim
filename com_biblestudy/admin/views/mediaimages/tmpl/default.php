@@ -148,7 +148,7 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="center">
                 <div class="btn-group">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediaimage.', $canChange, 'cb', '', ''); ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediaimages.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
 
@@ -187,26 +187,26 @@ $sortFields = $this->getSortFields();
 					if (BIBLESTUDY_CHECKREL)
 					{
 						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'article.');
+						JHtml::_('dropdown.edit', $item->id, 'mediaimage.');
 						JHtml::_('dropdown.divider');
 						if ($item->published) :
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediaimages.');
 						else :
-							JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.publish', 'cb' . $i, 'mediaimages.');
 						endif;
 
 						JHtml::_('dropdown.divider');
 
 						if ($archived) :
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediaimages.');
 						else :
-							JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.archive', 'cb' . $i, 'mediaimages.');
 						endif;
 
 						if ($trashed) :
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.untrash', 'cb' . $i, 'mediaimages.');
 						else :
-							JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.trash', 'cb' . $i, 'mediaimages.');
 						endif;
 
 						// Render dropdown list
