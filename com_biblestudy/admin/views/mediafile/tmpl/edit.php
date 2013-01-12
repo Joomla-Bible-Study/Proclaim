@@ -505,14 +505,6 @@ else
 				<?php echo $this->form->getInput('downloads'); ?>
             </div>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('ordering'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('ordering'); ?>
-            </div>
-        </div>
     </fieldset>
     <fieldset class="form-vertical">
         <div class="control-group">

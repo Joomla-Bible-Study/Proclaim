@@ -66,10 +66,6 @@ JHtml::_('behavior.keepalive');
 
 					<?php echo $this->form->getInput('list_show'); ?></li>
                 <li>
-					<?php echo $this->form->getLabel('ordering'); ?>
-
-					<?php echo $this->form->getInput('ordering'); ?></li>
-                <li>
 					<?php echo $this->form->getLabel('landing_show'); ?>
 
 					<?php echo $this->form->getInput('landing_show'); ?></li>

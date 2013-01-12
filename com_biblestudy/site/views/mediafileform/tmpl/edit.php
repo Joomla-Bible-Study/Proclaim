@@ -325,14 +325,6 @@ elseif (empty($this->item->study_id))
     </div>
     <div class="control-group">
         <div class="control-label">
-			<?php echo $this->form->getLabel('ordering'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('ordering'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
 			<?php echo $this->form->getLabel('comment'); ?>
         </div>
         <div class="controls">

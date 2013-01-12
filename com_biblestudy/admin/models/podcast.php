@@ -20,46 +20,6 @@ class BiblestudyModelPodcast extends JModelAdmin
 {
 
 	/**
-	 * Store
-	 *
-	 * @return boolean
-	 *
-	 * @todo Thees store() may not be needed.
-	 */
-	public function store()
-	{
-		$row   = & $this->getTable();
-		$input = new JInput;
-		$data  = $input->get('post');
-
-		// Bind the form fields to the hello table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the web link table to the database
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Get the form data
 	 *
 	 * @param   array    $data      Data for the form.

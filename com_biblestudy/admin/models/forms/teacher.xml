@@ -40,8 +40,9 @@
             <option value="1">JBS_CMN_SHOW_ABOVE_LANDING</option>
             <option value="2">JBS_CMN_SHOW_BELOW_LANDING</option>
         </field>
-        <field name="ordering" type="teacherOrdering" label="JBS_CMN_ORDERING"
-               description="JBS_CMN_ORDERING_DESC" class="inputbox"/>
+        <field name="ordering" type="text" label="JFIELD_ORDERING_LABEL"
+               description="JFIELD_ORDERING_DESC" class="inputbox" size="6"
+               default="0" labelclass="control-label" />
         <field name="teachername" type="text" class="inputbox" size="60"
                label="JBS_CMN_TEACHER" required="true"/>
         <field name="alias"

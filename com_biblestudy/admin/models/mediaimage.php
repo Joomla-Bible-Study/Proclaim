@@ -36,42 +36,6 @@ class BiblestudyModelMediaimage extends JModelAdmin
 	}
 
 	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 */
-	public function store()
-	{
-		$row   = $this->getTable();
-		$input = new JInput;
-		$data  = $input->get('post');
-
-		// Bind the form fields to the hello table
-		if (!$row->bind($data))
-		{
-
-			return false;
-		}
-
-		// Make sure the hello record is valid
-		if (!$row->check())
-		{
-
-			return false;
-		}
-
-		// Store the web link table to the database
-		if (!$row->store())
-		{
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Get the form data
 	 *
 	 * @param   array    $data      Data for the form.
