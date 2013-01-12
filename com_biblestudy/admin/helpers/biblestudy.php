@@ -220,18 +220,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function rendermenu($text, $url, $vName)
 	{
-		jimport('joomla.version');
-		$version = new JVersion;
-
-		if ($version->RELEASE == '3.0')
-		{
-			$versionName = true;
-		}
-		else
-		{
-			$versionName = false;
-		}
-		if ($versionName)
+		if (version_compare(JVERSION, '3.0', 'ge'))
 		{
 			JHtmlSidebar::addEntry($text, $url, $vName);
 		}
