@@ -28,7 +28,7 @@ $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <table id="bsm_teachertable">
+    <table class="table table-striped" id="bsm_teachertable">
         <tbody>
         <tr class="titlerow">
             <td style="text-align: center" colspan="3" class="title">
@@ -45,7 +45,7 @@ $JBSMTeacher = new JBSMTeacher;
 			break;
 		case 'T':
 			// Table
-			echo '<table id="bsms_teachertable" style="width: 100%;">';
+			echo '<table class="table table-striped" id="bsms_teachertable" style="width: 100%;">';
 			break;
 		case 'D':
 			// DIV

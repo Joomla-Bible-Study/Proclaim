@@ -194,7 +194,9 @@ class BiblestudyModelSerie extends JModelAdmin
 			if (empty($table->ordering))
 			{
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_series');
+				$query = $db->getQuery(true);
+				$query->select('MAX(ordering)')->from('#__bsms_series');
+				$db->setQuery($query);
 				$max = $db->loadResult();
 
 				$table->ordering = $max + 1;
@@ -391,6 +393,20 @@ class BiblestudyModelSerie extends JModelAdmin
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
 	{
 		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer  $pk  The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
 	}
 
 	/**

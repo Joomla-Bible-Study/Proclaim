@@ -74,7 +74,7 @@ else
 		$image = $JBSMImage->getImage($i_path);
 	}
 	?>
-    <table class="bslisttable">
+    <table class="table table-striped bslisttable">
 		<?php
 		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
 		echo $listing;
@@ -85,7 +85,7 @@ else
 			echo $studies;
 		}
 
-		echo '<table><tr><td id="bsmsteacherstudyfooter">
+		echo '<table class="table table-striped"><tr><td id="bsmsteacherstudyfooter">
 		<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">'
 			. JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
 		?>

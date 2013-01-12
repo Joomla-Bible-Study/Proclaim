@@ -69,7 +69,7 @@ class JbStats
 
 		if (count($where) > 0)
 		{
-			$query .= ' AND ' . implode(' AND ', $where);
+			$query->where(implode(' AND ', $where));
 		}
 		$db->setQuery($query);
 		$results = $db->loadResult();
@@ -270,7 +270,7 @@ class JbStats
 		$query
 			->select('COUNT(*)')
 			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'));
+			->where('published = ' . 1);
 		$db->setQuery($query);
 
 		return intval($db->loadResult());
@@ -364,8 +364,8 @@ class JbStats
 		$query
 			->select('SUM(downloads)')
 			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'))
-			->where('downloads > ' . $db->q('0'));
+			->where('published = ' . 1)
+			->where('downloads > ' . 0);
 		$db->setQuery($query);
 
 		return intval($db->loadResult());
@@ -386,7 +386,7 @@ class JbStats
 		$query
 			->select('study_id, sum(downloads + plays) as added ')
 			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'))
+			->where('published = ' . 1)
 			->group('study_id');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();

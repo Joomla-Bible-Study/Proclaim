@@ -55,7 +55,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			$teacherids->id = $id;
 		}
-		$teacher = '<table id = "teacher"><tr>';
+		$teacher = '<table class="table" id="teacher"><tr>';
 
 		if (!isset($teacherids))
 		{
@@ -64,8 +64,8 @@ class JBSMTeacher extends JBSMListing
 		foreach ($teacherids as $teachers)
 		{
 			$database = JFactory::getDBO();
-			$query    = 'SELECT * FROM #__bsms_teachers' .
-				'  WHERE id = ' . $teachers;
+			$query    = $database->getQuery(true);
+			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path  = null;
@@ -80,7 +80,7 @@ class JBSMTeacher extends JBSMListing
 				$image->width  = 0;
 				$image->height = 0;
 			}
-			$teacher .= '<td><table class="cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
 				. '" height="' . $image->height . '" alt="" /></td></tr>';
 
 			$teacher .= '<tr><td>';
@@ -99,7 +99,8 @@ class JBSMTeacher extends JBSMListing
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
-			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>' . $params->get('list_intro') . '</p></td></tr></table> </div></td>';
+			$teacher .= '<td><div id="listintro"><table class="table" id="listintro"><tr><td><p>';
+			$teacher .= $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
 		$teacher .= '</tr></table>';
 
@@ -200,35 +201,29 @@ class JBSMTeacher extends JBSMListing
 
 		if ($params->get('series_detail_limit'))
 		{
-			$limit = ' LIMIT ' . $params->get('series_detail_limit');
+			$limit = $params->get('series_detail_limit');
 		}
 		if ($nolimit == 1)
 		{
 			$limit = '';
 		}
 		$db    = JFactory::getDBO();
-		$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = ' . $id;
-		$db->setQuery($query);
-		$allrows = $db->loadObjectList();
-		$rows    = $db->getAffectedRows();
-
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-			. ' FROM #__bsms_studies'
-			. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-			. ' where #__bsms_teachers.id = ' . $id . ' AND #__bsms_studies.published = 1 '
-			. ' GROUP BY #__bsms_studies.id'
-			. ' order by studydate desc'
-			. $limit;
-
-		$db->setQuery($query);
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text')
+			->from('#__bsms_studies')
+			->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
+			->leftJoin('#__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)')
+			->leftJoin('#__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)')
+			->leftJoin('#__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)')
+			->leftJoin('#__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)')
+			->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
+			->where('#__bsms_teachers.id = ' . $id)->where('#__bsms_studies.published = ' . 1)
+			->group('#__bsms_studies.id')
+			->order('studydate desc');
+		$db->setQuery($query, 0, $limit);
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -260,7 +255,7 @@ class JBSMTeacher extends JBSMListing
 				break;
 			case 'T':
 				// Table
-				$studies .= '<table id="bsms_studytable" width="100%">';
+				$studies .= '<table class="table" id="bsms_studytable" width="100%">';
 				break;
 			case 'D':
 				// DIV

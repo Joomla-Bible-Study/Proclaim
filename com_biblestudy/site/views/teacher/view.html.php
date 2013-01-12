@@ -58,7 +58,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$document    = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$images  = new JBSMImages;

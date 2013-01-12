@@ -98,15 +98,15 @@ class BiblestudyViewTopics extends JViewLegacy
 
 		$this->f_levels = $options;
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
-
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
+
+			if (BIBLESTUDY_CHECKREL)
+			{
+				$this->sidebar = JHtmlSidebar::render();
+			}
 		}
 
 		// Set the document
@@ -150,6 +150,16 @@ class BiblestudyViewTopics extends JViewLegacy
 			{
 				JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
 			}
+		}
+		if (BIBLESTUDY_CHECKREL)
+		{
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+			);
+
 		}
 	}
 

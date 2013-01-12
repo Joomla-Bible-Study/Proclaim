@@ -118,7 +118,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="seriesList">
+    <table class="table table-striped adminlist" id="series">
         <thead>
         <tr>
             <th width="1%" class="nowrap center hidden-phone">

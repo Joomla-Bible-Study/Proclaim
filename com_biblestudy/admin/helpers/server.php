@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    8.0.0
+ *
+ * @todo Looks like this could go into the dbhelper.php file. TOM
  */
 class JBSMServer
 {
@@ -31,13 +33,14 @@ class JBSMServer
 	public static function getServer($serverid)
 	{
 		$db    = JFactory::getDBO();
-		$query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
-
+		$query = $db->getQuery(true);
+		$query->select('distinct *')
+			->from('#__bsms_servers')
+			->where('id = ' . (int) $serverid);
 		$db->setQuery($query);
+		$result = $db->loadObject();
 
-		$tresult = $db->loadObject();
-
-		return $tresult;
+		return $result;
 	}
 
 	/**
@@ -49,15 +52,15 @@ class JBSMServer
 	 */
 	public static function getFolder($folderId)
 	{
-
 		$db    = JFactory::getDBO();
-		$query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
-
+		$query = $db->getQuery(true);
+		$query->select('distinct *')
+			->from('#__bsms_folders')
+			->where('id = ' . (int) $folderId);
 		$db->setQuery($query);
+		$result = $db->loadObject();
 
-		$tresult = $db->loadObject();
-
-		return $tresult;
+		return $result;
 	}
 
 }

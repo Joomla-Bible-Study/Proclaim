@@ -128,7 +128,9 @@ class JBSExport
 		$export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
 		// Get the table rows and create insert statements from them
-		$query = 'SELECT * FROM ' . $db->quoteName($table);
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from($db->qn($table));
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 

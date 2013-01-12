@@ -52,7 +52,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
-			->where(' id = ' . (int) $db->q($id));
+			->where(' id = ' . (int) $id);
 		$db->setQuery($query);
 
 		if (!$db->execute())

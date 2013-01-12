@@ -55,7 +55,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		$query     = $db->getQuery('true');
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
-		$query->where('id= ' . (int) $db->q($mid));
+		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
 		?>

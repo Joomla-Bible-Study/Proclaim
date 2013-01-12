@@ -46,7 +46,6 @@ $input  = $app->input;
 <fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_STY_DETAILS'); ?></a></li>
-    <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></a></li>
     <li><a href="#scripture" data-toggle="tab"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></a></li>
     <li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
     <li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
@@ -102,22 +101,6 @@ $input  = $app->input;
     </div>
 </div>
 <div class="tab-pane" id="scripture">
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('script1'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('script1'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('script2'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('script1'); ?>
-        </div>
-    </div>
     <div class="control-group">
         <div class="control-label">
 			<?php echo $this->form->getLabel('booknumber'); ?>
@@ -283,73 +266,6 @@ $input  = $app->input;
         </div>
     </div>
 </div>
-<div class="tab-pane" id="publishing">
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo JText::_('JBS_STY_HITS'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->item->hits; ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('published'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('published'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('studydate'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('studydate'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('comments'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('comments'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('user_id'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id)?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('access'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('access'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('language'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('language'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-        </div>
-    </div>
-</div>
-
 <?php if ($this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
 
@@ -359,28 +275,28 @@ $input  = $app->input;
 	<?php endif; ?>
 
 
-<div class="tab-pane" id="metadata">
-	<?php
-	foreach ($params as $name => $fieldset):
-		if (isset($fieldset->description) && trim($fieldset->description)):
-			?>
-            <p class="tip">
-				<?php echo $this->escape(JText::_($fieldset->description)); ?>
-            </p>
-			<?php endif; ?>
+<?php
+foreach ($params as $name => $fieldSet): ?>
+		<div class="tab-pane" id="metadata">
+			<?php
+	if (isset($fieldset->description) && trim($fieldSet->description)):
+		?>
+        <p class="tip">
+			<?php echo $this->escape(JText::_($fieldSet->description)); ?>
+        </p>
+		<?php endif; ?>
 
-		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+	<?php foreach ($this->form->getFieldSet($name) as $field) : ?>
         <div class="control-group">
             <div class="control-label">
+				<?php echo $field->label; ?>
             </div>
             <div class="controls">
-				<?php echo $field->label; ?><?php echo $field->input; ?>
+				<?php echo $field->input; ?>
             </div>
         </div>
-
 		<?php endforeach; ?>
-
-		<?php endforeach; ?>
+	<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="media">
     <table class="adminlist">
@@ -457,7 +373,76 @@ $input  = $app->input;
 </div>
 </fieldset>
 </div>
-<!-- End Sidebar -->
+<div class="span2">
+    <h4><?php echo JText::_('JDETAILS');?></h4>
+    <hr/>
+    <fieldset class="form-vertical">
 
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo JText::_('JBS_STY_HITS'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->item->hits; ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('published'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('published'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('studydate'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('studydate'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('comments'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('comments'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('user_id'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id)?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('access'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('access'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('language'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('language'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-label">
+				<?php echo $this->form->getLabel('id'); ?>
+            </div>
+            <div class="controls">
+				<?php echo $this->form->getInput('id'); ?>
+            </div>
+        </div>
+    </fieldset>
 </div>
+<!-- End Sidebar -->
 </form>

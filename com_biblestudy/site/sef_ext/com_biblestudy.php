@@ -53,7 +53,6 @@ switch ($view)
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		break;
-
 	case 'sermon': // Need to keep the id because of the number of teachings
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
@@ -66,8 +65,8 @@ switch ($view)
 		break;
 	case 'seriesdisplay':
 		$title[] = $view;
-
-		$query_name = 'SELECT series_text FROM #__bsms_series WHERE #__bsms_series.id = ' . $id;
+		$query_name = $database->getQuery(true);
+		$query_name->select('series_text')->from('#__bsms_series')->where('#__bsms_series.id = ' . $id);
 		$database->setQuery($query_name);
 		$series  = $database->loadResult();
 		$title[] = $series;
@@ -82,8 +81,8 @@ switch ($view)
 		break;
 	case 'teacher':
 		$title[] = $view;
-
-		$query_name = 'SELECT teachername FROM #__bsms_teachers WHERE #__bsms_teachers.id = ' . $id;
+		$query_name = $database->getQuery(true);
+		$query_name->select('teachername')->from('#__bsms_teachers')->where('#__bsms_teachers.id = ' . $id);
 		$database->setQuery($query_name);
 		$teacher = $database->loadResult();
 		$title[] = $teacher;
@@ -93,14 +92,12 @@ switch ($view)
 		break;
 	case 'landingpage':
 		$title[] = $view;
-
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
 		break;
 	case 'popup':
 		$title[] = $view;
-
 		shRemoveFromGETVarsList('player');
 		shRemoveFromGETVarsList('template');
 		shRemoveFromGETVarsList('view');

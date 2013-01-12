@@ -67,18 +67,11 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Get the title of the linked chart
-		$db = JFactory::getDBO();
-		$db->setQuery(
-			'SELECT series_text AS name' .
-				' FROM #__bsms_series' .
-				' WHERE id = ' . (int) $this->value
-		);
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('series_text AS name')->from('#__bsms_series')->where('id = ' . (int) $this->value);
+		$db->setQuery($query);
 		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg())
-		{
-			JError::raiseWarning(500, $error);
-		}
 
 		if (empty($title))
 		{
@@ -88,8 +81,11 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		$link = 'index.php?option=com_biblestudy&amp;view=series&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
 		JHTML::_('behavior.modal', 'a.modal');
-		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_SERIES') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_SERIES') . '</a></div></div>' . "\n";
+		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="';
+		$html .= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
+		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_SERIES');
+		$html .= '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_SERIES');
+		$html .= '</a></div></div>' . "\n";
 
 		// The active study id field.
 		if (0 == (int) $this->value)

@@ -1160,7 +1160,7 @@ class JBSMListing extends JBSMElements
 
 		if ($sharetype == 1)
 		{
-			$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
+			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
 						<tr class="bsmssharetitlerow">
 						<th id="bsmssharetitle" </th></tr></thead>
 						<tbody><tr class="bsmsshareiconrow">';
@@ -1179,7 +1179,8 @@ class JBSMListing extends JBSMElements
 
 			// Get the information from the database on what social networking sites to use
 			$db    = JFactory::getDBO();
-			$query = 'SELECT * FROM #__bsms_share where published = 1 ORDER BY name ASC';
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_share')->where('published = ' . 1)->order('name asc');
 			$db->setQuery($query);
 			$rows      = $db->loadObjectList();
 			$sharerows = count($rows);
@@ -1192,7 +1193,7 @@ class JBSMListing extends JBSMElements
 			}
 
 			// Begin to form the table
-			$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
+			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
 						<tr class="bsmssharetitlerow">
 						<th id="bsmssharetitle" colspan=' . $sharerows . '>' . $sharetitle . '</th></tr></thead>
 						<tbody><tr class="bsmsshareiconrow">';
@@ -1504,7 +1505,7 @@ class JBSMListing extends JBSMElements
 
 		if ($params->get('title_line_1') > 0)
 		{
-			$title = '<table id="titletable"><tbody><tr><td class="titlefirstline">';
+			$title = '<table class="table" id="titletable"><tbody><tr><td class="titlefirstline">';
 
 			switch ($params->get('title_line_1'))
 			{
@@ -2094,17 +2095,7 @@ class JBSMListing extends JBSMElements
 	 *
 	 * @return string
 	 */
-	private function getHeadercell(
-		$rowid,
-		$row,
-		$params,
-		$lastcol,
-		$colspan,
-		$rowspan,
-		$rowcolid,
-		$nh,
-		$admin_params,
-		$template)
+	private function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 	{
 		$headercell = '<th ';
 		$elementid  = new stdClass;
@@ -2122,10 +2113,12 @@ class JBSMListing extends JBSMElements
 		if (!isset($elementid->id))
 		{
 			// @todo need to see if this need to be removed.
-			// $headercell .= 'customhead';
+			$headercell .= 'customhead';
 		}
-
-		$headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
+		else
+		{
+			$headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
+		}
 
 		if ($lastcol == 1)
 		{

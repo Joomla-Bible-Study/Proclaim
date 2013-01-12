@@ -52,18 +52,11 @@ class JFormFieldModal_Study extends JFormField
 		$html = array();
 		$link = 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
-		$db = JFactory::getDBO();
-		$db->setQuery(
-			'SELECT studytitle AS title' .
-				' FROM #__bsms_studies' .
-				' WHERE id = ' . (int) $this->value
-		);
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('studytitle AS title')->from('#__bsms_studies')->where('id = ' . (int) $this->value);
+		$db->setQuery($query);
 		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg())
-		{
-			JError::raiseWarning(500, $error);
-		}
 
 		if (empty($title))
 		{
@@ -79,7 +72,8 @@ class JFormFieldModal_Study extends JFormField
 		// The user select button.
 		$html[] = '<div class="button2-left">';
 		$html[] = '  <div class="blank">';
-		$html[] = '	<a class="modal" title="' . JText::_('JBS_CMN_STUDY_CHANGE') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_STUDY_CHANGE') . '</a>';
+		$html[] = '	<a class="modal" title="' . JText::_('JBS_CMN_STUDY_CHANGE') . '"  href="' . $link .
+			'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_STUDY_CHANGE') . '</a>';
 		$html[] = '  </div>';
 		$html[] = '</div>';
 

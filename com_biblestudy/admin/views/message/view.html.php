@@ -82,18 +82,15 @@ class BiblestudyViewMessage extends JViewLegacy
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
 		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
-		$host               = JURI::base();
 		$document           = JFactory::getDocument();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
-		//$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-		//$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtml::_('jquery.framework');
 		}
 
-		//$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 		$script = "
             jQuery(document).ready(function() {
@@ -109,12 +106,12 @@ class BiblestudyViewMessage extends JViewLegacy
                 });
             });
              ";
-		//JHtml::script($script);
+
+		// JHtml::script($script);
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
 		JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
-		//$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
 
 		$this->setLayout("edit");
 

@@ -8,7 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php';
 require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php';
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
@@ -74,10 +73,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		$t = $input->get('t', 1, 'int');
 
-		if (!$t)
-		{
-			$t = 1;
-		}
 		$template           = JBSMParams::getTemplateparams();
 		$params             = $template->params;
 		$a_params           = JBSMParams::getAdmin();
@@ -143,7 +138,8 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		foreach ($items AS $item)
 		{
-			$item->slug         = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
+			$item->slug         = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+				. str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
 			$seriesimage        = $images->getSeriesThumbnail($item->series_thumbnail);
 			$item->image        = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
 			$item->serieslink   = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
@@ -164,6 +160,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 
+		// @todo need to redo this. bcc
 		if ($count > 0)
 		{
 			for ($i = 0; $i < $count; $i++)

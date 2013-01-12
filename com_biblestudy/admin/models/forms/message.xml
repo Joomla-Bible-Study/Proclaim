@@ -149,10 +149,10 @@
 
     <fields name="params">
         <fieldset name="params">
-            <field name="metakey" type="text" class="inputbox" size="50" label="JBS_STY_METAKEYWORDS"
-                   description="JBS_STY_METAKEYWORDS_DESC"/>
-            <field name="metadesc" type="textarea" class="inputbox" cols="50" rows="4" label="JBS_STY_METADESCRIPTION"
-                   description="JBS_STY_METADESCRIPTION_DESC"/>
+            <field name="metakey" type="textarea" label="JBS_STY_METAKEYWORDS"
+                   description="JBS_STY_METAKEYWORDS_DESC" class="inputbox" rows="3" size="30" />
+            <field name="metadesc" type="textarea" label="JBS_STY_METADESCRIPTION"
+                   description="JBS_STY_METADESCRIPTION_DESC" class="inputbox" cols="30" rows="3" />
         </fieldset>
     </fields>
 </form>

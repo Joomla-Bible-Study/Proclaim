@@ -154,7 +154,7 @@
             </field>
             <field name="username" type="text" size="100" default=""
                    label="JBS_SHR_USERNAME" description="JBS_SHR_USERNAME_DESC"/>
-            <field name="api" size="200" type="text" default="" label="JBS_SHR_API"
+            <field name="api" size="100" type="text" default="" label="JBS_SHR_API"
                    description="JBS_SHR_API_DESC"/>
             <field name="shareimage" type="media" size="46" default=""
                    label="JBS_SHR_SHAREIMAGE"/>

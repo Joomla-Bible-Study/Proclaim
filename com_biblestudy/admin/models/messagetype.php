@@ -129,7 +129,9 @@ class BiblestudyModelMessagetype extends JModelAdmin
 			if (empty($table->ordering))
 			{
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_message_type');
+				$query = $db->getQuery(true);
+				$query->select('MAX(ordering)')->from('#__bsms_message_type');
+				$db->setQuery($query);
 				$max = $db->loadResult();
 
 				$table->ordering = $max + 1;
@@ -141,6 +143,20 @@ class BiblestudyModelMessagetype extends JModelAdmin
 			// $table->modified	= $date->toMySQL();
 			// $table->modified_by	= $user->get('id');
 		}
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer  $pk  The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
 	}
 
 	/**

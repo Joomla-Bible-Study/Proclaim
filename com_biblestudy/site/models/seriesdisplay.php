@@ -49,17 +49,21 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 */
 	protected function populateState()
 	{
+		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$input = new JInput;
-		$pk    = $input->get('id', '', 'int');
+		$pk    = $app->input->get('id', '', 'int');
 		$this->setState('series.id', $pk);
-		$input  = new JInput;
-		$offset = $input->get('limitstart', '', 'int');
+
+		$offset = $app->input->get('limitstart', '', 'int');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params = JFactory::getApplication('site')->getParams;
+		$params = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+		$this->setState('template', $template);
+
+		$params->merge($template->params);
 		$this->setState('params', $params);
 
 		$user = JFactory::getUser();
@@ -122,5 +126,4 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		return $this->_item[$pk];
 	}
 
-//end class
 }

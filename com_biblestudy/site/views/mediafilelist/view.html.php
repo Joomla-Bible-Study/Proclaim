@@ -7,7 +7,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/biblestudy.php';
+JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
 JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
@@ -60,6 +60,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	protected $params;
 
 	public $pageclass_sfx;
+
 	public $newlink;
 
 	/**
@@ -72,7 +73,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$app              = JFactory::getApplication();
-		$this->canDo      = JBSMHelper::getActions('', 'mediafilesedit');
+		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafilesedit');
 		$this->state      = $this->get('State');
 		$this->items      = $this->get('Items');
 		$this->mediatypes = $this->get('Mediatypes');

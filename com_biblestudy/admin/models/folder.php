@@ -214,6 +214,20 @@ class BiblestudyModelFolder extends JModelAdmin
 	}
 
 	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer  $pk  The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
 	 * Clean the cache
 	 *
 	 * @param   string   $group      The cache group

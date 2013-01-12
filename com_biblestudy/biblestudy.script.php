@@ -64,19 +64,28 @@ class Com_BiblestudyInstallerScript
 		$db = JFactory::getDBO();
 
 		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
-		$query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
+		$query = $db->getQuery(true);
+		$query->select('extension_id')
+			->from('#__extensions')
+			->where('name LIKE ' . $db->q('%com_biblestudy%'));
 		$db->setQuery($query);
 		$extensionid = $db->loadResult();
 
 		if ($extensionid)
 		{
-			$query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . (int) $db->quote($extensionid);
+			$query = $db->getQuery(true);
+			$query->select('version_id')
+				->from('#__schemas')
+				->where('extension_id = ' . $db->quote($extensionid));
 			$db->setQuery($query);
 			$jbsversion = $db->loadResult();
 
 			if ($jbsversion == '20100101')
 			{
-				$query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . (int) $db->quote($extensionid);
+				$query = $db->getQuery(true);
+				$query->update('#__schemas')
+					->set('version_id = ' . $db->q('7.0.0'))
+					->where('extension_id = ' . $db->quote($extensionid));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -107,7 +116,9 @@ class Com_BiblestudyInstallerScript
 	public function install($parent)
 	{
 		$db    = JFactory::getDBO();
-		$query = "SELECT id FROM #__bsms_admin";
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__bsms_admin');
 		$db->setQuery($query);
 
 		if (!$db->loadResult())
@@ -146,8 +157,11 @@ class Com_BiblestudyInstallerScript
 
 		require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php';
 
-		$db = JFactory::getDBO();
-		$db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_admin')
+			->where('id = ' . (int) 1);
 		$admin = $db->loadObject();
 
 		$drop_tables = $admin->drop_tables;
@@ -165,7 +179,7 @@ class Com_BiblestudyInstallerScript
 			$query     = $db->getQuery(true);
 			$query->delete()
 				->from('#__assets')
-				->where('perent_id = ' . (int) $db->q($parent_id));
+				->where('perent_id = ' . $db->q($parent_id));
 			$db->setQuery($query);
 			$db->execute();
 			$query = $db->getQuery(true);
@@ -232,7 +246,7 @@ class Com_BiblestudyInstallerScript
 			$query = $db->getQuery(true);
 			$query->select('version_id')
 				->from('#__schemas')
-				->where('extension_id = ' . (int) $db->q($extensionid));
+				->where('extension_id = ' . $db->q($extensionid));
 			$db->setQuery($query);
 			$jbsversion = $db->loadResult();
 
@@ -241,7 +255,7 @@ class Com_BiblestudyInstallerScript
 				$query = $db->getQuery(true);
 				$query->update('#__schemas')
 					->set('version_id = ' . $db->q($this->_release))
-					->where('extension_id = ' . (int) $db->q($extensionid));
+					->where('extension_id = ' . $db->q($extensionid));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -578,7 +592,7 @@ class Com_BiblestudyInstallerScript
 			$query      = $db->getQuery(true);
 			$query->update('#__menu')
 				->set("`link` = " . $db->quote($menu->link))
-				->where('id = ' . (int) $db->quote($menu->id));
+				->where('id = ' . $db->quote($menu->id));
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -608,7 +622,7 @@ class Com_BiblestudyInstallerScript
 				$query                   = $db->getQuery(true);
 				$query->update('#__bsms_media')
 					->set("`media_image_path` = " . $db->quote($image->media_image_path))
-					->where('id = ' . (int) $db->quote($image->id));
+					->where('id = ' . $db->quote($image->id));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -634,7 +648,7 @@ class Com_BiblestudyInstallerScript
 			$qeery        = $db->getQuery(true);
 			$qeery->update('#__bsms_share')
 				->set('`params` =' . $db->quote($data->params))
-				->where('id = ' . (int) $db->quote($data->id));
+				->where('id = ' . $db->quote($data->id));
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -712,7 +726,7 @@ class Com_BiblestudyInstallerScript
 		{
 			$query = $db->getQuery(true);
 			$query->update($table['table'])
-				->set('`access` = ' . (int) $db->quote($id))
+				->set('`access` = ' . $db->quote($id))
 				->where("(`access` = '0' or `access` = '')");
 			$db->setQuery($query);
 			$db->execute();

@@ -335,9 +335,8 @@ class ModJBSMHelper
 	{
 		$db         = JFactory::getDBO();
 		$templateid = $params->get('modulemenuid', 1);
-		$query      = 'SELECT *'
-			. ' FROM #__bsms_templates'
-			. ' WHERE published = 1 AND id = ' . $templateid;
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_templates')->where('published = 1')->where('id = ' . $templateid);
 		$db->setQuery($query);
 		$template = $db->loadObjectList();
 
@@ -352,9 +351,8 @@ class ModJBSMHelper
 	public static function getAdmin()
 	{
 		$db    = JFactory::getDBO();
-		$query = 'SELECT *'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = 1');
 		$db->setQuery($query);
 		$admin = $db->loadObjectList();
 

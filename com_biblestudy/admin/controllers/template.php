@@ -87,6 +87,8 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 * @param   string  $template  ?
 	 *
 	 * @return boolean|string
+	 *
+	 * @deprecated 8.0.0 Not used in scope bcc
 	 */
 	public function getTemplate($template)
 	{

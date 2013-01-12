@@ -82,7 +82,25 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$app = JFactory::getApplication();
 
-		$this->setState('filter.language', $app->getLanguageFilter());
+		// Load the parameters. Merge Global and Menu Item params into new object
+		$params     = $app->getParams();
+		$menuParams = new JRegistry;
+
+		if ($menu = $app->getMenu()->getActive())
+		{
+			$menuParams->loadString($menu->params);
+		}
+
+		$template = JBSMParams::getTemplateparams();
+		$this->setState('template', $template);
+
+		$mergedParams = clone $menuParams;
+		$mergedParams->merge($params);
+		$mergedParams->merge($template->params);
+
+		$this->setState('params', $mergedParams);
+
+		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
 		$this->setState('filter.studytitle', $studytitle);
@@ -118,7 +136,7 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.languages', $languages);
 
 		/**
-		 * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
+		 * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
 		parent::populateState('study.studydate', 'DESC');
 		$input      = new JInput;
@@ -874,7 +892,8 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getDownloads($id)
 	{
-		$query  = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
+		$query = $this->_db->getQuery(true);
+		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
 		$result = $this->_getList($query);
 
 		if (!$result)
@@ -895,7 +914,6 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getFiles()
 	{
-		/* @todo Tom commented this out because it caused the query to fail - needs work. */
 		$mediaFiles = null;
 		$db         = JFactory::getDBO();
 		$i          = 0;
@@ -904,12 +922,12 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$i++;
 			$sermon_id = $sermon->id;
-			$query     = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-				. ' FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-				. ' WHERE `study_id` ='
-				. $sermon_id;
+			$query     = $db->getQuery(true);
+			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+				->from('#__bsms_mediafiles')
+				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
+				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
+				->where('study_id` = ' . $sermon_id);
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}

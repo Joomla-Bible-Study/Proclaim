@@ -374,7 +374,7 @@ $input  = $app->input;
 		<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="media">
-    <table class="adminlist">
+    <table class="table table-striped adminlist">
         <thead>
         <tr>
             <th class="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>

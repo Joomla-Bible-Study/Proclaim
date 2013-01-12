@@ -1,13 +1,10 @@
 <?php
-
 /**
- * Install Script
- *
- * @package    BibleStudy
- * @subpackage Plugin.JBSBackup
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @package     BibleStudy
+ * @subpackage  Plugin.JBSBackup
+ * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link        http://www.JoomlaBibleStudy.org
  * */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -26,7 +23,7 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to install the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -38,20 +35,19 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function uninstall($parent)
 	{
-		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_JBSBACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
 	 * method to update the component
 	 *
-	 * @param   string  $parent  ?
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -77,48 +73,44 @@ class plgSystemjbsbackupInstallerScript
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
-	`timeset` varchar(14) NOT NULL DEFAULT '',
-	`backup` varchar(14) DEFAULT NULL,
-	PRIMARY KEY (`timeset`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+			`timeset` varchar(14) NOT NULL DEFAULT '',
+			`backup` varchar(14) DEFAULT NULL,
+			PRIMARY KEY (`timeset`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
-			$db->query();
-			$query = "INSERT INTO `#__jbsbackup_timeset` (`timeset`, `backup`) VALUES
-	( '1281646339', '1281646339')";
-			$db->setQuery($query);
-			$db->query();
+			$db->execute();
+			$data          = new stdClass;
+			$data->timeset = 1281646339;
+			$data->backup  = 1281646339;
+			$db->insertObject('#__jbsbackup_timeset', $data);
 		}
-		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_JBSBACKUP_UPDATE_TEXT') . '</p>';
 	}
 
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param   string  $type    ?
-	 * @param   string  $parent  ?
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function preflight($type, $parent)
 	{
-		// $type is the type of change (install, update or discover_install)
-		// echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+		// --echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string  $type    ?
-	 * @param   string  $parent  ?
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function postflight($type, $parent)
 	{
-		// $parent is the class calling this method
-		// $type is the type of change (install, update or discover_install)
-		// echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+		// --echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 }

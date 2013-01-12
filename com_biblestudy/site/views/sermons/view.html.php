@@ -155,7 +155,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * @var object
 	 */
-	protected $document;
+	public $document;
 
 	/**
 	 * @var int
@@ -178,7 +178,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$limitstart = $input->get('limitstart', '', 'int');
 		$input->set('start', $limitstart);
 		$this->state = $this->get('State');
-		$document    = JFactory::getDocument();
 
 		$items = $this->get('Items');
 
@@ -196,151 +195,86 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->admin      = JBSMParams::getAdmin();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
-		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
+		$user     = JFactory::getUser();
+		$groups   = $user->getAuthorisedViewLevels();
+		$params = $this->state->params;
 
-		for ($i = 0; $i < $count; $i++)
+		$this->admin_params = $this->admin->params;
+		$page_builder       = new JBSPagebuilder;
+
+		for ($i = 0, $n = count($items); $i < $n; $i++)
 		{
 
-			if ($items[$i]->access > 1 && !in_array($items[$i]->access, $groups))
+			$item = & $items[$i];
+
+			if ($item->access > 1 && !in_array($item->access, $groups))
 			{
-				unset($items[$i]);
+				unset($item);
+			}
+			else
+			{
+				$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
+
+				$pelements        = $page_builder->buildPage($item, $params, $this->admin_params);
+				$item->scripture1 = $pelements->scripture1;
+				$item->scripture2 = $pelements->scripture2;
+				$item->media      = $pelements->media;
+				$item->duration   = $pelements->duration;
+				$item->studydate  = $pelements->studydate;
+				$item->topics     = $pelements->topics;
+
+				if (isset($pelements->study_thumbnail))
+				{
+					$item->study_thumbnail = $pelements->study_thumbnail;
+				}
+				else
+				{
+					$item->study_thumbnail = null;
+				}
+
+				if (isset($pelements->series_thumbnail))
+				{
+
+					$item->series_thumbnail = $pelements->series_thumbnail;
+				}
+				else
+				{
+					$item->series_thumbnail = null;
+				}
+				$item->detailslink = $pelements->detailslink;
+
+				if (!isset($pelements->studyintro))
+				{
+					$pelements->studyintro = '';
+				}
+				$item->studyintro = $pelements->studyintro;
+
+				if (isset($pelements->secondary_reference))
+				{
+					$item->secondary_reference = $pelements->secondary_reference;
+				}
+				else
+				{
+					$item->secondary_reference = '';
+				}
+				if (isset($pelements->sdescription))
+				{
+					$item->sdescription = $pelements->sdescription;
+				}
+				else
+				{
+					$item->sdescription = '';
+				}
 			}
 
 		}
-		$template = JBSMParams::getTemplateparams();
-		$params   = $template->params;
-
-		$a_params           = JBSMParams::getAdmin();
-		$this->admin_params = $a_params->params;
-
-		foreach ($items AS $item)
-		{
-			$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-				. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-		}
-
-		$studies     = $items;
-		$pagebuilder = new JBSPagebuilder;
-
-		foreach ($studies as $i => $study)
-		{
-
-			$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
-			$studies[$i]->scripture1 = $pelements->scripture1;
-			$studies[$i]->scripture2 = $pelements->scripture2;
-			$studies[$i]->media      = $pelements->media;
-			$studies[$i]->duration   = $pelements->duration;
-			$studies[$i]->studydate  = $pelements->studydate;
-			$studies[$i]->topics     = $pelements->topics;
-
-			if (isset($pelements->study_thumbnail))
-			{
-				$studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-			}
-			else
-			{
-				$studies[$i]->study_thumbnail = null;
-			}
-
-			if (isset($pelements->series_thumbnail))
-			{
-
-				$studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-			}
-			else
-			{
-				$studies[$i]->series_thumbnail = null;
-			}
-			$studies[$i]->detailslink = $pelements->detailslink;
-
-			if (!isset($pelements->studyintro))
-			{
-				$pelements->studyintro = '';
-			}
-			$studies[$i]->studyintro = $pelements->studyintro;
-
-			if (isset($pelements->secondary_reference))
-			{
-				$studies[$i]->secondary_reference = $pelements->secondary_reference;
-			}
-			else
-			{
-				$studies[$i]->secondary_reference = '';
-			}
-			if (isset($pelements->sdescription))
-			{
-				$studies[$i]->sdescription = $pelements->sdescription;
-			}
-			else
-			{
-				$studies[$i]->sdescription = '';
-			}
-		}
-		$this->study = $studies;
-		$this->items = $items;
 
 		// Get the podcast subscription
 		$podcast         = new podcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
-		$mainframe       = JFactory::getApplication();
-		$option          = $input->get('option', '', 'cmd');
-		$itemparams      = $mainframe->getPageParameters();
-
-		// Prepare meta information (under development)
-		if ($itemparams->get('metakey'))
-		{
-			$document->setMetadata('keywords', $itemparams->get('metakey'));
-		}
-		elseif (!$itemparams->get('metakey'))
-		{
-			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
-		}
-
-		if ($itemparams->get('metadesc'))
-		{
-			$document->setDescription($itemparams->get('metadesc'));
-		}
-		elseif (!$itemparams->get('metadesc'))
-		{
-			$document->setDescription($this->admin_params->get('metadesc'));
-		}
 
 		JViewLegacy::loadHelper('image');
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtml::_('behavior.framework');
-		}
-		else
-		{
-			JHTML::_('behavior.mootools');
-		}
-		$css = $params->get('css');
-
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-
-		// Errors when using local swfobject.js file.  IE 6 doesn't work
-		// Import Scripts
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-
-		// Styles from tooltip.css moved to css/biblestudy.css
-		// Import Stylesheets
-		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 		$uri = new JUri;
 
 		$filter_topic       = $this->state->get('filter.topic');
@@ -353,7 +287,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$filter_orders      = $this->state->get('filter.orders');
 		$filter_languages   = $this->state->get('filter.languages');
 
-		// $total = $this->get('Total');
 		// Remove the studies the user is not allowed to see
 
 		$this->teachers     = $this->get('Teachers');
@@ -370,13 +303,12 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		// End scripture helper
 		// Get the data for the drop down boxes
-		$this->template   = $template;
+		$this->template   = $this->state->get('template');
 		$this->pagination = $pagination;
 		$this->order      = $this->orders;
 		$this->topic      = $this->topics;
 		$images           = new JBSMImages;
-		$main             = $images->mainStudyImage();
-		$this->main       = $main;
+		$this->main       = $images->mainStudyImage();
 
 		// Get the Popular stats
 		$stats               = new jbStats;
@@ -397,9 +329,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->page->gobutton = '<span id="gobutton"><input type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '" /></span>';
 
 		// Build language drop down
-		$used     = JLanguageHelper::getLanguages();
-		$langtemp = array();
-		$lang     = array();
+		$used = JLanguageHelper::getLanguages();
+		$lang = array();
 
 		foreach ($used as $use)
 		{
@@ -528,6 +459,25 @@ class BiblestudyViewSermons extends JViewLegacy
 		$pathway = $app->getPathWay();
 		$pathway->addItem($title, '');
 
+		// Prepare meta information (under development)
+		if ($this->params->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('metakey'));
+		}
+		elseif (!$this->params->get('metakey') && $this->admin_params->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
+		}
+
+		if ($this->params->get('metadesc'))
+		{
+			$this->document->setDescription($this->params->get('metadesc'));
+		}
+		elseif (!$this->params->get('metadesc') && $this->admin_params->get('metadesc'))
+		{
+			$this->document->setDescription($this->admin_params->get('metadesc'));
+		}
+
 		if ($this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
@@ -542,6 +492,39 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
+		if (BIBLESTUDY_CHECKREL)
+		{
+			JHtml::_('behavior.framework');
+		}
+		else
+		{
+			JHTML::_('behavior.mootools');
+		}
+		$css = $this->params->get('css');
+
+		if ($css <= "-1")
+		{
+			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+		}
+		$this->document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+
+		// Errors when using local swfobject.js file.  IE 6 doesn't work
+		// Import Scripts
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+
+		// Styles from tooltip.css moved to css/biblestudy.css
+		// Import Stylesheets
+		$this->document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 	}
 
 }

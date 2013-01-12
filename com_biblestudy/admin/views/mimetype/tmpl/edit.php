@@ -35,74 +35,81 @@ $input  = $app->input;
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
+    <div class="row-fluid">
+        <!-- Begin Content -->
+        <div class="span10 form-horizontal">
+            <fieldset>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#general" data-toggle="tab">
+							<?php echo JText::_('JBS_CMN_DETAILS'); ?>
+                        </a>
+                    </li>
+					<?php if ($this->canDo->get('core.admin')): ?>
+                    <li>
+                        <a href="#permissions" data-toggle="tab">
+							<?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?>
+                        </a>
+                    </li>
+					<?php endif ?>
+                </ul>
+                <div class="tab-content">
+                    <!-- Begin Tabs -->
+                    <div class="tab-pane active" id="general">
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('mimetext'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('mimetext'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label">
+								<?php echo $this->form->getLabel('mimetype'); ?>
+                            </div>
+                            <div class="controls">
+								<?php echo $this->form->getInput('mimetype'); ?>
+                            </div>
+                        </div>
 
-    <!-- Begin Content -->
-    <div class="span10 form-horizontal">
-        <fieldset>
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-                </li>
-
-				<?php if ($this->canDo->get('core.admin')): ?>
-                <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-				<?php endif ?>
-            </ul>
-            <div class="tab-content">
-                <!-- Begin Tabs -->
-                <div class="tab-pane active" id="general">
-
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('id'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('id'); ?>
-                        </div>
                     </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
-                        </div>
+					<?php if ($this->canDo->get('core.admin')): ?>
+                    <div class="tab-pane" id="permissions">
+                        <fieldset>
+							<?php echo $this->form->getInput('rules'); ?>
+                        </fieldset>
                     </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('mimetext'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('mimetext'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('mimetype'); ?>
-                        </div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('mimetype'); ?>
-                        </div>
-                    </div>
-
+					<?php endif; ?>
                 </div>
-
-
-
-				<?php if ($this->canDo->get('core.admin')): ?>
-                <div class="tab-pane" id="permissions">
-                    <fieldset>
-						<?php echo $this->form->getInput('rules'); ?>
-                    </fieldset>
-                </div>
-				<?php endif; ?>
-
-            </div>
+            </fieldset>
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 			<?php echo JHtml::_('form.token'); ?>
-
-
-        </fieldset>
+        </div>
+        <!-- Begin Sidebar -->
+        <div class="span2">
+            <h4><?php echo JText::_('JDETAILS');?></h4>
+            <hr/>
+            <fieldset class="form-vertical">
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('id'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('id'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <!-- End Sidebar -->
     </div>
-
 </form>

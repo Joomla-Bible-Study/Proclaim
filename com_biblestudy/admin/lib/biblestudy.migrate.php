@@ -153,7 +153,7 @@ class JBSMigrate
                         `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                         `version` VARCHAR(255) DEFAULT NULL,
                         PRIMARY KEY (id)
-                        ) DEFAULT CHARSET=utf8";
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -237,7 +237,10 @@ class JBSMigrate
 			case 2:
 
 				// This is a current database version so we check to see which version. We query to get the highest build in the version table
-				$query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
+				$query = $db->getQuery(true);
+				$query->select('*')
+					->from('#__bsms_version')
+					->order('build desc');
 				$db->setQuery($query);
 				$db->query();
 				$version = $db->loadObject();
@@ -394,16 +397,18 @@ class JBSMigrate
 				break;
 
 			case 3:
+				$query = $db->getQuery(true);
 
 				// This is an older version of the software so we check it's version
 				if ($olderversiontype == 1)
 				{
-					$db->setQuery("SELECT schemaVersion  FROM #__bsms_schemaVersion");
+					$query->select('schemaVersion')->from('#__bsms_schemaVersion');
 				}
 				else
 				{
-					$db->setQuery("SELECT schemaVersion FROM #__bsms_schemaversion");
+					$query->select('schemaVersion')->from('#__bsms_schemaversion');
 				}
+				$db->setQuery($query);
 				$schema = $db->loadResult();
 
 				switch ($schema)

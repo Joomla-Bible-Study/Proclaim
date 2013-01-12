@@ -33,22 +33,22 @@ public var $_name = 'book';
 	/**
 	 * Element Function
 	 *
-	 * @param string $name
-	 * @param string $value
-	 * @param string $node
-	 * @param string $control_name
+	 * @param   string  $name          ?
+	 * @param   string  $value         ?
+	 * @param   string  &$node         ?
+	 * @param   string  $control_name  ?
 	 *
 	 * @return string
 	 */
 	public function fetchElement($name, $value, &$node, $control_name)
 	{
-		$db = JFactory::getDBO();
-
-		$query = 'SELECT DISTINCT #__bsms_studies.booknumber, #__bsms_books.bookname, #__bsms_books.booknumber AS bnum, #__bsms_books.id AS bid' .
-			' FROM #__bsms_studies' .
-			' LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)' .
-			' WHERE #__bsms_books.published = 1' .
-			' ORDER BY #__bsms_books.booknumber ASC';
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('DISTINCT #__bsms_studies.booknumber, #__bsms_books.bookname, #__bsms_books.booknumber AS bnum, #__bsms_books.id AS bid')
+			->from('#__bsms_studies')
+			->leftJoin('#__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)')
+			->where('#__bsms_books.published = 1')
+			->order('#__bsms_books.booknumber asc');
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
 		array_unshift($options, JHTML::_('select.option', '0', '- ' . JText::_('Select a Book') . ' -', 'booknumber', 'bookname'));

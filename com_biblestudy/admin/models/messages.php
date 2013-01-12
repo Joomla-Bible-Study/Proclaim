@@ -128,12 +128,12 @@ class BiblestudyModelMessages extends JModelList
 		{
 			$i++;
 			$sermon_id = $sermon->id;
-			$query     = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-				. ' FROM #__bsms_mediafiles'
-				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-				. ' WHERE `study_id` ='
-				. $sermon_id;
+			$query     = $db->getQuery(true);
+			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+				->from('#__bsms_mediafiles')
+				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
+				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
+				->where('study_id = ' . $sermon_id);
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
@@ -386,9 +386,7 @@ class BiblestudyModelMessages extends JModelList
 		$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
 		$query->group('book.id');
 		$query->order('book.booknumber');
-
 		$db->setQuery($query->__toString());
-
 		$db_result = $db->loadAssocList();
 
 		foreach ($db_result as $i => $value)
@@ -409,13 +407,11 @@ class BiblestudyModelMessages extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-
 		$query->select('teacher.id AS value, teacher.teachername AS text');
 		$query->from('#__bsms_teachers AS teacher');
 		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
 		$query->group('teacher.id');
 		$query->order('teacher.teachername');
-
 		$db->setQuery($query->__toString());
 
 		return $db->loadObjectList();
@@ -431,13 +427,11 @@ class BiblestudyModelMessages extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-
 		$query->select('series.id AS value, series.series_text AS text');
 		$query->from('#__bsms_series AS series');
 		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
 		$query->group('series.id');
 		$query->order('series.series_text');
-
 		$db->setQuery($query->__toString());
 
 		return $db->loadObjectList();
@@ -453,13 +447,11 @@ class BiblestudyModelMessages extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-
 		$query->select('messageType.id AS value, messageType.message_type AS text');
 		$query->from('#__bsms_message_type AS messageType');
 		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
 		$query->group('messageType.id');
 		$query->order('messageType.message_type');
-
 		$db->setQuery($query->__toString());
 
 		return $db->loadObjectList();

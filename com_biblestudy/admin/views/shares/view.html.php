@@ -46,7 +46,7 @@ class BiblestudyViewShares extends JViewLegacy
 
 	protected $f_levels;
 
-	protected $sidebar;
+	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -96,12 +96,16 @@ class BiblestudyViewShares extends JViewLegacy
 
 		$this->f_levels = $options;
 
-		if (BIBLESTUDY_CHECKREL)
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
 		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+			$this->addToolbar();
 
-		$this->addToolbar();
+			if (BIBLESTUDY_CHECKREL)
+			{
+				$this->sidebar = JHtmlSidebar::render();
+			}
+		}
 
 		// Set the document
 		$this->setDocument();
@@ -145,6 +149,15 @@ class BiblestudyViewShares extends JViewLegacy
 			{
 				JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
 			}
+		}
+		if (BIBLESTUDY_CHECKREL)
+		{
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=shares');
+
+			JHtmlSidebar::addFilter(
+				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+			);
 		}
 	}
 

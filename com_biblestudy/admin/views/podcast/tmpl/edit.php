@@ -35,239 +35,243 @@ $input  = $app->input;
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
-
+<div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
-<fieldset>
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
-    <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a></li>
-    <li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></a></li>
+    <fieldset>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
+            <li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></a></li>
 
-	<?php if ($this->canDo->get('core.admin')): ?>
-    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-	<?php endif ?>
-</ul>
-<div class="tab-content">
-<!-- Begin Tabs -->
-<div class="tab-pane" id="publishing">
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('published'); ?>
+			<?php if ($this->canDo->get('core.admin')): ?>
+            <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
+			<?php endif ?>
+        </ul>
+        <div class="tab-content">
+            <!-- Begin Tabs -->
+            <div class="tab-pane active" id="general">
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('title'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('title'); ?>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('description'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('description'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('website'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('website'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('author'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('author'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('editor_name'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('editor_name'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('editor_email'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('editor_email'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcastsearch'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcastsearch'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcastlanguage'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcastlanguage'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('detailstemplateid'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('detailstemplateid'); ?>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane" id="images">
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('image'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('image'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcastimage'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcastimage'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcast_image_subscribe'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcast_image_subscribe'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcast_subscribe_desc'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcast_subscribe_desc'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('alternatelink'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('alternatelink'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('alternateimage'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('alternateimage'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('podcast_subscribe_show'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('alternatewords'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('alternatewords'); ?>
+                    </div>
+                </div>
+            </div>
+
+			<?php if ($this->canDo->get('core.admin')): ?>
+            <div class="tab-pane" id="permissions">
+
+				<?php echo $this->form->getInput('rules'); ?>
+
+            </div>
+			<?php endif; ?>
         </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('published'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('filename'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('filename'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcastlimit'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcastlimit'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('episodetitle'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('episodetitle'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('custom'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('custom'); ?></li>
-        </div>
-    </div>
+
+    </fieldset>
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+	<?php echo JHtml::_('form.token'); ?>
+    <!-- End Content -->
 </div>
-<div class="tab-pane active" id="general">
-
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
+<!-- Begin Sidebar -->
+<div class="span2">
+    <h4><?php echo JText::_('JDETAILS');?></h4>
+    <hr/>
+    <fieldset class="form-vertical">
+        <div class="tab-pane" id="publishing">
+            <div class="control-group">
+                <div class="control-label">
+			        <?php echo $this->form->getLabel('id'); ?>
+                </div>
+                <div class="controls">
+			        <?php echo $this->form->getInput('id'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('published'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('published'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('filename'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('filename'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('podcastlimit'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('podcastlimit'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('episodetitle'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('episodetitle'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+			        <?php echo $this->form->getLabel('language'); ?>
+                </div>
+                <div class="controls">
+			        <?php echo $this->form->getInput('language'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('custom'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('custom'); ?>
+                </div>
+            </div>
         </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('title'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('title'); ?></li>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('description'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('description'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('website'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('website'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('author'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('author'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('editor_name'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('editor_name'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('editor_email'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('editor_email'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcastsearch'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcastsearch'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('language'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('language'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcastlanguage'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcastlanguage'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('detailstemplateid'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('detailstemplateid'); ?></li>
-        </div>
-    </div>
-
+    </fieldset>
 </div>
-<div class="tab-pane" id="images">
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('image'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('image'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcastimage'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcastimage'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcast_image_subscribe'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcast_image_subscribe'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcast_subscribe_desc'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcast_subscribe_desc'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('alternatelink'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('alternatelink'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('alternateimage'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('alternateimage'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('podcast_subscribe_show'); ?></li>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('alternatewords'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('alternatewords'); ?></li>
-        </div>
-    </div>
-</div>
-
-<?php if ($this->canDo->get('core.admin')): ?>
-<div class="tab-pane" id="permissions">
-
-	<?php echo $this->form->getInput('rules'); ?>
-
-</div>
-	<?php endif; ?>
-</div>
-
-
-<input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-<?php echo JHtml::_('form.token'); ?>
-
-<!-- End Content -->
-
-</fieldset>
+<!-- End Sidebar -->
 </div>
 </form>

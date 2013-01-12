@@ -112,7 +112,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="foldersList">
+    <table class="table table-striped adminlist" id="mimetypes">
         <thead>
         <tr>
             <th width="1%">
@@ -122,7 +122,7 @@ $sortFields = $this->getSortFields();
             <th width="1%" style="min-width:55px" class="nowrap center">
 				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mimetype.published', $listDirn, $listOrder); ?>
             </th>
-            <th width="20%">
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_MMT_MIME_TEXT', 'mimetype.mimetext', $listDirn, $listOrder); ?>
             </th>
             <th width="10%" class="nowrap hidden-phone">
@@ -166,26 +166,26 @@ $sortFields = $this->getSortFields();
 					if (BIBLESTUDY_CHECKREL)
 					{
 						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'article.');
+						JHtml::_('dropdown.edit', $item->id, 'folder.');
 						JHtml::_('dropdown.divider');
 						if ($item->published) :
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unpublish', 'cb' . $i, 'folders.');
 						else :
-							JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.publish', 'cb' . $i, 'folders.');
 						endif;
 
 						JHtml::_('dropdown.divider');
 
 						if ($archived) :
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unarchive', 'cb' . $i, 'folders.');
 						else :
-							JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.archive', 'cb' . $i, 'folders.');
 						endif;
 
 						if ($trashed) :
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.untrash', 'cb' . $i, 'folders.');
 						else :
-							JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.trash', 'cb' . $i, 'folders.');
 						endif;
 
 						// Render dropdown list

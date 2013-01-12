@@ -11,7 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/translated.php');
+JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
@@ -120,7 +120,7 @@ class JBSMLanding
 					$t = 0;
 					$i = 0;
 
-					$location = "\n" . '<table class="landing_table" width="100%"><tr>';
+					$location = "\n" . '<table class="table landing_table" width="100%"><tr>';
 					$showdiv  = 0;
 
 					foreach ($tresult as $b)
@@ -143,7 +143,7 @@ class JBSMLanding
 
 								$location .= "\n" . '</table>';
 								$location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
-								$location .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+								$location .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
@@ -266,6 +266,7 @@ class JBSMLanding
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$JViewLegacy->loadHelper('helper');
+		$langlink = JLanguageMultilang::isEnabled();
 
 		$teacher   = null;
 		$teacherid = null;
@@ -326,7 +327,6 @@ class JBSMLanding
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
 			->order('a.ordering, a.teachername ' . $order);
-
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -336,7 +336,7 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			$teacher = "\n" . '<table class="landing_table" width="100%"><tr>';
+			$teacher = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$showdiv = 0;
 
 			switch ($teacheruselimit)
@@ -363,7 +363,7 @@ class JBSMLanding
 
 								$teacher .= "\n" . '</table>';
 								$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
-								$teacher .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+								$teacher .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
@@ -500,6 +500,8 @@ class JBSMLanding
 	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @todo look like $numRows was not defined not sure if needed.
 	 */
 	public function getSeriesLandingPage($params, $id, $admin_params)
 	{
@@ -513,6 +515,7 @@ class JBSMLanding
 		$JViewLegacy->loadHelper('helper');
 		$series   = null;
 		$seriesid = null;
+		$numRows  = null;
 
 		$template = $params->get('serieslisttemplateid', 1);
 		$limit    = $params->get('landingserieslimit');
@@ -583,7 +586,7 @@ class JBSMLanding
 			switch ($seriesuselimit)
 			{
 				case 0:
-					$series = "\n" . '<table class="landing_table" width="100%" >';
+					$series = "\n" . '<table class="table landing_table" width="100%" >';
 
 					$t = 0;
 					$i = 0;
@@ -610,7 +613,7 @@ class JBSMLanding
 
 								$series .= "\n" . '</table>';
 								$series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
-								$series .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+								$series .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
@@ -826,7 +829,7 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			$year    = "\n" . '<table class="landing_table" width="100%"><tr>';
+			$year    = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$showdiv = 0;
 
 			foreach ($tresult as &$b)
@@ -848,7 +851,7 @@ class JBSMLanding
 
 						$year .= "\n" . '</table>';
 						$year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
-						$year .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+						$year .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;
@@ -987,7 +990,6 @@ class JBSMLanding
 			->order('#__bsms_topics.topic_text ' . $order)
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
-
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -997,7 +999,7 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			$topic   = "\n" . '<table class="landing_table" width="100%"><tr>';
+			$topic   = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$showdiv = 0;
 
 			foreach ($tresult as &$b)
@@ -1019,7 +1021,7 @@ class JBSMLanding
 
 						$topic .= "\n" . '</table>';
 						$topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-						$topic .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+						$topic .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;
@@ -1170,7 +1172,7 @@ class JBSMLanding
 			switch ($messagetypeuselimit)
 			{
 				case 0:
-					$messagetype = "\n" . '<table class="landing_table" width="100%"><tr>';
+					$messagetype = "\n" . '<table class="table landing_table" width="100%"><tr>';
 					$showdiv     = 0;
 
 					foreach ($tresult as &$b)
@@ -1192,7 +1194,7 @@ class JBSMLanding
 
 								$messagetype .= "\n" . '</table>';
 								$messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
-								$messagetype .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+								$messagetype .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
@@ -1379,7 +1381,7 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			$book    = "\n" . '<table class="landing_table" width="100%" ><tr>';
+			$book    = "\n" . '<table class="table landing_table" width="100%" ><tr>';
 			$showdiv = 0;
 
 			foreach ($tresult as &$b)
@@ -1402,7 +1404,7 @@ class JBSMLanding
 
 						$book .= "\n" . '</table>';
 						$book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
-						$book .= "\n" . '<table width = "100%" class="landing_table"><tr>';
+						$book .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;

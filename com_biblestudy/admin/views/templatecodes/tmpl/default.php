@@ -51,7 +51,7 @@ $sortFields = $this->getSortFields();
     <div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
     </div>
-    <div id="j-main-container" class="span10">
+        <div id="j-main-container" class="span10">
         <?php else : ?>
             <div id="j-main-container">
             <?php endif; ?>
@@ -106,7 +106,7 @@ $sortFields = $this->getSortFields();
     </div>
     <div class="clearfix"></div>
 
-    <table class="table table-striped" id="locations">
+    <table class="table table-striped adminlist" id="templatecodes">
         <thead>
         <tr>
 
@@ -162,26 +162,26 @@ $sortFields = $this->getSortFields();
 						if (BIBLESTUDY_CHECKREL)
 						{
 							// Create dropdown items
-							JHtml::_('dropdown.edit', $item->id, 'article.');
+							JHtml::_('dropdown.edit', $item->id, 'message.');
 							JHtml::_('dropdown.divider');
 							if ($item->published) :
-								JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
 							else :
-								JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
 							endif;
 
 							JHtml::_('dropdown.divider');
 
 							if ($archived) :
-								JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
 							else :
-								JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
 							endif;
 
 							if ($trashed) :
-								JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
 							else :
-								JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+								JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
 							endif;
 
 							// Render dropdown list

@@ -40,7 +40,8 @@ class JBSMPodcast
 		$date = date('r');
 
 		// First get all of the podcast that are published
-		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
 		$db->setQuery($query);
 		$podids       = $db->loadObjectList();
 		$custom       = new JBSMCustom;
@@ -53,7 +54,8 @@ class JBSMPodcast
 			foreach ($podids AS $podinfo)
 			{
 				// Check to see if there is a media file associated - if not, don't continue
-				$query = 'SELECT id FROM #__bsms_mediafiles WHERE podcast_id LIKE "%' . $podinfo->id . '%" AND published = 1';
+				$query = $db->getQuery(true);
+				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
 				$db->setQuery($query);
 				$checkresult = $db->loadObjectList();
 
@@ -316,9 +318,13 @@ class JBSMPodcast
 	 */
 	public function getEpisodes($id, $limit)
 	{
+		preg_match_all('!\d+!', $limit, $set_limit);
+		$set_limit = implode(' ', $set_limit[0]);
+
 		// Here's where we look at each mediafile to see if they are connected to this podcast
 		$db    = JFactory::getDBO();
-		$query = 'SELECT p.id AS pid, p.podcastlimit,'
+		$query = $db->getQuery(true);
+		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
 			. ' mf.published AS mfpub, mf.createdate, mf.params,'
 			. ' mf.docMan_id, mf.article_id,'
@@ -330,19 +336,19 @@ class JBSMPodcast
 			. ' f.id AS fid, f.folderpath,'
 			. ' t.id AS tid, t.teachername,'
 			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-			. ' mt.id AS mtid, mt.mimetype'
-			. ' FROM #__bsms_mediafiles AS mf'
-			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-			. ' LEFT JOIN #__bsms_series AS se ON (se.id = s.series_id)'
-			. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-			. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-			. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-			. ' WHERE mf.podcast_id LIKE "%' . $id . '%" AND mf.published = 1 ORDER BY createdate DESC ' . $limit;
+			. ' mt.id AS mtid, mt.mimetype')
+			->from('#__bsms_mediafiles AS mf')
+			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
+			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
+			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
+			->leftJoin('#__bsms_folders AS f ON (f.id = mf.path)')
+			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
+			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
+			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
+			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
+			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
 
-		$db->setQuery($query);
+		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
 
 		return $episodes;

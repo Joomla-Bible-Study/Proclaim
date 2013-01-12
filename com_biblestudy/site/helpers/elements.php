@@ -172,7 +172,7 @@ class JBSMElements extends JBSAdmin
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'text';
-				$elementid->element    = '<table class="detailstable"><tbody><tr><td>';
+				$elementid->element    = '<table class="table detailstable"><tbody><tr><td>';
 				$elementid->element .= $this->getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
 				$textorpdf = 'pdf';
 				$elementid->element .= $this->getTextlink(
@@ -202,12 +202,13 @@ class JBSMElements extends JBSAdmin
 			case 23:
 				$elementid->id         = 'filesize';
 				$elementid->headertext = JText::_('JBS_CMN_FILESIZE');
-				$query_media1          = 'SELECT #__bsms_mediafiles.id AS mid, #__bsms_mediafiles.size, #__bsms_mediafiles.published, #__bsms_mediafiles.study_id'
-					. ' FROM #__bsms_mediafiles'
-					. ' WHERE #__bsms_mediafiles.study_id = ' . $row->id
-					. ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering, #__bsms_mediafiles.id ASC LIMIT 1';
-
-				$db->setQuery($query_media1);
+				$query_media1          = $db->getQuery(true);
+				$query_media1->select('#__bsms_mediafiles.id AS mid, #__bsms_mediafiles.size, #__bsms_mediafiles.published, #__bsms_mediafiles.study_id')
+					->from('#__bsms_mediafiles')
+					->where('#__bsms_mediafiles.study_id = ' . $row->id)
+					->where('#__bsms_mediafiles.published = ' . 1)
+					->order('ordering, #__bsms_mediafiles.id asc');
+				$db->setQuery($query_media1, 0, 1);
 				$media1             = $db->loadObject();
 				$elementid->element = $this->getFilesize($media1->size);
 				break;
@@ -262,7 +263,8 @@ class JBSMElements extends JBSAdmin
 				$timages              = new JBSMImages;
 				$elementid->id        = 'teacher-image';
 				$elementid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
-				$query                = "SELECT thumb, teacher_thumbnail FROM #__bsms_teachers WHERE id = $row->teacher_id";
+				$query                = $db->getQuery(true);
+				$query->select('thumb, teacher_thumbnail')->from('#__bsms_teachers')->where('id =' . $row->teacher_id);
 				$db->setQuery($query);
 				$thumb = $db->loadObject();
 
@@ -338,10 +340,11 @@ class JBSMElements extends JBSAdmin
 		}
 		$show_verses = $params->get('show_verses');
 		$db          = JFactory::getDBO();
-		$query       = 'SELECT #__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid '
-			. ' FROM #__bsms_studies'
-			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. '  WHERE #__bsms_studies.id = ' . $row->id;
+		$query       = $db->getQuery(true);
+		$query->select('#__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid')
+			->from('#__bsms_studies')
+			->leftJoin('#__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)')
+			->where('#__bsms_studies.id = ' . $row->id);
 		$db->setQuery($query);
 		$bookresults  = $db->loadObject();
 		$affectedrows = count($bookresults);
@@ -350,7 +353,8 @@ class JBSMElements extends JBSAdmin
 		{
 			return null;
 		}
-		$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = ' . $booknumber;
+		$query = $db->getQuery(true);
+		$query->select('bookname, booknumber')->from('#__bsms_books')->where('booknumber = ' . $booknumber);
 		$db->setQuery($query);
 		$booknameresults = $db->loadObject();
 
@@ -740,20 +744,21 @@ class JBSMElements extends JBSAdmin
 		$media1_link  = null;
 		$downloadlink = null;
 		$filesize     = null;
-
-		$query = 'SELECT #__bsms_mediafiles.*,'
+		$query        = $database->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
 			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
 			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
 			. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
 			. ' #__bsms_media.media_alttext AS malttext,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-			. ' FROM #__bsms_mediafiles'
-			. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-			. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-			. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-			. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-			. ' WHERE #__bsms_mediafiles.study_id = ' . $row->id
-			. ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
+			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
+			->where('#__bsms_mediafiles.study_id = ' . $row->id)
+			->where('#__bsms_mediafiles.published = 1')
+			->order('ordering asc, #__bsms_mediafiles.mime_type asc');
 		$database->setQuery($query);
 		$media1 = $database->loadObjectList('id');
 		$rows2  = count($media1);
@@ -767,7 +772,7 @@ class JBSMElements extends JBSAdmin
 			return $mediatable;
 		}
 
-		$mediatable = '<div><table class="mediatable"><tbody><tr>';
+		$mediatable = '<div><table class="table mediatable"><tbody><tr>';
 		$row_count  = 0;
 
 		foreach ($media1 as $media)
@@ -858,6 +863,7 @@ class JBSMElements extends JBSAdmin
 			{
 				$type = $item;
 			}
+			$media1_link = null;
 
 			switch ($playertype)
 			{
@@ -866,7 +872,7 @@ class JBSMElements extends JBSAdmin
 					if ($params->get('direct_internal', 0) == 1)
 					{
 						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
 							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
 							. $media->malttext . "' /></a>";
@@ -875,7 +881,8 @@ class JBSMElements extends JBSAdmin
 						if ($type == 0)
 						{
 							// FIXME look like this function is no longer in teh code table need to find what it did.
-							$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+							// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+							$media1_link = "<p>Need to Fixme</p>";
 						}
 					}
 					else
@@ -895,18 +902,18 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 1:
-
 					if ($type == 1)
 					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=2&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;template=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
+						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 					}
 					else
 					{
 						// FIXME Looks like this is not in code need to find.
-						$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+						// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+						$media1_link = "<p>Need to Fixme</p>";
 					}
 
 					break;
@@ -941,8 +948,9 @@ class JBSMElements extends JBSAdmin
 
 			if ($link_type > 0)
 			{
-				$width  = $download_tmp->width;
-				$height = $download_tmp->height;
+				$width        = $download_tmp->width;
+				$height       = $download_tmp->height;
+				$downloadlink = null;
 
 				if ($compat_mode == 0)
 				{
@@ -950,11 +958,9 @@ class JBSMElements extends JBSAdmin
 				}
 				else
 				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath
-						. $media->filename . '&amp;size=' . $media->size . '">';
+					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
-				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="'
-					. $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '"   alt"' . $media->malttext . '"  /></a>';
+				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type)
 			{
@@ -967,7 +973,7 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 2:
-					$mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
+					$mediatable .= '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
 					break;
 			}
 			$mediatable .= '</td>';
@@ -1002,7 +1008,7 @@ class JBSMElements extends JBSAdmin
 
 		} // End of if show_filesize
 
-		$mediatable .= '</td></tr></tbody></table></div>';
+		$mediatable .= '</tbody></table></div>';
 
 		return $mediatable;
 	}
@@ -1079,21 +1085,22 @@ class JBSMElements extends JBSAdmin
 	 */
 	public function getMediaRows($study_id)
 	{
-		$query = 'SELECT #_bsms_mediafiles.*,'
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('SELECT #_bsms_mediafiles.*,'
 			. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
 			. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
 			. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
 			. ' #_bsms_media.media_alttext AS malttext,'
-			. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext'
-			. ' FROM #_bsms_mediafiles'
-			. ' LEFT JOIN #_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)'
-			. ' LEFT JOIN #_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)'
-			. ' LEFT JOIN #_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)'
-			. ' LEFT JOIN #_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)'
-			. ' WHERE #_bsms_mediafiles.study_id = ' . $study_id
-			. ' AND #_bsms_mediafiles.published = 1 ORDER BY ordering ASC, #_bsms_mediafiles.mime_type ASC;';
-
-		$database = JFactory::getDBO();
+			. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
+			->from('#_bsms_mediafiles')
+			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
+			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
+			->leftJoin('#_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)')
+			->leftJoin('#_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)')
+			->where('#_bsms_mediafiles.study_id = ' . $study_id)
+			->where('#_bsms_mediafiles.published = ' . 1)
+			->order('ordering asc, #_bsms_mediafiles.mime_type asc');
 		$database->setQuery($query);
 		$mediaRows = $database->loadObjectList();
 
@@ -1120,23 +1127,25 @@ class JBSMElements extends JBSAdmin
 		$imageh = null;
 
 		$database = JFactory::getDBO();
-		$query    = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
-			. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
-                        FROM #__bsms_studies AS s
-                        LEFT JOIN #__bsms_media AS m ON ( m.id = s.image_cd )
-                        LEFT JOIN #__bsms_servers AS sr ON ( sr.id = s.server_cd )
-                        WHERE s.id =' . $row->id;
+		$query    = $database->getQuery(true);
+		$query->select('m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
+			. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path')
+			->from('#__bsms_studies AS s')
+			->leftJoin('#__bsms_media AS m ON ( m.id = s.image_cd )')
+			->leftJoin('#__bsms_servers AS sr ON ( sr.id = s.server_cd )')
+			->where('s.id =' . $row->id);
 		$database->setQuery($query);
 		$cd    = $database->loadObject();
-		$query = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
-			. ' s.image_dvd, s.prod_dvd, s.server_dvd, sr.id AS srid, sr.server_path
-                        FROM #__bsms_studies AS s
-                        LEFT JOIN #__bsms_media AS m ON ( m.id = s.image_dvd )
-                        LEFT JOIN #__bsms_servers AS sr ON ( sr.id = s.server_dvd )
-                        WHERE s.id =' . $row->id;
+		$query = $database->getQuery(true);
+		$query->select('m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
+			. ' s.image_dvd, s.prod_dvd, s.server_dvd, sr.id AS srid, sr.server_path')
+			->from('#__bsms_studies AS s')
+			->leftJoin('#__bsms_media AS m ON ( m.id = s.image_dvd )')
+			->leftJoin('#__bsms_servers AS sr ON ( sr.id = s.server_dvd )')
+			->where('s.id =' . $row->id);
 		$database->setQuery($query);
 		$dvd   = $database->loadObject();
-		$store = '<table id="detailstable"><tr><td>';
+		$store = '<table class="table" id="detailstable"><tr><td>';
 
 		if (($cd->mid + $dvd->mid) > 0)
 		{
@@ -1207,19 +1216,23 @@ class JBSMElements extends JBSAdmin
 	 * @param   string  $mime     MimeType info
 	 *
 	 * @return string
+	 *
+	 * @FIXME look like the last where is not right, TOM
 	 */
 	public function getFilepath($id3, $idfield, $mime)
 	{
 		$mainframe = JFactory::getApplication();
 
 		$database = JFactory::getDBO();
-		$query    = 'SELECT #__bsms_mediafiles.*,'
+		$query    = $database->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
 			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath'
-			. ' FROM #__bsms_mediafiles'
-			. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-			. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-			. ' WHERE ' . $idfield . ' = ' . $id3 . ' AND #__bsms_mediafiles.published = 1 ' . $mime;
+			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
+			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->where($idfield . ' = ' . $id3)
+			->where('#__bsms_mediafiles.published = 1 ' . $mime);
 		$database->setQuery($query);
 		$filepathresults = $database->loadObject();
 

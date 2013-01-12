@@ -77,7 +77,7 @@ $row         = $this->item;
 	?>
 </div><!-- header -->
 <div>
-    <table id="bsmsdetailstable">
+    <table class="table table-striped" id="bsmsdetailstable">
         <thead>
 		<?php
 		if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1)

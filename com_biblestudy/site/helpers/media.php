@@ -128,8 +128,9 @@ class JBSMMediaHelper
 		$image       = $images->getMediaImage($media->path2, $media->impath);
 
 		$database = JFactory::getDBO();
-
-		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
+		$query    = $database->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+		$database->setQuery($query);
 		$admin = $database->loadObjectList();
 
 
@@ -205,8 +206,9 @@ class JBSMMediaHelper
 
 
 		$database = JFactory::getDBO();
-
-		$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
+		$query    = $database->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+		$database->setQuery($query);
 		$admin = $database->loadObjectList();
 
 

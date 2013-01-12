@@ -93,18 +93,17 @@ $sortFields = $this->getSortFields();
         </div>
     </div>
     <div class="clr"></div>
-
-    <table class="table table-striped" id="messagetypeslist">
+    <table class="table table-striped adminlist" id="templatelist">
         <thead>
         <tr>
-            <th width="1%">
+            <th width="1%" class="hidden-phone">
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th width="8%" class="nowrap center hidden-phone">
+            <th width="1%" style="min-width:55px" class="nowrap center">
 				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'template.published', $listDirn, $listOrder); ?>
             </th>
-            <th alicn="center">
+            <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_ID', 'template.title', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap">
@@ -122,17 +121,13 @@ $sortFields = $this->getSortFields();
 			$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.template.' . $item->id);
 			$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.template.' . $item->id);
 			?>
-        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
-
+        <tr class="row<?php echo $i % 2; ?>">
             <td class="center hidden-phone">
 				<?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
             <td class="center">
-                <div class="btn-group">
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'templates.', $canChange, 'cb', '', ''); ?>
-                </div>
             </td>
-
             <td class="nowrap has-context">
                 <div class="pull-left">
 
@@ -150,26 +145,26 @@ $sortFields = $this->getSortFields();
 					if (BIBLESTUDY_CHECKREL)
 					{
 						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'article.');
+						JHtml::_('dropdown.edit', $item->id, 'template.');
 						JHtml::_('dropdown.divider');
 						if ($item->published) :
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unpublish', 'cb' . $i, 'templates.');
 						else :
-							JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.publish', 'cb' . $i, 'templates.');
 						endif;
 
 						JHtml::_('dropdown.divider');
 
 						if ($archived) :
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.unarchive', 'cb' . $i, 'templates.');
 						else :
-							JHtml::_('dropdown.archive', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.archive', 'cb' . $i, 'templates.');
 						endif;
 
 						if ($trashed) :
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.untrash', 'cb' . $i, 'templates.');
 						else :
-							JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
+							JHtml::_('dropdown.trash', 'cb' . $i, 'templates.');
 						endif;
 
 						// Render dropdown list
@@ -178,7 +173,6 @@ $sortFields = $this->getSortFields();
 					?>
                 </div>
             </td>
-
             <td class="center hidden-phone">
 				<?php echo (int) $item->id; ?>
             </td>

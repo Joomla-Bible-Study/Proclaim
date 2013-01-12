@@ -8,6 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
 JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_HELPERS . '/biblestudy.php');
 JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
@@ -87,7 +88,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->form        = $this->get('Form');
 		$this->return_page = $this->get('ReturnPage');
 
-		$this->canDo = JBSMHelper::getActions($this->item->id, 'mediafilesedit');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
 		// Create a shortcut to the parameters.
 		$params = & $this->state->params;
@@ -108,7 +109,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$user = JFactory::getUser();
 
-
 		if (!$this->canDo->get('core.edit'))
 		{
 			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
@@ -128,7 +128,8 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$db = JFactory::getDBO();
 
 		// Get server for upload dropdown
-		$query = 'SELECT id as value, server_name as text FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC';
+		$query = $db->getQuery(true);
+		$query->select('id as value, server_name as text')->from('#__bsms_servers')->where('published=1')->order('server_name asc');
 		$db->setQuery($query);
 		$db->execute();
 		$server              = array(
@@ -145,7 +146,8 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->upload_server = $ref1;
 
 		// Get folders for upload dropdown
-		$query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
+		$query = $db->getQuery(true);
+		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published=1')->order('foldername asc');
 		$db->setQuery($query);
 		$folders             = $db->loadObjectList();
 		$folder              = array(
@@ -230,6 +232,5 @@ class BiblestudyViewMediafileform extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 	}
-
 
 }

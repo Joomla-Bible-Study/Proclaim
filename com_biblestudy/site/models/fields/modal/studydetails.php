@@ -67,11 +67,9 @@ class JFormFieldModal_studydetails extends JFormField
 
 		// Get the title of the linked chart
 		$db = JFactory::getDBO();
-		$db->setQuery(
-			'SELECT studytitle AS name' .
-				' FROM #__bsms_studies' .
-				' WHERE id = ' . (int) $this->value
-		);
+		$query = $db->getQuery(true);
+		$query->select('studytitle AS name')->from('#__bsms_studies')->where('id = ' . (int) $this->value);
+		$db->setQuery($query);
 		$title = $db->loadResult();
 
 		if (empty($title))

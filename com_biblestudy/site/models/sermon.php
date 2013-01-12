@@ -58,7 +58,9 @@ class BiblestudyModelSermon extends JModelItem
 	{
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
 		$db = JFactory::getDBO();
-		$db->setQuery('UPDATE #__bsms_studies SET hits = hits  + 1 WHERE id = ' . (int) $pk);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
+		$db->setQuery($query);
 		$db->query();
 
 		return true;
