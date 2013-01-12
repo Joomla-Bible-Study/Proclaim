@@ -9,9 +9,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php';
-
-// @todo do we use this file now????
 // use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
@@ -31,6 +28,8 @@ if (!defined('_BIBLESTUDY_LICENSE'))
  *
  * @package  BibleStudy.Admin
  * @since    7.0.2
+ *
+ * @use This is used by biblestudy.debug.php
  */
 class CBiblestudyVersion
 {

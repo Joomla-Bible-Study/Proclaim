@@ -42,7 +42,7 @@ class ImageMagickLib extends ImageLib
 	 *
 	 * @return void
 	 *
-	 * @todo look like this si not working yet. bcc
+	 * @todo look like this is not working yet. bcc
 	 */
 	public static function resize($image)
 	{

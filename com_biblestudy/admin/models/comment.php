@@ -160,7 +160,6 @@ class BiblestudyModelComment extends JModelAdmin
 	 * @return  boolean  True on success, False on error.
 	 *
 	 * @since 7.0.1
-	 * @todo  This may need to be optimized
 	 */
 	public function save($data)
 	{

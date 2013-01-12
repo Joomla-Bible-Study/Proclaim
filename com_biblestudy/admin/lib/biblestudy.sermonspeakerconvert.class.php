@@ -144,17 +144,6 @@ class JBSConvert
 				$add     = $add + $updated;
 			}
 
-			/* @todo Not sure if this is needed.
-			 * $query = $db->getQuery(true);
-			 * $query->select('id')
-			 *        ->from('#__bsms_teachers')
-			 *        ->where('published = 1')
-			 *        ->order($db->qn('id') . ' desc');
-			 * $db->setQuery($query, 0, 1);
-			 * $lastteacher = $db->loadAssoc();
-			 * $teacher_id  = $lastteacher['id'];
-			 */
-
 			$query = $db->getQuery(true);
 			$query->select('s.*, se.id AS sid, se.teacher AS teacher')
 				->from('#__sermon_sermons AS s')
@@ -232,7 +221,7 @@ class JBSConvert
 					$data1->downloads   = 1;
 					$data1->plays       = 0;
 
-					// @todo we need to check and see if this work with $db->getAffectedRows();
+					// @todo we need to check and see if this work with $db->getAffectedRows(); TOM
 					if (!$db->insertObject('#__bsms_mediafiles', $data1, 'id'))
 					{
 						$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_CREATING_MEDIAFILES_SS') . '</td></tr>';
@@ -254,7 +243,7 @@ class JBSConvert
 						$data2->downloads   = 0;
 						$data2->plays       = 0;
 
-						// @todo we need to check and see if this work with $db->getAffectedRows();
+						// @todo we need to check and see if this work with $db->getAffectedRows();  TOM
 						if (!$db->insertObject('#__bsms_mediafiles', $data2, 'id'))
 						{
 							$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_CREATING_MEDIAFILES_SS') . '</td></tr>';

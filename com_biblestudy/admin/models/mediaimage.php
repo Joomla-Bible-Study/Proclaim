@@ -18,7 +18,6 @@ jimport('joomla.application.component.modeladmin');
  */
 class BiblestudyModelMediaimage extends JModelAdmin
 {
-	private $_admin;
 
 	/**
 	 * Method override to check if you can edit an existing record.
@@ -51,7 +50,6 @@ class BiblestudyModelMediaimage extends JModelAdmin
 		// Bind the form fields to the hello table
 		if (!$row->bind($data))
 		{
-			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
@@ -59,7 +57,6 @@ class BiblestudyModelMediaimage extends JModelAdmin
 		// Make sure the hello record is valid
 		if (!$row->check())
 		{
-			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
@@ -67,32 +64,11 @@ class BiblestudyModelMediaimage extends JModelAdmin
 		// Store the web link table to the database
 		if (!$row->store())
 		{
-			$this->setError($this->_db->getErrorMsg());
 
 			return false;
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Admin Table
-	 *
-	 * @return object
-	 *
-	 * @todo move to helper
-	 */
-	public function getAdmin()
-	{
-		if (empty($this->_admin))
-		{
-			$query        = 'SELECT *'
-				. ' FROM #__bsms_admin'
-				. ' WHERE id = 1';
-			$this->_admin = $this->_getList($query);
-		}
-
-		return $this->_admin;
 	}
 
 	/**
