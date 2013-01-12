@@ -20,50 +20,6 @@ JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/bibl
  */
 class BiblestudyModelTemplate extends JModelAdmin
 {
-	/**
-	 * Store record
-	 *
-	 * @param   array   $data  ?
-	 * @param   string  $tmpl  ?
-	 *
-	 * @return boolean
-	 */
-	public function store($data = null, $tmpl = null)
-	{
-		$row   = $this->getTable();
-		$input = new JInput;
-
-		// @todo Clean this up
-		if (!isset($data))
-		{
-			$data = $input->get('post');
-		}
-		$data['tmpl'] = $input->get('tmpl', '', 'string');
-
-		// Bind the form fields to the table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-		// Store the table to the database
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		return true;
-	}
 
 	/**
 	 * Copy Template
