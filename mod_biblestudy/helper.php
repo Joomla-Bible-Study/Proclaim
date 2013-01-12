@@ -367,7 +367,7 @@ class ModJBSMHelper
 	 *
 	 * @return void
 	 *
-	 * @todo make this change according to the parameter settings for new template
+	 * @todo make this change according to the parameter settings for new template. TOM ????
 	 */
 	public function renderStudy($study = '_study', $params = null)
 	{

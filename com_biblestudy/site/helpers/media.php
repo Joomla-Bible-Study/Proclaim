@@ -160,7 +160,7 @@ class JBSMMediaHelper
 
 			$out = '';
 
-			// @todo need ot find where this variable needs to come from.
+			// @todo need ot find where this variable needs to come from. TOM
 			$compat_mode = '1';
 			$d_path      = null;
 
@@ -228,7 +228,7 @@ class JBSMMediaHelper
 		$ispath   = 0;
 		$mime     = '';
 
-		// @todo need ot find where this variable needs to come from.
+		// @todo need ot find where this variable needs to come from. TOM
 		$d_path = null;
 
 		$path1 = $JBSMListing->getFilepath($media->id, $idfield, $mime);

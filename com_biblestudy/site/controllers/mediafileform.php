@@ -271,7 +271,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 *
 	 * @return object
 	 *
-	 * @todo This is brocken and not sure if needed.
+	 * @todo This is brocken and not sure if needed. TOM
 	 */
 	public function docmanCategoryItems()
 	{
@@ -289,7 +289,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Link to Sections May need to be Removed.
 	 *
-	 * @todo This is brocken and not sure if needed.
+	 * @todo This is brocken and not sure if needed. TOM
 	 * @return object
 	 */
 	public function articlesSectionCategories()
@@ -307,7 +307,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Link to Articles Category Items
 	 *
-	 * @todo This is bracken and not sure if needed.
+	 * @todo This is bracken and not sure if needed. TOM
 	 * @return object
 	 */
 	public function articlesCategoryItems()
@@ -325,7 +325,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Link to VertueMart Items
 	 *
-	 * @todo This is brocken and not sure if needed.
+	 * @todo This is brocken and not sure if needed. TOM
 	 * @return object
 	 */
 	public function virtueMartItems()

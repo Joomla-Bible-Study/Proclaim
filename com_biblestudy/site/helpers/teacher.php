@@ -190,8 +190,6 @@ class JBSMTeacher extends JBSMListing
 	 * @param   int        $template      Template
 	 *
 	 * @return string
-	 *
-	 * @todo need to re-wright the sql.
 	 */
 	public function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	{

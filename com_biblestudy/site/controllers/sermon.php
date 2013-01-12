@@ -254,7 +254,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @return NULL
 	 *
-	 * @todo need to be looked at.
+	 * @todo need to be looked at. TOM
 	 */
 	public function comment()
 	{
@@ -338,7 +338,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 	/**
 	 * Begin scripture links plugin function
-	 * FIXME this looks to be broken.
+	 * FIXME this looks to be broken. TOM
 	 *
 	 * @return null
 	 */

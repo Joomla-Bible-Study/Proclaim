@@ -29,7 +29,7 @@ class RelatedStudies
 	 *
 	 * @return boolean
 	 *
-	 * @todo need to look if all is needed.
+	 * @todo need to look if all is needed. TOM BCC
 	 */
 	public function getRelated($row, $params)
 	{

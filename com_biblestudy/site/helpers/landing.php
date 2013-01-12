@@ -501,7 +501,7 @@ class JBSMLanding
 	 *
 	 * @return string
 	 *
-	 * @todo look like $numRows was not defined not sure if needed.
+	 * @todo look like $numRows was not defined not sure if needed. TOM
 	 */
 	public function getSeriesLandingPage($params, $id, $admin_params)
 	{

@@ -12,8 +12,10 @@ defined('_JEXEC') or die;
  * Content Component HTML Helper
  *
  * @static
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @package     BibleStudy.Site
+ * @since       7.0.0
+ *
+ * @deprecated  7.0.0
  */
 class JHtmlIcon
 {
@@ -21,7 +23,7 @@ class JHtmlIcon
 	/**
 	 * Print Popup
 	 *
-	 * @todo need to verify what the $request is coming from error out now.
+	 * @todo need to verify what the $request is coming from error out now. TOM
 	 * @return string
 	 */
 	public static function print_popup()

@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// @todo need to work over the JLoader
+// @todo need to work over the JLoader. TOM
 JLoader::register('JBSMImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
 JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
@@ -22,7 +22,7 @@ $JViewLegacy->loadHelper('helper');
  * @package  BibleStudy.Site
  * @since    8.0.0
  *
- * @todo     Still need to fix up.
+ * @todo     Still need to fix up. Lots of Unused verbals. BCC TOM
  */
 class JBSMSerieslist extends JBSMListing
 {
@@ -130,7 +130,7 @@ class JBSMSerieslist extends JBSMListing
 		return $listing;
 	}
 
-//elements are: series title, series image, series pastor + image, description
+	// Elements are: series title, series image, series pastor + image, description
 	/**
 	 * Get SeriesLink
 	 *

@@ -134,7 +134,7 @@ if ($url)
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
 /**
- * @todo fork the layout based on params to other custom template files, Tom can you see if this to do is still needed.
+ * @todo fork the layout based on params to other custom template files, Tom can you see if this to do is still needed. TOM
  */
 if ($params->get('useexpert_module') > 0)
 {

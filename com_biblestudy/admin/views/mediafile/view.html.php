@@ -98,7 +98,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$serverlist = array_merge($server, $results);
 		$idsel      = "'SWFUpload_0'";
 
-		// @todo need to fix this not sure what to do to fix it now error
+		// @todo need to fix this not sure what to do to fix it now error, TOM
 		$ref1           = JHTML::_('select.genericList', $serverlist, 'upload_server',
 			'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
 		$ref1com        = 'upload_server';

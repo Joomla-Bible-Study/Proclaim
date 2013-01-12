@@ -795,7 +795,7 @@ class JBSMElements extends JBSAdmin
 			$mediatable .= '<td>';
 
 
-			// @todo - not sure how much of this is needed
+			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
 			$filesize = $this->getFilesize($media->size);
 
 			// This one IS needed
@@ -880,7 +880,7 @@ class JBSMElements extends JBSAdmin
 
 						if ($type == 0)
 						{
-							// FIXME look like this function is no longer in teh code table need to find what it did.
+							// FIXME look like this function is no longer in teh code table need to find what it did. TOM
 							// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 							$media1_link = "<p>Need to Fixme</p>";
 						}
@@ -911,7 +911,7 @@ class JBSMElements extends JBSAdmin
 					}
 					else
 					{
-						// FIXME Looks like this is not in code need to find.
+						// FIXME Looks like this is not in code need to find. TOM
 						// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 						$media1_link = "<p>Need to Fixme</p>";
 					}
@@ -919,7 +919,7 @@ class JBSMElements extends JBSAdmin
 					break;
 
 				case 2:
-					// FIXME Looks like this is not in code need to find.
+					// FIXME Looks like this is not in code need to find. TOM
 					$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
 					break;
 
@@ -1115,7 +1115,7 @@ class JBSMElements extends JBSAdmin
 	 *
 	 * @return string
 	 *
-	 *  Fixme look like this has missing info for the width and height
+	 *  Fixme look like this has missing info for the width and height. TOM
 	 */
 	private function getStore($params, $row)
 	{

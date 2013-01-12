@@ -12,6 +12,9 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
+JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
+JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+
 /**
  * Controller class for Sermons
  *
@@ -26,7 +29,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 *
 	 * @var string
 	 */
-	var $mediaCode;
+	public  $mediaCode;
 
 	/**
 	 * Method to display the view
@@ -36,21 +39,15 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	public function __construct()
 	{
 		parent::__construct();
-
-		// Register Extra tasks
 	}
 
 	/**
 	 * Download?
 	 *
 	 * @return void
-	 *
-	 * @todo Fix ASAP Broken
 	 */
 	public function download()
 	{
-		// --require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
-		JLoader::register('Dump_File', dirname(__FILE__) . '/lib/biblestudy.download.class.php');
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
@@ -59,15 +56,13 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		{
 			$downloader = new Dump_File;
 			$downloader->download($mid);
-
-			die;
 		}
 	}
 
 	/**
 	 * Avplayer
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function avplayer()
 	{
@@ -79,8 +74,6 @@ class BiblestudyControllerSermons extends JControllerLegacy
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
 			echo $mediacode;
-
-			return null;
 		}
 	}
 
@@ -91,9 +84,6 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		// --require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
-		// 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-		JLoader::register('jbsMedia', dirname(__FILE__) . '/lib/biblestudy.media.class.php');
 		$getMedia = new jbsMedia;
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));

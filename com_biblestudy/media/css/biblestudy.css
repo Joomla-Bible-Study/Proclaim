@@ -25,7 +25,7 @@
     font-size:18px;
     font-weight:bold;
     border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
+    padding: 4px 0 4px 4px;
 }
 #bsm_teachertable_list .bsm_separator
 {
@@ -187,7 +187,7 @@
     margin-right: 5px;
 }
 .podcastheader h3{
-    display:table-header;
+    display:table-header-group;
     text-align:center;
 }
 
@@ -958,12 +958,12 @@ table.bslisttable .mediatable span.bsfilesize {
     margin: 0;
     color: #9FD4FF;
     padding: 8px 8px 4px;
-    background: url(/images/tooltip/bubble.gif) top left;
+    background: url(../images/tooltip/bubble.gif) top left;
 }
 .tool-text {
     font-size: 11px;
     padding: 4px 8px 8px;
-    background: url(/images/tooltip/bubble_filler.gif) bottom right;
+    background: url(../images/tooltip/bubble_filler.gif) bottom right;
 }
 .custom-tip {
     color: #000;
@@ -1009,7 +1009,7 @@ table.bslisttable .mediatable span.bsfilesize {
     font-size:18px;
     font-weight:bold;
     border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
+    padding: 4px 0 4px 4px;
 }
 #bsm_teachertable .bsm_separator
 {
@@ -1099,7 +1099,7 @@ table.bslisttable .mediatable span.bsfilesize {
 #toolbar td.white {
     background-color:#FFFFFF;
 }
-#toolbar a hover visited{
+#toolbar a:hover a:visited{
     color:#0B55C4;
 }
 
@@ -1131,7 +1131,7 @@ table.bslisttable .mediatable span.bsfilesize {
 
 }
 .landing_title {
-    font-family:arial;
+    font-family:Arial, Helvetica, sans-serif;
     font-size:16px;
     font-weight:bold;
 
@@ -1140,7 +1140,7 @@ table.bslisttable .mediatable span.bsfilesize {
 
 }
 #showhide {
-    font-family:arial;
+    font-family:Arial, Helvetica, sans-serif;
     font-size:12px;
     font-weight:bold;
     text-decoration:none;
