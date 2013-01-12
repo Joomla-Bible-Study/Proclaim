@@ -179,7 +179,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @return boolean
 	 *
-	 * @todo look like this was not emplemented need to look into this, TOM
+	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, TOM
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
@@ -306,7 +306,6 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return boolean
 	 *
 	 * @since 7.0.1
-	 * @todo  This may need to be optimized
 	 */
 	public function save($data)
 	{
@@ -316,10 +315,8 @@ class BiblestudyModelMessage extends JModelAdmin
 
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 	/**
@@ -331,15 +328,13 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return boolean
 	 *
 	 * @since 7.0.2
-	 * @todo  This may need to be optimized
-	 * @throws Exception If error
 	 */
 	public function setTopics($pks, $data)
 	{
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('COM_CONTENT_NO_ITEM_SELECTED'));
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
 
 			return false;
 		}
@@ -355,27 +350,27 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		if (!$db->query())
 		{
-			throw new Exception($db->getErrorMsg());
+			return false;
 		}
 		$query->clear();
 
 		// Add all the tags back
 		if ($data['topics'])
 		{
-			$topics     = explode(",", $data['topics']);
-			$topics_sql = array();
+			$topics = explode(",", $data['topics']);
 
 			foreach ($topics as $topic)
 			{
-				$topics_sql[] = '(' . $topic . ', ' . $pks . ')';
-			}
-			$query->insert('#__bsms_studytopics (topic_id, study_id) VALUES ' . implode(',', $topics_sql));
-			$db->setQuery($query->__toString());
+				$tdata           = new stdClass;
+				$tdata->topic_id = $topic;
+				$tdata->study_id = $pks;
 
-			if (!$db->query())
-			{
-				throw new Exception($db->getErrorMsg());
+				if (!$db->insertObject('#__bsms_studytopics', $tdata))
+				{
+					return false;
+				}
 			}
+
 		}
 
 		return true;
