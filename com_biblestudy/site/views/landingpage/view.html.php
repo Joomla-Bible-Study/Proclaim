@@ -10,7 +10,6 @@ defined('_JEXEC') or die;
 
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/images.php');
 JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
 
@@ -134,7 +133,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$filter_orders      = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
 		$search             = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
-		$adminrows = new JBSAdmin;
 		$app       = JFactory::getApplication();
 		$menu      = $app->getMenu();
 		$item      = $menu->getActive();

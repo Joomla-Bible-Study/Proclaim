@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 // @todo redo the require_once to JLoader
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.images.class.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.stats.class.php');
-JLoader::register('JBSAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');

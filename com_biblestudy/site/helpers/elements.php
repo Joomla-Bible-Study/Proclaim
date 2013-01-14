@@ -8,7 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
@@ -20,7 +19,7 @@ JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php
  * @package  BibleStudy.Site
  * @since    8.0.0
  */
-class JBSMElements extends JBSAdmin
+class JBSMElements
 {
 	/**
 	 * @var string

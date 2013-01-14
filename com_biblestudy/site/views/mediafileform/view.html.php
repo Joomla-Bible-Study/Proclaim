@@ -9,7 +9,6 @@
 defined('_JEXEC') or die;
 
 JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
-JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_HELPERS . '/biblestudy.php');
 JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
