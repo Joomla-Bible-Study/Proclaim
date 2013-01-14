@@ -10,8 +10,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+//require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
@@ -104,7 +104,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$input->set('sid', $this->item->id);
 		$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
-		$this->canDo      = JBSMHelper::getActions($this->item->id, 'sermon');
+		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
 		$this->admin      = JBSMParams::getAdmin($isSite = true);
 
 		$user = JFactory::getUser();
@@ -121,7 +121,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$this->params = $params;
 		$this->user   = $user;
 
-		$canDo = JBSMHelper::getActions($this->item->id, 'sermon');
+		$canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
 
 		if (!$canDo->get('core.edit'))
 		{

@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 /**
@@ -94,7 +94,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
 		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		$this->canDo = JBSMHelper::getActions('', 'message');
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
 		$this->books        = $this->get('Books');
 		$this->teachers     = $this->get('Teachers');
