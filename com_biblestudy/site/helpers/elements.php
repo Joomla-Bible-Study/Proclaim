@@ -806,7 +806,7 @@ class JBSMElements extends JBSAdmin
 			$width    = $image->width;
 			$path1    = $media->spath . $media->fpath . $media->filename;
 
-			if (!stristr('http://', $path1))
+			if (!preg_match("@^'http?://@i", $path1))
 			{
 				$path1 = 'http://' . $path1;
 			}
