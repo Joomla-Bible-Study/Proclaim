@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 //require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblstudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for CommentList extends Comments
@@ -64,7 +64,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 
 			return;
 		}
-		$this->canDo = JBSMHelper::getActions('', 'comments');
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
 		// Check permissions to enter studies
 		if (!$this->canDo->get('core.edit'))
 		{

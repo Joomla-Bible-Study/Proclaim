@@ -96,7 +96,8 @@ $saveOrder = $listOrder == 'ordering';
                            title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                 </th>
                 <th width="1%" class="nowrap hidden-phone">
-					<?php echo 'id'; ?>
+					<?php //echo 'id'; ?>
+                    <?php echo JHtml::_('grid.sort', 'ID', 'study.id', $listDirn, $listOrder); ?>
                 </th>
                 <th width="1%" style="min-width:25px" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>

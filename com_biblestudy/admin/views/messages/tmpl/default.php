@@ -196,7 +196,7 @@ $sortFields = $this->getSortFields();
 			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
         </th>
         <th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mediafile.id', $listDirn, $listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'message.id', $listDirn, $listOrder); ?>
         </th>
     </tr>
     </thead>
@@ -205,9 +205,9 @@ $sortFields = $this->getSortFields();
 		$item->max_ordering = 0; //??
 		$ordering           = ($listOrder == 'study.ordering');
 		$canCreate          = $user->authorise('core.create');
-		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
-		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
-		$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
+		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
+		$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
 		?>
     <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->series_id; ?>">
         <td class="order nowrap center hidden-phone">
