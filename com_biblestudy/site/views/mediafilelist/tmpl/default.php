@@ -143,6 +143,9 @@ $sortFields = $this->getSortFields();
                 <th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
                 </th>
+                <th width="5%">
+					<?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'mediafile.id', $listDirn, $listOrder); ?>
+                </th>
             </tr>
             </thead>
             <tbody>
