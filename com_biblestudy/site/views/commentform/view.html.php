@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblstudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for Comment
@@ -77,7 +77,7 @@ class BiblestudyViewCommentform extends JViewLegacy
 		$this->form        = $this->get('Form');
 		$this->return_page = $this->get('ReturnPage');
 
-		$this->canDo = JBSMHelper::getActions($this->item->id, 'comment');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'comment');
 		$document    = JFactory::getDocument();
 
 		// Check for errors.

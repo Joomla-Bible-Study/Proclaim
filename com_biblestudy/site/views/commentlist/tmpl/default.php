@@ -77,6 +77,7 @@ $sortFields = $this->getSortFields();
                         onclick="document.id('filter_search').value='';this.form.submit();"
                         title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
             </div>
+            <div class="clearfix"></div>
 			<?php if (BIBLESTUDY_CHECKREL)
 		{
 			?>
@@ -122,7 +123,7 @@ $sortFields = $this->getSortFields();
         </div>
 
 
-        <table class="table table-striped" style="width: 100%;">
+        <table id="articleList" class="table table-striped" >
             <thead>
             <tr>
                 <th width="1%">
