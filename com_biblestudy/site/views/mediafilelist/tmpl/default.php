@@ -74,7 +74,7 @@ $sortFields = $this->getSortFields();
                         onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>
                     <i class="icon-remove"></i></button>
             </div>
-            <div class="btn-group pull-right hidden-phone">
+            <div class="btn-group pull-left hidden-phone">
                 <label for="limit"
                        class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
 				<?php echo $this->pagination->getLimitBox(); ?>
