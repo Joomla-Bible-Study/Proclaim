@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 
-require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
+//require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 require_once (JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
 require_once (JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
 require_once (JPATH_COMPONENT . '/helpers/related.php');
