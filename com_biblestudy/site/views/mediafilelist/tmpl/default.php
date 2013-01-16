@@ -110,8 +110,10 @@ $sortFields = $this->getSortFields();
 					<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
                 </select>
             </div>
-
 			<?php endif; ?>
+            <div class="btn-group pull-right">
+		        <?php echo $this->newlink; ?>
+            </div>
         </div>
         <div class="clearfix"></div>
 

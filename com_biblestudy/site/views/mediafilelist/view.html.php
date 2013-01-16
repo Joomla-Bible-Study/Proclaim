@@ -106,7 +106,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit">' . JText::_('JBS_CMN_NEW') . '</a>';
+			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit"  class="btn btn-primary">'
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		// Escape strings for HTML output
