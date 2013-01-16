@@ -92,7 +92,7 @@ class Com_BiblestudyInstallerScript {
     function install($parent) {
         $db = JFactory::getDBO();
         $query = "SELECT id FROM #__bsms_admin";
-        $db->setQuery($querie);
+        $db->setQuery($query);
         if (!$db->loadResult()) {
             $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
             $queries = $db->splitSql($query);
