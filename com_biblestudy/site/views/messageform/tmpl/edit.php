@@ -114,7 +114,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('booknumber'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber);?>
+			<?php echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->params->get('booknumber') : $this->item->booknumber);?>
         </div>
     </div>
     <div class="control-group">
@@ -229,7 +229,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('teacher_id'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id) ?>
+			<?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->params->get('teacher_id') : $this->item->teacher_id) ?>
         </div>
     </div>
     <div class="control-group">
@@ -237,7 +237,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('location_id'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin_params->get('location_id') : $this->item->location_id) ?>
+			<?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->params->get('location_id') : $this->item->location_id) ?>
         </div>
     </div>
     <div class="control-group">
@@ -245,7 +245,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('series_id'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin_params->get('series_id') : $this->item->series_id) ?>
+			<?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->params->get('series_id') : $this->item->series_id) ?>
         </div>
     </div>
     <div class="control-group">
@@ -261,7 +261,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('messagetype'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin_params->get('messagetype') : $this->item->messagetype) ?>
+			<?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->params->get('messagetype') : $this->item->messagetype) ?>
         </div>
     </div>
     <div class="control-group">
@@ -269,7 +269,7 @@ $input  = $app->input;
 			<?php echo $this->form->getLabel('thumbnailm'); ?>
         </div>
         <div class="controls">
-			<?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm) ?>
+			<?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->params->get('default_study_image') : $this->item->thumbnailm) ?>
         </div>
     </div>
 </div>

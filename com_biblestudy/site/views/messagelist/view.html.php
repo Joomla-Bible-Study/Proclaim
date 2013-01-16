@@ -107,15 +107,14 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if (!$this->canDo->get('core.edit'))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
+            return;
 		}
 
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit') . '">'
-				. JText::_('JBS_CMN_NEW') . '</a>';
+			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		$this->_prepareDocument();
