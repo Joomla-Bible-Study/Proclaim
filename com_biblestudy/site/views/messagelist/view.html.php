@@ -107,6 +107,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if (!$this->canDo->get('core.edit'))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
 		}
 
 		// Puts a new record link at the top of the form
