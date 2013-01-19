@@ -45,7 +45,6 @@
         <folder>views</folder>
         <folder>models</folder>
         <folder>language</folder>
-        <folder>tables</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
         <folder>lib</folder>
