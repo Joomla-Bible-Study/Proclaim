@@ -795,7 +795,9 @@
                 <option value="15">Young's Literal Translation</option>
             </field>
             <field name="show_comments" type="accesslevel" default=""
-                   label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC"/>
+                   label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC">
+                    <option value="0">Don't Show</option>
+            </field>
             <field name="link_comments" default="0" type="list"
                    label="JBS_TPL_DETAILS_LINK_COMMENTS" description="JBS_TPL_DETAILS_LINK_COMMENTS_DESC">
                 <option value="0">JBS_TPL_USE_HIDE_SHOW_LINK</option>

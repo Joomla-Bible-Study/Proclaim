@@ -174,7 +174,7 @@ class TableTopic extends JTable
 	 *
 	 * @return      boolean true on success
 	 *
-	 * @todo this look like it is not used. TOM
+	 * @todo this look like it is not used. TOM (I didn't write this one)
 	 */
 	public function checkAlias($data = array(), $recordId)
 	{

@@ -271,7 +271,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 *
 	 * @return object
 	 *
-	 * @todo This is brocken and not sure if needed. TOM
+	 * @todo This is brocken and not sure if needed. TOM (this function can be removed. I think it is hanlded by admin/fields/docman)
 	 */
 	public function docmanCategoryItems()
 	{

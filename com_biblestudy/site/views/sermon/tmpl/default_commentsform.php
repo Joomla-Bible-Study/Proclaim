@@ -65,7 +65,7 @@ $db    = JFactory::getDBO();
 $query = $db->getQuery(true);
 $query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $this->item->id)->order('c.comment_date asc');
 $db->setQuery($query);
-$comments = $db->loadObjectList();
+$comments = $this->comments;
 
 if (!count($comments))
 {

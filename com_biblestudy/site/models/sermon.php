@@ -225,7 +225,24 @@ class BiblestudyModelSermon extends JModelItem
 		return $this->_item[$pk];
 	}
 
-	/**
+    /**
+     * Method to retrieve comments for a study
+     * @access  public
+     * @return object
+     */
+    public function getComments()
+    {
+        $app = JFactory::getApplication('site');
+        $id = $app->input->get('id', '', 'int');
+
+        $db    = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
+        $db->setQuery($query);
+        $comments = $db->loadObjectList();
+        return $comments;
+    }
+    /**
 	 * Method to store a record
 	 *
 	 * @access    public

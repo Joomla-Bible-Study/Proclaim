@@ -91,7 +91,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->print = $app->input->getBool('print');
 		$this->state = $this->get('State');
 		$this->user  = $user;
-
+        $this->comments = $this->get('comments');
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

@@ -26,7 +26,7 @@ defined('_JEXEC') or die;
 	}
 	$show_comments = $this->item->params->get('show_comments');
 
-	if ($show_comments > 1)
+	if ($show_comments >= 1)
 	{
 		$user           = JFactory::getUser();
 		$groups         = $user->getAuthorisedViewLevels();

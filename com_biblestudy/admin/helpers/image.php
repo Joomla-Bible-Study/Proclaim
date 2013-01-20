@@ -30,6 +30,7 @@ class JBSMImage
 	 * @return JObject
 	 *
 	 * @FIXME need to see if this is a JObject or stdClass. If JObject we must set all of the JObject like set('var','value')
+     * @FIXME It's just a stdClass
 	 */
 	public static function getImage($path)
 	{

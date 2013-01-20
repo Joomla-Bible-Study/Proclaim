@@ -28,7 +28,7 @@ class Updatejbs701
 		$db = JFactory::getDBO();
 
 		// Modify table topics
-		// FIXME Tom
+		// FIXME Tom (I didn't write this one, what is wrong here?)
 		$tables      = $db->getTableFields('#__bsms_topics');
 		$languagetag = 0;
 		$paramstag   = 0;
