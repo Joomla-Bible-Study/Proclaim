@@ -425,4 +425,67 @@ class JBSMDbHelper
 		return true;
 	}
 
+	/**
+	 * Clean up Study Topics Duplicates
+	 *
+	 * @since 8.0.0
+	 *
+	 * @return void
+	 */
+	public static function CleanStudyTopics()
+	{
+
+		$app = JFactory::getApplication();
+		$db  = JFactory::getDBO();
+
+
+		$query = $db->getQuery(true);
+		$query->select('id')->from('#__bsms_studies');
+		$db->setQuery($query);
+		$results = $db->loadObjectList();
+		foreach ($results AS $result)
+		{
+			$query = $db->getQuery(true);
+			$query->select('id, topic_id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id);
+			$db->setQuery($query);
+			$resulta = $db->loadObjectList();
+			$c       = count($resulta);
+			if ($resulta && $c > 1)
+			{
+				$t = 1;
+				foreach ($resulta AS $study_topics)
+				{
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id)->where('topic_id = ' . $study_topics->topic_id)->order('id desc');
+					$db->setQuery($query);
+					$results = $db->loadObjectList();
+					$records = count($results);
+
+					if ($records > 1)
+					{
+						foreach ($results AS $id)
+						{
+							if ($t < $records)
+							{
+								$query = $db->getQuery(true);
+								$query->delete('#__bsms_studytopics')->where('id = ' . $id->id);
+								$db->setQuery($query);
+								if (!$db->execute())
+								{
+									$app->enqueueMessage('Error with Deleting duplicat topics record ' . $id->id, 'error');
+								}
+								else
+								{
+									$app->enqueueMessage('Removed Duplicat topic Record ' . $id->id, 'notice');
+								}
+								$t++;
+							}
+						}
+
+					}
+				}
+			}
+		}
+	}
+
 }
