@@ -17,6 +17,13 @@ JHTML::_('behavior.tooltip');
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
+// Create shortcuts to some parameters.
+$params  = $this->item->params;
+//$images  = json_decode($this->item->images);
+//$urls    = json_decode($this->item->urls);
+$user    = JFactory::getUser();
+$canEdit = $params->get('access-edit');
+
 $JViewLegacy = new JViewLegacy;
 
 $JViewLegacy->loadHelper('title');
@@ -35,15 +42,29 @@ $row         = $this->item;
 		echo $this->related;
 	}
 	?>
-    <div class="buttonheading">
-
-		<?php
-		if ($this->item->params->get('show_print_view') > 0)
-		{
-			echo $this->page->print;
-		}
-		?>
+	<?php if (!$this->print) : ?>
+	<?php if ($canEdit || $params->get('show_print_view') || $params->get('show_email_icon')) : ?>
+        <div class="btn-group pull-right buttonheading">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-cog"></i> <span class="caret"></span> </a>
+			<?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
+            <ul class="dropdown-menu actions">
+				<?php if ($params->get('show_print_view')) : ?>
+                <li class="print-icon"> <?php echo JHtml::_('icon.print_popup', $this->item, $params); ?> </li>
+				<?php endif; ?>
+				<?php if ($params->get('show_email_icon')) : ?>
+                <li class="email-icon"> <?php echo JHtml::_('icon.email', $this->item, $params); ?> </li>
+				<?php endif; ?>
+				<?php if ($canEdit) : ?>
+                <li class="edit-icon"> <?php echo JHtml::_('icon.edit', $this->item, $params); ?> </li>
+				<?php endif; ?>
+            </ul>
+        </div>
+		<?php endif; ?>
+	<?php else : ?>
+    <div class="pull-right">
+		<?php echo JHtml::_('icon.print_screen', $this->item, $params); ?>
     </div>
+	<?php endif; ?>
 
 	<?php
 	// Social Networking begins here

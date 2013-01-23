@@ -34,7 +34,7 @@ abstract class JBSMHelperRoute
 	 *
 	 * @return string
 	 */
-	public static function getArticleRoute($id)
+	public static function getArticleRoute($id, $language = 0)
 	{
 		$needles = array(
 			'article' => array((int) $id)
@@ -42,6 +42,36 @@ abstract class JBSMHelperRoute
 
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=sermon&id=' . $id;
+
+		if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+		{
+			$db    = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('a.sef AS sef');
+			$query->select('a.lang_code AS lang_code');
+			$query->from('#__languages AS a');
+
+			$db->setQuery($query);
+			$langs = $db->loadObjectList();
+
+			foreach ($langs as $lang)
+			{
+				if ($language == $lang->lang_code)
+				{
+					$link .= '&lang=' . $lang->sef;
+					$needles['language'] = $language;
+				}
+			}
+		}
+
+		if ($item = self::_findItem($needles))
+		{
+			$link .= '&Itemid=' . $item;
+		}
+		elseif ($item = self::_findItem())
+		{
+			$link .= '&Itemid=' . $item;
+		}
 
 		return $link;
 	}
