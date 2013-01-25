@@ -218,11 +218,11 @@ class JBSImport
 
 			foreach ($objects as $object)
 			{
-				$dropquery = $db->getQuery(true);
-
-				// Abstract call to Joomla Database
-				$dropquery->dropTable($object['name'], 'true');
+				$dropquery = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
+				$db->setQuery($dropquery);
+				$db->execute();
 			}
+
 			// Create an array of queries from the sql file
 			$queries = $db->splitSql($query);
 
