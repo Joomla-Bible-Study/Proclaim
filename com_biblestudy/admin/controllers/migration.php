@@ -33,7 +33,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 * @param   boolean  $cachable   If true, the view output will be cached
 	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return void
+	 * @return mixed
 	 *
 	 * @access    public
 	 */
@@ -46,7 +46,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		$input->set('migrationdone', '0');
 		$task      = $input->get('task');
 		$oldprefix = $input->get('oldprefix', '');
-		$run       = $input->get('run', '0', 'int');
+		$run       = $input->get('run', 0, 'int');
 
 		if ($task == 'export' && ($run == 1 || $run == 2))
 		{
@@ -94,7 +94,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		{
 			$this->import();
 		}
-		parent::display();
+		return parent::display();
 	}
 
 	/**
