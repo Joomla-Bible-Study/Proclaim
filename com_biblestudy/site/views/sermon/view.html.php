@@ -109,8 +109,6 @@ class BiblestudyViewSermon extends JViewLegacy
 
 			return null;
 		}
-		$input = new JInput;
-		$print = $input->get('print', '', 'bool');
 
 		$Biblepassage  = new showScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
@@ -169,7 +167,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 			// Check for alternative layouts (since we are not in a single-article menu item)
 			// Single-article menu item layout takes priority over alt layout for an article
-			$layout = $item->params->get('article_layout');
+			$layout = $item->params->get('sermon_layout');
 
 			if ($layout)
 			{
@@ -361,10 +359,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');
-
-		// To add the icon class to JHTML
-		JHTML::addIncludePath(JPATH_COMPONENT . '/helpers');
-		$this->page->print = JHtml::_('icon.print_popup', $this->item, $this->item->params);
 
 		// End process prepare content plugins
 		$this->template = $template;

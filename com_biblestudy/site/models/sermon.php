@@ -56,8 +56,8 @@ class BiblestudyModelSermon extends JModelItem
 	 */
 	public function hit($pk = null)
 	{
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db = JFactory::getDBO();
+		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
@@ -87,7 +87,7 @@ class BiblestudyModelSermon extends JModelItem
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
+		$params = $app->getParams();
 		$this->setState('params', $params);
 
 		$user = JFactory::getUser();
@@ -113,6 +113,11 @@ class BiblestudyModelSermon extends JModelItem
 	{
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
+
+		if ($this->_item === null)
+		{
+			$this->_item = array();
+		}
 
 		if (!isset($this->_item[$pk]))
 		{
@@ -171,8 +176,10 @@ class BiblestudyModelSermon extends JModelItem
 			$data->topic_text = $topic_text;
 			$data->bname      = JText::_($data->bname);
 
+
 			$template     = JBSMParams::getTemplateparams();
-			$data->params = $template->params;
+			$data->params = clone $this->getState('params');
+			$data->params->merge($template->params);
 
 			$a_params           = JBSMParams::getAdmin();
 			$data->admin_params = $a_params->params;
@@ -184,21 +191,17 @@ class BiblestudyModelSermon extends JModelItem
 			if (!$user->get('guest'))
 			{
 				$userId = $user->get('id');
-				$asset  = 'com_biblestudy.sermon.' . $data->id;
+				$asset  = 'com_biblestudy.message.' . $data->id;
 
 				// Check general edit permission first.
 				if ($user->authorise('core.edit', $asset))
 				{
-					$data->params->set('sermon-edit', true);
+					$data->params->set('access-edit', true);
 				}
 				// Now check if edit.own is available.
 				elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
 				{
-					// Check for a valid user and that they are the owner.
-					if ($userId == $data->created_by)
-					{
-						$data->params->set('sermon-edit', true);
-					}
+					$data->params->set('access-edit', true);
 				}
 			}
 
@@ -208,7 +211,7 @@ class BiblestudyModelSermon extends JModelItem
 			if ($access)
 			{
 				// If the access filter has been set, we already know this user can view.
-				$data->params->set('sermon-view', true);
+				$data->params->set('access-view', true);
 			}
 			else
 			{

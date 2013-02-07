@@ -21,6 +21,24 @@ JLoader::register('JBSMDbHelper', BIBLESTUDY_PATH_ADMIN_HELPERS, '/dbhelpser.php
  */
 class JBSExport
 {
+	// **********************************************************************
+	// File handling fields
+	// **********************************************************************
+
+	/** @var string Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated) */
+	protected $dumpFile = '';
+
+	/** @var string Data cache, used to cache data before being written to disk */
+	protected $data_cache = '';
+
+	/** @var resource Filepointer to the current dump part */
+	private $fp = null;
+
+	/** @var string Absolute path to the temp file */
+	protected $tempFile = '';
+
+	/** @var string Relative path of how the file should be saved in the archive */
+	protected $saveAsName = '';
 
 	/**
 	 * Export DB//
@@ -31,43 +49,42 @@ class JBSExport
 	 */
 	public function exportdb($run)
 	{
-		$date          = date('Y_F_j');
-		$localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
-		$objects       = JBSMDbHelper::getObjects();
-		$tables        = null;
+		$date             = date('Y_F_j');
+		$this->saveAsName = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
+		$objects          = JBSMDbHelper::getObjects();
+		$tables           = null;
 
 		foreach ($objects as $object)
 		{
-			$tables[] = $this->getExportTable($object['name']);
+			$this->getExportTable($object['name']);
 		}
-		$export = implode(' ', $tables);
 
 		switch ($run)
 		{
 			case 1:
-				$file = JPATH_SITE . '/tmp/' . $localfilename;
+				$this->dumpFile = JPATH_SITE . '/tmp/' . 'jbs-db-backup_' . $date . '_' . time() . '.sql';
 
-				if (!JFile::write($file, $export))
+				if (!$this->writeline($this->data_cache))
 				{
 					return false;
 				}
 				else
 				{
-					$downloadfile = $this->output_file($file, $localfilename, $mime_type = 'text/x-sql');
+					$this->output_file($this->dumpFile, $this->saveAsName, $mime_type = 'text/x-sql');
 
-					return $downloadfile;
+					return true;
 				}
 				break;
 
 			case 2:
-				$file = JPATH_SITE . '/media/com_biblestudy/database/' . $localfilename;
+				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/database/' . $this->saveAsName;
 
-				if (!JFile::write($file, $export))
+				if (!$this->writeline($this->data_cache))
 				{
 					return false;
 				}
 
-				return $file;
+				return $this->dumpFile;
 				break;
 		}
 
@@ -95,9 +112,6 @@ class JBSExport
 			set_time_limit(300);
 		}
 
-		$data   = array();
-		$export = '';
-
 		$db = JFactory::getDBO();
 
 		// Get the prefix
@@ -107,17 +121,17 @@ class JBSExport
 		$export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
 
 		// Start of Tables
-		$export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
+		$export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
 
 		// Drop the existing table
-		$export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
+		$export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
 
 		// Create a new table defintion based on the incoming database
-		$query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
+		$query = 'SHOW CREATE TABLE ' . $db->qn($table);
 		$db->setQuery($query);
 		$table_def = $db->loadObject();
 
-		foreach ($table_def as $key => $value)
+		foreach ($table_def as $value)
 		{
 			if (substr_count($value, 'CREATE'))
 			{
@@ -125,7 +139,7 @@ class JBSExport
 				$export = str_replace('TYPE=', 'ENGINE=', $export);
 			}
 		}
-		$export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
+		$export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
 
 		// Get the table rows and create insert statements from them
 		$query = $db->getQuery(true);
@@ -139,17 +153,17 @@ class JBSExport
 			foreach ($results as $result)
 			{
 				$data = array();
-				$export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
+				$export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
 
 				foreach ($result as $key => $value)
 				{
 					if ($value === null)
 					{
-						$data[] = $db->quoteName($key) . "=NULL";
+						$data[] = $db->qn($key) . "=NULL";
 					}
 					else
 					{
-						$data[] = $db->quoteName($key) . "=" . $db->quote($value);
+						$data[] = $db->qn($key) . "=" . $db->q($db->escape($value));
 					}
 				}
 				$export .= implode(',', $data);
@@ -158,7 +172,55 @@ class JBSExport
 		}
 		$export .= "\n-- --------------------------------------------------------\n\n";
 
-		return $export;
+		$this->data_cache .= $export;
+
+		return true;
+	}
+
+	/**
+	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
+	 * failed, return value is FALSE.
+	 *
+	 * @param   string  $fileData  Data to write. Set to null to close the file handle.
+	 *
+	 * @return boolean TRUE is saving to the file succeeded
+	 */
+	protected function writeline(&$fileData)
+	{
+		$app = JFactory::getApplication();
+		if (!$this->fp)
+		{
+			$this->fp = @fopen($this->dumpFile, 'a');
+			if ($this->fp === false)
+			{
+				$app->enqueueMessage('Could not open ' . $this->dumpFile . ' for append, in DB dump.', 'error');
+
+				return false;
+			}
+		}
+
+		if (is_null($fileData))
+		{
+			if (is_resource($this->fp)) @fclose($this->fp);
+			$this->fp = null;
+
+			return true;
+		}
+		else
+		{
+			if ($this->fp)
+			{
+				$ret = fwrite($this->fp, $fileData);
+				@clearstatcache();
+
+				// Make sure that all data was written to disk
+				return ($ret == strlen($fileData));
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 
 	/**
@@ -168,25 +230,32 @@ class JBSExport
 	 * @param   string  $name       Name output
 	 * @param   string  $mime_type  Meme_Type
 	 *
-	 * @return boolean
+	 * @return void
 	 */
 	public function output_file($file, $name, $mime_type = '')
 	{
-		/*
-		  This function takes a path to a file to output ($file),
-		  the filename that the browser will see ($name) and
-		  the MIME type of the file ($mime_type, optional).
+		// Disable caching
+		header("Pragma: public");
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private");
 
-		  If you want to do something on download abort/finish,
-		  register_shutdown_function('function_name');
-		 */
+		// Turn off output buffering to decrease cpu usage
+		@ob_end_clean();
+
+		// disable execution time limit
+		set_time_limit(0);
+
+		// Required for IE, otherwise Content-Disposition may be ignored
+		if (ini_get('zlib.output_compression'))
+		{
+			ini_set('zlib.output_compression', 'Off');
+		}
+
 		if (!is_readable($file))
 		{
 			die('File not found or inaccessible!');
 		}
-
-		$size = filesize($file);
-		$name = rawurldecode($name);
 
 		/* Figure out the MIME type (if not specified) */
 		$known_mime_types = array(
@@ -221,33 +290,29 @@ class JBSExport
 			}
 		}
 
-		// Turn off output buffering to decrease cpu usage
-		@ob_end_clean();
+		$name = rawurldecode($name);
 
-		// Required for IE, otherwise Content-Disposition may be ignored
-		if (ini_get('zlib.output_compression'))
-		{
-			ini_set('zlib.output_compression', 'Off');
-		}
-
-		header('Content-Type: ' . $mime_type);
+		// File specific headers
+		header('Accept-Ranges: bytes');
+		header("Content-Description: File Transfer");
+		header("Content-Type: $mime_type");
 		header('Content-Disposition: attachment; filename="' . $name . '"');
 		header("Content-Transfer-Encoding: binary");
-		header('Accept-Ranges: bytes');
 
-		/* The three lines below basically make the
-		  download non-cacheable */
-		header("Cache-control: private");
-		header('Pragma: private');
-		header("Expires: Mon, 26 Jul 2014 05:00:00 GMT");
+		$size = filesize($file);
+		// workaround for int overflow
+		if ($size < 0)
+		{
+			$size = exec('ls -al "' . $file . '" | awk \'BEGIN {FS=" "}{print $5}\'');
+		}
 
 		// Multipart-download and download resuming support
 		if (isset($_SERVER['HTTP_RANGE']))
 		{
 			list($a, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
 			list($range) = explode(",", $range, 2);
-			list($range, $range_end) = explode("-", $range);
-			$range = intval($range);
+			list($range, $range_end) = explode("=", $range);
+			$range = round(floatval($range), 0);
 
 			if (!$range_end)
 			{
@@ -255,56 +320,52 @@ class JBSExport
 			}
 			else
 			{
-				$range_end = intval($range_end);
+				$range_end = round(floatval($range_end), 0);
 			}
 
-			$new_length = $range_end - $range + 1;
+			$partial_length = $range_end - $range + 1;
 			header("HTTP/1.1 206 Partial Content");
-			header("Content-Length: $new_length");
+			header("Content-Length: $partial_length");
 			header("Content-Range: bytes $range-$range_end/$size");
 		}
 		else
 		{
-			$new_length = $size;
-			header("Content-Length: " . $size);
+			$partial_length = $size;
+			header("Content-Length: $partial_length");
 		}
 
 		/* output the file itself */
 		// You may want to change this
 		$chunksize  = 1 * (1024 * 1024);
-		$bytes_send = 0;
-		$file       = fopen($file, 'r');
+		$bytes_sent = 0;
 
-		if ($file)
+		if ($fp = fopen($file, 'r'))
 		{
+			// Fast forward within file, if requested
 			if (isset($_SERVER['HTTP_RANGE']))
 			{
-				fseek($file, $range);
+				fseek($fp, $range);
 			}
 
-			while (!feof($file) &&
-				(!connection_aborted()) &&
-				($bytes_send < $new_length)
-			)
+			// Read and output the file in chunks
+			while (!feof($fp) AND (!connection_aborted()) AND ($bytes_sent < $partial_length))
 			{
-				$buffer = fread($file, $chunksize);
+				$buffer = fread($fp, $chunksize);
 
 				// Is also possible
 				print($buffer);
 				flush();
-				$bytes_send += strlen($buffer);
+				$bytes_sent += strlen($buffer);
 			}
-			fclose($file);
+			fclose($fp);
 		}
 		else
 		{
-			JFactory::getApplication()->enqueueMessage('Error - can not open file.', 'error');
-
-			return false;
+			die('Unable to open file.');
 		}
-		unlink($file);
 
-		return true;
+		// Must have die() in to return proper file.
+		die();
 	}
 
 }
