@@ -429,7 +429,7 @@ class jbsMedia
 		$JBSMElements = new JBSMElements;
 		$filesize     = $JBSMElements->getFilesize($media->size);
 		$docman       = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
-		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
+		 title="' . $media->malttext . ' - ' . $media->comment . '" target="'. $media->special .'"><img src="' . $src
 			. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
 			. '" height="' . $height . '" border="0" /></a>';
 
@@ -535,8 +535,8 @@ class jbsMedia
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' .
-							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							. $filesize . '" target="'.
+							$media->special .'"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
 
 						return $playercode;
