@@ -26,3 +26,7 @@ ALTER TABLE  `#__bsms_locations` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_timeset` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_styles` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_update` ENGINE = INNODB;
+
+--adding fields to podcast
+ALTER TABLE `#__bsms_podcast` ADD `episodesubtitle` int(11) DEFAULT NULL;
+ALTER TABLE `#__bsms_podcast` ADD `customsubtitle` varchar(200) DEFAULT NULL;

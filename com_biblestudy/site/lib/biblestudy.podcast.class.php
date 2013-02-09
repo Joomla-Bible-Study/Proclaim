@@ -156,7 +156,7 @@ class JBSMPodcast
 						$episode->id  = $episode->study_id;
 						$scripture    = $JBSMElements->getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
-
+                        $pod_subtitle = $podinfo->episodesubtitle;
 						if (!$episode->size)
 						{
 							$episode->size = '1024';
@@ -201,7 +201,46 @@ class JBSMPodcast
 								$title    = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
+                        switch ($pod_subtitle)
+                        {
+                            case 0:
+                                $subtitle = $episode->teachername;
+                                break;
+                            case 1:
+                                $subtitle = $episode->teachername.' - '.$scripture;
+                                break;
+                            case 2:
+                                $subtitle = $scripture;
+                                break;
+                            case 3:
+                                $subtitle = $episode->studytitle ;
+                                break;
+                            case 4:
+                                $subtitle = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
+                                break;
+                            case 5:
+                                $element = $custom->getCustom(
+                                    $rowid = 'row1col1',
+                                    $podinfo->custom,
+                                    $episode,
+                                    $params,
+                                    $admin_params,
+                                    $detailstemplateid
+                                );
 
+                                $subtitle = $element->element;
+                                break;
+                            case 6:
+                                $query = $db->getQuery('true');
+                                $query->select('*');
+                                $query->from('#__bsms_books');
+                                $query->where('booknumber = ' . $episode->booknumber);
+                                $db->setQuery($query);
+                                $book     = $db->loadObject();
+                                $bookname = JText::_($book->bookname);
+                                $subtitle    = $bookname . ' ' . $episode->chapter_begin;
+                                break;
+                        }
 						$title       = str_replace('&', "and", $title);
 						$description = str_replace('&', "and", $episode->studyintro);
 						$description = strip_tags($description);
@@ -220,7 +259,7 @@ class JBSMPodcast
                         		<description>' . $description . '</description>
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
-                        		<itunes:subtitle>' . $title . '</itunes:subtitle>
+                        		<itunes:subtitle>' . $subtitle . '</itunes:subtitle>
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(

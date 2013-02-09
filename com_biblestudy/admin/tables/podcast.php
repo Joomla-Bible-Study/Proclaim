@@ -157,18 +157,32 @@ class TablePodcast extends JTable
 	 */
 	public $episodetitle = null;
 
-	/**
-	 * Custom
-	 *
-	 * @var string
-	 */
-	public $custom = null;
+    /**
+     * Custom
+     *
+     * @var string
+     */
+    public $custom = null;
 
-	/**
-	 * Details template ID
-	 *
-	 * @var string
-	 */
+    /**
+     * Details template ID
+     *
+     * @var string
+     */
+    public $episodesubtitle = null;
+
+    /**
+     * Custom
+     *
+     * @var string
+     */
+    public $customsubtitle = null;
+
+    /**
+     * Details template ID
+     *
+     * @var string
+     */
 	public $detailstemplateid = null;
 
 	/**

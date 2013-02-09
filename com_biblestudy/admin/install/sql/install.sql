@@ -270,6 +270,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image',
   `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image',
   `alternatewords` varchar(20),
+  `podcastsubtitle` int(11) DEFAULT NULL,
+  `customsubtitle` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

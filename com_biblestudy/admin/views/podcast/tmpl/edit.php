@@ -255,18 +255,34 @@ $input  = $app->input;
             </div>
             <div class="control-group">
                 <div class="control-label">
-			        <?php echo $this->form->getLabel('language'); ?>
-                </div>
-                <div class="controls">
-			        <?php echo $this->form->getInput('language'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="control-label">
 					<?php echo $this->form->getLabel('custom'); ?>
                 </div>
                 <div class="controls">
 					<?php echo $this->form->getInput('custom'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('episodesubtitle'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('episodesubtitle'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('customsubtitle'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('customsubtitle'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('language'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('language'); ?>
                 </div>
             </div>
         </div>
