@@ -36,16 +36,16 @@ if (!$t)
 		{
 			case 0:
 				?>
-	</tbody>
-	</table>
-	<table class="table table-striped" id="seriesstudytable">
-        <tbody>
-			<?php
-			$studies = $serieslisting->getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
-			echo $studies;
-			?>
-        </tbody>
-    </table>
+            	</tbody>
+            	</table>
+            	<table class="table table-striped" id="seriesstudytable">
+                    <tbody>
+            			<?php
+            			$studies = $serieslisting->getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
+            			echo $studies;
+            			?>
+                    </tbody>
+                </table>
 				<?php
 				break;
 

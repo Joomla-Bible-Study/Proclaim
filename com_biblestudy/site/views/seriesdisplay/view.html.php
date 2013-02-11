@@ -139,7 +139,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		foreach ($studies AS $i => $study)
 		{
-			$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+			$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params); 
 			$studies[$i]->scripture1 = $pelements->scripture1;
 			$studies[$i]->scripture2 = $pelements->scripture2;
 			$studies[$i]->media      = $pelements->media;

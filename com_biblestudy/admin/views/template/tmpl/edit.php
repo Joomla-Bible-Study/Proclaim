@@ -405,7 +405,21 @@ $input  = $app->input;
 	<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="series">
-    <ul class="adminformlist">
+<div id="details-sliders" class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#serieslist" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_SERIESLIST'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#seriesdetails" data-toggle="tab">
+					<?php echo JText::_('JBS_TPL_SERIESDETAILS'); ?>
+                </a>
+            </li>
+     </ul>
+    <div class="tab-content">
+    <div class="tab-pane active" id="serieslist">
 		<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
         <div class="control-group">
             <div class="control-label">
@@ -416,8 +430,8 @@ $input  = $app->input;
             </div>
         </div>
 		<?php endforeach; ?>
-    </ul>
-    <ul class="adminformlist">
+    </div>
+    <div class="tab-pane" id="seriesdetails">
 		<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
         <div class="control-group">
             <div class="control-label">
@@ -428,7 +442,9 @@ $input  = $app->input;
             </div>
         </div>
 		<?php endforeach; ?>
-    </ul>
+    </div>
+    </div>
+    </div>
 </div>
 
 <?php if ($this->canDo->get('core.admin')): ?>

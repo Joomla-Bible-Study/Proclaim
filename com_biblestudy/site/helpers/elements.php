@@ -115,7 +115,8 @@ class JBSMElements
 			case 10:
 				$elementid->id         = 'date';
 				$elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
-				$elementid->element    = $row->studydate;
+				//$elementid->element    = $row->studydate;
+                $elementid->element    = $this->getstudyDate($params,$row->studydate);
 				break;
 			case 11:
 				$elementid->id         = 'submitted';
