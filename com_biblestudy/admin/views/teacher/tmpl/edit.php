@@ -145,6 +145,7 @@ $input  = $app->input;
         <div class="control-label">
 			<?php echo $this->form->getLabel('short'); ?>
         </div>
+        <div class="clr"></div>
         <div class="controls">
 			<?php echo $this->form->getInput('short'); ?>
         </div>
@@ -153,6 +154,7 @@ $input  = $app->input;
         <div class="control-label">
 			<?php echo $this->form->getLabel('information'); ?>
         </div>
+        <div class="clr"></div>
         <div class="controls">
 			<?php echo $this->form->getInput('information'); ?>
         </div>
