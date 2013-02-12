@@ -210,7 +210,7 @@ class JBSMListing extends JBSMElements
 		}
 		else
 		{
-			$elementid = $this->getElementid($params->get('row1col1'), $row, $params, $admin_params, $template);
+			$elementid = JBSMElements::getElementid($params->get('row1col1'), $row, $params, $admin_params, $template);
 		}
 		$colspan = $params->get('r1c1span');
 		$rowspan = $params->get('rowspanr1c1');
@@ -223,7 +223,7 @@ class JBSMListing extends JBSMElements
 
 		if (isset($elementid))
 		{
-			$listing .= $this->getCell(
+			$listing .= self::getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),
 				$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -245,7 +245,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row1col2'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row1col2'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r1c2span');
 			$rowspan = $params->get('rowspanr1c2');
@@ -258,7 +258,7 @@ class JBSMListing extends JBSMElements
 
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -280,7 +280,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row1col3'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row1col3'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r1c3span');
 			$rowspan = $params->get('rowspanr1c3');
@@ -292,7 +292,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -314,7 +314,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row1col4'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row1col4'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r1c4span');
 			$rowspan = $params->get('rowspanr1c4');
@@ -327,7 +327,7 @@ class JBSMListing extends JBSMElements
 			if (isset($elementid))
 			{
 
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr1c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -371,7 +371,7 @@ class JBSMListing extends JBSMElements
 		}
 		else
 		{
-			$elementid = $this->getElementid($params->get('row2col1'), $row, $params, $admin_params, $template);
+			$elementid = JBSMElements::getElementid($params->get('row2col1'), $row, $params, $admin_params, $template);
 		}
 		$colspan = $params->get('r2c1span');
 		$rowspan = $params->get('rowspanr2c1');
@@ -384,7 +384,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= $this->getCell(
+			$listing .= self::getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'),
 				$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -404,7 +404,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row2col2'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row2col2'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r2c2span');
 			$rowspan = $params->get('rowspanr2c2');
@@ -416,7 +416,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -438,7 +438,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r2c3span');
 			$rowspan = $params->get('rowspanr2c3');
@@ -450,7 +450,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -472,7 +472,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row2col4'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row2col4'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r2c4span');
 			$rowspan = $params->get('rowspanr2c4');
@@ -484,7 +484,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -528,7 +528,7 @@ class JBSMListing extends JBSMElements
 		}
 		else
 		{
-			$elementid = $this->getElementid($params->get('row3col1'), $row, $params, $admin_params, $template);
+			$elementid = JBSMElements::getElementid($params->get('row3col1'), $row, $params, $admin_params, $template);
 		}
 		$colspan = $params->get('r3c1span');
 		$rowspan = $params->get('rowspanr3c1');
@@ -541,7 +541,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= $this->getCell(
+			$listing .= self::getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3,
 				$tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -561,7 +561,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row3col2'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row3col2'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r3c2span');
 			$rowspan = $params->get('rowspanr3c2');
@@ -573,7 +573,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -595,7 +595,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row3col3'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row3col3'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r3c3span');
 			$rowspan = $params->get('rowspanr3c3');
@@ -607,7 +607,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -629,7 +629,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row3col4'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row3col4'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r3c4span');
 			$rowspan = $params->get('rowspanr3c4');
@@ -641,7 +641,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -683,7 +683,7 @@ class JBSMListing extends JBSMElements
 		}
 		else
 		{
-			$elementid = $this->getElementid($params->get('row4col1'), $row, $params, $admin_params, $template);
+			$elementid = JBSMElements::getElementid($params->get('row4col1'), $row, $params, $admin_params, $template);
 		}
 		$colspan = $params->get('r4c1span');
 		$rowspan = $params->get('rowspanr4c1');
@@ -696,7 +696,7 @@ class JBSMListing extends JBSMElements
 		}
 		if (isset($elementid))
 		{
-			$listing .= $this->getCell(
+			$listing .= self::getCell(
 				$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3,
 				$tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 			);
@@ -717,7 +717,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row4col2'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row4col2'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r4c2span');
 			$rowspan = $params->get('rowspanr4c2');
@@ -729,7 +729,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -751,7 +751,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row4col3'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row4col3'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r4c3span');
 			$rowspan = $params->get('rowspanr4c3');
@@ -763,7 +763,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
 					$params->get('linkr4c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
 				);
@@ -785,7 +785,7 @@ class JBSMListing extends JBSMElements
 			}
 			else
 			{
-				$elementid = $this->getElementid($params->get('row4col4'), $row, $params, $admin_params, $template);
+				$elementid = JBSMElements::getElementid($params->get('row4col4'), $row, $params, $admin_params, $template);
 			}
 			$colspan = $params->get('r4c4span');
 			$rowspan = $params->get('rowspanr4c4');
@@ -797,7 +797,7 @@ class JBSMListing extends JBSMElements
 			}
 			if (isset($elementid))
 			{
-				$listing .= $this->getCell(
+				$listing .= self::getCell(
 					$elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c4'),
 					$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $row, $template
 				);
@@ -869,7 +869,7 @@ class JBSMListing extends JBSMElements
 
 		if ($islink > 0)
 		{
-			$cell .= $this->getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
+			$cell .= self::getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
 		}
 		$cell .= $element;
 
@@ -1248,7 +1248,7 @@ class JBSMListing extends JBSMElements
 					}
 					else
 					{
-						$element1 = $this->getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
+						$element1 = JBSMElements::getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item2'))
@@ -1266,7 +1266,7 @@ class JBSMListing extends JBSMElements
 					}
 					else
 					{
-						$element2 = $this->getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
+						$element2 = JBSMElements::getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item3'))
@@ -1285,7 +1285,7 @@ class JBSMListing extends JBSMElements
 					}
 					else
 					{
-						$element3 = $this->getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
+						$element3 = JBSMElements::getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item4'))
@@ -1303,7 +1303,7 @@ class JBSMListing extends JBSMElements
 					}
 					else
 					{
-						$element4 = $this->getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
+						$element4 = JBSMElements::getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
 					}
 				}
 

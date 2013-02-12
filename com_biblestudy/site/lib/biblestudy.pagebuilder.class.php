@@ -298,7 +298,7 @@ class JBSPagebuilder
 					$mediareturns[] = $downloadlink;
 					break;
 			}
-		}
+		} 
 		$mediareturn = implode('', $mediareturns);
 
 		return $mediareturn;

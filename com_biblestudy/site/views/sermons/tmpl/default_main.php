@@ -172,7 +172,7 @@ $teachers = $params->get('teacher_id');
 				$oddeven = $class1;
 			}
 
-			$listing = $JBSMTeacher->getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+			$listing = JBSMListing::getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
 			echo $listing;
 		}
 		?>

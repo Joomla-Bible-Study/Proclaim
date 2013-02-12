@@ -242,11 +242,11 @@ class BiblestudyViewSermons extends JViewLegacy
 				}
 				$item->detailslink = $pelements->detailslink;
 
-				if (!isset($pelements->studyintro))
+				if (!isset($item->studyintro))
 				{
-					$pelements->studyintro = '';
+					$item->studyintro = '';
 				}
-				$item->studyintro = $pelements->studyintro;
+				
 
 				if (isset($pelements->secondary_reference))
 				{

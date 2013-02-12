@@ -69,7 +69,7 @@ class jbsMedia
 
 		// Here we get a list of the media ids associated with the study we got from $row
 
-		$mediaids = $this->getMediaRows($row->id);
+		$mediaids = self::getMediaRows($row->id);
 
 		if (!$mediaids)
 		{
@@ -93,8 +93,8 @@ class jbsMedia
 			$itemparams = $registry;
 
 			// Get the attributes for the player used in this item
-			$player     = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media);
-			$playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
+			$player     = self::getPlayerAttributes($admin_params, $params, $itemparams, $media);
+			$playercode = self::getPlayerCode($params, $itemparams, $player, $image, $media);
 
 			// Now we build the column for each media file
 			$table .= '<td>';
@@ -183,8 +183,7 @@ class jbsMedia
 		} // End of if show_file size
 
 		$table .= '</tbody></table>';
-		var_dump($table);
-
+	
 		return $table;
 	}
 
@@ -217,7 +216,7 @@ class jbsMedia
 	 */
 	public function getMediaRows($id)
 	{
-		if (!$id)
+	   if (!$id)
 		{
 			return false;
 		}
@@ -244,7 +243,7 @@ class jbsMedia
 
 		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
 
-		$query->where('#__bsms_mediafiles.study_id = ' . (int) $db->q($id));
+		$query->where('#__bsms_mediafiles.study_id = ' . (int) $id);
 		$query->where('#__bsms_mediafiles.published = 1');
 		$query->order('ordering ASC, #__bsms_media.media_image_name ASC');
 		$db->setQuery($query);

@@ -52,14 +52,14 @@ class JBSMElements
 				$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 				$esv                   = 0;
 				$scripturerow          = 1;
-				$elementid->element    = $this->getScripture($params, $row, $esv, $scripturerow);
+				$elementid->element    = self::getScripture($params, $row, $esv, $scripturerow);
 				break;
 			case 2:
 				$elementid->id         = 'scripture2';
 				$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 				$esv                   = 0;
 				$scripturerow          = 2;
-				$elementid->element    = $this->getScripture($params, $row, $esv, $scripturerow);
+				$elementid->element    = self::getScripture($params, $row, $esv, $scripturerow);
 				break;
 			case 3:
 				$elementid->id         = 'secondary';
@@ -69,7 +69,7 @@ class JBSMElements
 			case 4:
 				$elementid->id         = 'duration';
 				$elementid->headertext = JText::_('JBS_CMN_DURATION');
-				$elementid->element    = $this->getDuration($params, $row);
+				$elementid->element    = self::getDuration($params, $row);
 				break;
 			case 5:
 				$elementid->id         = 'title';
@@ -115,7 +115,7 @@ class JBSMElements
 			case 10:
 				$elementid->id         = 'date'; 
 				$elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
-				if (isset($row->studydate)){$elementid->element    = $this->getstudyDate($params,$row->studydate);} else {$elementid->element = '';}
+				if (isset($row->studydate)){$elementid->element    = self::getstudyDate($params,$row->studydate);} else {$elementid->element = '';}
 				break;
 			case 11:
 				$elementid->id         = 'submitted';
@@ -186,17 +186,17 @@ class JBSMElements
 				$elementid->id         = 'details';
 				$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 				$textorpdf             = 'pdf';
-				$elementid->element    = $this->getTextlink($params, $row, $textorpdf, $admin_params, $template);
+				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = $this->getMediaTable($params, $row, $admin_params);
+				$elementid->element    = jbsMedia::getMediaTable($row, $params, $admin_params); 
 				break;
 			case 22:
 				$elementid->id         = 'store';
 				$elementid->headertext = JText::_('JBS_CMN_STORE');
-				$elementid->element    = $this->getStore($params, $row);
+				$elementid->element    = self::getStore($params, $row);
 				break;
 			case 23:
 				$elementid->id         = 'filesize';
