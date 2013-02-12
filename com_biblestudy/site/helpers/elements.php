@@ -39,7 +39,7 @@ class JBSMElements
 	 * @return object
 	 */
 	public function getElementid($rowid, $row, $params, $admin_params, $template)
-	{
+	{ 
 		// Start Element ID
 		$elementid = new stdClass;
 
@@ -97,41 +97,40 @@ class JBSMElements
 					$elementid->element = '';
 				}
 				break;
-			case 7:
+			case 7: 
 				$elementid->id         = 'teacher';
 				$elementid->headertext = JText::_('JBS_CMN_TEACHER');
-				$elementid->element    = $row->teachername;
+				if (isset($row->teachername)){$elementid->element    = $row->teachername;} else {$elementid->element = '';}
 				break;
 			case 8:
 				$elementid->id         = 'teacher';
 				$elementid->headertext = JText::_('JBS_CMN_TEACHER');
-				$elementid->element    = $row->teachertitle . ' ' . $row->teachername;
+				if (isset($row->teachertitle) && isset($row->teachername)){$elementid->element    = $row->teachertitle . ' ' . $row->teachername;} else {$elementid->element = '';}
 				break;
 			case 9:
 				$elementid->id         = 'series';
 				$elementid->headertext = JText::_('JBS_CMN_SERIES');
-				$elementid->element    = $row->series_text;
+				if (isset($row->series_text)){$elementid->element    = $row->series_text;} else {$elementid->element = '';} 
 				break;
 			case 10:
-				$elementid->id         = 'date';
+				$elementid->id         = 'date'; 
 				$elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
-				//$elementid->element    = $row->studydate;
-                $elementid->element    = $this->getstudyDate($params,$row->studydate);
+				if (isset($row->studydate)){$elementid->element    = $this->getstudyDate($params,$row->studydate);} else {$elementid->element = '';}
 				break;
 			case 11:
 				$elementid->id         = 'submitted';
 				$elementid->headertext = JText::_('JBS_CMN_SUBMITTED_BY');
-				$elementid->element    = $row->submitted;
+				if (isset($row->submitted)){$elementid->element    = $row->submitted;} else {$elementid->element = '';}
 				break;
 			case 12:
 				$elementid->id         = 'hits';
 				$elementid->headertext = JText::_('JBS_CMN_VIEWS');
-				$elementid->element    = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
+				if (isset($row->hits)){$elementid->element    = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;} else {$elementid->element = '';}
 				break;
 			case 13:
 				$elementid->id         = 'studynumber';
 				$elementid->headertext = JText::_('JBS_CMN_STUDYNUMBER');
-				$elementid->element    = $row->studynumber;
+				if (isset($row->studynumber)){$elementid->element    = $row->studynumber;} else {$elementid->element = '';}
 				break;
 			case 14:
 				$elementid->id         = 'topic';
@@ -155,12 +154,12 @@ class JBSMElements
 			case 15:
 				$elementid->id         = 'location';
 				$elementid->headertext = JText::_('JBS_CMN_LOCATION');
-				$elementid->element    = $row->location_text;
+				if (isset($row->location_text)){$elementid->element    = $row->location_text;} else {$elementid->element = '';}
 				break;
 			case 16:
 				$elementid->id         = 'messagetype';
 				$elementid->headertext = JText::_('JBS_CMN_MESSAGE_TYPE');
-				$elementid->element    = $row->message_type;
+				if (isset($row->message_type)){$elementid->element    = $row->message_type;} else {$elementid->element = '';}
 				break;
 			case 17:
 				$elementid->id         = 'details';
@@ -247,17 +246,17 @@ class JBSMElements
 			case 27:
 				$elementid->id         = 'series_description';
 				$elementid->headertext = JText::_('JBS_CMN_DESCRIPTION');
-				$elementid->element    = $row->sdescription;
+				if (isset($row->sdescription)){$elementid->element    = $row->sdescription;} else {$elementid->element = '';}
 				break;
 			case 28:
 				$elementid->id         = 'plays';
 				$elementid->headertext = JText::_('JBS_CMN_PLAYS');
-				$elementid->element    = $row->totalplays;
+				if (isset($row->totalplays)){$elementid->element    = $row->totalplays;} else {$elementid->element = '';}
 				break;
 			case 29:
 				$elementid->id         = 'downloads';
 				$elementid->headertext = JText::_('JBS_CMN_DOWNLOADS');
-				$elementid->element    = $row->totaldownloads;
+				if(isset($row->totaldownloads)){$elementid->element    = $row->totaldownloads;} else {$elementid->element = '';}
 				break;
 			case 30:
 				$timages              = new JBSMImages;

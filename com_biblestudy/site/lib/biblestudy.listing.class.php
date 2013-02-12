@@ -2106,13 +2106,12 @@ class JBSMListing extends JBSMElements
 			$elementid->id         = 'jbsmedia';
 		}
 		else
-		{
-			$elementid = $this->getElementid($rowid, $row, $params, $admin_params, $template);
+		{ 
+			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template); 
 		}
 
 		if (!isset($elementid->id))
 		{
-			// @todo need to see if this need to be removed.
 			$headercell .= 'customhead';
 		}
 		else
