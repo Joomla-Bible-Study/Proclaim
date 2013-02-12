@@ -72,10 +72,14 @@ class BiblestudyViewMessage extends JViewLegacy
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$input->set('sid', $this->item->id);
-		$input->set('sdate', $this->item->studydate);
+		//$input->set('sid', $this->item->id);
+		//$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 
+//set some variables for use by the modal mediafile entry form from a study
+        $app    = JFactory::getApplication();
+        $app->setUserState($option . 'sid', $this->item->id);
+        $app->setUserState($option . 'sdate', $this->item->studydate);
 		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new JRegistry;
