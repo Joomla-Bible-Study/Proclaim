@@ -99,7 +99,7 @@ class TablePodcast extends JTable
 	 *
 	 * @var string
 	 */
-	public $podcastsubtitle = null;
+	public $episodesubtitle = null;
 
 	/**
 	 * Podcast Search Words
