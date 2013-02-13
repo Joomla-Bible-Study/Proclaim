@@ -154,18 +154,13 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		$admin = null;
 
-	//	require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.admin.class.php';
+        $db = JFactory::getDBO();
+        $query = 'SELECT * FROM #__bsms_admin WHERE id = 1';
+        $db->setQuery($query);
+        $adminsettings = $db->loadObject();
 
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_admin')
-			->where('id = ' . (int) 1);
-		$admin = $db->loadObject();
-
-		$drop_tables = $admin->drop_tables;
+		$drop_tables = $adminsettings->drop_tables;
 
 		if ($drop_tables > 0)
 		{
@@ -180,7 +175,7 @@ class Com_BiblestudyInstallerScript
 			$query     = $db->getQuery(true);
 			$query->delete()
 				->from('#__assets')
-				->where('perent_id = ' . $db->q($parent_id));
+				->where('parent_id = ' . $db->q($parent_id));
 			$db->setQuery($query);
 			$db->execute();
 			$query = $db->getQuery(true);

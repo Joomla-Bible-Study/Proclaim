@@ -95,13 +95,6 @@ class TablePodcast extends JTable
 	public $podcastsummary = null;
 
 	/**
-	 * Podcast Sub Title
-	 *
-	 * @var string
-	 */
-	public $episodesubtitle = null;
-
-	/**
 	 * Podcast Search Words
 	 *
 	 * @var string
