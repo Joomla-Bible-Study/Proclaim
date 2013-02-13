@@ -119,7 +119,7 @@ $sortFields = $this->getSortFields();
         <label for="filter_studyyears" id="filter_studyyears"
                class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_studyyears" class="input-medium" onchange="this.form.submit()">
-            <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+            <option value=""><?php echo JText::_('JOPTION_SELECT_YEAR'); ?></option>
 			<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year')); ?>
         </select>
     </div>
@@ -127,7 +127,7 @@ $sortFields = $this->getSortFields();
         <label for="filter_studybooks" id="filter_studybooks"
                class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_studybooks" class="input-medium" onchange="this.form.submit()">
-            <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+            <option value=""><?php echo JText::_('JOPTION_SELECT_BOOK'); ?></option>
 			<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book')); ?>
         </select>
     </div>
@@ -135,7 +135,7 @@ $sortFields = $this->getSortFields();
         <label for="filter_messagetypes" id="filter_messagetypes"
                class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_messagetypes" class="input-medium" onchange="this.form.submit()">
-            <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+            <option value=""><?php echo JText::_('JOPTION_SELECT_MESSAGETYPE'); ?></option>
 			<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype')); ?>
         </select>
     </div>
@@ -143,7 +143,7 @@ $sortFields = $this->getSortFields();
         <label for="filter_studylocations" id="filter_studylocations"
                class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
         <select name="filter_studylocations" class="input-medium" onchange="this.form.submit()">
-            <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+            <option value=""><?php echo JText::_('JOPTION_SELECT_LOCATION'); ?></option>
 			<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location')); ?>
         </select>
     </div>
