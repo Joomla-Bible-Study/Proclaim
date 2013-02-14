@@ -170,7 +170,7 @@ class BiblestudyViewInstall extends JViewLegacy
 					foreach ($plugins as $plugin => $published)
 					{
 						$query = $db->getQuery(true);
-						$query->select('COUNT(*)')->from('#__extensions')->where('module=' . $db->q($plugin))->where('folder = ' . $db->q($folder));
+						$query->select('COUNT(*)')->from('#__extensions')->where('element=' . $db->q($plugin))->where('folder = ' . $db->q($folder));
 						$db->setQuery($query);
 						$result                  = $db->loadResult();
 						$this->status->plugins[] = array(
