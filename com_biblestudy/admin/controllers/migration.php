@@ -9,6 +9,8 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 jimport('joomla.html.parameter');
+
+// todo: need to finish the Jloader
 include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.restore.php';
 include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php';
 include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.migrate.php';
@@ -26,6 +28,63 @@ JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.ph
  */
 class BiblestudyControllerMigration extends JControllerLegacy
 {
+	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+
+		$this->modelName = 'migration';
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   string  $task  An optional associative array of configuration settings.
+	 *
+	 * @return void
+	 */
+	public function execute($task)
+	{
+		if ($task != 'run')
+		{
+			$task = 'browse';
+		}
+		parent::execute($task);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @return void
+	 */
+	public function browse()
+	{
+		$model = $this->getModel('migration');
+		$state = $model->startScanning();
+		$model->setState('scanstate', $state);
+
+		$this->display(false);
+	}
+
+	/**
+	 * Start the Update
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		$id = JFactory::getApplication()->input->getInt('id');
+
+		$model = $this->getModel('migration');
+		$state = $model->run(true, $id);
+		$model->setState('scanstate', $state);
+
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&task=admin.edit&id=1', false));
+	}
 
 	/**
 	 * Method to display the view
@@ -94,6 +153,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		{
 			$this->import();
 		}
+
 		return parent::display();
 	}
 
