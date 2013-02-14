@@ -41,80 +41,72 @@ $input  = $app->input;
     <div class="row-fluid">
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
-            <fieldset>
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
-					<?php if ($this->canDo->get('core.admin')): ?>
-                    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-                    </li>
-					<?php endif ?>
-                </ul>
-                <div class="tab-content">
-                    <!-- Begin Tabs -->
-                    <div class="tab-pane active" id="general">
-                        <div class="control-group">
-                            <div class="control-label">
-								<?php echo $this->form->getLabel('message_type'); ?>
-                            </div>
-                            <div class="controls">
-								<?php echo $this->form->getInput('message_type'); ?>
-                            </div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+                </li>
+				<?php endif ?>
+            </ul>
+            <div class="tab-content">
+                <!-- Begin Tabs -->
+                <div class="tab-pane active" id="general">
+                    <div class="control-group">
+                        <div class="control-label">
+							<?php echo $this->form->getLabel('message_type'); ?>
                         </div>
-                        <div class="control-group">
-                            <div class="control-label">
-								<?php echo $this->form->getLabel('alias'); ?>
-                            </div>
-                            <div class="controls">
-								<?php echo $this->form->getInput('alias'); ?>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="control-label">
-								<?php echo $this->form->getLabel('landing_show'); ?>
-                            </div>
-                            <div class="controls">
-								<?php echo $this->form->getInput('landing_show'); ?>
-                            </div>
+                        <div class="controls">
+							<?php echo $this->form->getInput('message_type'); ?>
                         </div>
                     </div>
-
-					<?php if ($this->canDo->get('core.admin')): ?>
-                    <div class="tab-pane" id="permissions">
-                        <fieldset>
-							<?php echo $this->form->getInput('rules'); ?>
-                        </fieldset>
+                    <div class="control-group">
+                        <div class="control-label">
+							<?php echo $this->form->getLabel('alias'); ?>
+                        </div>
+                        <div class="controls">
+							<?php echo $this->form->getInput('alias'); ?>
+                        </div>
                     </div>
-					<?php endif; ?>
-
+                    <div class="control-group">
+                        <div class="control-label">
+							<?php echo $this->form->getLabel('landing_show'); ?>
+                        </div>
+                        <div class="controls">
+							<?php echo $this->form->getInput('landing_show'); ?>
+                        </div>
+                    </div>
                 </div>
-            </fieldset>
-                <input type="hidden" name="task" value=""/>
-                <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-				<?php echo JHtml::_('form.token'); ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <div class="tab-pane" id="permissions">
+					<?php echo $this->form->getInput('rules'); ?>
+                </div>
+				<?php endif; ?>
+            </div>
+            <input type="hidden" name="task" value=""/>
+            <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+			<?php echo JHtml::_('form.token'); ?>
         </div>
         <!-- Begin Sidebar -->
-        <div class="span2">
+        <div class="span2 form-vertical">
             <h4><?php echo JText::_('JDETAILS');?></h4>
             <hr/>
-            <fieldset class="form-vertical">
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('id'); ?>
-                    </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('id'); ?>
                 </div>
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('published'); ?>
-                    </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('id'); ?>
                 </div>
-            </fieldset>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('published'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('published'); ?>
+                </div>
+            </div>
         </div>
         <!-- End Sidebar -->
     </div>

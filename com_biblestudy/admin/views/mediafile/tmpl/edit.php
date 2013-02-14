@@ -29,13 +29,13 @@ $input  = $app->input;
 
 //$params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
-$folder   = '';
-$server   = '';
-$input    = new JInput;
-$option   = $input->get('option', '', 'cmd');
+$folder = '';
+$server = '';
+$input  = new JInput;
+$option = $input->get('option', '', 'cmd');
 //$study    = $input->get('sid', '', 'int');
 //$sdate    = $input->get('sdate', '', 'string');
-$study    = $app->getUserState($option . 'sid'); 
+$study    = $app->getUserState($option . 'sid');
 $sdate    = $app->getUserState($option . 'sdate');
 $size     = $app->getUserState($option . 'size');
 $fname    = $app->getUserState($option . 'fname');
@@ -86,10 +86,6 @@ elseif (empty($this->item->study_id))
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
         }
-    }
-</script>
-<script language="javascript" type="text/javascript">
-    function submitbutton(task) {
         if (task == '') {
             return false;
         }
@@ -148,7 +144,7 @@ elseif (empty($this->item->study_id))
                 return false;
             }
         }
-    }
+    };
 
     function sizebutton(remotefilesize) {
         var objTB = document.getElementById("size");
@@ -185,8 +181,7 @@ else
 ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
-<div class="span9 form-horizontal">
-<fieldset>
+<div class="span10 form-horizontal">
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
     </li>
@@ -202,7 +197,6 @@ else
     </li>
     <li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
     </li>
-
 	<?php if ($this->canDo->get('core.admin')): ?>
     <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
@@ -260,13 +254,9 @@ else
 			<?php echo $this->form->getInput('comment'); ?>
         </div>
     </div>
-
-
 </div>
 <div class="tab-pane" id="linktype">
     <div class="row-fluid">
-
-
         <div class="control-group">
             <div class="control-label">
 				<?php echo $this->form->getLabel('docMan_id'); ?>
@@ -291,12 +281,9 @@ else
 				<?php echo $this->form->getInput('virtueMart_id'); ?>
             </div>
         </div>
-
     </div>
 </div>
 <div class="tab-pane" id="player">
-
-
     <div class="control-group">
         <div class="control-label">
 			<?php echo $this->form->getLabel('player'); ?>
@@ -321,28 +308,8 @@ else
 			<?php echo $this->form->getInput('mediacode'); ?>
         </div>
     </div>
-
-
 </div>
 <div class="tab-pane" id="file">
-
-
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('plays'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('plays'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('downloads'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('downloads'); ?>
-        </div>
-    </div>
     <div class="control-group">
         <div class="control-label">
 			<?php echo $this->form->getLabel('server'); ?>
@@ -383,11 +350,8 @@ else
 			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
         </div>
     </div>
-
-
 </div>
 <div class="tab-pane" id="upload">
-
     <div class="control-group">
         <div class="control-label">
 			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
@@ -437,12 +401,8 @@ else
 			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
         </div>
     </div>
-
-
 </div>
 <div class="tab-pane" id="parameters">
-
-
 	<?php foreach ($params as $name => $fieldset):
 	foreach ($this->form->getFieldset($name) as $field) : ?>
         <div class="control-group">
@@ -455,87 +415,73 @@ else
         </div>
 		<?php endforeach; ?>
 	<?php endforeach; ?>
-
-
 </div>
 <?php if ($this->canDo->get('core.admin')): ?>
 <div class="tab-pane" id="permissions">
-
-    <div class="control-group">
-        <div class="controls">
-			<?php echo $this->form->getInput('rules'); ?>
-        </div>
-    </div>
-
+	<?php echo $this->form->getInput('rules'); ?>
 </div>
 
 	<?php endif; ?>
-</fieldset>
 <input type="hidden" name="flupfile" value=""/>
 <input type="hidden" name="task" value=""/>
 <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 <?php echo JHtml::_('form.token'); ?>
 <input type="hidden" name="controller" value="mediafile"/>
 </div>
+</div>
 <!-- Begin Sidebar -->
-<div class="span2">
+<div class="span2 form-vertical">
     <h4><?php echo JText::_('JDETAILS');?></h4>
     <hr/>
-    <fieldset class="form-vertical">
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('id'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('id'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('plays'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('plays'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('downloads'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('downloads'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('published'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('published'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('access'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('access'); ?>
+        </div>
+    </div>
 
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('id'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('id'); ?>
-            </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('language'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('plays'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('plays'); ?>
-            </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('language'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('downloads'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('downloads'); ?>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset class="form-vertical">
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('published'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('published'); ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('access'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('access'); ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('language'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('language'); ?>
-            </div>
-        </div>
-    </fieldset>
+    </div>
 </div>
 <!-- End Sidebar -->
 </div>

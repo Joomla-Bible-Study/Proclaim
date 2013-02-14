@@ -43,7 +43,6 @@ $input  = $app->input;
 <div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
-<fieldset>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_STY_DETAILS'); ?></a></li>
     <li><a href="#scripture" data-toggle="tab"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></a></li>
@@ -371,78 +370,74 @@ foreach ($params as $name => $fieldSet): ?>
 <input type="hidden" name="task" value=""/>
 <?php echo JHtml::_('form.token'); ?>
 </div>
-</fieldset>
 </div>
-<div class="span2">
+<div class="span2 form-vertical">
     <h4><?php echo JText::_('JDETAILS');?></h4>
     <hr/>
-    <fieldset class="form-vertical">
-
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo JText::_('JBS_STY_HITS'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->item->hits; ?>
-            </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo JText::_('JBS_STY_HITS'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('published'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('published'); ?>
-            </div>
+        <div class="controls span12 small">
+			<?php echo $this->item->hits; ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('studydate'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('studydate'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('published'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('comments'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('comments'); ?>
-            </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('published'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('user_id'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id)?>
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('studydate'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('access'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('access'); ?>
-            </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('studydate'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('language'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('language'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('comments'); ?>
         </div>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $this->form->getLabel('id'); ?>
-            </div>
-            <div class="controls">
-				<?php echo $this->form->getInput('id'); ?>
-            </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('comments'); ?>
         </div>
-    </fieldset>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('user_id'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id)?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('access'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('access'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('language'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('language'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+			<?php echo $this->form->getLabel('id'); ?>
+        </div>
+        <div class="controls">
+			<?php echo $this->form->getInput('id'); ?>
+        </div>
+    </div>
 </div>
 <!-- End Sidebar -->
 </form>

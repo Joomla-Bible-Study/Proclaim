@@ -2,8 +2,8 @@
 <form>
     <field
             name="published"
-            type="radio"
-            class="btn-group"
+            type="list"
+            class="span12 small"
             id="published"
             label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC"
@@ -30,5 +30,5 @@
     <field name="asset_id" type="hidden" filter="unset"/>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-           class="readonly"/>
+           class="readonly span12 small"/>
 </form>

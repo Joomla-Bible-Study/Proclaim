@@ -127,7 +127,7 @@ $sortFields = $this->getSortFields();
 				echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA', 'media.media_image_name', $listDirn, $listOrder);
 				?>
             </th>
-            <th  width="1%" class="nowrap hidden-phone">
+            <th width="1%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'media.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
@@ -178,10 +178,11 @@ $sortFields = $this->getSortFields();
                 </div>
             </td>
             <td class="nowrap has-context">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediaimage.edit&id=' . (int) $item->id); ?>">
-					<?php echo $this->escape($item->media_image_name); ?>
-                </a>
-
+                <div class="pull-left">
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediaimage.edit&id=' . (int) $item->id); ?>">
+						<?php echo $this->escape($item->media_image_name); ?>
+                    </a>
+                </div>
                 <div class="pull-left">
 					<?php
 					if (BIBLESTUDY_CHECKREL)

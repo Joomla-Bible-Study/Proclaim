@@ -38,8 +38,7 @@ $input  = $app->input;
       method="post" name="adminForm" id="item-form" class="form-validate">
 <div class="row-fluid">
 <!-- Begin Content -->
-<div class="span12 form-horizontal">
-<fieldset>
+<div class="span10 form-horizontal">
 <ul class="nav nav-tabs">
     <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_TPL_GENERAL'); ?></a></li>
     <li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_CMN_MEDIA'); ?></a></li>
@@ -61,14 +60,6 @@ $input  = $app->input;
         </div>
         <div class="controls">
 			<?php echo $this->form->getInput('id'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-			<?php echo $this->form->getLabel('published'); ?>
-        </div>
-        <div class="controls">
-			<?php echo $this->form->getInput('published'); ?>
         </div>
     </div>
     <div class="control-group">
@@ -405,7 +396,7 @@ $input  = $app->input;
 	<?php endforeach; ?>
 </div>
 <div class="tab-pane" id="series">
-<div id="details-sliders" class="tabbable tabs-left">
+    <div id="details-sliders" class="tabbable tabs-left">
         <ul class="nav nav-tabs">
             <li class="active">
                 <a href="#serieslist" data-toggle="tab">
@@ -417,33 +408,33 @@ $input  = $app->input;
 					<?php echo JText::_('JBS_TPL_SERIESDETAILS'); ?>
                 </a>
             </li>
-     </ul>
-    <div class="tab-content">
-    <div class="tab-pane active" id="serieslist">
-		<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $field->label;?>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="serieslist">
+				<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
+                </div>
+				<?php endforeach; ?>
             </div>
-            <div class="controls">
-				<?php echo $field->input; ?>
+            <div class="tab-pane" id="seriesdetails">
+				<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $field->label;?>
+                    </div>
+                    <div class="controls">
+						<?php echo $field->input; ?>
+                    </div>
+                </div>
+				<?php endforeach; ?>
             </div>
         </div>
-		<?php endforeach; ?>
-    </div>
-    <div class="tab-pane" id="seriesdetails">
-		<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
-        <div class="control-group">
-            <div class="control-label">
-				<?php echo $field->label;?>
-            </div>
-            <div class="controls">
-				<?php echo $field->input; ?>
-            </div>
-        </div>
-		<?php endforeach; ?>
-    </div>
-    </div>
     </div>
 </div>
 
@@ -453,9 +444,29 @@ $input  = $app->input;
 </div>
 	<?php endif; ?>
 </div>
-</fieldset>
 <input type="hidden" name="task" value=""/>
 <?php echo JHtml::_('form.token'); ?>
 </div>
+<!-- End Content -->
+<!-- Begin Sidebar -->
+<div class="span2">
+    <h4><?php echo JText::_('JDETAILS');?></h4>
+    <hr/>
+    <fieldset class="form-vertical">
+        <div class="control-group">
+            <div class="controls">
+				<?php echo $this->form->getValue('title'); ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+			<?php echo $this->form->getLabel('published'); ?>
+            <div class="controls">
+				<?php echo $this->form->getInput('published'); ?>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<!-- End Sidebar -->
 </div>
 </form>

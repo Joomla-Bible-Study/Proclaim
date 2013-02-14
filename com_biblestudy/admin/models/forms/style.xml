@@ -3,8 +3,8 @@
     <fieldset>
         <field
                 name="published"
-                type="radio"
-                class="btn-group"
+                type="list"
+                class="span12 small"
                 id="published"
                 label="JSTATUS"
                 description="JFIELD_PUBLISHED_DESC"
@@ -37,6 +37,6 @@
                section="style" validate="rules"/>
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"
-               class="readonly"/>
+               class="readonly span12 small"/>
     </fieldset>
 </form>

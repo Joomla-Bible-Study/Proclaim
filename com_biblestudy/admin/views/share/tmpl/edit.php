@@ -39,93 +39,89 @@ $input  = $app->input;
     <div class="row-fluid">
         <!-- Begin Content -->
         <div class="span10 form-horizontal">
-            <fieldset>
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#general"
-                                          data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-                    </li>
-					<?php if ($this->canDo->get('core.admin')): ?>
-                    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-                    </li>
-					<?php endif ?>
-                </ul>
-                <div class="tab-content">
-                    <!-- Begin Tabs -->
-                    <div class="tab-pane active" id="general">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#general"
+                                      data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+                </li>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+                </li>
+				<?php endif ?>
+            </ul>
+            <div class="tab-content">
+                <!-- Begin Tabs -->
+                <div class="tab-pane active" id="general">
+                    <div class="control-group">
+                        <div class="control-label">
+							<?php echo $this->form->getLabel('name'); ?>
+                        </div>
+                        <div class="controls">
+							<?php echo $this->form->getInput('name'); ?>
+                        </div>
+                    </div>
+					<?php
+					$i     = 1;
+					$count = count($this->form->getFieldset('params'));
+
+					foreach ($this->form->getFieldset('params') as $field)
+					{
+						if ($i == 1 || $i == 12)
+						{
+							?>
+                                <div class="span5 pull-left">
+	                                <?php
+						}
+						?>
+
                         <div class="control-group">
                             <div class="control-label">
-								<?php echo $this->form->getLabel('name'); ?>
+								<?php echo $field->label; ?>
                             </div>
                             <div class="controls">
-								<?php echo $this->form->getInput('name'); ?>
+								<?php echo $field->input; ?>
                             </div>
                         </div>
 						<?php
-						$i     = 1;
-						$count = count($this->form->getFieldset('params'));
-
-						foreach ($this->form->getFieldset('params') as $field)
+						if ($i == 11 || $count == $i)
 						{
-							if ($i == 1 || $i == 12)
-							{
-								?>
-                                <div class="span5 pull-left">
-	                                <?php
-							}
 							?>
-
-                            <div class="control-group">
-                                <div class="control-label">
-									<?php echo $field->label; ?>
-                                </div>
-                                <div class="controls">
-									<?php echo $field->input; ?>
-                                </div>
-                            </div>
-							<?php
-							if ($i == 11 || $count == $i)
-							{
-								?>
                                 </div>
                                 <?php
-							}
-							$i++;
 						}
-						?>
-                    </div>
-					<?php if ($this->canDo->get('core.admin')): ?>
-                    <div class="tab-pane" id="permissions">
-						<?php echo $this->form->getInput('rules'); ?>
-                    </div>
-					<?php endif; ?>
+						$i++;
+					}
+					?>
                 </div>
-            </fieldset>
+				<?php if ($this->canDo->get('core.admin')): ?>
+                <div class="tab-pane" id="permissions">
+					<?php echo $this->form->getInput('rules'); ?>
+                </div>
+				<?php endif; ?>
+            </div>
             <input type="hidden" name="task" value=""/>
 			<?php echo JHtml::_('form.token'); ?>
         </div>
 
         <!-- Begin Sidebar -->
-        <div class="span2">
+        <div class="span2 form-vertical">
             <h4><?php echo JText::_('JDETAILS');?></h4>
             <hr/>
-            <fieldset class="form-vertical">
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('id'); ?>
-                    </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('id'); ?>
                 </div>
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('published'); ?>
-                    </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('id'); ?>
                 </div>
-            </fieldset>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+					<?php echo $this->form->getLabel('published'); ?>
+                </div>
+                <div class="controls">
+					<?php echo $this->form->getInput('published'); ?>
+                </div>
+            </div>
         </div>
         <!-- End Sidebar -->
     </div>

@@ -257,57 +257,54 @@ $sortFields = $this->getSortFields();
 					$item->studytitle
 				) : 'ID: ' . $this->escape($item->id)); ?>
 				<?php endif; ?>
-                <div class="pull-left">
-					<?php
-					if (BIBLESTUDY_CHECKREL)
-					{
-						// Create dropdown items
-						JHtml::_('dropdown.edit', $item->id, 'message.');
-						JHtml::_('dropdown.divider');
-
-						if ($item->published)
-						{
-							JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
-						}
-						else
-						{
-							JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
-						}
-
-						JHtml::_('dropdown.divider');
-
-						if ($archived)
-						{
-							JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
-						}
-						else
-						{
-							JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
-						}
-
-						if ($trashed)
-						{
-							JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
-						}
-						else
-						{
-							JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
-						}
-
-						// Render dropdown list
-						echo JHtml::_('dropdown.render');
-					}
-					?>
-                </div>
 				<?php if ($item->alias) : ?>
                 <p class="smallsub">
 					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
 				<?php endif; ?>
             </div>
+            <div class="pull-left">
+		        <?php
+		        if (BIBLESTUDY_CHECKREL)
+		        {
+			        // Create dropdown items
+			        JHtml::_('dropdown.edit', $item->id, 'message.');
+			        JHtml::_('dropdown.divider');
 
+			        if ($item->published)
+			        {
+				        JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
+			        }
+			        else
+			        {
+				        JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
+			        }
+
+			        JHtml::_('dropdown.divider');
+
+			        if ($archived)
+			        {
+				        JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
+			        }
+			        else
+			        {
+				        JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
+			        }
+
+			        if ($trashed)
+			        {
+				        JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
+			        }
+			        else
+			        {
+				        JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
+			        }
+
+			        // Render dropdown list
+			        echo JHtml::_('dropdown.render');
+		        }
+		        ?>
+            </div>
         </td>
-
-
         <td class="nowrap hidden-phone hidden-tablet">
 			<?php
 			if ($item->chapter_begin != 0 && $item->verse_begin != 0)
