@@ -50,7 +50,7 @@ $input = $app->input;
       method="post" name="adminForm" id="item-form" class="form-validate">
 <div class="row-fluid">
 <!-- Begin Content -->
-<div class="span10 form-horizontal">
+<div class="span12 form-horizontal">
 <ul class="nav nav-tabs">
     <li class="active"><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
     <li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
@@ -72,139 +72,103 @@ $input = $app->input;
 
 <!-- Begin Tabs -->
 <div class="tab-pane active" id="admin">
-    <div class="row-fluid">
-        <h4><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h4>
+    <h4><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h4>
 
-        <div class="control-group">
-			<?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
-            </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
         </div>
-        <div class="control-group">
-            <label style="max-width: 100%; padding: 0 5px 0 0;">
-                <!--suppress HtmlUnknownTarget -->
-                <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
-					<?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
-                </a>
-            </label>
+    </div>
+    <div class="control-group">
+        <label style="max-width: 100%; padding: 0 5px 0 0;">
+            <!--suppress HtmlUnknownTarget -->
+            <a href="index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate">
+				<?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
+            </a>
+        </label>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('metakey', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('metakey', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('metakey', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('metakey', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('metadesc', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('metadesc', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('metadesc', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('metadesc', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('compat_mode', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('compat_mode', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('compat_mode', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('compat_mode', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('drop_tables'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('drop_tables'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('drop_tables'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('drop_tables'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('studylistlimit', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('studylistlimit', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('uploadtype', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('uploadtype', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('uploadtype', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('uploadtype', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('show_location_media', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('show_location_media', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('show_location_media', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('show_location_media', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('popular_limit', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('popular_limit', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('popular_limit', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('popular_limit', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('character_filter', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('character_filter', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('character_filter', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('character_filter', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('format_popular', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('format_popular', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('format_popular', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('format_popular', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('socialnetworking', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('socialnetworking', 'params'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('sharetype', 'params'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('sharetype', 'params'); ?>
         </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('sharetype', 'params'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('sharetype', 'params'); ?>
-            </div>
-        </div>
-        <div class="control-group">
-			<?php echo $this->form->getLabel('debug'); ?>
-            <div class="controls">
-				<?php echo $this->form->getInput('debug'); ?>
-            </div>
+    </div>
+    <div class="control-group">
+		<?php echo $this->form->getLabel('debug'); ?>
+        <div class="controls">
+			<?php echo $this->form->getInput('debug'); ?>
         </div>
     </div>
 </div>
 <div class="tab-pane" id="defaults">
     <div class="row-fluid">
-        <div class="span6">
-            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
-
-            <div class="control-group">
-				<?php echo $this->form->getLabel('default_main_image', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('default_main_image', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('default_series_image', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('default_series_image', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('default_teacher_image', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('default_teacher_image', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('default_download_image', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('default_download_image', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('default_showHide_image', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('default_showHide_image', 'params'); ?>
-                </div>
-            </div>
-        </div>
         <div class="span6">
             <h4><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h4>
 
@@ -285,61 +249,93 @@ $input = $app->input;
                 </div>
             </div>
         </div>
+        <div>
+            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
+
+            <div class="control-group">
+				<?php echo $this->form->getLabel('default_main_image', 'params'); ?>
+                <div class="controls">
+					<?php echo $this->form->getInput('default_main_image', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+				<?php echo $this->form->getLabel('default_series_image', 'params'); ?>
+                <div class="controls">
+					<?php echo $this->form->getInput('default_series_image', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+				<?php echo $this->form->getLabel('default_teacher_image', 'params'); ?>
+                <div class="controls">
+					<?php echo $this->form->getInput('default_teacher_image', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+				<?php echo $this->form->getLabel('default_download_image', 'params'); ?>
+                <div class="controls">
+					<?php echo $this->form->getInput('default_download_image', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+				<?php echo $this->form->getLabel('default_showHide_image', 'params'); ?>
+                <div class="controls">
+					<?php echo $this->form->getInput('default_showHide_image', 'params'); ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="tab-pane" id="playersettings">
-    <div class="row-fluid">
-        <div class="span6">
-            <h4><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></h4>
+    <div class="span6">
+        <h4><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></h4>
 
-            <div class="control-group">
-				<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
+        <div class="control-group">
+			<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
 
-                <div class="controls">
-					<?php echo $this->playerstats; ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('from', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('from', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('to', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('to', 'params'); ?>
-                </div>
-            </div>
-            <div class="control-group">
-                <input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/>
+            <div class="controls">
+				<?php echo $this->playerstats; ?>
             </div>
         </div>
-        <div class="span6">
-            <h4><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></h4>
+        <div class="control-group">
+			<?php echo $this->form->getLabel('from', 'params'); ?>
+            <div class="controls">
+				<?php echo $this->form->getInput('from', 'params'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+			<?php echo $this->form->getLabel('to', 'params'); ?>
+            <div class="controls">
+				<?php echo $this->form->getInput('to', 'params'); ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/>
+        </div>
+    </div>
+    <div class="span6">
+        <h4><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></h4>
 
-            <div class="control-group">
-				<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
+        <div class="control-group">
+			<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
 
-                <div class="controls">
-					<?php echo $this->popups; ?>
-                </div>
+            <div class="controls">
+				<?php echo $this->popups; ?>
             </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('pFrom', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('pFrom', 'params'); ?>
-                </div>
+        </div>
+        <div class="control-group">
+			<?php echo $this->form->getLabel('pFrom', 'params'); ?>
+            <div class="controls">
+				<?php echo $this->form->getInput('pFrom', 'params'); ?>
             </div>
-            <div class="control-group">
-				<?php echo $this->form->getLabel('pTo', 'params'); ?>
-                <div class="controls">
-					<?php echo $this->form->getInput('pTo', 'params'); ?>
-                </div>
+        </div>
+        <div class="control-group">
+			<?php echo $this->form->getLabel('pTo', 'params'); ?>
+            <div class="controls">
+				<?php echo $this->form->getInput('pTo', 'params'); ?>
             </div>
-            <div class="control-group">
-                <input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
-            </div>
+        </div>
+        <div class="control-group">
+            <input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
         </div>
     </div>
 </div>
@@ -361,12 +357,10 @@ $input = $app->input;
 	<?php echo $this->loadTemplate('database'); ?>
 </div>
 <div class="tab-pane" id="convert">
-    <div class="row-fluid">
-        <h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
+    <h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
 
-        <div> <?php echo $this->ss; ?> </div>
-        <div> <?php echo $this->pi; ?> </div>
-    </div>
+    <div> <?php echo $this->ss; ?> </div>
+    <div> <?php echo $this->pi; ?> </div>
 </div>
 </div>
 </div>
