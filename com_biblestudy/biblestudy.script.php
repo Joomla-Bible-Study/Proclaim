@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No Direct Access
+
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -17,7 +17,6 @@ jimport('joomla.filesystem.file');
  */
 class Com_BiblestudyInstallerScript
 {
-
 
 	/**
 	 * The release value to be displayed and check against throughout this file.
@@ -32,7 +31,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_joomla_release = '2.5.0';
+	private $_minimum_joomla_release = '2.5.3';
 
 	/**
 	 * The component's name
@@ -103,7 +102,7 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		// Only allow to install on Joomla! 2.5.0 or later
+		// Only allow to install on Joomla! 2.5.3 or later
 		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
 	}
 
@@ -155,10 +154,10 @@ class Com_BiblestudyInstallerScript
 	public function uninstall($parent)
 	{
 
-        $db = JFactory::getDBO();
-        $query = 'SELECT * FROM #__bsms_admin WHERE id = 1';
-        $db->setQuery($query);
-        $adminsettings = $db->loadObject();
+		$db    = JFactory::getDBO();
+		$query = 'SELECT * FROM #__bsms_admin WHERE id = 1';
+		$db->setQuery($query);
+		$adminsettings = $db->loadObject();
 
 		$drop_tables = $adminsettings->drop_tables;
 
@@ -198,7 +197,7 @@ class Com_BiblestudyInstallerScript
 		}
 		else
 		{
-			$drop_result = '<H3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</H3>';
+			$drop_result = '<h3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
 		}
 		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
 	}
@@ -729,6 +728,5 @@ class Com_BiblestudyInstallerScript
 		}
 	}
 
-  
 
 }
