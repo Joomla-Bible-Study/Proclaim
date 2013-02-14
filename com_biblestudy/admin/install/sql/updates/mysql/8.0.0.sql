@@ -10,7 +10,6 @@ ALTER TABLE  `#__bsms_series` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_message_type` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_folders` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_order` ENGINE = INNODB;
-ALTER TABLE  `#__bsms_search` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_media` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_books` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_podcast` ENGINE = INNODB;
@@ -27,6 +26,7 @@ ALTER TABLE  `#__bsms_timeset` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_styles` ENGINE = INNODB;
 ALTER TABLE  `#__bsms_update` ENGINE = INNODB;
 
---adding fields to podcast
+
+
 ALTER TABLE `#__bsms_podcast` ADD `episodesubtitle` int(11) DEFAULT NULL;
 ALTER TABLE `#__bsms_podcast` ADD `customsubtitle` varchar(200) DEFAULT NULL;

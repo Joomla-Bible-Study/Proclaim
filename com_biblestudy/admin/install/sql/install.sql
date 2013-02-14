@@ -280,19 +280,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#__bsms_search`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_search` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `value` varchar(15) DEFAULT '',
-  `text` varchar(15) DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `#__bsms_series`
 --
 
