@@ -76,13 +76,12 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 */
 	public function run()
 	{
-		$id = JFactory::getApplication()->input->getInt('id');
-
 		$model = $this->getModel('migration');
-		$state = $model->run(true, $id);
-		$model->setState('scanstate', $state);
+		//$state = $model->run(true);
+		var_dump($model->getState('scanstate'));
+		//$model->setState('scanstate', $state);
 
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&task=admin.edit&id=1', false));
+		//$this->display(false);
 	}
 
 	/**
@@ -98,6 +97,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	public function display($cachable = false, $urlparams = array())
 	{
 
+		$model = $this->getModel('migration');
 		$input = new JInput;
 		$input->set('view', 'admin');
 		$app = JFactory::getApplication();
@@ -131,20 +131,19 @@ class BiblestudyControllerMigration extends JControllerLegacy
 
 		if ($task == 'migrate' && $run == 1 && !$oldprefix)
 		{
-
-			$migrate   = new JBSMigrate;
-			$migration = $migrate->migrate();
+			//$this->run();
+			$migration = '';
 
 			if ($migration)
 			{
-				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '', 'message');
-				$input->set('migrationdone', '1');
+				//$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '', 'message');
+				//$input->set('migrationdone', '1');
 
 				// --$input->set('jbsmessages', $jbsmessages);
 			}
 			else
 			{
-				$app->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'warning');
+				//$app->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'warning');
 			}
 		}
 
@@ -218,15 +217,17 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		}
 		if ($result || $copysuccess)
 		{
-			$migrate   = new JBSMigrate;
-			$migration = $migrate->migrate();
+			$this->run();
+			$model = $this->getModel('migration');
+			$migration = $model->getState('scanstate');
 
 			if ($migration)
 			{
 				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 
 				// Final step is to fix assets
-				$this->fixAssets();
+				$assets = new FixJBSAssets;
+				$assets->fixAssets();
 				$installer = new Com_BiblestudyInstallerScript;
 				$installer->deleteUnexistingFiles();
 				$installer->fixMenus();
@@ -245,7 +246,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 				$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 			}
 		}
-		$this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
+		//$this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
 	}
 
 	/**
