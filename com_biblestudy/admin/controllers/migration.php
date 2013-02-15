@@ -13,7 +13,6 @@ jimport('joomla.html.parameter');
 // todo: need to finish the Jloader
 include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.restore.php';
 include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php';
-include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.migrate.php';
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
@@ -293,19 +292,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 				}
 			}
 		}
-
-		return true;
-	}
-
-	/**
-	 * Fix Assets Table
-	 *
-	 * @return boolean
-	 */
-	public function fixAssets()
-	{
-		$asset = new fixJBSAssets;
-		$asset->fixAssets();
 
 		return true;
 	}

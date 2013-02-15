@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class Updatejbs701
+class JBS701Update
 {
 
 	/**
@@ -28,7 +28,6 @@ class Updatejbs701
 		$db = JFactory::getDBO();
 
 		// Modify table topics
-		// FIXME Tom (I didn't write this one, what is wrong here?)
 		$tables      = $db->getTableFields('#__bsms_topics');
 		$languagetag = 0;
 		$paramstag   = 0;

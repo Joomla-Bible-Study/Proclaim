@@ -15,41 +15,11 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    8.0.0
  */
-class BiblestudyViewMessagetypes extends JViewLegacy
+class BiblestudyViewMigration extends JViewLegacy
 {
+	protected $more;
 
-	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
-	 * @var object
-	 */
-	protected $canDo;
-
-	/**
-	 * @var array
-	 */
-	public $f_levels;
-
-	public $sidebar;
+	protected $percentage;
 
 	/**
 	 * Execute and display a template script.
@@ -63,36 +33,49 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'migration');
+		$model = $this->getModel();
+		$state = $model->getState('scanstate', false);
 
-		// Check for errors
-		if (count($errors = $this->get('Errors')))
+		$total = max(1, $model->totalVersions);
+		$done  = $model->doneVersions;
+
+		if ($state)
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+			if ($total > 0)
+			{
+				$percent = min(max(round(100 * $done / $total), 1), 100);
+			}
 
-			return false;
+			$more = true;
+		}
+		else
+		{
+			$percent = 100;
+			$more    = false;
 		}
 
-		// Set the document
-		$this->setDocument();
+		$this->more = & $more;
+		$this->setLayout('default');
 
-		// Display the template
-		return parent::display($tpl);
-	}
+		if (version_compare(JVERSION, '3.0', 'ge'))
+		{
+			JHTML::_('behavior.framework');
+		}
+		else
+		{
+			JHTML::_('behavior.mootools');
+		}
 
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @since    7.1.0
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_MESSAGE_TYPES'));
+		$this->percentage = & $percent;
+
+		if ($more)
+		{
+			$script = "window.addEvent( 'domready' ,  function() {\n";
+			$script .= "document.forms.adminForm.submit();\n";
+			$script .= "});\n";
+			JFactory::getDocument()->addScriptDeclaration($script);
+		}
+
+		parent::display();
 	}
 }
