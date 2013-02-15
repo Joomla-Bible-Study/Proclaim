@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 <div style="background-color: #900; color: #fff; font-size: large;">
     <h1>MySQL errors during installation</h1>
 
-    <p>The Akeeba Backup installation script detected MySQL error which will
+    <p>The installation script detected MySQL error which will
         prevent the component from working properly. We suggest uninstalling
         any previous version of Akeeba Backup and trying a clean installation.
     </p>
@@ -30,10 +30,15 @@ defined('_JEXEC') or die;
 </div>
 <?php endif; ?>
 
-<h1><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $this->jbstype . '_TEXT'); ?></h1>
+<h1> 
+    <img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
+    <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $this->jbstype . '_TEXT'); ?>
+</h1>
 
 <?php $rows = 0; ?>
-<table class="adminlist">
+ <div class="clearfix"></div>
+
+    <table class="table table-striped adminlist" id="install">
     <thead>
     <tr>
         <th class="title" colspan="2">Extension</th>
@@ -82,45 +87,39 @@ defined('_JEXEC') or die;
         </tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
+        </tbody>
+</table>
+<table class="table table-striped adminlist" id="install">
+    <tbody>
+        <tr>
+        <td >
+
+            <a href="index.php?option=com_biblestudy">
+                <img src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" />
+
+                <h3 style="text-align: left;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
+            </a>
+        
+        </td>
+
+        </tr>
+       
+        <tr><td>
+          <p><a href="http://www.joomlabiblestudy.org/forum.html"
+              target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
+        
+        <p><a href="http://www.joomlabiblestudy.org"
+              target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
+        
+            <p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
+              target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
+        
+        <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>
+            All rights reserved.</p>
+        
+        </td>
+        </tr>
     </tbody>
 </table>
 
-<fieldset class="jbs_install_footer">
-    <div class="width-65 fltlft">
-        <img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
 
-        <p>
-			<?php echo JText::_('JBS_INS_STATEMENT1'); ?>
-        </p>
-
-        <p>
-			<?php echo JText::_('JBS_INS_STATEMENT2'); ?>
-        </p>
-
-        <p>
-			<?php echo JText::_('JBS_INS_STATEMENT3'); ?>
-        </p>
-
-        <p><a href="http://www.joomlabiblestudy.org/forum.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-
-        <p><a href="http://www.joomlabiblestudy.org"
-              target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-
-        <p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-
-        <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>
-            All rights reserved.</p>
-    </div>
-    <div class="width-35 fltrt">
-        <div class="finishbutton" onmouseover="this.className='finishbutton1'"
-             onmouseout="this.className='finishbutton'">
-            <a href="index.php?option=com_biblestudy">
-                <img src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" class="imgcenter"/>
-
-                <h3 style="text-align: center;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
-            </a>
-        </div>
-    </div>
-</fieldset>
