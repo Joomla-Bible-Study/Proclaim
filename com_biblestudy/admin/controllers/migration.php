@@ -68,21 +68,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	}
 
 	/**
-	 * Start the Update
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$model = $this->getModel('migration');
-		//$state = $model->run(true);
-		var_dump($model->getState('scanstate'));
-		//$model->setState('scanstate', $state);
-
-		//$this->display(false);
-	}
-
-	/**
 	 * Import function from the backup page
 	 *
 	 * @return void
@@ -144,9 +129,12 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		}
 		if ($result || $copysuccess)
 		{
+			die('start run');
 			$model = $this->getModel('migration');
 			$state = $model->run(true);
 			$model->setState('scanstate', $state);
+
+			$this->display(false);
 
 			if ($state)
 			{
@@ -161,7 +149,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 				$installer->fixImagePaths();
 				$installer->fixemptyaccess();
 				$installer->fixemptylanguage();
-				$input->set('migrationdone', '1');
 			}
 			elseif (!$copysuccess)
 			{
@@ -173,7 +160,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 				$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 			}
 		}
-		//$this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
 	}
 
 	/**

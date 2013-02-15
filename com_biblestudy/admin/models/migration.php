@@ -148,7 +148,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 		$stack = json_decode($stack, true);
 
-		$this->_versionStack = $stack['members'];
+		$this->_versionStack = $stack['version'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
 	}
