@@ -22,8 +22,6 @@ JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.ph
  *
  * @package  BibleStudy.Admin
  * @since    7.1.0
- *
- * @todo     need to redo to us progress bare system.
  */
 class BiblestudyControllerMigration extends JControllerLegacy
 {
@@ -82,77 +80,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		//$model->setState('scanstate', $state);
 
 		//$this->display(false);
-	}
-
-	/**
-	 * Method to display the view
-	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-	 *
-	 * @return mixed
-	 *
-	 * @access    public
-	 */
-	public function display($cachable = false, $urlparams = array())
-	{
-
-		$model = $this->getModel('migration');
-		$input = new JInput;
-		$input->set('view', 'admin');
-		$app = JFactory::getApplication();
-		$input->set('migrationdone', '0');
-		$task      = $input->get('task');
-		$oldprefix = $input->get('oldprefix', '');
-		$run       = $input->get('run', 0, 'int');
-
-		if ($task == 'export' && ($run == 1 || $run == 2))
-		{
-			$export = new JBSExport;
-
-			if (!$result = $export->exportdb($run))
-			{
-				$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-			}
-			elseif ($run == 2)
-			{
-				if (!$result)
-				{
-					$msg = $result;
-				}
-				else
-				{
-					$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-				}
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-			}
-		}
-
-		if ($task == 'migrate' && $run == 1 && !$oldprefix)
-		{
-			//$this->run();
-			$migration = '';
-
-			if ($migration)
-			{
-				//$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '', 'message');
-				//$input->set('migrationdone', '1');
-
-				// --$input->set('jbsmessages', $jbsmessages);
-			}
-			else
-			{
-				//$app->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'warning');
-			}
-		}
-
-		if ($task == 'import')
-		{
-			$this->import();
-		}
-
-		return parent::display();
 	}
 
 	/**
@@ -217,11 +144,11 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		}
 		if ($result || $copysuccess)
 		{
-			$this->run();
 			$model = $this->getModel('migration');
-			$migration = $model->getState('scanstate');
+			$state = $model->run(true);
+			$model->setState('scanstate', $state);
 
-			if ($migration)
+			if ($state)
 			{
 				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 

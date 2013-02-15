@@ -406,7 +406,6 @@ class BibleStudyModelMigration extends JModelLegacy
 				{
 					case '7.0.1':
 						$this->_versionStack = array('allupdate', 'update710');
-						$this->totalVersions = 2;
 						break;
 					case '7.0.1.1':
 						$this->_versionStack = array('allupdate', 'update710');
