@@ -58,25 +58,17 @@ defined('_JEXEC') or die;
             </tr>
             <tr>
                 <td>
-                <td>
-                <td>
                     <input type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
-                </td>
-                </td>
                 </td>
             </tr>
             <tr>
-                <td>
-                <td>
-                <td>
+                <td colspan="3">
 					<?php echo JText::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
 					<?php echo JText::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
                 </td>
-                </td>
-                </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="3">
 					<?php
 					$ver = JVERSION;
 					echo '<tr><td colspan="2"><strong> ' . JText::_('JBS_IBM_CURRENT_JOOMLA_VERSION') . ': </strong>' . $ver . '</td></tr>';
