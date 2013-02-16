@@ -253,7 +253,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		$versiontype    = '';
 		$currentversion = false;
 		$oldversion     = false;
-		$jbsexists      = false;
 
 		// Check to see if version is newer then 7.0.2
 		foreach ($tables as $table)
@@ -511,8 +510,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			$this->totalVersions = count($this->_versionStack);
 		}
-		var_dump($this->_versionStack);
-		var_dump($this->totalVersions);
 
 		return true;
 	}

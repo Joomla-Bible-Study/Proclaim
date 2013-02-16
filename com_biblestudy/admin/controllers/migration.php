@@ -57,25 +57,9 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 */
 	public function browse()
 	{
+		$app   = JFactory::getApplication();
 		$model = $this->getModel('migration');
 		$state = $model->startScanning();
-		$model->setState('scanstate', $state);
-
-		$this->display(false);
-	}
-
-	/**
-	 * Run Function
-	 *
-	 * @return void
-	 *
-	 * @since 8.0.0
-	 */
-	public function run()
-	{
-		$app = JFactory::getApplication();
-		$model = $this->getModel('migration');
-		$state = $model->run(true);
 		$model->setState('scanstate', $state);
 
 		if ($app->input->get('jbsimport', 0))
@@ -97,6 +81,22 @@ class BiblestudyControllerMigration extends JControllerLegacy
 			JBSMDbHelper::resetdb();
 			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 		}
+
+		$this->display(false);
+	}
+
+	/**
+	 * Run Function
+	 *
+	 * @return void
+	 *
+	 * @since 8.0.0
+	 */
+	public function run()
+	{
+		$model = $this->getModel('migration');
+		$state = $model->run(true);
+		$model->setState('scanstate', $state);
 
 		$this->display(false);
 	}
