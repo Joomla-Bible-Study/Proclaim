@@ -11,6 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSRestore', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.restore.php');
 JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
 JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');
@@ -297,6 +298,104 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$update = $alias->updateAlias();
 		$this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
+	}
+
+	/**
+	 * Do the import
+	 *
+	 * @param   boolean  $parent     Source of info
+	 * @param   boolean  $cachable   ?
+	 * @param   boolean  $urlparams  Description
+	 *
+	 * @return void
+	 */
+	public function doimport($parent = true, $cachable = false, $urlparams = false)
+	{
+		$copysuccess = false;
+		$result      = null;
+		$model       = $this->getModel('migration');
+
+		// This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
+		$app   = JFactory::getApplication();
+		$input = new JInput;
+		$input->set('view', $input->get('view', 'admin', 'cmd'));
+
+		// Add commands to move tables from old prefix to new
+		$oldprefix = $input->get('oldprefix', '', 'string');
+
+		if ($oldprefix)
+		{
+			if ($this->copyTables($oldprefix))
+			{
+				$copysuccess = 1;
+			}
+			else
+			{
+				$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
+				$copysuccess = false;
+			}
+		}
+		else
+		{
+			$import = new JBSRestore;
+			$result = $import->importdb($parent);
+		}
+		if ($result || $copysuccess)
+		{
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1');
+		}
+		else
+		{
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=0');
+		}
+	}
+
+	/**
+	 * Copy Old Tables to new Joomla! Tables
+	 *
+	 * @param   string  $oldprefix  ?
+	 *
+	 * @return boolean
+	 */
+	public function copyTables($oldprefix)
+	{
+		// Create table tablename_new like tablename; -> this will copy the structure...
+		// Insert into tablename_new select * from tablename; -> this would copy all the data
+		$db     = JFactory::getDBO();
+		$tables = $db->getTableList();
+		$prefix = $db->getPrefix();
+
+		foreach ($tables as $table)
+		{
+			$isjbs = substr_count($table, $oldprefix . 'bsms');
+
+			if ($isjbs)
+			{
+				$oldlength       = strlen($oldprefix);
+				$newsubtablename = substr($table, $oldlength);
+				$newtablename    = $prefix . $newsubtablename;
+				$query           = 'DROP TABLE IF EXISTS ' . $newtablename;
+
+				if (!JBSMDbHelper::performdb($query))
+				{
+					return false;
+				}
+				$query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
+
+				if (!JBSMDbHelper::performdb($query))
+				{
+					return false;
+				}
+				$query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
+
+				if (!JBSMDbHelper::performdb($query))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 }

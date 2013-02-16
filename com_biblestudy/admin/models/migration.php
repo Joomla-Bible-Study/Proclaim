@@ -7,11 +7,7 @@
  * */
 // No direct access
 defined('_JEXEC') or die;
-jimport('joomla.html.parameter');
 
-// todo: need to finish the Jloader
-include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.restore.php';
-include_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.backup.php';
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
@@ -185,7 +181,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 *  Run the Migration will there is time.
 	 *
-	 * @param   bool   $resetTimer  If the time must be reset
+	 * @param   bool  $resetTimer  If the time must be reset
 	 *
 	 * @return bool
 	 */
@@ -515,6 +511,8 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			$this->totalVersions = count($this->_versionStack);
 		}
+		var_dump($this->_versionStack);
+		var_dump($this->totalVersions);
 
 		return true;
 	}
@@ -522,13 +520,22 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * System to Update based on versions
 	 *
-	 * @param $version string Version to update
+	 * @param   string  $version  Version to update
 	 *
 	 * @return boolean
 	 */
 	private function doVersionUpdate($version)
 	{
-		return $this->$version;
+		if (call_user_func($version . '()'))
+		{
+			return true;
+		}
+		else
+		{
+			JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
+		}
+
+		return false;
 	}
 
 	/**

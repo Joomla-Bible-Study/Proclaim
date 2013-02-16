@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * @since      7.1.0
  * */
-// No Direct Access
+
 defined('_JEXEC') or die;
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" enctype="multipart/form-data"
@@ -78,8 +78,8 @@ defined('_JEXEC') or die;
         </table>
     </div>
     <input type="hidden" name="option" value="com_biblestudy"/>
-    <input type="hidden" name="task" value="migration.doimport"/>
-    <input type="hidden" name="controller" value="migration"/>
+    <input type="hidden" name="task" value="admin.doimport"/>
+    <input type="hidden" name="controller" value="admin"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>
 

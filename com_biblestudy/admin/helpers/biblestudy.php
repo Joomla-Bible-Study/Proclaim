@@ -393,7 +393,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function debug()
 	{
-		include_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php';
+		include_once BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php';
 		$admin_params = JBSMParams::getAdmin();
 
 		return $admin_params->debug;

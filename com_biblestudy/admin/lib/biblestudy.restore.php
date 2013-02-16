@@ -7,6 +7,7 @@
  * */
 defined('_JEXEC') or die;
 
+JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 /**
  * Restore class
  *
@@ -14,7 +15,7 @@ defined('_JEXEC') or die;
  * @since    7.0.4
  * @todo     Rename Class to be better suted for restore
  */
-class JBSImport
+class JBSRestore
 {
 
 	/**
@@ -73,13 +74,12 @@ class JBSImport
 			}
 			if (($perent !== true) && $result)
 			{
-				require_once BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php';
 				$fix = new fixJBSAssets;
 				$fix->fixassets();
 			}
 		}
 
-		// To do: delete uploaded files or have a option to do this??
+		// Todo: delete uploaded files or have a option to do this??
 		return $result;
 	}
 
