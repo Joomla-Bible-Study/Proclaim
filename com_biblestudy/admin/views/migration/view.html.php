@@ -38,6 +38,7 @@ class BiblestudyViewMigration extends JViewLegacy
 
 		$total = max(1, $model->totalVersions);
 		$done  = $model->doneVersions;
+		$this->callstack = $model->callstack;
 
 		if ($state)
 		{

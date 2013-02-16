@@ -23,6 +23,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <?php else: ?>
 <h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
+<h3><?php var_dump($this->callstack) ?></h3>
 
 
 <div class="progress progress-striped active">

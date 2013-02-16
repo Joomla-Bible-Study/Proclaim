@@ -12,7 +12,6 @@ jimport('joomla.html.parameter');
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
 
 /**
  * JBS Export Migration Controller
@@ -62,25 +61,25 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		$state = $model->startScanning();
 		$model->setState('scanstate', $state);
 
-		if ($app->input->get('jbsimport', 0))
-		{
-			$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
+		//if (0)
+		//{
+			//$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 
 			// Final step is to fix assets
-			$assets = new FixJBSAssets;
-			$assets->fixAssets();
-			$installer = new Com_BiblestudyInstallerScript;
-			$installer->deleteUnexistingFiles();
-			$installer->fixMenus();
-			$installer->fixImagePaths();
-			$installer->fixemptyaccess();
-			$installer->fixemptylanguage();
-		}
-		else
-		{
-			JBSMDbHelper::resetdb();
-			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
-		}
+			//$assets = new FixJBSAssets;
+			//$assets->fixAssets();
+			//$installer = new Com_BiblestudyInstallerScript;
+			//$installer->deleteUnexistingFiles();
+			//$installer->fixMenus();
+			//$installer->fixImagePaths();
+			//$installer->fixemptyaccess();
+			//$installer->fixemptylanguage();
+		//}
+		//else
+		//{
+			//JBSMDbHelper::resetdb();
+			//$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+		//}
 
 		$this->display(false);
 	}

@@ -10,7 +10,9 @@ defined('_JEXEC') or die;
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('fixJBSAssets', dirname(__FILE__) . '/lib/biblestudy.assets.php');
+JLoader::register('fixJBSAssets', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.assets.php');
+JLoader::register('MigrationUpgrade', JPATH_ADMINISTRATOR . '/components/com_biblestudy/migration/updateAll.php');
+
 
 /**
  * JBS Export Migration Controller
@@ -35,6 +37,9 @@ class BibleStudyModelMigration extends JModelLegacy
 
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
+
+	/** @var array Call stack fro the Visioning System. */
+	public $callstack = array();
 
 	/** @var string Version of BibleStudy */
 	private $_versionSwitch = null;
@@ -216,6 +221,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
+				ksort($this->_versionStack);
 				$version = array_pop($this->_versionStack);
 				$this->doneVersions++;
 				$this->doVersionUpdate($version);
@@ -382,6 +388,8 @@ class BibleStudyModelMigration extends JModelLegacy
 			}
 		}
 
+		$this->callstack['versionttype'] = $versiontype;
+
 		// Now we run a switch case on the VersionType and run an install routine accordingly
 		switch ($versiontype)
 		{
@@ -397,22 +405,24 @@ class BibleStudyModelMigration extends JModelLegacy
 				$version              = $updates->version;
 				$this->_versionSwitch = $version;
 
+				$this->callstack['subversiontype1_version'] = $version;
+
 				switch ($version)
 				{
 					case '7.0.1':
-						$this->_versionStack = array('allupdate', 'update710');
+						$this->_versionStack = array('allupdate', 'upgrade710');
 						break;
 					case '7.0.1.1':
-						$this->_versionStack = array('allupdate', 'update710');
+						$this->_versionStack = array('allupdate', 'upgrade710');
 						break;
 					case '7.0.2':
-						$this->_versionStack = array('allupdate', 'update710');
+						$this->_versionStack = array('allupdate', 'upgrade710');
 						break;
 					case '7.0.3':
-						$this->_versionStack = array('allupdate', 'update710');
+						$this->_versionStack = array('allupdate', 'upgrade710');
 						break;
 					case '7.0.4':
-						$this->_versionStack = array('allupdate', 'update710');
+						$this->_versionStack = array('allupdate', 'upgrade710');
 						break;
 				}
 				break;
@@ -426,30 +436,32 @@ class BibleStudyModelMigration extends JModelLegacy
 				$db->query();
 				$version = $db->loadObject();
 
+				$this->callstack['subversiontype2_version'] = $version->build;
+
 				switch ($version->build)
 				{
 					case '700':
-						$this->_versionStack = array('update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '624':
-						$this->_versionStack = array('update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '623':
-						$this->_versionStack = array('update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '622':
-						$this->_versionStack = array('update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '615':
-						$this->_versionStack = array('update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '614':
-						$this->_versionStack = array('update614', 'update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade614', 'upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case null:
@@ -475,6 +487,8 @@ class BibleStudyModelMigration extends JModelLegacy
 				$db->setQuery($query);
 				$schema = $db->loadResult();
 
+				$this->callstack['subversiontype3_version'] = $schema;
+
 				switch ($schema)
 				{
 					case '600':
@@ -484,20 +498,22 @@ class BibleStudyModelMigration extends JModelLegacy
 						break;
 
 					case '608':
-						$this->_versionStack = array('update611', 'update613', 'update614', 'update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade611', 'upgrade613', 'upgrade614', 'upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '611':
-						$this->_versionStack = array('update613', 'update614', 'update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade613', 'upgrade614', 'upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '613':
-						$this->_versionStack = array('update614', 'update622', 'update623', 'update700', 'update701', 'allupdate', 'update710');
+						$this->_versionStack = array('upgrade614', 'upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 				}
 				break;
 
 			case 4:
+
+				$this->callstack['subversiontype4_version'] = JText::_('JBS_IBM_VERSION_TOO_OLD');
 
 				// There is a version installed, but it is older than 6.0.8 and we can't upgrade it
 				$this->setState('scanerror', JText::_('JBS_IBM_VERSION_TOO_OLD'));
@@ -506,10 +522,11 @@ class BibleStudyModelMigration extends JModelLegacy
 				break;
 		}
 
-		if (!empty($this->_versionStack))
+		if (!empty($this->_versionStack) || $this->_versionStack == 0)
 		{
 			$this->totalVersions = count($this->_versionStack);
 		}
+		$this->_versionStack = array_reverse($this->_versionStack);
 
 		return true;
 	}
@@ -523,7 +540,9 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function doVersionUpdate($version)
 	{
-		if (call_user_func($version . '()'))
+		$migration = new MigrationUpgrade;
+
+		if (call_user_func_array(array($migration, $version), array()))
 		{
 			return true;
 		}
@@ -533,150 +552,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 
 		return false;
-	}
-
-	/**
-	 * Update for 6.1.1
-	 *
-	 * @return string
-	 */
-	private function update611()
-	{
-		JLoader::register('jbs611Install', dirname(__FILE__) . '/migration/biblestudy.611.upgrade.php');
-		$install = new jbs611Install;
-
-		if (!$install->upgrade611())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 6.1.3
-	 *
-	 * @return string
-	 */
-	private function update613()
-	{
-		JLoader::register('jbs613Install', dirname(__FILE__) . '/migration/biblestudy.613.upgrade.php');
-		$install = new jbs613Install;
-
-		if (!$install->upgrade613())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 6.1.4
-	 *
-	 * @return string
-	 */
-	private function update614()
-	{
-		JLoader::register('jbs614Install', dirname(__FILE__) . '/migration/biblestudy.614.upgrade.php');
-		$install = new jbs614Install;
-
-		if (!$install->upgrade614())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 6.2.2
-	 *
-	 * @return string
-	 */
-	private function update622()
-	{
-		JLoader::register('jbs622Install', dirname(__FILE__) . '/migration/biblestudy.622.upgrade.php');
-		$install = new jbs622Install;
-
-		if (!$install->upgrade622())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 6.2.3
-	 *
-	 * @return string
-	 */
-	private function update623()
-	{
-		JLoader::register('jbs623Install', dirname(__FILE__) . '/migration/biblestudy.623.upgrade.php');
-		$install = new jbs623Install;
-
-		if (!$install->upgrade623())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 7.0.0
-	 *
-	 * @return string
-	 */
-	private function update700()
-	{
-		JLoader::register('jbs700Install', dirname(__FILE__) . '/migration/biblestudy.700.upgrade.php');
-		$install = new jbs700Install;
-
-		if (!$install->upgrade700())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 7.0.1
-	 *
-	 * @return string
-	 */
-	private function update701()
-	{
-		JLoader::register('JBS701Update', dirname(__FILE__) . '/install/updates/update701.php');
-		$install = new JBS701Update;
-
-		if (!$install->do701update())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update for 7.1.0
-	 *
-	 * @return string|boolean
-	 */
-	private function update710()
-	{
-		JLoader::register('JBS710Update', dirname(__FILE__) . '/install/updates/update710.php');
-		$migrate = new JBS710Update;
-
-		if (!$migrate->update710())
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -715,172 +590,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 
 		return true;
-	}
-
-	/**
-	 * Function to do updates after 7.0.2
-	 *
-	 * @return array
-	 *
-	 * @since 7.0.4
-	 */
-	public function AllUpdate()
-	{
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/mysql';
-
-		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
-		usort($files, 'version_compare');
-
-		/* Finde Extension ID of component */
-		$query = $db->getQuery(true);
-		$query
-			->select('extension_id')
-			->from('#__extensions')
-			->where('`name` = "com_biblestudy"');
-		$db->setQuery($query);
-		$eid = $db->loadResult();
-
-		foreach ($files as $i => $value)
-		{
-
-			/* Find Last updated Version in Update table */
-			$query = $db->getQuery(true);
-			$query
-				->select('version')
-				->from('#__bsms_update');
-			$db->setQuery($query);
-			$updates = $db->loadResult();
-			$update  = end($updates);
-
-			if ($update)
-			{
-				/* Set new Schema Version */
-				$this->setSchemaVersion($update, $eid);
-			}
-			else
-			{
-				$value = '7.0.0';
-			}
-
-			if (version_compare($value, $update) <= 0)
-			{
-				unset($files[$i]);
-			}
-			elseif ($files)
-			{
-				// Get file contents
-				$buffer = file_get_contents($path . '/' . $value . '.sql');
-
-				// Graceful exit and rollback if read not successful
-				if ($buffer === false)
-				{
-					$app->enqueueMessage(JText::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
-
-					return false;
-				}
-
-				// Create an array of queries from the sql file
-				$queries = $db->splitSql($buffer);
-
-				if (count($queries) == 0)
-				{
-					// No queries to process
-					return 0;
-				}
-
-				// Process each query in the $queries array (split out of sql file).
-				foreach ($queries as $query)
-				{
-					$query = trim($query);
-
-					if ($query != '' && $query{0} != '#')
-					{
-						$db->setQuery($query);
-
-						if (!$db->execute())
-						{
-							$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-
-							return false;
-						}
-					}
-				}
-			}
-			else
-			{
-				$app->enqueueMessage(JText::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
-
-				return false;
-			}
-			/* Find Last updated Version in Update table */
-			$query = $db->getQuery(true);
-			$query
-				->select('version')
-				->from('#__bsms_update');
-			$db->setQuery($query);
-			$updates = $db->loadResult();
-			$update  = end($updates);
-
-			if ($update)
-			{
-				/* Set new Schema Version */
-				$this->setSchemaVersion($update, $eid);
-			}
-			else
-			{
-				$app->enqueueMessage('no update table', 'error');
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Set the schema version for an extension by looking at its latest update
-	 *
-	 * @param   string   $version  Version number
-	 * @param   integer  $eid      Extension ID
-	 *
-	 * @return  void
-	 *
-	 * @since   7.1.0
-	 */
-	public function setSchemaVersion($version, $eid)
-	{
-		$app = JFactory::getApplication();
-		if ($version && $eid)
-		{
-			$db = JFactory::getDBO();
-
-			// Update the database
-			$query = $db->getQuery(true);
-			$query
-				->delete()
-				->from('#__schemas')
-				->where('extension_id = ' . $eid);
-			$db->setQuery($query);
-
-			if ($db->execute())
-			{
-				$query->clear();
-				$query->insert($db->quoteName('#__schemas'));
-				$query->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')));
-				$query->values($eid . ', ' . $db->quote($version));
-				$db->setQuery($query);
-				$db->execute();
-			}
-			else
-			{
-				$app->enqueueMessage('Could not locate extension id in schemas table');
-			}
-		}
-		$app->enqueueMessage('No Version and eid');
 	}
 
 }
