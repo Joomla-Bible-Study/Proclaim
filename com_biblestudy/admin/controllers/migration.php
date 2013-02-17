@@ -61,7 +61,14 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		$state = $model->startScanning();
 		$model->setState('scanstate', $state);
 
-		//if (0)
+		if(!$app->input->get('jbsimport', 0)){
+			JBSMDbHelper::resetdb();
+			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+		}
+		else{
+			$app->enqueueMessage('good migration', 'error');
+		}
+		//if ()
 		//{
 			//$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 
@@ -94,7 +101,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	public function run()
 	{
 		$model = $this->getModel('migration');
-		$state = $model->run(true);
+		$state = $model->run();
 		$model->setState('scanstate', $state);
 
 		$this->display(false);

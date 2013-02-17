@@ -313,7 +313,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$copysuccess = false;
 		$result      = null;
-		$model       = $this->getModel('migration');
 
 		// This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
 		$app   = JFactory::getApplication();
@@ -346,7 +345,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=0');
+			$this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1', 'error');
 		}
 	}
 

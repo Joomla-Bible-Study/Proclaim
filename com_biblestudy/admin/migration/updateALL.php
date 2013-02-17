@@ -17,6 +17,9 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  */
 class MigrationUpgrade
 {
+	/** @var string Default schema version */
+	private $_schemaVersion = '7.0.0';
+
 	/**
 	 * Upgrade function
 	 *
@@ -532,7 +535,7 @@ class MigrationUpgrade
 				{
 					$podcasts = str_replace('|', ',', $podcasts);
 					$query    = "UPDATE #__bsms_mediafiles SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
-							(int) $db->quote($result->id) . " LIMIT 1";
+						(int) $db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -1003,7 +1006,7 @@ class MigrationUpgrade
 		$query = $db->getQuery(true);
 		$query->select('id, params, podcast_id')->from('#__bsms_mediafiles')->where('podcast_id > ' . 0);
 		$db->setQuery($query);
-		$db->query();
+		$db->query(); // Need this do to the getNumRows dos not execute the Query
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
@@ -1396,7 +1399,6 @@ class MigrationUpgrade
 	 */
 	public function upgrade710()
 	{
-		die('710');
 		JLoader::register('JBS710Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/update710.php');
 		$migrate = new JBS710Update;
 
@@ -1417,7 +1419,6 @@ class MigrationUpgrade
 	 */
 	public function allupdate()
 	{
-		die('all');
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDBO();
 		jimport('joomla.filesystem.folder');
@@ -1427,7 +1428,7 @@ class MigrationUpgrade
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		usort($files, 'version_compare');
 
-		/* Finde Extension ID of component */
+		/* Find Extension ID of component */
 		$query = $db->getQuery(true);
 		$query
 			->select('extension_id')
@@ -1445,10 +1446,12 @@ class MigrationUpgrade
 				->select('version')
 				->from('#__bsms_update');
 			$db->setQuery($query);
-			$updates = $db->loadResult();
-			$update  = end($updates);
+			$updates              = $db->loadObjectList();
+			$update               = end($updates);
+			$update               = $update->version;
+			$this->_schemaVersion = $update;
 
-			if ($update)
+			if ($update && $eid)
 			{
 				/* Set new Schema Version */
 				$this->setSchemaVersion($update, $eid);
@@ -1464,13 +1467,12 @@ class MigrationUpgrade
 			}
 			elseif ($files)
 			{
-				// Get file contents
 				$buffer = file_get_contents($path . '/' . $value . '.sql');
 
 				// Graceful exit and rollback if read not successful
 				if ($buffer === false)
 				{
-					$app->enqueueMessage(JText::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
+					JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
 
 					return false;
 				}
@@ -1514,8 +1516,9 @@ class MigrationUpgrade
 				->select('version')
 				->from('#__bsms_update');
 			$db->setQuery($query);
-			$updates = $db->loadResult();
+			$updates = $db->loadObjectList();
 			$update  = end($updates);
+			$update  = $update->version;
 
 			if ($update)
 			{
@@ -1573,7 +1576,6 @@ class MigrationUpgrade
 				$app->enqueueMessage('Could not locate extension id in schemas table');
 			}
 		}
-		$app->enqueueMessage('No Version and eid');
 	}
 
 }

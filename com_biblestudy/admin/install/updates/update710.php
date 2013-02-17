@@ -57,10 +57,11 @@ class JBS710Update
 		{
 			$query = $db->getQuery(true);
 			$query->select('*')
-				->from('#__bsms_styles')
-				->where($db->qn('filename') . '=' . $db->q('biblestudy'));
+				->from('#__bsms_styles');
 			$db->setQuery($query);
-			$result = $db->loadObject();
+			$result = $db->loadObjectList();
+			var_dump($result);
+			die();
 
 			if ($result)
 			{

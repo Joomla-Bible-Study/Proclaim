@@ -21,6 +21,8 @@ class BiblestudyViewMigration extends JViewLegacy
 
 	protected $percentage;
 
+	protected $callstack;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -33,12 +35,15 @@ class BiblestudyViewMigration extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$model = $this->getModel();
+		$model = $this->getModel('migration');
 		$state = $model->getState('scanstate', false);
 
 		$total = max(1, $model->totalVersions);
 		$done  = $model->doneVersions;
-		$this->callstack = $model->callstack;
+		$this->callstack = $model->getState('migration_stack');
+		var_dump($total);
+		var_dump($done);
+		var_dump($state);
 
 		if ($state)
 		{

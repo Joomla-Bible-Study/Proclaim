@@ -87,9 +87,10 @@ class BibleStudyModelMigration extends JModelLegacy
 	private function saveStack()
 	{
 		$stack = array(
-			'version' => $this->_versionStack,
-			'total'   => $this->totalVersions,
-			'done'    => $this->doneVersions
+			'version'   => $this->_versionStack,
+			'total'     => $this->totalVersions,
+			'done'      => $this->doneVersions,
+			'callstack' => $this->callstack
 		);
 		$stack = json_encode($stack);
 
@@ -134,6 +135,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			$this->_versionStack = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
+			$this->callstack     = array();
 
 			return;
 		}
@@ -152,6 +154,8 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_versionStack = $stack['version'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
+		$this->callstack     = $stack['callstack'];
+
 	}
 
 	/**
@@ -247,7 +251,6 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	public function getVersions()
 	{
-		$app              = JFactory::getApplication();
 		$db               = JFactory::getDBO();
 		$olderversiontype = 0;
 
@@ -337,53 +340,6 @@ class BibleStudyModelMigration extends JModelLegacy
 				if ($jbsexists > 0)
 				{
 					$versiontype = 4;
-				}
-			}
-		}
-
-		// Since we are going to install something, let's check to see if there is a version table, and create it if it isn't there
-		foreach ($tables as $table)
-		{
-			$studies    = $prefix . 'bsms_version';
-			$jbsexists1 = substr_count($table, $studies);
-
-			if (!$jbsexists1)
-			{
-				$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version` (
-                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                      `version` varchar(20) NOT NULL,
-                      `versiondate` date NOT NULL,
-                      `installdate` date NOT NULL,
-                      `build` varchar(20) NOT NULL,
-                      `versionname` varchar(40) DEFAULT NULL,
-                      PRIMARY KEY (`id`)
-                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8";
-				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
-
-					return false;
-				}
-			}
-			$update     = $prefix . 'bsms_update';
-			$jbsexists2 = substr_count($table, $update);
-
-			if ($jbsexists2 === 0)
-			{
-				$query = "CREATE TABLE IF NOT EXISTS `#__bsms_update` (
-                        `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                        `version` VARCHAR(255) DEFAULT NULL,
-                        PRIMARY KEY (id)
-                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
-
-					return false;
 				}
 			}
 		}
@@ -541,17 +497,19 @@ class BibleStudyModelMigration extends JModelLegacy
 	private function doVersionUpdate($version)
 	{
 		$migration = new MigrationUpgrade;
-
-		if (call_user_func_array(array($migration, $version), array()))
+		if ($version == 'allupdate')
 		{
-			return true;
-		}
-		else
-		{
-			JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
-		}
+			if (call_user_func_array(array($migration, $version), array()))
+			{
+				return true;
+			}
+			else
+			{
+				JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
 
-		return false;
+				return false;
+			}
+		}
 	}
 
 	/**
