@@ -243,6 +243,12 @@ $input = $app->input;
                 </div>
             </div>
             <div class="control-group">
+                <?php echo $this->form->getLabel('media_image', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('media_image', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
 				<?php echo $this->form->getLabel('mime', 'params'); ?>
                 <div class="controls">
 					<?php echo $this->form->getInput('mime', 'params'); ?>

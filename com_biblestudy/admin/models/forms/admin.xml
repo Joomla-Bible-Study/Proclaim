@@ -136,6 +136,13 @@
                value_field="title" labelclass="control-label">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
         </field>
+        <field name="media_image" type="sql" class="inputbox" label="JBS_CMS_MEDIA_IMAGE"
+               description="JBS_CMN_MEDIA_IMAGE_DESC" default="-1"
+               query="SELECT id, media_text FROM #__bsms_media WHERE published = 1 ORDER BY media_text ASC"
+               key_field="id"
+               value_field="media_text" labelclass="control-label">
+            <option value="-1">JBS_AMN_NO_MEDIA_IMAGE</option>
+               </field>
         <field name="mime" type="sql" class="inputbox" label="JBS_CMN_MIME_TYPE"
                description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
                query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
