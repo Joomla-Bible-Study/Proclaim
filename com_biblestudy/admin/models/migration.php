@@ -44,6 +44,15 @@ class BibleStudyModelMigration extends JModelLegacy
 	/** @var string Version of BibleStudy */
 	private $_versionSwitch = null;
 
+	/** @var int Id of Extinction Table */
+	private $_biblestudyEid = 0;
+
+	/** @var string Path to Mysql files */
+	public static $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
+	/** @var array Array of SQL files to parse. */
+	private $_fileStack = array();
+
 	/**
 	 * Returns the current timestamps in decimal seconds
 	 *
@@ -227,7 +236,11 @@ class BibleStudyModelMigration extends JModelLegacy
 			{
 				ksort($this->_versionStack);
 				$version = array_pop($this->_versionStack);
-				$this->doneVersions++;
+
+				if ($version != 'allupdate')
+				{
+					$this->doneVersions++;
+				}
 				$this->doVersionUpdate($version);
 			}
 		}
@@ -252,6 +265,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	public function getVersions()
 	{
 		$db               = JFactory::getDBO();
+		$app              = JFactory::getApplication();
 		$olderversiontype = 0;
 
 		// First we check to see if there is a current version database installed. This will have a #__bsms_version table so we check for it's existence.
@@ -397,7 +411,8 @@ class BibleStudyModelMigration extends JModelLegacy
 				switch ($version->build)
 				{
 					case '700':
-						$this->_versionStack = array('upgrade701', 'allupdate', 'upgrade710');
+						$this->_versionStack  = array('upgrade701', 'allupdate', 'upgrade710');
+						$this->_versionSwitch = '7.0.0';
 						break;
 
 					case '624':
@@ -454,7 +469,9 @@ class BibleStudyModelMigration extends JModelLegacy
 						break;
 
 					case '608':
-						$this->_versionStack = array('upgrade611', 'upgrade613', 'upgrade614', 'upgrade622', 'upgrade623', 'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
+						$this->_versionStack = array(
+							'upgrade611', 'upgrade613', 'upgrade614', 'upgrade622', 'upgrade623',
+							'upgrade700', 'upgrade701', 'allupdate', 'upgrade710');
 						break;
 
 					case '611':
@@ -484,6 +501,56 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 		$this->_versionStack = array_reverse($this->_versionStack);
 
+		// Start of Building the All state build.
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+
+		$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
+		usort($files, 'version_compare');
+
+		/* Find Extension ID of component */
+		$query = $db->getQuery(true);
+		$query
+			->select('extension_id')
+			->from('#__extensions')
+			->where('`name` = "com_biblestudy"');
+		$db->setQuery($query);
+		$eid                  = $db->loadResult();
+		$this->_biblestudyEid = $eid;
+
+		foreach ($files as $i => $value)
+		{
+
+			$update = $this->_versionSwitch;
+
+			if ($update && $eid)
+			{
+				/* Set new Schema Version */
+				$this->setSchemaVersion($update, $eid);
+			}
+			else
+			{
+				$value = '7.0.0';
+			}
+
+			if (version_compare($value, $update) <= 0)
+			{
+				unset($files[$i]);
+			}
+			elseif ($files)
+			{
+				$count               = count($files);
+				$this->totalVersions = $this->totalVersions + $count;
+				$this->_fileStack    = $files;
+			}
+			else
+			{
+				$app->enqueueMessage(JText::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
+
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -497,18 +564,25 @@ class BibleStudyModelMigration extends JModelLegacy
 	private function doVersionUpdate($version)
 	{
 		$migration = new MigrationUpgrade;
-		if ($version == 'allupdate')
+
+		if ($version != 'allupdate')
 		{
 			if (call_user_func_array(array($migration, $version), array()))
 			{
 				return true;
 			}
-			else
-			{
-				JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
+			JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
 
-				return false;
+			return false;
+		}
+		else
+		{
+			if (call_user_func_array(array('BibleStudyModelMigration', $version), array()))
+			{
+				return true;
 			}
+
+			return false;
 		}
 	}
 
@@ -548,6 +622,142 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 
 		return true;
+	}
+
+	/**
+	 * Function to do updates after 7.0.2
+	 *
+	 * @return array
+	 *
+	 * @since 7.0.4
+	 */
+	protected function allupdate()
+	{
+		$app = JFactory::getApplication();
+
+		foreach ($this->_fileStack as $value)
+		{
+
+			$this->doneVersions++;
+			$db  = JFactory::getDbo();
+			$app = JFactory::getApplication();
+
+			$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
+
+			// Graceful exit and rollback if read not successful
+			if ($buffer === false)
+			{
+				JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
+
+				return false;
+			}
+
+			// Create an array of queries from the sql file
+			$queries = $db->splitSql($buffer);
+
+			if (count($queries) == 0)
+			{
+				// No queries to process
+				return 0;
+			}
+
+			// Process each query in the $queries array (split out of sql file).
+			foreach ($queries as $query)
+			{
+				$query = trim($query);
+
+				if ($query != '' && $query{0} != '#')
+				{
+					$db->setQuery($query);
+
+					if (!$db->execute())
+					{
+						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
+
+						return false;
+					}
+				}
+			}
+		}
+		$update = $this->getUpdateVersion();
+
+		if ($update)
+		{
+			/* Set new Schema Version */
+			$this->setSchemaVersion($update, $this->_biblestudyEid);
+		}
+		else
+		{
+			$app->enqueueMessage('no update table', 'error');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Set the schema version for an extension by looking at its latest update
+	 *
+	 * @param   string   $version  Version number
+	 * @param   integer  $eid      Extension ID
+	 *
+	 * @return  void
+	 *
+	 * @since   7.1.0
+	 */
+
+	private function setSchemaVersion($version, $eid)
+	{
+		$app = JFactory::getApplication();
+
+		if ($version && $eid)
+		{
+			$db = JFactory::getDBO();
+
+			// Update the database
+			$query = $db->getQuery(true);
+			$query
+				->delete()
+				->from('#__schemas')
+				->where('extension_id = ' . $eid);
+			$db->setQuery($query);
+
+			if ($db->execute())
+			{
+				$query->clear();
+				$query->insert($db->quoteName('#__schemas'));
+				$query->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')));
+				$query->values($eid . ', ' . $db->quote($version));
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else
+			{
+				$app->enqueueMessage('Could not locate extension id in schemas table');
+			}
+		}
+	}
+
+	/**
+	 * Returns Update Version form Table
+	 *
+	 * @return string
+	 */
+	private function getUpdateVersion()
+	{
+		$db = JFactory::getDbo();
+
+		/* Find Last updated Version in Update table */
+		$query = $db->getQuery(true);
+		$query
+			->select('version')
+			->from('#__bsms_update');
+		$db->setQuery($query);
+		$updates = $db->loadObjectList();
+		$update  = end($updates);
+
+		return $update->version;
 	}
 
 }

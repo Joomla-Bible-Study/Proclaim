@@ -71,6 +71,6 @@ defined('_JEXEC') or die;
         </div>
     </div>
     <input type="hidden" name="option" value="com_biblestudy"/>
-    <input type="hidden" name="task" value="migration.import"/>
-    <input type="hidden" name="controller" value="migration"/>
+    <input type="hidden" name="task" value="admin.import"/>
+    <input type="hidden" name="controller" value="admin"/>
 </form>
