@@ -15,7 +15,7 @@ defined('JPATH_BASE') or die;
  * @subpackage  com_biblestudy
  * @since       3.0
  */
-class JFormFieldOrdering extends JFormField
+class JFormFieldmediafileordering extends JFormField
 {
     /**
      * The form field type.
