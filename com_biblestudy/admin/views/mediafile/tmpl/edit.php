@@ -254,6 +254,10 @@ else
 			<?php echo $this->form->getInput('comment'); ?>
         </div>
     </div>
+    <div class="control-group">
+        <div class="control-label"><?php echo $this->form->getLabel('ordering'); ?></div>
+        <div class="controls"><?php echo $this->form->getInput('ordering'); ?></div>
+    </div>
 </div>
 <div class="tab-pane" id="linktype">
     <div class="row-fluid">
@@ -350,6 +354,7 @@ else
 			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
         </div>
     </div>
+
 </div>
 <div class="tab-pane" id="upload">
     <div class="control-group">

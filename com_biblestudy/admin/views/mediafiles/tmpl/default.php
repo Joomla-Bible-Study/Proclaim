@@ -39,7 +39,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
-    Joomla.orderTable = function () {
+    Joomla.orderTable = function() {
         table = document.getElementById("sortTable");
         direction = document.getElementById("directionTable");
         order = table.options[table.selectedIndex].value;

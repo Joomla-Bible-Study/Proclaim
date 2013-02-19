@@ -51,9 +51,9 @@
     <field name="downloads" type="text" class="readonly span12 small" label="JBS_CMN_DOWNLOADS"
            description="JBS_MED_DOWNLOADS_DESC" size="10" default="N/A" readonly="true"/>
     <field name="spacer" type="spacer" hr="true"/>
-    <field name="ordering" type="text" label="JFIELD_ORDERING_LABEL"
-           description="JFIELD_ORDERING_DESC" class="inputbox" size="6"
-           default="0" labelclass="control-label" />
+    <field name="ordering" type="mediafileordering" class="inputbox"
+           label="JFIELD_ORDERING_LABEL"
+           description="JFIELD_ORDERING_DESC" />
     <field name="comment" type="text" size="50" label="JBS_CMN_COMMENT"
            description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
     <field name="docMan_id" type="docman" extension="com_biblestudy"
