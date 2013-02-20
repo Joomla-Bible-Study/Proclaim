@@ -30,7 +30,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'ordering';
+$saveOrder = $listOrder == 'mediafile.ordering';
 if ($saveOrder && BIBLESTUDY_CHECKREL)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
@@ -114,11 +114,14 @@ $sortFields = $this->getSortFields();
 <thead>
 <tr>
     <th width="1%" class="nowrap center hidden-phone">
-		<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.study_id, mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
+		<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
     </th>
     <th width="1%" class="hidden-phone">
         <input type="checkbox" name="checkall-toggle" value=""
                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+    </th>
+    <th width="3%" style ="..." class="nowrap center">
+        <?php echo JText::_('JORDER'); ?>
     </th>
     <th width="1%" style="min-width:55px" class="nowrap center">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
@@ -161,13 +164,13 @@ $sortFields = $this->getSortFields();
 <tbody>
 <?php
 foreach ($this->items as $i => $item) :
-	$item->max_ordering = 0; //??
+    $ordering   = ($listOrder == 'mediafile.ordering');
 	$canCreate          = $user->authorise('core.create');
 	$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
 	$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
 	$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
 	?>
-<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id ?>">
     <td class="order nowrap center hidden-phone">
 		<?php
 		if ($canChange) :
@@ -192,6 +195,9 @@ foreach ($this->items as $i => $item) :
     </td>
     <td class="center hidden-phone">
 		<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+    </td>
+    <td class="center">
+        <?php echo $item->ordering; ?>
     </td>
     <td class="center">
 			<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', $canChange, 'cb', '', ''); ?>

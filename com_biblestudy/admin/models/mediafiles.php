@@ -320,7 +320,7 @@ class BiblestudyModelMediafiles extends JModelList
 		}
 		if ($orderCol == 'ordering')
 		{
-			$orderCol = 'mediafile.ordering';
+			$orderCol = 'mediafile.study_id, mediafile.ordering';
 		}
 		if ($orderCol == 'published')
 		{
@@ -330,6 +330,10 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$orderCol = 'mediafile.id';
 		}
+        if ($orderCol == 'mediafile.ordering')
+        {
+            $orderCol = 'mediafile.study_id '.$orderDirn.', mediafile.ordering';
+        }
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

@@ -30,7 +30,7 @@ $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
 $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'ordering';
+$saveOrder  = $listOrder == 'teacher.ordering';
 $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
@@ -115,6 +115,9 @@ $sortFields = $this->getSortFields();
             <input type="checkbox" name="checkall-toggle" value=""
                    title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
         </th>
+        <th width="3%" style ="..." class="nowrap center">
+            <?php echo JText::_('JORDER'); ?>
+        </th>
         <th width="5%">
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
         </th>
@@ -143,6 +146,7 @@ $sortFields = $this->getSortFields();
 	<?php
 	foreach ($this->items as $i => $item) :
 		$item->max_ordering = 0; //??
+        $ordering   = ($listOrder == 'teachers.ordering');
 		$canCreate          = $user->authorise('core.create');
 		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.teacher.' . $item->id);
 		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.teacher.' . $item->id);
@@ -170,6 +174,9 @@ $sortFields = $this->getSortFields();
         </td>
         <td class="center hidden-phone">
 			<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+        </td>
+        <td class="center">
+            <?php echo $item->ordering; ?>
         </td>
         <td class="center">
             <div class="btn-group">

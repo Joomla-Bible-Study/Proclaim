@@ -585,4 +585,18 @@ class BiblestudyModelMediafile extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
+
+    /**
+     * A protected method to get a set of ordering conditions.
+     *
+     * @param	object	A record object.
+     * @return	array	An array of conditions to add to add to ordering queries.
+     * @since	1.6
+     */
+    protected function getReorderConditions($table)
+    {
+        $condition = array();
+        $condition[] = 'study_id = '.(int) $table->study_id;
+        return $condition;
+    }
 }
