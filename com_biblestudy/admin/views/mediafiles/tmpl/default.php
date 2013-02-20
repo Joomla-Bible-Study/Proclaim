@@ -34,7 +34,7 @@ $saveOrder = $listOrder == 'ordering';
 if ($saveOrder && BIBLESTUDY_CHECKREL)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
 ?>
@@ -110,11 +110,11 @@ $sortFields = $this->getSortFields();
 </div>
 <div class="clearfix"></div>
 
-<table class="table table-striped adminlist" id="articleList">
+<table class="table table-striped adminlist" id="mediafileList">
 <thead>
 <tr>
     <th width="1%" class="nowrap center hidden-phone">
-		<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
+		<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.study_id, mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
     </th>
     <th width="1%" class="hidden-phone">
         <input type="checkbox" name="checkall-toggle" value=""
