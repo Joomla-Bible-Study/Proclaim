@@ -30,7 +30,7 @@ class BiblestudyControllerTeachers extends JControllerAdmin
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'Teachers', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

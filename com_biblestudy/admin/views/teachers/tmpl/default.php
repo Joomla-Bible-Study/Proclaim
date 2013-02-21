@@ -32,6 +32,12 @@ $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder  = $listOrder == 'teacher.ordering';
 $sortFields = $this->getSortFields();
+if ($saveOrder && BIBLESTUDY_CHECKREL)
+{
+    $saveOrderingUrl = 'index.php?option=com_biblestudy&task=teachers.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
+
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function () {
@@ -145,14 +151,14 @@ $sortFields = $this->getSortFields();
     <tbody>
 	<?php
 	foreach ($this->items as $i => $item) :
-		$item->max_ordering = 0; //??
-        $ordering   = ($listOrder == 'teachers.ordering');
+		//$item->max_ordering = 0; //??
+        $ordering   = ($listOrder == 'teacher.ordering');
 		$canCreate          = $user->authorise('core.create');
 		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.teacher.' . $item->id);
 		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.teacher.' . $item->id);
 		$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.teacher.' . $item->id);
 		?>
-    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
         <td class="order nowrap center hidden-phone">
 			<?php if ($canChange) :
 			$disableClassName = '';
