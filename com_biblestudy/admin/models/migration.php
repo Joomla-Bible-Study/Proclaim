@@ -48,7 +48,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	private $_biblestudyEid = 0;
 
 	/** @var string Path to Mysql files */
-	public static $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
 	/** @var array Array of SQL files to parse. */
 	private $_fileStack = array();
