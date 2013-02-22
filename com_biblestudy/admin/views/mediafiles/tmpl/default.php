@@ -120,9 +120,7 @@ $sortFields = $this->getSortFields();
         <input type="checkbox" name="checkall-toggle" value=""
                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
     </th>
-    <th width="3%" style ="..." class="nowrap center">
-        <?php echo JText::_('JORDER'); ?>
-    </th>
+
     <th width="1%" style="min-width:55px" class="nowrap center">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
     </th>
@@ -196,9 +194,7 @@ foreach ($this->items as $i => $item) :
     <td class="center hidden-phone">
 		<?php echo JHtml::_('grid.id', $i, $item->id); ?>
     </td>
-    <td class="center">
-        <?php echo $item->ordering; ?>
-    </td>
+
     <td class="center">
 			<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', $canChange, 'cb', '', ''); ?>
     </td>

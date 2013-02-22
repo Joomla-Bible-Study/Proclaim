@@ -123,22 +123,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		return $data;
 	}
 
-	/**
-	 * A protected method to get a set of ordering conditions.
-	 *
-	 * @param   JTable  $table  A record object.
-	 *
-	 * @return    array    An array of conditions to add to add to ordering queries.
-	 *
-	 * @since    1.7.0
-	 */
-	protected function getReorderConditions($table)
-	{
-		$condition   = array();
-		$condition[] = 'catid = ' . (int) $table->catid;
 
-		return $condition;
-	}
 
 	/**
 	 * Prepare and sanitise the table prior to saving.
@@ -209,5 +194,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
+
+
 
 }

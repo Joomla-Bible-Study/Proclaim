@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 /**
  * View class for Message
  *

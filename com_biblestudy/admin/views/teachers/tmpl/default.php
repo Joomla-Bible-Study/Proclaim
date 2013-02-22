@@ -121,9 +121,6 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
             <input type="checkbox" name="checkall-toggle" value=""
                    title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
         </th>
-        <th width="3%" style ="..." class="nowrap center">
-            <?php echo JText::_('JORDER'); ?>
-        </th>
         <th width="5%">
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
         </th>
@@ -158,7 +155,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.teacher.' . $item->id);
 		$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.teacher.' . $item->id);
 		?>
-    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
+    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
         <td class="order nowrap center hidden-phone">
 			<?php if ($canChange) :
 			$disableClassName = '';
@@ -180,9 +177,6 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
         </td>
         <td class="center hidden-phone">
 			<?php echo JHtml::_('grid.id', $i, $item->id); ?>
-        </td>
-        <td class="center">
-            <?php echo $item->ordering; ?>
         </td>
         <td class="center">
             <div class="btn-group">
