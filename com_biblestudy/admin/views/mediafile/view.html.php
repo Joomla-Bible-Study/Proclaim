@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 JLoader::register('JBSMUpload', JPATH_SITE . '/components/com_biblestudy/helpers/upload.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+
 /**
  * View class for MediaFile
  *
@@ -76,7 +76,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 
 		// Load the Admin settings
-		//$this->loadHelper('params');
+		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new JRegistry;
 		$registry->loadString($this->admin->params);

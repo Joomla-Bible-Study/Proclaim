@@ -20,21 +20,18 @@ JHtml::_('behavior.keepalive');
 if (BIBLESTUDY_CHECKREL)
 	JHtml::_('formbehavior.chosen', 'select');
 
-// Create shortcut to parameters.
-//$params = $this->state->get('params');
-//$params = $params->toArray();
+
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
 
-//$params = $this->form->getFieldsets('params');
+
 //Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
 $input  = new JInput;
 $option = $input->get('option', '', 'cmd');
-//$study    = $input->get('sid', '', 'int');
-//$sdate    = $input->get('sdate', '', 'string');
+
 $study    = $app->getUserState($option . 'sid');
 $sdate    = $app->getUserState($option . 'sdate');
 $size     = $app->getUserState($option . 'size');
