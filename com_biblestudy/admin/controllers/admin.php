@@ -348,6 +348,25 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
+	 * Import function from the backup page
+	 * @since 7.1.0
+	 */
+	public function import() {
+		$application = JFactory::getApplication();
+		$import = new JBSRestore;
+		$parent = false;
+		$result = $import->importdb($parent);
+		if ($result === true) {
+			$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
+		} elseif ($result === false) {
+
+		} else {
+			$application->enqueueMessage('' . $result . '');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+	}
+
+	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
 	 * @param   string  $oldprefix  ?
