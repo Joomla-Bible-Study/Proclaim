@@ -6,7 +6,7 @@
         Purpose of the stylesheet follows.
 */
 
-form .controls label {
+form .tab-content .controls label, form .controls #batch-move-copy label {
     float: left;
     clear: none;
     padding-left: 10px;
@@ -15,11 +15,11 @@ form .controls label {
 }
 
 .control-group label {
-    margin-right: 2em;
+    display: block;
+    margin-bottom: 5px;
 }
 
 form .controls fieldset {
-
     border: none;
 }
 
@@ -42,11 +42,6 @@ label, input, button, select, textarea {
     font-size: 13px;
     font-weight: normal;
     line-height: 18px;
-}
-
-.modal-footer {
-    float: right;
-    clear: left;
 }
 
 [class^="icon-16"], [class*=" icon-16"] {
@@ -87,8 +82,31 @@ div.pagetitle {
     width: auto;
 }
 
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+    float: left;
+    margin-left: 0;
+}
+
+.form-search label, .form-inline label, .form-search .btn-group, .form-inline .btn-group {
+    display: inline-block;
+}
+
+.form-vertical .control-label {
+    float: none;
+    width: auto;
+    padding-right: 0;
+    padding-top: 0;
+    text-align: left;
+}
+
+.form-vertical .controls {
+    margin-left: 0;
+}
+
 .form-horizontal .control-label {
     width: auto;
+    padding-right: 5px;
+    text-align: left;
 }
 
 form .btn-group label {
@@ -109,10 +127,10 @@ input, select {
     display: inline-block;
 }
 
-.churchdirectory_paddingtop20 {
-    margin-top: 20px;
-}
 
+/*
+ Bible Study only
+*/
 .form-vertical .control-label {
     float: none;
     width: auto;
