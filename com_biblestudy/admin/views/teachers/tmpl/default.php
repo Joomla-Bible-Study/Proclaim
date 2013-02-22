@@ -155,7 +155,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 		$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.teacher.' . $item->id);
 		$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.teacher.' . $item->id);
 		?>
-    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">
         <td class="order nowrap center hidden-phone">
 			<?php if ($canChange) :
 			$disableClassName = '';

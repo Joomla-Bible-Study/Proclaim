@@ -1,17 +1,15 @@
 <?php
-
 /**
- * Controller for Admin
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 JLoader::register('JBSRestore', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.restore.php');
+JLoader::register('JBSExport', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.backup.php');
 JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
 JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');
@@ -395,6 +393,31 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 
 		return true;
+	}
+
+	public function export()
+	{
+		$input  = new JInput;
+		$run    = $input->get('run', '', 'int');
+		$export = new JBSExport;
+
+		if (!$result = $export->exportdb($run))
+		{
+			$msg = JText::_('JBS_CMN_OPERATION_FAILED');
+			$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+		}
+		elseif ($run == 2)
+		{
+			if (!$result)
+			{
+				$msg = $result;
+			}
+			else
+			{
+				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			}
+			$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+		}
 	}
 
 }
