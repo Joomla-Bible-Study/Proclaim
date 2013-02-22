@@ -29,34 +29,19 @@ class JBSMParams
 	public static function getAdmin()
 	{
 		$db     = JFactory::getDBO();
-		$tables = $db->getTableList();
-		$prefix = $db->getPrefix();
-		$admin  = null;
-		$adminTable = 0;
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from('#__bsms_admin')
+            ->where($db->qn('id') . ' = ' . (int) 1);
+        $db->setQuery($query);
+        $admin    = $db->loadObject();
+        $registry = new JRegistry;
+        $registry->loadString($admin->params);
+        $admin->params = $registry;
 
-		// Check to see if version is newer then 7.0.2
-		foreach ($tables as $table)
-		{
-			$subTable    = $prefix . 'bsms_admin';
-			$adminTable = substr_count($table, $subTable);
-
-		}
-		if ($adminTable)
-		{
-			$query = $db->getQuery(true);
-			$query->select('*')
-				->from('#__bsms_admin')
-				->where($db->qn('id') . ' = ' . (int) 1);
-			$db->setQuery($query);
-			$admin    = $db->loadObject();
-			$registry = new JRegistry;
-			$registry->loadString($admin->params);
-			$admin->params = $registry;
-
-			// Add the current user id
-			$user           = JFactory::getUser();
-			$admin->user_id = $user->id;
-		}
+        // Add the current user id
+        $user           = JFactory::getUser();
+        $admin->user_id = $user->id;
 
 		return $admin;
 	}
