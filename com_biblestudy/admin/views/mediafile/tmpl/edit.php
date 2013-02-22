@@ -7,39 +7,38 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-// Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('behavior.modal');
 if (BIBLESTUDY_CHECKREL)
+{
 	JHtml::_('formbehavior.chosen', 'select');
+}
 
 // Create shortcut to parameters.
-//$params = $this->state->get('params');
-//$params = $params->toArray();
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
 
 //$params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
-$folder = '';
-$server = '';
-$input  = new JInput;
-$option = $input->get('option', '', 'cmd');
-//$study    = $input->get('sid', '', 'int');
-//$sdate    = $input->get('sdate', '', 'string');
+$folder   = '';
+$server   = '';
+$input    = new JInput;
+$option   = $input->get('option', '', 'cmd');
 $study    = $app->getUserState($option . 'sid');
 $sdate    = $app->getUserState($option . 'sdate');
 $size     = $app->getUserState($option . 'size');
 $fname    = $app->getUserState($option . 'fname');
 $serverid = $app->getUserState($option . 'serverid');
+
 if ($this->item->server)
 {
 	$server = $this->item->server;
@@ -83,9 +82,9 @@ elseif (empty($this->item->study_id))
     Joomla.submitbutton = function (task) {
         if (task == 'mediafile.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
-        } else {
-            alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
         }
+    };
+    function submitbutton(task) {
         if (task == '') {
             return false;
         }
@@ -102,7 +101,6 @@ elseif (empty($this->item->study_id))
                 return true;
             }
         }
-
         else if (task == 'thirdparty') {
             if (document.adminForm.video_third.value == '') {
                 alert("<?php echo JText::_('JBS_MED_ADD_THIRD_PARTY_URL'); ?>");
@@ -144,7 +142,7 @@ elseif (empty($this->item->study_id))
                 return false;
             }
         }
-    };
+    }
 
     function sizebutton(remotefilesize) {
         var objTB = document.getElementById("size");
@@ -166,19 +164,18 @@ elseif (empty($this->item->study_id))
     } else if (window.attachEvent) {
         window.attachEvent('load', showupload);
     }
-
 </script>
 <form action="<?php
 $input = new JInput;
 if ($input->get('layout', '', 'string') == 'modal')
 {
-	$url = 'index.php?option=com_biblestudy&amp;layout=mediafile&amp;tmpl=component&amp;layout=modal&amp;id=' . (int) $this->item->id;
+	$url = 'index.php?option=com_biblestudy&view=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 }
 else
 {
-	$url = 'index.php?option=com_biblestudy&amp;view=mediafile&amp;layout=edit&amp;id=' . (int) $this->item->id;
-} echo $url;
-?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+	$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+} echo JRoute::_($url);
+?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
@@ -212,7 +209,8 @@ else
 			<?php echo JText::_('JSAVE'); ?></button>
         <button type="button" onclick="window.parent.SqueezeBox.close();  ">
 			<?php echo JText::_('JCANCEL'); ?></button>
-    </div> <?php } ?>
+    </div>
+	<?php } ?>
 
     <div class="control-group">
         <div class="control-label">
@@ -426,9 +424,8 @@ else
 	<?php endif; ?>
 <input type="hidden" name="flupfile" value=""/>
 <input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+<input type="hidden" name="return" value="<?php echo $input->getCmd('return');?>"/>
 <?php echo JHtml::_('form.token'); ?>
-<input type="hidden" name="controller" value="mediafile"/>
 </div>
 </div>
 <!-- Begin Sidebar -->

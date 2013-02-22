@@ -76,7 +76,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		//$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 
-//set some variables for use by the modal mediafile entry form from a study
+		//set some variables for use by the modal mediafile entry form from a study
         $app    = JFactory::getApplication();
         $app->setUserState($option . 'sid', $this->item->id);
         $app->setUserState($option . 'sdate', $this->item->studydate);
@@ -117,16 +117,14 @@ class BiblestudyViewMessage extends JViewLegacy
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
 		JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
 
-		$this->setLayout("edit");
-
 		// Set the toolbar
 		$this->addToolbar();
 
-		// Display the template
-		parent::display($tpl);
-
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**

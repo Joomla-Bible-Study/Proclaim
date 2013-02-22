@@ -20,6 +20,13 @@ class BiblestudyControllerMediafile extends JControllerForm
 {
 
 	/**
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 *
+	 * @since 7.0
+	 */
+	protected $view_list = 'mediafiles';
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param   array  $config  A named array of configuration variables.

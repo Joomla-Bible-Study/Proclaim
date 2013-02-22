@@ -44,7 +44,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   boolean  $cachable   Cachable system
 	 * @param   boolean  $urlparams  Url params
 	 *
-	 * @return void
+	 * @return  JController		This object to support chaining.
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
@@ -122,6 +122,8 @@ class BiblestudyController extends JControllerLegacy
 		}
 
 		parent::display();
+
+		return $this;
 	}
 
 	/**
