@@ -604,7 +604,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function doVersionUpdate($version)
 	{
-		$migration = new MigrationUpgrade;
+		$migration = new MigrationUpgrade();
 
 		if (call_user_func(array($migration, $version)))
 		{
