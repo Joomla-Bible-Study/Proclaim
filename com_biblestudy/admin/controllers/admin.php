@@ -291,7 +291,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 *
 	 * @since    7.1.0
 	 */
-	public function dbreset()
+	public function dbReset()
 	{
 		JBSMDbHelper::resetdb();
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
@@ -317,12 +317,10 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * Do the import
 	 *
 	 * @param   boolean  $parent     Source of info
-	 * @param   boolean  $cacheble   if we should cache do import
-	 * @param   boolean  $urlparams  Description
 	 *
 	 * @return void
 	 */
-	public function doimport($parent = true, $cacheble = false, $urlparams = false)
+	public function doimport($parent = true)
 	{
 		$copysuccess = false;
 		$result      = null;
@@ -382,7 +380,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		} else {
 			$application->enqueueMessage('' . $result . '');
 		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
 	}
 
 	/**

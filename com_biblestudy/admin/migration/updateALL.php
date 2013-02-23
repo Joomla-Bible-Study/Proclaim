@@ -10,20 +10,18 @@ defined('_JEXEC') or die;
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
- * Update on All upgrades
+ * Update on All upgrades for migrating from old DB's
  *
  * @package  BibleStudy.Admin
  * @since    7.0.3
  */
 class MigrationUpgrade
 {
-	/** @var string Default schema version */
-	private $_schemaVersion = '7.0.0';
 
 	/**
 	 * Upgrade function
 	 *
-	 * @return array
+	 * @return boolean
 	 */
 	public function upgrade700()
 	{
@@ -788,9 +786,9 @@ class MigrationUpgrade
 	/**
 	 * Add Asset Column
 	 *
-	 * @param   array  $table  ?
+	 * @param   array  $table  Table name to affect
 	 *
-	 * @return object
+	 * @return boolean
 	 */
 	protected function addAssetColumn($table)
 	{
@@ -833,9 +831,9 @@ class MigrationUpgrade
 	}
 
 	/**
-	 * Upgrade funtion
+	 * Upgrade function
 	 *
-	 * @return string
+	 * @return boolean
 	 */
 	public function upgrade623()
 	{
@@ -909,7 +907,7 @@ class MigrationUpgrade
 	/**
 	 * Upgrade Function
 	 *
-	 * @return string
+	 * @return boolean
 	 */
 	public function upgrade622()
 	{
@@ -948,7 +946,7 @@ class MigrationUpgrade
 	/**
 	 * Upgrade function
 	 *
-	 * @return string
+	 * @return boolean
 	 */
 	public function upgrade614()
 	{
@@ -1043,7 +1041,7 @@ class MigrationUpgrade
 	/**
 	 * Upgrade function
 	 *
-	 * @return array Messages of progress.
+	 * @return boolean Messages of progress.
 	 */
 	public function upgrade613()
 	{
@@ -1328,7 +1326,7 @@ class MigrationUpgrade
 	/**
 	 * Upgrade Function
 	 *
-	 * @return string
+	 * @return boolean
 	 */
 	public function upgrade612()
 	{
@@ -1351,7 +1349,7 @@ class MigrationUpgrade
 	/**
 	 * Upgrade function
 	 *
-	 * @return array
+	 * @return boolean
 	 */
 	public function upgrade611()
 	{
@@ -1391,11 +1389,10 @@ class MigrationUpgrade
 		return true;
 	}
 
-
 	/**
 	 * Update for 7.1.0
 	 *
-	 * @return string|boolean
+	 * @return boolean
 	 */
 	public function upgrade710()
 	{
@@ -1409,5 +1406,24 @@ class MigrationUpgrade
 
 		return true;
 	}
+
+	/**
+	 * Update for 7.1.0
+	 *
+	 * @return boolean
+	 */
+	public function upgrade701()
+	{
+		JLoader::register('JBS701Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/update701.php');
+		$migrate = new JBS701Update;
+
+		if (!$migrate->do701update())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 
 }

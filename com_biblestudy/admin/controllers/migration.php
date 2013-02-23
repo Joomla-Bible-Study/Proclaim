@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No direct access
+
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 jimport('joomla.html.parameter');
@@ -14,7 +14,7 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
- * JBS Export Migration Controller
+ * Class Migration Controller
  *
  * @package  BibleStudy.Admin
  * @since    7.1.0

@@ -15,7 +15,7 @@ JLoader::register('MigrationUpgrade', JPATH_ADMINISTRATOR . '/components/com_bib
 
 
 /**
- * JBS Export Migration Controller
+ * class Migration model
  *
  * @package  BibleStudy.Admin
  * @since    7.1.0
@@ -29,16 +29,16 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private $_startTime = null;
 
-	/** @var array The members to process */
+	/** @var array The pre versions to process */
 	private $_versionStack = array();
 
-	/** @var int Total numbers of Versions in this site */
+	/** @var int Total numbers of Versions */
 	public $totalVersions = 0;
 
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
 
-	/** @var array Call stack fro the Visioning System. */
+	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
 	/** @var string Version of BibleStudy */
@@ -53,10 +53,8 @@ class BibleStudyModelMigration extends JModelLegacy
 	/** @var array Array of SQL files to parse. */
 	private $_filesStack = array();
 
-	/** @var array Array of SQL files to parse. */
+	/** @var array Array of PHP Function to parse. */
 	private $_afterStack = array();
-
-	public $v = 0;
 
 	/**
 	 * Returns the current timestamps in decimal seconds
@@ -81,7 +79,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Makes sure that no more than 3 seconds since the start of the timer have elapsed
+	 * Makes sure that no more than 2 seconds since the start of the timer have elapsed
 	 *
 	 * @return bool
 	 */
@@ -94,7 +92,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Saves the Version stack in the session
+	 * Saves the Versions/SQL/After stack in the session
 	 *
 	 * @return void
 	 */
@@ -122,7 +120,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Resets the file/folder stack saved in the session
+	 * Resets the Versions/SQL/After stack saved in the session
 	 *
 	 * @return void
 	 */
@@ -138,7 +136,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Loads the file/folder stack from the session
+	 * Loads the Versions/SQL/After stack from the session
 	 *
 	 * @return void
 	 */
@@ -178,7 +176,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Start Looking though the members
+	 * Start Looking though the Versions
 	 *
 	 * @return bool
 	 */
@@ -247,7 +245,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Start the Run through the members or member.
+	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
 	 *
 	 * @return bool
 	 */
@@ -269,7 +267,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			{
 				$files = array_pop($this->_filesStack);
 				$this->doneVersions++;
-				$this->allupdate($files);
+				$this->allUpdate($files);
 			}
 		}
 
@@ -297,7 +295,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Migrate versions
+	 * Get migrate versions of DB after import/copy has finished.
 	 *
 	 * @return boolean
 	 */
@@ -402,7 +400,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		switch ($versiontype)
 		{
 			case 1:
-				self::corectversions();
+				self::correctVersions();
 				/* Find Last updated Version in Update table */
 				$query = $db->getQuery(true);
 				$query->select('*')
@@ -520,7 +518,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Get Sql Files Array
+	 * Get Sql Files Array of file in the update folder
 	 *
 	 * @return bool
 	 */
@@ -582,7 +580,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Get After
+	 * Get After Array for thing that cannot be don in SQL
 	 *
 	 * @return void
 	 */
@@ -620,7 +618,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	 *
 	 * @return boolean
 	 */
-	public static function corectversions()
+	public static function correctVersions()
 	{
 		$db = JFactory::getDBO();
 		/* Find Last updated Version in Update table */
@@ -654,15 +652,15 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Function to do updates after 7.0.2
+	 * Function to do updates after 7.0.2 using the SQL Stack
 	 *
 	 * @param   string  $value  The File to run sql.
 	 *
-	 * @return array
+	 * @return boolean
 	 *
 	 * @since 7.0.4
 	 */
-	protected function allupdate($value)
+	protected function allUpdate($value)
 	{
 		$db  = JFactory::getDbo();
 		$app = JFactory::getApplication();
@@ -753,7 +751,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Returns Update Version form Table
 	 *
-	 * @return string
+	 * @return string Returns the Last Version in the #_bsms_update table
 	 */
 	private function getUpdateVersion()
 	{
@@ -774,7 +772,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Finish the system
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function finish()
 	{
