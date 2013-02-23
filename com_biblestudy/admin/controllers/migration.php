@@ -61,32 +61,15 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		$state = $model->startScanning();
 		$model->setState('scanstate', $state);
 
-		if(!$app->input->get('jbsimport', 0)){
+		if (!$app->input->get('jbsimport', 0))
+		{
 			JBSMDbHelper::resetdb();
 			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 		}
-		else{
+		else
+		{
 			$app->enqueueMessage('good migration', 'error');
 		}
-		//if ()
-		//{
-			//$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
-
-			// Final step is to fix assets
-			//$assets = new FixJBSAssets;
-			//$assets->fixAssets();
-			//$installer = new Com_BiblestudyInstallerScript;
-			//$installer->deleteUnexistingFiles();
-			//$installer->fixMenus();
-			//$installer->fixImagePaths();
-			//$installer->fixemptyaccess();
-			//$installer->fixemptylanguage();
-		//}
-		//else
-		//{
-			//JBSMDbHelper::resetdb();
-			//$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
-		//}
 
 		$this->display(false);
 	}

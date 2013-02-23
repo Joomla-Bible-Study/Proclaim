@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 JLoader::register('JBSRestore', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.restore.php');
 JLoader::register('JBSExport', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.backup.php');
 JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
 JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');
 JLoader::register('JBSMFixAlias', BIBLESTUDY_PATH_ADMIN_HELPERS . '/alias.php');
@@ -284,6 +285,20 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
+	 * Reset Db to install
+	 *
+	 * @return void
+	 *
+	 * @since    7.1.0
+	 */
+	public function dbreset()
+	{
+		JBSMDbHelper::resetdb();
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+	}
+
+
+	/**
 	 * Alias Updates
 	 *
 	 * @return void
@@ -302,12 +317,12 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * Do the import
 	 *
 	 * @param   boolean  $parent     Source of info
-	 * @param   boolean  $cachable   ?
+	 * @param   boolean  $cacheble   if we should cache do import
 	 * @param   boolean  $urlparams  Description
 	 *
 	 * @return void
 	 */
-	public function doimport($parent = true, $cachable = false, $urlparams = false)
+	public function doimport($parent = true, $cacheble = false, $urlparams = false)
 	{
 		$copysuccess = false;
 		$result      = null;
@@ -349,6 +364,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 	/**
 	 * Import function from the backup page
+	 *
+	 * @return void
+	 *
 	 * @since 7.1.0
 	 */
 	public function import() {
@@ -356,6 +374,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$import = new JBSRestore;
 		$parent = false;
 		$result = $import->importdb($parent);
+
 		if ($result === true) {
 			$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
 		} elseif ($result === false) {
@@ -369,7 +388,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string  $oldprefix  ?
+	 * @param   string  $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */
@@ -414,6 +433,11 @@ class BiblestudyControllerAdmin extends JControllerForm
 		return true;
 	}
 
+	/**
+	 * Export Db
+	 *
+	 * @return void
+	 */
 	public function export()
 	{
 		$input  = new JInput;
