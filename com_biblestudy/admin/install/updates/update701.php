@@ -28,7 +28,7 @@ class JBS701Update
 		$db = JFactory::getDBO();
 
 		// Modify table topics
-		$tables      = $db->getTableFields('#__bsms_topics');
+		$tables      = $db->getTableColumns('#__bsms_topics');
 		$languagetag = 0;
 		$paramstag   = 0;
 
