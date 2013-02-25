@@ -34,7 +34,34 @@ defined('_JEXEC') or die;
 
 		if (in_array($show_comments, $groups))
 		{
-			echo $this->loadTemplate('commentsform');
+            //Determine what kind of comments component to use
+            switch($this->item->params->get('comments_type', 0))
+            {
+                case 0:
+                    //this should be using JBS comments only
+                    echo $this->loadTemplate('commentsform');
+                    break;
+
+                case 1:
+                    //This is a just JComments
+                    $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
+                    if (file_exists($comments)) {
+                        require_once($comments);
+                        echo JComments::showComments($this->item->id, 'com_biblestudy', $this->item->studytitle);
+                    }
+                    break;
+
+                case 2:
+                    //this is a combination of JBS and JComments
+                    $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
+                    if (file_exists($comments)) {
+                        require_once($comments);
+                        echo JComments::showComments($this->item->id, 'com_biblestudy', $this->item->studytitle);
+                    }
+                    echo $this->loadTemplate('commentsform');
+                    break;
+            }
+
 		}
 	}
 	echo $this->loadTemplate('footerlink');

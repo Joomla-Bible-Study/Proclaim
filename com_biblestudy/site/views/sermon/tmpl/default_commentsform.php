@@ -27,7 +27,8 @@ defined('_JEXEC') or die;
     }
 </script>
 <?php
-$commentjava = "javascript:ReverseDisplay('comments')";
+$commentjava = "javascript:ReverseDisplay('JBScomments')";
+
 
 switch ($this->item->params->get('link_comments', 0))
 {
@@ -35,12 +36,12 @@ switch ($this->item->params->get('link_comments', 0))
 		echo '<strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
 			. JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
 		?>
-        <div id="comments" style="display:none;">
+        <div id="JBScomments" style="display:none;">
             <br/>
 		<?php
 		break;
 	case 1:
-		echo '<div id="comments">';
+		echo '<div id="JBScomments">';
 		break;
 }
 ?>

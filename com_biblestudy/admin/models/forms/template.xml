@@ -789,6 +789,12 @@
                 <option value="53">Wycliffe New Testament (NT)</option>
                 <option value="15">Young's Literal Translation</option>
             </field>
+            <field name="comments_type" type="list" default="0"
+                   label="JBS_TPL_COMMENT_TYPE" description="JBS_TPL_COMMENT_TYPE_DESC">
+                    <option value="0">JBS_TPL_JBS_COMMENTS</option>
+                    <option value="1">JBS_TPL_JCOMMENTS</option>
+                    <option value="2">JBS_TPL_BOTH_COMMENTS</option>
+            </field>
             <field name="show_comments" type="accesslevel" default=""
                    label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC">
                     <option value="0">Don't Show</option>
