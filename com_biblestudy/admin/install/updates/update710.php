@@ -325,7 +325,7 @@ div.listingfooter ul li {
 					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
 				$db->setQuery($query);
 				$result = $db->loadObject();
-				JBSMDbHelper::reloadtable($result, 'Style');
+				if ($result) {JBSMDbHelper::reloadtable($result, 'Style');}
 				self::setemptytemplates();
 
 				return true;
@@ -385,10 +385,10 @@ div.listingfooter ul li {
 		$query->select('id')->from('#__bsms_templates');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
-
+        if (!$results){return false;}
 		foreach ($results as $result)
 		{
-			// Store new Recorde so it can be seen.
+			// Store new Record so it can be seen.
 			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 			$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
 
