@@ -34,9 +34,8 @@ class JBS701Update
         $dbhelper = new JBSMDbHelper;
         if (is_array($tables))
         {
-		foreach ($tables as $table)
-		{
-			foreach ($table as $key => $value)
+
+			foreach ($tables as $key => $value)
 			{
 				if (substr_count($key, 'languages'))
 				{
@@ -67,7 +66,7 @@ class JBS701Update
                 }
 
 			}
-		}
+
     }
     else
     {
