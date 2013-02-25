@@ -42,7 +42,7 @@ class JBS701Update
 				{
 					$languagetag = 1;
                     $changefield = array('table' => '#__bsms_topics','field' => 'languages', 'type' => 'change', 'command' => '`params` varchar(511) NULL');
-                    if (!$dbhelper->alterDB($addfield, "Build 701: "))
+                    if (!$dbhelper->alterDB($changefield, "Build 701: "))
                     {
                         JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
                         return false;
