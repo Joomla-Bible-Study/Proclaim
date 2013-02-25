@@ -89,7 +89,7 @@ class JBS701Update
 		$query = $db->getQuery(true);
 		$query->insert('#__bsms_studytopics (study_id, topic_id)')
 			->select('#__bsms_studies.id, #__bsms_studies.topics_id ')
-			->from('__bsms_studies')
+			->from('#__bsms_studies')
 			->where('#__bsms_studies.topics_id > 0');
 		/* Need to test this out.
 		* $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id,
