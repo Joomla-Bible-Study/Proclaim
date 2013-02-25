@@ -111,6 +111,21 @@ class JBSMDbHelper
 						}
 					}
 					break;
+
+                case 'change':
+                    if (!table || !$field)
+                    {
+                        break;
+                    }
+                    if (self::checkTables($table, $field) === true)
+                    {
+                        $query = 'ALTER TABLE `' . $table . '` CHANGE `' . $field . '`' . $command;
+
+                        if (!self::performDB($query, $from))
+                        {
+                            return false;
+                        }
+                    }
 			}
 		}
 

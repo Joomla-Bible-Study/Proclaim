@@ -7,7 +7,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 /**
  * Update for 7.0.1 class
  *
@@ -31,7 +31,9 @@ class JBS701Update
 		$tables      = $db->getTableColumns('#__bsms_topics');
 		$languagetag = 0;
 		$paramstag   = 0;
-
+        $dbhelper = new JBSMDbHelper;
+        if (is_array($tables))
+        {
 		foreach ($tables as $table)
 		{
 			foreach ($table as $key => $value)
@@ -39,15 +41,12 @@ class JBS701Update
 				if (substr_count($key, 'languages'))
 				{
 					$languagetag = 1;
-					$query       = 'ALTER TABLE #__bsms_topics CHANGE `languages` `params` varchar(511) NULL';
-					$db->setQuery($query);
-
-					if (!$db->execute())
-					{
-						JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-
-						return false;
-					}
+                    $changefield = array('table' => '#__bsms_topics','field' => 'languages', 'type' => 'change', 'command' => '`params` varchar(511) NULL');
+                    if (!$dbhelper->alterDB($addfield, "Build 701: "))
+                    {
+                        JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+                        return false;
+                    }
 				}
 				elseif (substr_count($key, 'params'))
 				{
@@ -56,18 +55,25 @@ class JBS701Update
 			}
 			if (!$languagetag && !$paramstag)
 			{
-				$query = 'ALTER TABLE #__bsms_topics ADD `params` varchar(511) NULL';
-				$db->setQuery($query);
 
-				if (!$db->execute())
-				{
-					JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+                $addfield = array(
+                    'table'   => '#__bsms_topics', 'field' => 'params', 'type' => 'ADD',
+                    'command' => 'varchar(511) NULL'
+                );
+                if (!$dbhelper->alterDB($addfield, "Build 701: "))
+                {
+                    JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+                    return false;
+                }
 
-					return false;
-				}
 			}
 		}
-
+    }
+    else
+    {
+    JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+    return false;
+    }
 		$fixtopics = $this->updatetopics();
 
 		if (!$fixtopics)
