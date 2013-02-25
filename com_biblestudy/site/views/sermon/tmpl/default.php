@@ -56,7 +56,7 @@ defined('_JEXEC') or die;
                     $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
                     if (file_exists($comments)) {
                         require_once($comments);
-                        echo JComments::showComments($this->item->id, 'com_biblestudy', $this->item->studytitle);
+                        echo JComments::show($this->item->id, 'com_biblestudy', $this->item->studytitle);
                     }
                     echo $this->loadTemplate('commentsform');
                     break;
