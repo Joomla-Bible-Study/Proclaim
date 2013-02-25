@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No Direct Access
+
 defined('_JEXEC') or die;
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 /**
@@ -29,50 +29,52 @@ class JBS701Update
 
 		// Modify table topics
 		$tables      = $db->getTableColumns('#__bsms_topics');
-		$languagetag = 0;
-		$paramstag   = 0;
-        $dbhelper = new JBSMDbHelper;
-        if (is_array($tables))
-        {
+		$languagetag = false;
+		$paramstag   = false;
+		$dbhelper    = new JBSMDbHelper;
 
-			foreach ($tables as $key => $value)
+		if (is_array($tables))
+		{
+			if (isset($tables['languages']))
 			{
-				if (substr_count($key, 'languages'))
+				$languagetag = true;
+				$changefield = array(array('table' => '#__bsms_topics', 'field' => 'languages', 'type' => 'CHANGE', 'command' => '`params` varchar(511) NULL'));
+
+				if (!$dbhelper->alterDB($changefield, "Build 701: "))
 				{
-					$languagetag = 1;
-                    $changefield = array('table' => '#__bsms_topics','field' => 'languages', 'type' => 'change', 'command' => '`params` varchar(511) NULL');
-                    if (!$dbhelper->alterDB($changefield, "Build 701: "))
-                    {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-                        return false;
-                    }
+					JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+
+					return false;
 				}
-				elseif (substr_count($key, 'params'))
-				{
-					$paramstag = 1;
-				}
+			}
+			elseif (isset($tables['params']))
+			{
+				$paramstag = true;
 			}
 			if (!$languagetag && !$paramstag)
 			{
 
-                $addfield = array(
-                    'table'   => '#__bsms_topics', 'field' => 'params', 'type' => 'ADD',
-                    'command' => 'varchar(511) NULL'
-                );
-                if (!$dbhelper->alterDB($addfield, "Build 701: "))
-                {
-                    JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-                    return false;
-                }
+				$addfield = array(array(
+					'table'   => '#__bsms_topics', 'field' => 'params', 'type' => 'ADD',
+					'command' => 'varchar(511) NULL'
+				));
+
+				if (!$dbhelper->alterDB($addfield, "Build 701: "))
+				{
+					JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+
+					return false;
+				}
 
 			}
 
-    }
-    else
-    {
-    JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-    return false;
-    }
+		}
+		else
+		{
+			JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+
+			return false;
+		}
 		$fixtopics = $this->updatetopics();
 
 		if (!$fixtopics)
@@ -96,9 +98,6 @@ class JBS701Update
 			->select('#__bsms_studies.id, #__bsms_studies.topics_id ')
 			->from('#__bsms_studies')
 			->where('#__bsms_studies.topics_id > 0');
-		/* Need to test this out.
-		* $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id,
-		* #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0'; */
 		$db->setQuery($query);
 
 		if (!$db->execute())

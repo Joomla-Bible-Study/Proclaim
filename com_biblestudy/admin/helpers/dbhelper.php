@@ -44,7 +44,7 @@ class JBSMDbHelper
 
 	/**
 	 * Alters a table
-	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY tables.
+	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
 	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
 	 * @param   string  $from    Where the query is coming from for msg
@@ -112,20 +112,20 @@ class JBSMDbHelper
 					}
 					break;
 
-                case 'change':
-                    if (!table || !$field)
-                    {
-                        break;
-                    }
-                    if (self::checkTables($table, $field) === true)
-                    {
-                        $query = 'ALTER TABLE `' . $table . '` CHANGE `' . $field . '`' . $command;
+				case 'change':
+					if (!$table || !$field)
+					{
+						break;
+					}
+					if (self::checkTables($table, $field) === true)
+					{
+						$query = 'ALTER TABLE `' . $table . '` CHANGE `' . $field . '`' . $command;
 
-                        if (!self::performDB($query, $from))
-                        {
-                            return false;
-                        }
-                    }
+						if (!self::performDB($query, $from))
+						{
+							return false;
+						}
+					}
 			}
 		}
 

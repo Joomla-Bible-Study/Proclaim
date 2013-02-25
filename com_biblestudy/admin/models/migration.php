@@ -79,7 +79,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Makes sure that no more than 2 seconds since the start of the timer have elapsed
+	 * Makes sure that no more than 3 seconds since the start of the timer have elapsed
 	 *
 	 * @return bool
 	 */
@@ -88,7 +88,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 2;
+		return $elapsed < 3;
 	}
 
 	/**
@@ -261,6 +261,8 @@ class BibleStudyModelMigration extends JModelLegacy
 			}
 		}
 
+		$this->resetTimer();
+
 		if (empty($this->_versionStack) && !empty($this->_filesStack))
 		{
 			while (!empty($this->_filesStack) && $this->haveEnoughTime())
@@ -270,6 +272,8 @@ class BibleStudyModelMigration extends JModelLegacy
 				$this->allUpdate($files);
 			}
 		}
+
+		$this->resetTimer();
 
 		if (empty($this->_versionStack) && empty($this->_filesStack) && !empty($this->_afterStack))
 		{
@@ -566,7 +570,8 @@ class BibleStudyModelMigration extends JModelLegacy
 			elseif ($files)
 			{
 				$this->totalVersions += count($files);
-				$this->_filesStack = array_merge($this->_filesStack, $files);
+				$files             = array_reverse($files);
+				$this->_filesStack = $files;
 			}
 			else
 			{
@@ -602,7 +607,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function doVersionUpdate($version)
 	{
-		$migration = new MigrationUpgrade();
+		$migration = new MigrationUpgrade;
 
 		if (call_user_func(array($migration, $version)))
 		{

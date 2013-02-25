@@ -352,7 +352,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&jbsimport=1');
 		}
 		else
 		{

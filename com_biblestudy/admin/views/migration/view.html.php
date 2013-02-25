@@ -36,14 +36,17 @@ class BiblestudyViewMigration extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$model = $this->getModel('migration');
+
+		if (!JFactory::getApplication()->input->get('task'))
+		{
+			$state = $model->startScanning();
+			$model->setState('scanstate', $state);
+		}
 		$state = $model->getState('scanstate', false);
 
-		$total = max(1, $model->totalVersions);
-		$done  = $model->doneVersions;
+		$total           = max(1, $model->totalVersions);
+		$done            = $model->doneVersions;
 		$this->callstack = $model->getState('migration_stack');
-		var_dump($total);
-		var_dump($done);
-		var_dump($state);
 
 		if ($state)
 		{
@@ -82,6 +85,6 @@ class BiblestudyViewMigration extends JViewLegacy
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
 
-		parent::display();
+		parent::display($tpl);
 	}
 }
