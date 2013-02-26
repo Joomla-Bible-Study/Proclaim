@@ -84,7 +84,8 @@ class BiblestudyViewMigration extends JViewLegacy
 			$script .= "});\n";
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
-
+        $title = JFactory::getApplication()->get('JComponentTitle');
+        JToolBarHelper::title($title);
 		parent::display($tpl);
 	}
 }

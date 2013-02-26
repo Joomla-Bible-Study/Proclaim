@@ -1,103 +1,72 @@
 <?php
+
 /**
- * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * Update for 7.1.0
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
-// No Direct Access
+//No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('jbsDBhelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Update for 7.1.0 class
- *
- * @package  BibleStudy.Admin
- * @since    7.1.0
+ * @package BibleStudy.Admin
+ * @since 7.1.0
  */
-class JBS710Update
-{
+class JBS710Update {
 
-	/**
-	 * Method to Update to 7.1.0
-	 *
-	 * @return boolean
-	 */
-	public function update710()
-	{
-		$app     = JFactory::getApplication();
-		$db      = JFactory::getDBO();
-		$old_css = false;
-		$newCSS  = null;
-		jimport('joomla.filesystem.file');
+    /**
+     * Method to Update to 7.1.0
+     * @return boolean
+     */
+    public function update710() {
+        $db = JFactory::getDBO();
+        $oldcss = FALSE;
+        jimport('joomla.filesystem.file');
+        //Check to see if there is an existing css
+        $src = JPATH_SITE . '/tmp/biblestudy.css';
+        //There is no existing css so let us check for a backup
+        $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        $default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        //if there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
 
-		// Check to see if there is an existing css
-		$src = JPATH_SITE . '/tmp/biblestudy.css';
+        if (JFile::exists($src)) {
+            $oldcss = JFile::read($src);
+        } elseif (JFile::exists($backup)) {
+            $oldcss = JFile::read($backup);
+        } else {
+            $newCSS = JFile::read($default);
+        }
+        if ($oldcss) {
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            if ($result) {
+                $query = 'UPDATE #__bsms_styles SET `stylecode` = "' . $db->escape($oldcss) . '" WHERE `id` = ' . $result->id;
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-		// There is no existing css so let us check for a backup
-		$backup  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/backup/biblestudy.css';
-		$default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/biblestudy.css';
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                }
+            } else {
+                $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($oldcss) . '",0)';
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-		// If there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
-
-		if (JFile::exists($src))
-		{
-			$old_css = file_get_contents($src);
-		}
-		elseif (JFile::exists($backup))
-		{
-			$old_css = file_get_contents($backup);
-		}
-		else
-		{
-			$newCSS = file_get_contents($default);
-		}
-		if ($old_css)
-		{
-			$query = $db->getQuery(true);
-			$query->select('*')
-				->from('#__bsms_styles');
-			$db->setQuery($query);
-			$result = $db->loadObjectList();
-			
-
-			if ($result)
-			{
-				$query = $db->getQuery('true');
-				$query->update('#__bsms_styles')
-					->set($db->qn('stylecode') . '=' . $db->q($db->escape($old_css)))
-					->where($db->qn('id') . '=' . (int) $db->q($result->id));
-				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
-
-					return false;
-				}
-			}
-			else
-			{
-				$data            = new stdClass;
-				$data->published = 1;
-				$data->filename  = 'biblstudy';
-				$data->stylecode = $db->escape($old_css);
-				$data->asset_id  = 0;
-
-				if (!$db->insertObject('#__bsms_styles', $data, 'id'))
-				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
-
-					return false;
-				}
-			}
-			if (JFile::exists($src))
-			{
-				JFile::delete($src);
-			}
-			// Add CSS to the file
-			$new710css = '
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                }
+            }
+            if (JFile::exists($src)) {
+                JFile::delete($src);
+            }
+            //Add CSS to the file
+            $new710css = '
 /* New Teacher Codes */
 #bsm_teachertable_list .bsm_teachername
 {
@@ -315,100 +284,68 @@ div.listingfooter ul li {
 }
 
 ';
+            if (jbsDBhelper::fixupcss('biblestudy', true, $new710css, null)) {
+                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+                $db->setQuery($query);
+                $result = $db->loadObject();
+                jbsDBhelper::reloadtable($result, 'Style');
+                JBS710Update::setemptytemplates();
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            if (!$result) {
+                $query = 'INSERT INTO #__bsms_styles (`published`, `filename`, `stylecode`, `asset_id`) VALUES (1,"biblestudy","' . $db->escape($newCSS) . '",0)';
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-			if (JBSMDbHelper::fixupcss('biblestudy', true, $new710css, null))
-			{
-				$query = $db->getQuery(true);
-				$query->select('*')
-					->from('#__bsms_styles')
-					->where($db->qn('filename') . '=' . $db->q('biblestudy'));
-				$db->setQuery($query);
-				$result = $db->loadObject();
-				if ($result) {JBSMDbHelper::reloadtable($result, 'Style');}
-				self::setemptytemplates();
+                    return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
+                }
+                $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+                $db->setQuery($query);
+                $result = $db->loadObject();
+                jbsDBhelper::reloadtable($result, 'Style');
+                JBS710Update::setemptytemplates();
+                JError::raiseNotice(1, 'No CSS files where found so loaded default css info');
+                return TRUE;
+            }
+        }
 
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			$query = $db->getQuery(true);
-			$query->select('*')
-				->from('#__bsms_styles')
-				->where($db->qn('filename') . '=' . $db->q('biblestudy'));
-			$db->setQuery($query);
-			$result = $db->loadObject();
+        return true;
+        //end if no new css file
+    }
 
-			if (!$result)
-			{
-				$objects            = new stdClass;
-				$objects->id        = null;
-				$objects->published = 1;
-				$objects->filename  = 'biblestudy';
-				$objects->stylecode = $db->escape($newCSS);
-				$objects->asset_id  = 0;
+    public static function setemptytemplates() {
+        $db = JFactory::getDBO();
+        $query = 'SELECT id FROM #__bsms_templates';
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+        foreach ($results as $result)
+        {
+            // Store new Recorde so it can be seen.
+            JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+            $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+            try {
+                $table->load($result->id);
+                $table->store();
+                $table->load($result->id);
+                $registry = new JRegistry;
+                $registry->loadString($table->params);
+                $css = $registry->get('css');
+                $registry->set('css', 'biblestudy.css');
 
-				if (!$db->insertObject('#__bsms_styles', $objects, 'id'))
-				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
-
-					return false;
-				}
-				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_styles')->where($db->qn('filename') . '=' . $db->q('biblestudy'));
-				$db->setQuery($query);
-				JBSMDbHelper::reloadtable($db->loadObject(), 'Style');
-				self::setemptytemplates();
-				$app->enqueueMessage('No CSS files where found so loaded default css info', 'notice');
-
-				return true;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Set Empty Templates
-	 *
-	 * @return void
-	 */
-	public static function setemptytemplates()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')->from('#__bsms_templates');
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
-        if (!$results){return false;}
-		foreach ($results as $result)
-		{
-			// Store new Record so it can be seen.
-			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-			$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-
-			try
-			{
-				$table->load($result->id);
-				$table->store();
-				$table->load($result->id);
-				$registry = new JRegistry;
-				$registry->loadString($table->params);
-				$registry->set('css', 'biblestudy.css');
-
-				// Now write the params back into the $table array and store.
-				$table->params = (string) $registry->toString();
-				$table->store();
-			}
-			catch (Exception $e)
-			{
-				JFactory::getApplication()->enqueueMessage('Caught exception: ' . $e->getMessage(), 'warning');
-			}
-		}
-	}
+                //Now write the params back into the $table array and store.
+                $table->params = (string) $registry->toString();
+                $table->store();
+            } catch (Exception $e) {
+                JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
+            }
+        }
+    }
 
 }

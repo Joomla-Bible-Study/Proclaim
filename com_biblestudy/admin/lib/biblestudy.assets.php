@@ -52,7 +52,7 @@ class FixJBSAssets
 			// Put the table into the return array
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
-			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
+			$query->select('j.id, j.asset_id, a.id as aid, a.parent_id')
 				->from($db->qn($object['name']) . ' as j')
 				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
@@ -62,13 +62,13 @@ class FixJBSAssets
 			foreach ($results as $result)
 			{
 				// If there is no jasset_id it means that this has not been set and should be
-				if (!$result->jasset_id)
+				if (!$result->asset_id)
 				{
 					self::setasset($result, $object['assetname']);
 				}
 
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if ($parent_id != $result->parent_id && $result->jasset_id)
+				if ($parent_id != $result->parent_id && $result->asset_id)
 				{
 					self::deleteasset($result);
 					self::setasset($result, $object['assetname']);
@@ -287,19 +287,19 @@ class FixJBSAssets
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 		$table = JTable::getInstance($assetname, 'Table', array('dbo' => $db));
 
-		if ($data->jid)
+		if ($data->id)
 		{
 			try
 			{
-				$table->load($data->jid);
-			}
+				$table->load($data->id);
+   			}
 			catch (Exception $e)
 			{
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 
 				return false;
 			}
-			if (!$table->store())
+			if (@!$table->store())
 			{
 				JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
 
