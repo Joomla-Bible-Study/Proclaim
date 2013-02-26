@@ -60,8 +60,7 @@ class JBS710Update
 				->from('#__bsms_styles');
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
-			var_dump($result);
-			die();
+			
 
 			if ($result)
 			{
