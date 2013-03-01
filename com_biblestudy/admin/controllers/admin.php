@@ -293,8 +293,18 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function dbReset()
 	{
-		JBSMDbHelper::resetdb();
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+        $user   = JFactory::getUser();
+        if (in_array('8', $user->groups))
+        {
+            JBSMDbHelper::resetdb();
+            $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+        }
+        else
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+            $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+        }
+
 	}
 
 
