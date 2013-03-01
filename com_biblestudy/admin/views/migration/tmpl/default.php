@@ -33,7 +33,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <form action="index.php" name="adminForm" id="adminForm">
     <input type="hidden" name="option" value="com_biblestudy"/>
     <input type="hidden" name="view" value="migration"/>
-    <input type="hidden" name="task" value="run"/>
+    <input type="hidden" name="task" value="browse"/>
     <input type="hidden" name="tmpl" value="component"/>
 </form>
 

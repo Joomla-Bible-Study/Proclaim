@@ -23,6 +23,8 @@ class BiblestudyViewMigration extends JViewLegacy
 
 	protected $callstack;
 
+	protected $i = 0;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -39,17 +41,20 @@ class BiblestudyViewMigration extends JViewLegacy
 
 		if (!JFactory::getApplication()->input->get('task'))
 		{
-			$state = $model->startScanning();
-			$model->setState('scanstate', $state);
+			//$model->setRedirect;
+			//$model->setState('scanstate', $state);
+			//$this->i++;
+			//var_dump($this->i);
 		}
 		$state = $model->getState('scanstate', false);
 
 		$total           = max(1, $model->totalVersions);
 		$done            = $model->doneVersions;
-		$this->callstack = $model->getState('migration_stack');
 
 		if ($state)
 		{
+			var_dump($state); var_dump($total); var_dump($done);
+			die();
 			if ($total > 0)
 			{
 				$percent = min(max(round(100 * $done / $total), 1), 100);
@@ -59,6 +64,8 @@ class BiblestudyViewMigration extends JViewLegacy
 		}
 		else
 		{
+			var_dump($state);
+			die();
 			$percent = 100;
 			$more    = false;
 		}
@@ -84,8 +91,9 @@ class BiblestudyViewMigration extends JViewLegacy
 			$script .= "});\n";
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
-        $title = JFactory::getApplication()->get('JComponentTitle');
-        JToolBarHelper::title($title);
+		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 		parent::display($tpl);
 	}
 }

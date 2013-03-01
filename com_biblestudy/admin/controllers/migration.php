@@ -70,8 +70,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 			$state = $model->startScanning();
 			$model->setState('scanstate', $state);
 		}
-
-		$this->display(false);
 	}
 
 	/**
@@ -86,8 +84,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		$model = $this->getModel('migration');
 		$state = $model->run();
 		$model->setState('scanstate', $state);
-
-		$this->display(false);
 	}
 
 }

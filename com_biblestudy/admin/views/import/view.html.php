@@ -39,8 +39,9 @@ class BiblestudyViewImport extends JViewLegacy
 	{
 		$app             = JFactory::getApplication();
 		$this->jbsimport = $app->input->getInt('jbsimport', 0);
-		$title           = JFactory::getApplication()->get('JComponentTitle');
-		JToolBarHelper::title($title);
+		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 
 		return parent::display($tpl);
 	}
