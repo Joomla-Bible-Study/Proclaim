@@ -66,7 +66,7 @@ if ($msg)
 	<?php echo $this->sidebar; ?>
 	<?php endif; ?>
 </div>
-<div id="j-main-container" class="span10 <?php if (!BIBLESTUDY_CHECKREL) echo 'fltrt width-80' ?>">
+<div id="j-main-container" class="span10">
 <div class="fbwelcome">
     <h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
@@ -107,56 +107,56 @@ if ($msg)
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-teachers.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=series"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_SERIES'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-series.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=messagetypes"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-messagetype.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=locations"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-locations.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=topics"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-topics.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=comments"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-comments.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=servers"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-servers.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=folders"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_FOLDERS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-folder.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_FOLDERS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_FOLDERS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=podcasts"
@@ -170,14 +170,14 @@ if ($msg)
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-social.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=templates"
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-templates.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mediaimages"
@@ -191,7 +191,7 @@ if ($msg)
                                  style="text-decoration:none;"
                                  title="<?php echo JText::_('JBS_CMN_MIME_TYPES'); ?>"> <img
                     src="../media/com_biblestudy/images/icons/icon-48-mimetype.png" alt="" align="middle"
-                    border="0"/> <span> <?php echo JText::_('JBS_CMN_MIME_TYPES'); ?> </a></div>
+                    border="0"/> <span> <?php echo JText::_('JBS_CMN_MIME_TYPES'); ?> </span></a></div>
         </div>
         <div style="float:left;">
             <div class="icon"><a href="index.php?option=com_biblestudy&amp;view=styles"
@@ -200,8 +200,7 @@ if ($msg)
                     src="../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align="middle"
                     border="0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a></div>
         </div>
-		<?php // FIXME need to fix the LiveUpdate system to 2.5 and 3.0
-		//echo LiveUpdate::getIcon(); ?>
+		<?php// echo LiveUpdate::getIcon(); ?>
     </div>
     <div style="clear: both;"></div>
 </div>

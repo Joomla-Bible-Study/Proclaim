@@ -292,7 +292,7 @@ class FixJBSAssets
 			try
 			{
 				$table->load($data->id);
-   			}
+			}
 			catch (Exception $e)
 			{
 				echo 'Caught exception: ', $e->getMessage(), "\n";
@@ -320,23 +320,29 @@ class FixJBSAssets
 	private static function deleteasset($data)
 	{
 		$db = JFactory::getDBO();
-
-		if ($data->jasset_id >= 2)
+		if (isset($data->jasset_id))
 		{
-			$query = $db->getQuery(true);
-			$query->delete('#__assets')
-				->where('id = ' . $db->quote($data->jasset_id));
-			$db->setQuery($query);
-
-			if (!$db->execute())
+			if ($data->jasset_id >= 2)
 			{
-				JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+				$query = $db->getQuery(true);
+				$query->delete('#__assets')
+					->where('id = ' . $db->quote($data->jasset_id));
+				$db->setQuery($query);
 
-				return false;
+				if (!$db->execute())
+				{
+					JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+
+					return false;
+				}
 			}
-		}
 
-		return true;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }

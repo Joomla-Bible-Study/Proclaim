@@ -8,6 +8,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
 /**
  * This is for Retrieving Admin and Template db
  *
@@ -28,22 +30,27 @@ class JBSMParams
 	 */
 	public static function getAdmin()
 	{
-		$db     = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('*')
-            ->from('#__bsms_admin')
-            ->where($db->qn('id') . ' = ' . (int) 1);
-        $db->setQuery($query);
-        $admin    = $db->loadObject();
-        $registry = new JRegistry;
-        $registry->loadString($admin->params);
-        $admin->params = $registry;
+		if (JBSMDbHelper::checkIfTable('#__bsms_admin'))
+		{
+			$db    = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('*')
+				->from('#__bsms_admin')
+				->where($db->qn('id') . ' = ' . (int) 1);
+			$db->setQuery($query);
+			$admin    = $db->loadObject();
+			$registry = new JRegistry;
+			$registry->loadString($admin->params);
+			$admin->params = $registry;
 
-        // Add the current user id
-        $user           = JFactory::getUser();
-        $admin->user_id = $user->id;
+			// Add the current user id
+			$user           = JFactory::getUser();
+			$admin->user_id = $user->id;
 
-		return $admin;
+			return $admin;
+		}
+
+		return false;
 	}
 
 	/**

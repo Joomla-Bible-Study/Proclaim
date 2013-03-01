@@ -19,6 +19,33 @@ class JBSMDbHelper
 	public static $extension = 'com_biblestudy';
 
 	/**
+	 * System to Check if Table Exists
+	 *
+	 * @param    string  $cktable  Table to check for exp:"#__bsms_admin
+	 *
+	 * @return bool  If table is there True else False if not.
+	 */
+	public static function checkIfTable($cktable)
+	{
+
+		$db     = JFactory::getDbo();
+		$tables = $db->getTableList();
+		$prefix = $db->getPrefix();
+
+		foreach ($tables AS $table)
+		{
+			$tableAF = str_replace($prefix, "#__", $table);
+			if ($tableAF == $cktable)
+			{
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Discover the fields in a table
 	 *
 	 * @param   string  $table  Is the table you are checking
