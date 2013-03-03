@@ -360,6 +360,7 @@ div.listingfooter ul li {
 			try
 			{
 				$table->load($result->id);
+                //@todo this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 				@$table->store();
 				$table->load($result->id);
 				$registry = new JRegistry;
@@ -369,6 +370,7 @@ div.listingfooter ul li {
 
 				//Now write the params back into the $table array and store.
 				$table->params = (string) $registry->toString();
+                //@todo this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 				@$table->store();
 			}
 			catch (Exception $e)
