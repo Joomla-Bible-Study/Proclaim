@@ -91,9 +91,9 @@ class BiblestudyViewMigration extends JViewLegacy
 			$script .= "});\n";
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
-		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		JToolBarHelper::title(JText::_('Joomla Bible Study Migration'), 'administration');
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
+		$document->setTitle(JText::_('Joomla Bible Study Migration'));
 
 		return parent::display($tpl);
 	}

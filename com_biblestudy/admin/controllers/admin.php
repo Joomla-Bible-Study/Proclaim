@@ -362,11 +362,11 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=import&jbsimport=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1');
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1', 'error');
+			$this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1');
 		}
 	}
 

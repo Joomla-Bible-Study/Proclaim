@@ -33,17 +33,22 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
     <input type="hidden" name="option" value="com_biblestudy"/>
     <input type="hidden" name="view" value="migration"/>
     <input type="hidden" name="task" value="migration.run"/>
-    <input type="hidden" name="tmpl" value="component"/>
 </form>
 
 <?php if (!$this->more): ?>
-<div class="alert alert-info">
-    <p><?php echo JText::_('JBS_MIG__LBL_AUTOCLOSE_IN_3S'); ?></p>
+<div id="j-main-container" class="span10">
+    <div id="cpanel" style="padding-left: 20px">
+        <div class="pull-left">
+            <div class="icon">
+                <a href="index.php?option=com_biblestudy&view=cpanel">
+                    <img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+                         border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
+					<span>
+						<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
+					</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="text/javascript">
-    window.setTimeout('closeme();', 3000);
-    function closeme() {
-        parent.SqueezeBox.close();
-    }
-</script>
 <?php endif; ?>
