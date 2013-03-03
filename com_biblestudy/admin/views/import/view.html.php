@@ -38,7 +38,13 @@ class BiblestudyViewImport extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$app             = JFactory::getApplication();
-		$this->jbsimport = $app->input->getInt('jbsimport', 0);
+
+		if ($app->input->getInt('jbsimport') == 0)
+		{
+			JBSMDbHelper::resetdb();
+			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+		}
+
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));

@@ -23,7 +23,6 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <?php else: ?>
 <h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
-<h3><?php var_dump($this->callstack) ?></h3>
 
 
 <div class="progress progress-striped active">
@@ -33,7 +32,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <form action="index.php" name="adminForm" id="adminForm">
     <input type="hidden" name="option" value="com_biblestudy"/>
     <input type="hidden" name="view" value="migration"/>
-    <input type="hidden" name="task" value="browse"/>
+    <input type="hidden" name="task" value="migration.run"/>
     <input type="hidden" name="tmpl" value="component"/>
 </form>
 

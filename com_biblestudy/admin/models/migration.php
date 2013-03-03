@@ -206,15 +206,7 @@ class BibleStudyModelMigration extends JModelLegacy
 
 		$this->saveStack();
 
-		if (!$this->haveEnoughTime())
-		{
-
-			return true;
-		}
-		else
-		{
-			return $this->run(false);
-		}
+		return true;
 	}
 
 	/**
@@ -261,8 +253,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			}
 		}
 
-		$this->resetTimer();
-
 		if (empty($this->_versionStack) && !empty($this->_filesStack))
 		{
 			while (!empty($this->_filesStack) && $this->haveEnoughTime())
@@ -272,8 +262,6 @@ class BibleStudyModelMigration extends JModelLegacy
 				$this->allUpdate($files);
 			}
 		}
-
-		$this->resetTimer();
 
 		if (empty($this->_versionStack) && empty($this->_filesStack) && !empty($this->_afterStack))
 		{
