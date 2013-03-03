@@ -396,7 +396,7 @@ class JBSMDbHelper
 		try
 		{
 			$table->load($result->id);
-			$table->store();
+			@$table->store();
 		}
 		catch (Exception $e)
 		{
