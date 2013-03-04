@@ -191,7 +191,7 @@ class JBSMElements
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = jbsMedia::getMediaTable($row, $params, $admin_params); 
+				$elementid->element    = self::getMediaTable($row, $params, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -721,7 +721,7 @@ class JBSMElements
 		$getMedia = new jbsMedia;
 		jimport('joomla.application.component.helper');
 
-		if (!$row->id)
+		if (!isset($row->id))
 		{
 			return false;
 		}
