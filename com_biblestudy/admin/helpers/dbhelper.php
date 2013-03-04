@@ -396,7 +396,8 @@ class JBSMDbHelper
 		try
 		{
 			$table->load($result->id);
-			$table->store();
+            //@todo this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
+			@$table->store();
 		}
 		catch (Exception $e)
 		{
