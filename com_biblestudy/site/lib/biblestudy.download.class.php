@@ -59,7 +59,7 @@ class Dump_File
 			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
-			->leftJoin('JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
 			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
 			->where('#__bsms_mediafiles.id = ' . $mid);
 		$db->setQuery($query, 0, 1);
