@@ -26,7 +26,7 @@ class JFormFieldMediafile extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Locations';
+	protected $type = 'Mediafile';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -37,8 +37,9 @@ class JFormFieldMediafile extends JFormFieldList
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('id,location_text');
-		$query->from('#__bsms_locations');
+		$query->select('id,filename');
+		$query->from('#__bsms_mediafiles');
+        $query->where('study_id = ' . $this->id);
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 
@@ -48,7 +49,7 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, $message->location_text);
+				$options[] = JHtml::_('select.option', $message->id, empty($message->filename) ? $message->id : $message->filename);
 			}
 		}
 

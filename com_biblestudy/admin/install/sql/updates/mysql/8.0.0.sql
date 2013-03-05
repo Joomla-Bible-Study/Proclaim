@@ -30,3 +30,5 @@ ALTER TABLE  `#__bsms_update` ENGINE = INNODB;
 
 ALTER TABLE `#__bsms_podcast` ADD `episodesubtitle` int(11) DEFAULT NULL;
 ALTER TABLE `#__bsms_podcast` ADD `customsubtitle` varchar(200) DEFAULT NULL;
+
+ALTER TABLE `#__bsms_studies` ADD `download_id` int(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile';

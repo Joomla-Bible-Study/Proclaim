@@ -358,6 +358,14 @@ foreach ($params as $name => $fieldSet): ?>
         </tr>
         </tfoot>
     </table>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('download_id'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('download_id'); ?>
+        </div>
+    </div>
 </div>
 
 <?php if ($this->canDo->get('core.admin')): ?>

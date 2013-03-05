@@ -402,6 +402,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
   `access` int(10) unsigned NOT NULL DEFAULT '1',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Studies.',
+  `download_id` int(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`),

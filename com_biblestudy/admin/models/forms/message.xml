@@ -39,6 +39,10 @@
         <option value="*">JALL</option>
     </field>
 
+    <field name="download_id" type="mediafile" label="JBS_STY_DOWNLOAD_LINK" description="JBS_STY_DOWNLOAD_LINK_DESC" default="0"
+            >
+        <option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
+            </field>
     <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
            description="JBS_STY_CREATE_DATE_DESC" class="inputbox span12 small"
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true" labelclass="control-label"/>
