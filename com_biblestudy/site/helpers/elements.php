@@ -30,7 +30,7 @@ class JBSMElements
 	 * Get Elementid
 	 *
 	 * @param   int        $rowid         ID
-	 * @param   object     $row           Table info
+	 * @param   JTable     $row           Table info
 	 * @param   JRegistry  $params        Component / System Params
 	 * @param   JRegistry  $admin_params  Admin Settings
 	 * @param   int        $template      Template ID
@@ -39,7 +39,7 @@ class JBSMElements
 	 * @return object
 	 */
 	public function getElementid($rowid, $row, $params, $admin_params, $template)
-	{ 
+	{
 		// Start Element ID
 		$elementid = new stdClass;
 
@@ -97,40 +97,96 @@ class JBSMElements
 					$elementid->element = '';
 				}
 				break;
-			case 7: 
+			case 7:
 				$elementid->id         = 'teacher';
 				$elementid->headertext = JText::_('JBS_CMN_TEACHER');
-				if (isset($row->teachername)){$elementid->element    = $row->teachername;} else {$elementid->element = '';}
+
+				if (isset($row->teachername))
+				{
+					$elementid->element = $row->teachername;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 8:
 				$elementid->id         = 'teacher';
 				$elementid->headertext = JText::_('JBS_CMN_TEACHER');
-				if (isset($row->teachertitle) && isset($row->teachername)){$elementid->element    = $row->teachertitle . ' ' . $row->teachername;} else {$elementid->element = '';}
+
+				if (isset($row->teachertitle) && isset($row->teachername))
+				{
+					$elementid->element = $row->teachertitle . ' ' . $row->teachername;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 9:
 				$elementid->id         = 'series';
 				$elementid->headertext = JText::_('JBS_CMN_SERIES');
-				if (isset($row->series_text)){$elementid->element    = $row->series_text;} else {$elementid->element = '';} 
+
+				if (isset($row->series_text))
+				{
+					$elementid->element = $row->series_text;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 10:
-				$elementid->id         = 'date'; 
+				$elementid->id         = 'date';
 				$elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
-				if (isset($row->studydate)){$elementid->element    = self::getstudyDate($params,$row->studydate);} else {$elementid->element = '';}
+
+				if (isset($row->studydate))
+				{
+					$elementid->element = self::getstudyDate($params, $row->studydate);
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 11:
 				$elementid->id         = 'submitted';
 				$elementid->headertext = JText::_('JBS_CMN_SUBMITTED_BY');
-				if (isset($row->submitted)){$elementid->element    = $row->submitted;} else {$elementid->element = '';}
+
+				if (isset($row->submitted))
+				{
+					$elementid->element = $row->submitted;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 12:
 				$elementid->id         = 'hits';
 				$elementid->headertext = JText::_('JBS_CMN_VIEWS');
-				if (isset($row->hits)){$elementid->element    = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;} else {$elementid->element = '';}
+
+				if (isset($row->hits))
+				{
+					$elementid->element = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 13:
 				$elementid->id         = 'studynumber';
 				$elementid->headertext = JText::_('JBS_CMN_STUDYNUMBER');
-				if (isset($row->studynumber)){$elementid->element    = $row->studynumber;} else {$elementid->element = '';}
+
+				if (isset($row->studynumber))
+				{
+					$elementid->element = $row->studynumber;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 14:
 				$elementid->id         = 'topic';
@@ -154,12 +210,28 @@ class JBSMElements
 			case 15:
 				$elementid->id         = 'location';
 				$elementid->headertext = JText::_('JBS_CMN_LOCATION');
-				if (isset($row->location_text)){$elementid->element    = $row->location_text;} else {$elementid->element = '';}
+
+				if (isset($row->location_text))
+				{
+					$elementid->element = $row->location_text;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 16:
 				$elementid->id         = 'messagetype';
 				$elementid->headertext = JText::_('JBS_CMN_MESSAGE_TYPE');
-				if (isset($row->message_type)){$elementid->element    = $row->message_type;} else {$elementid->element = '';}
+
+				if (isset($row->message_type))
+				{
+					$elementid->element = $row->message_type;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 17:
 				$elementid->id         = 'details';
@@ -191,7 +263,7 @@ class JBSMElements
 			case 20:
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = self::getMediaTable($row, $params, $admin_params);
+				$elementid->element    = self::getMediaTable($params, $row, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -246,17 +318,41 @@ class JBSMElements
 			case 27:
 				$elementid->id         = 'series_description';
 				$elementid->headertext = JText::_('JBS_CMN_DESCRIPTION');
-				if (isset($row->sdescription)){$elementid->element    = $row->sdescription;} else {$elementid->element = '';}
+
+				if (isset($row->sdescription))
+				{
+					$elementid->element = $row->sdescription;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 28:
 				$elementid->id         = 'plays';
 				$elementid->headertext = JText::_('JBS_CMN_PLAYS');
-				if (isset($row->totalplays)){$elementid->element    = $row->totalplays;} else {$elementid->element = '';}
+
+				if (isset($row->totalplays))
+				{
+					$elementid->element = $row->totalplays;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 29:
 				$elementid->id         = 'downloads';
 				$elementid->headertext = JText::_('JBS_CMN_DOWNLOADS');
-				if(isset($row->totaldownloads)){$elementid->element    = $row->totaldownloads;} else {$elementid->element = '';}
+
+				if (isset($row->totaldownloads))
+				{
+					$elementid->element = $row->totaldownloads;
+				}
+				else
+				{
+					$elementid->element = '';
+				}
 				break;
 			case 30:
 				$timages              = new JBSMImages;
@@ -725,9 +821,7 @@ class JBSMElements
 		{
 			return false;
 		}
-
 		$database = JFactory::getDBO();
-
 		$images = new JBSMImages;
 
 		if (!isset($admin_params->default_download_image))
@@ -736,7 +830,6 @@ class JBSMElements
 		}
 
 		$download_tmp = $images->getMediaImage($admin_params->default_download_image, $media = null);
-
 		$download_image = $download_tmp->path;
 
 		// Predefine var
@@ -761,7 +854,6 @@ class JBSMElements
 		$database->setQuery($query);
 		$media1 = $database->loadObjectList('id');
 		$rows2  = count($media1);
-
 		$compat_mode = $admin_params->get('compat_mode');
 
 		if ($rows2 < 1)
@@ -770,13 +862,11 @@ class JBSMElements
 
 			return $mediatable;
 		}
-
 		$mediatable = '<div><table class="table mediatable"><tbody><tr>';
 		$row_count  = 0;
 
 		foreach ($media1 as $media)
 		{
-
 			$row_count++;
 
 			// Load the parameters

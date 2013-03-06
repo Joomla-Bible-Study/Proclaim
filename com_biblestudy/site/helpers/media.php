@@ -93,9 +93,9 @@ class JBSMMediaHelper
 
 		$player_width = $params->get('player_width', 290);
 		$media1_link  = '<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
-		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/player.swf" id="audioplayer'
+		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.flash.swf" id="audioplayer'
 			. $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
-		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/player.swf" />
+		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.flash.swf" />
 		    <param name="FlashVars" value="playerID=audioplayer' . $media->id . '&soundFile=' . $path1 . '" />
 		    <param name="quality" value="high" />
 		    <param name="menu" value="false" />

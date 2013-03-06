@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+dump($this->autostart);
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 $jbsMedia = new jbsMedia;
 ?>
@@ -31,16 +31,17 @@ if ($this->params->get('player') == 1 || $this->player == 1)
 	?>
 
 <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $this->playerwidth + 1; ?>px;">
-    <video height="<?php echo $this->playerheight; ?>"
-           poster="<?php echo $this->params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
-           width="<?php echo $this->playerwidth; ?>" id='placeholder'>
-        <source src='<?php echo $this->path1; ?>' style="padding: 10px">
+    <div id='placeholder'>
         <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>
-    </video>
+    </div>
 </div>
 <script language="javascript" type="text/javascript">
     jwplayer('placeholder').setup({
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/player.swf',
+        'file':'<?php echo $this->path1; ?>',
+        'height':'<?php echo $this->playerheight; ?>',
+        'width':'<?php echo $this->playerwidth; ?>',
+        'image':'<?php echo $this->params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>',
+        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf',
         'autostart':'<?php echo $this->autostart; ?>',
         'backcolor':'<?php echo $this->backcolor; ?>',
         'frontcolor':'<?php echo $this->frontcolor; ?>',

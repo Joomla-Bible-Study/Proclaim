@@ -246,7 +246,6 @@ class BiblestudyViewSermons extends JViewLegacy
 				{
 					$item->studyintro = '';
 				}
-				
 
 				if (isset($pelements->secondary_reference))
 				{

@@ -183,7 +183,7 @@ class jbsMedia
 		} // End of if show_file size
 
 		$table .= '</tbody></table>';
-	
+
 		return $table;
 	}
 
@@ -216,7 +216,7 @@ class jbsMedia
 	 */
 	public function getMediaRows($id)
 	{
-	   if (!$id)
+		if (!$id)
 		{
 			return false;
 		}
@@ -428,7 +428,7 @@ class jbsMedia
 		$JBSMElements = new JBSMElements;
 		$filesize     = $JBSMElements->getFilesize($media->size);
 		$docman       = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
-		 title="' . $media->malttext . ' - ' . $media->comment . '" target="'. $media->special .'"><img src="' . $src
+		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
 			. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
 			. '" height="' . $height . '" border="0" /></a>';
 
@@ -501,6 +501,7 @@ class jbsMedia
 		$screencolor  = $params->get('screencolor', '0xFFFFFF');
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
+
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
 		/**
@@ -534,8 +535,8 @@ class jbsMedia
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="'.
-							$media->special .'"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							. $filesize . '" target="' .
+							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
 
 						return $playercode;
@@ -558,15 +559,20 @@ class jbsMedia
 				switch ($player->type)
 				{
 					case 2: // Inline
-						$playercode = "<video height='" . $player->playerheight . "' poster='" . JURI::base()
-							. $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "' width='"
-							. $player->playerwidth . "' id='placeholder'> <source src='" . $path . "' /><a href='http://www.adobe.com/go/getflashplayer'>"
-							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
-									<script type='text/javascript'>
-									jwplayer('placeholder').setup({
-						                                flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
-						                            });
-									</script>";
+						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
+							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
+									<script language=\"javascript\" type=\"text/javascript\">
+    jwplayer('placeholder').setup({
+	    'file' : '<?php echo $path; ?>',
+	    'height' : '<?php echo $height; ?>',
+	    'width' : '<?php echo $width; ?>',
+        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
+        'backcolor':'<?php echo $backcolor; ?>',
+        'frontcolor':'<?php echo $frontcolor; ?>',
+        'lightcolor':'<?php echo $lightcolor; ?>',
+        'screencolor':'<?php echo $screencolor; ?>',
+    });
+</script>";
 						break;
 
 					case 1: // Popup
@@ -577,7 +583,7 @@ class jbsMedia
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
 
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
-							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
+							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
 						break;
