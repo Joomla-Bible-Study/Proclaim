@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-dump($this->autostart);
+
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 $jbsMedia = new jbsMedia;
 ?>
