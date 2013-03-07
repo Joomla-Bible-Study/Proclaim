@@ -55,8 +55,8 @@ class JBSMPodcast
 			{
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
-				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
-				$db->setQuery($query);
+				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('"%' . $podinfo->id . '%"'))->where('published = ' . 1);
+                $db->setQuery($query);
 				$checkresult = $db->loadObjectList();
 
 				if ($checkresult)
@@ -330,6 +330,10 @@ class JBSMPodcast
 						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
 					}
 				} // End if $checkresult if positive
+                else
+                {
+                    $msg[] = $file . ' - ' . JText::_('JBS_CMN_NO_MEDIA_FILES');
+                }
 			}
 			// End foreach podids as podinfo
 		}
@@ -426,8 +430,8 @@ class JBSMPodcast
 		}
 		if (!$fileit)
 		{
-			JFactory::getApplication()
-				->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+			$app = JFactory::getApplication();
+				$app->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
 
 			return false;
 		}
