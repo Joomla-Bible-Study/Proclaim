@@ -20,6 +20,14 @@ class BiblestudyModelPodcast extends JModelAdmin
 {
 
 	/**
+	 * Protect prefix
+	 *
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	/**
 	 * Get the form data
 	 *
 	 * @param   array    $data      Data for the form.
@@ -43,6 +51,22 @@ class BiblestudyModelPodcast extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return    JTable    A database object
+	 *
+	 * @since    2.5
+	 */
+	public function getTable($name = 'Podcast', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
+	}
+
+	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  array    The default data is an empty array.
@@ -59,6 +83,27 @@ class BiblestudyModelPodcast extends JModelAdmin
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return    mixed    Object on success, false on failure.
+	 *
+	 * @since    1.6
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+
+		if ($item)
+		{
+
+		}
+
+		return $item;
 	}
 
 	/**
