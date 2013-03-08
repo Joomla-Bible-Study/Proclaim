@@ -55,8 +55,8 @@ class JBSMPodcast
 			{
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
-				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('"%' . $podinfo->id . '%"'))->where('published = ' . 1);
-                $db->setQuery($query);
+				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
+				$db->setQuery($query);
 				$checkresult = $db->loadObjectList();
 
 				if ($checkresult)
@@ -156,7 +156,8 @@ class JBSMPodcast
 						$episode->id  = $episode->study_id;
 						$scripture    = $JBSMElements->getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
-                        $pod_subtitle = $podinfo->episodesubtitle;
+						$pod_subtitle = $podinfo->episodesubtitle;
+
 						if (!$episode->size)
 						{
 							$episode->size = '1024';
@@ -201,46 +202,46 @@ class JBSMPodcast
 								$title    = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
-                        switch ($pod_subtitle)
-                        {
-                            case 0:
-                                $subtitle = $episode->teachername;
-                                break;
-                            case 1:
-                                $subtitle = $episode->teachername.' - '.$scripture;
-                                break;
-                            case 2:
-                                $subtitle = $scripture;
-                                break;
-                            case 3:
-                                $subtitle = $episode->studytitle ;
-                                break;
-                            case 4:
-                                $subtitle = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
-                                break;
-                            case 5:
-                                $element = $custom->getCustom(
-                                    $rowid = 'row1col1',
-                                    $podinfo->custom,
-                                    $episode,
-                                    $params,
-                                    $admin_params,
-                                    $detailstemplateid
-                                );
+						switch ($pod_subtitle)
+						{
+							case 0:
+								$subtitle = $episode->teachername;
+								break;
+							case 1:
+								$subtitle = $episode->teachername . ' - ' . $scripture;
+								break;
+							case 2:
+								$subtitle = $scripture;
+								break;
+							case 3:
+								$subtitle = $episode->studytitle;
+								break;
+							case 4:
+								$subtitle = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
+								break;
+							case 5:
+								$element = $custom->getCustom(
+									$rowid = 'row1col1',
+									$podinfo->custom,
+									$episode,
+									$params,
+									$admin_params,
+									$detailstemplateid
+								);
 
-                                $subtitle = $element->element;
-                                break;
-                            case 6:
-                                $query = $db->getQuery('true');
-                                $query->select('*');
-                                $query->from('#__bsms_books');
-                                $query->where('booknumber = ' . $episode->booknumber);
-                                $db->setQuery($query);
-                                $book     = $db->loadObject();
-                                $bookname = JText::_($book->bookname);
-                                $subtitle    = $bookname . ' ' . $episode->chapter_begin;
-                                break;
-                        }
+								$subtitle = $element->element;
+								break;
+							case 6:
+								$query = $db->getQuery('true');
+								$query->select('*');
+								$query->from('#__bsms_books');
+								$query->where('booknumber = ' . $episode->booknumber);
+								$db->setQuery($query);
+								$book     = $db->loadObject();
+								$bookname = JText::_($book->bookname);
+								$subtitle = $bookname . ' ' . $episode->chapter_begin;
+								break;
+						}
 						$title       = str_replace('&', "and", $title);
 						$description = str_replace('&', "and", $episode->studyintro);
 						$description = strip_tags($description);
@@ -330,10 +331,10 @@ class JBSMPodcast
 						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
 					}
 				} // End if $checkresult if positive
-                else
-                {
-                    $msg[] = $file . ' - ' . JText::_('JBS_CMN_NO_MEDIA_FILES');
-                }
+				else
+				{
+					$msg[] = $file . ' - ' . JText::_('JBS_CMN_NO_MEDIA_FILES');
+				}
 			}
 			// End foreach podids as podinfo
 		}
@@ -431,7 +432,7 @@ class JBSMPodcast
 		if (!$fileit)
 		{
 			$app = JFactory::getApplication();
-				$app->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+			$app->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
 
 			return false;
 		}
