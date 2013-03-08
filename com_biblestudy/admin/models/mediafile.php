@@ -549,7 +549,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if (empty($data))
 		{
 			$data             = $this->getItem();
-			dump($data, 'data');
 			$data->podcast_id = explode(',', $data->podcast_id);
 
 		}
