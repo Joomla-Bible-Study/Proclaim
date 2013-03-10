@@ -12,8 +12,8 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-require_once BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php';
-
+//require_once BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php';
+JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 require_once __DIR__ . '/helper.php';
 
 // Need for inline player

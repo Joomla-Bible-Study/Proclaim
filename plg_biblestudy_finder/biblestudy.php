@@ -313,7 +313,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	protected function setup()
 	{
 		// Load dependent classes.
-		require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
+		//require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
+        JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
 
 		return true;
 	}

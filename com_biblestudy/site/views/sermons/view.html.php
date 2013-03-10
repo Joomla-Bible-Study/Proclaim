@@ -9,11 +9,18 @@
 defined('_JEXEC') or die;
 
 // @todo redo the require_once to JLoader
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.images.class.php');
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.stats.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/podcastsubscribe.php');
+//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.images.class.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+//require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.stats.class.php');
+JLoader::register('JbStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
+
+//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/podcastsubscribe.php');
+JLoader::register('PodcastSubscribe', JPATH_SITE . 'components/com_biblestudy/helpers/podcastsubscribe.php');
+
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
+
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**

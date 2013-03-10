@@ -8,9 +8,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php';
-require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php';
+//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php';
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php';
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
+JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 
 /**
  * View class for SeriesDisplays
