@@ -26,7 +26,11 @@ $published = $this->state->get('filter.published');
 				<?php echo JHtml::_('batch.access'); ?>
             </div>
         </div>
-
+        <div class="control-group">
+            <div class="controls">
+                <?php echo JHtml::_('biblestudy.series_id');?>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn" type="button" onclick="document.id('batch-folders-id');document.id('batch-access').value=''"
