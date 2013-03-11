@@ -640,9 +640,29 @@ class BiblestudyModelMessage extends JModelAdmin
 
         $done = false;
 
-        if (strlen($commands['series_id']) > 0)
+        if (strlen($commands['teacher']) > 0)
         {
-            if (!$this->batchSeries($commands['series_id'], $pks, $contexts))
+            if (!$this->batchTeacher($commands['teacher'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+        
+         if (strlen($commands['series']) > 0)
+        {
+            if (!$this->batchSeries($commands['series'], $pks, $contexts))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+        
+         if (strlen($commands['messagetype']) > 0)
+        {
+            if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts))
             {
                 return false;
             }
@@ -650,4 +670,143 @@ class BiblestudyModelMessage extends JModelAdmin
             $done = true;
         }
     }
+    
+    /**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchTeacher($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$table->teacher_id = (int) $value;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+    
+     /**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchMessagetype($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$table->messagetype = (int) $value;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+    
+     /**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchSeries($value, $pks, $contexts)
+	{ 
+		// Set the variables
+		$user  = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$table->series_id = (int) $value;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+    
+    
 }

@@ -155,7 +155,7 @@ class BiblestudyViewServers extends JViewLegacy
 		}
 		if (BIBLESTUDY_CHECKREL)
 		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=folders');
+			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
 
 			JHtmlSidebar::addFilter(
 				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',

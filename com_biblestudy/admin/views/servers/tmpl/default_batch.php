@@ -26,33 +26,14 @@ $published = $this->state->get('filter.published');
 				<?php echo JHtml::_('batch.access'); ?>
             </div>
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <?php echo JHtml::_('biblestudy.Teacher');?>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <?php echo JHtml::_('biblestudy.Messagetype');?>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <?php echo JHtml::_('biblestudy.Series');?>
-            </div>
-        </div>
-        	<div class="control-group">
-			<div class="controls">
-				<?php echo JHtml::_('batch.language'); ?>
-			</div>
-		</div>
+
     </div>
     <div class="modal-footer">
-        <button class="btn" type="button" onclick="document.id('batch-folders-id');document.id('batch-access').value=''"
+        <button class="btn" type="button" onclick="document.id('batch-servers-id');document.id('batch-access').value=''"
                 data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
         </button>
-        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('message.batch');">
+        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('location.batch');">
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
         </button>
     </div>

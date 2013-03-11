@@ -47,6 +47,11 @@ JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 				<?php echo JHtml::_('batch.access'); ?>
             </div>
         </div>
+        	<div class="control-group">
+			<div class="controls">
+				<?php echo JHtml::_('batch.language'); ?>
+			</div>
+		</div>
     </div>
     <div class="modal-footer">
         <button class="btn" type="button"

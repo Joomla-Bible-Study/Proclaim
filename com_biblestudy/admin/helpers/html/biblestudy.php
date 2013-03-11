@@ -90,7 +90,7 @@ abstract class JHtmlBiblestudy
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, mimetype As text');
-		$query->from('#__bsmsmime_type AS a');
+		$query->from('#__bsms_mime_type AS a');
 		$query->order('a.mimetype ASC');
 
 		// Get the options.
@@ -108,6 +108,70 @@ abstract class JHtmlBiblestudy
 		return $options;
 	}
 
+/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Serieslist()
+	{
+		$options = null;
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
+
+		$query->select('id As value, series_text As text');
+		$query->from('#__bsms_series AS a');
+		$query->order('a.series_text ASC');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+		}
+
+		return $options;
+	}
+
+
+/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Messagetypelist()
+	{
+		$options = null;
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
+
+		$query->select('id As value, message_type As text');
+		$query->from('#__bsms_message_type AS a');
+		$query->order('a.message_type ASC');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+		}
+
+		return $options;
+	}
 	/**
 	 * Method to get the field options.
 	 *
@@ -158,6 +222,37 @@ abstract class JHtmlBiblestudy
 		return $object;
 	}
 
+/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Teacherlist()
+	{
+		$options = null;
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
+
+		$query->select('id As value, teachername As text');
+		$query->from('#__bsms_teachers AS a');
+		$query->order('a.teachername ASC');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+		}
+
+		return $options;
+	}
 	/**
 	 * Display a batch widget for the player selector.
 	 *
@@ -264,4 +359,67 @@ abstract class JHtmlBiblestudy
 
 		return implode("\n", $lines);
 	}
+    
+    /**
+	 * Display a batch widget for the teacher selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+     public static function Teacher()
+     {
+        	// Create the batch selector to change the player on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_TEACHER') . '::' . JText::_('JBS_TEACHER_DESC') . '">',
+			JText::_('JBS_TEACHER'), '</label>',
+			'<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
+			'<option value="">' . JText::_('JBS_CMN_TEACHER_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Teacherlist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+     }
+     
+      /**
+	 * Display a batch widget for the teacher selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+     public static function Messagetype()
+     {
+        	// Create the batch selector to change the player on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MESSAGETYPE') . '::' . JText::_('JBS_MESSAGETYPE_DESC') . '">',
+			JText::_('JBS_MESSAGETYPE'), '</label>',
+			'<select name="batch[messagetype]" class="inputbox" id="batch-messagetype">',
+			'<option value="">' . JText::_('JBS_CMN_MESSAGETYPE_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Messagetypelist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+     }
+     
+      /**
+	 * Display a batch widget for the teacher selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+     public static function Series()
+     {
+        	// Create the batch selector to change the player on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_SERIES') . '::' . JText::_('JBS_SERIES_DESC') . '">',
+			JText::_('JBS_SERIES'), '</label>',
+			'<select name="batch[series]" class="inputbox" id="batch-series">',
+			'<option value="">' . JText::_('JBS_CMN_SERIES_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Serieslist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+     }
 }
