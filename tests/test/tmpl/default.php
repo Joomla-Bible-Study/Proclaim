@@ -9,4 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-?>
+
+include_once BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php';
+$admin_params = JBSMParams::getAdmin();
+var_dump($admin_params->debug);
