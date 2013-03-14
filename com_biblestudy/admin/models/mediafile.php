@@ -20,7 +20,6 @@ jimport('joomla.application.component.modeladmin');
  */
 class BiblestudyModelMediafile extends JModelAdmin
 {
-
 	/**
 	 * Admin
 	 *
@@ -455,7 +454,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @since    2.5
 	 */
 	public function batch($commands, $pks, $contexts)
-	{ 
+	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
 		JArrayHelper::toInteger($pks);

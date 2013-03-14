@@ -101,7 +101,7 @@ foreach ($items AS $item)
 }
 $list      = $items;
 $link_text = $params->get('pagetext', 'More Bible Studies');
-$jinput = new JInput;
+$jinput    = new JInput;
 if (!$templatemenuid)
 {
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');

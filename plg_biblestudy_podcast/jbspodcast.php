@@ -98,8 +98,8 @@ class PlgSystemJbspodcast extends JPlugin
 	public function checktime($params)
 	{
 
-		$now = time();
-		$db  = JFactory::getDBO();
+		$now   = time();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('timeset')->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
@@ -132,8 +132,8 @@ class PlgSystemJbspodcast extends JPlugin
 		$config    = & JFactory::getConfig();
 		$offset    = $config->get('config.offset');
 
-		$now = time();
-		$db  = JFactory::getDBO();
+		$now   = time();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('timeset')->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
@@ -231,8 +231,8 @@ class PlgSystemJbspodcast extends JPlugin
 	 */
 	public function updatetime()
 	{
-		$time = time();
-		$db   = JFactory::getDBO();
+		$time  = time();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__jbspodcast_timeset')->set('timeset = ' . $time);
 		$db->setQuery($query);
@@ -257,7 +257,7 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
 		//require_once $path1 . 'biblestudy.podcast.class.php';
-        JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
 		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 

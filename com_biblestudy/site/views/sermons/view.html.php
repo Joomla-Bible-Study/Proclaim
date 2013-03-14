@@ -201,8 +201,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->admin      = JBSMParams::getAdmin();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user     = JFactory::getUser();
-		$groups   = $user->getAuthorisedViewLevels();
+		$user   = JFactory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
 		$params = $this->state->params;
 
 		$this->admin_params = $this->admin->params;

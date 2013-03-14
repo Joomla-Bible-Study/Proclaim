@@ -9,9 +9,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
-
 JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
-
 JLoader::register('JBSMTranslated', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
 
 /**
@@ -608,70 +606,70 @@ class BiblestudyModelMessage extends JModelAdmin
 		return true;
 	}
 
-    /**
-     * Method to perform batch operations on an item or a set of items.
-     *
-     * @param   array  $commands  An array of commands to perform.
-     * @param   array  $pks       An array of item ids.
-     * @param   array  $contexts  An array of item contexts.
-     *
-     * @return    boolean     Returns true on success, false on failure.
-     *
-     * @since    2.5
-     */
-    public function batch($commands, $pks, $contexts)
-    {
-        // Sanitize user ids.
-        $pks = array_unique($pks);
-        JArrayHelper::toInteger($pks);
+	/**
+	 * Method to perform batch operations on an item or a set of items.
+	 *
+	 * @param   array  $commands  An array of commands to perform.
+	 * @param   array  $pks       An array of item ids.
+	 * @param   array  $contexts  An array of item contexts.
+	 *
+	 * @return    boolean     Returns true on success, false on failure.
+	 *
+	 * @since    2.5
+	 */
+	public function batch($commands, $pks, $contexts)
+	{
+		// Sanitize user ids.
+		$pks = array_unique($pks);
+		JArrayHelper::toInteger($pks);
 
-        // Remove any values of zero.
-        if (array_search(0, $pks, true))
-        {
-            unset($pks[array_search(0, $pks, true)]);
-        }
+		// Remove any values of zero.
+		if (array_search(0, $pks, true))
+		{
+			unset($pks[array_search(0, $pks, true)]);
+		}
 
-        if (empty($pks))
-        {
-            $this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+		if (empty($pks))
+		{
+			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
 
-            return false;
-        }
+			return false;
+		}
 
-        $done = false;
+		$done = false;
 
-        if (strlen($commands['teacher']) > 0)
-        {
-            if (!$this->batchTeacher($commands['teacher'], $pks, $contexts))
-            {
-                return false;
-            }
+		if (strlen($commands['teacher']) > 0)
+		{
+			if (!$this->batchTeacher($commands['teacher'], $pks, $contexts))
+			{
+				return false;
+			}
 
-            $done = true;
-        }
-        
-         if (strlen($commands['series']) > 0)
-        {
-            if (!$this->batchSeries($commands['series'], $pks, $contexts))
-            {
-                return false;
-            }
+			$done = true;
+		}
 
-            $done = true;
-        }
-        
-         if (strlen($commands['messagetype']) > 0)
-        {
-            if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts))
-            {
-                return false;
-            }
+		if (strlen($commands['series']) > 0)
+		{
+			if (!$this->batchSeries($commands['series'], $pks, $contexts))
+			{
+				return false;
+			}
 
-            $done = true;
-        }
-    }
-    
-    /**
+			$done = true;
+		}
+
+		if (strlen($commands['messagetype']) > 0)
+		{
+			if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts))
+			{
+				return false;
+			}
+
+			$done = true;
+		}
+	}
+
+	/**
 	 * Batch popup changes for a group of media files.
 	 *
 	 * @param   string  $value     The new value matching a client.
@@ -716,8 +714,8 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		return true;
 	}
-    
-     /**
+
+	/**
 	 * Batch popup changes for a group of media files.
 	 *
 	 * @param   string  $value     The new value matching a client.
@@ -762,8 +760,8 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		return true;
 	}
-    
-     /**
+
+	/**
 	 * Batch popup changes for a group of media files.
 	 *
 	 * @param   string  $value     The new value matching a client.
@@ -775,7 +773,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @since   2.5
 	 */
 	protected function batchSeries($value, $pks, $contexts)
-	{ 
+	{
 		// Set the variables
 		$user  = JFactory::getUser();
 		$table = $this->getTable();
@@ -791,6 +789,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				if (!$table->store())
 				{
 					$this->setError($table->getError());
+
 					return false;
 				}
 			}
@@ -807,6 +806,6 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		return true;
 	}
-    
-    
+
+
 }

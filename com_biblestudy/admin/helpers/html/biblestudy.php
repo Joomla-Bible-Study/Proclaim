@@ -57,9 +57,6 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function Link_typelist()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
 		$options = array();
 
 		$options[] = array('value' => 0, 'text' => JText::_('JBS_MED_NO_DOWNLOAD_ICON'));
@@ -108,7 +105,7 @@ abstract class JHtmlBiblestudy
 		return $options;
 	}
 
-/**
+	/**
 	 * Method to get the field options.
 	 *
 	 * @return    array    The field option objects.
@@ -141,7 +138,7 @@ abstract class JHtmlBiblestudy
 	}
 
 
-/**
+	/**
 	 * Method to get the field options.
 	 *
 	 * @return    array    The field option objects.
@@ -172,6 +169,7 @@ abstract class JHtmlBiblestudy
 
 		return $options;
 	}
+
 	/**
 	 * Method to get the field options.
 	 *
@@ -222,7 +220,7 @@ abstract class JHtmlBiblestudy
 		return $object;
 	}
 
-/**
+	/**
 	 * Method to get the field options.
 	 *
 	 * @return    array    The field option objects.
@@ -253,6 +251,7 @@ abstract class JHtmlBiblestudy
 
 		return $options;
 	}
+
 	/**
 	 * Display a batch widget for the player selector.
 	 *
@@ -359,17 +358,17 @@ abstract class JHtmlBiblestudy
 
 		return implode("\n", $lines);
 	}
-    
-    /**
+
+	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
 	 */
-     public static function Teacher()
-     {
-        	// Create the batch selector to change the player on a selection list.
+	public static function Teacher()
+	{
+		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_TEACHER') . '::' . JText::_('JBS_TEACHER_DESC') . '">',
 			JText::_('JBS_TEACHER'), '</label>',
@@ -379,18 +378,18 @@ abstract class JHtmlBiblestudy
 		);
 
 		return implode("\n", $lines);
-     }
-     
-      /**
+	}
+
+	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
 	 */
-     public static function Messagetype()
-     {
-        	// Create the batch selector to change the player on a selection list.
+	public static function Messagetype()
+	{
+		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MESSAGETYPE') . '::' . JText::_('JBS_MESSAGETYPE_DESC') . '">',
 			JText::_('JBS_MESSAGETYPE'), '</label>',
@@ -400,18 +399,18 @@ abstract class JHtmlBiblestudy
 		);
 
 		return implode("\n", $lines);
-     }
-     
-      /**
+	}
+
+	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
 	 */
-     public static function Series()
-     {
-        	// Create the batch selector to change the player on a selection list.
+	public static function Series()
+	{
+		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_SERIES') . '::' . JText::_('JBS_SERIES_DESC') . '">',
 			JText::_('JBS_SERIES'), '</label>',
@@ -421,5 +420,5 @@ abstract class JHtmlBiblestudy
 		);
 
 		return implode("\n", $lines);
-     }
+	}
 }

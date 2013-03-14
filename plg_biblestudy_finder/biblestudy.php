@@ -17,6 +17,8 @@ jimport('joomla.application.component.helper');
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
+ *
+ *
  * Finder adapter for Biblestudy.
  *
  * @package     BibleStudy
@@ -314,7 +316,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	{
 		// Load dependent classes.
 		//require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
-        JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
+		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
 
 		return true;
 	}
