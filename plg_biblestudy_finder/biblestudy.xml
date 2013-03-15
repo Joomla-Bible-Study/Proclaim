@@ -6,7 +6,7 @@
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <copyright>(C) 2007 - 2012 Joomla Bible Study All rights reserved.</copyright>
-    <version>7.1.2</version>
+    <version>8.0.b1</version>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>PLG_FINDER_BIBLESTUDY_XML_DESCRIPTION</description>
     <files>
@@ -14,10 +14,11 @@
         <filename>index.html</filename>
         <folder>language</folder>
     </files>
-	<!-- UPDATESERVER DEFINITION -->
+    <!-- UPDATESERVER DEFINITION -->
     <updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Finder Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml]]>
+        <!-- Note: No spaces or linebreaks allowed between the server tags -->
+        <server type="extension" priority="1" name="Joomla Bible Study Finder Plg">
+            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml]]>
         </server>
     </updateservers>
 </extension>

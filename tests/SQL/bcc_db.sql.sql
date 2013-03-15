@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 	`access` int(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `#__bsms_books` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`bookname` varchar(250) DEFAULT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_books` (
 	`published` tinyint(3) NOT NULL DEFAULT '1',
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`published` tinyint(3) NOT NULL DEFAULT '0',
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`foldername` varchar(250) NOT NULL DEFAULT '',
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`location_text` varchar(250) DEFAULT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`media_text` text,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`study_id` int(5) DEFAULT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`message_type` text NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`mimetype` varchar(50) DEFAULT NULL,
@@ -142,13 +142,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_order` (
 	`id` int(10) NOT NULL AUTO_INCREMENT,
 	`value` varchar(15) DEFAULT '',
 	`text` varchar(50) DEFAULT '',
 	PRIMARY KEY (`id`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`title` varchar(100) DEFAULT NULL,
@@ -174,13 +174,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_search` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`value` varchar(15) DEFAULT '',
 	`text` varchar(15) DEFAULT '',
 	PRIMARY KEY (`id`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`series_text` text,
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`server_name` varchar(250) NOT NULL DEFAULT '',
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_share` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` varchar(250) DEFAULT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_share` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`studydate` datetime DEFAULT NULL,
@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`study_id` int(3) NOT NULL DEFAULT '0',
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 	`access` int(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`teacher_image` text,
@@ -309,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`type` varchar(255) NOT NULL,
@@ -324,12 +324,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
 	PRIMARY KEY (`timeset`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`topic_text` text,
@@ -340,7 +340,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
 INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`) VALUES
 (1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","admin_store":"1","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x"}', 0, 1);
 

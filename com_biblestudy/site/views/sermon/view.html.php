@@ -1,242 +1,515 @@
 <?php
-
 /**
- * Sermon JView
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'related.php');
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblegateway.php');
-$uri = JFactory::getURI();
+//require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
+require_once (JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
+require_once (JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
+require_once (JPATH_COMPONENT . '/helpers/related.php');
+require_once (JPATH_COMPONENT . '/helpers/biblegateway.php');
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+
 
 /**
  * View class for Sermon
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @property mixed document
+ * @package  BibleStudy.Site
+ * @since    7.0.0
+ *
+ * @todo     Still need to fix all the problems.
  */
-class BiblestudyViewSermon extends JViewLegacy {
+class BiblestudyViewSermon extends JViewLegacy
+{
+	/**
+	 * @var object
+	 */
+	protected $item;
 
-    /**
-     * Execute and display a template script.
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     *
-     * @see     fetch()
-     * @since   11.1
-     */
-    public function display($tpl = null) {
+	/**
+	 * @var JRegistry
+	 */
+	protected $params;
 
-        $mainframe = JFactory::getApplication();
-        $study = $this->get('Item');
-        $relatedstudies = new relatedStudies();
+	protected $print;
 
-        $app = JFactory::getApplication();
-        $menu = $app->getMenu();
-        $item = $menu->getActive();
+	/**
+	 * @var JRegistry
+	 */
+	protected $state;
+
+	protected $user;
+
+	protected $passage;
+
+	protected $related;
+
+	protected $subscribe;
+
+	protected $menuid;
+
+	protected $detailslink;
+
+	protected $page;
+
+	protected $template;
+
+	protected $article;
+
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
+	{
+		$app    = JFactory::getApplication();
+		$user   = JFactory::getUser();
+		$userId = $user->get('id');
+
+		// @todo may think of moving this to the core helper.
+		if (BIBLESTUDY_CHECKREL)
+		{
+			$dispatcher = JEventDispatcher::getInstance();
+		}
+		else
+		{
+			$dispatcher = JDispatcher::getInstance();
+		}
+
+		$this->item  = $this->get('Item');
+		$this->print = $app->input->getBool('print');
+		$this->state = $this->get('State');
+		$this->user  = $user;
+        $this->comments = $this->get('comments');
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			$app->enqueueMessage(500, implode("\n", $errors), 'error');
+
+			return;
+		}
+
+		// Create a shortcut for $item.
+		$item = & $this->item;
+
+		if ($this->getLayout() == 'pagebreak')
+		{
+			$this->_displayPagebreak($tpl);
+
+			return null;
+		}
+
+		$Biblepassage  = new showScripture;
+		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
+
+		// Add router helpers.
+		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
+
+		$item->readmore_link = JRoute::_(JBSMHelperRoute::getArticleRoute($item->slug, ''));
+
+		// Merge article params. If this is single-article view, menu params override article params
+		// Otherwise, article params override menu item params
+		$this->params = $this->state->get('params');
+		$active       = $app->getMenu()->getActive();
+		$temp         = clone ($this->params);
+
+		// Check to see which parameters should take priority
+		if ($active)
+		{
+			$currentLink = $active->link;
+
+			// If the current view is the active item and an article view for this article, then the menu item params take priority
+			if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
+			{
+				// $item->params are the article params, $temp are the menu item params
+				// Merge so that the menu item params take priority
+				$item->params->merge($temp);
+
+				// Load layout from active query (in case it is an alternative menu item)
+				if (isset($active->query['layout']))
+				{
+					$this->setLayout($active->query['layout']);
+				}
+			}
+			else
+			{
+				// Current view is not a single article, so the article params take priority here
+				// Merge the menu item params with the article params so that the article params take priority
+				$temp->merge($item->params);
+				$item->params = $temp;
+
+				// Check for alternative layouts (since we are not in a single-article menu item)
+				// Single-article menu item layout takes priority over alt layout for an article
+				$layout = $item->params->get('sermon_layout');
+
+				if ($layout)
+				{
+					$this->setLayout($layout);
+				}
+			}
+		}
+		else
+		{
+			// Merge so that article params take priority
+			$temp->merge($item->params);
+			$item->params = $temp;
+
+			// Check for alternative layouts (since we are not in a single-article menu item)
+			// Single-article menu item layout takes priority over alt layout for an article
+			$layout = $item->params->get('sermon_layout');
+
+			if ($layout)
+			{
+				$this->setLayout($layout);
+			}
+		}
+
+		$offset = $this->state->get('list.offset');
+
+		// Check the view access to the article (the model has already computed the values).
+		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
+		{
+
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+
+		}
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+		$groups = $user->getAuthorisedViewLevels();
+
+		if ($this->item->access > 1)
+		{
+
+			if (!in_array($this->item->access, $groups))
+			{
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
+			}
+		}
+
+		$relatedstudies = new RelatedStudies;
+
+		$template      = $this->get('template');
+		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
+
+		$document = JFactory::getDocument();
+		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$css = $this->item->params->get('css');
+
+		if ($css <= "-1")
+		{
+			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+		}
+
+		$pagebuilder            = new JBSPagebuilder;
+		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+		$this->item->scripture1 = $pelements->scripture1;
+		$this->item->scripture2 = $pelements->scripture2;
+		$this->item->media      = $pelements->media;
+		$this->item->duration   = $pelements->duration;
+		$this->item->studydate  = $pelements->studydate;
+
+		if (isset($pelements->secondary_reference))
+		{
+			$this->item->secondary_reference = $pelements->secondary_reference;
+		}
+		else
+		{
+			$this->item->secondary_reference = '';
+		}
+		if (isset($pelements->topics))
+		{
+			$this->item->topics = $pelements->topics;
+		}
+		else
+		{
+			$this->item->topics = '';
+		}
+		if (isset($pelements->study_thumbnail))
+		{
+			$this->item->study_thumbnail = $pelements->study_thumbnail;
+		}
+		else
+		{
+			$this->item->study_thumbnail = null;
+		}
+		if (isset($pelements->series_thumbnail))
+		{
+			$this->item->series_thumbnail = $pelements->series_thumbnail;
+		}
+		else
+		{
+			$this->item->series_thumbnail = null;
+		}
+		$this->item->detailslink = $pelements->detailslink;
+
+		if (isset($pelements->teacherimage))
+		{
+			$this->item->teacherimage = $pelements->teacherimage;
+		}
+		else
+		{
+			$this->item->teacherimage = null;
+		}
+		$article       = new stdClass;
+		$article->text = $this->item->scripture1;
+		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->scripture1 = $article->text;
+		$article->text          = $this->item->scripture2;
+		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->scripture2 = $article->text;
+		$article->text          = $this->item->studyintro;
+		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->studyintro = $article->text;
+		$article->text          = $this->item->secondary_reference;
+		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+		$this->item->secondary_reference = $article->text;
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
+		$this->loadHelper('params');
+
+		// Get the podcast subscription
+		$podcast         = new podcastSubscribe;
+		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
+
+		// Passage link to BibleGateway
+		$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+
+		if ($plugin)
+		{
+			$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+
+			// Convert parameter fields to objects.
+			$registry = new JRegistry;
+			$registry->loadString($plugin->params);
+			$st_params  = $registry;
+			$version    = $st_params->get('bible_version');
+			$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
+		}
+
+		// Added database queries from the default template - moved here instead
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
+		$database->setQuery($query);
+		$menuid       = $database->loadResult();
+		$this->menuid = $menuid;
 
 
-        $template = $this->get('template');
+		if ($this->getLayout() == 'pagebreak')
+		{
+			$this->_displayPagebreak($tpl);
 
-        $registry = new JRegistry();
-        $registry->loadString($template[0]->params);
-        $params = $registry;
-        $a_params = $this->get('Admin');
-        $this->related = $relatedstudies->getRelated($study, $params);
-        // Convert parameter fields to objects.
-        $registry = new JRegistry();
-        $registry->loadString($a_params[0]->params);
-        $this->admin_params = $registry;
-        //@todo need to move to module bad way to code this.
-        // Convert item paremeters into objects
-        $registry = new JRegistry;
-        $registry->loadString($study->params);
-        $itemparams = $registry;
-        $adminrows = new JBSAdmin();
-        $document = JFactory::getDocument();
-        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-        $css = $params->get('css');
-        if ($css <= "-1"):
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-        else:
-            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-        endif;
-        $pathway = $mainframe->getPathWay();
-        $contentConfig = JComponentHelper::getParams('com_biblestudy');
-        $dispatcher = JDispatcher::getInstance();
+			return null;
+		}
 
-        //Adjust the slug if there is no alias in the row
-        //Set the slug
-        $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
-        $pagebuilder = new JBSPagebuilder();
-        $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
-        $study->scripture1 = $pelements->scripture1;
-        $study->scripture2 = $pelements->scripture2;
-        $study->media = $pelements->media;
-        $study->duration = $pelements->duration;
-        $study->studydate = $pelements->studydate;
-        if (isset($pelements->topics)):
-            $study->topics = $pelements->topics;
-        else:
-            $study->topics = '';
-        endif;
-        if (isset($pelements->study_thumbnail)):
-            $study->study_thumbnail = $pelements->study_thumbnail;
-        else:
-            $study->study_thumbnail = null;
-        endif;
-        if (isset($pelements->series_thumbnail)):
-            $study->series_thumbnail = $pelements->series_thumbnail;
-        else:
-            $study->series_thumbnail = null;
-        endif;
-        $study->detailslink = $pelements->detailslink;
-        if (isset($pelements->teacherimage)):
-            $study->teacherimage = $pelements->teacherimage;
-        else:
-            $study->teacherimage = null;
-        endif;
-        $article = new stdClass();
-        $article->text = $study->scripture1;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->scripture1 = $article->text;
-        $article->text = $study->scripture2;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->scripture2 = $article->text;
-        $article->text = $study->studyintro;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->studyintro = $article->text;
-        $article->text = $study->secondary_reference;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
-        $study->secondary_reference = $article->text;
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $this->loadHelper('params');
-
-        //get the podcast subscription
-        $podcast = new podcastSubscribe();
-        $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
-        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user = JFactory::getUser();
-        $groups = $user->getAuthorisedViewLevels();
-
-        //   $count = count($items);
-        if ($study->access > 1) {
-            if (!in_array($study->access, $groups)) {
-                return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));
-            }
-        }
-
-        //Prepare meta information (under development)
-        if ($itemparams->get('metakey')) {
-            $document->setMetadata('keywords', $itemparams->get('metakey'));
-        } elseif (!$itemparams->get('metakey')) {
-            $document->setMetadata('keywords', $study->topic_text . ',' . $study->studytitle);
-        }
-
-        if ($itemparams->get('metadesc')) {
-            $document->setDescription($itemparams->get('metadesc'));
-        } elseif (!$itemparams->get('metadesc')) {
-            $document->setDescription($study->studyintro);
-        }
-        //Passage link to BibleGateway
-        $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
-        if ($plugin) {
-            $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
-            // Convert parameter fields to objects.
-            $registry = new JRegistry;
-            $registry->loadString($plugin->params);
-            $st_params = $registry;
-            $version = $st_params->get('bible_version');
-            $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
-        }
-
-        //Added database queries from the default template - moved here instead
-        $database = JFactory::getDBO();
-        $query = "SELECT id"
-                . "\nFROM #__menu"
-                . "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
-        $database->setQuery($query);
-        $menuid = $database->loadResult();
-        $this->assignRef('menuid', $menuid);
-
-
-        if ($this->getLayout() == 'pagebreak') {
-            $this->_displayPagebreak($tpl);
-            return;
-        }
-        $print = JRequest::getBool('print');
-        // build the html select list for ordering
-
-        /*
+		/*
          * Process the prepare content plugins
          */
-        $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link');
-        if ($linkit) {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-            $limitstart = JRequest::getVar('limitstart', 'int');
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
-            $article->studytext = $article->text;
-            $study->studytext = $article->text;
-        } //end if $linkit
-        $Biblepassage = new showScripture();
-        $this->passage = $Biblepassage->buildPassage($study, $params);
+		$article->text = $this->item->studytext;
+		$linkit        = $this->item->params->get('show_scripture_link');
 
-        //Prepares a link string for use in social networking
-        $u = JURI::getInstance();
-        $detailslink = htmlspecialchars($u->toString());
-        $detailslink = JRoute::_($detailslink);
-        $this->assignRef('detailslink', $detailslink);
-        $share = JView::loadHelper('share');
-        $this->page = new stdClass();
-        $this->page->social = getShare($detailslink, $study, $params, $this->admin_params);
-        JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
-        JHTML::_('behavior.tooltip');
-        $this->page->print = JHtml::_('icon.print_popup', $params);
-        //End social networking
-        // End process prepare content plugins
-        $this->assignRef('template', $template);
-        $this->assignRef('print', $print);
-        $this->assignRef('params', $params);
-        $this->assignRef('study', $study);
-        $this->assignRef('article', $article);
-        $this->assignRef('passage_link', $passage_link);
+		if ($linkit)
+		{
+			switch ($linkit)
+			{
+				case 0:
+					break;
+				case 1:
+					JPluginHelper::importPlugin('content');
+					break;
+				case 2:
+					JPluginHelper::importPlugin('content', 'scripturelinks');
+					break;
+			}
+			$limitstart = $app->input->get('limitstart', 'int');
+			$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
+			$article->studytext    = $article->text;
+			$this->item->studytext = $article->text;
 
-        parent::display($tpl);
-    }
+		} // End if $linkit
 
-    /**
-     * Display PageBrack
-     * @param string $tpl
-     */
-    function _displayPagebreak($tpl) {
-        $document = JFactory::getDocument();
-        $document->setTitle(JText::_('JBS_CMN_READ_MORE'));
-        parent::display($tpl);
-    }
+		$Biblepassage  = new showScripture;
+		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
+
+		// Prepares a link string for use in social networking
+		$u                 = JURI::getInstance();
+		$detailslink       = htmlspecialchars($u->toString());
+		$detailslink       = JRoute::_($detailslink);
+		$this->detailslink = $detailslink;
+
+		$JBSMListing        = new JBSMListing;
+		$this->page         = new stdClass;
+		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
+		JHTML::_('behavior.tooltip');
+
+		// End process prepare content plugins
+		$this->template = $template;
+		$this->article  = $article;
+
+		// Increment the hit counter of the Sermon.
+		if (!$this->params->get('intro_only') && $offset == 0)
+		{
+			$model = $this->getModel();
+			$model->hit();
+		}
+
+		$this->_prepareDocument();
+
+		parent::display($tpl);
+	}
+
+	/**
+	 * Prepares the document
+	 *
+	 * @return void
+	 */
+	protected function _prepareDocument()
+	{
+		$app     = JFactory::getApplication();
+		$menus   = $app->getMenu();
+		$pathway = $app->getPathway();
+		$title   = null;
+
+		$this->item->metadesc = $this->item->studyintro;
+		$this->item->metakey  = $this->item->topics;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		}
+		else
+		{
+			$this->params->def('page_heading', JText::_('JBS_CMN_MESSAGE_TITLE'));
+		}
+
+		$title = $this->params->get('page_title', '');
+
+		$id = (int) @$menu->query['id'];
+
+		// If the menu item does not concern this Study
+		if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id))
+		{
+			// If this is not a single article menu item, set the page title to the article title
+			if ($this->item->studytitle)
+			{
+				$title = $this->item->studytitle;
+			}
+			$path = array(array('studytitle' => $this->item->studytitle, 'link' => '')
+			);
+
+			$path = array_reverse($path);
+
+			foreach ($path as $item)
+			{
+				$pathway->addItem($item['studytitle'], $item['link']);
+			}
+		}
+
+		// Check for empty title and add site name if param is set
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+		if (empty($title))
+		{
+			$title = $this->item->studytitle;
+		}
+		$this->document->setTitle($title);
+
+		if ($this->item->params->get('metadesc'))
+		{
+			$this->document->setDescription($this->item->params->get('metadesc'));
+		}
+		elseif (!$this->item->params->get('metadesc'))
+		{
+			$this->document->setDescription($this->item->studyintro);
+		}
+
+		if ($this->item->metakey)
+		{
+			$this->document->setMetadata('keywords', $this->item->metakey);
+		}
+		elseif (!$this->item->metakey && $this->params->get('menu-meta_keywords'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
+
+		// Prepare meta information (under development)
+		if ($this->item->params->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $this->item->params->get('metakey'));
+		}
+		elseif (!$this->item->params->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
+		}
+		if ($app->getCfg('MetaAuthor') == '1')
+		{
+			$this->document->setMetaData('author', $this->item->teachername);
+		}
+
+		// If there is a pagebreak heading or title, add it to the page title
+		if (!empty($this->item->page_title))
+		{
+			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
+			$this->document->setTitle(
+				$this->item->page_title . ' - '
+					. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
+			);
+		}
+
+		if ($this->print)
+		{
+			$this->document->setMetaData('robots', 'noindex, nofollow');
+		}
+	}
+
+	/**
+	 * Display PageBrack
+	 *
+	 * @param   string  $tpl  ?
+	 *
+	 * @return void
+	 */
+	protected function _displayPagebreak($tpl)
+	{
+		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		parent::display($tpl);
+	}
 
 }

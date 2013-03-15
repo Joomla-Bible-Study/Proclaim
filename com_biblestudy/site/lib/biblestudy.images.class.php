@@ -1,273 +1,339 @@
 <?php
-
 /**
- * BibleStudy images class
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
-
+JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
 /**
  * BibleStudy images class
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
-class jbsImages {
+class JBSMImages
+{
 
-    /**
-     * Get Image Path
-     * @param string $path
-     * @return \JObject
-     */
-    function getImagePath($path) {
-        $tmp = new JObject();
-        jimport('joomla.filesystem.folder');
-        jimport('joomla.filesystem.file');
-        if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path)):
-            $tmp->path = $path;
-            $tmp->size = filesize($tmp->path);
-            $ext = strtolower(JFile::getExt($path));
-            switch ($ext) {
-                // Image
-                case 'jpg':
-                case 'png':
-                case 'gif':
-                case 'xcf':
-                case 'odg':
-                case 'bmp':
-                case 'jpeg':
-                    $info = getimagesize($tmp->path);
-                    $tmp->width = $info[0];
-                    $tmp->height = $info[1];
-                    $tmp->type = $info[2];
-                    $tmp->mime = $info['mime'];
-                    if (!$tmp->width) {
-                        $tmp->width = 0;
-                    }
-                    if (!$tmp->height) {
-                        $tmp->height = 0;
-                    }
-            }
-        else:
-            $tmp->path = NULL;
-            $tmp->size = NULL;
-            $tmp->width = 0;
-            $tmp->height = 0;
-            $tmp->type = '';
-            $tmp->mime = '';
-        endif;
-        return $tmp;
-    }
+	/**
+	 * Get Image Path
+	 *
+	 * @param   string  $path  ?
+	 *
+	 * @return object
+	 */
+	public static function getImagePath($path)
+	{
+		$tmp = new stdClass;
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
 
-    /**
-     * Main Study Image
-     * @return string
-     */
-    function mainStudyImage() {
-        $mainimage = array();
-        $path = null;
-        $image = null;
-        $database = JFactory::getDBO();
-        $database->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
-        $admin = $database->loadObject();
+		if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path))
+		{
+			$tmp->path = $path;
+			$tmp->size = filesize($tmp->path);
+			$ext       = strtolower(JFile::getExt($path));
 
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadString($admin->params);
-        $admin_params = $registry;
+			switch ($ext)
+			{
+				// Image
+				case 'jpg':
+				case 'png':
+				case 'gif':
+				case 'xcf':
+				case 'odg':
+				case 'bmp':
+				case 'jpeg':
+					$info        = getimagesize($tmp->path);
+					$tmp->width  = $info[0];
+					$tmp->height = $info[1];
+					$tmp->type   = $info[2];
+					$tmp->mime   = $info['mime'];
 
-        if (!$admin_params->get('default_main_image')) {
-            $path = 'media/com_biblestudy/images/openbible.png';
-        } else {
-            $path = $admin_params->get('default_main_image');
-        }
+					if (!$tmp->width)
+					{
+						$tmp->width = 0;
+					}
 
-        $mainimage = $this->getImagePath($path);
-        return $mainimage;
-    }
+					if (!$tmp->height)
+					{
+						$tmp->height = 0;
+					}
+			}
+		}
+		else
+		{
+			$tmp->path   = null;
+			$tmp->size   = null;
+			$tmp->width  = 0;
+			$tmp->height = 0;
+			$tmp->type   = '';
+			$tmp->mime   = '';
+		}
 
-    /**
-     * Get MediaImage Folder
-     * @return string
-     */
-    function getMediaImageFolder() {
+		return $tmp;
+	}
 
-        $mediaimagefolder = 'media/com_biblestudy/images';
+	/**
+	 * Main Study Image
+	 *
+	 * @return object
+	 */
+	public static function mainStudyImage()
+	{
+		$path     = null;
+		$image    = null;
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+		$database->setQuery($query);
+		$admin = $database->loadObject();
 
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadString($admin->params);
+		$admin_params = $registry;
 
-        return $mediaimagefolder;
-    }
+		if (!$admin_params->get('default_main_image'))
+		{
+			$path = 'media/com_biblestudy/images/openbible.png';
+		}
+		else
+		{
+			$path = $admin_params->get('default_main_image');
+		}
 
-    /**
-     * Get SeriesImage Folder
-     * @todo Tom need to look at this and verify this is right
-     * @return string
-     */
-    function getSeriesImageFolder() {
+		$mainimage = self::getImagePath($path);
 
-        $seriesimagefolder = 'images';
+		return $mainimage;
+	}
 
-        return $seriesimagefolder;
-    }
+	/**
+	 * Get MediaImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getMediaImageFolder()
+	{
 
-    /**
-     * Get StudiesImage Folder
-     * @todo Tom need to look at this and verify this is right
-     * @return string
-     */
-    function getStudiesImageFolder() {
+		$mediaimagefolder = 'media/com_biblestudy/images';
 
-        $studiesimagefolder = 'images';
+		return $mediaimagefolder;
+	}
 
-        return $studiesimagefolder;
-    }
+	/**
+	 * Get SeriesImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getSeriesImageFolder()
+	{
 
-    /**
-     * Get TeacherImage Folder
-     * @todo Tom need to look at this and verify this is right
-     * @return string
-     */
-    function getTeacherImageFolder() {
+		$seriesimagefolder = 'images';
 
-        $teacherimagefolder = 'images';
+		return $seriesimagefolder;
+	}
 
-        return $teacherimagefolder;
-    }
+	/**
+	 * Get StudiesImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getStudiesImageFolder()
+	{
 
-    /**
-     * Get Study Thumbnail
-     * @param string $image
-     * @return string
-     */
-    function getStudyThumbnail($image = 'openbible.png') {
-        $imagepath = array();
-        $folder = $this->getStudiesImageFolder();
-        $path = $folder . '/' . $image;
-        if (substr_count($image, '/')) {
-            $path = $image;
-        }
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+		$studiesimagefolder = 'images';
 
-    /**
-     * Get Series Thumbnail
-     * @param string $image
-     * @return string
-     */
-    function getSeriesThumbnail($image = 'openbible.png') {
-        $imagepath = array();
-        $folder = $this->getSeriesImageFolder();
-        $path = $folder . '/' . $image;
-        if (substr_count($image, '/')) {
-            $path = $image;
-        }
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+		return $studiesimagefolder;
+	}
 
-    /**
-     * Get Teacher Thumbnail
-     * @param string $image1
-     * @param string $image2
-     * @return string
-     */
-    function getTeacherThumbnail($image1 = NULL, $image2 = NULL) {
-        $imagepath = array();
-        $folder = $this->getTeacherImageFolder();
+	/**
+	 * Get TeacherImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getTeacherImageFolder()
+	{
 
-        if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0) {
-            $path = $image2;
-            if (!substr_count($path, '/')) {
-                $path = $folder . '/' . $image2;
-            }
-        } else {
-            $path = $folder . '/' . $image1;
-            if (substr_count($image1, '/') > 0) {
-                $path = $image1;
-            }
-        }
+		$teacherimagefolder = 'images';
 
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+		return $teacherimagefolder;
+	}
 
-    /**
-     * Get Teacher Image
-     * @param string $image1
-     * @param string $image2
-     * @return string
-     */
-    function getTeacherImage($image1 = null, $image2 = null) {
-        $imagepath = array();
-        $folder = $this->getTeacherImageFolder();
-        if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0) {
-            $path = $image2;
-            if (!substr_count($path, '/')) {
-                $path = $folder . '/' . $image2;
-            }
-        } else {
-            $path = $folder . '/' . $image1;
-            if (substr_count($image1, '/') > 0) {
-                $path = $image1;
-            }
-        }
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+	/**
+	 * Get Study Thumbnail
+	 *
+	 * @param   string  $image  ?
+	 *
+	 * @return object
+	 */
+	public static function getStudyThumbnail($image = 'openbible.png')
+	{
+		$folder = self::getStudiesImageFolder();
+		$path   = $folder . '/' . $image;
 
-    /**
-     * Get Media Image
-     * @param string $media1
-     * @param string $media2
-     * @return string
-     */
-    function getMediaImage($media1 = NULL, $media2 = NULL) {
-        $imagepath = array();
-        $folder = $this->getMediaImageFolder();
-        if (!$media1 || $media1 == '0' || strncmp($media1, '- ', 2) == 0) {
-            $path = $media2;
-            if (!substr_count($path, '/')) {
-                $path = $folder . '/' . $media2;
-            }
-        } else {
-            $path = $folder . '/' . $media1;
-            if (substr_count($media1, '/') > 0) {
-                $path = $media1;
-            }
-        }
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+		if (substr_count($image, '/'))
+		{
+			$path = $image;
+		}
+		$imagepath = self::getImagePath($path);
 
-    /**
-     * Get Show Hide
-     * @todo Brent Cordis need to refacter this to pull admin params from the helper.php
-     * @return string
-     */
-    function getShowHide() {
-        $database = JFactory::getDBO();
-        $database->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
-        $admin = $database->loadObject();
+		return $imagepath;
+	}
 
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadString($admin->params);
-        $admin_params = $registry;
+	/**
+	 * Get Series Thumbnail
+	 *
+	 * @param   string  $image  ?
+	 *
+	 * @return object
+	 */
+	public static function getSeriesThumbnail($image = 'openbible.png')
+	{
+		$folder = self::getSeriesImageFolder();
+		$path   = $folder . '/' . $image;
 
-        if (!$admin_params->get('default_showHide_image')) {
-            $path = 'media/com_biblestudy/images/showhide.gif';
-        } else {
-            $path = $admin_params->get('default_showHide_image');
-        }
+		if (substr_count($image, '/'))
+		{
+			$path = $image;
+		}
+		$imagepath = self::getImagePath($path);
 
-        $imagepath = $this->getImagePath($path);
-        return $imagepath;
-    }
+		return $imagepath;
+	}
+
+	/**
+	 * Get Teacher Thumbnail
+	 *
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
+	 *
+	 * @return object
+	 */
+	public static function getTeacherThumbnail($image1 = null, $image2 = null)
+	{
+		$folder = self::getTeacherImageFolder();
+
+		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
+		{
+			$path = $image2;
+
+			if (!substr_count($path, '/'))
+			{
+				$path = $folder . '/' . $image2;
+			}
+		}
+		else
+		{
+			$path = $folder . '/' . $image1;
+
+			if (substr_count($image1, '/') > 0)
+			{
+				$path = $image1;
+			}
+		}
+
+		$imagepath = self::getImagePath($path);
+
+		return $imagepath;
+	}
+
+	/**
+	 * Get Teacher Image
+	 *
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
+	 *
+	 * @return object
+	 */
+	public static function getTeacherImage($image1 = null, $image2 = null)
+	{
+		$folder = self::getTeacherImageFolder();
+		$path   = null;
+
+		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
+		{
+			$path = $image2;
+
+			if (!substr_count($path, '/'))
+			{
+				$path = $folder . '/' . $image2;
+			}
+		}
+		else
+		{
+			$path = $folder . '/' . $image1;
+
+			if (substr_count($image1, '/') > 0)
+			{
+				$path = $image1;
+			}
+		}
+		$imagepath = self::getImagePath($path);
+
+		return $imagepath;
+	}
+
+	/**
+	 * Get Media Image
+	 *
+	 * @param   string  $media1  ?
+	 * @param   string  $media2  ?
+	 *
+	 * @return object
+	 */
+	public static function getMediaImage($media1 = null, $media2 = null)
+	{
+		$folder = self::getMediaImageFolder();
+		$path   = null;
+
+		if (!$media1 || $media1 == '0' || strncmp($media1, '- ', 2) == 0)
+		{
+			$path = $media2;
+
+			if (!substr_count($path, '/'))
+			{
+				$path = $folder . '/' . $media2;
+			}
+		}
+		else
+		{
+			$path = $folder . '/' . $media1;
+
+			if (substr_count($media1, '/') > 0)
+			{
+				$path = $media1;
+			}
+		}
+
+		$imagepath = self::getImagePath($path);
+
+		return $imagepath;
+	}
+
+	/**
+	 * Get Show Hide
+	 *
+	 * @return object
+	 */
+	public static function getShowHide()
+	{
+		$admin = JBSMParams::getAdmin();
+
+		if (!$admin->params->get('default_showHide_image'))
+		{
+			$path = 'media/com_biblestudy/images/showhide.gif';
+		}
+		else
+		{
+			$path = $admin->params->get('default_showHide_image');
+		}
+
+		$imagepath = self::getImagePath($path);
+
+		return $imagepath;
+	}
 
 }
-
-// End of class

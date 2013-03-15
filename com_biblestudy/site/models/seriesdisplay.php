@@ -1,163 +1,129 @@
 <?php
-
 /**
- * Series Display Model
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modelitem');
 
 /**
  * Model class for SeriesDisplay
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
-class BiblestudyModelSeriesdisplay extends JModelItem {
+class BiblestudyModelSeriesdisplay extends JModelItem
+{
 
-    /**
-     * Model context string.
-     *
-     * @var		string
-     */
-    protected $_context = 'com_biblestudy.seriesdisplay';
+	/**
+	 * Model context string.
+	 *
+	 * @var        string
+	 */
+	protected $_context = 'com_biblestudy.seriesdisplay';
 
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 *
+	 * @since   11.1
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
 
-    /**
-     * Template
-     * @var array
-     */
-    var $_template;
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
 
-    /**
-     * Admin
-     * @var array
-     */
-    var $_admin;
+		// Load state from the request.
+		$pk    = $app->input->get('id', '', 'int');
+		$this->setState('series.id', $pk);
 
+		$offset = $app->input->get('limitstart', '', 'int');
+		$this->setState('list.offset', $offset);
 
-    /**
-     * Constructor
-     *
-     * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
-     *
-     * @since   11.1
-     */
-    function __construct($config = array()) {
-        parent::__construct($config);
-    }
+		// Load the parameters.
+		$params = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+		$this->setState('template', $template);
 
-    /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
-     *
-     * @since	1.6
-     */
-    protected function populateState() {
-        $app = JFactory::getApplication('site');
+		$params->merge($template->params);
+		$this->setState('params', $params);
 
-        // Load state from the request.
-        $pk = JRequest::getInt('id');
-        $this->setState('series.id', $pk);
+		$user = JFactory::getUser();
 
-        $offset = JRequest::getUInt('limitstart');
-        $this->setState('list.offset', $offset);
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
+	}
 
-        // Load the parameters.
-        $params = $app->getParams();
-        $this->setState('params', $params);
+	/**
+	 * Method to get study data.
+	 *
+	 * @param   int  $pk  The id of the study.
+	 *
+	 * @since 7.1.0
+	 * @throws Exception
+	 *
+	 * @return    mixed    Menu item data object on success, false on failure.
+	 *
+	 * @todo  look are removing this may not used. bcc
+	 */
+	public function getItem($pk = null)
+	{
+		// Initialise variables.
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState('series.id');
 
-        // TODO: Tune these values based on other permissions.
-        $user = JFactory::getUser();
-        if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy'))) {
-            $this->setState('filter.published', 1);
-            $this->setState('filter.archived', 2);
-        }
-    }
+		if (!isset($this->_item[$pk]))
+		{
+			$db    = $this->getDbo();
+			$query = $db->getQuery(true);
+			$query->select(
+				$this->getState(
+					'item.select',
+					'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
+				)
+			);
+			$query->from('#__bsms_series AS se');
 
-    /**
-     * Method to get study data.
-     *
-     * @param	integer	The id of the study.
-     * @since 7.1.0
-     * @return	mixed	Menu item data object on success, false on failure.
-     */
-    function &getItem($pk = null) {
-        // Initialise variables.
-        $pk = (!empty($pk)) ? $pk : (int) $this->getState('series.id');
-        if (!isset($this->_item[$pk])) {
+			// Join over teachers
+			$query->select(
+				't.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+			);
+			$query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
+			$query->where('se.id = ' . (int) $pk);
+			$db->setQuery($query);
+			$data = $db->loadObject();
 
-            try {
-                $db = $this->getDbo();
-                $query = $db->getQuery(true);
-                $query->select($this->getState(
-                                'item.select', 'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug')
-                );
-                $query->from('#__bsms_series AS se');
-                //join over teachers
-                $query->select('t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
-                $query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
-                $query->where('se.id = ' . (int) $pk);
-                $db->setQuery($query);
-                $data = $db->loadObject();
-                if ($error = $db->getErrorMsg()) {
-                    throw new Exception($error);
-                }
+			if (empty($data))
+			{
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
-                if (empty($data)) {
-                    return JError::raiseError(404, JText::_('JBS_CMN_SERIES_NOT_FOUND'));
-                }
+				return false;
+			}
 
-                $this->_item[$pk] = $data;
-            } catch (JException $e) {
-                if ($e->getCode() == 404) {
-                    // Need to go thru the error handler to allow Redirect to work.
-                    JError::raiseError(404, $e->getMessage());
-                } else {
-                    $this->setError($e);
-                    $this->_item[$pk] = false;
-                }
-            }
-        }
-        return $this->_item[$pk];
-    }
+			$this->_item[$pk] = $data;
+		}
 
-    /**
-     * Method to store a record
-     * @todo Need to move this into the Helper.php
-     * @access	public
-     * @return	boolean	True on success
-     */
-    function getTemplate() {
-        if (empty($this->_template)) {
-            $templateid = JRequest::getVar('t', 1, 'get', 'int');
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_templates'
-                    . ' WHERE published = 1 AND id = ' . $templateid;
-            $this->_template = $this->_getList($query);
-        }
-        return $this->_template;
-    }
+		return $this->_item[$pk];
+	}
 
-    /**
-     * Get Admin
-     * @todo Need to move this into the Helper.php
-     * @return type
-     */
-    function getAdmin() {
-        if (empty($this->_admin)) {
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_admin = $this->_getList($query);
-        }
-        return $this->_admin;
-    }
-
-//end class
 }

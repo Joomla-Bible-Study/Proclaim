@@ -1,407 +1,640 @@
-<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<!DOCTYPE html>
+<html xmlns:date="http://exslt.org/dates-and-times" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>JoomlaBibleStudy » \biblestudyimportModelbiblestudy</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta charset="utf-8">
+    <title>JoomlaBibleStudy » \biblestudyimportModelbiblestudy</title>
+    <meta name="author" content="Mike van Riel">
+    <meta name="description" content="">
+    <link href="../css/template.css" rel="stylesheet" media="all">
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/template.js" type="text/javascript"></script>
+    <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a></li>
-<li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla Bible Study</a></li>
-<li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2076</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">20</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">5</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a
+                class="brand" href="../index.html">JoomlaBibleStudy</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a>Packages</a></li>
+                            <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a>
+                            </li>
+                            <li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a>
+                            </li>
+                            <li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a>
+                            </li>
+                            <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+                            <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla
+                                Bible Study</a></li>
+                            <li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                                <span class="label label-info">2076</span></a></li>
+                            <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                                <ul>
+                                    <li>todo 
+                                        <span class="label label-info">20</span>
+                                    </li>
+                                    <li>fixme 
+                                        <span class="label label-info">1</span>
+                                    </li>
+                                </ul>
+                            </a></li>
+                            <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                                <span class="label label-info">5</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a>
+    </div>
 </div>
 <div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#__construct" title="__construct :: "><span class="description">__construct()
-        </span><pre>__construct()</pre></a></li>
-<li class="method public "><a href="#_exists" title="_exists :: "><span class="description">_exists()
-        </span><pre>_exists()</pre></a></li>
-<li class="method public "><a href="#addFolder" title="addFolder :: "><span class="description">addFolder()
-        </span><pre>addFolder()</pre></a></li>
-<li class="method public "><a href="#addLocation" title="addLocation :: "><span class="description">addLocation()
-        </span><pre>addLocation()</pre></a></li>
-<li class="method public "><a href="#addMediaFile" title="addMediaFile :: "><span class="description">addMediaFile()
-        </span><pre>addMediaFile()</pre></a></li>
-<li class="method public "><a href="#addMimeType" title="addMimeType :: "><span class="description">addMimeType()
-        </span><pre>addMimeType()</pre></a></li>
-<li class="method public "><a href="#addPodcast" title="addPodcast :: "><span class="description">addPodcast()
-        </span><pre>addPodcast()</pre></a></li>
-<li class="method public "><a href="#addSeries" title="addSeries :: "><span class="description">addSeries()
-        </span><pre>addSeries()</pre></a></li>
-<li class="method public "><a href="#addServer" title="addServer :: "><span class="description">addServer()
-        </span><pre>addServer()</pre></a></li>
-<li class="method public "><a href="#addStudy" title="addStudy :: "><span class="description">addStudy()
-        </span><pre>addStudy()</pre></a></li>
-<li class="method public "><a href="#addTeacher" title="addTeacher :: "><span class="description">addTeacher()
-        </span><pre>addTeacher()</pre></a></li>
-<li class="method public "><a href="#addTopic" title="addTopic :: "><span class="description">addTopic()
-        </span><pre>addTopic()</pre></a></li>
-<li class="method public "><a href="#addType" title="addType :: "><span class="description">addType()
-        </span><pre>addType()</pre></a></li>
-<li class="method public "><a href="#getFolder" title="getFolder :: "><span class="description">getFolder()
-        </span><pre>getFolder()</pre></a></li>
-<li class="method public "><a href="#getServer" title="getServer :: "><span class="description">getServer()
-        </span><pre>getServer()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="property public "><a href="#%24db" title="$db :: "><span class="description">$db</span><pre>$db</pre></a></li>
-<li class="property public "><a href="#%24folderId" title="$folderId :: "><span class="description">$folderId</span><pre>$folderId</pre></a></li>
-<li class="property public "><a href="#%24locationId" title="$locationId :: "><span class="description">$locationId</span><pre>$locationId</pre></a></li>
-<li class="property public "><a href="#%24messageType" title="$messageType :: "><span class="description">$messageType</span><pre>$messageType</pre></a></li>
-<li class="property public "><a href="#%24mimeTypeId" title="$mimeTypeId :: "><span class="description">$mimeTypeId</span><pre>$mimeTypeId</pre></a></li>
-<li class="property public "><a href="#%24podcastId" title="$podcastId :: "><span class="description">$podcastId</span><pre>$podcastId</pre></a></li>
-<li class="property public "><a href="#%24seriesId" title="$seriesId :: "><span class="description">$seriesId</span><pre>$seriesId</pre></a></li>
-<li class="property public "><a href="#%24serverId" title="$serverId :: "><span class="description">$serverId</span><pre>$serverId</pre></a></li>
-<li class="property public "><a href="#%24studyId" title="$studyId :: "><span class="description">$studyId</span><pre>$studyId</pre></a></li>
-<li class="property public "><a href="#%24teacherId" title="$teacherId :: "><span class="description">$teacherId</span><pre>$teacherId</pre></a></li>
-<li class="property public "><a href="#%24topicId" title="$topicId :: "><span class="description">$topicId</span><pre>$topicId</pre></a></li>
-</ul>
+    <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
+                                                                              title="Show public elements">Public
+    </button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private"
+                                                                                                     title="Show private elements">
+        Private
+    </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
+
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+        </li>
+        <li class="method public "><a href="#__construct" title="__construct :: "><span class="description">__construct()
+        </span>
+            <pre>__construct()</pre>
+        </a></li>
+        <li class="method public "><a href="#_exists" title="_exists :: "><span class="description">_exists()
+        </span>
+            <pre>_exists()</pre>
+        </a></li>
+        <li class="method public "><a href="#addFolder" title="addFolder :: "><span class="description">addFolder()
+        </span>
+            <pre>addFolder()</pre>
+        </a></li>
+        <li class="method public "><a href="#addLocation" title="addLocation :: "><span class="description">addLocation()
+        </span>
+            <pre>addLocation()</pre>
+        </a></li>
+        <li class="method public "><a href="#addMediaFile" title="addMediaFile :: "><span class="description">addMediaFile()
+        </span>
+            <pre>addMediaFile()</pre>
+        </a></li>
+        <li class="method public "><a href="#addMimeType" title="addMimeType :: "><span class="description">addMimeType()
+        </span>
+            <pre>addMimeType()</pre>
+        </a></li>
+        <li class="method public "><a href="#addPodcast" title="addPodcast :: "><span class="description">addPodcast()
+        </span>
+            <pre>addPodcast()</pre>
+        </a></li>
+        <li class="method public "><a href="#addSeries" title="addSeries :: "><span class="description">addSeries()
+        </span>
+            <pre>addSeries()</pre>
+        </a></li>
+        <li class="method public "><a href="#addServer" title="addServer :: "><span class="description">addServer()
+        </span>
+            <pre>addServer()</pre>
+        </a></li>
+        <li class="method public "><a href="#addStudy" title="addStudy :: "><span class="description">addStudy()
+        </span>
+            <pre>addStudy()</pre>
+        </a></li>
+        <li class="method public "><a href="#addTeacher" title="addTeacher :: "><span class="description">addTeacher()
+        </span>
+            <pre>addTeacher()</pre>
+        </a></li>
+        <li class="method public "><a href="#addTopic" title="addTopic :: "><span class="description">addTopic()
+        </span>
+            <pre>addTopic()</pre>
+        </a></li>
+        <li class="method public "><a href="#addType" title="addType :: "><span class="description">addType()
+        </span>
+            <pre>addType()</pre>
+        </a></li>
+        <li class="method public "><a href="#getFolder" title="getFolder :: "><span class="description">getFolder()
+        </span>
+            <pre>getFolder()</pre>
+        </a></li>
+        <li class="method public "><a href="#getServer" title="getServer :: "><span class="description">getServer()
+        </span>
+            <pre>getServer()</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-property"></i> Properties
+        </li>
+        <li class="property public "><a href="#%24db" title="$db :: "><span class="description">$db</span>
+            <pre>$db</pre>
+        </a></li>
+        <li class="property public "><a href="#%24folderId" title="$folderId :: "><span
+                class="description">$folderId</span>
+            <pre>$folderId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24locationId" title="$locationId :: "><span class="description">$locationId</span>
+            <pre>$locationId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24messageType" title="$messageType :: "><span class="description">$messageType</span>
+            <pre>$messageType</pre>
+        </a></li>
+        <li class="property public "><a href="#%24mimeTypeId" title="$mimeTypeId :: "><span class="description">$mimeTypeId</span>
+            <pre>$mimeTypeId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24podcastId" title="$podcastId :: "><span
+                class="description">$podcastId</span>
+            <pre>$podcastId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24seriesId" title="$seriesId :: "><span
+                class="description">$seriesId</span>
+            <pre>$seriesId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24serverId" title="$serverId :: "><span
+                class="description">$serverId</span>
+            <pre>$serverId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24studyId" title="$studyId :: "><span
+                class="description">$studyId</span>
+            <pre>$studyId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24teacherId" title="$teacherId :: "><span
+                class="description">$teacherId</span>
+            <pre>$teacherId</pre>
+        </a></li>
+        <li class="property public "><a href="#%24topicId" title="$topicId :: "><span
+                class="description">$topicId</span>
+            <pre>$topicId</pre>
+        </a></li>
+    </ul>
 </div>
 <div class="span8">
-<a name="%5CbiblestudyimportModelbiblestudy" id="\biblestudyimportModelbiblestudy"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/biblestudyimportModelbiblestudy.html">biblestudyimportModelbiblestudy</a>
-</li>
+<a name="%5CbiblestudyimportModelbiblestudy" id="\biblestudyimportModelbiblestudy"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/biblestudyimportModelbiblestudy.html">biblestudyimportModelbiblestudy</a>
+    </li>
 </ul>
-<div href="../classes/biblestudyimportModelbiblestudy.html" class="element class"><div class="details">
+<div href="../classes/biblestudyimportModelbiblestudy.html" class="element class">
+<div class="details">
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
-<h2>__construct()
-        </h2>
-<pre>__construct() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+    <i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a>
+
+<div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+    <h2>__construct()
+    </h2>
+    <pre>__construct() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="_exists" id="_exists"></a><div class="element clickable method public _exists" data-toggle="collapse" data-target="._exists .collapse">
-<h2>_exists()
-        </h2>
-<pre>_exists($table, $field, $objectRef, $storeId) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$table</h4>
-<code></code>
+<a name="_exists" id="_exists"></a>
+
+<div class="element clickable method public _exists" data-toggle="collapse" data-target="._exists .collapse">
+    <h2>_exists()
+    </h2>
+    <pre>_exists($table, $field, $objectRef, $storeId) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$table</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$field</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$objectRef</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$storeId</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="subelement argument">
-<h4>$field</h4>
-<code></code>
+<a name="addFolder" id="addFolder"></a>
+
+<div class="element clickable method public addFolder" data-toggle="collapse" data-target=".addFolder .collapse">
+    <h2>addFolder()
+    </h2>
+    <pre>addFolder($folder) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$folder</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="subelement argument">
-<h4>$objectRef</h4>
-<code></code>
+<a name="addLocation" id="addLocation"></a>
+
+<div class="element clickable method public addLocation" data-toggle="collapse" data-target=".addLocation .collapse">
+    <h2>addLocation()
+    </h2>
+    <pre>addLocation($location) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$location</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="subelement argument">
-<h4>$storeId</h4>
-<code></code>
+<a name="addMediaFile" id="addMediaFile"></a>
+
+<div class="element clickable method public addMediaFile" data-toggle="collapse" data-target=".addMediaFile .collapse">
+    <h2>addMediaFile()
+    </h2>
+    <pre>addMediaFile($media) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$media</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="addMimeType" id="addMimeType"></a>
+
+<div class="element clickable method public addMimeType" data-toggle="collapse" data-target=".addMimeType .collapse">
+    <h2>addMimeType()
+    </h2>
+    <pre>addMimeType($mimeType) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$mimeType</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="addFolder" id="addFolder"></a><div class="element clickable method public addFolder" data-toggle="collapse" data-target=".addFolder .collapse">
-<h2>addFolder()
-        </h2>
-<pre>addFolder($folder) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$folder</h4>
-<code></code>
+<a name="addPodcast" id="addPodcast"></a>
+
+<div class="element clickable method public addPodcast" data-toggle="collapse" data-target=".addPodcast .collapse">
+    <h2>addPodcast()
+    </h2>
+    <pre>addPodcast($podcast) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$podcast</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="addSeries" id="addSeries"></a>
+
+<div class="element clickable method public addSeries" data-toggle="collapse" data-target=".addSeries .collapse">
+    <h2>addSeries()
+    </h2>
+    <pre>addSeries($series) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$series</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="addLocation" id="addLocation"></a><div class="element clickable method public addLocation" data-toggle="collapse" data-target=".addLocation .collapse">
-<h2>addLocation()
-        </h2>
-<pre>addLocation($location) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$location</h4>
-<code></code>
+<a name="addServer" id="addServer"></a>
+
+<div class="element clickable method public addServer" data-toggle="collapse" data-target=".addServer .collapse">
+    <h2>addServer()
+    </h2>
+    <pre>addServer($server) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$server</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="addStudy" id="addStudy"></a>
+
+<div class="element clickable method public addStudy" data-toggle="collapse" data-target=".addStudy .collapse">
+    <h2>addStudy()
+    </h2>
+    <pre>addStudy($study) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$study</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="addMediaFile" id="addMediaFile"></a><div class="element clickable method public addMediaFile" data-toggle="collapse" data-target=".addMediaFile .collapse">
-<h2>addMediaFile()
-        </h2>
-<pre>addMediaFile($media) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$media</h4>
-<code></code>
+<a name="addTeacher" id="addTeacher"></a>
+
+<div class="element clickable method public addTeacher" data-toggle="collapse" data-target=".addTeacher .collapse">
+    <h2>addTeacher()
+    </h2>
+    <pre>addTeacher($teacher) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$teacher</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="addTopic" id="addTopic"></a>
+
+<div class="element clickable method public addTopic" data-toggle="collapse" data-target=".addTopic .collapse">
+    <h2>addTopic()
+    </h2>
+    <pre>addTopic($topic) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$topic</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="addMimeType" id="addMimeType"></a><div class="element clickable method public addMimeType" data-toggle="collapse" data-target=".addMimeType .collapse">
-<h2>addMimeType()
-        </h2>
-<pre>addMimeType($mimeType) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$mimeType</h4>
-<code></code>
+<a name="addType" id="addType"></a>
+
+<div class="element clickable method public addType" data-toggle="collapse" data-target=".addType .collapse">
+    <h2>addType()
+    </h2>
+    <pre>addType($type) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$type</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="getFolder" id="getFolder"></a>
+
+<div class="element clickable method public getFolder" data-toggle="collapse" data-target=".getFolder .collapse">
+    <h2>getFolder()
+    </h2>
+    <pre>getFolder() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="addPodcast" id="addPodcast"></a><div class="element clickable method public addPodcast" data-toggle="collapse" data-target=".addPodcast .collapse">
-<h2>addPodcast()
-        </h2>
-<pre>addPodcast($podcast) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$podcast</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addSeries" id="addSeries"></a><div class="element clickable method public addSeries" data-toggle="collapse" data-target=".addSeries .collapse">
-<h2>addSeries()
-        </h2>
-<pre>addSeries($series) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$series</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addServer" id="addServer"></a><div class="element clickable method public addServer" data-toggle="collapse" data-target=".addServer .collapse">
-<h2>addServer()
-        </h2>
-<pre>addServer($server) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$server</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addStudy" id="addStudy"></a><div class="element clickable method public addStudy" data-toggle="collapse" data-target=".addStudy .collapse">
-<h2>addStudy()
-        </h2>
-<pre>addStudy($study) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$study</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addTeacher" id="addTeacher"></a><div class="element clickable method public addTeacher" data-toggle="collapse" data-target=".addTeacher .collapse">
-<h2>addTeacher()
-        </h2>
-<pre>addTeacher($teacher) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$teacher</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addTopic" id="addTopic"></a><div class="element clickable method public addTopic" data-toggle="collapse" data-target=".addTopic .collapse">
-<h2>addTopic()
-        </h2>
-<pre>addTopic($topic) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$topic</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="addType" id="addType"></a><div class="element clickable method public addType" data-toggle="collapse" data-target=".addType .collapse">
-<h2>addType()
-        </h2>
-<pre>addType($type) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$type</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="getFolder" id="getFolder"></a><div class="element clickable method public getFolder" data-toggle="collapse" data-target=".getFolder .collapse">
-<h2>getFolder()
-        </h2>
-<pre>getFolder() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="getServer" id="getServer"></a><div class="element clickable method public getServer" data-toggle="collapse" data-target=".getServer .collapse">
-<h2>getServer()
-        </h2>
-<pre>getServer() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="getServer" id="getServer"></a>
+
+<div class="element clickable method public getServer" data-toggle="collapse" data-target=".getServer .collapse">
+    <h2>getServer()
+    </h2>
+    <pre>getServer() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24db" id="$db"> </a><div class="element clickable property public $db" data-toggle="collapse" data-target=".$db .collapse">
-<h2>$db</h2>
-<pre>$db </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+    <i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24db" id="$db"> </a>
+
+<div class="element clickable property public $db" data-toggle="collapse" data-target=".$db .collapse">
+    <h2>$db</h2>
+    <pre>$db </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24folderId" id="$folderId"> </a><div class="element clickable property public $folderId" data-toggle="collapse" data-target=".$folderId .collapse">
-<h2>$folderId</h2>
-<pre>$folderId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24folderId" id="$folderId"> </a>
+
+<div class="element clickable property public $folderId" data-toggle="collapse" data-target=".$folderId .collapse">
+    <h2>$folderId</h2>
+    <pre>$folderId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24locationId" id="$locationId"> </a><div class="element clickable property public $locationId" data-toggle="collapse" data-target=".$locationId .collapse">
-<h2>$locationId</h2>
-<pre>$locationId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24locationId" id="$locationId"> </a>
+
+<div class="element clickable property public $locationId" data-toggle="collapse" data-target=".$locationId .collapse">
+    <h2>$locationId</h2>
+    <pre>$locationId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24messageType" id="$messageType"> </a><div class="element clickable property public $messageType" data-toggle="collapse" data-target=".$messageType .collapse">
-<h2>$messageType</h2>
-<pre>$messageType </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24messageType" id="$messageType"> </a>
+
+<div class="element clickable property public $messageType" data-toggle="collapse"
+     data-target=".$messageType .collapse">
+    <h2>$messageType</h2>
+    <pre>$messageType </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24mimeTypeId" id="$mimeTypeId"> </a><div class="element clickable property public $mimeTypeId" data-toggle="collapse" data-target=".$mimeTypeId .collapse">
-<h2>$mimeTypeId</h2>
-<pre>$mimeTypeId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24mimeTypeId" id="$mimeTypeId"> </a>
+
+<div class="element clickable property public $mimeTypeId" data-toggle="collapse" data-target=".$mimeTypeId .collapse">
+    <h2>$mimeTypeId</h2>
+    <pre>$mimeTypeId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24podcastId" id="$podcastId"> </a><div class="element clickable property public $podcastId" data-toggle="collapse" data-target=".$podcastId .collapse">
-<h2>$podcastId</h2>
-<pre>$podcastId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24podcastId" id="$podcastId"> </a>
+
+<div class="element clickable property public $podcastId" data-toggle="collapse" data-target=".$podcastId .collapse">
+    <h2>$podcastId</h2>
+    <pre>$podcastId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24seriesId" id="$seriesId"> </a><div class="element clickable property public $seriesId" data-toggle="collapse" data-target=".$seriesId .collapse">
-<h2>$seriesId</h2>
-<pre>$seriesId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24seriesId" id="$seriesId"> </a>
+
+<div class="element clickable property public $seriesId" data-toggle="collapse" data-target=".$seriesId .collapse">
+    <h2>$seriesId</h2>
+    <pre>$seriesId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24serverId" id="$serverId"> </a><div class="element clickable property public $serverId" data-toggle="collapse" data-target=".$serverId .collapse">
-<h2>$serverId</h2>
-<pre>$serverId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24serverId" id="$serverId"> </a>
+
+<div class="element clickable property public $serverId" data-toggle="collapse" data-target=".$serverId .collapse">
+    <h2>$serverId</h2>
+    <pre>$serverId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24studyId" id="$studyId"> </a><div class="element clickable property public $studyId" data-toggle="collapse" data-target=".$studyId .collapse">
-<h2>$studyId</h2>
-<pre>$studyId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24studyId" id="$studyId"> </a>
+
+<div class="element clickable property public $studyId" data-toggle="collapse" data-target=".$studyId .collapse">
+    <h2>$studyId</h2>
+    <pre>$studyId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24teacherId" id="$teacherId"> </a><div class="element clickable property public $teacherId" data-toggle="collapse" data-target=".$teacherId .collapse">
-<h2>$teacherId</h2>
-<pre>$teacherId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24teacherId" id="$teacherId"> </a>
+
+<div class="element clickable property public $teacherId" data-toggle="collapse" data-target=".$teacherId .collapse">
+    <h2>$teacherId</h2>
+    <pre>$teacherId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="%24topicId" id="$topicId"> </a><div class="element clickable property public $topicId" data-toggle="collapse" data-target=".$topicId .collapse">
-<h2>$topicId</h2>
-<pre>$topicId </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24topicId" id="$topicId"> </a>
+
+<div class="element clickable property public $topicId" data-toggle="collapse" data-target=".$topicId .collapse">
+    <h2>$topicId</h2>
+    <pre>$topicId </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
 </div>
 </div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
-            generated on 2012-07-22T16:50:57-05:00.<br></footer></div>
+</div>
+</div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+        generated on 2012-07-22T16:50:57-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>

@@ -2,57 +2,95 @@
 
 /**
  * Core Admin BibleStudy file
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 // Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
-    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
+{
+	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
-//require_once(JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-//if (JRequest::getCmd('view', '') == 'liveupdate') {
-//    LiveUpdate::handleRequest();
-//    return;
-//}
+JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
 
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
+{
+	LiveUpdate::handleRequest();
+
+	return;
+}
+
+include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+
+
+if (version_compare(JVERSION, '3.0', 'ge'))
+{
+	define('BIBLESTUDY_CHECKREL', true);
+}
+else
+{
+	define('BIBLESTUDY_CHECKREL', false);
+}
 
 // Register helper class
-JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', __DIR__ . '/helpers/biblestudy.php');
 
 addCSS();
 addJS();
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
-$controller->execute(JRequest::getCmd('task'));
+$controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();
 
 /**
  * Global css
  *
+ * @return null
+ *
  * @since   1.7.0
  */
-function addCSS() {
-    JHTML::stylesheet('media/com_biblestudy/css/general.css');
-    JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-    if (BibleStudyHelper::debug() === '1'):
-        JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
-    endif;
+function addCSS()
+{
+	if (JBSMBibleStudyHelper::debug() === '1')
+	{
+		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
+	}
+	if (!BIBLESTUDY_CHECKREL)
+	{
+		JHTML::stylesheet('media/com_biblestudy/jui/css/icomoon.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+	}
+	JHTML::stylesheet('media/com_biblestudy/css/general.css');
+	JHTML::stylesheet('media/com_biblestudy/css/icons.css');
+
+	return null;
 }
 
 /**
  * Global JS
  *
+ * @return null
+ *
  * @since   7.0
  */
-function addJS() {
-    JHTML::script('media/com_biblestudy/js/jquery.js');
-    JHTML::script('media/com_biblestudy/js/noconflict.js');
-    JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
+function addJS()
+{
+	if (!BIBLESTUDY_CHECKREL)
+	{
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.min.js');
+		JHTML::script('/media/com_biblestudy/jui/js/bootstrap.js');
+		JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.sortable.js');
+		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
+	}
+
+	return null;
 }

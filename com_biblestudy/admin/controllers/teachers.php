@@ -1,13 +1,11 @@
 <?php
-
 /**
- * Controller for Teachers list
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
@@ -15,24 +13,58 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * Teachers list controller class.
  *
- * @package BibleStudy.Admin
- * @since 7.0.0
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
-class BiblestudyControllerTeachers extends JControllerAdmin {
+class BiblestudyControllerTeachers extends JControllerAdmin
+{
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return JModel
+	 *
+	 * @since 7.0.0
+	 */
+	public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
+	}
 
     /**
-     * Proxy for getModel
+     * Method to save the submitted ordering values for records via AJAX.
      *
-     * @param string $name    The name of the model
-     * @param string $prefix  The prefix for the PHP class name
-     * @param array $config
+     * @return	void
      *
-     * @return JModel
-     * @since 7.0.0
+     * @since   3.0
      */
-    public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
-        $model = parent::getModel($name, $prefix, $config);
-        return $model;
-    }
+    public function saveOrderAjax()
+    {
+        $pks = $this->input->post->get('cid', array(), 'array');
+        $order = $this->input->post->get('order', array(), 'array');
 
+        // Sanitize the input
+        JArrayHelper::toInteger($pks);
+        JArrayHelper::toInteger($order);
+
+        // Get the model
+        $model = $this->getModel();
+
+        // Save the ordering
+        $return = $model->saveorder($pks, $order);
+
+        if ($return)
+        {
+            echo "1";
+        }
+
+        // Close the application
+        JFactory::getApplication()->close();
+    }
 }

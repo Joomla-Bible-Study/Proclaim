@@ -8,7 +8,8 @@
 #bsm_teachertable_list
 {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
 #bsm_teachertable_list td {
     text-align:left;
@@ -24,7 +25,7 @@
     font-size:18px;
     font-weight:bold;
     border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
+    padding: 4px 0 4px 4px;
 }
 #bsm_teachertable_list .bsm_separator
 {
@@ -186,7 +187,7 @@
     margin-right: 5px;
 }
 .podcastheader h3{
-    display:table-header;
+    display:table-header-group;
     text-align:center;
 }
 
@@ -231,154 +232,156 @@ div.listingfooter ul li {
 #bsdropdownmenu {
     margin-bottom: 10px;
 }
-.bslisttable {
+table.bslisttable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
-.bslisttable th, .bslisttable td {
+
+table.bslisttable th, table.bslisttable td, table.bslisttable tr {
     text-align:left;
     padding:0 5px 0 5px;
     border:none;
 }
-.bslisttable .row1col1,
-.bslisttable .row2col1,
-.bslisttable .row3col1,
-.bslisttable .row4col1 {
+table.bslisttable .row1col1,
+table.bslisttable .row2col1,
+table.bslisttable .row3col1,
+table.bslisttable .row4col1 {
     border-left: grey 2px solid;
 }
-.bslisttable .lastcol {
+table.bslisttable .lastcol {
     border-right: grey 2px solid;
 }
-.bslisttable .lastrow td {
+table.bslisttable .lastrow td {
     border-bottom:2px solid grey;
     padding-bottom:7px;
 }
-.bslisttable th {
+table.bslisttable th {
     background-color:#707070;
     font-weight:bold;
     color:white;
 
 }
-.bslisttable th.row1col1,
-.bslisttable th.row1col2,
-.bslisttable th.row1col3,
-.bslisttable th.row1col4 {
+table.bslisttable th.row1col1,
+table.bslisttable th.row1col2,
+table.bslisttable th.row1col3,
+table.bslisttable th.row1col4 {
     border-top: grey 2px solid;
     padding-top:3px;
 }
-.bslisttable th.firstrow {
+table.bslisttable th.firstrow {
     border-bottom: grey 2px solid;
 }
-.bslisttable tr.lastrow th {
+table.bslisttable tr.lastrow th {
     border-bottom:2px solid grey;
     padding-bottom:3px;
 }
 
-.bslisttable tr.bsodd td {
+table.bslisttable tr.bsodd td {
     background-color:#FFFFFF;
 }
-.bslisttable tr.bseven td {
+table.bslisttable tr.bseven td {
     background-color:#FFFFF0;
 }
 
-.bslisttable .date {
+table.bslisttable .date {
     white-space:nowrap;
     font-size:1.2em;
     color:grey;
     font-weight:bold;
 }
-.bslisttable .scripture1 {
+table.bslisttable .scripture1 {
     white-space:nowrap;
     color:#c02121;
     font-weight:bold;
 }
-.bslisttable .scripture2 {
+table.bslisttable .scripture2 {
     white-space:nowrap;
     color:#c02121;
     font-weight:bold;
 }
-.bslisttable .title {
+table.bslisttable .title {
     font-size:1.2em;
     color:#707070;
     font-weight:bold;
 }
-.bslisttable .series_text {
+table.bslisttable .series_text {
     white-space:nowrap;
     color:grey;
 }
-.bslisttable .duration {
+table.bslisttable .duration {
     white-space:nowrap;
     font-style:italic;
 }
-.bslisttable .studyintro {
+table.bslisttable .studyintro {
 
 }
-.bslisttable .teacher {
+table.bslisttable .teacher {
     white-space:nowrap;
 }
-.bslisttable .location_text {
+table.bslisttable .location_text {
     white-space:nowrap;
 }
-.bslisttable .topic_text {
+table.bslisttable .topic_text {
     white-space:nowrap;
 }
-.bslisttable .message_type {
+table.bslisttable .message_type {
     white-space:nowrap;
 }
-.bslisttable .jbsmedia {
+table.bslisttable .jbsmedia {
     white-space:nowrap;
 }
-.bslisttable .store {
+table.bslisttable .store {
     white-space:nowrap;
 }
-.bslisttable .details-text {
+table.bslisttable .details-text {
     white-space:nowrap;
 }
-.bslisttable .details-pdf {
+table.bslisttable .details-pdf {
     white-space:nowrap;
 }
-.bslisttable .details-text-pdf {
+table.bslisttable .details-text-pdf {
     white-space:nowrap;
 }
-.bslisttable .detailstable td {
+table.bslisttable .detailstable td {
     border: none;
     padding: 0 2px 0 0;
 }
-.bslisttable .secondary_reference {
+table.bslisttable .secondary_reference {
     white-space:nowrap;
 }
-.bslisttable .teacher-title-name {
+table.bslisttable .teacher-title-name {
     white-space:nowrap;
 }
-.bslisttable .submitted {
+table.bslisttable .submitted {
     white-space:nowrap;
 }
-.bslisttable .hits {
+table.bslisttable .hits {
     white-space:nowrap;
 }
-.bslisttable .studynumber {
+table.bslisttable .studynumber {
     white-space:nowrap;
 }
-.bslisttable .filesize {
+table.bslisttable .filesize {
     white-space:nowrap;
 }
-.bslisttable .custom {
+table.bslisttable .custom {
     white-space:nowrap;
 }
-.bslisttable .commentshead {
+table.bslisttable .commentshead {
     font-size: 2em;
     font-weight:bold;
 }
-.bslisttable .thumbnail {
+table.bslisttable .thumbnail {
     white-space:nowrap;
 }
-.bslisttable .mediatable td {
+table.bslisttable .mediatable td {
     border: none;
     padding: 0 6px 0 0;
 }
-.bslisttable .mediatable span.bsfilesize {
+table.bslisttable .mediatable span.bsfilesize {
     font-size:0.6em;
-    position:relative; bottom: 7px;
+    bottom: 7px;
 }
 
 .component-content ul
@@ -401,9 +404,10 @@ div.listingfooter ul li {
 
 #bsmsdetailstable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
-#bsmsdetailstable th, #bsmsdetailstable td {
+#bsmsdetailstable thead tr, #bsmsdetailstable thead th, #bsmsdetailstable td,#bsmsdetailstable tbody tr {
     text-align:left;
     padding:0 5px 0 5px;
     border:none;
@@ -545,7 +549,7 @@ div.listingfooter ul li {
 }
 #bsmsdetailstable .mediatable span.bsfilesize {
     font-size:0.6em;
-    position:relative; bottom: 7px;
+    bottom: 7px;
 }
 #bsdetailstable th, #bsdetailstable td {
     text-align:left;
@@ -559,9 +563,10 @@ div.listingfooter ul li {
 }
 #titletable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
-#titletable th, #titletable td {
+#titletable th, #titletable td, #titletable tr {
     text-align:left;
     padding:0 5px 0 5px;
     border:none;
@@ -582,7 +587,8 @@ div.listingfooter ul li {
 
 #bsmsmoduletable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
 #bsmsmoduletable th, #bsmsmoduletable td {
     text-align:left;
@@ -732,7 +738,8 @@ div.listingfooter ul li {
 /* Series List-Details Items */
 #seriestable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
 #seriestable th, #seriestable td {
     text-align:left;
@@ -786,7 +793,8 @@ div.listingfooter ul li {
 /* Series Detail Study Links Items */
 #seriesstudytable {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
 #seriesstudytable th, #seriesstudytable td {
     text-align:left;
@@ -950,12 +958,12 @@ div.listingfooter ul li {
     margin: 0;
     color: #9FD4FF;
     padding: 8px 8px 4px;
-    background: url(/images/tooltip/bubble.gif) top left;
+    background: url(../images/tooltip/bubble.gif) top left;
 }
 .tool-text {
     font-size: 11px;
     padding: 4px 8px 8px;
-    background: url(/images/tooltip/bubble_filler.gif) bottom right;
+    background: url(../images/tooltip/bubble_filler.gif) bottom right;
 }
 .custom-tip {
     color: #000;
@@ -984,7 +992,8 @@ div.listingfooter ul li {
 #bsm_teachertable
 {
     margin: 0;
-    border-collapse:separate;
+    border-spacing:0;
+    border-collapse:collapse;
 }
 #bsm_teachertable td {
     text-align:left;
@@ -1000,7 +1009,7 @@ div.listingfooter ul li {
     font-size:18px;
     font-weight:bold;
     border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
+    padding: 4px 0 4px 4px;
 }
 #bsm_teachertable .bsm_separator
 {
@@ -1090,14 +1099,14 @@ div.listingfooter ul li {
 #toolbar td.white {
     background-color:#FFFFFF;
 }
-#toolbar a hover visited{
+#toolbar a:hover a:visited{
     color:#0B55C4;
 }
 
 /*Social Networking Items */
 #bsmsshare {
     margin: 0;
-    border-collapse:separate;
+    border-collapse:collapse;
     float:right;
     border: 1px solid #CFCFCF;
     background-color: #F5F5F5;
@@ -1122,7 +1131,7 @@ div.listingfooter ul li {
 
 }
 .landing_title {
-    font-family:arial;
+    font-family:Arial, Helvetica, sans-serif;
     font-size:16px;
     font-weight:bold;
 
@@ -1131,7 +1140,7 @@ div.listingfooter ul li {
 
 }
 #showhide {
-    font-family:arial;
+    font-family:Arial, Helvetica, sans-serif;
     font-size:12px;
     font-weight:bold;
     text-decoration:none;
@@ -1195,4 +1204,13 @@ p.popupfooter {
 
 #recaptcha_widget_div {
     position:static !important;
+}
+
+table.cellspacing {
+    border-spacing:0;
+    border-collapse:collapse;
+}
+
+.buttonheading {
+    float: right;
 }

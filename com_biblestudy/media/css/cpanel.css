@@ -5,12 +5,6 @@
     Description:
         Purpose of the stylesheet follows.
 */
-
-/*
-   TODO customize this sample style
-   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
-*/
-
 #fbadmin {
     text-align: left;
 }
@@ -19,10 +13,8 @@
     clear: both;
 }
 
-#fbmenu {
-    margin-top: 15px;
-    padding-top: 3px;
-    border-top: 1px solid #ccc;
+.fbmenu {
+    width: 14%;
 }
 
 #fbmenu a {
@@ -44,7 +36,6 @@
 
 .fbsubmenu {
     background: #fff;
-    padding-left: 10px;
     padding: 5px 5px 5px 15px;
 }
 
@@ -144,10 +135,7 @@ table.thisform th {
     font-size: 15px;
     font-weight: normal;
     font-variant: small-caps;
-    padding-top: 6px;
-    padding-bottom: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding: 6px 4px 2px 4px;
     text-align: left;
     height: 25px;
     color: #666666;
@@ -160,7 +148,7 @@ table.thisform td {
 }
 
 .fbstatscover {
-    padding: 0px;
+    padding: 0;
 }
 
 table.fbstat {

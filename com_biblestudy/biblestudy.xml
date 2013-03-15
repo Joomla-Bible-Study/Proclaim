@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/2.5/component-install.dtd">
 <extension type="component" version="2.5" method="upgrade">
     <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
     if it is a new install or an actual upgrade; Normal installs will
@@ -8,10 +7,10 @@
     <!-- Generic Metadata -->
     <name>COM_BIBLESTUDY</name>
     <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007 - 2012 Joomla Bible Study Team All rights reserved</copyright>
+    <copyright>(C) 2007 - 2013 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>7.1.2</version>
-    <creationDate>Oct 25, 2012</creationDate>
+    <version>8.0.b1</version>
+    <creationDate>March 15, 2013</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <description>JBS_INS_XML_DESCRIPTION</description>
@@ -37,16 +36,15 @@
     </update>
 
     <files folder="site">
-        <filename>index.html</filename>
         <filename>biblestudy.php</filename>
         <filename>controller.php</filename>
         <filename>convert1.htm</filename>
+        <filename>index.html</filename>
         <filename>router.php</filename>
         <folder>sef_ext</folder>
         <folder>views</folder>
         <folder>models</folder>
         <folder>language</folder>
-        <folder>tables</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
         <folder>lib</folder>
@@ -60,6 +58,7 @@
         <folder>database</folder>
         <folder>images</folder>
         <folder>js</folder>
+        <folder>jui</folder>
         <folder>legacyplayer</folder>
         <folder>player</folder>
         <filename>index.html</filename>
@@ -69,53 +68,55 @@
         <menu img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_BIBLESTUDY</menu>
         <submenu>
             <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-            <menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png" alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
-            <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
-            <menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
-            <menu link="option=com_biblestudy&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
-            <menu link="option=com_biblestudy&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
-            <menu link="option=com_biblestudy&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
-            <menu link="option=com_biblestudy&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
-            <menu link="option=com_biblestudy&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
-            <menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
-            <menu link="option=com_biblestudy&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png" alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
-            <menu link="option=com_biblestudy&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png" alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
-            <menu link="option=com_biblestudy&amp;view=folders" img="../media/com_biblestudy/images/menu/icon-16-folder.png" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
-            <menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png" alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
-            <menu link="option=com_biblestudy&amp;view=shares" img="../media/com_biblestudy/images/menu/icon-16-social.png" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-            <menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_CODE_DISPLAY">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=mediaimages" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
-            <menu link="option=com_biblestudy&amp;view=mimetypes" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
-            <menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png" alt="JBS_MNU_STYLES">JBS_MNU_STYLES</menu>
+
+            <menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
+            <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
+            <menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
+            <menu link="option=com_biblestudy&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
+            <menu link="option=com_biblestudy&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
+            <menu link="option=com_biblestudy&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
+            <menu link="option=com_biblestudy&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGE_TYPES</menu>
+            <menu link="option=com_biblestudy&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
+            <menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
+            <menu link="option=com_biblestudy&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
+            <menu link="option=com_biblestudy&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
+            <menu link="option=com_biblestudy&amp;view=folders" img="../media/com_biblestudy/images/menu/icon-16-folder.png">JBS_MNU_SERVER_FOLDERS</menu>
+            <menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
+            <menu link="option=com_biblestudy&amp;view=shares" img="../media/com_biblestudy/images/menu/icon-16-social.png">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+            <menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
+            <menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
+            <menu link="option=com_biblestudy&amp;view=mediaimages" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png">JBS_MNU_MEDIA_IMAGES</menu>
+            <menu link="option=com_biblestudy&amp;view=mimetypes" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png">JBS_MNU_MIME_TYPES</menu>
+            <menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
             <!-- Instead of link you can specify individual link attributes -->
         </submenu>
 
         <!-- Administration Main File Copy Section -->
         <files folder="admin">
-            <filename>index.html</filename>
+            <filename>access.xml</filename>
             <filename>biblestudy.php</filename>
+            <filename>config.xml</filename>
             <filename>controller.php</filename>
             <filename>convert1.htm</filename>
-            <filename>config.xml</filename>
-            <filename>access.xml</filename>
-            <folder>help</folder>
-            <folder>tables</folder>
-            <folder>views</folder>
-            <folder>models</folder>
-            <folder>helpers</folder>
+            <filename>index.html</filename>
             <folder>controllers</folder>
+            <folder>help</folder>
+            <folder>helpers</folder>
+            <folder>install</folder>
+            <folder>language</folder>
             <folder>lib</folder>
             <folder>liveupdate</folder>
-            <folder>language</folder>
-            <folder>install</folder>
             <folder>migration</folder>
+            <folder>models</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
         </files>
     </administration>
 
     <!-- new server call -->
     <updateservers>
-        <server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
+        <server type="extension" priority="1" name="Joomla Bible Study">
+            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
     </updateservers>
 
     <!-- Tables -->
@@ -127,6 +128,6 @@
 
     <!--  Dependencies -->
     <dependencies>
-        <dependency type="platform" name="joomla" operator="=" version="2.5" />
+        <dependency type="platform" name="joomla" operator="=" version="2.5"/>
     </dependencies>
 </extension>

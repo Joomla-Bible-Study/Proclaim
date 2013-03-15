@@ -2,27 +2,36 @@
 
 /**
  * Controller for Seriesdisplay
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 /**
  * Controller for Seriesdisplay
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
-class BiblestudyControllerSeriesdisplay extends JControllerLegacy {
+class BiblestudyControllerSeriesdisplay extends JControllerLegacy
+{
 
-    /**
-     * constructor (registers additional tasks to methods)
-     * @return void
-     */
-    public function __construct() {
-        parent::__construct();
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
+	 *                             'view_path' (this list is not meant to be comprehensive).
+	 *
+	 * @see JControllerLagacy
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
 
 }

@@ -1,111 +1,139 @@
 <?php
-
 /**
- * Podcast model
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
 /**
  * Podcast model class
- * @package BibleStudy.Admin
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
  */
-class BiblestudyModelPodcast extends JModelAdmin {
+class BiblestudyModelPodcast extends JModelAdmin
+{
 
-    /**
-     * Method override to check if you can edit an existing record.
-     *
-     * @param       array   $data   An array of input data.
-     * @param       string  $key    The name of the key for the primary key.
-     *
-     * @return      boolean
-     * @since       1.6
-     */
-    protected function allowEdit($data = array(), $key = 'id') {
-        // Check specific edit permission then general edit permission.
-        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.podcast.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-    }
+	/**
+	 * Protect prefix
+	 *
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
 
-    /**
-     * Store
-     * @return boolean
-     */
-    public function store() {
-        $row = & $this->getTable();
+	/**
+	 * Get the form data
+	 *
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
 
-        $data = JRequest::get('post');
+		if (empty($form))
+		{
+			return false;
+		}
 
-        // Bind the form fields to the hello table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+		return $form;
+	}
 
-        // Make sure the record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return    JTable    A database object
+	 *
+	 * @since    2.5
+	 */
+	public function getTable($name = 'Podcast', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
+	}
 
-        // Store the web link table to the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-            //			$this->setError( $row->getErrorMsg() );
-            return false;
-        }
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  array    The default data is an empty array.
+	 *
+	 * @since   7.0
+	 */
+	protected function loadFormData()
+	{
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.podcast.data', array());
 
-        return true;
-    }
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
 
-    /**
-     * Get the form data
-     *
-     * @param array $data
-     * @param boolean $loadData
-     * @return object|boolean
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true) {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
+		return $data;
+	}
 
-        return $form;
-    }
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return    mixed    Object on success, false on failure.
+	 *
+	 * @since    1.6
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
 
-    /**
-     * Method to get the data that should be injected in the form.
-     *
-     * @return  array    The default data is an empty array.
-     * @since   7.0
-     */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.podcast.data', array());
-        if (empty($data))
-            $data = $this->getItem();
+		if ($item)
+		{
 
-        return $data;
-    }
+		}
 
-    /**
-     * Custom clean the cache of com_biblestudy and biblestudy modules
-     * @param string $group
-     * @param int $client_id
-     *
-     * @since	1.6
-     */
-    protected function cleanCache($group = null, $client_id = 0) {
-        parent::cleanCache('com_biblestudy');
-        parent::cleanCache('mod_biblestudy');
-    }
+		return $item;
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer  $pk  The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 *
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
+	}
 
 }

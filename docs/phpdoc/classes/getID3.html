@@ -1,574 +1,983 @@
-<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<!DOCTYPE html>
+<html xmlns:date="http://exslt.org/dates-and-times" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>JoomlaBibleStudy » \getID3</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta charset="utf-8">
+    <title>JoomlaBibleStudy » \getID3</title>
+    <meta name="author" content="Mike van Riel">
+    <meta name="description" content="">
+    <link href="../css/template.css" rel="stylesheet" media="all">
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/template.js" type="text/javascript"></script>
+    <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/BibleStude.html"><i class="icon-folder-open"></i> BibleStude</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
-<li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">897</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">32</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">11</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a
+                class="brand" href="../index.html">JoomlaBibleStudy</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a>Packages</a></li>
+                            <li><a href="../packages/BibleStude.html"><i class="icon-folder-open"></i> BibleStude</a>
+                            </li>
+                            <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a>
+                            </li>
+                            <li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a>
+                            </li>
+                            <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+                            <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+                            <li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                                <span class="label label-info">897</span></a></li>
+                            <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                                <ul>
+                                    <li>todo 
+                                        <span class="label label-info">32</span>
+                                    </li>
+                                    <li>fixme 
+                                        <span class="label label-info">1</span>
+                                    </li>
+                                </ul>
+                            </a></li>
+                            <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                                <span class="label label-info">11</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a>
+    </div>
 </div>
 <div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#CalculateCompressionRatioAudio" title="CalculateCompressionRatioAudio :: "><span class="description">CalculateCompressionRatioAudio()
-        </span><pre>CalculateCompressionRatioAudio()</pre></a></li>
-<li class="method public "><a href="#CalculateCompressionRatioVideo" title="CalculateCompressionRatioVideo :: "><span class="description">CalculateCompressionRatioVideo()
-        </span><pre>CalculateCompressionRatioVideo()</pre></a></li>
-<li class="method public "><a href="#CalculateReplayGain" title="CalculateReplayGain :: "><span class="description">CalculateReplayGain()
-        </span><pre>CalculateReplayGain()</pre></a></li>
-<li class="method public "><a href="#ChannelsBitratePlaytimeCalculations" title="ChannelsBitratePlaytimeCalculations :: "><span class="description">ChannelsBitratePlaytimeCalculations()
-        </span><pre>ChannelsBitratePlaytimeCalculations()</pre></a></li>
-<li class="method public "><a href="#CharConvert" title="CharConvert :: "><span class="description">CharConvert()
-        </span><pre>CharConvert()</pre></a></li>
-<li class="method public "><a href="#CleanUp" title="CleanUp :: "><span class="description">CleanUp()
-        </span><pre>CleanUp()</pre></a></li>
-<li class="method public "><a href="#GetFileFormat" title="GetFileFormat :: "><span class="description">GetFileFormat()
-        </span><pre>GetFileFormat()</pre></a></li>
-<li class="method public "><a href="#GetFileFormatArray" title="GetFileFormatArray :: "><span class="description">GetFileFormatArray()
-        </span><pre>GetFileFormatArray()</pre></a></li>
-<li class="method public "><a href="#HandleAllTags" title="HandleAllTags :: "><span class="description">HandleAllTags()
-        </span><pre>HandleAllTags()</pre></a></li>
-<li class="method public "><a href="#ProcessAudioStreams" title="ProcessAudioStreams :: "><span class="description">ProcessAudioStreams()
-        </span><pre>ProcessAudioStreams()</pre></a></li>
-<li class="method public "><a href="#__construct" title="__construct :: "><span class="description">__construct()
-        </span><pre>__construct()</pre></a></li>
-<li class="method public "><a href="#analyze" title="analyze :: "><span class="description">analyze()
-        </span><pre>analyze()</pre></a></li>
-<li class="method public "><a href="#error" title="error :: "><span class="description">error()
-        </span><pre>error()</pre></a></li>
-<li class="method public "><a href="#fread_buffer_size" title="fread_buffer_size :: "><span class="description">fread_buffer_size()
-        </span><pre>fread_buffer_size()</pre></a></li>
-<li class="method public "><a href="#getHashdata" title="getHashdata :: "><span class="description">getHashdata()
-        </span><pre>getHashdata()</pre></a></li>
-<li class="method public "><a href="#getid3_tempnam" title="getid3_tempnam :: "><span class="description">getid3_tempnam()
-        </span><pre>getid3_tempnam()</pre></a></li>
-<li class="method public "><a href="#include_module" title="include_module :: "><span class="description">include_module()
-        </span><pre>include_module()</pre></a></li>
-<li class="method public "><a href="#openfile" title="openfile :: "><span class="description">openfile()
-        </span><pre>openfile()</pre></a></li>
-<li class="method public "><a href="#saveAttachment" title="saveAttachment :: "><span class="description">saveAttachment()
-        </span><pre>saveAttachment()</pre></a></li>
-<li class="method public "><a href="#setOption" title="setOption :: "><span class="description">setOption()
-        </span><pre>setOption()</pre></a></li>
-<li class="method public "><a href="#version" title="version :: "><span class="description">version()
-        </span><pre>version()</pre></a></li>
-<li class="method public "><a href="#warning" title="warning :: "><span class="description">warning()
-        </span><pre>warning()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="property public "><a href="#%24encoding" title="$encoding :: "><span class="description">$encoding</span><pre>$encoding</pre></a></li>
-<li class="property public "><a href="#%24encoding_id3v1" title="$encoding_id3v1 :: "><span class="description">$encoding_id3v1</span><pre>$encoding_id3v1</pre></a></li>
-<li class="property public "><a href="#%24filename" title="$filename :: "><span class="description">$filename</span><pre>$filename</pre></a></li>
-<li class="property public "><a href="#%24fp" title="$fp :: "><span class="description">$fp</span><pre>$fp</pre></a></li>
-<li class="property public "><a href="#%24info" title="$info :: "><span class="description">$info</span><pre>$info</pre></a></li>
-<li class="property public "><a href="#%24option_extra_info" title="$option_extra_info :: "><span class="description">$option_extra_info</span><pre>$option_extra_info</pre></a></li>
-<li class="property public "><a href="#%24option_fread_buffer_size" title="$option_fread_buffer_size :: "><span class="description">$option_fread_buffer_size</span><pre>$option_fread_buffer_size</pre></a></li>
-<li class="property public "><a href="#%24option_max_2gb_check" title="$option_max_2gb_check :: "><span class="description">$option_max_2gb_check</span><pre>$option_max_2gb_check</pre></a></li>
-<li class="property public "><a href="#%24option_md5_data" title="$option_md5_data :: "><span class="description">$option_md5_data</span><pre>$option_md5_data</pre></a></li>
-<li class="property public "><a href="#%24option_md5_data_source" title="$option_md5_data_source :: "><span class="description">$option_md5_data_source</span><pre>$option_md5_data_source</pre></a></li>
-<li class="property public "><a href="#%24option_save_attachments" title="$option_save_attachments :: "><span class="description">$option_save_attachments</span><pre>$option_save_attachments</pre></a></li>
-<li class="property public "><a href="#%24option_sha1_data" title="$option_sha1_data :: "><span class="description">$option_sha1_data</span><pre>$option_sha1_data</pre></a></li>
-<li class="property public "><a href="#%24option_tag_apetag" title="$option_tag_apetag :: "><span class="description">$option_tag_apetag</span><pre>$option_tag_apetag</pre></a></li>
-<li class="property public "><a href="#%24option_tag_id3v1" title="$option_tag_id3v1 :: "><span class="description">$option_tag_id3v1</span><pre>$option_tag_id3v1</pre></a></li>
-<li class="property public "><a href="#%24option_tag_id3v2" title="$option_tag_id3v2 :: "><span class="description">$option_tag_id3v2</span><pre>$option_tag_id3v2</pre></a></li>
-<li class="property public "><a href="#%24option_tag_lyrics3" title="$option_tag_lyrics3 :: "><span class="description">$option_tag_lyrics3</span><pre>$option_tag_lyrics3</pre></a></li>
-<li class="property public "><a href="#%24option_tags_html" title="$option_tags_html :: "><span class="description">$option_tags_html</span><pre>$option_tags_html</pre></a></li>
-<li class="property public "><a href="#%24option_tags_process" title="$option_tags_process :: "><span class="description">$option_tags_process</span><pre>$option_tags_process</pre></a></li>
-<li class="property public "><a href="#%24tempdir" title="$tempdir :: "><span class="description">$tempdir</span><pre>$tempdir</pre></a></li>
-<li class="nav-header protected">» Protected</li>
-<li class="property protected "><a href="#%24memory_limit" title="$memory_limit :: "><span class="description">$memory_limit</span><pre>$memory_limit</pre></a></li>
-<li class="property protected "><a href="#%24startup_error" title="$startup_error :: "><span class="description">$startup_error</span><pre>$startup_error</pre></a></li>
-<li class="property protected "><a href="#%24startup_warning" title="$startup_warning :: "><span class="description">$startup_warning</span><pre>$startup_warning</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-constant"></i> Constants</li>
-<li class="constant  "><a href="#ATTACHMENTS_INLINE" title="ATTACHMENTS_INLINE :: "><span class="description">ATTACHMENTS_INLINE</span><pre>ATTACHMENTS_INLINE</pre></a></li>
-<li class="constant  "><a href="#ATTACHMENTS_NONE" title="ATTACHMENTS_NONE :: "><span class="description">ATTACHMENTS_NONE</span><pre>ATTACHMENTS_NONE</pre></a></li>
-<li class="constant  "><a href="#FREAD_BUFFER_SIZE" title="FREAD_BUFFER_SIZE :: "><span class="description">FREAD_BUFFER_SIZE</span><pre>FREAD_BUFFER_SIZE</pre></a></li>
-<li class="constant  "><a href="#VERSION" title="VERSION :: "><span class="description">VERSION</span><pre>VERSION</pre></a></li>
-</ul>
+    <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
+                                                                              title="Show public elements">Public
+    </button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private"
+                                                                                                     title="Show private elements">
+        Private
+    </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
+
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+        </li>
+        <li class="method public "><a href="#CalculateCompressionRatioAudio" title="CalculateCompressionRatioAudio :: "><span
+                class="description">CalculateCompressionRatioAudio()
+        </span>
+            <pre>CalculateCompressionRatioAudio()</pre>
+        </a></li>
+        <li class="method public "><a href="#CalculateCompressionRatioVideo" title="CalculateCompressionRatioVideo :: "><span
+                class="description">CalculateCompressionRatioVideo()
+        </span>
+            <pre>CalculateCompressionRatioVideo()</pre>
+        </a></li>
+        <li class="method public "><a href="#CalculateReplayGain" title="CalculateReplayGain :: "><span
+                class="description">CalculateReplayGain()
+        </span>
+            <pre>CalculateReplayGain()</pre>
+        </a></li>
+        <li class="method public "><a href="#ChannelsBitratePlaytimeCalculations"
+                                      title="ChannelsBitratePlaytimeCalculations :: "><span class="description">ChannelsBitratePlaytimeCalculations()
+        </span>
+            <pre>ChannelsBitratePlaytimeCalculations()</pre>
+        </a></li>
+        <li class="method public "><a href="#CharConvert" title="CharConvert :: "><span class="description">CharConvert()
+        </span>
+            <pre>CharConvert()</pre>
+        </a></li>
+        <li class="method public "><a href="#CleanUp" title="CleanUp :: "><span class="description">CleanUp()
+        </span>
+            <pre>CleanUp()</pre>
+        </a></li>
+        <li class="method public "><a href="#GetFileFormat" title="GetFileFormat :: "><span class="description">GetFileFormat()
+        </span>
+            <pre>GetFileFormat()</pre>
+        </a></li>
+        <li class="method public "><a href="#GetFileFormatArray" title="GetFileFormatArray :: "><span
+                class="description">GetFileFormatArray()
+        </span>
+            <pre>GetFileFormatArray()</pre>
+        </a></li>
+        <li class="method public "><a href="#HandleAllTags" title="HandleAllTags :: "><span class="description">HandleAllTags()
+        </span>
+            <pre>HandleAllTags()</pre>
+        </a></li>
+        <li class="method public "><a href="#ProcessAudioStreams" title="ProcessAudioStreams :: "><span
+                class="description">ProcessAudioStreams()
+        </span>
+            <pre>ProcessAudioStreams()</pre>
+        </a></li>
+        <li class="method public "><a href="#__construct" title="__construct :: "><span class="description">__construct()
+        </span>
+            <pre>__construct()</pre>
+        </a></li>
+        <li class="method public "><a href="#analyze" title="analyze :: "><span class="description">analyze()
+        </span>
+            <pre>analyze()</pre>
+        </a></li>
+        <li class="method public "><a href="#error" title="error :: "><span class="description">error()
+        </span>
+            <pre>error()</pre>
+        </a></li>
+        <li class="method public "><a href="#fread_buffer_size" title="fread_buffer_size :: "><span class="description">fread_buffer_size()
+        </span>
+            <pre>fread_buffer_size()</pre>
+        </a></li>
+        <li class="method public "><a href="#getHashdata" title="getHashdata :: "><span class="description">getHashdata()
+        </span>
+            <pre>getHashdata()</pre>
+        </a></li>
+        <li class="method public "><a href="#getid3_tempnam" title="getid3_tempnam :: "><span class="description">getid3_tempnam()
+        </span>
+            <pre>getid3_tempnam()</pre>
+        </a></li>
+        <li class="method public "><a href="#include_module" title="include_module :: "><span class="description">include_module()
+        </span>
+            <pre>include_module()</pre>
+        </a></li>
+        <li class="method public "><a href="#openfile" title="openfile :: "><span class="description">openfile()
+        </span>
+            <pre>openfile()</pre>
+        </a></li>
+        <li class="method public "><a href="#saveAttachment" title="saveAttachment :: "><span class="description">saveAttachment()
+        </span>
+            <pre>saveAttachment()</pre>
+        </a></li>
+        <li class="method public "><a href="#setOption" title="setOption :: "><span class="description">setOption()
+        </span>
+            <pre>setOption()</pre>
+        </a></li>
+        <li class="method public "><a href="#version" title="version :: "><span class="description">version()
+        </span>
+            <pre>version()</pre>
+        </a></li>
+        <li class="method public "><a href="#warning" title="warning :: "><span class="description">warning()
+        </span>
+            <pre>warning()</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-property"></i> Properties
+        </li>
+        <li class="property public "><a href="#%24encoding" title="$encoding :: "><span
+                class="description">$encoding</span>
+            <pre>$encoding</pre>
+        </a></li>
+        <li class="property public "><a href="#%24encoding_id3v1" title="$encoding_id3v1 :: "><span class="description">$encoding_id3v1</span>
+            <pre>$encoding_id3v1</pre>
+        </a></li>
+        <li class="property public "><a href="#%24filename" title="$filename :: "><span
+                class="description">$filename</span>
+            <pre>$filename</pre>
+        </a></li>
+        <li class="property public "><a href="#%24fp" title="$fp :: "><span class="description">$fp</span>
+            <pre>$fp</pre>
+        </a></li>
+        <li class="property public "><a href="#%24info" title="$info :: "><span class="description">$info</span>
+            <pre>$info</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_extra_info" title="$option_extra_info :: "><span
+                class="description">$option_extra_info</span>
+            <pre>$option_extra_info</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_fread_buffer_size" title="$option_fread_buffer_size :: "><span
+                class="description">$option_fread_buffer_size</span>
+            <pre>$option_fread_buffer_size</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_max_2gb_check" title="$option_max_2gb_check :: "><span
+                class="description">$option_max_2gb_check</span>
+            <pre>$option_max_2gb_check</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_md5_data" title="$option_md5_data :: "><span
+                class="description">$option_md5_data</span>
+            <pre>$option_md5_data</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_md5_data_source" title="$option_md5_data_source :: "><span
+                class="description">$option_md5_data_source</span>
+            <pre>$option_md5_data_source</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_save_attachments" title="$option_save_attachments :: "><span
+                class="description">$option_save_attachments</span>
+            <pre>$option_save_attachments</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_sha1_data" title="$option_sha1_data :: "><span
+                class="description">$option_sha1_data</span>
+            <pre>$option_sha1_data</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tag_apetag" title="$option_tag_apetag :: "><span
+                class="description">$option_tag_apetag</span>
+            <pre>$option_tag_apetag</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tag_id3v1" title="$option_tag_id3v1 :: "><span
+                class="description">$option_tag_id3v1</span>
+            <pre>$option_tag_id3v1</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tag_id3v2" title="$option_tag_id3v2 :: "><span
+                class="description">$option_tag_id3v2</span>
+            <pre>$option_tag_id3v2</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tag_lyrics3" title="$option_tag_lyrics3 :: "><span
+                class="description">$option_tag_lyrics3</span>
+            <pre>$option_tag_lyrics3</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tags_html" title="$option_tags_html :: "><span
+                class="description">$option_tags_html</span>
+            <pre>$option_tags_html</pre>
+        </a></li>
+        <li class="property public "><a href="#%24option_tags_process" title="$option_tags_process :: "><span
+                class="description">$option_tags_process</span>
+            <pre>$option_tags_process</pre>
+        </a></li>
+        <li class="property public "><a href="#%24tempdir" title="$tempdir :: "><span
+                class="description">$tempdir</span>
+            <pre>$tempdir</pre>
+        </a></li>
+        <li class="nav-header protected">» Protected</li>
+        <li class="property protected "><a href="#%24memory_limit" title="$memory_limit :: "><span class="description">$memory_limit</span>
+            <pre>$memory_limit</pre>
+        </a></li>
+        <li class="property protected "><a href="#%24startup_error" title="$startup_error :: "><span
+                class="description">$startup_error</span>
+            <pre>$startup_error</pre>
+        </a></li>
+        <li class="property protected "><a href="#%24startup_warning" title="$startup_warning :: "><span
+                class="description">$startup_warning</span>
+            <pre>$startup_warning</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-constant"></i> Constants
+        </li>
+        <li class="constant  "><a href="#ATTACHMENTS_INLINE" title="ATTACHMENTS_INLINE :: "><span class="description">ATTACHMENTS_INLINE</span>
+            <pre>ATTACHMENTS_INLINE</pre>
+        </a></li>
+        <li class="constant  "><a href="#ATTACHMENTS_NONE" title="ATTACHMENTS_NONE :: "><span class="description">ATTACHMENTS_NONE</span>
+            <pre>ATTACHMENTS_NONE</pre>
+        </a></li>
+        <li class="constant  "><a href="#FREAD_BUFFER_SIZE" title="FREAD_BUFFER_SIZE :: "><span class="description">FREAD_BUFFER_SIZE</span>
+            <pre>FREAD_BUFFER_SIZE</pre>
+        </a></li>
+        <li class="constant  "><a href="#VERSION" title="VERSION :: "><span class="description">VERSION</span>
+            <pre>VERSION</pre>
+        </a></li>
+    </ul>
 </div>
 <div class="span8">
-<a name="%5CgetID3" id="\getID3"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/getID3.html">getID3</a>
-</li>
+<a name="%5CgetID3" id="\getID3"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/getID3.html">getID3</a>
+    </li>
 </ul>
-<div href="../classes/getID3.html" class="element class"><div class="details">
+<div href="../classes/getID3.html" class="element class">
+<div class="details">
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="CalculateCompressionRatioAudio" id="CalculateCompressionRatioAudio"></a><div class="element clickable method public CalculateCompressionRatioAudio" data-toggle="collapse" data-target=".CalculateCompressionRatioAudio .collapse">
-<h2>CalculateCompressionRatioAudio()
-        </h2>
-<pre>CalculateCompressionRatioAudio() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+    <i class="icon-custom icon-method"></i> Methods</h3>
+<a name="CalculateCompressionRatioAudio" id="CalculateCompressionRatioAudio"></a>
+
+<div class="element clickable method public CalculateCompressionRatioAudio" data-toggle="collapse"
+     data-target=".CalculateCompressionRatioAudio .collapse">
+    <h2>CalculateCompressionRatioAudio()
+    </h2>
+    <pre>CalculateCompressionRatioAudio() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="CalculateCompressionRatioVideo" id="CalculateCompressionRatioVideo"></a><div class="element clickable method public CalculateCompressionRatioVideo" data-toggle="collapse" data-target=".CalculateCompressionRatioVideo .collapse">
-<h2>CalculateCompressionRatioVideo()
-        </h2>
-<pre>CalculateCompressionRatioVideo() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="CalculateCompressionRatioVideo" id="CalculateCompressionRatioVideo"></a>
+
+<div class="element clickable method public CalculateCompressionRatioVideo" data-toggle="collapse"
+     data-target=".CalculateCompressionRatioVideo .collapse">
+    <h2>CalculateCompressionRatioVideo()
+    </h2>
+    <pre>CalculateCompressionRatioVideo() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="CalculateReplayGain" id="CalculateReplayGain"></a><div class="element clickable method public CalculateReplayGain" data-toggle="collapse" data-target=".CalculateReplayGain .collapse">
-<h2>CalculateReplayGain()
-        </h2>
-<pre>CalculateReplayGain() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="CalculateReplayGain" id="CalculateReplayGain"></a>
+
+<div class="element clickable method public CalculateReplayGain" data-toggle="collapse"
+     data-target=".CalculateReplayGain .collapse">
+    <h2>CalculateReplayGain()
+    </h2>
+    <pre>CalculateReplayGain() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="ChannelsBitratePlaytimeCalculations" id="ChannelsBitratePlaytimeCalculations"></a><div class="element clickable method public ChannelsBitratePlaytimeCalculations" data-toggle="collapse" data-target=".ChannelsBitratePlaytimeCalculations .collapse">
-<h2>ChannelsBitratePlaytimeCalculations()
-        </h2>
-<pre>ChannelsBitratePlaytimeCalculations() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="ChannelsBitratePlaytimeCalculations" id="ChannelsBitratePlaytimeCalculations"></a>
+
+<div class="element clickable method public ChannelsBitratePlaytimeCalculations" data-toggle="collapse"
+     data-target=".ChannelsBitratePlaytimeCalculations .collapse">
+    <h2>ChannelsBitratePlaytimeCalculations()
+    </h2>
+    <pre>ChannelsBitratePlaytimeCalculations() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="CharConvert" id="CharConvert"></a><div class="element clickable method public CharConvert" data-toggle="collapse" data-target=".CharConvert .collapse">
-<h2>CharConvert()
-        </h2>
-<pre>CharConvert($array, $encoding) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$array</h4>
-<code></code>
+<a name="CharConvert" id="CharConvert"></a>
+
+<div class="element clickable method public CharConvert" data-toggle="collapse" data-target=".CharConvert .collapse">
+    <h2>CharConvert()
+    </h2>
+    <pre>CharConvert($array, $encoding) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$array</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$encoding</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="subelement argument">
-<h4>$encoding</h4>
-<code></code>
+<a name="CleanUp" id="CleanUp"></a>
+
+<div class="element clickable method public CleanUp" data-toggle="collapse" data-target=".CleanUp .collapse">
+    <h2>CleanUp()
+    </h2>
+    <pre>CleanUp() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
+<a name="GetFileFormat" id="GetFileFormat"></a>
+
+<div class="element clickable method public GetFileFormat" data-toggle="collapse"
+     data-target=".GetFileFormat .collapse">
+    <h2>GetFileFormat()
+    </h2>
+    <pre>GetFileFormat($filedata, $filename) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$filedata</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$filename</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="CleanUp" id="CleanUp"></a><div class="element clickable method public CleanUp" data-toggle="collapse" data-target=".CleanUp .collapse">
-<h2>CleanUp()
-        </h2>
-<pre>CleanUp() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="GetFileFormatArray" id="GetFileFormatArray"></a>
+
+<div class="element clickable method public GetFileFormatArray" data-toggle="collapse"
+     data-target=".GetFileFormatArray .collapse">
+    <h2>GetFileFormatArray()
+    </h2>
+    <pre>GetFileFormatArray() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="GetFileFormat" id="GetFileFormat"></a><div class="element clickable method public GetFileFormat" data-toggle="collapse" data-target=".GetFileFormat .collapse">
-<h2>GetFileFormat()
-        </h2>
-<pre>GetFileFormat($filedata, $filename) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$filedata</h4>
-<code></code>
+<a name="HandleAllTags" id="HandleAllTags"></a>
+
+<div class="element clickable method public HandleAllTags" data-toggle="collapse"
+     data-target=".HandleAllTags .collapse">
+    <h2>HandleAllTags()
+    </h2>
+    <pre>HandleAllTags() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<div class="subelement argument">
-<h4>$filename</h4>
-<code></code>
+<a name="ProcessAudioStreams" id="ProcessAudioStreams"></a>
+
+<div class="element clickable method public ProcessAudioStreams" data-toggle="collapse"
+     data-target=".ProcessAudioStreams .collapse">
+    <h2>ProcessAudioStreams()
+    </h2>
+    <pre>ProcessAudioStreams() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
+<a name="__construct" id="__construct"></a>
+
+<div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+    <h2>__construct()
+    </h2>
+    <pre>__construct() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="GetFileFormatArray" id="GetFileFormatArray"></a><div class="element clickable method public GetFileFormatArray" data-toggle="collapse" data-target=".GetFileFormatArray .collapse">
-<h2>GetFileFormatArray()
-        </h2>
-<pre>GetFileFormatArray() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="analyze" id="analyze"></a>
+
+<div class="element clickable method public analyze" data-toggle="collapse" data-target=".analyze .collapse">
+    <h2>analyze()
+    </h2>
+    <pre>analyze($filename) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$filename</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="HandleAllTags" id="HandleAllTags"></a><div class="element clickable method public HandleAllTags" data-toggle="collapse" data-target=".HandleAllTags .collapse">
-<h2>HandleAllTags()
-        </h2>
-<pre>HandleAllTags() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="error" id="error"></a>
+
+<div class="element clickable method public error" data-toggle="collapse" data-target=".error .collapse">
+    <h2>error()
+    </h2>
+    <pre>error($message) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$message</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="ProcessAudioStreams" id="ProcessAudioStreams"></a><div class="element clickable method public ProcessAudioStreams" data-toggle="collapse" data-target=".ProcessAudioStreams .collapse">
-<h2>ProcessAudioStreams()
-        </h2>
-<pre>ProcessAudioStreams() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="fread_buffer_size" id="fread_buffer_size"></a>
+
+<div class="element clickable method public fread_buffer_size" data-toggle="collapse"
+     data-target=".fread_buffer_size .collapse">
+    <h2>fread_buffer_size()
+    </h2>
+    <pre>fread_buffer_size() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
-<h2>__construct()
-        </h2>
-<pre>__construct() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="getHashdata" id="getHashdata"></a>
+
+<div class="element clickable method public getHashdata" data-toggle="collapse" data-target=".getHashdata .collapse">
+    <h2>getHashdata()
+    </h2>
+    <pre>getHashdata($algorithm) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$algorithm</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="analyze" id="analyze"></a><div class="element clickable method public analyze" data-toggle="collapse" data-target=".analyze .collapse">
-<h2>analyze()
-        </h2>
-<pre>analyze($filename) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$filename</h4>
-<code></code>
+<a name="getid3_tempnam" id="getid3_tempnam"></a>
+
+<div class="element clickable method public getid3_tempnam" data-toggle="collapse"
+     data-target=".getid3_tempnam .collapse">
+    <h2>getid3_tempnam()
+    </h2>
+    <pre>getid3_tempnam() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
+<a name="include_module" id="include_module"></a>
+
+<div class="element clickable method public include_module" data-toggle="collapse"
+     data-target=".include_module .collapse">
+    <h2>include_module()
+    </h2>
+    <pre>include_module($name) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$name</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="error" id="error"></a><div class="element clickable method public error" data-toggle="collapse" data-target=".error .collapse">
-<h2>error()
-        </h2>
-<pre>error($message) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$message</h4>
-<code></code>
+<a name="openfile" id="openfile"></a>
+
+<div class="element clickable method public openfile" data-toggle="collapse" data-target=".openfile .collapse">
+    <h2>openfile()
+    </h2>
+    <pre>openfile($filename) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$filename</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-</div></div>
+<a name="saveAttachment" id="saveAttachment"></a>
+
+<div class="element clickable method public saveAttachment" data-toggle="collapse"
+     data-target=".saveAttachment .collapse">
+    <h2>saveAttachment()
+    </h2>
+    <pre>saveAttachment($ThisFileInfoIndex, $filename, $offset, $length) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$ThisFileInfoIndex</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$filename</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$offset</h4>
+                <code></code>
+            </div>
+            <div class="subelement argument">
+                <h4>$length</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="fread_buffer_size" id="fread_buffer_size"></a><div class="element clickable method public fread_buffer_size" data-toggle="collapse" data-target=".fread_buffer_size .collapse">
-<h2>fread_buffer_size()
-        </h2>
-<pre>fread_buffer_size() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="setOption" id="setOption"></a>
+
+<div class="element clickable method public setOption" data-toggle="collapse" data-target=".setOption .collapse">
+    <h2>setOption()
+    </h2>
+    <pre>setOption($optArray) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$optArray</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="getHashdata" id="getHashdata"></a><div class="element clickable method public getHashdata" data-toggle="collapse" data-target=".getHashdata .collapse">
-<h2>getHashdata()
-        </h2>
-<pre>getHashdata($algorithm) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$algorithm</h4>
-<code></code>
+<a name="version" id="version"></a>
+
+<div class="element clickable method public version" data-toggle="collapse" data-target=".version .collapse">
+    <h2>version()
+    </h2>
+    <pre>version() </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
-</div>
-<a name="getid3_tempnam" id="getid3_tempnam"></a><div class="element clickable method public getid3_tempnam" data-toggle="collapse" data-target=".getid3_tempnam .collapse">
-<h2>getid3_tempnam()
-        </h2>
-<pre>getid3_tempnam() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="include_module" id="include_module"></a><div class="element clickable method public include_module" data-toggle="collapse" data-target=".include_module .collapse">
-<h2>include_module()
-        </h2>
-<pre>include_module($name) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$name</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="openfile" id="openfile"></a><div class="element clickable method public openfile" data-toggle="collapse" data-target=".openfile .collapse">
-<h2>openfile()
-        </h2>
-<pre>openfile($filename) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$filename</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="saveAttachment" id="saveAttachment"></a><div class="element clickable method public saveAttachment" data-toggle="collapse" data-target=".saveAttachment .collapse">
-<h2>saveAttachment()
-        </h2>
-<pre>saveAttachment($ThisFileInfoIndex, $filename, $offset, $length) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$ThisFileInfoIndex</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$filename</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$offset</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$length</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="setOption" id="setOption"></a><div class="element clickable method public setOption" data-toggle="collapse" data-target=".setOption .collapse">
-<h2>setOption()
-        </h2>
-<pre>setOption($optArray) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$optArray</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<a name="version" id="version"></a><div class="element clickable method public version" data-toggle="collapse" data-target=".version .collapse">
-<h2>version()
-        </h2>
-<pre>version() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="warning" id="warning"></a><div class="element clickable method public warning" data-toggle="collapse" data-target=".warning .collapse">
-<h2>warning()
-        </h2>
-<pre>warning($message) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$message</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24encoding" id="$encoding"> </a><div class="element clickable property public $encoding" data-toggle="collapse" data-target=".$encoding .collapse">
-<h2>$encoding</h2>
-<pre>$encoding </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24encoding_id3v1" id="$encoding_id3v1"> </a><div class="element clickable property public $encoding_id3v1" data-toggle="collapse" data-target=".$encoding_id3v1 .collapse">
-<h2>$encoding_id3v1</h2>
-<pre>$encoding_id3v1 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24filename" id="$filename"> </a><div class="element clickable property public $filename" data-toggle="collapse" data-target=".$filename .collapse">
-<h2>$filename</h2>
-<pre>$filename </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24fp" id="$fp"> </a><div class="element clickable property public $fp" data-toggle="collapse" data-target=".$fp .collapse">
-<h2>$fp</h2>
-<pre>$fp </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24info" id="$info"> </a><div class="element clickable property public $info" data-toggle="collapse" data-target=".$info .collapse">
-<h2>$info</h2>
-<pre>$info </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_extra_info" id="$option_extra_info"> </a><div class="element clickable property public $option_extra_info" data-toggle="collapse" data-target=".$option_extra_info .collapse">
-<h2>$option_extra_info</h2>
-<pre>$option_extra_info </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_fread_buffer_size" id="$option_fread_buffer_size"> </a><div class="element clickable property public $option_fread_buffer_size" data-toggle="collapse" data-target=".$option_fread_buffer_size .collapse">
-<h2>$option_fread_buffer_size</h2>
-<pre>$option_fread_buffer_size </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_max_2gb_check" id="$option_max_2gb_check"> </a><div class="element clickable property public $option_max_2gb_check" data-toggle="collapse" data-target=".$option_max_2gb_check .collapse">
-<h2>$option_max_2gb_check</h2>
-<pre>$option_max_2gb_check </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_md5_data" id="$option_md5_data"> </a><div class="element clickable property public $option_md5_data" data-toggle="collapse" data-target=".$option_md5_data .collapse">
-<h2>$option_md5_data</h2>
-<pre>$option_md5_data </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_md5_data_source" id="$option_md5_data_source"> </a><div class="element clickable property public $option_md5_data_source" data-toggle="collapse" data-target=".$option_md5_data_source .collapse">
-<h2>$option_md5_data_source</h2>
-<pre>$option_md5_data_source </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_save_attachments" id="$option_save_attachments"> </a><div class="element clickable property public $option_save_attachments" data-toggle="collapse" data-target=".$option_save_attachments .collapse">
-<h2>$option_save_attachments</h2>
-<pre>$option_save_attachments </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_sha1_data" id="$option_sha1_data"> </a><div class="element clickable property public $option_sha1_data" data-toggle="collapse" data-target=".$option_sha1_data .collapse">
-<h2>$option_sha1_data</h2>
-<pre>$option_sha1_data </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tag_apetag" id="$option_tag_apetag"> </a><div class="element clickable property public $option_tag_apetag" data-toggle="collapse" data-target=".$option_tag_apetag .collapse">
-<h2>$option_tag_apetag</h2>
-<pre>$option_tag_apetag </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tag_id3v1" id="$option_tag_id3v1"> </a><div class="element clickable property public $option_tag_id3v1" data-toggle="collapse" data-target=".$option_tag_id3v1 .collapse">
-<h2>$option_tag_id3v1</h2>
-<pre>$option_tag_id3v1 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tag_id3v2" id="$option_tag_id3v2"> </a><div class="element clickable property public $option_tag_id3v2" data-toggle="collapse" data-target=".$option_tag_id3v2 .collapse">
-<h2>$option_tag_id3v2</h2>
-<pre>$option_tag_id3v2 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tag_lyrics3" id="$option_tag_lyrics3"> </a><div class="element clickable property public $option_tag_lyrics3" data-toggle="collapse" data-target=".$option_tag_lyrics3 .collapse">
-<h2>$option_tag_lyrics3</h2>
-<pre>$option_tag_lyrics3 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tags_html" id="$option_tags_html"> </a><div class="element clickable property public $option_tags_html" data-toggle="collapse" data-target=".$option_tags_html .collapse">
-<h2>$option_tags_html</h2>
-<pre>$option_tags_html </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24option_tags_process" id="$option_tags_process"> </a><div class="element clickable property public $option_tags_process" data-toggle="collapse" data-target=".$option_tags_process .collapse">
-<h2>$option_tags_process</h2>
-<pre>$option_tags_process </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24tempdir" id="$tempdir"> </a><div class="element clickable property public $tempdir" data-toggle="collapse" data-target=".$tempdir .collapse">
-<h2>$tempdir</h2>
-<pre>$tempdir </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24memory_limit" id="$memory_limit"> </a><div class="element clickable property protected $memory_limit" data-toggle="collapse" data-target=".$memory_limit .collapse">
-<h2>$memory_limit</h2>
-<pre>$memory_limit </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24startup_error" id="$startup_error"> </a><div class="element clickable property protected $startup_error" data-toggle="collapse" data-target=".$startup_error .collapse">
-<h2>$startup_error</h2>
-<pre>$startup_error </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24startup_warning" id="$startup_warning"> </a><div class="element clickable property protected $startup_warning" data-toggle="collapse" data-target=".$startup_warning .collapse">
-<h2>$startup_warning</h2>
-<pre>$startup_warning </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="warning" id="warning"></a>
+
+<div class="element clickable method public warning" data-toggle="collapse" data-target=".warning .collapse">
+    <h2>warning()
+    </h2>
+    <pre>warning($message) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <p class="long_description"></p>
+
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$message</h4>
+                <code></code>
+            </div>
+        </div>
+    </div>
 </div>
 <h3>
-<i class="icon-custom icon-constant"></i> Constants</h3>
-<a name="ATTACHMENTS_INLINE" id="ATTACHMENTS_INLINE"> </a><div class="element clickable constant  ATTACHMENTS_INLINE" data-toggle="collapse" data-target=".ATTACHMENTS_INLINE .collapse">
-<h2>ATTACHMENTS_INLINE</h2>
-<pre>ATTACHMENTS_INLINE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+    <i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24encoding" id="$encoding"> </a>
+
+<div class="element clickable property public $encoding" data-toggle="collapse" data-target=".$encoding .collapse">
+    <h2>$encoding</h2>
+    <pre>$encoding </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="ATTACHMENTS_NONE" id="ATTACHMENTS_NONE"> </a><div class="element clickable constant  ATTACHMENTS_NONE" data-toggle="collapse" data-target=".ATTACHMENTS_NONE .collapse">
-<h2>ATTACHMENTS_NONE</h2>
-<pre>ATTACHMENTS_NONE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24encoding_id3v1" id="$encoding_id3v1"> </a>
+
+<div class="element clickable property public $encoding_id3v1" data-toggle="collapse"
+     data-target=".$encoding_id3v1 .collapse">
+    <h2>$encoding_id3v1</h2>
+    <pre>$encoding_id3v1 </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="FREAD_BUFFER_SIZE" id="FREAD_BUFFER_SIZE"> </a><div class="element clickable constant  FREAD_BUFFER_SIZE" data-toggle="collapse" data-target=".FREAD_BUFFER_SIZE .collapse">
-<h2>FREAD_BUFFER_SIZE</h2>
-<pre>FREAD_BUFFER_SIZE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24filename" id="$filename"> </a>
+
+<div class="element clickable property public $filename" data-toggle="collapse" data-target=".$filename .collapse">
+    <h2>$filename</h2>
+    <pre>$filename </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-<a name="VERSION" id="VERSION"> </a><div class="element clickable constant  VERSION" data-toggle="collapse" data-target=".VERSION .collapse">
-<h2>VERSION</h2>
-<pre>VERSION </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+<a name="%24fp" id="$fp"> </a>
+
+<div class="element clickable property public $fp" data-toggle="collapse" data-target=".$fp .collapse">
+    <h2>$fp</h2>
+    <pre>$fp </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
-</div></div>
+<a name="%24info" id="$info"> </a>
+
+<div class="element clickable property public $info" data-toggle="collapse" data-target=".$info .collapse">
+    <h2>$info</h2>
+    <pre>$info </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_extra_info" id="$option_extra_info"> </a>
+
+<div class="element clickable property public $option_extra_info" data-toggle="collapse"
+     data-target=".$option_extra_info .collapse">
+    <h2>$option_extra_info</h2>
+    <pre>$option_extra_info </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_fread_buffer_size" id="$option_fread_buffer_size"> </a>
+
+<div class="element clickable property public $option_fread_buffer_size" data-toggle="collapse"
+     data-target=".$option_fread_buffer_size .collapse">
+    <h2>$option_fread_buffer_size</h2>
+    <pre>$option_fread_buffer_size </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_max_2gb_check" id="$option_max_2gb_check"> </a>
+
+<div class="element clickable property public $option_max_2gb_check" data-toggle="collapse"
+     data-target=".$option_max_2gb_check .collapse">
+    <h2>$option_max_2gb_check</h2>
+    <pre>$option_max_2gb_check </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_md5_data" id="$option_md5_data"> </a>
+
+<div class="element clickable property public $option_md5_data" data-toggle="collapse"
+     data-target=".$option_md5_data .collapse">
+    <h2>$option_md5_data</h2>
+    <pre>$option_md5_data </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_md5_data_source" id="$option_md5_data_source"> </a>
+
+<div class="element clickable property public $option_md5_data_source" data-toggle="collapse"
+     data-target=".$option_md5_data_source .collapse">
+    <h2>$option_md5_data_source</h2>
+    <pre>$option_md5_data_source </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_save_attachments" id="$option_save_attachments"> </a>
+
+<div class="element clickable property public $option_save_attachments" data-toggle="collapse"
+     data-target=".$option_save_attachments .collapse">
+    <h2>$option_save_attachments</h2>
+    <pre>$option_save_attachments </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_sha1_data" id="$option_sha1_data"> </a>
+
+<div class="element clickable property public $option_sha1_data" data-toggle="collapse"
+     data-target=".$option_sha1_data .collapse">
+    <h2>$option_sha1_data</h2>
+    <pre>$option_sha1_data </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tag_apetag" id="$option_tag_apetag"> </a>
+
+<div class="element clickable property public $option_tag_apetag" data-toggle="collapse"
+     data-target=".$option_tag_apetag .collapse">
+    <h2>$option_tag_apetag</h2>
+    <pre>$option_tag_apetag </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tag_id3v1" id="$option_tag_id3v1"> </a>
+
+<div class="element clickable property public $option_tag_id3v1" data-toggle="collapse"
+     data-target=".$option_tag_id3v1 .collapse">
+    <h2>$option_tag_id3v1</h2>
+    <pre>$option_tag_id3v1 </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tag_id3v2" id="$option_tag_id3v2"> </a>
+
+<div class="element clickable property public $option_tag_id3v2" data-toggle="collapse"
+     data-target=".$option_tag_id3v2 .collapse">
+    <h2>$option_tag_id3v2</h2>
+    <pre>$option_tag_id3v2 </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tag_lyrics3" id="$option_tag_lyrics3"> </a>
+
+<div class="element clickable property public $option_tag_lyrics3" data-toggle="collapse"
+     data-target=".$option_tag_lyrics3 .collapse">
+    <h2>$option_tag_lyrics3</h2>
+    <pre>$option_tag_lyrics3 </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tags_html" id="$option_tags_html"> </a>
+
+<div class="element clickable property public $option_tags_html" data-toggle="collapse"
+     data-target=".$option_tags_html .collapse">
+    <h2>$option_tags_html</h2>
+    <pre>$option_tags_html </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24option_tags_process" id="$option_tags_process"> </a>
+
+<div class="element clickable property public $option_tags_process" data-toggle="collapse"
+     data-target=".$option_tags_process .collapse">
+    <h2>$option_tags_process</h2>
+    <pre>$option_tags_process </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24tempdir" id="$tempdir"> </a>
+
+<div class="element clickable property public $tempdir" data-toggle="collapse" data-target=".$tempdir .collapse">
+    <h2>$tempdir</h2>
+    <pre>$tempdir </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24memory_limit" id="$memory_limit"> </a>
+
+<div class="element clickable property protected $memory_limit" data-toggle="collapse"
+     data-target=".$memory_limit .collapse">
+    <h2>$memory_limit</h2>
+    <pre>$memory_limit </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24startup_error" id="$startup_error"> </a>
+
+<div class="element clickable property protected $startup_error" data-toggle="collapse"
+     data-target=".$startup_error .collapse">
+    <h2>$startup_error</h2>
+    <pre>$startup_error </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="%24startup_warning" id="$startup_warning"> </a>
+
+<div class="element clickable property protected $startup_warning" data-toggle="collapse"
+     data-target=".$startup_warning .collapse">
+    <h2>$startup_warning</h2>
+    <pre>$startup_warning </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<h3>
+    <i class="icon-custom icon-constant"></i> Constants</h3>
+<a name="ATTACHMENTS_INLINE" id="ATTACHMENTS_INLINE"> </a>
+
+<div class="element clickable constant  ATTACHMENTS_INLINE" data-toggle="collapse"
+     data-target=".ATTACHMENTS_INLINE .collapse">
+    <h2>ATTACHMENTS_INLINE</h2>
+    <pre>ATTACHMENTS_INLINE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="ATTACHMENTS_NONE" id="ATTACHMENTS_NONE"> </a>
+
+<div class="element clickable constant  ATTACHMENTS_NONE" data-toggle="collapse"
+     data-target=".ATTACHMENTS_NONE .collapse">
+    <h2>ATTACHMENTS_NONE</h2>
+    <pre>ATTACHMENTS_NONE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="FREAD_BUFFER_SIZE" id="FREAD_BUFFER_SIZE"> </a>
+
+<div class="element clickable constant  FREAD_BUFFER_SIZE" data-toggle="collapse"
+     data-target=".FREAD_BUFFER_SIZE .collapse">
+    <h2>FREAD_BUFFER_SIZE</h2>
+    <pre>FREAD_BUFFER_SIZE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
+</div>
+<a name="VERSION" id="VERSION"> </a>
+
+<div class="element clickable constant  VERSION" data-toggle="collapse" data-target=".VERSION .collapse">
+    <h2>VERSION</h2>
+    <pre>VERSION </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description"><p class="long_description"></p></div>
+    </div>
 </div>
 </div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
-            generated on 2012-08-11T13:56:31-05:00.<br></footer></div>
+</div>
+</div>
+</div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+        generated on 2012-08-11T13:56:31-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>

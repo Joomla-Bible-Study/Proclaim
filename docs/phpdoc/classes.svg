@@ -537,18 +537,18 @@
 <text text-anchor="middle" x="543" y="-13267.2" font-family="Courier,monospace" font-size="11.00">fixJBSalias</text>
 </a>
 </g>
-<!-- \\BibleStudyHelper -->
-<g id="node43" class="node"><title>\\BibleStudyHelper</title>
-<a xlink:href="com_biblestudy.admin.helpers.biblestudy.html" xlink:title="BibleStudyHelper" target="_parent">
+<!-- \\JBSMHelper -->
+<g id="node43" class="node"><title>\\JBSMHelper</title>
+<a xlink:href="com_biblestudy.admin.helpers.biblestudy.html" xlink:title="JBSMHelper" target="_parent">
 <polygon fill="none" stroke="black" points="605.5,-13234 480.5,-13234 480.5,-13198 605.5,-13198 605.5,-13234"/>
-<text text-anchor="middle" x="543" y="-13213.2" font-family="Courier,monospace" font-size="11.00">BibleStudyHelper</text>
+<text text-anchor="middle" x="543" y="-13213.2" font-family="Courier,monospace" font-size="11.00">JBSMHelper</text>
 </a>
 </g>
-<!-- \\jbsDBhelper -->
-<g id="node44" class="node"><title>\\jbsDBhelper</title>
-<a xlink:href="com_biblestudy.admin.helpers.dbhelper.html" xlink:title="jbsDBhelper" target="_parent">
+<!-- \\JBSMDbHelper -->
+<g id="node44" class="node"><title>\\JBSMDbHelper</title>
+<a xlink:href="com_biblestudy.admin.helpers.dbhelper.html" xlink:title="JBSMDbHelper" target="_parent">
 <polygon fill="none" stroke="black" points="588.5,-13180 497.5,-13180 497.5,-13144 588.5,-13144 588.5,-13180"/>
-<text text-anchor="middle" x="543" y="-13159.2" font-family="Courier,monospace" font-size="11.00">jbsDBhelper</text>
+<text text-anchor="middle" x="543" y="-13159.2" font-family="Courier,monospace" font-size="11.00">JBSMDbHelper</text>
 </a>
 </g>
 <!-- \\ImageLib -->
@@ -620,21 +620,21 @@
 <g id="edge89" class="edge"><title>\\bibleStudyTemplate&#45;&gt;\\JObject</title>
 <path fill="none" stroke="black" d="M473.949,-10840.5C453.526,-10837 433.096,-10829.2 420,-10813 244.579,-10596.1 516.17,-993.56 348,-771 321.206,-735.54 283.879,-773.968 252,-743"/>
 </g>
-<!-- \\biblestudyHelperToolbar -->
-<g id="node50" class="node"><title>\\biblestudyHelperToolbar</title>
-<a xlink:href="com_biblestudy.site.helpers.toolbar.html" xlink:title="biblestudyHelperToolbar" target="_parent">
+<!-- \\JBSMHelperToolbar -->
+<g id="node50" class="node"><title>\\JBSMHelperToolbar</title>
+<a xlink:href="com_biblestudy.site.helpers.toolbar.html" xlink:title="JBSMHelperToolbar" target="_parent">
 <polygon fill="none" stroke="black" points="629,-10804 457,-10804 457,-10768 629,-10768 629,-10804"/>
-<text text-anchor="middle" x="543" y="-10783.2" font-family="Courier,monospace" font-size="11.00">biblestudyHelperToolbar</text>
+<text text-anchor="middle" x="543" y="-10783.2" font-family="Courier,monospace" font-size="11.00">JBSMHelperToolbar</text>
 </a>
 </g>
-<!-- \\biblestudyHelperToolbar&#45;&gt;\\JObject -->
-<g id="edge367" class="edge"><title>\\biblestudyHelperToolbar&#45;&gt;\\JObject</title>
+<!-- \\JBSMHelperToolbar&#45;&gt;\\JObject -->
+<g id="edge367" class="edge"><title>\\JBSMHelperToolbar&#45;&gt;\\JObject</title>
 <path fill="none" stroke="black" d="M456.879,-10782.5C442.615,-10778 429.413,-10770.6 420,-10759 245.518,-10543.3 515.27,-992.36 348,-771 321.205,-735.541 283.879,-773.968 252,-743"/>
 <path fill="none" stroke="black" d="M250,-743C227.309,-714.798 138.248,-720.983 84.2939,-730.582"/>
 <polygon fill="none" stroke="black" points="83.4994,-727.17 74.3266,-732.472 84.8037,-734.047 83.4994,-727.17"/>
 </g>
-<!-- \\biblestudyHelperToolbar&#45;&gt;\\JObject -->
-<g id="edge91" class="edge"><title>\\biblestudyHelperToolbar&#45;&gt;\\JObject</title>
+<!-- \\JBSMHelperToolbar&#45;&gt;\\JObject -->
+<g id="edge91" class="edge"><title>\\JBSMHelperToolbar&#45;&gt;\\JObject</title>
 <path fill="none" stroke="black" d="M249.605,-742.731C227.441,-727.995 146.48,-736.298 92.4555,-741.471"/>
 <polygon fill="none" stroke="black" points="91.9945,-737.999 82.3686,-742.425 92.6538,-744.968 91.9945,-737.999"/>
 </g>
@@ -2542,11 +2542,11 @@
 <text text-anchor="middle" x="543" y="-4249.2" font-family="Courier,monospace" font-size="11.00">relatedStudies</text>
 </a>
 </g>
-<!-- \\BiblestudyHelperRoute -->
-<g id="node213" class="node"><title>\\BiblestudyHelperRoute</title>
-<a xlink:href="com_biblestudy.site.helpers.route.html" xlink:title="BiblestudyHelperRoute" target="_parent">
+<!-- \\JBSMHelperRoute -->
+<g id="node213" class="node"><title>\\JBSMHelperRoute</title>
+<a xlink:href="com_biblestudy.site.helpers.route.html" xlink:title="JBSMHelperRoute" target="_parent">
 <polygon fill="none" stroke="black" points="622,-4216 464,-4216 464,-4180 622,-4180 622,-4216"/>
-<text text-anchor="middle" x="543" y="-4195.2" font-family="Courier,monospace" font-size="11.00">BiblestudyHelperRoute</text>
+<text text-anchor="middle" x="543" y="-4195.2" font-family="Courier,monospace" font-size="11.00">JBSMHelperRoute</text>
 </a>
 </g>
 <!-- \\JBSUpload -->
@@ -3119,11 +3119,11 @@
 <path fill="none" stroke="black" d="M490.702,-1824.21C465.523,-1822.35 437.017,-1815.27 420,-1795 302.576,-1655.14 461.436,-296.116 348,-153 338.296,-140.757 323.506,-133.79 308.42,-129.901"/>
 <polygon fill="none" stroke="black" points="309.028,-126.452 298.515,-127.766 307.553,-133.295 309.028,-126.452"/>
 </g>
-<!-- \\modBiblestudyHelper -->
-<g id="node264" class="node"><title>\\modBiblestudyHelper</title>
-<a xlink:href="mod_biblestudy.helper.html" xlink:title="modBiblestudyHelper" target="_parent">
+<!-- \\modJBSMHelper -->
+<g id="node264" class="node"><title>\\modJBSMHelper</title>
+<a xlink:href="mod_biblestudy.helper.html" xlink:title="modJBSMHelper" target="_parent">
 <polygon fill="none" stroke="black" points="615.5,-1462 470.5,-1462 470.5,-1426 615.5,-1426 615.5,-1462"/>
-<text text-anchor="middle" x="543" y="-1441.2" font-family="Courier,monospace" font-size="11.00">modBiblestudyHelper</text>
+<text text-anchor="middle" x="543" y="-1441.2" font-family="Courier,monospace" font-size="11.00">modJBSMHelper</text>
 </a>
 </g>
 <!-- \\modBibleStudyPodcast -->

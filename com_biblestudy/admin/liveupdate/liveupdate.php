@@ -1,8 +1,8 @@
 <?php
 /**
- * @package LiveUpdate
+ * @package   LiveUpdate
  * @copyright Copyright ©2011 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  *
  * One-click updater for Joomla! extensions
  * Copyright (C) 2011  Nicholas K. Dionysopoulos / AkeebaBackup.com
@@ -23,8 +23,10 @@
 
 defined('_JEXEC') or die();
 
-require_once dirname(__FILE__).'/classes/abstractconfig.php';
-require_once dirname(__FILE__).'/config.php';
+//require_once dirname(__FILE__) . '/classes/abstractconfig.php';
+JLoader::register('LiveUpdateAbstractConfig', dirname(__FILE__) . '/classes/abstractconfig.php');
+//require_once dirname(__FILE__) . '/config.php';
+JLoader::register('LiveUpdateConfig', dirname(__FILE__) . '/config.php');
 
 class LiveUpdate
 {
@@ -38,7 +40,7 @@ class LiveUpdate
 	{
 		// Load translations
 		$basePath = dirname(__FILE__);
-		$jlang = JFactory::getLanguage();
+		$jlang    = JFactory::getLanguage();
 		$jlang->load('liveupdate', $basePath, 'en-GB', true); // Load English (British)
 		$jlang->load('liveupdate', $basePath, $jlang->getDefault(), true); // Load the site's default language
 		$jlang->load('liveupdate', $basePath, null, true); // Load the currently selected language
@@ -54,72 +56,85 @@ class LiveUpdate
 		self::loadLanguage();
 
 		// Load the controller and let it run the show
-		require_once dirname(__FILE__).'/classes/controller.php';
+		//require_once dirname(__FILE__) . '/classes/controller.php';
+		JLoader::register('LiveUpdateController', dirname(__FILE__) . '/classes/controller.php');
 		$controller = new LiveUpdateController();
-		$controller->execute(JRequest::getCmd('task','overview'));
+		$input      = new JInput;
+		$controller = $input->get('task', 'overview', 'cmd');
+		//$controller->execute(JRequest::getCmd('task','overview'));
 		$controller->redirect();
 	}
 
 	/**
 	 * Returns update information about your extension, based on your configuration settings
+	 *
 	 * @return stdClass
 	 */
 	public static function getUpdateInformation($force = false)
 	{
-		require_once dirname(__FILE__).'/classes/updatefetch.php';
-		$update = new LiveUpdateFetch();
-		$info = $update->getUpdateInformation($force);
-		$hasUpdates = $update->hasUpdates();
+		//require_once dirname(__FILE__) . '/classes/updatefetch.php';
+		JLoader::register('LiveUpdateFetch', dirname(__FILE__) . '/classes/updatefetch.php');
+		$update           = new LiveUpdateFetch();
+		$info             = $update->getUpdateInformation($force);
+		$hasUpdates       = $update->hasUpdates();
 		$info->hasUpdates = $hasUpdates;
 
-		$config = LiveUpdateConfig::getInstance();
+		$config  = LiveUpdateConfig::getInstance();
 		$extInfo = $config->getExtensionInformation();
 
-		$info->extInfo = (object)$extInfo;
+		$info->extInfo = (object) $extInfo;
 
 		return $info;
 	}
 
-	public static function getIcon($config=array())
+	public static function getIcon($config = array())
 	{
 		// Load language strings
 		self::loadLanguage();
+		$input = new JInput();
 
 		$defaultConfig = array(
-			'option'			=> JRequest::getCmd('option',''),
-			'view'				=> 'liveupdate',
-			'mediaurl'			=> JURI::base().'components/'.JRequest::getCmd('option','').'/liveupdate/assets/'
+			'option'   => $input->get('option', '', 'cmd'),
+			'view'     => 'liveupdate',
+			'mediaurl' => JURI::base() . 'components/' . $input->get('option', '', 'cmd') . '/liveupdate/assets/'
 		);
-		$c = array_merge($defaultConfig, $config);
+		$c             = array_merge($defaultConfig, $config);
 
-		$url = 'index.php?option='.$c['option'].'&view='.$c['view'];
+		$url = 'index.php?option=' . $c['option'] . '&view=' . $c['view'];
 		$img = $c['mediaurl'];
 
 		$updateInfo = self::getUpdateInformation();
-		if(!$updateInfo->supported) {
+		if (!$updateInfo->supported)
+		{
 			// Unsupported
 			$class = 'liveupdate-icon-notsupported';
 			$img .= 'nosupport-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_UNSUPPORTED');
-		} elseif($updateInfo->stuck) {
+		}
+		elseif ($updateInfo->stuck)
+		{
 			// Stuck
 			$class = 'liveupdate-icon-crashed';
 			$img .= 'nosupport-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_CRASHED');
-		} elseif($updateInfo->hasUpdates) {
+		}
+		elseif ($updateInfo->hasUpdates)
+		{
 			// Has updates
 			$class = 'liveupdate-icon-updates';
 			$img .= 'update-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_UPDATES');
-		} else {
+		}
+		else
+		{
 			// Already in the latest release
 			$class = 'liveupdate-icon-noupdates';
 			$img .= 'current-32.png';
 			$lbl = JText::_('LIVEUPDATE_ICON_CURRENT');
 		}
 
-		return '<div class="icon"><a href="'.$url.'">'.
-			'<div><img src="'.$img.'" width="32" height="32" border="0" align="middle" style="float: none" /></div>'.
-			'<span class="'.$class.'">'.$lbl.'</span></a></div>';
+		return '<div class="icon"><a href="' . $url . '">' .
+			'<div><img src="' . $img . '" width="32" height="32" border="0" align="middle" style="float: none" /></div>' .
+			'<span class="' . $class . '">' . $lbl . '</span></a></div>';
 	}
 }

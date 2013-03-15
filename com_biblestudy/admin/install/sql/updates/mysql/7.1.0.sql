@@ -4,18 +4,21 @@ ON DUPLICATE KEY UPDATE version= '7.1.0';
 --
 -- Admin Table
 --
+
 ALTER TABLE `#__bsms_admin` ADD COLUMN `installstate` TEXT;
 ALTER TABLE `#__bsms_admin` ADD `debug` TINYINT( 3 ) NOT NULL DEFAULT '0';
 
 --
 -- Books
 --
+
 ALTER TABLE `#__bsms_books` MODIFY `published` tinyint(3) NOT NULL DEFAULT '1';
 
 --
 -- Comments Table
 --
-ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Comments.';
+
+ALTER TABLE `#__bsms_comments` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 
 UPDATE `#__bsms_comments` SET `language` = '*' WHERE `#__bsms_comments`.`language` = '';
 
@@ -26,6 +29,7 @@ UPDATE `#__bsms_comments` SET `language` = '*' WHERE `#__bsms_comments`.`languag
 --
 -- Locations Table
 --
+
 ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` int(3) DEFAULT '1';
 
 --
@@ -34,8 +38,8 @@ ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` int(3) DEFAULT '1';
 
 --
 -- MediaFiles Table
---
-ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
+ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by_alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
@@ -47,6 +51,7 @@ UPDATE `#__bsms_mediafiles` SET `language` = '*' WHERE `#__bsms_mediafiles`.`lan
 --
 -- Message Type Table
 --
+
 ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 
 --
@@ -80,7 +85,7 @@ ALTER TABLE `#__bsms_podcast` ADD COLUMN `alternatewords` varchar(20);
 -- Series Table
 --
 
-ALTER TABLE `#__bsms_series` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Series.';
+ALTER TABLE `#__bsms_series` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 
 UPDATE `#__bsms_series` SET `language` = '*' WHERE `#__bsms_series`.`language` = '';
 
@@ -112,7 +117,7 @@ UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.myspace.com/index
 --
 -- Studies Table
 --
-ALTER TABLE `#__bsms_studies` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Studies.';
+ALTER TABLE `#__bsms_studies` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_seriesid` ( `series_id` );
 ALTER TABLE `#__bsms_studies`ADD INDEX `idx_topicsid` ( `topics_id` );
 ALTER TABLE `#__bsms_studies`ADD INDEX `idx_user` ( `user_id` );
@@ -142,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
 -- Teachers Table
 --
 
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Teachers.';
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `facebooklink` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `twitterlink` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `bloglink` varchar(150);

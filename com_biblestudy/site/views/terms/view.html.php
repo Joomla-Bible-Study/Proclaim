@@ -1,78 +1,154 @@
 <?php
 /**
- * Tearm JView
- * @package BibleStudy.Site
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
-
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 // This is the popup window for the teachings.  We could put anything in this window.
-//TODO Need to Clean this up and rework to be proper Joomla calls bcc
 /**
  * View class for Terms
- * @package BibleStudy.Site
- * @since 7.0.0
+ *
+ * @package  BibleStudy.Site
+ * @since    7.0.0
  */
-class biblestudyViewterms extends JViewLegacy {
+class BiblestudyViewTerms extends JViewLegacy
+{
+	/**
+	 * @var JRegistry
+	 */
+	protected $params;
 
-    /**
-     * Execute and display a template script.
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     *
-     * @see     fetch()
-     * @since   11.1
-     */
-    public function display($tpl = null) {
-        $t = JRequest::getInt('t', '1', 'get');
-        $mid = JRequest::getInt('mid', '', 'get');
-        $compat_mode = JRequest::getInt('compat_mode', '0', 'get');
+	/**
+	 * @var JDocument
+	 */
+	protected $document;
 
-        $db = JFactory::getDBO();
-        $query = $db->getQuery('true');
-        $query->select('*');
-        $query->from('#__bsms_templates');
-        $query->where('id = ' . $t);
-        $db->setQuery($query);
-        //$db->query();
-        $template = $db->loadObject();
-        $registry = new JRegistry();
-        $registry->loadString($template->params);
-        $params = $registry;
-        $termstext = $params->get('terms');
+	/**
+	 * @var Object
+	 */
+	public $media;
 
-        $query = $db->getQuery('true');
-        $query->select('*');
-        $query->from('#__bsms_mediafiles');
-        $query->where('id= ' . $mid);
-        $db->setQuery($query);
-        // $db->query();
-        $media = $db->loadObject();
-        ?>
-        <div class="termstext">
-            <?php
-            echo $termstext;
-            ?>
-        </div>
-        <div class="termslink">
-            <?php
-            if ($compat_mode == 1) {
-                echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-            } else {
-                echo '<a href="index.php?option=com_biblestudy&mid=' . $media->id . '&view=sermons&task=download">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-            }
-            ?>
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
+	{
+		$input       = new JInput;
+		$t           = $input->get('t', 1, 'int');
+		$mid         = $input->get('mid', '', 'int');
+		$compat_mode = $input->get('compat_mode', '0', 'int');
 
-        </div>
-        <?php
-    }
+		$template  = JBSMParams::getTemplateparams();
+		$this->params    = $template->params;
+		$termstext = $this->params->get('terms');
+		$db        = JFactory::getDbo();
+		$query     = $db->getQuery('true');
+		$query->select('*');
+		$query->from('#__bsms_mediafiles');
+		$query->where('id= ' . (int) $mid);
+		$db->setQuery($query);
+		$this->media = $db->loadObject();
+		?>
+    <div class="termstext">
+		<?php
+		echo $termstext;
+		?>
+    </div>
+    <div class="termslink">
+		<?php
+		if ($compat_mode == 1)
+		{
+			echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $this->media->spath . $this->media->fpath . $this->media->filename
+				. '&size=' . $this->media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
+		}
+		else
+		{
+			echo '<a href="index.php?option=com_biblestudy&mid=' . $this->media->id . '&view=sermons&task=download">'
+				. JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
+		}
+		?>
+    </div>
+	<?php
+
+		$this->_prepareDocument();
+	}
+
+	/**
+	 * Prepares the document;
+	 *
+	 * @return void
+	 */
+	protected function _prepareDocument()
+	{
+		$app   = JFactory::getApplication();
+		$menus = $app->getMenu();
+
+		$itemparams = JComponentHelper::getParams('com_biblestudy');
+		$title      = null;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		}
+		else
+		{
+			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
+		}
+		$title = $this->params->get('page_title', '');
+		$title .= ' : ' . $this->media->filename;
+
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+		$this->document->setTitle($title);
+
+		// Prepare meta information (under development)
+		if ($itemparams->get('metakey'))
+		{
+			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+		}
+		elseif ($this->params->get('menu-meta_keywords'))
+		{
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+
+		if ($itemparams->get('metadesc'))
+		{
+			$this->document->setDescription($itemparams->get('metadesc'));
+		}
+		elseif ($this->params->get('menu-meta_description'))
+		{
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
+	}
 
 }
 

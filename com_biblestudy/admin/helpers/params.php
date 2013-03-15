@@ -1,56 +1,84 @@
 <?php
-
 /**
- * Params Helper
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.helper');
-jimport('joomla.application.component.model');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
- * This is for Retreving Admin and Template db
- * @package BibleStudy.Admin
- * @since 7.0.0
+ * This is for Retrieving Admin and Template db
+ *
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
+ *
+ * @property $template->params JRegistry
  */
-class BsmHelper extends JComponentHelper {
+class JBSMParams
+{
 
-    /**
-     * Gets the settings from Admin
-     *
-     * @param   $isSite   Boolean   True if this is called from the frontend
-     * @since   7.0
-     */
-    public static function getAdmin($isSite = false) {
-        if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
-        $admin = JModel::getInstance('Admin', 'BiblestudyModel');
-        $admin = $admin->getItem(1);
+	public static $extension = 'com_biblestudy';
 
-        //Add the current user id
-        $user = JFactory::getUser();
-        $admin->user_id = $user->id;
-        return $admin;
-    }
+	/**
+	 * Gets the settings from Admin
+	 *
+	 * @return object Return Admin table
+	 */
+	public static function getAdmin()
+	{
+		if (JBSMDbHelper::checkIfTable('#__bsms_admin'))
+		{
+			$db    = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('*')
+				->from('#__bsms_admin')
+				->where($db->qn('id') . ' = ' . (int) 1);
+			$db->setQuery($query);
+			$admin    = $db->loadObject();
+			$registry = new JRegistry;
+			$registry->loadString($admin->params);
+			$admin->params = $registry;
 
-    /**
-     * Get Template Params
-     *
-     * @param object $isSite
-     * @return object
-     */
-    public static function getTemplateparams($isSite = false) {
-        if ($isSite)
-            JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
-        $pk = JRequest::getInt('t', 'get', '1');
-        $template = JModel::getInstance('Template', 'BiblestudyModel');
-        $template = $template->getItem($pk);
-        return $template;
-    }
+			// Add the current user id
+			$user           = JFactory::getUser();
+			$admin->user_id = $user->id;
+
+			return $admin;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get Template Params
+	 *
+	 * @return object Return active template info
+	 */
+	public static function getTemplateparams()
+	{
+		$db = JFactory::getDbo();
+		$pk = JFactory::getApplication()->input->getInt('t', '1');
+
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_templates')
+			->where('published = ' . (int) 1)
+			->where('id = ' . (int) $pk);
+		$db->setQuery($query);
+		$template = $db->loadObject();
+
+		if ($template)
+		{
+			$registry = new JRegistry;
+			$registry->loadString($template->params);
+			$template->params = $registry;
+		}
+
+		return $template;
+	}
 
 }
