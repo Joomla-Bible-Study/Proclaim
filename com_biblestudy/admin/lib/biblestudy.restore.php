@@ -319,9 +319,7 @@ class JBSRestore
 	private static function _getPackageFromFolder()
 	{
 		$input = new JInput;
-		$p_dir = $input->get('install_directory', '', 'word');
-		$p_dir = JPath::clean($p_dir);
-
+		$p_dir = $input->getString('install_directory');
 		return $p_dir;
 	}
 
