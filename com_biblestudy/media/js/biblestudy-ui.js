@@ -1,4 +1,4 @@
-$j(document).ready( function() {
+$j(document).ready(function () {
     //Accordion
     $j('#templateTagsContainer').accordion({
         header: "h3"
@@ -13,14 +13,14 @@ $j(document).ready( function() {
     });
 
     $j('.tmplTag').hover(
-        function() {
+        function () {
             $j(this).css('cursor', 'move');
             $j(this).addClass('tmplTagSelected');
         },
-        function() {
+        function () {
             $j(this).removeClass('tmplTagSelected');
         }
-        );
+    );
 
     $j('.tmplTag').draggable({
         revert: 'invalid',
@@ -28,20 +28,17 @@ $j(document).ready( function() {
     });
 
     $j('#tmplCanvas').droppable({
-        over:
-        function() {
+        over: function () {
             $j(this).animate({
                 opacity: "0.7"
             });
         },
-        out:
-        function() {
+        out: function () {
             $j(this).animate({
                 opacity: "1"
             });
         },
-        drop:
-        function() {
+        drop: function () {
             $j(this).animate({
                 opacity: "1"
             });
@@ -56,20 +53,20 @@ $j(document).ready( function() {
     $j('#tmplCanvas:first-child ul li').append(canvasControls);
 
     /*	$j('.canvasRow').hover(
-		function() {
-			$j(this).append(canvasControls);
-		},
-		function() {
-			$j(this).children('#cursor').remove();
-		}
-	);*/
+     function() {
+     $j(this).append(canvasControls);
+     },
+     function() {
+     $j(this).children('#cursor').remove();
+     }
+     );*/
 
-    $j('#cursorInsertRight').bind('click',function() {
+    $j('#cursorInsertRight').bind('click', function () {
         var newElement = '<div class="canvasElement"></div>';
         $j(this).parent().before(newElement);
     });
 
-    $j('#cursorInsertBottom').click(function() {
+    $j('#cursorInsertBottom').click(function () {
         var newRow = '<li class="canvasRow"></li>';
         $j(this).parent().parent().parent().append(newRow);
     });

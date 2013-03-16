@@ -51,7 +51,7 @@ $controller->redirect();
 /**
  * Global css
  *
- * @return null
+ * @return void
  *
  * @since   1.7.0
  */
@@ -69,14 +69,12 @@ function addCSS()
 	}
 	JHTML::stylesheet('media/com_biblestudy/css/general.css');
 	JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-
-	return null;
 }
 
 /**
  * Global JS
  *
- * @return null
+ * @return void
  *
  * @since   7.0
  */
@@ -91,6 +89,4 @@ function addJS()
 		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.sortable.js');
 		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
 	}
-
-	return null;
 }
