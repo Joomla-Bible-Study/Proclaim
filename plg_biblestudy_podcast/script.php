@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class PlgSystemjbspodcastInstallerScript
 {
-	public $is700;
 
 	/**
 	 * method to install the component
@@ -27,7 +26,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function install($parent)
+	public function install ($parent)
 	{
 
 	}
@@ -39,7 +38,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function uninstall($parent)
+	public function uninstall ($parent)
 	{
 		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
@@ -52,7 +51,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function update($parent)
+	public function update ($parent)
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
@@ -98,40 +97,8 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function preflight($type, $parent)
+	public function preflight ($type, $parent)
 	{
-		// Check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDBO();
-
-		// First see if there is an update table
-		$tables      = $db->getTableList();
-		$prefix      = $db->getPrefix();
-		$updatetable = $prefix . 'jbspodcast_update';
-		$updatefound = false;
-		$this->is700 = false;
-
-		foreach ($tables as $table)
-		{
-			if ($table == $updatetable)
-			{
-				$updatefound = true;
-			}
-		}
-		if (!$updatefound)
-		{
-			// Do the query here to create the table. This will tell Joomla to update the db from this version on
-			$query = 'CREATE TABLE IF NOT EXISTS #__jbspodcast_update (
-                              id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                              version VARCHAR(255) DEFAULT NULL,
-                              PRIMARY KEY (id)
-                            ) DEFAULT CHARSET=utf8';
-			$db->setQuery($query);
-			$db->execute();
-			$query = $db->getQuery(true);
-			$query->insert('#__jbspodcast_update')->set('id = ' . 1 . ', version = 7.0.0');
-			$db->setQuery($query);
-			$db->execute();
-		}
 	}
 
 	/**
@@ -142,7 +109,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function  postflight($type, $parent)
+	public function  postflight ($type, $parent)
 	{
 	}
 
