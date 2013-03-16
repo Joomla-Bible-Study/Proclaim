@@ -1,4 +1,4 @@
-<?php
+ver<?php
 /**
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
