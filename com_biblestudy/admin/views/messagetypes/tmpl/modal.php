@@ -57,7 +57,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <tfoot>
         <tr>
             <td colspan="10">
-				<?php echo $this->pagination->getListFooter(); ?>
+				<?php if(BIBLESTUDY_CHECKREL) : echo $this->pagination->getListFooter(); else: echo $this->pagination->getPagesLinks(); endif; ?>
             </td>
         </tr>
         </tfoot>
