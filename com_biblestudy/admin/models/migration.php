@@ -782,7 +782,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			$assets = new FixJBSAssets;
 			$assets->fixAssets();
 			$installer = new Com_BiblestudyInstallerScript;
-			$installer->deleteUnexistingFiles();
 			$installer->fixMenus();
 			$installer->fixImagePaths();
 			$installer->fixemptyaccess();
