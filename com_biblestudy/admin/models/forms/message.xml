@@ -47,7 +47,7 @@
            description="JBS_STY_CREATE_DATE_DESC" class="inputbox span12 small"
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true" labelclass="control-label"/>
 
-    <field name="comments" type="radio" class="btn-group" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC"
+    <field name="comments" type="list" class="span12 small" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC"
            default="0">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>

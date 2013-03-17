@@ -136,6 +136,7 @@ input, select {
     padding-right: 0;
     padding-top: 0;
     text-align: left;
+    clear: left;
 }
 
 fieldset {

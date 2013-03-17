@@ -232,14 +232,14 @@
                 <option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
             </field>
             <field name="playerposition" type="list" default="over"
-                   label="playerposition" description="playerposition">
-                <option value="over">over</option>
-                <option value="bottom">bottom</option>
-                <option value="top">top</option>
-                <option value="none">none</option>
+                   label="JBS_TPL_MEDIA_PLAYERPOSITION" description="JBS_TPL_MEDIA_PLAYERPOSITION_DESC">
+                <option value="over">JBS_CMN_OVER</option>
+                <option value="bottom">JBS_CMN_BOTTOM</option>
+                <option value="top">JBS_CMN_TOP</option>
+                <option value="none">JBS_CMN_NONE</option>
             </field>
             <field name="playeridlehide" type="radio" default="1" class="btn-group"
-                   label="playeridlehide" description="playeridlehide">
+                   label="JBS_TPL_MEDIA_PLAYERIDLEHIDE" description="JBS_TPL_MEDIA_PLAYERIDLEHIDE_DESC">
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
             </field>

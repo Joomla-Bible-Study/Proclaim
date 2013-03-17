@@ -23,7 +23,7 @@
                 JTRASHED
             </option>
         </field>
-        <field name="list_show" type="radio" label="JBS_TCH_SHOW_LIST_VIEW" class="btn-group"
+        <field name="list_show" type="list" label="JBS_TCH_SHOW_LIST_VIEW" class="span12 small"
                description="JBS_TCH_SHOW_LIST_VIEW_DESC" default="0"
                required="true">
             <option value="0">JBS_CMN_NO</option>

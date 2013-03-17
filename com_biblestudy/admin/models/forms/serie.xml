@@ -2,14 +2,14 @@
 <form>
     <fieldset>
         <field name="published"
-                type="list"
-                class="span12 small"
-                id="published"
-                label="JSTATUS"
-                description="JFIELD_PUBLISHED_DESC"
-                size="1"
-                default="1"
-                filter="integer">
+               type="list"
+               class="span12 small"
+               id="published"
+               label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC"
+               size="1"
+               default="1"
+               filter="integer">
             <option value="1">
                 JPUBLISHED
             </option>
@@ -39,12 +39,12 @@
             <option value="-1">JBS_CMN_SELECT_TEACHER</option>
         </field>
         <field name="buttonspacer"
-                description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
-                type="spacer"/>
+               description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+               type="spacer"/>
         <field name="description" type="editor" class="inputbox"
                label="JBS_CMN_DESCRIPTION" filter="JBSMHelper::filterText"
                buttons="true"/>
-        <field name="series_thumbnail" type="media" size="46"
+        <field name="series_thumbnail" type="media" size="46" class="span12"
                label="JBS_SER_SERIES_THUMBNAIL_IMAGE" labelclass="control-label"/>
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
                description="JFIELD_ACCESS_DESC" class="span12 small" size="1"/>

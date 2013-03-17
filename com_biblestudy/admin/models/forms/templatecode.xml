@@ -2,8 +2,8 @@
 <form>
     <field
             name="published"
-            type="radio"
-            class="btn-group"
+            type="list"
+            class="span12 small"
             id="published"
             label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC"

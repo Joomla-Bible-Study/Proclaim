@@ -293,10 +293,9 @@ $input  = $app->input;
 </div>
 
 <!-- Begin Sidebar -->
-<div class="span2">
+<div class="span2 form-vertical">
     <h4><?php echo JText::_('JDETAILS');?></h4>
     <hr />
-    <fieldset class="form-vertical">
         <div class="control-group">
             <div class="control-group">
                 <div class="controls">
@@ -350,7 +349,6 @@ $input  = $app->input;
 			    <?php echo $this->form->getInput('language'); ?>
             </div>
         </div>
-    </fieldset>
 </div>
 <!-- End Sidebar -->
 

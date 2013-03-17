@@ -51,7 +51,7 @@ class BiblestudyModelTopic extends JModelAdmin
 		* first get the installed languages */
 		$knownLanguages    = JLanguage::getKnownLanguages();
 		$topicseditXMLForm = '<?xml version="1.0" encoding="utf-8"?> <form>';
-		$topicseditXMLForm .= '<field name="published" type="radio" class="btn-group" id="published" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" size="1" default="1" filter="integer">	<option value="1"> JPUBLISHED</option> <option value="0"> JUNPUBLISHED</option> <option value="-2"> JTRASHED</option> </field>';
+		$topicseditXMLForm .= '<field name="published" type="list" class="span12 small" id="published" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" size="1" default="1" filter="integer">	<option value="1"> JPUBLISHED</option> <option value="0"> JUNPUBLISHED</option> <option value="-2"> JTRASHED</option> </field>';
 		$topicseditXMLForm .= '<field name="topic_text" type="text" label="JBS_TPC_TOPIC_ALIAS" description="JBS_TPC_TOPIC_ALIAS_DESC" size="75" /> ';
 		$topicseditXMLForm .= '<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true" class="readonly" />';
 		$topicseditXMLForm .= '<fields name="params"> <fieldset name="params"> ';
