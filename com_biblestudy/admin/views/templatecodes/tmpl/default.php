@@ -93,6 +93,7 @@ $sortFields = $this->getSortFields();
             </select>
         </div>
 		<?php if (!BIBLESTUDY_CHECKREL): ?>
+		<div class="clearfix"></div>
         <div class="btn-group pull-right">
             <label for="filter_published" id="filter_published"
                    class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>

@@ -36,7 +36,8 @@ if ($msg)
 <!-- Header -->
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=cpanel'); ?>" method="post" name="adminForm"
       id="adminForm">
-<div id="j-sidebar-container" class="span2 <?php if (!BIBLESTUDY_CHECKREL) echo 'fltlft fbmenu' ?>">
+<div class="row-fluid">
+<div id="j-sidebar-container" class="span2">
     <div id="fbheader">
         <a href="index.php?option=com_biblestudy&view=cpanel"><img src="../media/com_biblestudy/images/logo.png"
                                                                    border="0"
@@ -270,6 +271,7 @@ if ($msg)
     </table>
 </div>
 <div style="clear: both;"></div>
+</div>
 </div>
 <?php echo JHtml::_('form.token'); ?>
 </form>

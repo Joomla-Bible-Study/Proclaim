@@ -154,3 +154,11 @@ fieldset {
         margin-left: 0;
     }
 }
+
+#limit {
+    width: 60px;
+}
+
+#directionTable {
+    width: 165px;
+}

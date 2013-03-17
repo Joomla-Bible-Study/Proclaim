@@ -13,7 +13,7 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * Update on All upgrades for migrating from old DB's
  *
  * @package  BibleStudy.Admin
- * @since    7.0.3
+ * @since    8.0.0
  */
 class MigrationUpgrade
 {
