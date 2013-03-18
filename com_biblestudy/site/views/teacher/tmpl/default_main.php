@@ -35,14 +35,10 @@ if (!$studieslisttemplateid)
     <tr>
         <td class="bsm_teacherthumbnail">
 			<?php
-			if (isset($this->item->title))
-			{
-				$teacherdisplay = $this->item->teachername . ' - ' . $this->item->title;
-			}
-			else
-			{
 				$teacherdisplay = $this->item->teachername;
-			}
+				
+				if (isset($this->item->title))
+					$teacherdisplay .= ' - ' . $this->item->title;
 			?>
 			<?php echo $this->item->largeimage; ?>
         </td>
