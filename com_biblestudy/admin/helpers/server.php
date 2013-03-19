@@ -1,54 +1,66 @@
 <?php
-
 /**
- * Server Helper
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 /**
- * Get Server
+ * Class Server Helper
  *
- * @param type $serverid
- * @return type
- */
-function getServer($serverid) {
-    $mainframe = & JFactory::getApplication();
-    $option = JRequest::getCmd('option');
-    $db = & JFactory::getDBO();
-    $query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
-
-    $db->setQuery($query);
-
-    $tresult = $db->loadObject();
-
-    $i = 0;
-
-    return $tresult;
-}
-
-/**
- * Get Folder
+ * @package  BibleStudy.Admin
+ * @since    8.0.0
  *
- * @param int $folderId
- * @return object
+ * @todo Looks like this could go into the dbhelper.php file. TOM - what is this even for. I don't think I wrote this.
  */
-function getFolder($folderId) {
-    $mainframe = & JFactory::getApplication();
-    $option = JRequest::getCmd('option');
+class JBSMServer
+{
+	/**
+	 * @var string
+	 */
+	public static $extension = 'com_biblestudy';
 
-    $db = & JFactory::getDBO();
-    $query = 'select distinct * from #__bsms_folders where id = ' . $folderId;
+	/**
+	 * Get Server
+	 *
+	 * @param   int  $serverid  Server ID
+	 *
+	 * @return object
+	 */
+	public static function getServer($serverid)
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('distinct *')
+			->from('#__bsms_servers')
+			->where('id = ' . (int) $serverid);
+		$db->setQuery($query);
+		$result = $db->loadObject();
 
-    $db->setQuery($query);
+		return $result;
+	}
 
-    $tresult = $db->loadObject();
+	/**
+	 * Get Folder
+	 *
+	 * @param   int  $folderId  Folder ID
+	 *
+	 * @return object
+	 */
+	public static function getFolder($folderId)
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('distinct *')
+			->from('#__bsms_folders')
+			->where('id = ' . (int) $folderId);
+		$db->setQuery($query);
+		$result = $db->loadObject();
 
-    $i = 0;
+		return $result;
+	}
 
-    return $tresult;
 }

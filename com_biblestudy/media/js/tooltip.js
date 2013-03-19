@@ -1,17 +1,17 @@
-window.addEvent('domready', function(){
+window.addEvent('domready', function () {
     //do your tips stuff in here...
     var zoomTip = new Tips($$('.zoomTip'), {
         className: 'custom', //this is the prefix for the CSS class
-        initialize:function(){
+        initialize: function () {
             this.fx = new Fx.Style(this.toolTip, 'opacity', {
                 duration: 500,
                 wait: false
             }).set(0);
         },
-        onShow: function(toolTip) {
+        onShow: function (toolTip) {
             this.fx.start(1);
         },
-        onHide: function(toolTip) {
+        onHide: function (toolTip) {
             this.fx.start(0);
         }
     });

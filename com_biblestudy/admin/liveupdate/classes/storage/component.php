@@ -1,75 +1,87 @@
 <?php
 /**
- * @package LiveUpdate
+ * @package   LiveUpdate
  * @copyright Copyright (c)2010-2012 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
 
 /**
  * Live Update Component Storage Class
- * Allows to store the update data to a component's parameters. This is the most reliable method. 
+ * Allows to store the update data to a component's parameters. This is the most reliable method.
  * Its configuration options are:
- * component	string	The name of the component which will store our data. If not specified the extension name will be used.
- * key			string	The name of the component parameter where the serialized data will be stored. If not specified "liveupdate" will be used.
+ * component    string    The name of the component which will store our data. If not specified the extension name will be used.
+ * key            string    The name of the component parameter where the serialized data will be stored. If not specified "liveupdate" will be used.
  */
 class LiveUpdateStorageComponent extends LiveUpdateStorage
 {
 	private static $component = null;
 	private static $key = null;
-	
+
 	public function load($config)
 	{
-		if(!array_key_exists('component', $config)) {
+		if (!array_key_exists('component', $config))
+		{
 			self::$component = $config['extensionName'];
-		} else {
+		}
+		else
+		{
 			self::$component = $config['component'];
 		}
 
-		if(!array_key_exists('key', $config)) {
+		if (!array_key_exists('key', $config))
+		{
 			self::$key = 'liveupdate';
-		} else {
+		}
+		else
+		{
 			self::$key = $config['key'];
 		}
-		
+
 		jimport('joomla.html.parameter');
 		jimport('joomla.application.component.helper');
 		// Not using JComponentHelper to avoid conflicts ;)
 		$db = JFactory::getDbo();
-		if( version_compare(JVERSION,'1.6.0','ge') ) {
+		if (version_compare(JVERSION, '1.6.0', 'ge'))
+		{
 			$sql = $db->getQuery(true)
 				->select($db->qn('params'))
 				->from($db->qn('#__extensions'))
-				->where($db->qn('type').' = '.$db->q('component'))
-				->where($db->qn('element').' = '.$db->q(self::$component));
-		} else {
-			$sql = 'SELECT '.$db->nameQuote('params').' FROM '.$db->nameQuote('#__components').
-				' WHERE '.$db->nameQuote('option').' = '.$db->Quote(self::$component).
+				->where($db->qn('type') . ' = ' . $db->q('component'))
+				->where($db->qn('element') . ' = ' . $db->q(self::$component));
+		}
+		else
+		{
+			$sql = 'SELECT ' . $db->nameQuote('params') . ' FROM ' . $db->nameQuote('#__components') .
+				' WHERE ' . $db->nameQuote('option') . ' = ' . $db->Quote(self::$component) .
 				" AND `parent` = 0 AND `menuid` = 0";
 		}
 		$db->setQuery($sql);
 		$rawparams = $db->loadResult();
-		if(version_compare(JVERSION, '1.6.0', 'ge')) {
+		if (version_compare(JVERSION, '1.6.0', 'ge'))
+		{
 			$params = new JRegistry();
 			$params->loadString($rawparams);
-		} else {
+		}
+		else
+		{
 			$params = new JParameter($rawparams);
 		}
 		$data = $params->getValue(self::$key, '');
-				
+
 		jimport('joomla.registry.registry');
 		self::$registry = new JRegistry('update');
-		
+
 		self::$registry->loadINI($data);
 	}
-	
+
 	public function save()
 	{
 		$data = self::$registry->toString('INI');
-		
+
 		$db = JFactory::getDBO();
-		
+
 		// An interesting discovery: if your component is manually updating its
 		// component parameters before Live Update is called, then calling Live
 		// Update will reset the modified component parameters because
@@ -84,44 +96,50 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 		$params->setValue(self::$key, $data);
 		*/
 
-		if( version_compare(JVERSION,'1.6.0','ge') ) {
+		if (version_compare(JVERSION, '1.6.0', 'ge'))
+		{
 			$sql = $db->getQuery(true)
 				->select($db->qn('params'))
 				->from($db->qn('#__extensions'))
-				->where($db->qn('type').' = '.$db->q('component'))
-				->where($db->qn('element').' = '.$db->q(self::$component));
-		} else {
-			$sql = 'SELECT '.$db->nameQuote('params').' FROM '.$db->nameQuote('#__components').
-				' WHERE '.$db->nameQuote('option').' = '.$db->Quote(self::$component).
+				->where($db->qn('type') . ' = ' . $db->q('component'))
+				->where($db->qn('element') . ' = ' . $db->q(self::$component));
+		}
+		else
+		{
+			$sql = 'SELECT ' . $db->nameQuote('params') . ' FROM ' . $db->nameQuote('#__components') .
+				' WHERE ' . $db->nameQuote('option') . ' = ' . $db->Quote(self::$component) .
 				" AND `parent` = 0 AND `menuid` = 0";
 		}
 		$db->setQuery($sql);
 		$rawparams = $db->loadResult();
-		$params = new JRegistry();
-		if( version_compare(JVERSION,'1.6.0','ge') ) {
+		$params    = new JRegistry();
+		if (version_compare(JVERSION, '1.6.0', 'ge'))
+		{
 			$params->loadString($rawparams);
-		} else {
+		}
+		else
+		{
 			$params->loadINI($rawparams);
 		}
-		
+
 		$params->setValue(self::$key, $data);
-		
-		if( version_compare(JVERSION,'1.6.0','ge') )
+
+		if (version_compare(JVERSION, '1.6.0', 'ge'))
 		{
 			// Joomla! 1.6
 			$data = $params->toString('JSON');
-			$sql = $db->getQuery(true)
+			$sql  = $db->getQuery(true)
 				->update($db->qn('#__extensions'))
-				->set($db->qn('params').' = '.$db->q($data))
-				->where($db->qn('type').' = '.$db->q('component'))
-				->where($db->qn('element').' = '.$db->q(self::$component));
+				->set($db->qn('params') . ' = ' . $db->q($data))
+				->where($db->qn('type') . ' = ' . $db->q('component'))
+				->where($db->qn('element') . ' = ' . $db->q(self::$component));
 		}
 		else
 		{
 			// Joomla! 1.5
 			$data = $params->toString('INI');
-			$sql = 'UPDATE `#__components` SET `params` = '.$db->Quote($data).' WHERE '.
-				"`option` = ".$db->Quote(self::$component)." AND `parent` = 0 AND `menuid` = 0";
+			$sql  = 'UPDATE `#__components` SET `params` = ' . $db->Quote($data) . ' WHERE ' .
+				"`option` = " . $db->Quote(self::$component) . " AND `parent` = 0 AND `menuid` = 0";
 		}
 
 		$db->setQuery($sql);

@@ -112,8 +112,7 @@ div.token-input-dropdown-jbs ul li em {
     font-style: normal;
 }
 
-div.token-input-dropdown-jbs ul li.token-input-selected-dropdown-item-jbs
-{
+div.token-input-dropdown-jbs ul li.token-input-selected-dropdown-item-jbs {
     background-color: #3b5998;
     color: #fff;
 }

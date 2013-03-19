@@ -1,19 +1,19 @@
 <?php
-
 /**
  * Bible Study Defines
- * @package BibleStudy.Admin
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 // Version information
-define('BIBLESTUDY_VERSION', '7.1.2');
-define('BIBLESTUDY_VERSION_DATE', '2012-10-25');
-define('BIBLESTUDY_VERSION_BUILD', '3436');
+define('BIBLESTUDY_VERSION', '8.0.0');
+define('BIBLESTUDY_VERSION_DATE', '2012-12-15');
+define('BIBLESTUDY_VERSION_BUILD', '3437');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
@@ -28,12 +28,14 @@ define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBL
 define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
 define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
 define('BIBLESTUDY_MEDIA_PATH', JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy');
+define('BIBLESTUDY_PATH_IMAGES', BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images');
 
 // Site Component paths
 define('BIBLESTUDY_PATH', JPATH_SITE . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
 define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib');
 define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'template');
 define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT);
+define('BIBLESTUDY_PATH_HELPERS', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'helpers');
 
 // Admin Component paths
 define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
@@ -42,6 +44,8 @@ define('BIBLESTUDY_PATH_ADMIN_HELPERS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARA
 define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'language');
 define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'install');
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images');
+
+define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'biblestudy.xml');
 
 // Minimum version requirements
 DEFINE('BIBLESTUDY_MIN_PHP', '5.2.4');

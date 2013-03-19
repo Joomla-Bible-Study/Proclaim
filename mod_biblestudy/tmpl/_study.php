@@ -2,15 +2,17 @@
 
 /**
  * _Study
- * @package BibleStudy
- * @subpackage Model.BibleStudy
- * @copyright            2010-2011
- * @license		GNU/GPL, see LICENSE.php
+ *
+ * @package     BibleStudy
+ * @subpackage  Model.BibleStudy
+ * @copyright   2010-2011 Joomla Bible Study
+ * @license     GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
-
-$path1 = JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
 $row = $study;
-include_once($path1 . 'listing.php');
-$listing = getListing($row, $params, $oddeven);
+//FIXME not working;
+
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+$JBSMListing = new JBSMListing;
+$listing     = $JBSMListing->getListing($row, $params, $oddeven, $admin_params, $template, $ismodule);
 echo $listing;

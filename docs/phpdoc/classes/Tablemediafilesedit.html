@@ -1,498 +1,917 @@
-<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<!DOCTYPE html>
+<html xmlns:date="http://exslt.org/dates-and-times" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>JoomlaBibleStudy » \Tablemediafilesedit</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta charset="utf-8">
+    <title>JoomlaBibleStudy » \Tablemediafilesedit</title>
+    <meta name="author" content="Mike van Riel">
+    <meta name="description" content="">
+    <link href="../css/template.css" rel="stylesheet" media="all">
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/template.js" type="text/javascript"></script>
+    <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">JoomlaBibleStudy</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/Bible%20Study.html"><i class="icon-folder-open"></i> Bible Study</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a></li>
-<li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla Bible Study</a></li>
-<li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">3871</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">20</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">5</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a
+                class="brand" href="../index.html">JoomlaBibleStudy</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a>Packages</a></li>
+                            <li><a href="../packages/Bible%20Study.html"><i class="icon-folder-open"></i> Bible
+                                Study</a></li>
+                            <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a>
+                            </li>
+                            <li><a href="../packages/BibleSutdy.html"><i class="icon-folder-open"></i> BibleSutdy</a>
+                            </li>
+                            <li><a href="../packages/Biblestudy.html"><i class="icon-folder-open"></i> Biblestudy</a>
+                            </li>
+                            <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+                            <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/Joomla%20Bible%20Study.html"><i class="icon-folder-open"></i> Joomla
+                                Bible Study</a></li>
+                            <li><a href="../packages/com.html"><i class="icon-folder-open"></i> com</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                                <span class="label label-info">3871</span></a></li>
+                            <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                                <ul>
+                                    <li>todo 
+                                        <span class="label label-info">20</span>
+                                    </li>
+                                    <li>fixme 
+                                        <span class="label label-info">1</span>
+                                    </li>
+                                </ul>
+                            </a></li>
+                            <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                                <span class="label label-info">5</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a>
+    </div>
 </div>
 <div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#Tablemediafilesedit" title="Tablemediafilesedit :: Constructor"><span class="description">Constructor</span><pre>Tablemediafilesedit()</pre></a></li>
-<li class="method public "><a href="#bind" title="bind :: "><span class="description">bind()
-        </span><pre>bind()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="property public "><a href="#%24article_id" title="$article_id :: "><span class="description">$article_id</span><pre>$article_id</pre></a></li>
-<li class="property public "><a href="#%24comment" title="$comment :: "><span class="description">$comment</span><pre>$comment</pre></a></li>
-<li class="property public "><a href="#%24createdate" title="$createdate :: "><span class="description">$createdate</span><pre>$createdate</pre></a></li>
-<li class="property public "><a href="#%24docMan_id" title="$docMan_id :: "><span class="description">$docMan_id</span><pre>$docMan_id</pre></a></li>
-<li class="property public "><a href="#%24filename" title="$filename :: "><span class="description">$filename</span><pre>$filename</pre></a></li>
-<li class="property public "><a href="#%24hits" title="$hits :: "><span class="description">$hits</span><pre>$hits</pre></a></li>
-<li class="property public "><a href="#%24id" title="$id :: Primary Key"><span class="description">Primary Key</span><pre>$id</pre></a></li>
-<li class="property public "><a href="#%24internal_viewer" title="$internal_viewer :: "><span class="description">$internal_viewer</span><pre>$internal_viewer</pre></a></li>
-<li class="property public "><a href="#%24link_type" title="$link_type :: "><span class="description">$link_type</span><pre>$link_type</pre></a></li>
-<li class="property public "><a href="#%24media_image" title="$media_image :: "><span class="description">$media_image</span><pre>$media_image</pre></a></li>
-<li class="property public "><a href="#%24mediacode" title="$mediacode :: "><span class="description">$mediacode</span><pre>$mediacode</pre></a></li>
-<li class="property public "><a href="#%24mime_type" title="$mime_type :: "><span class="description">$mime_type</span><pre>$mime_type</pre></a></li>
-<li class="property public "><a href="#%24ordering" title="$ordering :: "><span class="description">$ordering</span><pre>$ordering</pre></a></li>
-<li class="property public "><a href="#%24params" title="$params :: "><span class="description">$params</span><pre>$params</pre></a></li>
-<li class="property public "><a href="#%24path" title="$path :: "><span class="description">$path</span><pre>$path</pre></a></li>
-<li class="property public "><a href="#%24podcast_id" title="$podcast_id :: "><span class="description">$podcast_id</span><pre>$podcast_id</pre></a></li>
-<li class="property public "><a href="#%24published" title="$published :: "><span class="description">$published</span><pre>$published</pre></a></li>
-<li class="property public "><a href="#%24server" title="$server :: "><span class="description">$server</span><pre>$server</pre></a></li>
-<li class="property public "><a href="#%24size" title="$size :: "><span class="description">$size</span><pre>$size</pre></a></li>
-<li class="property public "><a href="#%24special" title="$special :: "><span class="description">$special</span><pre>$special</pre></a></li>
-<li class="property public "><a href="#%24study_id" title="$study_id :: "><span class="description">$study_id</span><pre>$study_id</pre></a></li>
-<li class="property public "><a href="#%24virtueMart_id" title="$virtueMart_id :: "><span class="description">$virtueMart_id</span><pre>$virtueMart_id</pre></a></li>
-</ul>
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#Tablemediafilesedit" title="Tablemediafilesedit :: Constructor"><span class="description">Constructor</span><pre>Tablemediafilesedit()</pre></a></li>
-<li class="method public "><a href="#bind" title="bind :: "><span class="description">bind()
-        </span><pre>bind()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="property public "><a href="#%24article_id" title="$article_id :: "><span class="description">$article_id</span><pre>$article_id</pre></a></li>
-<li class="property public "><a href="#%24comment" title="$comment :: "><span class="description">$comment</span><pre>$comment</pre></a></li>
-<li class="property public "><a href="#%24createdate" title="$createdate :: "><span class="description">$createdate</span><pre>$createdate</pre></a></li>
-<li class="property public "><a href="#%24docMan_id" title="$docMan_id :: "><span class="description">$docMan_id</span><pre>$docMan_id</pre></a></li>
-<li class="property public "><a href="#%24filename" title="$filename :: "><span class="description">$filename</span><pre>$filename</pre></a></li>
-<li class="property public "><a href="#%24hits" title="$hits :: "><span class="description">$hits</span><pre>$hits</pre></a></li>
-<li class="property public "><a href="#%24id" title="$id :: Primary Key"><span class="description">Primary Key</span><pre>$id</pre></a></li>
-<li class="property public "><a href="#%24internal_viewer" title="$internal_viewer :: "><span class="description">$internal_viewer</span><pre>$internal_viewer</pre></a></li>
-<li class="property public "><a href="#%24link_type" title="$link_type :: "><span class="description">$link_type</span><pre>$link_type</pre></a></li>
-<li class="property public "><a href="#%24media_image" title="$media_image :: "><span class="description">$media_image</span><pre>$media_image</pre></a></li>
-<li class="property public "><a href="#%24mediacode" title="$mediacode :: "><span class="description">$mediacode</span><pre>$mediacode</pre></a></li>
-<li class="property public "><a href="#%24mime_type" title="$mime_type :: "><span class="description">$mime_type</span><pre>$mime_type</pre></a></li>
-<li class="property public "><a href="#%24ordering" title="$ordering :: "><span class="description">$ordering</span><pre>$ordering</pre></a></li>
-<li class="property public "><a href="#%24params" title="$params :: "><span class="description">$params</span><pre>$params</pre></a></li>
-<li class="property public "><a href="#%24path" title="$path :: "><span class="description">$path</span><pre>$path</pre></a></li>
-<li class="property public "><a href="#%24podcast_id" title="$podcast_id :: "><span class="description">$podcast_id</span><pre>$podcast_id</pre></a></li>
-<li class="property public "><a href="#%24published" title="$published :: "><span class="description">$published</span><pre>$published</pre></a></li>
-<li class="property public "><a href="#%24server" title="$server :: "><span class="description">$server</span><pre>$server</pre></a></li>
-<li class="property public "><a href="#%24size" title="$size :: "><span class="description">$size</span><pre>$size</pre></a></li>
-<li class="property public "><a href="#%24special" title="$special :: "><span class="description">$special</span><pre>$special</pre></a></li>
-<li class="property public "><a href="#%24study_id" title="$study_id :: "><span class="description">$study_id</span><pre>$study_id</pre></a></li>
-<li class="property public "><a href="#%24virtueMart_id" title="$virtueMart_id :: "><span class="description">$virtueMart_id</span><pre>$virtueMart_id</pre></a></li>
-</ul>
+    <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
+                                                                              title="Show public elements">Public
+    </button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private"
+                                                                                                     title="Show private elements">
+        Private
+    </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
+
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+        </li>
+        <li class="method public "><a href="#Tablemediafilesedit" title="Tablemediafilesedit :: Constructor"><span
+                class="description">Constructor</span>
+            <pre>Tablemediafilesedit()</pre>
+        </a></li>
+        <li class="method public "><a href="#bind" title="bind :: "><span class="description">bind()
+        </span>
+            <pre>bind()</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-property"></i> Properties
+        </li>
+        <li class="property public "><a href="#%24article_id" title="$article_id :: "><span class="description">$article_id</span>
+            <pre>$article_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24comment" title="$comment :: "><span
+                class="description">$comment</span>
+            <pre>$comment</pre>
+        </a></li>
+        <li class="property public "><a href="#%24createdate" title="$createdate :: "><span class="description">$createdate</span>
+            <pre>$createdate</pre>
+        </a></li>
+        <li class="property public "><a href="#%24docMan_id" title="$docMan_id :: "><span
+                class="description">$docMan_id</span>
+            <pre>$docMan_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24filename" title="$filename :: "><span
+                class="description">$filename</span>
+            <pre>$filename</pre>
+        </a></li>
+        <li class="property public "><a href="#%24hits" title="$hits :: "><span class="description">$hits</span>
+            <pre>$hits</pre>
+        </a></li>
+        <li class="property public "><a href="#%24id" title="$id :: Primary Key"><span
+                class="description">Primary Key</span>
+            <pre>$id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24internal_viewer" title="$internal_viewer :: "><span
+                class="description">$internal_viewer</span>
+            <pre>$internal_viewer</pre>
+        </a></li>
+        <li class="property public "><a href="#%24link_type" title="$link_type :: "><span
+                class="description">$link_type</span>
+            <pre>$link_type</pre>
+        </a></li>
+        <li class="property public "><a href="#%24media_image" title="$media_image :: "><span class="description">$media_image</span>
+            <pre>$media_image</pre>
+        </a></li>
+        <li class="property public "><a href="#%24mediacode" title="$mediacode :: "><span
+                class="description">$mediacode</span>
+            <pre>$mediacode</pre>
+        </a></li>
+        <li class="property public "><a href="#%24mime_type" title="$mime_type :: "><span
+                class="description">$mime_type</span>
+            <pre>$mime_type</pre>
+        </a></li>
+        <li class="property public "><a href="#%24ordering" title="$ordering :: "><span
+                class="description">$ordering</span>
+            <pre>$ordering</pre>
+        </a></li>
+        <li class="property public "><a href="#%24params" title="$params :: "><span class="description">$params</span>
+            <pre>$params</pre>
+        </a></li>
+        <li class="property public "><a href="#%24path" title="$path :: "><span class="description">$path</span>
+            <pre>$path</pre>
+        </a></li>
+        <li class="property public "><a href="#%24podcast_id" title="$podcast_id :: "><span class="description">$podcast_id</span>
+            <pre>$podcast_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24published" title="$published :: "><span
+                class="description">$published</span>
+            <pre>$published</pre>
+        </a></li>
+        <li class="property public "><a href="#%24server" title="$server :: "><span class="description">$server</span>
+            <pre>$server</pre>
+        </a></li>
+        <li class="property public "><a href="#%24size" title="$size :: "><span class="description">$size</span>
+            <pre>$size</pre>
+        </a></li>
+        <li class="property public "><a href="#%24special" title="$special :: "><span
+                class="description">$special</span>
+            <pre>$special</pre>
+        </a></li>
+        <li class="property public "><a href="#%24study_id" title="$study_id :: "><span
+                class="description">$study_id</span>
+            <pre>$study_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24virtueMart_id" title="$virtueMart_id :: "><span class="description">$virtueMart_id</span>
+            <pre>$virtueMart_id</pre>
+        </a></li>
+    </ul>
+    <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
+                                                                              title="Show public elements">Public
+    </button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private"
+                                                                                                     title="Show private elements">
+        Private
+    </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
+
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+        </li>
+        <li class="method public "><a href="#Tablemediafilesedit" title="Tablemediafilesedit :: Constructor"><span
+                class="description">Constructor</span>
+            <pre>Tablemediafilesedit()</pre>
+        </a></li>
+        <li class="method public "><a href="#bind" title="bind :: "><span class="description">bind()
+        </span>
+            <pre>bind()</pre>
+        </a></li>
+        <li class="nav-header">
+            <i class="icon-custom icon-property"></i> Properties
+        </li>
+        <li class="property public "><a href="#%24article_id" title="$article_id :: "><span class="description">$article_id</span>
+            <pre>$article_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24comment" title="$comment :: "><span
+                class="description">$comment</span>
+            <pre>$comment</pre>
+        </a></li>
+        <li class="property public "><a href="#%24createdate" title="$createdate :: "><span class="description">$createdate</span>
+            <pre>$createdate</pre>
+        </a></li>
+        <li class="property public "><a href="#%24docMan_id" title="$docMan_id :: "><span
+                class="description">$docMan_id</span>
+            <pre>$docMan_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24filename" title="$filename :: "><span
+                class="description">$filename</span>
+            <pre>$filename</pre>
+        </a></li>
+        <li class="property public "><a href="#%24hits" title="$hits :: "><span class="description">$hits</span>
+            <pre>$hits</pre>
+        </a></li>
+        <li class="property public "><a href="#%24id" title="$id :: Primary Key"><span
+                class="description">Primary Key</span>
+            <pre>$id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24internal_viewer" title="$internal_viewer :: "><span
+                class="description">$internal_viewer</span>
+            <pre>$internal_viewer</pre>
+        </a></li>
+        <li class="property public "><a href="#%24link_type" title="$link_type :: "><span
+                class="description">$link_type</span>
+            <pre>$link_type</pre>
+        </a></li>
+        <li class="property public "><a href="#%24media_image" title="$media_image :: "><span class="description">$media_image</span>
+            <pre>$media_image</pre>
+        </a></li>
+        <li class="property public "><a href="#%24mediacode" title="$mediacode :: "><span
+                class="description">$mediacode</span>
+            <pre>$mediacode</pre>
+        </a></li>
+        <li class="property public "><a href="#%24mime_type" title="$mime_type :: "><span
+                class="description">$mime_type</span>
+            <pre>$mime_type</pre>
+        </a></li>
+        <li class="property public "><a href="#%24ordering" title="$ordering :: "><span
+                class="description">$ordering</span>
+            <pre>$ordering</pre>
+        </a></li>
+        <li class="property public "><a href="#%24params" title="$params :: "><span class="description">$params</span>
+            <pre>$params</pre>
+        </a></li>
+        <li class="property public "><a href="#%24path" title="$path :: "><span class="description">$path</span>
+            <pre>$path</pre>
+        </a></li>
+        <li class="property public "><a href="#%24podcast_id" title="$podcast_id :: "><span class="description">$podcast_id</span>
+            <pre>$podcast_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24published" title="$published :: "><span
+                class="description">$published</span>
+            <pre>$published</pre>
+        </a></li>
+        <li class="property public "><a href="#%24server" title="$server :: "><span class="description">$server</span>
+            <pre>$server</pre>
+        </a></li>
+        <li class="property public "><a href="#%24size" title="$size :: "><span class="description">$size</span>
+            <pre>$size</pre>
+        </a></li>
+        <li class="property public "><a href="#%24special" title="$special :: "><span
+                class="description">$special</span>
+            <pre>$special</pre>
+        </a></li>
+        <li class="property public "><a href="#%24study_id" title="$study_id :: "><span
+                class="description">$study_id</span>
+            <pre>$study_id</pre>
+        </a></li>
+        <li class="property public "><a href="#%24virtueMart_id" title="$virtueMart_id :: "><span class="description">$virtueMart_id</span>
+            <pre>$virtueMart_id</pre>
+        </a></li>
+    </ul>
 </div>
 <div class="span8">
-<a name="%5CTablemediafilesedit" id="\Tablemediafilesedit"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/Tablemediafilesedit.html">Tablemediafilesedit</a>
-</li>
+<a name="%5CTablemediafilesedit" id="\Tablemediafilesedit"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/Tablemediafilesedit.html">Tablemediafilesedit</a>
+    </li>
 </ul>
-<div href="../classes/Tablemediafilesedit.html" class="element class"><div class="details">
-<h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="Tablemediafilesedit" id="Tablemediafilesedit"></a><div class="element clickable method public Tablemediafilesedit" data-toggle="collapse" data-target=".Tablemediafilesedit .collapse">
-<h2>Constructor</h2>
-<pre>Tablemediafilesedit(object $db) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>object</code><p>Database connector object</p></div>
-</div></div>
+<div href="../classes/Tablemediafilesedit.html" class="element class">
+    <div class="details">
+        <h3>
+            <i class="icon-custom icon-method"></i> Methods</h3>
+        <a name="Tablemediafilesedit" id="Tablemediafilesedit"></a>
+
+        <div class="element clickable method public Tablemediafilesedit" data-toggle="collapse"
+             data-target=".Tablemediafilesedit .collapse">
+            <h2>Constructor</h2>
+            <pre>Tablemediafilesedit(object $db) </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description">
+                    <p class="long_description"></p>
+
+                    <h3>Parameters</h3>
+
+                    <div class="subelement argument">
+                        <h4>$db</h4>
+                        <code>object</code>
+
+                        <p>Database connector object</p></div>
+                </div>
+            </div>
+        </div>
+        <a name="bind" id="bind"></a>
+
+        <div class="element clickable method public bind" data-toggle="collapse" data-target=".bind .collapse">
+            <h2>bind()
+            </h2>
+            <pre>bind($array, $ignore) </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description">
+                    <p class="long_description"></p>
+
+                    <h3>Parameters</h3>
+
+                    <div class="subelement argument">
+                        <h4>$array</h4>
+                        <code></code>
+                    </div>
+                    <div class="subelement argument">
+                        <h4>$ignore</h4>
+                        <code></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>
+            <i class="icon-custom icon-property"></i> Properties</h3>
+        <a name="%24article_id" id="$article_id"> </a>
+
+        <div class="element clickable property public $article_id" data-toggle="collapse"
+             data-target=".$article_id .collapse">
+            <h2>$article_id</h2>
+            <pre>$article_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24comment" id="$comment"> </a>
+
+        <div class="element clickable property public $comment" data-toggle="collapse"
+             data-target=".$comment .collapse">
+            <h2>$comment</h2>
+            <pre>$comment </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24createdate" id="$createdate"> </a>
+
+        <div class="element clickable property public $createdate" data-toggle="collapse"
+             data-target=".$createdate .collapse">
+            <h2>$createdate</h2>
+            <pre>$createdate </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24docMan_id" id="$docMan_id"> </a>
+
+        <div class="element clickable property public $docMan_id" data-toggle="collapse"
+             data-target=".$docMan_id .collapse">
+            <h2>$docMan_id</h2>
+            <pre>$docMan_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24filename" id="$filename"> </a>
+
+        <div class="element clickable property public $filename" data-toggle="collapse"
+             data-target=".$filename .collapse">
+            <h2>$filename</h2>
+            <pre>$filename </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24hits" id="$hits"> </a>
+
+        <div class="element clickable property public $hits" data-toggle="collapse" data-target=".$hits .collapse">
+            <h2>$hits</h2>
+            <pre>$hits </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24id" id="$id"> </a>
+
+        <div class="element clickable property public $id" data-toggle="collapse" data-target=".$id .collapse">
+            <h2>Primary Key</h2>
+            <pre>$id : int</pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24internal_viewer" id="$internal_viewer"> </a>
+
+        <div class="element clickable property public $internal_viewer" data-toggle="collapse"
+             data-target=".$internal_viewer .collapse">
+            <h2>$internal_viewer</h2>
+            <pre>$internal_viewer </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24link_type" id="$link_type"> </a>
+
+        <div class="element clickable property public $link_type" data-toggle="collapse"
+             data-target=".$link_type .collapse">
+            <h2>$link_type</h2>
+            <pre>$link_type </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24media_image" id="$media_image"> </a>
+
+        <div class="element clickable property public $media_image" data-toggle="collapse"
+             data-target=".$media_image .collapse">
+            <h2>$media_image</h2>
+            <pre>$media_image </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24mediacode" id="$mediacode"> </a>
+
+        <div class="element clickable property public $mediacode" data-toggle="collapse"
+             data-target=".$mediacode .collapse">
+            <h2>$mediacode</h2>
+            <pre>$mediacode </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24mime_type" id="$mime_type"> </a>
+
+        <div class="element clickable property public $mime_type" data-toggle="collapse"
+             data-target=".$mime_type .collapse">
+            <h2>$mime_type</h2>
+            <pre>$mime_type </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24ordering" id="$ordering"> </a>
+
+        <div class="element clickable property public $ordering" data-toggle="collapse"
+             data-target=".$ordering .collapse">
+            <h2>$ordering</h2>
+            <pre>$ordering </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24params" id="$params"> </a>
+
+        <div class="element clickable property public $params" data-toggle="collapse" data-target=".$params .collapse">
+            <h2>$params</h2>
+            <pre>$params </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24path" id="$path"> </a>
+
+        <div class="element clickable property public $path" data-toggle="collapse" data-target=".$path .collapse">
+            <h2>$path</h2>
+            <pre>$path </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24podcast_id" id="$podcast_id"> </a>
+
+        <div class="element clickable property public $podcast_id" data-toggle="collapse"
+             data-target=".$podcast_id .collapse">
+            <h2>$podcast_id</h2>
+            <pre>$podcast_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24published" id="$published"> </a>
+
+        <div class="element clickable property public $published" data-toggle="collapse"
+             data-target=".$published .collapse">
+            <h2>$published</h2>
+            <pre>$published </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24server" id="$server"> </a>
+
+        <div class="element clickable property public $server" data-toggle="collapse" data-target=".$server .collapse">
+            <h2>$server</h2>
+            <pre>$server </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24size" id="$size"> </a>
+
+        <div class="element clickable property public $size" data-toggle="collapse" data-target=".$size .collapse">
+            <h2>$size</h2>
+            <pre>$size </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24special" id="$special"> </a>
+
+        <div class="element clickable property public $special" data-toggle="collapse"
+             data-target=".$special .collapse">
+            <h2>$special</h2>
+            <pre>$special </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24study_id" id="$study_id"> </a>
+
+        <div class="element clickable property public $study_id" data-toggle="collapse"
+             data-target=".$study_id .collapse">
+            <h2>$study_id</h2>
+            <pre>$study_id : string</pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24virtueMart_id" id="$virtueMart_id"> </a>
+
+        <div class="element clickable property public $virtueMart_id" data-toggle="collapse"
+             data-target=".$virtueMart_id .collapse">
+            <h2>$virtueMart_id</h2>
+            <pre>$virtueMart_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="bind" id="bind"></a><div class="element clickable method public bind" data-toggle="collapse" data-target=".bind .collapse">
-<h2>bind()
-        </h2>
-<pre>bind($array, $ignore) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$array</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ignore</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24article_id" id="$article_id"> </a><div class="element clickable property public $article_id" data-toggle="collapse" data-target=".$article_id .collapse">
-<h2>$article_id</h2>
-<pre>$article_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24comment" id="$comment"> </a><div class="element clickable property public $comment" data-toggle="collapse" data-target=".$comment .collapse">
-<h2>$comment</h2>
-<pre>$comment </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24createdate" id="$createdate"> </a><div class="element clickable property public $createdate" data-toggle="collapse" data-target=".$createdate .collapse">
-<h2>$createdate</h2>
-<pre>$createdate </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24docMan_id" id="$docMan_id"> </a><div class="element clickable property public $docMan_id" data-toggle="collapse" data-target=".$docMan_id .collapse">
-<h2>$docMan_id</h2>
-<pre>$docMan_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24filename" id="$filename"> </a><div class="element clickable property public $filename" data-toggle="collapse" data-target=".$filename .collapse">
-<h2>$filename</h2>
-<pre>$filename </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24hits" id="$hits"> </a><div class="element clickable property public $hits" data-toggle="collapse" data-target=".$hits .collapse">
-<h2>$hits</h2>
-<pre>$hits </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24id" id="$id"> </a><div class="element clickable property public $id" data-toggle="collapse" data-target=".$id .collapse">
-<h2>Primary Key</h2>
-<pre>$id : int</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24internal_viewer" id="$internal_viewer"> </a><div class="element clickable property public $internal_viewer" data-toggle="collapse" data-target=".$internal_viewer .collapse">
-<h2>$internal_viewer</h2>
-<pre>$internal_viewer </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24link_type" id="$link_type"> </a><div class="element clickable property public $link_type" data-toggle="collapse" data-target=".$link_type .collapse">
-<h2>$link_type</h2>
-<pre>$link_type </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24media_image" id="$media_image"> </a><div class="element clickable property public $media_image" data-toggle="collapse" data-target=".$media_image .collapse">
-<h2>$media_image</h2>
-<pre>$media_image </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24mediacode" id="$mediacode"> </a><div class="element clickable property public $mediacode" data-toggle="collapse" data-target=".$mediacode .collapse">
-<h2>$mediacode</h2>
-<pre>$mediacode </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24mime_type" id="$mime_type"> </a><div class="element clickable property public $mime_type" data-toggle="collapse" data-target=".$mime_type .collapse">
-<h2>$mime_type</h2>
-<pre>$mime_type </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24ordering" id="$ordering"> </a><div class="element clickable property public $ordering" data-toggle="collapse" data-target=".$ordering .collapse">
-<h2>$ordering</h2>
-<pre>$ordering </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24params" id="$params"> </a><div class="element clickable property public $params" data-toggle="collapse" data-target=".$params .collapse">
-<h2>$params</h2>
-<pre>$params </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24path" id="$path"> </a><div class="element clickable property public $path" data-toggle="collapse" data-target=".$path .collapse">
-<h2>$path</h2>
-<pre>$path </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24podcast_id" id="$podcast_id"> </a><div class="element clickable property public $podcast_id" data-toggle="collapse" data-target=".$podcast_id .collapse">
-<h2>$podcast_id</h2>
-<pre>$podcast_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24published" id="$published"> </a><div class="element clickable property public $published" data-toggle="collapse" data-target=".$published .collapse">
-<h2>$published</h2>
-<pre>$published </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24server" id="$server"> </a><div class="element clickable property public $server" data-toggle="collapse" data-target=".$server .collapse">
-<h2>$server</h2>
-<pre>$server </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24size" id="$size"> </a><div class="element clickable property public $size" data-toggle="collapse" data-target=".$size .collapse">
-<h2>$size</h2>
-<pre>$size </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24special" id="$special"> </a><div class="element clickable property public $special" data-toggle="collapse" data-target=".$special .collapse">
-<h2>$special</h2>
-<pre>$special </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24study_id" id="$study_id"> </a><div class="element clickable property public $study_id" data-toggle="collapse" data-target=".$study_id .collapse">
-<h2>$study_id</h2>
-<pre>$study_id : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24virtueMart_id" id="$virtueMart_id"> </a><div class="element clickable property public $virtueMart_id" data-toggle="collapse" data-target=".$virtueMart_id .collapse">
-<h2>$virtueMart_id</h2>
-<pre>$virtueMart_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-</div></div>
-<a name="%5CTablemediafilesedit" id="\Tablemediafilesedit"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/Tablemediafilesedit.html">Tablemediafilesedit</a>
-</li>
+<a name="%5CTablemediafilesedit" id="\Tablemediafilesedit"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/Tablemediafilesedit.html">Tablemediafilesedit</a>
+    </li>
 </ul>
-<div href="../classes/Tablemediafilesedit.html" class="element class"><div class="details">
-<h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="Tablemediafilesedit" id="Tablemediafilesedit"></a><div class="element clickable method public Tablemediafilesedit" data-toggle="collapse" data-target=".Tablemediafilesedit .collapse">
-<h2>Constructor</h2>
-<pre>Tablemediafilesedit(object $db) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>object</code><p>Database connector object</p></div>
-</div></div>
+<div href="../classes/Tablemediafilesedit.html" class="element class">
+    <div class="details">
+        <h3>
+            <i class="icon-custom icon-method"></i> Methods</h3>
+        <a name="Tablemediafilesedit" id="Tablemediafilesedit"></a>
+
+        <div class="element clickable method public Tablemediafilesedit" data-toggle="collapse"
+             data-target=".Tablemediafilesedit .collapse">
+            <h2>Constructor</h2>
+            <pre>Tablemediafilesedit(object $db) </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description">
+                    <p class="long_description"></p>
+
+                    <h3>Parameters</h3>
+
+                    <div class="subelement argument">
+                        <h4>$db</h4>
+                        <code>object</code>
+
+                        <p>Database connector object</p></div>
+                </div>
+            </div>
+        </div>
+        <a name="bind" id="bind"></a>
+
+        <div class="element clickable method public bind" data-toggle="collapse" data-target=".bind .collapse">
+            <h2>bind()
+            </h2>
+            <pre>bind($array, $ignore) </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description">
+                    <p class="long_description"></p>
+
+                    <h3>Parameters</h3>
+
+                    <div class="subelement argument">
+                        <h4>$array</h4>
+                        <code></code>
+                    </div>
+                    <div class="subelement argument">
+                        <h4>$ignore</h4>
+                        <code></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>
+            <i class="icon-custom icon-property"></i> Properties</h3>
+        <a name="%24article_id" id="$article_id"> </a>
+
+        <div class="element clickable property public $article_id" data-toggle="collapse"
+             data-target=".$article_id .collapse">
+            <h2>$article_id</h2>
+            <pre>$article_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24comment" id="$comment"> </a>
+
+        <div class="element clickable property public $comment" data-toggle="collapse"
+             data-target=".$comment .collapse">
+            <h2>$comment</h2>
+            <pre>$comment </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24createdate" id="$createdate"> </a>
+
+        <div class="element clickable property public $createdate" data-toggle="collapse"
+             data-target=".$createdate .collapse">
+            <h2>$createdate</h2>
+            <pre>$createdate </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24docMan_id" id="$docMan_id"> </a>
+
+        <div class="element clickable property public $docMan_id" data-toggle="collapse"
+             data-target=".$docMan_id .collapse">
+            <h2>$docMan_id</h2>
+            <pre>$docMan_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24filename" id="$filename"> </a>
+
+        <div class="element clickable property public $filename" data-toggle="collapse"
+             data-target=".$filename .collapse">
+            <h2>$filename</h2>
+            <pre>$filename </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24hits" id="$hits"> </a>
+
+        <div class="element clickable property public $hits" data-toggle="collapse" data-target=".$hits .collapse">
+            <h2>$hits</h2>
+            <pre>$hits </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24id" id="$id"> </a>
+
+        <div class="element clickable property public $id" data-toggle="collapse" data-target=".$id .collapse">
+            <h2>Primary Key</h2>
+            <pre>$id : int</pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24internal_viewer" id="$internal_viewer"> </a>
+
+        <div class="element clickable property public $internal_viewer" data-toggle="collapse"
+             data-target=".$internal_viewer .collapse">
+            <h2>$internal_viewer</h2>
+            <pre>$internal_viewer </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24link_type" id="$link_type"> </a>
+
+        <div class="element clickable property public $link_type" data-toggle="collapse"
+             data-target=".$link_type .collapse">
+            <h2>$link_type</h2>
+            <pre>$link_type </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24media_image" id="$media_image"> </a>
+
+        <div class="element clickable property public $media_image" data-toggle="collapse"
+             data-target=".$media_image .collapse">
+            <h2>$media_image</h2>
+            <pre>$media_image </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24mediacode" id="$mediacode"> </a>
+
+        <div class="element clickable property public $mediacode" data-toggle="collapse"
+             data-target=".$mediacode .collapse">
+            <h2>$mediacode</h2>
+            <pre>$mediacode </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24mime_type" id="$mime_type"> </a>
+
+        <div class="element clickable property public $mime_type" data-toggle="collapse"
+             data-target=".$mime_type .collapse">
+            <h2>$mime_type</h2>
+            <pre>$mime_type </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24ordering" id="$ordering"> </a>
+
+        <div class="element clickable property public $ordering" data-toggle="collapse"
+             data-target=".$ordering .collapse">
+            <h2>$ordering</h2>
+            <pre>$ordering </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24params" id="$params"> </a>
+
+        <div class="element clickable property public $params" data-toggle="collapse" data-target=".$params .collapse">
+            <h2>$params</h2>
+            <pre>$params </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24path" id="$path"> </a>
+
+        <div class="element clickable property public $path" data-toggle="collapse" data-target=".$path .collapse">
+            <h2>$path</h2>
+            <pre>$path </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24podcast_id" id="$podcast_id"> </a>
+
+        <div class="element clickable property public $podcast_id" data-toggle="collapse"
+             data-target=".$podcast_id .collapse">
+            <h2>$podcast_id</h2>
+            <pre>$podcast_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24published" id="$published"> </a>
+
+        <div class="element clickable property public $published" data-toggle="collapse"
+             data-target=".$published .collapse">
+            <h2>$published</h2>
+            <pre>$published </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24server" id="$server"> </a>
+
+        <div class="element clickable property public $server" data-toggle="collapse" data-target=".$server .collapse">
+            <h2>$server</h2>
+            <pre>$server </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24size" id="$size"> </a>
+
+        <div class="element clickable property public $size" data-toggle="collapse" data-target=".$size .collapse">
+            <h2>$size</h2>
+            <pre>$size </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24special" id="$special"> </a>
+
+        <div class="element clickable property public $special" data-toggle="collapse"
+             data-target=".$special .collapse">
+            <h2>$special</h2>
+            <pre>$special </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24study_id" id="$study_id"> </a>
+
+        <div class="element clickable property public $study_id" data-toggle="collapse"
+             data-target=".$study_id .collapse">
+            <h2>$study_id</h2>
+            <pre>$study_id : string</pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+        <a name="%24virtueMart_id" id="$virtueMart_id"> </a>
+
+        <div class="element clickable property public $virtueMart_id" data-toggle="collapse"
+             data-target=".$virtueMart_id .collapse">
+            <h2>$virtueMart_id</h2>
+            <pre>$virtueMart_id </pre>
+            <div class="labels"></div>
+            <div class="row collapse">
+                <div class="detail-description"><p class="long_description"></p></div>
+            </div>
+        </div>
+    </div>
 </div>
-<a name="bind" id="bind"></a><div class="element clickable method public bind" data-toggle="collapse" data-target=".bind .collapse">
-<h2>bind()
-        </h2>
-<pre>bind($array, $ignore) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$array</h4>
-<code></code>
-</div>
-<div class="subelement argument">
-<h4>$ignore</h4>
-<code></code>
-</div>
-</div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24article_id" id="$article_id"> </a><div class="element clickable property public $article_id" data-toggle="collapse" data-target=".$article_id .collapse">
-<h2>$article_id</h2>
-<pre>$article_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24comment" id="$comment"> </a><div class="element clickable property public $comment" data-toggle="collapse" data-target=".$comment .collapse">
-<h2>$comment</h2>
-<pre>$comment </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24createdate" id="$createdate"> </a><div class="element clickable property public $createdate" data-toggle="collapse" data-target=".$createdate .collapse">
-<h2>$createdate</h2>
-<pre>$createdate </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24docMan_id" id="$docMan_id"> </a><div class="element clickable property public $docMan_id" data-toggle="collapse" data-target=".$docMan_id .collapse">
-<h2>$docMan_id</h2>
-<pre>$docMan_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24filename" id="$filename"> </a><div class="element clickable property public $filename" data-toggle="collapse" data-target=".$filename .collapse">
-<h2>$filename</h2>
-<pre>$filename </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24hits" id="$hits"> </a><div class="element clickable property public $hits" data-toggle="collapse" data-target=".$hits .collapse">
-<h2>$hits</h2>
-<pre>$hits </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24id" id="$id"> </a><div class="element clickable property public $id" data-toggle="collapse" data-target=".$id .collapse">
-<h2>Primary Key</h2>
-<pre>$id : int</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24internal_viewer" id="$internal_viewer"> </a><div class="element clickable property public $internal_viewer" data-toggle="collapse" data-target=".$internal_viewer .collapse">
-<h2>$internal_viewer</h2>
-<pre>$internal_viewer </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24link_type" id="$link_type"> </a><div class="element clickable property public $link_type" data-toggle="collapse" data-target=".$link_type .collapse">
-<h2>$link_type</h2>
-<pre>$link_type </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24media_image" id="$media_image"> </a><div class="element clickable property public $media_image" data-toggle="collapse" data-target=".$media_image .collapse">
-<h2>$media_image</h2>
-<pre>$media_image </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24mediacode" id="$mediacode"> </a><div class="element clickable property public $mediacode" data-toggle="collapse" data-target=".$mediacode .collapse">
-<h2>$mediacode</h2>
-<pre>$mediacode </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24mime_type" id="$mime_type"> </a><div class="element clickable property public $mime_type" data-toggle="collapse" data-target=".$mime_type .collapse">
-<h2>$mime_type</h2>
-<pre>$mime_type </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24ordering" id="$ordering"> </a><div class="element clickable property public $ordering" data-toggle="collapse" data-target=".$ordering .collapse">
-<h2>$ordering</h2>
-<pre>$ordering </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24params" id="$params"> </a><div class="element clickable property public $params" data-toggle="collapse" data-target=".$params .collapse">
-<h2>$params</h2>
-<pre>$params </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24path" id="$path"> </a><div class="element clickable property public $path" data-toggle="collapse" data-target=".$path .collapse">
-<h2>$path</h2>
-<pre>$path </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24podcast_id" id="$podcast_id"> </a><div class="element clickable property public $podcast_id" data-toggle="collapse" data-target=".$podcast_id .collapse">
-<h2>$podcast_id</h2>
-<pre>$podcast_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24published" id="$published"> </a><div class="element clickable property public $published" data-toggle="collapse" data-target=".$published .collapse">
-<h2>$published</h2>
-<pre>$published </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24server" id="$server"> </a><div class="element clickable property public $server" data-toggle="collapse" data-target=".$server .collapse">
-<h2>$server</h2>
-<pre>$server </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24size" id="$size"> </a><div class="element clickable property public $size" data-toggle="collapse" data-target=".$size .collapse">
-<h2>$size</h2>
-<pre>$size </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24special" id="$special"> </a><div class="element clickable property public $special" data-toggle="collapse" data-target=".$special .collapse">
-<h2>$special</h2>
-<pre>$special </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24study_id" id="$study_id"> </a><div class="element clickable property public $study_id" data-toggle="collapse" data-target=".$study_id .collapse">
-<h2>$study_id</h2>
-<pre>$study_id : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-<a name="%24virtueMart_id" id="$virtueMart_id"> </a><div class="element clickable property public $virtueMart_id" data-toggle="collapse" data-target=".$virtueMart_id .collapse">
-<h2>$virtueMart_id</h2>
-<pre>$virtueMart_id </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
-</div>
-</div></div>
 </div>
 </div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
-            generated on 2012-07-22T16:20:33-05:00.<br></footer></div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+        generated on 2012-07-22T16:20:33-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>
