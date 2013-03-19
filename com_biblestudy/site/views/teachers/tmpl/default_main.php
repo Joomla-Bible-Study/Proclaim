@@ -25,23 +25,14 @@ defined('_JEXEC') or die;
 		$oddeven = $class1;
 
 		foreach ($this->items as $item)
-		{
-			if ($item->title)
-			{
-				$teacherdisplay = $item->teachername . ' - ' . $item->title;
-			}
-			else
-			{
-				$teacherdisplay = $item->teachername;
-			}
-			if ($oddeven == $class1)
-			{ // Alternate the color background
-				$oddeven = $class2;
-			}
-			else
-			{
-				$oddeven = $class1;
-			}
+		{			
+			$teacherdisplay = $item->teachername;
+			
+			if($item->title)
+				$teacherdisplay .= ' - ' . $item->title;
+			
+			//Alternate the row color
+			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 			?>
 
         <tr class="<?php echo $oddeven; ?> ">

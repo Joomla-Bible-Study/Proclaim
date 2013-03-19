@@ -163,16 +163,12 @@ $teachers = $params->get('teacher_id');
 
 		foreach ($this->items as $row)
 		{ // Run through each row of the data result from the model
-			if ($oddeven == $class1)
-			{ // Alternate the color background
-				$oddeven = $class2;
-			}
-			else
-			{
-				$oddeven = $class1;
-			}
+		
+			// Alternate row colors
+			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 
 			$listing = $JBSMTeacher->getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+		
 			echo $listing;
 		}
 		?>
