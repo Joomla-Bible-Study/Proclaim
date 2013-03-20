@@ -1,2 +1,2 @@
 language: php
-script: ant clean
+script: ant phpunit
