@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="joomla" default="build" basedir=".">
+	<property name="source" value="." />
+	<property name="biblestudy_source" value="com_biblestudy,mod_biblestudy,mod_biblestudy_podcast,plg_biblestudy_backup,plg_biblestudy_finder,plg_biblestudy_podcast,plg_biblestudy_search" />
+
+	<target name="clean" description="Clean up and create artifact directories">
+		<delete dir="${basedir}/build/coverage" />
+		<delete dir="${basedir}/build/logs" />
+		<delete dir="${basedir}/build/pdepend" />
+
+		<mkdir dir="${basedir}/build/coverage" />
+		<mkdir dir="${basedir}/build/logs" />
+		<mkdir dir="${basedir}/build/pdepend" />
+	</target>
+
+	<target name="lint" description="Perform syntax check of sourcecode files">
+		<apply executable="php" failonerror="true">
+			<arg value="-l" />
+
+			<fileset dir="${basedir}/com_biblestudy">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/mod_biblestudy">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/mod_biblestudy_podcast">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/plg_biblestudy_backup">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/plg_biblestudy_finder">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/plg_biblestudy_podcast">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+			<fileset dir="${basedir}/plg_biblestudy_search">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+		</apply>
+	</target>
+
+	<target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<exec executable="phpunit" />
+	</target>
+
+	<target name="parallelTasks" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
+		<parallel threadCount="2">
+			<sequential>
+				<antcall target="pdepend" />
+				<antcall target="phpmd" />
+			</sequential>
+			<antcall target="phpcs" />
+		</parallel>
+	</target>
+
+	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+		<exec executable="phpcs">
+			<arg value="--report=checkstyle" />
+			<arg value="-p" />
+			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
+			<arg value="--standard=${basedir}/build/phpcs/BibleStudy" />
+			<arg path="${source}" />
+		</exec>
+	</target>
+
+	<target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+		<exec executable="pdepend">
+			<arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
+			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
+			<arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
+			<arg value="--ignore=build,tests" />
+			<arg path="${source}" />
+		</exec>
+	</target>
+
+	<target name="phpmd" description="Generate pmd.xml using PHPMD">
+		<exec executable="phpmd">
+			<arg path="${biblestudy_source}" />
+			<arg value="html" />
+			<arg value="${basedir}/build/phpmd.xml" />
+			<arg value="--reportfile" />
+			<arg value="${basedir}/build/logs/pmd.html" />
+		</exec>
+	</target>
+
+	
+
+
+	<target name="build" depends="clean,phpunit,parallelTasks" />
+</project>
