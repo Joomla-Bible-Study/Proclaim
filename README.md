@@ -1,7 +1,6 @@
 Joomla-Bible-Study
 ==================
-"!https://travis-ci.org/genu/Joomla-Bible-Study.png!":https://travis-ci.org/genu/Joomla-Bible-Study
-
+[![Build Status](https://travis-ci.org/genu/Joomla-Bible-Study.png)](https://travis-ci.org/genu/Joomla-Bible-Study)
 
 Bible Study is a Joomla!® 1.5 and 2.5 component written by a team of webservants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. JBS is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
