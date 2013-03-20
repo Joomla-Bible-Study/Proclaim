@@ -1,2 +1,2 @@
 language: php
-script: ant build
+script: ant clean
