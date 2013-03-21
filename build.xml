@@ -8,10 +8,21 @@
 		<delete dir="${basedir}/build/coverage" />
 		<delete dir="${basedir}/build/logs" />
 		<delete dir="${basedir}/build/pdepend" />
+		<delete dir="${basedir}/build/packages" />
+		<delete dir="${basedir}/build/packages/component" />
+		<delete dir="${basedir}/build/packages/modules" />
+		<delete dir="${basedir}/build/packages/plugins" />
+		<delete dir="${basedir}/build/packages/addons" />
 
 		<mkdir dir="${basedir}/build/coverage" />
 		<mkdir dir="${basedir}/build/logs" />
 		<mkdir dir="${basedir}/build/pdepend" />
+		<mkdir dir="${basedir}/build/packages" />
+		<mkdir dir="${basedir}/build/packages/component" />
+		<mkdir dir="${basedir}/build/packages/modules" />
+		<mkdir dir="${basedir}/build/packages/plugins" />
+		<mkdir dir="${basedir}/build/packages/addons" />
+
 	</target>
 
 	<target name="lint" description="Perform syntax check of sourcecode files">
@@ -93,8 +104,36 @@
 		</exec>
 	</target>
 
-	
+	<target name="package" depends="clean,package_modules,package_plugins,package_component,package_addons">
+        <zip destfile="${basedir}/build/packages/pkg_biblestudy.zip">
+            <zipfileset dir="${basedir}/build/packages/component" prefix="packages"/>
+            <zipfileset dir="${basedir}/build/packages/modules" prefix="packages"/>
+            <zipfileset dir="${basedir}/build/packages/plugins" prefix="packages"/>
+            <zipfileset dir="${basedir}/build" includes="pkg_biblestudy_package.xml"/>
+        </zip>
+	</target>
 
+	<target name="package_component">
+		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
+	</target>
+
+	<target name="package_modules">
+		 <zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
+        <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
+    </target>
+
+    <target name="package_plugins">
+    	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
+    </target>
+
+    <target name="package_addons">
+    	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
+        <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
+        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomsef_extension"/>
+    </target>
 
 	<target name="build" depends="clean,phpunit,parallelTasks" />
 </project>
