@@ -14,7 +14,3 @@ Contributing is easy. Just fork this repository, and submit pull requests.
 Reporting Issues and requesting features
 ----------------------------------------
 Use the **Issues** section for reporting bugs, or requesting features. Please make sure that when bugs are reported, you include steps to reproduce them.
-<<<<<<< HEAD
-=======
-
->>>>>>> ebd9beaa91e3703575cb9dc6bc12ee5ec5f4a545
