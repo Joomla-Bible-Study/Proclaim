@@ -85,7 +85,16 @@
 	</target>
 
 	<target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
-		<exec executable="pdepend">
+        <phpdepend>
+            <fileset dir="${}">
+                <include name="apps/**/*.php" />
+                <include name="lib/de/**/*.php" />
+            </fileset>
+            <logger type="jdepend-xml" outfile="reports/jdepend.xml"/>
+            <analyzer type="coderank-mode" value="method"/>
+        </phpdepend>
+
+        <exec executable="pdepend">
 			<arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
 			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
 			<arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
@@ -95,7 +104,7 @@
 	</target>
 
 	<target name="phpmd" description="Generate pmd.xml using PHPMD">
-		<exec executable="phpmd">
+        <exec executable="phpmd">
 			<arg path="${biblestudy_source}" />
 			<arg value="html" />
 			<arg value="${basedir}/build/phpmd.xml" />
