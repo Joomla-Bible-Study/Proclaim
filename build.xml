@@ -104,7 +104,7 @@
 		</exec>
 	</target>
 
-	<target name="package" depends="clean,package_modules,package_plugins,package_component,package_addons">
+	<target name="package" depends="clean,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">
         <zip destfile="${basedir}/build/packages/pkg_biblestudy.zip">
             <zipfileset dir="${basedir}/build/packages/component" prefix="packages"/>
             <zipfileset dir="${basedir}/build/packages/modules" prefix="packages"/>
@@ -113,23 +113,23 @@
         </zip>
 	</target>
 
-	<target name="package_component">
+	<target name="package_component" description="Builds the component">
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
 	</target>
 
-	<target name="package_modules">
+	<target name="package_modules" description="Builds the modules">
 		 <zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
         <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
     </target>
 
-    <target name="package_plugins">
+    <target name="package_plugins" description="Builds the plugins">
     	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
     </target>
 
-    <target name="package_addons">
+    <target name="package_addons" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomsef_extension"/>
