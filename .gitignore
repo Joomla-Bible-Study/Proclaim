@@ -1,0 +1,6 @@
+# System files #
+.DS_Store
+.idea
+
+# Test Related Files #
+/phpunit.xml
