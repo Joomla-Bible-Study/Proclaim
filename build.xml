@@ -35,7 +35,7 @@
 	</fileset>
 
 	<!-- Validate syntax -->
-	<target name="lint"  depends="init" description="Perform syntax check of sourcecode files">
+	<target name="lint" description="Perform syntax check of sourcecode files">
 		<phplint haltonfailure="true">
 			<fileset refid="distributed_files"/>
 		</phplint>
