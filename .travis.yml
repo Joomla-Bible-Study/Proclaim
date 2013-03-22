@@ -1,7 +1,4 @@
 language: php
-
 php:
-  - 5.3
-  
-script: .travis-phing.sh -Dversion=2.0.0b1
-script: phing build
+  - 5.2
+script: .travis-phing.sh

@@ -1,40 +1,84 @@
 #!/bin/bash
-2  #-----------------------------------------------------------
-3	#
-4	# Purpose: Run phing in a travis environment
-5	#
-6	# Target system: travis-ci
-7	#-----------------------------------------------------------
-8	
-9	installPearTask ()
-10	{
-11	    echo -e "\nAuto-discover pear channels and upgrade ..."
-12	    pear config-set auto_discover 1
-13	    pear -qq channel-update pear.php.net
-14	    pear -qq upgrade
-15	    echo "... OK"
-16	
-17	    echo -e "\nInstalling / upgrading phing ... "
-18	    which phing >/dev/null                      &&
-19	        pear upgrade pear.phing.info/phing ||
-20	        pear install --alldeps pear.phing.info/phing
-21	
-22	    # update paths
-23	    phpenv rehash
-24	
-25	    # re-test for phing:
-26	    phing -v 2>&1 >/dev/null    &&
-27	        echo "... OK"           ||
-28	        return 1
-29	}
-30	
-31	
-32	#-----------------------------------------------------------
-33	
-34	    installPearTask &&
-35	        echo -e "\nSUCCESS - PHP ENVIRONMENT READY." ||
-36	        ( echo "=== FAILED."; exit 1 )
-37	
-38	    phing $*
-39	
-40	#------------------------------------------------------- eof
+#-----------------------------------------------------------
+#
+# Purpose: Run phing in a travis environment
+#
+# Target system: travis-ci
+#-----------------------------------------------------------
+
+installPearTask ()
+{
+    sudo apt-get update -qq
+    sudo apt-get install -qq php5-xdebug
+    
+    echo -e "\nAuto-discover pear channels and upgrade ..."
+    pear config-set auto_discover 1
+    pear -qq channel-update pear.php.net
+    pear -qq upgrade
+    pear -qq channel-discover pear.phing.info
+    echo "... OK"
+
+    echo -e "\nInstalling / upgrading phpcpd ... "
+    which phpcpd >/dev/null &&
+        pear upgrade pear.phpunit.de/phpcpd ||
+        pear install pear.phpunit.de/phpcpd
+    phpenv rehash
+
+    echo -e "\nInstalling / upgrading phploc ... "
+    which phploc >/dev/null &&
+        pear upgrade pear.phpunit.de/phploc ||
+        pear install pear.phpunit.de/phploc
+    phpenv rehash
+
+    echo -e "\nInstalling / upgrading phpcs ... "
+    which phpcs >/dev/null &&
+        pear upgrade pear.php.net/PHP_CodeSniffer ||
+        pear install pear.php.net/PHP_CodeSniffer
+    phpenv rehash
+    # re-test for phpcs:
+    phpcs --version 2>&1 >/dev/null &&
+        echo "... OK" ||
+        return 1
+
+    sudo apt-get install python-docutils
+    pear install VersionControl_Git-alpha
+    pear install VersionControl_SVN-alpha
+    pear install pear/XML_Serializer-beta
+    pear install --alldeps PEAR_PackageFileManager
+    pear install --alldeps PEAR_PackageFileManager2
+    pear install Net_Growl
+
+    # update paths
+    phpenv rehash
+}
+
+
+#-----------------------------------------------------------
+
+    installPearTask &&
+        echo -e "\nSUCCESS - PHP ENVIRONMENT READY." ||
+        ( echo "=== FAILED."; exit 1 )
+
+    if [[ $TRAVIS_PHP_VERSION < 5.3 ]]; then
+pear install -f phpunit/File_Iterator-1.3.2
+     pear install -f phpunit/PHP_TokenStream-1.1.4
+     pear install -f phpunit/PHP_Timer-1.0.3
+     pear install -f phpunit/Text_Template-1.1.1
+    else
+composer install
+    fi
+
+# echo "=== BUILDING PHING ==="
+# cd build
+# phing -Dversion=2.0.0b1
+
+    echo "=== SETTING GIT IDENTITY ==="
+    git config --global user.email "travis-ci-build@phing.info"
+    git config --global user.name "Phing Travis Builder"
+
+    echo "=== TESTING PHING ==="
+    cd test
+    ../bin/phing
+
+
+#------------------------------------------------------- eof
