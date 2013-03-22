@@ -2,6 +2,7 @@
 .gitignore
 .idea
 .c9revisions
+.DS_Store
 
 # Test Related Files #
 /phpunit.xml
