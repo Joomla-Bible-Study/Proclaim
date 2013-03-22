@@ -59,7 +59,7 @@
 		<parallel threadCount="2">
 			<sequential>
 				<antcall target="pdepend" />
-				<antcall target="phpmd" />
+				<antcall target="pmd" />
 			</sequential>
 			<antcall target="phpcs" />
 		</parallel>
@@ -159,7 +159,7 @@
     <target name="package_addons" depends="init" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
-        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomsef_extension"/>
+        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
 
 	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
