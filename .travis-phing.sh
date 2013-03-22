@@ -68,7 +68,7 @@ pear install -f phpunit/File_Iterator-1.3.2
 composer install
     fi
 
-../bin/phing
+./bin/phing
 
 
 #------------------------------------------------------- eof
