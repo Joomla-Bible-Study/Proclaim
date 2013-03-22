@@ -16,5 +16,9 @@ pear install phpdoc/phpDocumentor-alpha
 
 phpenv rehash
 
+#Download Javascript lint 
+curl http://www.javascriptlint.com/download/jsl-0.3.0-mac.tar.gz | tar xz
+mv jsl-0.3.0-mac/* ./
+
 echo "[Running phing]"
 phing apidoc
