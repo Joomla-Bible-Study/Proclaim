@@ -4,4 +4,4 @@ pear install phing/phing
 phpenv rehash
 
 echo "[Running phing]"
-phing
+phing lint
