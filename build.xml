@@ -39,9 +39,6 @@
 		<phplint haltonfailure="true">
 			<fileset refid="distributed_files"/>
 		</phplint>
-		<jsllint haltonfailure="true">
-			<fileset refid="distributed_files"/>
-		</jsllint>
 	</target>
 
 	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
