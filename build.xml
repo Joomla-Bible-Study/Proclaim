@@ -4,25 +4,20 @@
 	<property name="basedir" value="." />
 	<property name="project.name" value="Joomla Bible Study"/>
 
-	<target name="clean" description="Clean up and create artifact directories">
-		<delete dir="${basedir}/build/coverage" />
-		<delete dir="${basedir}/build/logs" />
-		<delete dir="${basedir}/build/pdepend" />
+	<target name="clean" description="Clean up directories">
 		<delete dir="${basedir}/build/packages" />
 		<delete dir="${basedir}/build/reports" />
 		<delete dir="${basedir}/docs" />
+	</target>
 
-
-		<mkdir dir="${basedir}/build/coverage" />
-		<mkdir dir="${basedir}/build/logs" />
-		<mkdir dir="${basedir}/build/pdepend" />
+	<target name="init" description="Create artifact directories">
 		<mkdir dir="${basedir}/build/packages" />
 		<mkdir dir="${basedir}/build/reports" />
+		<mkdir dir="${basedir}/docs" />
 		<mkdir dir="${basedir}/build/packages/component" />
 		<mkdir dir="${basedir}/build/packages/modules" />
 		<mkdir dir="${basedir}/build/packages/plugins" />
 		<mkdir dir="${basedir}/build/packages/addons" />
-		<mkdir dir="${basedir}/docs" />
 	</target>
 
 	<!-- List of all files that are distributed -->
@@ -40,7 +35,7 @@
 	</fileset>
 
 	<!-- Validate syntax -->
-	<target name="lint" description="Perform syntax check of sourcecode files">
+	<target name="lint"  depends="init" description="Perform syntax check of sourcecode files">
 		<phplint haltonfailure="true">
 			<fileset refid="distributed_files"/>
 		</phplint>
@@ -49,7 +44,7 @@
 		</jsllint>
 	</target>
 
-	<target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit codecoverage="true" haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
 			<formatter todir="${basedir}/build/reports" type="xml" outfile="test-unit.xml"/>
 			<formatter todir="${basedir}/build/reports" type="clover" outfile="test-clover.xml"/>
@@ -60,7 +55,7 @@
 		</phpunit>
 	</target>
 
-	<target name="parallelTasks" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
+	<target name="parallelTasks"  depends="init" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
 		<parallel threadCount="2">
 			<sequential>
 				<antcall target="pdepend" />
@@ -71,7 +66,7 @@
 	</target>
 
 	<!-- Copy and paste detector -->
-	<target name="phpcpd" description="Checks for copy and pasted code">
+	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
 		<phpcpd>
 			<fileset refid="distributed_files"/>
 			<formatter type="pmd" outfile="${basedir}/build/reports/cpd-code.xml"/>
@@ -79,14 +74,14 @@
 	</target>
 
 	<!-- Measure the size of the project -->
-	<target name="size" description="Measures the size of the project">
+	<target name="size" depends="init" description="Measures the size of the project">
 		<phploc reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">
 			<fileset refid="distributed_files"/>
 		</phploc>
 	</target>
 
 	<!-- Detect violations in coding standards -->
-	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+	<target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
 		<phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
 			<fileset refid="distributed_files"/>
 			<formatter type="checkstyle" outfile="${basedir}/build/reports/phpcs-checkstyle.xml"/>
@@ -94,14 +89,14 @@
 	</target>
 
 	<!-- Creates API documentation -->
-	<target name="apidoc" description="Generate project API documentation">
+	<target name="apidoc" depends="init" description="Generate project API documentation">
 		<phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
 			<fileset refid="distributed_files"/>
 		</phpdoc2>
 	</target>
 
 	<!-- Code analyzer and metric tool -->
-	<target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+	<target name="pdepend" depends="init" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
         <phpdepend haltonerror="true">
             <fileset refid="distributed_files"/>
             <logger type="jdepend-xml" outfile="${basedir}/build/reports/jdepend.xml"/>
@@ -112,7 +107,7 @@
 	</target>
 
 	<!-- PHP Mess Detector -->
-	<target name="pmd" description="Detect messy code, and generate report">
+	<target name="pmd" depends="init" description="Detect messy code, and generate report">
 		<phpmd rulesets="${basedir}/build/phpmd.xml">
 			<fileset refid="distributed_files"/>
 			<formatter type="html" outfile="${basedir}/build/reports/pmd.html"/>
@@ -120,7 +115,7 @@
 	</target>
 
 	<!-- Build distributable package -->
-	<target name="package" depends="clean,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">
+	<target name="package" depends="clean,init,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">
 		
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -145,27 +140,27 @@
         <delete dir="${basedir}/build/packages/_tmp" />
 	</target>
 
-	<target name="package_component" description="Builds the component">
+	<target name="package_component" depends="init" description="Builds the component">
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
 	</target>
 
-	<target name="package_modules" description="Builds the modules">
+	<target name="package_modules" depends="init" description="Builds the modules">
 		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
         <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
     </target>
 
-    <target name="package_plugins" description="Builds the plugins">
+    <target name="package_plugins" depends="init" description="Builds the plugins">
     	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
     </target>
 
-    <target name="package_addons" description="Builds addons, including third party integrations">
+    <target name="package_addons" depends="init" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomsef_extension"/>
     </target>
 
-	<target name="build" depends="clean,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
 </project>
