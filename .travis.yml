@@ -1,2 +1,2 @@
 language: php
-script: ant phpunit
+script: phing build
