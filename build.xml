@@ -3,6 +3,9 @@
 <project name="biblestudy" default="build">
 	<property name="basedir" value="." />
 	<property name="project.name" value="Joomla Bible Study"/>
+	<property name="build" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/"/>
+	<property name="src.test" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/tests/test"/>
+    <property name="dest.test" value="${build}/com_biblestudy/admin/views/test"/>
 
 	<target name="clean" description="Clean up directories">
 		<delete dir="${basedir}/build/packages" />
@@ -157,6 +160,23 @@
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
+    </target>
+
+    <!-- Targets for development purposes -->
+    <target name="reset">
+        <echo message="Reset back to Dev State"/>
+        <delete file="../com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="../com_biblestudy/admin/biblestudy.script.php"/>
+        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true"/>
+        <delete file="../com_biblestudy/media/css/site/biblestudy.css"/>
+        <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" target="${build}/com_biblestudy/biblestudy.xml"/>
+        <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php"
+                 target="${build}/com_biblestudy/biblestudy.script.php"/>
+        <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css"
+                 target="${build}/com_biblestudy/media/css/biblestudy.css"/>
+        <copy todir="${dest.test}">
+            <fileset dir="${src.test}" includes="**"/>
+        </copy>
     </target>
 
 	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
