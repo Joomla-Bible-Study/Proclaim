@@ -37,6 +37,7 @@
         <delete file="j1.5/com_jbsmigration.zip"/>
         <delete file="joomsef_extension/joomlsef_com_biblestudy.zip"/>
     </target>
+    
     <target name="build">
         <echo message="Remove Dev files"/>
         <delete file="../com_biblestudy/admin/biblestudy.xml"/>
