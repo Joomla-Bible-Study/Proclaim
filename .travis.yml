@@ -1,2 +1,4 @@
 language: php
-script: ant phpunit
+php:
+  - 5.2
+script: ./.travis-phing.sh
