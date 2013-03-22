@@ -1,3 +1,4 @@
 echo "[Installing Phing]"
-pyrus install phing/phing
+pear channel-discover pear.phing.info
+pear install phing/phing
 phpenv rehash
