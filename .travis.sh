@@ -17,4 +17,4 @@ pear install phpdoc/phpDocumentor-alpha
 phpenv rehash
 
 echo "[Running phing]"
-phing package
+phing apidoc
