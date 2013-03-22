@@ -15,4 +15,4 @@ pear install pear.phpunit.de/phploc
 phpenv rehash
 
 echo "[Running phing]"
-phing apidoc
+phing package
