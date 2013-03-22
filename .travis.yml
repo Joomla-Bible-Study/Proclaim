@@ -1,4 +1,5 @@
 language: php
 php:
   - 5.2
-script: ./.travis-phing.sh
+
+pear install phing/phing
