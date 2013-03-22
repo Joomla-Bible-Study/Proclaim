@@ -7,4 +7,4 @@ pear install pdepend/PHP_Depend-beta
 phpenv rehash
 
 echo "[Running phing]"
-phing lint
+phing apidoc
