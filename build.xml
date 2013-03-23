@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="biblestudy" default="build">
-	<property name="basedir" value="." />
+<project name="biblestudy" default="build" basedir=".">
+    <property name="basedir" value="${project.basedir}" />
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to test the component on -->
 	<property name="joomla.version" value="3.0.3" />
 	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
 
-	<property name="build" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/"/>
-	<property name="src.test" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/tests/test"/>
-    <property name="dest.test" value="${build}/com_biblestudy/admin/views/test"/>
+	<property name="src.test" value="${basedir}/tests/test"/>
+    <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
 
 	<target name="clean" description="Clean up directories">
 		<delete dir="${basedir}/build/packages" />
@@ -52,8 +51,7 @@
 
 	<target name="phpunit" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
-			<formatter todir="${basedir}/build/reports" type="xml" outfile="test-unit.xml"/>
-			<formatter todir="${basedir}/build/reports" type="clover" outfile="test-clover.xml"/>
+            <!-- We can only use one formatter at a time -->
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
 				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
@@ -61,14 +59,11 @@
 		</phpunit>
 	</target>
 
+    <!-- this task is highly experimental, and will only work on *nix machines that have the PHP pcntl extension installed -->
 	<target name="parallelTasks"  depends="init" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
-		<parallel threadCount="2">
-			<sequential>
-				<antcall target="pdepend" />
-				<antcall target="pmd" />
-			</sequential>
-			<antcall target="phpcs" />
-		</parallel>
+        <phingcall target="pdepend"/>
+        <phingcall target="pmd" />
+        <phingcall target="phpcs" />
 	</target>
 
 	<!-- Copy and paste detector -->
@@ -188,15 +183,15 @@
     <!-- Targets for development purposes -->
     <target name="reset">
         <echo message="Reset back to Dev State"/>
-        <delete file="../com_biblestudy/admin/biblestudy.xml"/>
-        <delete file="../com_biblestudy/admin/biblestudy.script.php"/>
-        <delete dir="../com_biblestudy/admin/views/test" includeemptydirs="true"/>
-        <delete file="../com_biblestudy/media/css/site/biblestudy.css"/>
-        <symlink link="${build}/com_biblestudy/admin/biblestudy.xml" target="${build}/com_biblestudy/biblestudy.xml"/>
-        <symlink link="${build}/com_biblestudy/admin/biblestudy.script.php"
-                 target="${build}/com_biblestudy/biblestudy.script.php"/>
-        <symlink link="${build}/com_biblestudy/media/css/site/biblestudy.css"
-                 target="${build}/com_biblestudy/media/css/biblestudy.css"/>
+        <delete file="com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="com_biblestudy/admin/biblestudy.script.php"/>
+        <delete dir="com_biblestudy/admin/views/test" includeemptydirs="true"/>
+        <delete file="com_biblestudy/media/css/site/biblestudy.css"/>
+        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.xml" target="${basedir}/com_biblestudy/biblestudy.xml"/>
+        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.script.php"
+                 target="${basedir}/com_biblestudy/biblestudy.script.php"/>
+        <symlink link="${basedir}/com_biblestudy/media/css/site/biblestudy.css"
+                 target="${basedir}/com_biblestudy/media/css/biblestudy.css"/>
         <copy todir="${dest.test}">
             <fileset dir="${src.test}" includes="**"/>
         </copy>
