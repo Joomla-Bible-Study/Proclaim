@@ -14,6 +14,8 @@
 
 define('_JEXEC', 1);
 
+
+
 // Fix magic quotes.
 ini_set('magic_quotes_runtime', 0);
 
@@ -22,7 +24,7 @@ ini_set('zend.ze1_compatibility_mode', '0');
 error_reporting(E_ALL & ~E_STRICT);
 ini_set('display_errors', 1);
 
-/*
+/*.joomla-cms/libraries
  * Ensure that required path constants are defined.  These can be overridden within the phpunit.xml file
  * if you chose to create a custom version of that file.
  */
@@ -32,15 +34,16 @@ if (!defined('JPATH_TESTS'))
 }
 if (!defined('JPATH_PLATFORM'))
 {
-	define('JPATH_PLATFORM', realpath('.joomla-cms/libraries'));
+	define('JPATH_PLATFORM', realpath(dirname(__FILE__).'/.joomla-cms/libraries'));
+	
 }
 if (!defined('JPATH_LIBRARIES'))
 {
-	define('JPATH_LIBRARIES', realpath('.joomla-cms/libraries'));
+	define('JPATH_LIBRARIES', realpath(dirname(__FILE__).'/.joomla-cms/libraries'));
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', realpath('.joomla-cms'));
+	define('JPATH_BASE', realpath(dirname(__FILE__).'/.joomla-cms'));
 }
 if (!defined('JPATH_ROOT'))
 {
@@ -81,6 +84,7 @@ if (!defined('JPATH_THEMES'))
 
 // Import the platform in legacy mode.
 require_once JPATH_PLATFORM . '/import.legacy.php';
+
 
 // Force library to be in JError legacy mode
 JError::setErrorHandling(E_NOTICE, 'message');

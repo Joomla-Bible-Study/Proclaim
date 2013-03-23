@@ -50,13 +50,13 @@
 		</phplint>
 	</target>
 
-	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit codecoverage="true" haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
+	<target name="phpunit" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
 			<formatter todir="${basedir}/build/reports" type="xml" outfile="test-unit.xml"/>
 			<formatter todir="${basedir}/build/reports" type="clover" outfile="test-clover.xml"/>
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
-				<fileset dir="${basedir}/tests/unit" includes="**/*.php"/>
+				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
 	</target>
