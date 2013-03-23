@@ -1,8 +1,5 @@
 <?php
-
 /**
- * JView html
- *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,7 +10,7 @@ defined('_JEXEC') or die;
 
 
 /**
- * View class for Templates
+ * View class for Topic
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
@@ -22,18 +19,18 @@ class BiblestudyViewTest extends JViewLegacy
 {
 
 	/**
-	 * Items
+	 * Form
 	 *
-	 * @var array
+	 * @var object
 	 */
-	protected $items;
+	protected $form;
 
 	/**
-	 * Pagination
+	 * Item
 	 *
-	 * @var array
+	 * @var object
 	 */
-	protected $pagination;
+	protected $item;
 
 	/**
 	 * State
@@ -43,32 +40,16 @@ class BiblestudyViewTest extends JViewLegacy
 	protected $state;
 
 	/**
-	 * State
+	 * Defaults
 	 *
 	 * @var object
 	 */
-	public $canDo;
+	protected $defaults;
 
 	/**
-	 * State
-	 *
 	 * @var object
 	 */
-	public $templates;
-
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
-	public $f_levels;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	public $sidebar;
+	protected $canDo;
 
 	/**
 	 * Execute and display a template script.
@@ -82,24 +63,51 @@ class BiblestudyViewTest extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		$this->canDo = JBSMBibleStudyHelper::getActions(1, 'test');
 
-		$this->setDocument();
+		// Set the toolbar
 		$this->addToolbar();
+
+		// Set the document
+		$this->setDocument();
 
 		// Display the template
 		return parent::display($tpl);
 	}
 
 	/**
-	 * Add Toolbar
+	 * Adds ToolBar
 	 *
 	 * @return void
 	 *
-	 * @since 7.0.0
+	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title('test', '');
+		$input = new JInput;
+		$input->set('hidemainmenu', true);
+		$isNew = 0;
+		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
+
+		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		{
+			JToolBarHelper::apply('topic.apply');
+			JToolBarHelper::save('topic.save');
+			JToolBarHelper::cancel('topic.cancel');
+		}
+		else
+		{
+			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			{
+				JToolBarHelper::apply('topic.apply');
+				JToolBarHelper::save('topic.save');
+			}
+			JToolBarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
+		}
+
+		JToolBarHelper::divider();
+		JToolBarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -111,24 +119,9 @@ class BiblestudyViewTest extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
+		$isNew    = 0;
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_TEMPLATES'));
-	}
-
-	/**
-	 * Returns an array of fields the table can be sorted by
-	 *
-	 * @return  array  Array containing the field name to sort by as the key and display text as value
-	 *
-	 * @since   3.0
-	 */
-	protected function getSortFields()
-	{
-		return array(
-			'template.title'     => JText::_('JBS_TPL_TEMPLATE_ID'),
-			'template.published' => JText::_('JSTATUS'),
-			'template.id'        => JText::_('JGRID_HEADING_ID')
-		);
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', 'test'));
 	}
 
 }
