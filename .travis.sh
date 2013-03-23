@@ -13,6 +13,7 @@ pear install PHP_CodeSniffer-1.5.0RC1
 pear install pear.phpunit.de/phpcpd
 pear install pear.phpunit.de/phploc
 pear install phpdoc/phpDocumentor-alpha
+pear install VersionControl_Git-0.4.4
 
 phpenv rehash
 
