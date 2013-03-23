@@ -3,6 +3,7 @@
 .idea
 .c9revisions
 .DS_Store
+.joomla-cms
 
 # Test Related Files #
 /phpunit.xml

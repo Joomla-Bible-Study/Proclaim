@@ -3,6 +3,11 @@
 <project name="biblestudy" default="build">
 	<property name="basedir" value="." />
 	<property name="project.name" value="Joomla Bible Study"/>
+
+	<!-- Joomla version to test the component on -->
+	<property name="joomla.version" value="3.0.3" />
+	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
+
 	<property name="build" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/"/>
 	<property name="src.test" value="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/tests/test"/>
     <property name="dest.test" value="${build}/com_biblestudy/admin/views/test"/>
@@ -11,6 +16,7 @@
 		<delete dir="${basedir}/build/packages" />
 		<delete dir="${basedir}/build/reports" />
 		<delete dir="${basedir}/docs" />
+		<delete dir="${basedir}/tests/unit/.joomla-cms"/>
 	</target>
 
 	<target name="init" description="Create artifact directories">
@@ -161,6 +167,23 @@
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
+
+	<!-- Stage Joomla for bootstrapping unit tests -->
+	<target name="stage_joomla" description="Stage the Joomla framework in order to bootstrap the components unit tests">
+		<available file="${joomla-stage-dir}" type="dir" property="joomla-staged" />
+		<if>
+			<isset property="joomla-staged"/>
+			<then>
+				<echo message="Joomla ${joomla.version} is already staged, running unit tests" />
+			</then>
+			<else>
+				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
+				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+				<!-- Switch to the Joomla version that we want to test on -->
+				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
+			</else>
+		</if>
+	</target>
 
     <!-- Targets for development purposes -->
     <target name="reset">

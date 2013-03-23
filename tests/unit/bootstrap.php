@@ -32,15 +32,15 @@ if (!defined('JPATH_TESTS'))
 }
 if (!defined('JPATH_PLATFORM'))
 {
-	define('JPATH_PLATFORM', realpath(dirname(dirname(dirname(__DIR__))) . '/joomla-cms/libraries'));
+	define('JPATH_PLATFORM', realpath('.joomla-cms/libraries'));
 }
 if (!defined('JPATH_LIBRARIES'))
 {
-	define('JPATH_LIBRARIES', realpath(dirname(dirname(dirname(__DIR__))) . '/joomla-cms/libraries'));
+	define('JPATH_LIBRARIES', realpath('.joomla-cms/libraries'));
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', realpath(dirname(dirname(dirname(__DIR__)))) . '/joomla-cms');
+	define('JPATH_BASE', realpath('.joomla-cms'));
 }
 if (!defined('JPATH_ROOT'))
 {
@@ -90,4 +90,4 @@ JError::setErrorHandling(E_WARNING, 'message');
 require_once JPATH_LIBRARIES . '/cms.php';
 
 // Register the core Joomla test classes.
-JLoader::registerPrefix('Test', __DIR__ . '/core');
+//JLoader::registerPrefix('Test', __DIR__ . '/core');
