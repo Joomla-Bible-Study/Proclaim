@@ -4,8 +4,9 @@
     <property name="basedir" value="${project.basedir}" />
 	<property name="project.name" value="Joomla Bible Study"/>
 
-	<!-- Joomla version to test the component on -->
+	<!-- Joomla version to trun the unit tests against -->
 	<property name="joomla.version" value="3.0.3" />
+	<!-- Staging directory where joomla is cloned into for running unit tests -->
 	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
@@ -17,7 +18,7 @@
 		<delete dir="${basedir}/docs" />
 		<delete dir="${basedir}/tests/unit/.joomla-cms"/>
 	</target>
-
+	
 	<target name="init" description="Create artifact directories">
 		<mkdir dir="${basedir}/build/packages" />
 		<mkdir dir="${basedir}/build/reports" />
@@ -28,7 +29,7 @@
 		<mkdir dir="${basedir}/build/packages/addons" />
 	</target>
 
-	<!-- List of all files that are distributed -->
+	<!-- List of all files that are packaged and distributed -->
 	<fileset dir="${basedir}" id="distributed_files">
 		<include name="com_biblestudy/**/*.php"/>
 		<include name="jbsmigration/**/*.php"/>
@@ -57,13 +58,6 @@
 				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
-	</target>
-
-    <!-- this task is highly experimental, and will only work on *nix machines that have the PHP pcntl extension installed -->
-	<target name="parallelTasks"  depends="init" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
-        <phingcall target="pdepend"/>
-        <phingcall target="pmd" />
-        <phingcall target="phpcs" />
 	</target>
 
 	<!-- Copy and paste detector -->
@@ -116,7 +110,7 @@
 	</target>
 
 	<!-- Build distributable package -->
-	<target name="package" depends="clean,init,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">
+	<target name="package" depends="clean,init,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">		
 		
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -141,15 +135,18 @@
         <delete dir="${basedir}/build/packages/_tmp" />
 	</target>
 
+	<!-- Create com_biblestudy.zip -->
 	<target name="package_component" depends="init" description="Builds the component">
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
 	</target>
 
+	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
 	<target name="package_modules" depends="init" description="Builds the modules">
 		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
         <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
     </target>
 
+	<!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
     <target name="package_plugins" depends="init" description="Builds the plugins">
     	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
@@ -157,6 +154,7 @@
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
     </target>
 
+	<!-- Create plg_xmap_jbs.zip, com_jbsmigration.zip, and joomsef_com_biblestudy.zip -->
     <target name="package_addons" depends="init" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
@@ -196,6 +194,7 @@
             <fileset dir="${src.test}" includes="**"/>
         </copy>
     </target>
-
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,parallelTasks" />
+	
+	<!-- This target should exit gracefully in order for a pull request is approved. -->
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs" />
 </project>
