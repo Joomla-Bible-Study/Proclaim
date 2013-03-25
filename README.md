@@ -8,8 +8,22 @@ Embed YouTube videos, play audio, show study notes - even create your own html d
 
 Contributing
 ------------
+1. [Fork this repository.][fork]
+2. [Create a topic branch.][branch]
+3. Implement your feature or bug fix.
+4. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
+4. Run `phing build` (requires [Phing][phing] to be installed)
+5. If not building sucessfully, go back to step **3**
+6. Add your files to repositiory: `git add .`
+7. Commit your files: `git commit -m "Implemented feature [x]"`
+8. Push your changes: `git push`
+9. [Submit a pull request][pr]
 
-Contributing is easy. Just fork this repository, and submit pull requests.
+[fork]: http://help.github.com/fork-a-repo/
+[branch]: http://learn.github.com/p/branching.html
+[pr]: http://help.github.com/send-pull-requests/
+[phing]: http://www.phing.info/
+
 
 Reporting Issues and requesting features
 ----------------------------------------
