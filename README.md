@@ -19,6 +19,8 @@ Contributing
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
 
+Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
+
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
