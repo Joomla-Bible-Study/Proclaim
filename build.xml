@@ -197,5 +197,5 @@
         </copy>
     </target>
 
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,parallelTasks" />
 </project>
