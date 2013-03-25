@@ -10,7 +10,7 @@
 	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
-    <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
+    	<property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
 
 	<target name="clean" description="Clean up directories">
 		<delete dir="${basedir}/build/packages" />
@@ -128,10 +128,10 @@
 			</fileset>
 		</copy>
 
-		<!-- Create the archive -->
+	<!-- Create the archive -->
         <zip destfile="${basedir}/build/packages/pkg_biblestudy.zip" basedir="${basedir}/build/packages/_tmp"/>
 
-		<!-- Remove the staged packages -->
+	<!-- Remove the staged packages -->
         <delete dir="${basedir}/build/packages/_tmp" />
 	</target>
 
@@ -167,7 +167,7 @@
 		<if>
 			<isset property="joomla-staged"/>
 			<then>
-				<echo message="Joomla ${joomla.version} is already staged, running unit tests" />
+				<echo message="Joomla ${joomla.version} is already staged, unit tests can now be run" />
 			</then>
 			<else>
 				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
