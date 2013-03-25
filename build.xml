@@ -196,5 +196,5 @@
     </target>
 	
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs" />
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd" />
 </project>
