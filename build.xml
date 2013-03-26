@@ -15,7 +15,6 @@
 		<delete dir="${basedir}/build/packages" />
 		<delete dir="${basedir}/build/reports" />
 		<delete dir="${basedir}/docs" />
-		<delete dir="${basedir}/tests/unit/.joomla-cms"/>
 	</target>
 
 	<target name="init" description="Create artifact directories">
@@ -59,12 +58,6 @@
 		</phpunit>
 	</target>
 
-    <!-- this task is highly experimental, and will only work on *nix machines that have the PHP pcntl extension installed -->
-	<target name="parallelTasks"  depends="init" description="Run the pdepend, phpmd and phpcs tasks in parallel using a maximum of 2 threads.">
-        <phingcall target="pdepend"/>
-        <phingcall target="pmd" />
-        <phingcall target="phpcs" />
-	</target>
 
 	<!-- Copy and paste detector -->
 	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
@@ -172,7 +165,7 @@
 				<echo message="Joomla ${joomla.version} is already staged, running unit tests" />
 			</then>
 			<else>
-				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
+				<echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes" />
 				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
@@ -197,5 +190,5 @@
         </copy>
     </target>
 
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,apidoc,pmd,parallelTasks,package" />
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
 </project>
