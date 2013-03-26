@@ -16,7 +16,6 @@
 		<delete dir="${basedir}/build/packages" />
 		<delete dir="${basedir}/build/reports" />
 		<delete dir="${basedir}/docs" />
-		<delete dir="${basedir}/tests/unit/.joomla-cms"/>
 	</target>
 	
 	<target name="init" description="Create artifact directories">
@@ -170,7 +169,7 @@
 				<echo message="Joomla ${joomla.version} is already staged, unit tests can now be run" />
 			</then>
 			<else>
-				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
+				<echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes" />
 				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
@@ -196,5 +195,5 @@
     </target>
 	
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd" />
+	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
 </project>
