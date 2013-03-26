@@ -8,6 +8,9 @@ Embed YouTube videos, play audio, show study notes - even create your own html d
 
 Contributing
 ------------
+We appreciate contributions in varioius capacities, below are some ways that you can contribute to this project
+
+###Development
 1. [Fork this repository.][fork]
 2. [Create a topic branch.][branch]
 3. Implement your feature or bug fix.
@@ -20,6 +23,14 @@ Contributing
 9. [Submit a pull request][pr]
 
 Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
+
+
+
+###Translation 
+The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
+
+###Testing
+For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
