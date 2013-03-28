@@ -180,7 +180,7 @@
 
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
-    	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/grbc-cloud" promptText="Enter the path to your Joomla! root directory"/>
+    	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
     	<echo message="Joomla path set to: ${joomla_path}"/>
     	<echo message="Linking component to Joomla!"/>
 
