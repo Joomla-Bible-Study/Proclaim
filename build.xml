@@ -5,7 +5,7 @@
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to trun the unit tests against -->
-	<property name="joomla.version" value="3.0.3" />
+	<property name="joomla.version" value="2.5.6" />
 	<!-- Staging directory where joomla is cloned into for running unit tests -->
 	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
 
