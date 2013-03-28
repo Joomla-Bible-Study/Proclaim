@@ -186,6 +186,7 @@
 
     	<!-- Create symbolic links for component in the Joomla director -->
 		<symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}/administrator/components/com_biblestudy"/>
+		<symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}/media/com_biblestudy"/>
 		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}/components/com_biblestudy"/>
     	<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}/modules/mod_biblestudy"/>
     	<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}/modules/mod_biblestudy_podcast"/>
