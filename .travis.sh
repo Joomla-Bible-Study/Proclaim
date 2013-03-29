@@ -19,5 +19,10 @@ pear install VersionControl_Git-0.4.4
 
 phpenv rehash
 
+# Selenium setup
+export DISPLAY=:99.0
+sh -e /etc/init.d/xvfb start
+
+
 echo "[Running phing]"
 phing build
