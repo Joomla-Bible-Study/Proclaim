@@ -6,6 +6,7 @@
 .joomla-cms
 
 # Test Related Files #
+/tests/system/servers/configdef.php
 /phpunit.xml
 
 com_biblestudy/admin/biblestudy.script.php
