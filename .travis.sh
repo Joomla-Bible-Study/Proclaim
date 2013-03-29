@@ -25,4 +25,4 @@ sh -e /etc/init.d/xvfb start
 
 
 echo "[Running phing]"
-phing build
+phing test.system
