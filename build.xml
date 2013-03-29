@@ -9,8 +9,10 @@
 	<!-- Staging directory where joomla is cloned into for running unit tests -->
 	<property name="joomla-stage-dir" value="${basedir}/tests/.joomla-cms"/>
 
+	<property name="config_path" value="${basedir}/tests/system/servers"/>
+
 	<property name="src.test" value="${basedir}/tests/test"/>
-    	<property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
+    <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
 
 	<target name="clean" description="Clean up directories">
 		<delete dir="${basedir}/build/packages" />
@@ -185,6 +187,27 @@
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</else>
 		</if>
+	</target>
+
+	<target name="test">
+		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="SERVER_ROOT" value="Applications/MAMP/htdocs"/>
+					<token key="HOST" value="http://localhost"/>
+					<token key="JOOMLA_PATH" value="/joomla-dev/"/>
+					<token key="DB_HOST" value="localhost"/>
+					<token key="DB_USER" value="root"/>
+					<token key="DB_PASS" value="root"/>
+					<token key="DB_NAME" value="joomla-dev"/>
+					<token key="DB_TYPE" value="MySQLi"/>
+					<token key="DB_PREFIX" value="xxx_"/>
+					<token key="JOOMLA_USERNAME" value="admin"/>
+					<token key="JOOMLA_PASSWORD" value="password"/>
+					<token key="JOOMLA_EMAIL" value="example@example.com"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
 	</target>
 
     <!-- Targets for development purposes -->

@@ -16,16 +16,16 @@ class SeleniumConfig
 {
 
 	// $folder is the path to the apache root folder
-	var $folder = '/Applications/MAMP/htdocs'; // typical windows example with XAMPP
+	var $folder = '##SERVER_ROOT##'; // typical windows example with XAMPP
 //	var $folder = '/usr/local/apache/htdocs'; // typical linux example
 
 	// $host is normally 'http://localhost'
-	var $host = 'http://localhost';
+	var $host = '##HOST##';
 
 	// $path is the rest of the URL to the Joomla! home page
 	// Example: Your full URL to Joomla! is http://localhost/joomla_16/index.php
 	// then $path would be '/joomla_16/'
-	var $path = '/joomla-dev/';
+	var $path = '##JOOMLA_PATH##';
 	
 	// $baseURI set in contructor to the full path
 	var $baseURI;
@@ -35,12 +35,12 @@ class SeleniumConfig
 	var $screenShotPath = 'tests/system/screenshots';
 
 	// set the database host, database username, database pasword, and database name
-	var $db_host = 'localhost';
-	var $db_user = 'root';
-	var $db_pass = 'root';
-	var $db_name = 'joomla-dev';
-	var $db_type = 'MySQLi';
-	var $db_prefix = 'xxx_';
+	var $db_host = '##DB_HOST##';
+	var $db_user = '##DB_USER##';
+	var $db_pass = '##DB_PASS##';
+	var $db_name = '##DB_NAME##';
+	var $db_type = '##DB_TYPE##';
+	var $db_prefix = '##DB_PREFIX##';
 	
 	// optional setting to install sample data
 	// If not set or true, sample data is installed. Set to false to not install sample data
@@ -53,12 +53,12 @@ class SeleniumConfig
 	var $sample_data_file = 'Learn Joomla';
 
 	// set the site name (keep to less than 14 characters)
-	var $site_name = 'Joomla';
+	var $site_name = 'Joomla Tests';
 
 	// set the admin login, admin password, and admin email address
-	var $username = 'admin';
-	var $password = 'password';
-	var $admin_email = 'you@yourdomain.com';
+	var $username = '##JOOMLA_USERNAME##';
+	var $password = '##JOOMLA_PASSWORD##';
+	var $admin_email = '##JOOMLA_EMAIL##';
 
 	// this setting will use the default browser for your system
 	var $browser = '*chrome'; // for firefox (weird name!)
