@@ -6,7 +6,7 @@
  * Does a standard Joomla! installation
  */
 
-require_once 'tests/system/SeleniumJoomlaTestCase.php';
+require_once 'SeleniumJoomlaTestCase.php';
 
 class DoInstall extends SeleniumJoomlaTestCase
 {
