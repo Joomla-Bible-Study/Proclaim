@@ -7,7 +7,7 @@
 	<!-- Joomla version to trun the unit tests against -->
 	<property name="joomla.version" value="2.5.6" />
 	<!-- Staging directory where joomla is cloned into for running unit tests -->
-	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
+	<property name="joomla-stage-dir" value="${basedir}/tests/.joomla-cms"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
     	<property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
@@ -55,6 +55,16 @@
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
 				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<target name="test.system" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
+            <!-- We can only use one formatter at a time -->
+			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+			<batchtest>
+				<fileset dir="tests/system/suite" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
 	</target>
