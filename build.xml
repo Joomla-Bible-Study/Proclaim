@@ -189,7 +189,7 @@
 		</if>
 	</target>
 
-	<target name="test">
+	<target name="test.create_config">
 		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
