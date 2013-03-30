@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="../.joomla-cms/tests/unit/bootstrap.php" colors="false">
+	<testsuites>
+<!-- 		<testsuite name="components">
+			<directory>tests/unit/suites/components</directory>
+		</testsuite>
+		<testsuite name="modules">
+			<directory>tests/unit/suites/modules</directory>
+		</testsuite>
+		<testsuite name="plugins">
+			<directory>tests/unit/suites/plugins</directory>
+		</testsuite> -->
+		<testsuite name="libraries">
+			<directory>tests/unit/.joomla-cms/tests/unit/suites/libraries</directory>
+		</testsuite>
+		<testsuite name="administrator">
+			<directory>tests/unit/.joomla-cms/tests/unit/suites/administrator</directory>
+		</testsuite>
+	</testsuites>
+
+	<logging>
+		<log type="coverage-html" target="build/reports" title="Joomla-CMS" charset="UTF-8" yui="true" highlight="true"
+			lowUpperBound="35" highLowerBound="70" />
+		<log type="coverage-clover" target="build/reports/clover.xml" />
+		<log type="junit" target="build/reports/junit.xml" logIncompleteSkipped="false" />
+	</logging>
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">tests/unit/.joomla-cms/libraries/cms</directory>
+			<file>tests/unit/.joomla-cms/administrator/includes/helper.php</file>
+		</whitelist>
+	</filter>
+</phpunit>

@@ -6,4 +6,5 @@
 .joomla-cms
 
 # Test Related Files #
+/tests/system/servers/configdef.php
 /phpunit.xml

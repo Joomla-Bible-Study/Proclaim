@@ -8,7 +8,9 @@
 	<property name="joomla.version" value="2.5.6" />
 
 	<!-- Staging directory where joomla is cloned into for running unit tests -->
-	<property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
+	<property name="joomla-stage-dir" value="${basedir}/tests/.joomla-cms"/>
+
+	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
     <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
@@ -56,6 +58,16 @@
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
 				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<target name="test.system" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
+            <!-- We can only use one formatter at a time -->
+			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+			<batchtest>
+				<fileset dir="tests/system/suite" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
 	</target>
@@ -178,12 +190,33 @@
 		</if>
 	</target>
 
-    <!-- Set the default joomla path and create symbolic links -->
+	<target name="test.create_config">
+		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="SERVER_ROOT" value="Applications/MAMP/htdocs"/>
+					<token key="HOST" value="http://localhost"/>
+					<token key="JOOMLA_PATH" value="/joomla-dev/"/>
+					<token key="DB_HOST" value="localhost"/>
+					<token key="DB_USER" value="root"/>
+					<token key="DB_PASS" value="root"/>
+					<token key="DB_NAME" value="joomla-dev"/>
+					<token key="DB_TYPE" value="MySQLi"/>
+					<token key="DB_PREFIX" value="xxx_"/>
+					<token key="JOOMLA_USERNAME" value="admin"/>
+					<token key="JOOMLA_PASSWORD" value="password"/>
+					<token key="JOOMLA_EMAIL" value="example@example.com"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
+
+<!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
     	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
-    	<echo message="Joomla path set to: ${joomla_path}"/>
-    	<echo message="Linking component to Joomla!"/>
-
+		<echo message="Joomla path set to: ${joomla_path}"/>
+		<echo message="Linking component to Joomla!"/>
+		
     	<!-- Create symbolic links for component in the Joomla director -->
 		<symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}/administrator/components/com_biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}/media/com_biblestudy" overwrite="true"/>

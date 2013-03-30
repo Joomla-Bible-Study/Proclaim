@@ -106,6 +106,7 @@ class BiblestudyViewMessage extends JViewLegacy
                     searchingText: '" . JText::_('JBS_CMN_SEARCHING') . "',
                     animateDropdown: false,
                     preventDuplicates: true,
+                    allowFreeTagging: true,
                     prePopulate: " . $this->get('topics') . "
                 });
             });
