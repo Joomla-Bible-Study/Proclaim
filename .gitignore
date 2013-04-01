@@ -7,3 +7,15 @@
 
 # Test Related Files #
 /phpunit.xml
+
+com_biblestudy/admin/biblestudy.script.php
+
+com_biblestudy/admin/biblestudy.xml
+
+*.html
+
+com_biblestudy/admin/views/test/tmpl/default.php
+
+com_biblestudy/admin/views/test/view.html.php
+
+com_biblestudy/media/css/site/biblestudy.css
