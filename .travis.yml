@@ -23,6 +23,7 @@ script:
   - pear install PHP_CodeSniffer-1.4.4
   - pear install phpdoc/phpDocumentor-alpha
   - pear install VersionControl_Git-0.4.4
+  - phpenv rehash
   
 after_script: 
   - phing build
