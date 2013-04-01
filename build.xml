@@ -4,10 +4,8 @@
     <property name="basedir" value="${project.basedir}" />
 	<property name="project.name" value="Joomla Bible Study"/>
 
-	<!-- Joomla version to trun the unit tests against -->
-	<property name="joomla.version" value="3.0.3" />
-	<!-- Staging directory where joomla is cloned into for running unit tests -->
-	<property name="joomla-stage-dir" value="${basedir}/tests/.joomla-cms"/>
+	<!-- Joomla version to run the unit tests against -->
+	<property name="joomla.version" value="2.5.9" />
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
@@ -51,22 +49,12 @@
 		</phplint>
 	</target>
 
-	<target name="phpunit" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
             <!-- We can only use one formatter at a time -->
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
 				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
-
-	<target name="test.system" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
-            <!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="tests/system/suite" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
 	</target>
@@ -121,7 +109,7 @@
 	</target>
 
 	<!-- Build distributable package -->
-	<target name="package" depends="clean,init,package_modules,package_plugins,package_component,package_addons" description="Builds the whole component, including modules and plugins">		
+	<target name="package" depends="clean,dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">		
 		
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -147,18 +135,18 @@
 	</target>
 
 	<!-- Create com_biblestudy.zip -->
-	<target name="package_component" depends="init" description="Builds the component">
+	<target name="package.component" depends="init" description="Builds the component">
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
 	</target>
 
 	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
-	<target name="package_modules" depends="init" description="Builds the modules">
+	<target name="package.modules" depends="init" description="Builds the modules">
 		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
         <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
     </target>
 
 	<!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
-    <target name="package_plugins" depends="init" description="Builds the plugins">
+    <target name="package.plugins" depends="init" description="Builds the plugins">
     	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
@@ -166,19 +154,55 @@
     </target>
 
 	<!-- Create plg_xmap_jbs.zip, com_jbsmigration.zip, and joomsef_com_biblestudy.zip -->
-    <target name="package_addons" depends="init" description="Builds addons, including third party integrations">
+    <target name="package.addons" depends="init" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
 
+	<!-- Setup config file for running the Selenium Webdriver tests -->
+	<target name="test.setup">
+    	<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
+    	<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
+    	<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
+    	<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
+    	<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
+    	<propertyprompt propertyName="db_name" defaultValue="joomla-dev" promptText="Enter Database name"/>
+    	<propertyprompt propertyName="joomla_username" defaultValue="admin" promptText="Enter an initial Joomla username"/>
+    	<propertyprompt propertyName="joomla_password" defaultValue="password" promptText="Enter an initial Joomla password"/>
+    	<propertyprompt propertyName="joomla_email" defaultValue="example@example.com" promptText="Enter an initial Joomla email"/>
+
+		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="SERVER_ROOT" value="${server_root}"/>
+					<token key="HOST" value="${host}"/>
+					<token key="DB_HOST" value="${db_host}"/>
+					<token key="DB_USER" value="${db_user}"/>
+					<token key="DB_PASS" value="${db_pass}"/>
+					<token key="DB_NAME" value="${db_name}"/>
+					<token key="JOOMLA_USERNAME" value="${joomla_username}"/>
+					<token key="JOOMLA_PASSWORD" value="${joomla_password}"/>
+					<token key="JOOMLA_EMAIL" value="${jooma_email}"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<!-- Setup the joomla test environment -->
+		<phingcall target="test.init"/>
+		<!-- Link Joomla to the webserver's root directory  -->
+		<symlink target="${basedir}/tests/joomla-dev" link="${server_root}/joomla-dev" overwrite="true"/>
+	</target>
+
 	<!-- Stage Joomla for bootstrapping unit tests -->
-	<target name="stage_joomla" description="Stage the Joomla framework in order to bootstrap the components unit tests">
+	<target name="test.init" description="Stage Joomla in order to run the system tests">
+		<property name="joomla-stage-dir" value="${basedir}/tests/joomla-dev"/>
+		<!-- Only stage it if its not already staged -->
 		<available file="${joomla-stage-dir}" type="dir" property="joomla-staged" />
 		<if>
 			<isset property="joomla-staged"/>
 			<then>
-				<echo message="Joomla ${joomla.version} is already staged, unit tests can now be run" />
+				<echo message="Joomla ${joomla.version} is already staged, system tests can now be run" />
 			</then>
 			<else>
 				<echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes" />
@@ -189,44 +213,62 @@
 		</if>
 	</target>
 
-	<target name="test.create_config">
-		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
-			<filterchain>
-				<replacetokens begintoken="##" endtoken="##">
-					<token key="SERVER_ROOT" value="Applications/MAMP/htdocs"/>
-					<token key="HOST" value="http://localhost"/>
-					<token key="JOOMLA_PATH" value="/joomla-dev/"/>
-					<token key="DB_HOST" value="localhost"/>
-					<token key="DB_USER" value="root"/>
-					<token key="DB_PASS" value="root"/>
-					<token key="DB_NAME" value="joomla-dev"/>
-					<token key="DB_TYPE" value="MySQLi"/>
-					<token key="DB_PREFIX" value="xxx_"/>
-					<token key="JOOMLA_USERNAME" value="admin"/>
-					<token key="JOOMLA_PASSWORD" value="password"/>
-					<token key="JOOMLA_EMAIL" value="example@example.com"/>
-				</replacetokens>
-			</filterchain>
-		</copy>
+    <target name="test.clean">
+    	<delete dir="${basedir}/tests/joomla-dev" includeemptydirs="true"/>
+    </target>
+
+    <target name="test.system" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
+            <!-- We can only use one formatter at a time -->
+			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+			<batchtest>
+				<fileset dir="tests/system/tests/installation" includes="**/*.php"/>
+			</batchtest>
+		</phpunit>
 	</target>
 
-    <!-- Targets for development purposes -->
-    <target name="reset">
-        <echo message="Reset back to Dev State"/>
-        <delete file="com_biblestudy/admin/biblestudy.xml"/>
-        <delete file="com_biblestudy/admin/biblestudy.script.php"/>
-        <delete dir="com_biblestudy/admin/views/test" includeemptydirs="true"/>
-        <delete file="com_biblestudy/media/css/site/biblestudy.css"/>
-        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.xml" target="${basedir}/com_biblestudy/biblestudy.xml"/>
-        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.script.php"
-                 target="${basedir}/com_biblestudy/biblestudy.script.php"/>
-        <symlink link="${basedir}/com_biblestudy/media/css/site/biblestudy.css"
-                 target="${basedir}/com_biblestudy/media/css/biblestudy.css"/>
+	<!-- Set the default joomla path and create symbolic links -->
+    <target name="dev.setup">
+    	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
+		<echo message="Joomla path set to: ${joomla_path}"/>
+		<echo message="Linking component to Joomla!"/>
+		
+    	<!-- Create symbolic links for component in the Joomla director -->
+		<symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}/media/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}/components/com_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}/modules/mod_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}/modules/mod_biblestudy_podcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_backup" link="${joomla_path}/plugins/system/jbsbackup" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_finder" link="${joomla_path}/plugins/finder/biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}/plugins/system/jbspodcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}/plugins/search/biblestudysearch" overwrite="true"/>
+    </target>
+
+	<!-- Create symbolic links for the development state -->
+	<target name="dev.init">
+		<echo message="Initializing a development state"/>
+		<symlink link="com_biblestudy/admin/biblestudy.xml" target="com_biblestudy/biblestudy.xml"/>
+        <symlink link="com_biblestudy/admin/biblestudy.script.php" target="com_biblestudy/biblestudy.script.php"/>
+        <symlink link="com_biblestudy/media/css/site/biblestudy.css" target="com_biblestudy/media/css/biblestudy.css"/>
+
+		<!-- Not sure what this does -->
         <copy todir="${dest.test}">
             <fileset dir="${src.test}" includes="**"/>
         </copy>
-    </target>
+	</target>
 	
+	<!-- Clean up symbolic links from the development state -->
+    <target name="dev.clean">
+    	<echo message="Cleaning up development state"/>
+    	<delete file="com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="com_biblestudy/admin/biblestudy.script.php"/>
+        <delete file="com_biblestudy/media/css/site/biblestudy.css"/>
+
+		<!-- Undoing the creation of the dir -->
+        <delete dir="com_biblestudy/admin/views/test" includeemptydirs="true"/>
+    </target>
+
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
 	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
 </project>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="Install" tests="1" assertions="54" failures="0" errors="0" time="28.204519">
-    <testsuite name="SeleniumJoomlaTestCase" file="/Users/eugenistoc/Desktop/PHP/JBS/tests/system/SeleniumJoomlaTestCase.php" fullPackage="Joomla.FunctionalTest" package="Joomla.FunctionalTest" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
-    <testsuite name="DoInstall" file="/Users/eugenistoc/Desktop/PHP/JBS/tests/system/suite/doInstall.php" fullPackage="Joomla.SystemTest" package="Joomla.SystemTest" tests="1" assertions="54" failures="0" errors="0" time="28.204519">
-      <testcase name="testDoInstall" class="DoInstall" file="/Users/eugenistoc/Desktop/PHP/JBS/tests/system/suite/doInstall.php" line="13" assertions="54" time="28.204519"/>
-    </testsuite>
-  </testsuite>
-</testsuites>
