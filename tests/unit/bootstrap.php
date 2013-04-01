@@ -12,7 +12,6 @@
 
 define('_JEXEC', 1);
 
-
 // Fix magic quotes.
 ini_set('magic_quotes_runtime', 0);
 
