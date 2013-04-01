@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="biblestudy" default="build" basedir=".">
+<<<<<<< HEAD
     <property name="basedir" value="${project.basedir}" />
 	<property name="project.name" value="Joomla Bible Study"/>
 
@@ -52,46 +53,100 @@
 
 	<target name="phpunit" depends="init,stage_joomla" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
+=======
+    <property name="basedir" value="${project.basedir}"/>
+    <property name="project.name" value="Joomla Bible Study"/>
+
+    <!-- Joomla version to trun the unit tests against -->
+    <property name="joomla.version" value="3.0.3"/>
+    <!-- Staging directory where joomla is cloned into for running unit tests -->
+    <property name="joomla-stage-dir" value="${basedir}/tests/unit/.joomla-cms"/>
+
+    <property name="src.test" value="${basedir}/tests/test"/>
+    <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
+
+    <target name="clean" description="Clean up directories">
+        <delete dir="${basedir}/build/packages"/>
+        <delete dir="${basedir}/build/reports"/>
+        <delete dir="${basedir}/docs"/>
+    </target>
+
+    <target name="init" description="Create artifact directories">
+        <mkdir dir="${basedir}/build/packages"/>
+        <mkdir dir="${basedir}/build/reports"/>
+        <mkdir dir="${basedir}/docs"/>
+        <mkdir dir="${basedir}/build/packages/component"/>
+        <mkdir dir="${basedir}/build/packages/modules"/>
+        <mkdir dir="${basedir}/build/packages/plugins"/>
+        <mkdir dir="${basedir}/build/packages/addons"/>
+    </target>
+
+    <!-- List of all files that are packaged and distributed -->
+    <fileset dir="${basedir}" id="distributed_files">
+        <include name="com_biblestudy/**/*.php"/>
+        <include name="jbsmigration/**/*.php"/>
+        <include name="joomSEF_extension/**/*.php"/>
+        <include name="mod_biblestudy/**/*.php"/>
+        <include name="mod_biblestudy_podcast/**/*.php"/>
+        <include name="plg_biblestudy_backup/**/*.php"/>
+        <include name="plg_biblestudy_finder/**/*.php"/>
+        <include name="plg_biblestudy_podcast/**/*.php"/>
+        <include name="plg_biblestudhy_search/**/*.php"/>
+        <include name="xmap_JBS/**/*.php"/>
+    </fileset>
+
+    <!-- Validate syntax -->
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <phplint haltonfailure="true">
+            <fileset refid="distributed_files"/>
+        </phplint>
+    </target>
+
+    <target name="phpunit" depends="init,stage_joomla"
+            description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+        <phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
+>>>>>>> adminview
             <!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
+            <formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+            <batchtest>
+                <fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
+            </batchtest>
+        </phpunit>
+    </target>
 
-	<!-- Copy and paste detector -->
-	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
-		<phpcpd>
-			<fileset refid="distributed_files"/>
-			<formatter type="pmd" outfile="${basedir}/build/reports/cpd-code.xml"/>
-		</phpcpd>
-	</target>
+    <!-- Copy and paste detector -->
+    <target name="phpcpd" depends="init" description="Checks for copy and pasted code">
+        <phpcpd>
+            <fileset refid="distributed_files"/>
+            <formatter type="pmd" outfile="${basedir}/build/reports/cpd-code.xml"/>
+        </phpcpd>
+    </target>
 
-	<!-- Measure the size of the project -->
-	<target name="size" depends="init" description="Measures the size of the project">
-		<phploc reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">
-			<fileset refid="distributed_files"/>
-		</phploc>
-	</target>
+    <!-- Measure the size of the project -->
+    <target name="size" depends="init" description="Measures the size of the project">
+        <phploc reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">
+            <fileset refid="distributed_files"/>
+        </phploc>
+    </target>
 
-	<!-- Detect violations in coding standards -->
-	<target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
-		<phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
-			<fileset refid="distributed_files"/>
-			<formatter type="checkstyle" outfile="${basedir}/build/reports/phpcs-checkstyle.xml"/>
-		</phpcodesniffer>
-	</target>
+    <!-- Detect violations in coding standards -->
+    <target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
+        <phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
+            <fileset refid="distributed_files"/>
+            <formatter type="checkstyle" outfile="${basedir}/build/reports/phpcs-checkstyle.xml"/>
+        </phpcodesniffer>
+    </target>
 
-	<!-- Creates API documentation -->
-	<target name="apidoc" depends="init" description="Generate project API documentation">
-		<phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
-			<fileset refid="distributed_files"/>
-		</phpdoc2>
-	</target>
+    <!-- Creates API documentation -->
+    <target name="apidoc" depends="init" description="Generate project API documentation">
+        <phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
+            <fileset refid="distributed_files"/>
+        </phpdoc2>
+    </target>
 
-	<!-- Code analyzer and metric tool -->
-	<target name="pdepend" depends="init" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+    <!-- Code analyzer and metric tool -->
+    <target name="pdepend" depends="init"
+            description="Generate jdepend.xml and software metrics charts using PHP_Depend">
         <phpdepend haltonerror="true">
             <fileset refid="distributed_files"/>
             <logger type="jdepend-xml" outfile="${basedir}/build/reports/jdepend.xml"/>
@@ -99,6 +154,7 @@
             <logger type="overview-pyramid" outfile="${basedir}/build/reports/jdepend-pyramid.svg"/>
             <analyzer type="coderank-mode" value="method"/>
         </phpdepend>
+<<<<<<< HEAD
 	</target>
 
 	<!-- PHP Mess Detector -->
@@ -129,55 +185,96 @@
 		</copy>
 
 	<!-- Create the archive -->
+=======
+    </target>
+
+    <!-- PHP Mess Detector -->
+    <target name="pmd" depends="init" description="Detect messy code, and generate report">
+        <phpmd rulesets="${basedir}/build/phpmd.xml">
+            <fileset refid="distributed_files"/>
+            <formatter type="html" outfile="${basedir}/build/reports/pmd.html"/>
+        </phpmd>
+    </target>
+
+    <!-- Build distributable package -->
+    <target name="package" depends="clean,init,package_modules,package_plugins,package_component,package_addons"
+            description="Builds the whole component, including modules and plugins">
+
+        <!-- Stage the package -->
+        <mkdir dir="${basedir}/build/packages/_tmp"/>
+        <copy todir="${basedir}/build/packages/_tmp/packages">
+            <mapper type="flatten"/>
+            <fileset dir="${basedir}/build/packages">
+                <include name="component/*.zip"/>
+                <include name="plugins/*.zip"/>
+                <include name="modules/*.zip"/>
+            </fileset>
+        </copy>
+        <copy todir="${basedir}/build/packages/_tmp">
+            <fileset dir="${basedir}/build">
+                <include name="pkg_biblestudy_package.xml"/>
+            </fileset>
+        </copy>
+
+        <!-- Create the archive -->
+>>>>>>> adminview
         <zip destfile="${basedir}/build/packages/pkg_biblestudy.zip" basedir="${basedir}/build/packages/_tmp"/>
 
-	<!-- Remove the staged packages -->
-        <delete dir="${basedir}/build/packages/_tmp" />
-	</target>
-
-	<!-- Create com_biblestudy.zip -->
-	<target name="package_component" depends="init" description="Builds the component">
-		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
-	</target>
-
-	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
-	<target name="package_modules" depends="init" description="Builds the modules">
-		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
-        <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
+        <!-- Remove the staged packages -->
+        <delete dir="${basedir}/build/packages/_tmp"/>
     </target>
 
-	<!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
+    <!-- Create com_biblestudy.zip -->
+    <target name="package_component" depends="init" description="Builds the component">
+        <zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
+    </target>
+
+    <!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
+    <target name="package_modules" depends="init" description="Builds the modules">
+        <zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
+        <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip"
+             basedir="${basedir}/mod_biblestudy_podcast"/>
+    </target>
+
+    <!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
     <target name="package_plugins" depends="init" description="Builds the plugins">
-    	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
-        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
-        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
-        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip"
+             basedir="${basedir}/plg_biblestudy_finder"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip"
+             basedir="${basedir}/plg_biblestudy_search"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip"
+             basedir="${basedir}/plg_biblestudy_podcast"/>
+        <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip"
+             basedir="${basedir}/plg_biblestudy_backup"/>
     </target>
 
-	<!-- Create plg_xmap_jbs.zip, com_jbsmigration.zip, and joomsef_com_biblestudy.zip -->
+    <!-- Create plg_xmap_jbs.zip, com_jbsmigration.zip, and joomsef_com_biblestudy.zip -->
     <target name="package_addons" depends="init" description="Builds addons, including third party integrations">
-    	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
+        <zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
         <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
-        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
+        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip"
+             basedir="${basedir}/joomSEF_extension"/>
     </target>
 
-	<!-- Stage Joomla for bootstrapping unit tests -->
-	<target name="stage_joomla" description="Stage the Joomla framework in order to bootstrap the components unit tests">
-		<available file="${joomla-stage-dir}" type="dir" property="joomla-staged" />
-		<if>
-			<isset property="joomla-staged"/>
-			<then>
-				<echo message="Joomla ${joomla.version} is already staged, unit tests can now be run" />
-			</then>
-			<else>
-				<echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes" />
-				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
-				<!-- Switch to the Joomla version that we want to test on -->
-				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
-			</else>
-		</if>
-	</target>
+    <!-- Stage Joomla for bootstrapping unit tests -->
+    <target name="stage_joomla"
+            description="Stage the Joomla framework in order to bootstrap the components unit tests">
+        <available file="${joomla-stage-dir}" type="dir" property="joomla-staged"/>
+        <if>
+            <isset property="joomla-staged"/>
+            <then>
+                <echo message="Joomla ${joomla.version} is already staged, unit tests can now be run"/>
+            </then>
+            <else>
+                <echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes"/>
+                <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+                <!-- Switch to the Joomla version that we want to test on -->
+                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
+            </else>
+        </if>
+    </target>
 
+<<<<<<< HEAD
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
     	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
@@ -222,4 +319,26 @@
 
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
 	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
+=======
+    <!-- Targets for development purposes -->
+    <target name="reset">
+        <echo message="Reset back to Dev State"/>
+        <delete file="com_biblestudy/admin/biblestudy.xml"/>
+        <delete file="com_biblestudy/admin/biblestudy.script.php"/>
+        <delete dir="com_biblestudy/admin/views/test" includeemptydirs="true"/>
+        <delete file="com_biblestudy/media/css/site/biblestudy.css"/>
+        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.xml"
+                 target="${basedir}/com_biblestudy/biblestudy.xml"/>
+        <symlink link="${basedir}/com_biblestudy/admin/biblestudy.script.php"
+                 target="${basedir}/com_biblestudy/biblestudy.script.php"/>
+        <symlink link="${basedir}/com_biblestudy/media/css/site/biblestudy.css"
+                 target="${basedir}/com_biblestudy/media/css/biblestudy.css"/>
+        <copy todir="${dest.test}">
+            <fileset dir="${src.test}" includes="**"/>
+        </copy>
+    </target>
+
+    <!-- This target should exit gracefully in order for a pull request is approved. -->
+    <target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
+>>>>>>> adminview
 </project>
