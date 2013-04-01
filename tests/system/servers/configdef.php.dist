@@ -25,7 +25,7 @@ class SeleniumConfig
 	// $path is the rest of the URL to the Joomla! home page
 	// Example: Your full URL to Joomla! is http://localhost/joomla_16/index.php
 	// then $path would be '/joomla_16/'
-	var $path = '##JOOMLA_PATH##';
+	var $path = '/joomla-dev/';
 	
 	// $baseURI set in contructor to the full path
 	var $baseURI;
@@ -39,8 +39,8 @@ class SeleniumConfig
 	var $db_user = '##DB_USER##';
 	var $db_pass = '##DB_PASS##';
 	var $db_name = '##DB_NAME##';
-	var $db_type = '##DB_TYPE##';
-	var $db_prefix = '##DB_PREFIX##';
+	var $db_type = 'MySQLi';
+	var $db_prefix = 'xxx_';
 	
 	// optional setting to install sample data
 	// If not set or true, sample data is installed. Set to false to not install sample data
