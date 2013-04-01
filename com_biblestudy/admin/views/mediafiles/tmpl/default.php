@@ -149,10 +149,10 @@ $sortFields = $this->getSortFields();
     <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
     </th>
-    <th width="5%" class="nowrap center hidden-phone">
+    <th width="5%" class="nowrap center hidden-phone hidden-tablet">
 		<?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
     </th>
-    <th width="5%" class="nowrap center hidden-phone">
+    <th width="5%" class="nowrap center hidden-phone hidden-tablet">
 		<?php echo JHtml::_('grid.sort', 'JBS_MED_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
     </th>
     <th width="1%" class="nowrap center hidden-phone">
@@ -336,10 +336,10 @@ foreach ($this->items as $i => $item) :
     <td class="small hidden-phone">
 		<?php echo $this->escape($item->access_level); ?>
     </td>
-    <td class="nowrap has-context">
+    <td class="nowrap has-context hidden-phone hidden-tablet">
 		<?php echo $this->escape($item->plays); ?>
     </td>
-    <td class="nowrap has-context">
+    <td class="nowrap has-context hidden-phone hidden-tablet">
 		<?php echo $this->escape($item->downloads); ?>
     </td>
     <td class="center hidden-phone">
