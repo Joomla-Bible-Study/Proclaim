@@ -276,7 +276,7 @@ class BiblestudyViewMessages extends JViewLegacy
 			'teachers.teachername'     => JText::_('JBS_CMN_TEACHERS'),
 			'series.seriestext'        => JText::_('JBS_CMN_SERIES'),
 			'study.ordering'           => JText::_('JGRID_HEADING_ORDERING'),
-			'study.published'          => JText::_('JSTATUS'),
+			'study.published'          => JText::_('JPUBLISHED'),
 			'study.id'                 => JText::_('JGRID_HEADING_ID'),
 			'access_level'             => JText::_('JGRID_HEADING_ACCESS'),
 			'study.language'           => JText::_('JGRID_HEADING_LANGUAGE'),
