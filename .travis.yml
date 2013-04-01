@@ -10,8 +10,6 @@ before_script:
   - pear channel-discover pear.pdepend.org
   - pear channel-discover pear.phpmd.org
   - pear channel-discover pear.phpdoc.org
-  
-script:
   - pear install phing/phing
   - pear install pdepend/PHP_Depend-beta
   - pear install pear.phpunit.de/PHPUnit
