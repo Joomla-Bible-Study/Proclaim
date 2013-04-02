@@ -6,7 +6,7 @@
     <copyright>This component is released under the GNU/GPL License</copyright>
     <authorEmail>tomfuller2@gmail.com</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>8.0.b1</version>
+    <version>8.0.b2</version>
     <description>PLG_JBSBACKUP_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
