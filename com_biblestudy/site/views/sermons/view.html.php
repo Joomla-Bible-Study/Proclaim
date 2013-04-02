@@ -17,7 +17,7 @@ JLoader::register('JbStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.st
 //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/podcastsubscribe.php');
-JLoader::register('PodcastSubscribe', JPATH_SITE . 'components/com_biblestudy/helpers/podcastsubscribe.php');
+JLoader::register('PodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
@@ -275,7 +275,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Get the podcast subscription
-		$podcast         = new podcastSubscribe;
+		$podcast         = new PodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 		JViewLegacy::loadHelper('image');
