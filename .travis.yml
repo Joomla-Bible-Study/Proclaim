@@ -1,7 +1,7 @@
 language: php
 php:
   - 5.3
-
+  
 before_script:
   - "export DISPLAY=:99:0"
   - "sh -e /etc/init.d/xvfb start"
@@ -22,6 +22,6 @@ before_script:
   - pear install phpdoc/phpDocumentor-alpha
   - pear install VersionControl_Git-0.4.4
   - phpenv rehash
-
+  
 script: 
-  - phing pmd
+  - phing build
