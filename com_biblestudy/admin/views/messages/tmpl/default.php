@@ -154,7 +154,7 @@ $sortFields = $this->getSortFields();
 </div>
 <div class="clearfix"></div>
 
-<table class="table table-striped adminlist" id="articleList">
+<table class="table table-striped" id="articleList">
 	<thead>
 	<tr>
 		<th width="1%" class="nowrap center hidden-phone">
@@ -168,7 +168,7 @@ $sortFields = $this->getSortFields();
 		<th width="1%" style="min-width:55px" class="nowrap center">
 			<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 		</th>
-		<th width="10%" class="nowrap">
+		<th width="10%" class="nowrap hidden-phone hidden-tablet">
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
 		</th>
 		<th class="nowrap hidden-phone">
@@ -187,15 +187,10 @@ $sortFields = $this->getSortFields();
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 		</th>
 		<th class="nowrap center hidden-phone hidden-tablet">
-			<?php echo JHtml::_('grid.sort', 'JBS_CMN_HITS', 'study.hits', $listDirn, $listOrder); ?>
+			<?php echo JText::_('JBS_CPL_STATISTIC'); ?>
 		</th>
-		<th class="nowrap center hidden-phone hidden-tablet">
-			<?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
 		</th>
-		<th class="nowrap center hidden-phone hidden-tablet">
-			<?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
-		</th>
-		<th width="5%" class="nowrap hidden-phone">
+		<th width="5%" class="nowrap hidden-phone hidden-tablet">
 			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 		</th>
 		<th width="1%" class="nowrap center hidden-phone">
@@ -243,7 +238,7 @@ $sortFields = $this->getSortFields();
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?>
 				</div>
 			</td>
-			<td class="small hidden-phone">
+			<td class="small hidden-phone hidden-tablet">
 				<?php echo JHtml::_('date', $this->escape($item->studydate, JText::_('DATE_FORMAT_LC4'))); ?>
 			</td>
 			<td class="nowrap has-context">
@@ -327,15 +322,11 @@ $sortFields = $this->getSortFields();
 				<?php echo $this->escape($item->series_text); ?>
 			</td>
 			<td class="center hidden-phone hidden-tablet">
-				<?php echo $this->escape($item->hits); ?>
+				<?php echo JHtml::tooltip($this->escape($item->hits), JText::_('JBS_CMN_HITS'), null, JText::_('JBS_CMN_HITS'), '', 'Tooltip', 'hasTip small blue') ?><br />
+				<?php echo JHtml::tooltip($this->escape($item->totalplays), JText::_('JBS_CMN_PLAYS'), null, JText::_('JBS_CMN_PLAYS'), '', 'Tooltip', 'hasTip small blue')?><br />
+				<?php echo JHtml::tooltip($this->escape($item->totaldownloads), JText::_('JBS_CMN_DOWNLOADS'), null, JText::_('JBS_CMN_DOWNLOADS'), '', 'Tooltip', 'hasTip small blue')?>
 			</td>
-			<td class="center hidden-phone hidden-tablet">
-				<?php echo $this->escape($item->totalplays); ?>
-			</td>
-			<td class="center hidden-phone hidden-tablet">
-				<?php echo $this->escape($item->totaldownloads); ?>
-			</td>
-			<td class="small hidden-phone">
+			<td class="small hidden-phone hidden-tablet">
 				<?php if ($item->language == '*'): ?>
 					<?php echo JText::alt('JALL', 'language'); ?>
 				<?php else: ?>

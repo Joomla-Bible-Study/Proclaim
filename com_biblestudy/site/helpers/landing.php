@@ -97,14 +97,13 @@ class JBSMLanding
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
 			->from('#__bsms_locations a')
-			->select('b.access AS study_access')
+			->select('b.access')
 			->innerJoin('#__bsms_studies b on a.id = b.location_id')
-			->innerJoin('#__bsms_series s on b.series_id = s.id')
 			->where('b.location_id > 0')
 			->where('a.published = 1')
+            ->where('b.published = 1')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-			->where('s.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
 			->order('a.location_text ' . $order);
 		$db->setQuery($query);
@@ -325,6 +324,7 @@ class JBSMLanding
 			->where('b.language in (' . $language . ')')
 			->where('a.list_show = 1 and a.published = 1')
 			->where('b.access IN (' . $groups . ')')
+            ->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.ordering, a.teachername ' . $order);
 		$db->setQuery($query);
@@ -575,6 +575,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.series_id')
 			->where('a.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
+            ->where('b.published = 1')
 			->order('a.series_text ' . $order);
 		$db->setQuery($query);
 
@@ -819,6 +820,7 @@ class JBSMLanding
 			->from('#__bsms_studies')
 			->where('language in (' . $language . ')')
 			->where('access IN (' . $groups . ')')
+            ->where('published = 1')
 			->order('year(studydate) ' . $order);
 		$db->setQuery($query);
 
@@ -987,6 +989,7 @@ class JBSMLanding
 			->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
 			->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
 			->where('#__bsms_topics.published = 1')
+            ->where('#__bsms_studies.published = 1')
 			->order('#__bsms_topics.topic_text ' . $order)
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
@@ -1158,6 +1161,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.messagetype')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
+            ->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.message_type ' . $order);
 		$db->setQuery($query);
@@ -1371,6 +1375,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
+            ->where('b.published = 1')
 			->order('a.booknumber ' . $order);
 		$db->setQuery($query);
 

@@ -126,9 +126,6 @@ $sortFields = $this->getSortFields();
             <th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'folders.foldername', $listDirn, $listOrder); ?>
             </th>
-            <th width="10%" class="nowrap hidden-phone">
-				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
-            </th>
             <th width="1%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'folders.id', $listDirn, $listOrder); ?>
             </th>
@@ -196,9 +193,6 @@ $sortFields = $this->getSortFields();
 					}
 					?>
                 </div>
-            </td>
-            <td class="small hidden-phone">
-				<?php echo $this->escape($item->access_level); ?>
             </td>
             <td class="center hidden-phone">
 				<?php echo (int) $item->id; ?>
