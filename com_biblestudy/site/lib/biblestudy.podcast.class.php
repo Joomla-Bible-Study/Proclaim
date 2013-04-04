@@ -165,7 +165,9 @@ class JBSMPodcast
 						switch ($pod_title)
 						{
 							case 0:
-								$title = $scripture . ' - ' . $episode->studytitle;
+								$title = $scripture;
+                                if (!$scripture){ $title = $episode->studytitle;}
+                                else {$title .= ' - ' . $episode->studytitle;}
 								break;
 							case 1:
 								$title = $episode->studytitle;
@@ -174,10 +176,15 @@ class JBSMPodcast
 								$title = $scripture;
 								break;
 							case 3:
-								$title = $episode->studytitle . ' - ' . $scripture;
+								$title = $episode->studytitle;
+                                if (!$episode->studytitle) {$title = $scripture;}
+                                else {$title .= ' - ' . $scripture;}
 								break;
 							case 4:
-								$title = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
+								$title = $episodedate;
+                                if (!$episodedate){$title = $scripture;}
+                                else {$title .= ' - ' . $scripture;}
+                                if ($episode->studytitle){$title .= ' - ' . $episode->studytitle;}
 								break;
 							case 5:
 								$element = $custom->getCustom(
@@ -208,7 +215,8 @@ class JBSMPodcast
 								$subtitle = $episode->teachername;
 								break;
 							case 1:
-								$subtitle = $episode->teachername . ' - ' . $scripture;
+                                if (!$scripture){ $subtitle = $episode->studytitle;}
+                                else {$subtitle .= ' - ' . $episode->studytitle;}
 								break;
 							case 2:
 								$subtitle = $scripture;
@@ -217,7 +225,9 @@ class JBSMPodcast
 								$subtitle = $episode->studytitle;
 								break;
 							case 4:
-								$subtitle = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
+								$subtitle = $episodedate;
+                                if (!$episode->studytitle) {$subtitle = $scripture;}
+                                else {$subtitle .= ' - ' . $scripture;}
 								break;
 							case 5:
 								$element = $custom->getCustom(
