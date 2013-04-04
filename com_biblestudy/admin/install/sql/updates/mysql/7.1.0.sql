@@ -1,12 +1,9 @@
-INSERT INTO `#__bsms_update` (id,version) VALUES (7,'7.1.0')
-ON DUPLICATE KEY UPDATE version= '7.1.0';
-
 --
 -- Admin Table
 --
 
 ALTER TABLE `#__bsms_admin` ADD COLUMN `installstate` TEXT;
-ALTER TABLE `#__bsms_admin` ADD `debug` TINYINT( 3 ) NOT NULL DEFAULT '0';
+ALTER TABLE `#__bsms_admin` ADD COLUMN `debug` TINYINT( 3 ) NOT NULL DEFAULT '0';
 
 --
 -- Books
@@ -104,7 +101,6 @@ ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` varchar(100) NOT NULL;
 
 --
 -- Share Table
--- @todo need to look at a better way to do this sql
 --
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}' WHERE `#__bsms_share`.`id` = 1;
 
@@ -119,8 +115,8 @@ UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.myspace.com/index
 --
 ALTER TABLE `#__bsms_studies` ADD COLUMN `language` char(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_seriesid` ( `series_id` );
-ALTER TABLE `#__bsms_studies`ADD INDEX `idx_topicsid` ( `topics_id` );
-ALTER TABLE `#__bsms_studies`ADD INDEX `idx_user` ( `user_id` );
+ALTER TABLE `#__bsms_studies` ADD INDEX `idx_topicsid` ( `topics_id` );
+ALTER TABLE `#__bsms_studies` ADD INDEX `idx_user` ( `user_id` );
 UPDATE `#__bsms_studies` SET `language` = '*' WHERE `#__bsms_studies`.`language` = '';
 
 --
