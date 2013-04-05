@@ -165,9 +165,10 @@ class JBSMPodcast
 						switch ($pod_title)
 						{
 							case 0:
-								$title = $scripture;
-                                if (!$scripture){ $title = $episode->studytitle;}
-                                else {$title .= ' - ' . $episode->studytitle;}
+                                if ($scripture && $episode->studytitle){$title = $scripture .' - '.$episode->studytitle;}
+								elseif (!$scripture) {$title = $episode->studytitle;}
+                                elseif (!$episode->studytitle) {$title = $scripture;}
+
 								break;
 							case 1:
 								$title = $episode->studytitle;
@@ -176,9 +177,9 @@ class JBSMPodcast
 								$title = $scripture;
 								break;
 							case 3:
-								$title = $episode->studytitle;
-                                if (!$episode->studytitle) {$title = $scripture;}
-                                else {$title .= ' - ' . $scripture;}
+                                if ($scripture && $episode->studytitle){$title = $episode->studytitle .' - '.$scripture;}
+                                elseif (!$scripture) {$title = $episode->studytitle;}
+                                elseif (!$episode->studytitle) {$title = $scripture;}
 								break;
 							case 4:
 								$title = $episodedate;
@@ -215,8 +216,9 @@ class JBSMPodcast
 								$subtitle = $episode->teachername;
 								break;
 							case 1:
-                                if (!$scripture){ $subtitle = $episode->studytitle;}
-                                else {$subtitle .= ' - ' . $episode->studytitle;}
+                                if ($scripture && $episode->studytitle){$subtitle = $scripture .' - '.$episode->studytitle;}
+                                elseif (!$scripture) {$subtitle = $episode->studytitle;}
+                                elseif (!$episode->studytitle) {$subtitle = $scripture;}
 								break;
 							case 2:
 								$subtitle = $scripture;
