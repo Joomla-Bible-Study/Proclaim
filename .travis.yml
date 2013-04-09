@@ -22,3 +22,6 @@ before_script:
   - pear install phpdoc/phpDocumentor-alpha
   - pear install VersionControl_Git-0.4.4
   - phpenv rehash
+
+script:
+  - phing pmd
