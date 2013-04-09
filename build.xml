@@ -5,19 +5,13 @@
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to run the unit tests against -->
-	<property name="joomla.version" value="2.5.9" />
+	<property name="joomla.version" value="3.1.0_beta3" />
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
     <property name="dest.test" value="${basedir}/com_biblestudy/admin/views/test"/>
 
-	<target name="clean" description="Clean up directories">
-		<delete dir="${basedir}/build/packages" />
-		<delete dir="${basedir}/build/reports" />
-		<delete dir="${basedir}/docs" />
-	</target>
-	
 	<target name="init" description="Create artifact directories">
 		<mkdir dir="${basedir}/build/packages" />
 		<mkdir dir="${basedir}/build/reports" />
@@ -109,7 +103,7 @@
 	</target>
 
 	<!-- Build distributable package -->
-	<target name="package" depends="clean,dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">		
+	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">
 		
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -135,8 +129,10 @@
 	</target>
 
 	<!-- Create com_biblestudy.zip -->
-	<target name="package.component" depends="init" description="Builds the component">
+	<target name="package.component" depends="init,dev.clean" description="Builds the component">
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
+        <!--Reset back to a development state-->
+        <phingcall target="dev.init"/>
 	</target>
 
 	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
@@ -183,38 +179,22 @@
 					<token key="DB_NAME" value="${db_name}"/>
 					<token key="JOOMLA_USERNAME" value="${joomla_username}"/>
 					<token key="JOOMLA_PASSWORD" value="${joomla_password}"/>
-					<token key="JOOMLA_EMAIL" value="${jooma_email}"/>
+					<token key="JOOMLA_EMAIL" value="${joomla_email}"/>
 				</replacetokens>
 			</filterchain>
 		</copy>
 
 		<!-- Setup the joomla test environment -->
-		<phingcall target="test.init"/>
-		<!-- Link Joomla to the webserver's root directory  -->
-		<symlink target="${basedir}/tests/joomla-dev" link="${server_root}/joomla-dev" overwrite="true"/>
-	</target>
+		<phingcall target="stage_joomla">
+                <property name="joomla-stage-dir" value="tests/.joomla-dev-test"/>
+        </phingcall>
 
-	<!-- Stage Joomla for bootstrapping unit tests -->
-	<target name="test.init" description="Stage Joomla in order to run the system tests">
-		<property name="joomla-stage-dir" value="${basedir}/tests/joomla-dev"/>
-		<!-- Only stage it if its not already staged -->
-		<available file="${joomla-stage-dir}" type="dir" property="joomla-staged" />
-		<if>
-			<isset property="joomla-staged"/>
-			<then>
-				<echo message="Joomla ${joomla.version} is already staged, system tests can now be run" />
-			</then>
-			<else>
-				<echo message="Staging Joomla ${joomla.version} for testing component. This will take a few minutes" />
-				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
-				<!-- Switch to the Joomla version that we want to test on -->
-				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
-			</else>
-		</if>
+		<!-- Link Joomla to the webserver's root directory  -->
+		<symlink target="${basedir}/tests/.joomla-dev" link="${server_root}/joomla-dev-test" overwrite="true"/>
 	</target>
 
     <target name="test.clean">
-    	<delete dir="${basedir}/tests/joomla-dev" includeemptydirs="true"/>
+    	<delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
     </target>
 
     <target name="test.system" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
@@ -229,20 +209,39 @@
 
 	<!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
-    	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
-		<echo message="Joomla path set to: ${joomla_path}"/>
+    	<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" promptText="Enter the path to your Joomla! root directory"/>
+    	<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
+        <propertyprompt propertyName="stage_joomla" defaultValue="n" promptText="Stage Joomla?"/>
+        <if>
+            <equals arg1="${stage_joomla}" arg2="y"/>
+            <then>
+                <phingcall target="stage_joomla">
+                    <property name="joomla-stage-dir" value=".joomla-dev"/>
+                    <!-- Force a stage if its already staged -->
+                    <property name="force" value="${stage_joomla"/>
+                </phingcall>
+            </then>
+        </if>
+
+        <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+
+        <!-- Link Joomla to the webserver's root directory  -->
+        <symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>
+
 		<echo message="Linking component to Joomla!"/>
 		
-    	<!-- Create symbolic links for component in the Joomla director -->
-		<symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}/administrator/components/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}/components/com_biblestudy" overwrite="true"/>
-    	<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}/modules/mod_biblestudy" overwrite="true"/>
-    	<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}/modules/mod_biblestudy_podcast" overwrite="true"/>
-    	<symlink target="${basedir}/plg_biblestudy_backup" link="${joomla_path}/plugins/system/jbsbackup" overwrite="true"/>
-    	<symlink target="${basedir}/plg_biblestudy_finder" link="${joomla_path}/plugins/finder/biblestudy" overwrite="true"/>
-    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}/plugins/system/jbspodcast" overwrite="true"/>
-    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}/plugins/search/biblestudysearch" overwrite="true"/>
+    	<!-- Create symbolic links for component in the Joomla directory -->
+        <symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
+        <symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_backup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_finder" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+
+        <phingcall target="dev.init"/>
     </target>
 
 	<!-- Create symbolic links for the development state -->
@@ -253,9 +252,9 @@
         <symlink link="com_biblestudy/media/css/site/biblestudy.css" target="com_biblestudy/media/css/biblestudy.css"/>
 
 		<!-- Not sure what this does -->
-        <copy todir="${dest.test}">
-            <fileset dir="${src.test}" includes="**"/>
-        </copy>
+            <!--<copy todir="${dest.test}">-->
+            <!--<fileset dir="${src.test}" includes="**"/>-->
+        <!--</copy>-->
 	</target>
 	
 	<!-- Clean up symbolic links from the development state -->
@@ -269,6 +268,43 @@
         <delete dir="com_biblestudy/admin/views/test" includeemptydirs="true"/>
     </target>
 
+    <!-- Stage Joomla for bootstrapping unit tests -->
+    <target name="stage_joomla" description="Stage Joomla in specified path">
+        <!-- Only stage it if its not already staged -->
+        <available file="${joomla-stage-dir}" type="dir" property="joomla-staged" />
+
+        <!-- Possible conditions for staging-->
+        <condition property="staged_but_not_forced">
+        	<and>
+    			<istrue value="${joomla-stage-dir}"/>
+    			<equals arg1="${force}" arg2="n"/>
+    		</and>
+    	</condition>
+    	<condition property="staged_but_forced">
+			<and>
+    			<istrue value="${joomla-stage-dir}"/>
+    			<equals arg1="${force}" arg2="y"/>
+    		</and>
+    	</condition>
+        <if>
+    		<or>
+    			<isfalse value="${joomla-stage-dir}"/>
+    			<isfalse value="#{staged_but__not_forced}"/>
+    			<istrue value="#{staged_but_forced}"/>
+    		</or>
+    		<then>
+                <delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
+                <echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
+                <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+                <!-- Switch to the Joomla version that we want to test on -->
+                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/> 
+			</then>
+            <else>
+           		<echo message="Joomla ${joomla.version} is already staged" />
+            </else>
+        </if>
+    </target>
+
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="clean,init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
+	<target name="build" depends="init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd,phpcs"/>
 </project>

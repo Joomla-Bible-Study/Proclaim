@@ -3,7 +3,7 @@
 .idea
 .c9revisions
 .DS_Store
-joomla-dev
+.joomla-dev
 
 # Test Related Files #
 /tests/system/servers/configdef.php
