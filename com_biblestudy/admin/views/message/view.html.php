@@ -107,7 +107,10 @@ class BiblestudyViewMessage extends JViewLegacy
                     animateDropdown: false,
                     preventDuplicates: true,
                     allowFreeTagging: true,
-                    prePopulate: " . $this->get('topics') . "
+                    prePopulate: " . $this->get('topics') . ",
+                    onAdd: function(){
+                        console.log('added item');
+                    }
                 });
             });
              ";
