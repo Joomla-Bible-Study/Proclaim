@@ -556,6 +556,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `params` varchar(511) DEFAULT NULL,
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `language` char(7) DEFAULT  '*',
   `access` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),

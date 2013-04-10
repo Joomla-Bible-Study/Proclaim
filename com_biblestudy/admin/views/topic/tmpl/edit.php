@@ -85,21 +85,23 @@ $input = $app->input;
 		<hr/>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $this->form->getLabel('id'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('id'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="control-label">
 				<?php echo $this->form->getLabel('published'); ?>
 			</div>
 			<div class="controls">
 				<?php echo $this->form->getInput('published'); ?>
 			</div>
 		</div>
+        <div class="control-group">
+            <div class="control-label">
+                <?php echo $this->form->getLabel('language'); ?>
+            </div>
+            <div class="controls">
+                <?php echo $this->form->getInput('language'); ?>
+            </div>
+        </div>
 	</div>
 	<!-- End Sidebar -->
 		</div>
+<?php echo $this->form->getInput('id'); ?>
+<?php echo $this->form->getInput('asset_id'); ?>
 </form>
