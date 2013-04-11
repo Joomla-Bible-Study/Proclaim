@@ -5,7 +5,7 @@
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to run the unit tests against -->
-	<property name="joomla.version" value="3.1.0_beta3" />
+	<property name="joomla.version" value="2.5.9" />
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
