@@ -31,7 +31,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_joomla_release = '2.5.3';
+	private $_minimum_joomla_release = '2.5.6';
 
 	/**
 	 * The component's name
@@ -102,7 +102,7 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		// Only allow to install on Joomla! 2.5.3 or later
+		// Only allow to install on minimum Joomla! version
 		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
 	}
 
