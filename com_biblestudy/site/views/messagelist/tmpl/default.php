@@ -52,11 +52,11 @@ $saveOrder = $listOrder == 'ordering';
                        title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
             </div>
             <div class="btn-group pull-left hidden-phone">
-                <button type="submit" class="btn tip hasTooltip"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?><i
-                        class="icon-search"></i></button>
-                <button type="button" class="btn tip hasTooltip"
-                        onclick="document.id('filter_studytitle').value='';Joomla.submitbutton();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>
-                    <i class="icon-remove"></i></button>
+	            <button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
+				            class="icon-search"></i></button>
+	            <button class="btn tip hasTooltip" type="button"
+	                    onclick="document.id('filter_search').value='';this.form.submit();"
+	                    title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
             </div>
             <div class="clearfix"></div>
             <div class="btn-group btn-small pull-right">
