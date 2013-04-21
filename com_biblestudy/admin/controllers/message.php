@@ -89,4 +89,25 @@ class BiblestudyControllerMessage extends JControllerForm
 
 		return parent::batch($model);
 	}
+
+    public function save($key = null, $urlVar = null) {
+        $model = $this->getModel('Topic');
+        $data = JRequest::setVar('jform', array(), 'post', 'array');
+        $topic_ids = [];
+
+        //Non-numeric topics are assumed to be new and are added to the database
+        $topics  = explode(',', $data['topics']);
+        foreach($topics as $topic) {
+            if(!is_numeric($topic)) {
+                $model->save(array('topic_text' => $topic, 'language' => $data['language']));
+                $topic_ids[] = $model->getState('topic.id');
+            }else
+                $topic_ids[] = $topic;
+        }
+        $data['topics'] = implode(',', $topic_ids);
+
+        JRequest::setVar('jform', $data, 'post', 'array');
+
+        parent::save();
+    }
 }
