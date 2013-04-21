@@ -13,10 +13,14 @@ defined('_JEXEC') or die;
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
+JHtml::_('behavior.keepalive');
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.calendar');
+JHtml::_('behavior.formvalidation');
+
 // Load the tooltip behavior.
 if (BIBLESTUDY_CHECKREL)
 {
-	JHtml::_('bootstrap.tooltip');
 	JHtml::_('formbehavior.chosen', 'select');
 }
 else
@@ -27,15 +31,12 @@ else
 	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
 	JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
 	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-	JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
 	JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+	JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
 }
 
-JHtml::script(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-JHtml::script(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
+JHtml::script('media/com_biblestudy/js/noconflict.js');
+JHtml::script('media/com_biblestudy/js/biblestudy.js');
 
 // Create shortcut to parameters.
 $params = $this->item->params;
@@ -100,7 +101,7 @@ elseif (empty($this->item->study_id))
 		if (task == 'mediafileform.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
 </script>
@@ -188,6 +189,7 @@ elseif (empty($this->item->study_id))
 	}
 
 </script>
+<div class="edit item-page biblestudy">
 <form
 		action="<?php
 		$input = new JInput;
@@ -202,36 +204,44 @@ elseif (empty($this->item->study_id))
 		}
 		echo $url;
 		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-<div class="formelm-buttons">
-	<legend>
-		<?php
-		echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
 
-		if ($input->get('layout', '', 'string') == 'modal')
-		{
-			?>
-			<div class="fltlft">
-				<button type="button" onclick="submitbutton('mediafileform.save');  ">
-					<?php echo JText::_('JSAVE'); ?></button>
-				<button type="button" onclick="window.parent.SqueezeBox.close();  ">
-					<?php echo JText::_('JCANCEL'); ?></button>
-			</div>
-		<?php
-		}
-		else
-		{
-			?>
-			<div class="fltlft">
-				<button type="button" onclick="submitbutton('mediafileform.save');  ">
-					<?php echo JText::_('JSAVE'); ?></button>
-				<button type="button" onclick="submitbutton('mediafileform.cancel');  ">
-					<?php echo JText::_('JCANCEL'); ?></button>
-			</div>
-		<?php } ?>
-	</legend>
+<div class="btn-toolbar">
+	<?php
+	echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+
+	if ($input->get('layout', '', 'string') == 'modal')
+	{
+		?>
+
+		<div class="btn-group">
+			<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
+				<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
+			</button>
+		</div>
+		<div class="btn-group">
+			<button type="button" onclick="window.parent.SqueezeBox.close();  ">
+				<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
+			</button>
+		</div>
+	<?php
+	}
+	else
+	{
+		?>
+		<div class="btn-group">
+			<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
+				<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
+			</button>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn" onclick="Joomla.submitbutton('mediafileform.cancel')">
+				<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
+			</button>
+		</div>
+	<?php } ?>
 </div>
 <!-- Begin Content -->
-<div class="span12 form-horizontal">
+<fieldset>
 <ul class="nav nav-tabs">
 	<li class="active">
 		<a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
@@ -264,16 +274,6 @@ elseif (empty($this->item->study_id))
 </ul>
 <div class="tab-content">
 <div class="tab-pane active" id="general">
-
-	<?php if ($input->get('layout', '', 'string') == 'modal')
-	{
-		?>
-		<div class="control-group  form-inline">
-			<button type="button" onclick="submitbutton('mediafile.save');  ">
-				<?php echo JText::_('JSAVE'); ?></button>
-			<button type="button" onclick="window.parent.SqueezeBox.close();  ">
-				<?php echo JText::_('JCANCEL'); ?></button>
-		</div> <?php } ?>
 
 	<div class="control-group">
 		<div class="control-label">
@@ -576,9 +576,9 @@ elseif (empty($this->item->study_id))
 <input type="hidden" name="task" value=""/>
 <input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 <?php echo JHtml::_('form.token'); ?>
-<input type="hidden" name="controller" value="mediafile"/>
 </div>
-</div>
+</fieldset>
 </form>
+</div>
 <div class="clearfix"></div>
 
