@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset>
-        <field name="published" type="radio" label="JBS_CMN_PUBLISHED"
-               description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1"
-               required="true">
+        <field name="published" type="list" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC"
+               class="inputbox"
+               labelclass="control-label" default="0" required="true">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
+        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+               class="readonly span12 small"/>
         <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
                description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
                format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>

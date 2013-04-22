@@ -65,21 +65,19 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * @see     fetch()
 	 * @since   11.1
 	 */
-	public function display($tpl = null)
+	public function display ($tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		//$input->set('sid', $this->item->id);
-		//$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 
 		//set some variables for use by the modal mediafile entry form from a study
-        $app    = JFactory::getApplication();
-        $app->setUserState($option . 'sid', $this->item->id);
-        $app->setUserState($option . 'sdate', $this->item->studydate);
+		$app = JFactory::getApplication();
+		$app->setUserState($option . 'sid', $this->item->id);
+		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new JRegistry;
@@ -135,7 +133,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 *
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar ()
 	{
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
@@ -187,7 +185,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 *
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument ()
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
