@@ -20,20 +20,20 @@ $listDirn  = $this->state->get('list.direction');
       method="post" name="adminForm" id="adminForm">
     <fieldset class="filter clearfix">
         <div class="btn-toolbar">
-            <div class="btn-group pull-left">
-                <label for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?></label>
-                <input type="text" name="filter_studytitle" id="filter_studytitle"
-                       value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>"
-                       size="30" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
-            </div>
-            <div class="btn-group pull-left">
-                <button type="submit" class="btn hasTooltip" data-placement="bottom"
-                        title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-                <button type="button" class="btn hasTooltip" data-placement="bottom"
-                        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"
-                        onclick="document.id('filter_studytitle').value='';this.form.submit();"><i
-                        class="icon-remove"></i></button>
-            </div>
+	        <div class="filter-search btn-group pull-left">
+		        <label for="filter_search"
+		               class="element-invisible"><?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?></label>
+		        <input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"
+		               id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
+		               title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
+	        </div>
+	        <div class="btn-group pull-left hidden-phone">
+		        <button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
+					        class="icon-search"></i></button>
+		        <button class="btn tip hasTooltip" type="button"
+		                onclick="document.id('filter_search').value='';this.form.submit();"
+		                title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
+	        </div>
         </div>
         <hr class="hr-condensed"/>
         <div class="filters">

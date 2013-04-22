@@ -69,7 +69,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @return  void
 	 */
-	public function display($tpl = null)
+	public function display ($tpl = null)
 	{
 		$app              = JFactory::getApplication();
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafilesedit');
@@ -78,8 +78,12 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->pagination = $this->get('Pagination');
 		$this->admin      = JBSMParams::getAdmin();
-		$document         = JFactory::getDocument();
-		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/icons.css');
+		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+		if (!BIBLESTUDY_CHECKREL)
+		{
+			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+		}
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -107,7 +111,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit"  class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+					. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		// Escape strings for HTML output
@@ -123,7 +127,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument ()
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
@@ -182,7 +186,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields ()
 	{
 		return array(
 			'study.studytitle'     => JText::_('JBS_CMN_STUDY_TITLE'),
