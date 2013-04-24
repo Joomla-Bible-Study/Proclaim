@@ -1425,5 +1425,21 @@ class MigrationUpgrade
 		return true;
 	}
 
+    /**
+     * Update for 8.0.0
+     *
+     * @return boolean
+     */
+    public function upgrade800() {
+        JLoader::register('JBS800Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/8.0.0.php');
+        $migrate = new JBS800Update;
+
+        if (!$migrate->update800())
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 }

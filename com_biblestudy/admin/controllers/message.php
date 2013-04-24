@@ -98,7 +98,7 @@ class BiblestudyControllerMessage extends JControllerForm
         //Non-numeric topics are assumed to be new and are added to the database
         $topics  = explode(',', $data['topics']);
         foreach($topics as $topic) {
-            if(!is_numeric($topic)) {
+            if(!is_numeric($topic) && !empty($topic)) {
                 $model->save(array('topic_text' => $topic, 'language' => $data['language']));
                 $topic_ids[] = $model->getState('topic.id');
             }else
