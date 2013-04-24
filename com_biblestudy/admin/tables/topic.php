@@ -65,11 +65,15 @@ class TableTopic extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
+     * @todo    Consider deprecating this override
 	 * @link    http://docs.joomla.org/JTable/bind
 	 * @since   11.1
 	 */
 	public function bind($array, $ignore = '')
 	{
+        if(is_object($array))
+            return parent::bind($array, $ignore);
+
 		if (isset($array['params']) && is_array($array['params']))
 		{
 			$registry = new JRegistry;

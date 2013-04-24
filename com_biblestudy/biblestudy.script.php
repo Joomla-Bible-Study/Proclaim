@@ -102,7 +102,7 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		// Only allow to install on Joomla! 2.5.3 or later
+		// Only allow to install on minimum Joomla! version
 		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
 	}
 
@@ -261,6 +261,9 @@ class Com_BiblestudyInstallerScript
 		$params['my_param1'] = 'Start';
 		$params['my_param2'] = '1';
 		$this->setParams($params);
+        jloader::register('JBS800Update', JPATH_ADMINISTRATOR.'/components/com_biblestudy/install/updates/8.0.0.php');
+        $update800 = new JBS800Update();
+        $update800->update800();
 
 		// Set install state
 		$query1 = "UPDATE `#__bsms_admin` SET installstate =

@@ -581,7 +581,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		if (empty($this->_afterStack))
 		{
-			$this->_afterStack = array('0' => 'upgrade710');
+			$this->_afterStack = array('0' => 'upgrade710', '1' => 'update800');
 			$this->totalVersions += count($this->_afterStack);
 		}
 	}
