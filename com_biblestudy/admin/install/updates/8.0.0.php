@@ -31,8 +31,9 @@ class JBS800Update
      */
     public function update800()
     {
-        self::migrate_topics();
-        return true;
+        $reselt = self::migrate_topics();
+	$reselt = self::fixmediaparams();
+        return $reselt;
     }
 
     private function migrate_topics()
@@ -84,7 +85,9 @@ class JBS800Update
                     ->where('id = ' . $topic->id);
 
                 $db->setQuery($query);
-                $db->execute();
+                if(!$db->execute()){
+		// JLog::something;
+		return false;}
             }
         }
         return true;
@@ -124,4 +127,22 @@ class JBS800Update
             }
         }
     }
+
+   private function fixmediaparams()
+   {	
+	db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+	$query->select('id, params')
+		->from('#__bsms_mediafiles')
+		->where('`params` LIKE ' . $db->q('%internal_popup%'));
+	$db->setQuery($query);
+	$results = $db->loadObjectList();
+	
+	foreach ($results as $result) 
+	{
+	// Pars throught the records and correct the params for the player upgrade errors.
+	}
+	
+	return ture;
+   }
 }
