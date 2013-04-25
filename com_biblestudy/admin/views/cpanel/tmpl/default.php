@@ -201,7 +201,7 @@ if ($msg)
                     src="../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align="middle"
                     border="0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a></div>
         </div>
-		<?php // echo LiveUpdate::getIcon(); ?>
+		<?php echo LiveUpdate::getIcon(); ?>
     </div>
     <div style="clear: both;"></div>
 </div>
