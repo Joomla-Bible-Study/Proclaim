@@ -93,7 +93,7 @@ class BiblestudyControllerMessage extends JControllerForm
     public function save($key = null, $urlVar = null) {
         $model = $this->getModel('Topic');
         $data = JRequest::setVar('jform', array(), 'post', 'array');
-        $topic_ids = [];
+        $topic_ids = array();
 
         //Non-numeric topics are assumed to be new and are added to the database
         $topics  = explode(',', $data['topics']);
