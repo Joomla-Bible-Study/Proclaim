@@ -230,7 +230,8 @@ class JBSMDbHelper
 
 		foreach ($tables as $table)
 		{
-			if (substr_count($table, $bsms))
+
+			if (substr_count($table, $prefix) && substr_count($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);
