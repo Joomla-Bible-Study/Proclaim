@@ -1,5 +1,4 @@
 <?php
-
 /**
  * View html
  *
@@ -12,11 +11,9 @@
 defined('_JEXEC') or die;
 
 JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
-//require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
 if (!BIBLESTUDY_CHECKREL)
-	// --require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
 {
-	JLoader::register('LiveUpdate', dirname(__FILE__) . '/liveupdate/liveupdate.php');
+	JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
 }
 
 /**
@@ -45,7 +42,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */
-	public function display($tpl = null)
+	public function display ($tpl = null)
 	{
 
 		$this->state = $this->get('State');
@@ -94,7 +91,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function addToolbar()
+	protected function addToolbar ()
 	{
 		JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
 	}
@@ -106,7 +103,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function setDocument()
+	protected function setDocument ()
 	{
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_CONTROL_PANEL'));
