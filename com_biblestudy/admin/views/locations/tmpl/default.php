@@ -208,7 +208,7 @@ $sortFields = $this->getSortFields();
 			<?php endforeach; ?>
         </tbody>
     </table>
-	<?php if(BIBLESTUDY_CHECKREL) : echo $this->pagination->getListFooter(); else: echo $this->pagination->getPagesLinks(); endif; ?>
+	<?php echo $this->pagination->getListFooter(); ?>
 	<?php //Load the batch processing form. ?>
 	<?php echo $this->loadTemplate('batch'); ?>
     <input type="hidden" name="task" value=""/>

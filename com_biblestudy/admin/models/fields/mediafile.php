@@ -33,16 +33,23 @@ class JFormFieldMediafile extends JFormFieldList
 	 *
 	 * @return      array           An array of JHtml options.
 	 */
-	protected function getOptions()
+	protected function getOptions ()
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('a.id, a.filename, b.mimetext');
-		$query->from('#__bsms_mediafiles as a');
-        $query->join('LEFT','#__bsms_mimetype as b on a.mime_type = b.id');
-        $query->where('study_id = ' . $this->form->getValue('id'));
-		$db->setQuery((string) $query);
-		$messages = $db->loadObjectList();
+		if ($this->form->getValue('id'))
+		{
+			$db    = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('a.id, a.filename, b.mimetext');
+			$query->from('#__bsms_mediafiles as a');
+			$query->join('LEFT', '#__bsms_mimetype as b on a.mime_type = b.id');
+			$query->where('study_id = ' . $this->form->getValue('id'));
+			$db->setQuery((string) $query);
+			$messages = $db->loadObjectList();
+		}
+		else
+		{
+			$messages = null;
+		}
 
 		$options = array();
 
@@ -50,7 +57,7 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, empty($message->filename) ? $message->id . ' - '. $message->mimetext : $message->filename);
+				$options[] = JHtml::_('select.option', $message->id, empty($message->filename) ? $message->id . ' - ' . $message->mimetext : $message->filename);
 			}
 		}
 
