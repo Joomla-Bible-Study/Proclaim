@@ -312,7 +312,7 @@ class JBSExport
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
-		$prefix . $bsms = 'bsms_';
+		$bsms = 'bsms_';
 		$objects = array();
 
 		foreach ($tables as $table)
