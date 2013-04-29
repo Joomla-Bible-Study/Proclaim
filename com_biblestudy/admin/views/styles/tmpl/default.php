@@ -118,7 +118,7 @@ $listDirn  = $this->state->get('list.direction');
 			<?php endforeach; ?>
         </tbody>
     </table>
-	<?php if(BIBLESTUDY_CHECKREL) : echo $this->pagination->getListFooter(); else: echo $this->pagination->getPagesLinks(); endif; ?>
+	<?php echo $this->pagination->getListFooter(); ?>
 
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
