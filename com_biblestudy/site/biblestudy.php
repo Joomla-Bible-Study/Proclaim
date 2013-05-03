@@ -15,7 +15,7 @@ JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Difines
  */
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 jimport('joomla.version');
 $version = new JVersion;
 

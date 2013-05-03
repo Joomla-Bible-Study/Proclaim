@@ -237,7 +237,7 @@ class BiblestudyViewMessages extends JViewLegacy
 
 			JHtmlSidebar::addFilter(
 				JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'),
-				'filter_message_type',
+				'filter_messagetype',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
 			);
 
