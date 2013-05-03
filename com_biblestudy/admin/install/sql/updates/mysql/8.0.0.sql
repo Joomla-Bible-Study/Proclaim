@@ -30,7 +30,8 @@ ALTER TABLE `#__bsms_update` ENGINE = INNODB;
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `episodesubtitle` INT(11) DEFAULT NULL;
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `customsubtitle` VARCHAR(200) DEFAULT NULL;
 ALTER TABLE `#__bsms_topics` ADD COLUMN `language` CHAR(7) DEFAULT '*';
-ALTER TABLE `#__bsms_studies` DROP COLUMN `topics_id`;
+DROP INDEX `idx_topicsid` ON `#__bsms_studies`;
+ALTER TABLE `#__bsms_studies` DROP `topics_id` ;
 
 ALTER TABLE `#__bsms_studies` ADD COLUMN `download_id` INT(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile';
 
