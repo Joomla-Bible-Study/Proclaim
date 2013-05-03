@@ -9,6 +9,9 @@
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
+/* Put in do to this file is used in a plugin. */
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+
 JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
 JLoader::register('JBSMElements', JPATH_SITE . '/components/com_biblestudy/helpers/elements.php');
 JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
@@ -163,9 +166,18 @@ class JBSMPodcast
 						switch ($pod_title)
 						{
 							case 0:
-                                if ($scripture && $episode->studytitle){$title = $scripture .' - '.$episode->studytitle;}
-								elseif (!$scripture) {$title = $episode->studytitle;}
-                                elseif (!$episode->studytitle) {$title = $scripture;}
+								if ($scripture && $episode->studytitle)
+								{
+									$title = $scripture . ' - ' . $episode->studytitle;
+								}
+								elseif (!$scripture)
+								{
+									$title = $episode->studytitle;
+								}
+								elseif (!$episode->studytitle)
+								{
+									$title = $scripture;
+								}
 
 								break;
 							case 1:
@@ -175,15 +187,34 @@ class JBSMPodcast
 								$title = $scripture;
 								break;
 							case 3:
-                                if ($scripture && $episode->studytitle){$title = $episode->studytitle .' - '.$scripture;}
-                                elseif (!$scripture) {$title = $episode->studytitle;}
-                                elseif (!$episode->studytitle) {$title = $scripture;}
+								if ($scripture && $episode->studytitle)
+								{
+									$title = $episode->studytitle . ' - ' . $scripture;
+								}
+								elseif (!$scripture)
+								{
+									$title = $episode->studytitle;
+								}
+								elseif (!$episode->studytitle)
+								{
+									$title = $scripture;
+								}
 								break;
 							case 4:
 								$title = $episodedate;
-                                if (!$episodedate){$title = $scripture;}
-                                else {$title .= ' - ' . $scripture;}
-                                if ($episode->studytitle){$title .= ' - ' . $episode->studytitle;}
+
+								if (!$episodedate)
+								{
+									$title = $scripture;
+								}
+								else
+								{
+									$title .= ' - ' . $scripture;
+								}
+								if ($episode->studytitle)
+								{
+									$title .= ' - ' . $episode->studytitle;
+								}
 								break;
 							case 5:
 								$element = $custom->getCustom(
@@ -214,9 +245,18 @@ class JBSMPodcast
 								$subtitle = $episode->teachername;
 								break;
 							case 1:
-                                if ($scripture && $episode->studytitle){$subtitle = $scripture .' - '.$episode->studytitle;}
-                                elseif (!$scripture) {$subtitle = $episode->studytitle;}
-                                elseif (!$episode->studytitle) {$subtitle = $scripture;}
+								if ($scripture && $episode->studytitle)
+								{
+									$subtitle = $scripture . ' - ' . $episode->studytitle;
+								}
+								elseif (!$scripture)
+								{
+									$subtitle = $episode->studytitle;
+								}
+								elseif (!$episode->studytitle)
+								{
+									$subtitle = $scripture;
+								}
 								break;
 							case 2:
 								$subtitle = $scripture;
@@ -226,8 +266,15 @@ class JBSMPodcast
 								break;
 							case 4:
 								$subtitle = $episodedate;
-                                if (!$episode->studytitle) {$subtitle = $scripture;}
-                                else {$subtitle .= ' - ' . $scripture;}
+
+								if (!$episode->studytitle)
+								{
+									$subtitle = $scripture;
+								}
+								else
+								{
+									$subtitle .= ' - ' . $scripture;
+								}
 								break;
 							case 5:
 								$element = $custom->getCustom(
