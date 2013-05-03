@@ -105,7 +105,7 @@ class BiblestudyModelMessages extends JModelList
 		$id .= ':' . $this->getState('filter.book');
 		$id .= ':' . $this->getState('filter.teacher');
 		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.messageType');
+		$id .= ':' . $this->getState('filter.messagetype');
 		$id .= ':' . $this->getState('filter.year');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
@@ -190,8 +190,8 @@ class BiblestudyModelMessages extends JModelList
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
 
-		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_message_type');
-		$this->setState('filter.messageType', $messageType);
+		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype');
+		$this->setState('filter.messagetype', $messageType);
 
 		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		$this->setState('filter.year', $year);
