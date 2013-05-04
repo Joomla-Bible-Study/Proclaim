@@ -59,12 +59,13 @@ class JBS800Update
 				 *
 				 * @depricated 8.2.0
 				 **/
-				//Case: Params is not null
+				// Case: Params is not null
 			}
 			else
 			{
 				$registry->loadString($topic->params);
 				$params = $registry->toArray();
+
 				// Loop through every param language and create a new rocord
 				foreach ($params as $key => $value)
 				{
@@ -91,6 +92,7 @@ class JBS800Update
 				$query->delete('#__bsms_topics')
 						->where('id = ' . $topic->id);
 				$db->setQuery($query);
+
 				if (!$db->execute())
 				{
 
@@ -130,12 +132,13 @@ class JBS800Update
 		{
 			if ($topic_table->language == $result->study_language)
 			{
-				//Change study topic reference
+				// Change study topic reference
 				$query = $db->getQuery(true);
 				$query->update('#__bsms_studytopics as studytopics')
 						->set('topic_id = ' . $topic_table->id)
 						->where('studytopics.id = ' . $result->id);
 				$db->setQuery($query);
+
 				if (!$db->execute())
 				{
 					JFactory::getApplication()->enqueueMessage('Update of Studies topics Filed' . $result->id, 'warning');
@@ -232,6 +235,7 @@ class JBS800Update
 					->set('params = ' . $db->q($paramsString))
 					->where('id = ' . $db->q($result->id));
 			$db->setQuery($query);
+
 			if (!$db->execute())
 			{
 				JFactory::getApplication()->enqueueMessage('Update of mediafile params Filed' . $result->id, 'warning');

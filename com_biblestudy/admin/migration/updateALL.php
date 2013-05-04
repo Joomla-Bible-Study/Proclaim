@@ -670,13 +670,18 @@ class MigrationUpgrade
 		{
 			return false;
 		}
+		$query = "SHOW INDEX FROM #__bsms_timeset WHERE Key_name = 'idx_state'";
+		$db->setQuery($query);
 
-		// Fix timeset primary key
-		$query = "ALTER TABLE `#__bsms_timeset` DROP INDEX  `timeset` , ADD PRIMARY KEY (  `timeset` )";
-
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if ($db->loadResult())
 		{
-			return false;
+			// Fix timeset primary key
+			$query = "ALTER TABLE `#__bsms_timeset` DROP INDEX  `timeset` , ADD PRIMARY KEY (  `timeset` )";
+
+			if (!JBSMDbHelper::performdb($query, "Build 700: "))
+			{
+				return false;
+			}
 		}
 
 		// Fix studies params
@@ -870,7 +875,7 @@ class MigrationUpgrade
 					{
 						JFactory::getApplication()
 							->enqueueMessage(
-							"Build 623: " . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
+								"Build 623: " . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
 
 						return false;
 					}
@@ -1425,21 +1430,22 @@ class MigrationUpgrade
 		return true;
 	}
 
-    /**
-     * Update for 8.0.0
-     *
-     * @return boolean
-     */
-    public function upgrade800() {
-        JLoader::register('JBS800Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/8.0.0.php');
-        $migrate = new JBS800Update;
+	/**
+	 * Update for 8.0.0
+	 *
+	 * @return boolean
+	 */
+	public function upgrade800()
+	{
+		JLoader::register('JBS800Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/8.0.0.php');
+		$migrate = new JBS800Update;
 
-        if (!$migrate->update800())
-        {
-            return false;
-        }
+		if (!$migrate->update800())
+		{
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 }
