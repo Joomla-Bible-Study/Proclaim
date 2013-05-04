@@ -26,7 +26,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function install ($parent)
+	public function install($parent)
 	{
 
 	}
@@ -38,7 +38,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function uninstall ($parent)
+	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
 		echo '<p>' . JText::_('PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
@@ -51,7 +51,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function update ($parent)
+	public function update($parent)
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
@@ -75,10 +75,10 @@ class PlgSystemjbspodcastInstallerScript
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
-	`timeset` varchar(14) NOT NULL DEFAULT '',
-	`backup` varchar(14) DEFAULT NULL,
-	PRIMARY KEY (`timeset`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+					`timeset` VARCHAR(14) NOT NULL DEFAULT '',
+					`backup` VARCHAR(14) DEFAULT NULL,
+					PRIMARY KEY (`timeset`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
 			$db->execute();
 			$data          = new stdClass;
@@ -97,7 +97,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function preflight ($type, $parent)
+	public function preflight($type, $parent)
 	{
 	}
 
@@ -109,7 +109,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function  postflight ($type, $parent)
+	public function  postflight($type, $parent)
 	{
 	}
 
