@@ -8,9 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-
 /**
  * Class custom helper
  *

@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Location Helper
- *
  * @package    BibleStudy.Site
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,9 +7,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
  * Class for JBSMLanding

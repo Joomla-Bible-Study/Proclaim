@@ -8,11 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
-
 /**
  * View class for Teacher
  *
@@ -54,7 +49,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	{
 
 		$app         = JFactory::getApplication();
-		$pagebuilder = new JBSPagebuilder;
+		$pagebuilder = new JBSMPagebuilder;
 		$document    = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');

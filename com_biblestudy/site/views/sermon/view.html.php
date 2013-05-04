@@ -8,16 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
-//require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-require_once (JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
-require_once (JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
-require_once (JPATH_COMPONENT . '/helpers/related.php');
-require_once (JPATH_COMPONENT . '/helpers/biblegateway.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
-
 /**
  * View class for Sermon
  *
@@ -110,13 +100,13 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		$Biblepassage  = new showScripture;
+		$Biblepassage  = new JBSMShowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		$item->readmore_link = JRoute::_(JBSMHelperRoute::getArticleRoute($item->slug, ''));
+		$item->readmore_link = JRoute::_(JBSMRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
@@ -196,7 +186,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
-		$relatedstudies = new RelatedStudies;
+		$relatedstudies = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
@@ -219,7 +209,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 
-		$pagebuilder            = new JBSPagebuilder;
+		$pagebuilder            = new JBSMPagebuilder;
 		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
 		$this->item->scripture1 = $pelements->scripture1;
 		$this->item->scripture2 = $pelements->scripture2;
@@ -286,7 +276,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
-		$podcast         = new podcastSubscribe;
+		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
 		// Passage link to BibleGateway
@@ -346,7 +336,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		} // End if $linkit
 
-		$Biblepassage  = new showScripture;
+		$Biblepassage  = new JBSMShowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Prepares a link string for use in social networking

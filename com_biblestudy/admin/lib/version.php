@@ -24,14 +24,14 @@ if (!defined('_BIBLESTUDY_LICENSE'))
 }
 
 /**
- * BibleSutdy Version Class
+ * BibleStudy Version Class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.2
  *
  * @use This is used by biblestudy.debug.php
  */
-class CBiblestudyVersion
+class JBSMBiblestudyVersion
 {
 
 	/**

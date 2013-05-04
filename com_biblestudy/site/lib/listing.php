@@ -8,16 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-
-// Helper file - master list creater for study lists
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
-JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
-
 /**
  * BibleStudy listing class
  *
@@ -2111,8 +2101,8 @@ class JBSMListing extends JBSMElements
 			$elementid->id         = 'jbsmedia';
 		}
 		else
-		{ 
-			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template); 
+		{
+			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
 		}
 
 		if (!isset($elementid->id))

@@ -7,14 +7,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-//require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//include_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 
 /**
  * View class for SeriesDisplay
@@ -132,7 +124,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. ':' . $items->id;
 
 		// Get studies associated with the series
-		$pagebuilder = new JBSPagebuilder;
+		$pagebuilder = new JBSMPagebuilder;
 		$whereitem   = $items->id;
 		$wherefield  = 'study.series_id';
 

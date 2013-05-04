@@ -4,7 +4,7 @@
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * Notice: Undefined property: stdClass::$created_by_alias in /Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/icon.php on line 154
+ *             Notice: Undefined property: stdClass::$created_by_alias in /Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/icon.php on line 154
 Call Stack
  * */
 // No direct access
@@ -22,14 +22,23 @@ defined('_JEXEC') or die;
 class JHtmlIcon
 {
 
+	/**
+	 * Print popup button
+	 *
+	 * @param   object     $article  Article
+	 * @param   JRegistry  $params   Params
+	 * @param   array      $attribs  Array of Attributes
+	 *
+	 * @return mixed
+	 */
 	public static function print_popup($article, $params, $attribs = array())
 	{
-		$url = JBSMHelperRoute::getArticleRoute($article->slug);
-		$url .= '&tmpl=component&print=1&layout=default&page=' . @ $request->limitstart;
+		$url = JBSMRoute::getArticleRoute($article->slug);
+		$url .= '&tmpl=component&print=1&layout=default';
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 
-		// checks template image directory for image, if non found default are loaded
+		// Checks template image directory for image, if non found default are loaded
 		if ($params->get('show_icons'))
 		{
 			$text = '<i class="icon-print"></i> ' . JText::_('JGLOBAL_PRINT');
@@ -46,6 +55,14 @@ class JHtmlIcon
 		return JHtml::_('link', JRoute::_($url), $text, $attribs);
 	}
 
+	/**
+	 * Create Button
+	 *
+	 * @param   int        $category  Category id
+	 * @param   JRegistry  $params    Params
+	 *
+	 * @return string
+	 */
 	public static function create($category, $params)
 	{
 		$uri = JURI::getInstance();
@@ -68,6 +85,15 @@ class JHtmlIcon
 		return $output;
 	}
 
+	/**
+	 * Email button
+	 *
+	 * @param   object     $article  Article
+	 * @param   JRegistry  $params   Params
+	 * @param   array      $attribs  Array of Attributes
+	 *
+	 * @return mixed
+	 */
 	public static function email($article, $params, $attribs = array())
 	{
 		require_once JPATH_SITE . '/components/com_mailto/helpers/mailto.php';
@@ -102,11 +128,12 @@ class JHtmlIcon
 	 * This icon will not display in a popup window, nor if the article is trashed.
 	 * Edit access checks must be performed in the calling code.
 	 *
-	 * @param    object    $article       The article in question.
-	 * @param    object    $params        The article parameters
-	 * @param    array     $attribs       Not used??
+	 * @param   object     $article  The article in question.
+	 * @param   JRegistry  $params   The article parameters
+	 * @param   array      $attribs  Not used??
 	 *
 	 * @return    string    The HTML for the article edit icon.
+	 *
 	 * @since    1.6
 	 */
 	public static function edit($article, $params, $attribs = array())
@@ -141,16 +168,26 @@ class JHtmlIcon
 		}
 
 		$icon = $article->published ? 'edit' : 'eye-close';
-		$text = '<i class="hasTip icon-' . $icon . ' tip" title="' . JText::_('JBS_COM_EDIT_ITEM') . ' :: ' . $overlib . '"></i> ' . JText::_('JGLOBAL_EDIT');
+		$text = '<i class="hasTip icon-' . $icon . ' tip" title="' .
+			JText::_('JBS_COM_EDIT_ITEM') . ' :: ' . $overlib . '"></i> ' . JText::_('JGLOBAL_EDIT');
 
 		$output = JHtml::_('link', JRoute::_($url), $text);
 
 		return $output;
 	}
 
+	/**
+	 * Print Screen button
+	 *
+	 * @param   object     $article  Article
+	 * @param   JRegistry  $params   Params
+	 * @param   array      $attribs  Array of Attributes
+	 *
+	 * @return string
+	 */
 	public static function print_screen($article, $params, $attribs = array())
 	{
-		// checks template image directory for image, if non found default are loaded
+		// Checks template image directory for image, if non found default are loaded
 		if ($params->get('show_icons'))
 		{
 			$text = $text = '<i class="icon-print"></i> ' . JText::_('JGLOBAL_PRINT');
