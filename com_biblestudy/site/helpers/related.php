@@ -29,18 +29,19 @@ class RelatedStudies
 	 *
 	 * @return boolean
 	 *
-	 * @todo need to look if all is needed. TOM BCC
+	 * @todo need to look if all is needed. @TOM Look to me this need to me this need to be updated?
 	 */
 	public function getRelated($row, $params)
 	{
 		$this->score = array();
 		$keygo       = true;
-		$topicsgo    = true;
+		$topicsgo    = false;
 		$registry    = new JRegistry;
 		$registry->loadString($row->params);
-		$params     = $registry;
-		$keywords   = $params->get('metakey');
-		$topics     = $row->topics_id;
+		$params   = $registry;
+		$keywords = $params->get('metakey');
+
+		// $topics     = $row->topics_id;
 		$topicslist = $this->getTopics();
 
 		if (!$keywords)
@@ -56,10 +57,6 @@ class RelatedStudies
 			}
 		}
 
-		if (!$topics)
-		{
-			$topicsgo = false;
-		}
 		if (!$keygo && !$topicsgo)
 		{
 			return false;
@@ -77,10 +74,11 @@ class RelatedStudies
 			{
 				$keywordsresults = $this->parseKeys($keywords, $compare, $study->id);
 			}
+			/*
 			if ($study->topics_id)
 			{
 				$topicsresults = $this->parseKeys($topics, $study->topics_id, $study->id);
-			}
+			} */
 			if ($study->tp_id)
 			{
 				$studytopics = $this->parseKeys($topicslist, $study->tp_id, $study->id);
@@ -170,7 +168,7 @@ class RelatedStudies
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
-		$query->select('s.id, s.params, s.topics_id, s.access');
+		$query->select('s.id, s.params, s.access');
 		$query->from('#__bsms_studies as s');
 		$query->select('group_concat(stp.id separator ", ") AS tp_id');
 		$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');

@@ -16,7 +16,8 @@ INSERT INTO `#__jbspodcast_update` (id, version) VALUES
 (3, '7.0.2'),
 (4, '7.0.3'),
 (5, '7.1.0.a2'),
-(6, '7.1.1');
+(6, '7.1.1'),
+(7, '8.0.0');
 
 CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
   `timeset` VARCHAR(14) NOT NULL DEFAULT '',
