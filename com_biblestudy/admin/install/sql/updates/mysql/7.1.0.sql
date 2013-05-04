@@ -1,3 +1,5 @@
+INSERT INTO `#__bsms_update` (id, version) VALUES (7, '7.1.0')
+ON DUPLICATE KEY UPDATE version= '7.1.0';
 --
 -- Admin Table
 --
