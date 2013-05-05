@@ -12,6 +12,7 @@ JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+JHtml::addIncludePath(BIBLESTUDY_PATH_HELPERS . '/html');
 
 /**
  * Class for Elements
@@ -822,14 +823,14 @@ class JBSMElements
 			return false;
 		}
 		$database = JFactory::getDBO();
-		$images = new JBSMImages;
+		$images   = new JBSMImages;
 
 		if (!isset($admin_params->default_download_image))
 		{
 			$admin_params->default_download_image = 'download.png';
 		}
 
-		$download_tmp = $images->getMediaImage($admin_params->default_download_image, $media = null);
+		$download_tmp   = $images->getMediaImage($admin_params->default_download_image, $media = null);
 		$download_image = $download_tmp->path;
 
 		// Predefine var
@@ -852,8 +853,8 @@ class JBSMElements
 			->where('#__bsms_mediafiles.published = 1')
 			->order('ordering asc, #__bsms_mediafiles.mime_type asc');
 		$database->setQuery($query);
-		$media1 = $database->loadObjectList('id');
-		$rows2  = count($media1);
+		$media1      = $database->loadObjectList('id');
+		$rows2       = count($media1);
 		$compat_mode = $admin_params->get('compat_mode');
 
 		if ($rows2 < 1)
@@ -997,9 +998,15 @@ class JBSMElements
 							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
-						JHTML::_('behavior.modal');
-						$media1_link .= '<a href="index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid='
-							. $Itemid . '&amp;t=' . $template . '&amp;mediaid=' . $media->id . '&amp;tmpl=component" class="modal">Your text or image</a>';
+						JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+						JHTML::_('bsmedia.framework');
+						$playerwidth = $playerwidth + 40;
+						var_dump($media);
+						$media1_link = "<a class=\"lytebox\" href=\"index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component\" data-title=\"" . $media->malttext . "\"
+							data-lyte-options=\"width:" . $playerwidth . " height:" . $playerheight . " scrollbars:no\">
+							<img  src='" . $src . "' height='" . $height . "' width='" .
+							$width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 					}
 					else
 					{
