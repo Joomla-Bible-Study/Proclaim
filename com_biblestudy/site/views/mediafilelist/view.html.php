@@ -7,8 +7,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
@@ -80,6 +78,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->admin      = JBSMParams::getAdmin();
 		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
 		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+
 		if (!BIBLESTUDY_CHECKREL)
 		{
 			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');

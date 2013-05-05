@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 ?>
 <div class="listingfooter">
 	<?php
-	$input     = new JInput;
+	$input = new JInput;
 	$link_text = $this->item->params->get('link_text');
 
 	if (!$link_text)
@@ -43,6 +43,6 @@ defined('_JEXEC') or die;
 			$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
 		}
 		?>
-        <a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
+		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
 </div><!--end of footer div-->
 

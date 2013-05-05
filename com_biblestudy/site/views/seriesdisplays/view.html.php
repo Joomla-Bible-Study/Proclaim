@@ -8,12 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php';
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-
 /**
  * View class for SeriesDisplays
  *
@@ -112,7 +106,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 
-
 		// Import Scripts
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
@@ -132,7 +125,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$pagebuilder   = new JBSPagebuilder;
+		$pagebuilder   = new JBSMPagebuilder;
 		$items         = $this->get('Items');
 		$images        = new JBSMImages;
 
@@ -192,7 +185,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		// End scripture helper
 		$this->template   = $template;
 		$this->pagination = $pagination;
-
 
 		// Get the main study list image
 		$mainimage        = $images->mainStudyImage();
