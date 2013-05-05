@@ -19,10 +19,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get listing
 	 *
-	 * @param   object     $row           Item Info
+	 * @param   JTable     $row           Item Info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   string     $oddeven       ?Number patten?
-	 * @param   object     $admin_params  Admin info
+	 * @param   JRegistry  $admin_params  Admin info
 	 * @param   int        $template      Template ID
 	 * @param   string     $ismodule      If coming form a Module
 	 *
@@ -816,9 +816,9 @@ class JBSMListing extends JBSMElements
 	 * @param   string     $tmenu         Template Menu
 	 * @param   string     $entry_access  Access Entry
 	 * @param   string     $allow_entry   Allow Entry
-	 * @param   JRegistry  $params        Itom Params
+	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $row           Row info
+	 * @param   JTable     $row           Row info
 	 * @param   int        $template      Template ID
 	 *
 	 * @return string
@@ -961,11 +961,11 @@ class JBSMListing extends JBSMElements
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
 				$column .= '<a href="' . $link . '">';
@@ -1017,7 +1017,7 @@ class JBSMListing extends JBSMElements
 	 */
 	public function getListingExp($row, $params, $admin_params, $template)
 	{
-		$Media  = new jbsMedia;
+		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('templatecode');
@@ -1053,7 +1053,7 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object     $row           Item Info
+	 * @param   JTable     $row           Item Info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 * @param   object     $template      Template
@@ -1062,9 +1062,9 @@ class JBSMListing extends JBSMElements
 	 */
 	public function getStudyExp($row, $params, $admin_params, $template)
 	{
-		$Media = new jbsMedia;
-
+		$Media = new JBSMMedia;
 		$images = new JBSMImages;
+
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
@@ -1136,7 +1136,7 @@ class JBSMListing extends JBSMElements
 	 * Share Helper file
 	 *
 	 * @param   string     $link          Link
-	 * @param   object     $row           Item Info
+	 * @param   JTable     $row           Item Info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 *
@@ -1580,7 +1580,7 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Header
 	 *
-	 * @param   object     $row           JTable
+	 * @param   JTable     $row           JTable
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 * @param   int        $template      Template ID
@@ -1771,7 +1771,6 @@ class JBSMListing extends JBSMElements
 				$params->set('row1col1', 100);
 			}
 			$listing .= $this->getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-
 
 			if ($columns > 1 && $params->get('r1c1span') < 2)
 			{
@@ -2078,7 +2077,7 @@ class JBSMListing extends JBSMElements
 	 * Get Header Cell
 	 *
 	 * @param   int        $rowid         Table Row ID
-	 * @param   object     $row           Item info
+	 * @param   JTable     $row           Item info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   int        $lastcol       Last Column
 	 * @param   int        $colspan       Column Span

@@ -454,7 +454,7 @@ class JBSMSerieslist extends JBSMListing
 	public function getSeriesstudies($id, $params, $admin_params, $template)
 	{
 
-        $limit   = '';
+		$limit   = '';
 		$input   = new JInput;
 		$nolimit = $input->get('nolimit', '', 'int');
 

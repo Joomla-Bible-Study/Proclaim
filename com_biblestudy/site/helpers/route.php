@@ -28,9 +28,10 @@ abstract class JBSMRoute
 	protected static $lookup;
 
 	/**
-	 * Get Artical Rout
+	 * Get Article Rout
 	 *
-	 * @param   int  $id  The route of the study item
+	 * @param   int  $id        The route of the study item
+	 * @param   int  $language  The state of language
 	 *
 	 * @return string
 	 */

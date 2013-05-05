@@ -89,9 +89,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$dispatcher    = JDispatcher::getInstance();
 
 		// Get the menu item object
-		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$items       = $this->get('Item');
 		$this->state = $this->get('State');

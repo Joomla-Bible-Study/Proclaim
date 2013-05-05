@@ -145,13 +145,13 @@ class JHtmlIcon
 		// Ignore if in a popup window.
 		if ($params && $params->get('popup'))
 		{
-			return;
+			return false;
 		}
 
 		// Ignore if the state is negative (trashed).
 		if ($article->published < 0)
 		{
-			return;
+			return false;
 		}
 
 		JHtml::_('behavior.tooltip');

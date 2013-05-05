@@ -336,7 +336,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			. $go, 'value', 'text', "$filter_languages"
 		);
 
-		// Build the teacher dropdown
+		// Build the teacher drop down
 		$types[]              = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
 		$types                = array_merge($types, $this->teachers);
 		$this->page->teachers = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" '

@@ -9,7 +9,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// use default translations if none are available
+// Use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
 	DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');

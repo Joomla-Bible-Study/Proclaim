@@ -10,8 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Include dependancies
-JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
+// Include dependencies
+JLoader::register('JBSMRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Difines
  */

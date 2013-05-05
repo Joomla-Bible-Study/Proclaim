@@ -77,11 +77,12 @@ class BiblestudyViewSermon extends JViewLegacy
 			$dispatcher = JDispatcher::getInstance();
 		}
 
-		$this->item  = $this->get('Item');
-		$this->print = $app->input->getBool('print');
-		$this->state = $this->get('State');
-		$this->user  = $user;
-        $this->comments = $this->get('comments');
+		$this->item     = $this->get('Item');
+		$this->print    = $app->input->getBool('print');
+		$this->state    = $this->get('State');
+		$this->user     = $user;
+		$this->comments = $this->get('comments');
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

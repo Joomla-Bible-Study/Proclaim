@@ -8,8 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
-
 /**
  * View class for Comment
  *
