@@ -997,6 +997,9 @@ class JBSMElements
 							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+						JHTML::_('behavior.modal');
+						$media1_link .= '<a href="index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid='
+							. $Itemid . '&amp;t=' . $template . '&amp;mediaid=' . $media->id . '&amp;tmpl=component" class="modal">Your text or image</a>';
 					}
 					else
 					{

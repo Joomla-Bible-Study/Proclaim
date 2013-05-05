@@ -1,0 +1,3 @@
+[submodule "com_biblestudy/media/fancybox"]
+	path = com_biblestudy/media/fancybox
+	url = https://github.com/fancyapps/fancyBox.git
