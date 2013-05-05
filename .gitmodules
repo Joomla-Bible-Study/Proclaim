@@ -1,6 +1,0 @@
-[submodule "com_biblestudy/media/fancybox"]
-	path = com_biblestudy/media/fancybox
-	url = https://github.com/fancyapps/fancyBox.git
-[submodule "com_biblestudy/media/bPopup"]
-	path = com_biblestudy/media/bPopup
-	url = https://github.com/dinbror/bpopup.git
