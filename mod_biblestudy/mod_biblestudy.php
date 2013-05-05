@@ -11,9 +11,8 @@
  * */
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-//require_once BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php';
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+JLoader::register('JBSMPagebuilder', BIBLESTUDY_PATH_LIB . '/pagebuilder.php');
 require_once __DIR__ . '/helper.php';
 
 // Need for inline player
@@ -50,7 +49,7 @@ for ($i = 0; $i < $count; $i++)
 		}
 	}
 }
-$pagebuilder = new JBSPagebuilder;
+$pagebuilder = new JBSMPagebuilder;
 
 foreach ($items AS $item)
 {
@@ -102,6 +101,7 @@ foreach ($items AS $item)
 $list      = $items;
 $link_text = $params->get('pagetext', 'More Bible Studies');
 $jinput    = new JInput;
+
 if (!$templatemenuid)
 {
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
