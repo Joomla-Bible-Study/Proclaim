@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Finder adapter for Biblestudy.
- *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -17,15 +14,13 @@ jimport('joomla.application.component.helper');
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
- *
- *
  * Finder adapter for Biblestudy.
  *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */
-class plgFinderBiblestudy extends FinderIndexerAdapter
+class PlgFinderBiblestudy extends FinderIndexerAdapter
 {
 
 	/**
@@ -279,16 +274,12 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		 * configuration parameters.
 		 */
 		// Add the meta-author.
-//		$item->metaauthor = $item->metadata->get('author');
+
 		// Handle the link to the meta-data.
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
-//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
-//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-//		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-//		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
-//
+
 		// Translate the state. Articles should only be published if the category is published.
 		$item->state = $this->translateState($item->state);
 
@@ -314,10 +305,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
-		// Load dependent classes.
-		//require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
-		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
-
 		return true;
 	}
 
@@ -325,7 +312,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * Method to get a SQL query to load the published and access states for
 	 * an article and category.
 	 *
-	 * @param string $sql
+	 * @param   string  $sql  ?
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -353,6 +340,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	protected function getListQuery($sql = null)
 	{
 		$db = JFactory::getDbo();
+
 		// Check if we can use the supplied SQL query.
 		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');

@@ -8,8 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-
 if (version_compare(JVERSION, '2.5', 'ge'))
 {
 	jimport('joomla.application.component.modellist');
@@ -205,8 +203,9 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-		// force a language
+		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
+
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
@@ -338,6 +337,7 @@ class BiblestudyModelMessages extends JModelList
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
+
 		if (!empty($search))
 		{
 			if (stripos($search, 'id:') === 0)

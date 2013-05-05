@@ -8,8 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMUpload', JPATH_SITE . '/components/com_biblestudy/helpers/upload.php');
-
 /**
  * View class for MediaFile
  *

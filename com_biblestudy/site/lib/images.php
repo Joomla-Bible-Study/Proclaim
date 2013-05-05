@@ -7,7 +7,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
+
 /**
  * BibleStudy images class
  *

@@ -11,7 +11,6 @@ jimport('joomla.application.component.controller');
 jimport('joomla.html.parameter');
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Class Migration Controller

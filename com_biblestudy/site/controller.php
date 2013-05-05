@@ -278,7 +278,6 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function download()
 	{
-		JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
 		$task = $this->input->get('task');
 
 		if ($task == 'download')
@@ -317,7 +316,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		$input = new JInput;
+		$input    = new JInput;
 		$getMedia = new JBSMMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}

@@ -7,8 +7,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 if (BIBLESTUDY_CHECKREL)
 {
 	JHtml::_('bootstrap.tooltip');
@@ -158,7 +158,7 @@ $sortFields = $this->getSortFields();
 	<thead>
 	<tr>
 		<th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING');?>
+			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
 		</th>
 		<th width="1%" class="hidden-phone">
 			<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
@@ -200,7 +200,7 @@ $sortFields = $this->getSortFields();
 	</thead>
 	<tbody>
 	<?php foreach ($this->items as $i => $item) :
-		$item->max_ordering = 0; //??
+		$item->max_ordering = 0;
 		$ordering           = ($listOrder == 'study.ordering');
 		$canCreate          = $user->authorise('core.create');
 		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
@@ -247,12 +247,12 @@ $sortFields = $this->getSortFields();
 						<a href="<?php echo JRoute::_(
 							'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
 						); ?>">
-							<?php echo ($this->escape($item->studytitle) ? $this->escape(
+							<?php echo($this->escape($item->studytitle) ? $this->escape(
 								$item->studytitle
 							) : 'ID: ' . $this->escape($item->id)); ?>
 						</a>
 					<?php else : ?>
-						<?php echo ($this->escape($item->studytitle) ? $this->escape(
+						<?php echo($this->escape($item->studytitle) ? $this->escape(
 							$item->studytitle
 						) : 'ID: ' . $this->escape($item->id)); ?>
 					<?php endif; ?>
@@ -322,9 +322,11 @@ $sortFields = $this->getSortFields();
 				<?php echo $this->escape($item->series_text); ?>
 			</td>
 			<td class="center hidden-phone hidden-tablet">
-				<?php echo JHtml::tooltip($this->escape($item->hits), JText::_('JBS_CMN_HITS'), null, JText::_('JBS_CMN_HITS'), '', 'Tooltip', 'hasTip small blue') ?><br />
-				<?php echo JHtml::tooltip($this->escape($item->totalplays), JText::_('JBS_CMN_PLAYS'), null, JText::_('JBS_CMN_PLAYS'), '', 'Tooltip', 'hasTip small blue')?><br />
-				<?php echo JHtml::tooltip($this->escape($item->totaldownloads), JText::_('JBS_CMN_DOWNLOADS'), null, JText::_('JBS_CMN_DOWNLOADS'), '', 'Tooltip', 'hasTip small blue')?>
+				<?php echo JHtml::tooltip($this->escape($item->hits), JText::_('JBS_CMN_HITS'), null, JText::_('JBS_CMN_HITS'), '', 'Tooltip', 'hasTip small blue') ?>
+				<br/>
+				<?php echo JHtml::tooltip($this->escape($item->totalplays), JText::_('JBS_CMN_PLAYS'), null, JText::_('JBS_CMN_PLAYS'), '', 'Tooltip', 'hasTip small blue') ?>
+				<br/>
+				<?php echo JHtml::tooltip($this->escape($item->totaldownloads), JText::_('JBS_CMN_DOWNLOADS'), null, JText::_('JBS_CMN_DOWNLOADS'), '', 'Tooltip', 'hasTip small blue') ?>
 			</td>
 			<td class="small hidden-phone hidden-tablet">
 				<?php if ($item->language == '*'): ?>

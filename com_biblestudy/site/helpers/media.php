@@ -8,9 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
 /**
  * class for Media Helper
  *
@@ -394,7 +391,6 @@ class JBSMMedia
 			// Now we build the column for each media file
 			$table .= '<td>';
 
-
 			// Check to see if a download link is needed
 
 			$link_type = $media->link_type;
@@ -727,7 +723,6 @@ class JBSMMedia
 			. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
 			. '" height="' . $height . '" border="0" /></a>';
 
-
 		return $docman;
 	}
 
@@ -872,7 +867,6 @@ class JBSMMedia
 
 					case 1: // Popup
 
-
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
@@ -948,7 +942,6 @@ class JBSMMedia
 
 						return $playercode;
 						break;
-
 
 					case 1:
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=7&amp;t=" . $template .
