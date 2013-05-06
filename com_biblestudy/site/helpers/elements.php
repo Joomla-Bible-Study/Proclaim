@@ -1001,7 +1001,6 @@ class JBSMElements
 						JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 						JHTML::_('bsmedia.framework');
 						$playerwidth = $playerwidth + 40;
-						var_dump($media);
 						$media1_link = "<a class=\"lytebox\" href=\"index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
 							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component\" data-title=\"" . $media->malttext . "\"
 							data-lyte-options=\"width:" . $playerwidth . " height:" . $playerheight . " scrollbars:no\">
