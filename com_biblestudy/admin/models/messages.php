@@ -100,11 +100,12 @@ class BiblestudyModelMessages extends JModelList
 	{
 
 		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.studytitle');
 		$id .= ':' . $this->getState('filter.book');
 		$id .= ':' . $this->getState('filter.teacher');
 		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.messageType');
+		$id .= ':' . $this->getState('filter.messagetype');
 		$id .= ':' . $this->getState('filter.year');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
@@ -171,6 +172,9 @@ class BiblestudyModelMessages extends JModelList
 		$params = JComponentHelper::getParams('com_biblestudy');
 		$this->setState('params', $params);
 
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
 		$this->setState('filter.studytitle', $studytitle);
 
@@ -186,8 +190,8 @@ class BiblestudyModelMessages extends JModelList
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
 
-		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_message_type');
-		$this->setState('filter.messageType', $messageType);
+		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype');
+		$this->setState('filter.messagetype', $messageType);
 
 		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		$this->setState('filter.year', $year);
@@ -200,6 +204,14 @@ class BiblestudyModelMessages extends JModelList
 
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
+
+		// force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 
 		parent::populateState('study.studydate', 'DESC');
 	}
@@ -321,6 +333,21 @@ class BiblestudyModelMessages extends JModelList
 			{
 				$studytitle = $db->Quote('%' . $db->escape($studytitle, true) . '%');
 				$query->where('(study.studytitle LIKE ' . $studytitle . ' OR study.alias LIKE ' . $studytitle . ')');
+			}
+		}
+
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('study.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
+				$query->where('(study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search . ')');
 			}
 		}
 

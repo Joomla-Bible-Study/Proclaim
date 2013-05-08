@@ -225,12 +225,13 @@ class JBSMDbHelper
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
-		$prefix . $bsms = 'bsms_';
+		$bsms = 'bsms_';
 		$objects = array();
 
 		foreach ($tables as $table)
 		{
-			if (substr_count($table, $bsms))
+
+			if (substr_count($table, $prefix) && substr_count($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);

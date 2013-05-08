@@ -1,6 +1,5 @@
-INSERT INTO `#__bsms_update` (id,version) VALUES (4,'7.0.2')
+INSERT INTO `#__bsms_update` (id, version) VALUES (4, '7.0.2')
 ON DUPLICATE KEY UPDATE version= '7.0.2';
-
 --
 -- Old Talbes No longer used.
 --
@@ -122,7 +121,7 @@ ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREME
 -- Podcast
 --
 ALTER TABLE `#__bsms_podcast` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_podcast`ADD INDEX `idx_access` ( `access` ),
+ALTER TABLE `#__bsms_podcast` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
@@ -135,9 +134,9 @@ ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREM
 -- Series
 --
 ALTER TABLE `#__bsms_series` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_series`ADD INDEX `idx_access` ( `access` );
-ALTER TABLE `#__bsms_series`ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' AFTER `series_text`;
-ALTER TABLE `#__bsms_series`ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
+ALTER TABLE `#__bsms_series` ADD INDEX `idx_access` ( `access` );
+ALTER TABLE `#__bsms_series` ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' AFTER `series_text`;
+ALTER TABLE `#__bsms_series` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
@@ -146,7 +145,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 -- Servers
 --
 ALTER TABLE `#__bsms_servers` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_servers`ADD INDEX `idx_access` ( `access` ),
+ALTER TABLE `#__bsms_servers` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',

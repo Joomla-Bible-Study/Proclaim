@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Core Admin BibleStudy file
  *

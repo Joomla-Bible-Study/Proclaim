@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('fixJBSAssets', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.assets.php');
-JLoader::register('MigrationUpgrade', JPATH_ADMINISTRATOR . '/components/com_biblestudy/migration/updateAll.php');
+JLoader::register('MigrationUpgrade', JPATH_ADMINISTRATOR . '/components/com_biblestudy/migration/updateALL.php');
 
 
 /**
@@ -581,7 +581,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		if (empty($this->_afterStack))
 		{
-			$this->_afterStack = array('0' => 'upgrade710');
+			$this->_afterStack = array('0' => 'upgrade710', '1' => 'upgrade800');
 			$this->totalVersions += count($this->_afterStack);
 		}
 	}

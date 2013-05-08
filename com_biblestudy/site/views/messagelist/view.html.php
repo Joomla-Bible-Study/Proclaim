@@ -75,7 +75,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 *
 	 * @return  void
 	 */
-	public function display($tpl = null)
+	public function display ($tpl = null)
 	{
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -91,9 +91,12 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$registry->loadString($template->params);
 		$this->params = $registry;
 
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+		if (!BIBLESTUDY_CHECKREL)
+		{
+			$document = JFactory::getDocument();
+			$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
+			$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
 		$this->books        = $this->get('Books');
@@ -115,7 +118,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+					. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		$this->_prepareDocument();
@@ -128,7 +131,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument ()
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
