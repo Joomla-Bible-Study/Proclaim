@@ -152,9 +152,11 @@ class JBSMUpload
 	public static function getpath($url, $tempfile, $front = '')
 	{
 		jimport('joomla.filesystem.file');
-		$input  = new JInput;
-		$path   = $input->get('upload_folder', '', 'int');
-		$server = $input->get('upload_server', '', 'int');
+		jimport('joomla.controller.legacy');
+		$jclagacy = new JControllerLegacy;
+		$input    = new JInput;
+		$path     = $input->get('upload_folder', '', 'int');
+		$server   = $input->get('upload_server', '', 'int');
 
 		if ($server == '')
 		{
@@ -166,11 +168,11 @@ class JBSMUpload
 
 			if ($front)
 			{
-				self::setRedirect($url . $msg);
+				$jclagacy->setRedirect($url . $msg);
 			}
 			else
 			{
-				self::setRedirect($url, $msg);
+				$jclagacy->setRedirect($url, $msg);
 			}
 		}
 		$returnpath = $server . $path;
@@ -187,12 +189,10 @@ class JBSMUpload
 	 */
 	public static function deletetempfile($tempfile)
 	{
-		$db = JFactory::getDBO();
 		jimport('joomla.filesystem.file');
 
 		// Delete file
 		JFile::delete($tempfile);
-
 
 		return true;
 	}

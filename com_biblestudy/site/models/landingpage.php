@@ -10,9 +10,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-// --JLoader::register('JBSMTranslated' ,JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-
 /**
  * Model class for LandingPage
  *

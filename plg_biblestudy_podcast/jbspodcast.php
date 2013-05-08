@@ -254,7 +254,11 @@ class PlgSystemJbspodcast extends JPlugin
 	 */
 	public function doPodcast()
 	{
-		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+
 		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 

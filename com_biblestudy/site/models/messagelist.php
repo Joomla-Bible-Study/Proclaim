@@ -9,8 +9,8 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-// --require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/messages.php';
 JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/messages.php');
+
 /**
  * Model class for MessageList
  *

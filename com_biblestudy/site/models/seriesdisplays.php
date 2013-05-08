@@ -10,8 +10,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
-
 /**
  * Model class for SeriesDisplays
  *

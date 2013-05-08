@@ -25,7 +25,7 @@ else
 {
 	$templateparams = modBibleStudyPodcast::getTemplateParams($params);
 }
-JLoader::register('PodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
+JLoader::register('JBSMPodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 
 // Load the css
 $document = JFactory::getDocument();
@@ -42,7 +42,7 @@ else
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 
 // Run the podcast subscription
-$podcast   = new podcastSubscribe;
+$podcast   = new JBSMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 // Display the module
