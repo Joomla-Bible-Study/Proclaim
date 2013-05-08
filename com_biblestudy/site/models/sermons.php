@@ -8,7 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
+include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php';
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
 
 jimport('joomla.application.component.modellist');
@@ -85,8 +85,9 @@ class BiblestudyModelSermons extends JModelList
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$params     = $app->getParams();
 		$menuParams = new JRegistry;
+		$menu       = $app->getMenu()->getActive();
 
-		if ($menu = $app->getMenu()->getActive())
+		if ($menu)
 		{
 			$menuParams->loadString($menu->params);
 		}
@@ -136,11 +137,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.languages', $languages);
 
 		/**
-		 * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF, Tom need to know what to do with this todo
+		 * @todo We need to figure out how to properly use the populate state so that
+		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
 		parent::populateState('study.studydate', 'DESC');
 		$input      = new JInput;
-		$limitstart = $input->get('limitstart', '', 'int');
 		$value      = $input->get('start', '', 'int');
 		$this->setState('list.start', $value);
 	}
@@ -194,10 +195,11 @@ class BiblestudyModelSermons extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
+		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
-		                study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2, study.verse_end2, study.verse_begin2 ') . ','
+		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
+		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
+		                study.verse_end2, study.verse_begin2 ') . ','
 				. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
 
@@ -418,7 +420,7 @@ class BiblestudyModelSermons extends JModelList
 
 					foreach ($filters as $filter)
 					{
-						$where2[] = 'study.topics_id = ' . (int) $filter;
+						$where2[] = 'st.topic_id = ' . (int) $filter;
 					}
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
@@ -431,7 +433,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						if ($filter >= 1)
 						{
-							$query->where('study.topics_id = ' . (int) $filter);
+							$query->where('st.topic_id = ' . (int) $filter);
 						}
 					}
 				}
@@ -710,9 +712,10 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
 		$query->from('#__bsms_books AS book');
 
-		if ($params->get('booklist') == 1):
+		if ($params->get('booklist') == 1)
+		{
 			$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-		endif;
+		}
 		$query->group('book.id');
 		$query->order('book.booknumber');
 
@@ -755,6 +758,7 @@ class BiblestudyModelSermons extends JModelList
 	 * Get a list of all used series
 	 *
 	 * @since 7.0
+	 * @return Object
 	 */
 	public function getSeries()
 	{

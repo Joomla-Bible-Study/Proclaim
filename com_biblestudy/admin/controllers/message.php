@@ -90,15 +90,23 @@ class BiblestudyControllerMessage extends JControllerForm
 		return parent::batch($model);
 	}
 
-    public function save($key = null, $urlVar = null) {
+	/**
+	 * Method to save a record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 */
+	public function save($key = null, $urlVar = null) {
         $model = $this->getModel('Topic');
-        $data = $this->input->post->get('jform', array(), 'array');
-        $topic_ids = [];
+        $data = JRequest::setVar('jform', array(), 'post', 'array');
+        $topic_ids = array();
 
         //Non-numeric topics are assumed to be new and are added to the database
         $topics  = explode(',', $data['topics']);
         foreach($topics as $topic) {
-            if(!is_numeric($topic)) {
+            if(!is_numeric($topic) && !empty($topic)) {
                 $model->save(array('topic_text' => $topic, 'language' => $data['language']));
                 $topic_ids[] = $model->getState('topic.id');
             }else
@@ -106,7 +114,7 @@ class BiblestudyControllerMessage extends JControllerForm
         }
         $data['topics'] = implode(',', $topic_ids);
 
-        $this->input->post->set('jform', $data);
+        JRequest::setVar('jform', $data, 'post', 'array');
 
         parent::save();
     }

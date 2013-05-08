@@ -78,8 +78,13 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->pagination = $this->get('Pagination');
 		$this->admin      = JBSMParams::getAdmin();
-		$document         = JFactory::getDocument();
-		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/icons.css');
+		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+
+		if (!BIBLESTUDY_CHECKREL)
+		{
+			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+		}
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -106,7 +111,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit"  class="btn btn-primary">'
+			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafileform&task=mediafileform.edit"  class="btn btn-primary">'
 				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 

@@ -18,7 +18,8 @@ INSERT INTO `#__bsms_update` (id,version) VALUES
 (7,'7.1.0'),
 (8,'7.1.1'),
 (9,'7.1.2'),
-(10, '8.0.0');
+(10,'7.1.3'),
+(11, '8.0.0');
 
 -- --------------------------------------------------------
 
@@ -391,7 +392,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
   `media_seconds` varchar(2) DEFAULT NULL,
   `messagetype` varchar(100) DEFAULT '1',
   `series_id` int(3) DEFAULT '0',
-  `topics_id` int(3) DEFAULT '0',
   `studytext` text,
   `thumbnailm` text,
   `thumbhm` int(11) DEFAULT NULL,
@@ -407,7 +407,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`),
   KEY `idx_seriesid` (`series_id`),
-  KEY `idx_topicsid` (`topics_id`),
   KEY `idx_user` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 

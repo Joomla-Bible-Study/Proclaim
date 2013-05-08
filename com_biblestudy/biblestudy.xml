@@ -9,7 +9,7 @@
     <author>Joomla Bible Study Team</author>
     <copyright>(C) 2007 - 2013 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>8.0.b1</version>
+    <version>8.0.b3</version>
     <creationDate>March 15, 2013</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -68,7 +68,6 @@
         <menu img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_BIBLESTUDY</menu>
         <submenu>
             <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-
             <menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
             <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
             <menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
@@ -115,8 +114,7 @@
 
     <!-- new server call -->
     <updateservers>
-        <server type="extension" priority="1" name="Joomla Bible Study">
-            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
+        <server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
     </updateservers>
 
     <!-- Tables -->

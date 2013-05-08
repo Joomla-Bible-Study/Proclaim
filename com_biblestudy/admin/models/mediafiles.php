@@ -232,13 +232,6 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('mediafile.access = ' . (int) $access);
 		}
-		// Filter by filename
-		$filename = $this->getState('filter.filename');
-
-		if (!empty($filename))
-		{
-			$query->where('mediafile.filename LIKE "%' . $filename . '%"');
-		}
 
 		// Filter by study title
 		$study = $this->getState('filter.study_id');
@@ -293,7 +286,7 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			if (stripos($search, 'id:') === 0)
 			{
-				$query->where('a.id = ' . (int) substr($search, 3));
+				$query->where('mediafile.id = ' . (int) substr($search, 3));
 			}
 			else
 			{
