@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Location Helper
- *
  * @package    BibleStudy.Site
  * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,9 +7,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
  * Class for JBSMLanding
@@ -101,7 +95,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.location_id')
 			->where('b.location_id > 0')
 			->where('a.published = 1')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
@@ -324,7 +318,7 @@ class JBSMLanding
 			->where('b.language in (' . $language . ')')
 			->where('a.list_show = 1 and a.published = 1')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.ordering, a.teachername ' . $order);
 		$db->setQuery($query);
@@ -344,7 +338,6 @@ class JBSMLanding
 				case 0:
 					foreach ($tresult as $b)
 					{
-
 
 						if ($t >= $limit)
 						{
@@ -575,7 +568,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.series_id')
 			->where('a.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->order('a.series_text ' . $order);
 		$db->setQuery($query);
 
@@ -760,9 +753,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$year      = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -820,7 +810,7 @@ class JBSMLanding
 			->from('#__bsms_studies')
 			->where('language in (' . $language . ')')
 			->where('access IN (' . $groups . ')')
-            ->where('published = 1')
+			->where('published = 1')
 			->order('year(studydate) ' . $order);
 		$db->setQuery($query);
 
@@ -929,13 +919,11 @@ class JBSMLanding
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy();
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
 		$limit     = $params->get('landingtopicslimit');
+
 		if (!$limit)
 		{
 			$limit = 10000;
@@ -944,6 +932,7 @@ class JBSMLanding
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
 		$registry = new JRegistry;
+
 		if (isset($item->prams))
 		{
 			$registry->loadString($item->params);
@@ -989,7 +978,7 @@ class JBSMLanding
 			->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
 			->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
 			->where('#__bsms_topics.published = 1')
-            ->where('#__bsms_studies.published = 1')
+			->where('#__bsms_studies.published = 1')
 			->order('#__bsms_topics.topic_text ' . $order)
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
@@ -1096,9 +1085,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$input       = new JInput;
 		$addItemid   = $input->get('Itemid', '', 'int');
 		$messagetype = null;
@@ -1161,7 +1147,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.messagetype')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.message_type ' . $order);
 		$db->setQuery($query);
@@ -1301,7 +1287,6 @@ class JBSMLanding
 		return $messagetype;
 	}
 
-
 	/**
 	 * Get Books for Landing Page.
 	 *
@@ -1375,7 +1360,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->order('a.booknumber ' . $order);
 		$db->setQuery($query);
 
@@ -1405,7 +1390,6 @@ class JBSMLanding
 							$book .= "\n\t\t" . '<td  class="landing_td"></td>';
 							$book .= "\n\t" . '</tr>';
 						}
-
 
 						$book .= "\n" . '</table>';
 						$book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';

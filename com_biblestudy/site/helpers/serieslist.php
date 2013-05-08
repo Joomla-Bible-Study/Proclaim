@@ -8,15 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// @todo need to work over the JLoader. TOM
-JLoader::register('JBSMImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
-JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('image');
-$JViewLegacy->loadHelper('helper');
-
 /**
  *  Class for Series List
  *
@@ -462,8 +453,8 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSeriesstudies($id, $params, $admin_params, $template)
 	{
-		
-        $limit   = '';
+
+		$limit   = '';
 		$input   = new JInput;
 		$nolimit = $input->get('nolimit', '', 'int');
 
@@ -485,7 +476,7 @@ class JBSMSerieslist extends JBSMListing
 		$class2  = 'bseven';
 		$oddeven = $class1;
 
-		foreach ($result AS $row) 
+		foreach ($result AS $row)
 		{
 			if ($oddeven == $class1)
 			{ // Alternate the color background
@@ -506,7 +497,7 @@ class JBSMSerieslist extends JBSMListing
 				$studies .= ' lastrow';
 			}
 			$studies .= '">';
-            
+
 			$element = $this->getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
 
 			if ($params->get('series_detail_islink1') > 0)

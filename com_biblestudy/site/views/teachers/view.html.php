@@ -8,10 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 /**
  * View class for Teachers
  *
@@ -145,7 +141,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 		$images = new JBSMImages;
 
-		$pagebuilder = new JBSPagebuilder;
+		$pagebuilder = new JBSMPagebuilder;
 
 		foreach ($items as $i => $item)
 		{

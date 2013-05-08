@@ -127,7 +127,7 @@ $saveOrder = $listOrder == 'ordering';
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$item->max_ordering = 0; //??
+				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
 				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);

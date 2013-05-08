@@ -7,8 +7,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for CommentList extends Comments
@@ -65,6 +63,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			return;
 		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
+
 		// Check permissions to enter studies
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -108,6 +107,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 * Add the page title to browser.
 	 *
 	 * @since    7.1.0
+	 * @return void
 	 */
 	protected function setDocument()
 	{
