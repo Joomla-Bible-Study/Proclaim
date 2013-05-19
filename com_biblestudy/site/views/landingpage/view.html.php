@@ -8,11 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/images.php');
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
-
 /**
  * Landing page list view class
  *

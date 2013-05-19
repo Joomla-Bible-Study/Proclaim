@@ -9,7 +9,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// use default translations if none are available
+// Use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
 	DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
@@ -24,14 +24,14 @@ if (!defined('_BIBLESTUDY_LICENSE'))
 }
 
 /**
- * BibleSutdy Version Class
+ * BibleStudy Version Class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.2
  *
  * @use This is used by biblestudy.debug.php
  */
-class CBiblestudyVersion
+class JBSMBiblestudyVersion
 {
 
 	/**

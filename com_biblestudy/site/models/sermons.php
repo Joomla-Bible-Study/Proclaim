@@ -8,9 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
-
 jimport('joomla.application.component.modellist');
 
 /**
