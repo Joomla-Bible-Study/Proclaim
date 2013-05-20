@@ -398,7 +398,7 @@ class JBSMBibleStudyHelper
 
 		if (!isset($admin_params->debuge))
 		{
-			$admin_params = new stdClass;
+			$admin_params        = new stdClass;
 			$admin_params->debug = 1;
 		}
 

@@ -252,9 +252,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
-		// Load the backend helper for filtering.
-		// -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php';
-		JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 		$result = parent::save($key, $urlVar);
 
 		// If ok, redirect to the return page.
