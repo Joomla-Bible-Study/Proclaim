@@ -22,7 +22,6 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
-var_dump(JLoader::getClassList());
 jimport('joomla.version');
 $version = new JVersion;
 

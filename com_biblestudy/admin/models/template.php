@@ -10,8 +10,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
-
 /**
  * Template model class
  *

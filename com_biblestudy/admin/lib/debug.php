@@ -58,7 +58,6 @@ Class JBSMDebug
 		$dberror = $db->stderr(true);
 		echo Debug_Call_Stack_info($back + 1);
 
-		JLoader::register('CBiblestudyVersion', dirname(__FILE__) . '/lib/version.php');
 		$CBiblestudyVersion     = new JBSMBiblestudyVersion;
 		$biblestudyVersion      = $CBiblestudyVersion->version();
 		$biblestudyPHPVersion   = $CBiblestudyVersion->PHPVersion();
