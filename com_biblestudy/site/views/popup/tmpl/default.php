@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-$jbsMedia = new jbsMedia;
 ?>
 <div id="popupwindow" class="popupwindow">
     <body style="background-color:<?php echo $this->params->get('popupbackground', 'black') ?>">
@@ -22,7 +20,7 @@ $jbsMedia = new jbsMedia;
 // Here is where we choose whether to use the Internal Viewer or All Videos
 if ($this->params->get('player') == 3 || $this->player == 3 || $this->params->get('player') == 2 || $this->player == 2)
 {
-	$mediacode = $jbsMedia->getAVmediacode($this->media->mediacode, $this->media);
+	$mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
 	echo JHTML::_('content.prepare', $mediacode);
 }
 

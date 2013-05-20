@@ -11,9 +11,8 @@ defined('_JEXEC') or die;
 /**
  * Bible Study Core Difines
  */
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
-JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -160,7 +159,7 @@ class BiblestudyController extends JControllerLegacy
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
-			require_once(JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php');
+			require_once JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php';
 			$privatekey = $params->get('private_key');
 			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
 			$response   = $this->input->get('recaptcha_response_field', '', 'string');
@@ -285,7 +284,7 @@ class BiblestudyController extends JControllerLegacy
 		if ($task == 'download')
 		{
 			$mid        = $this->input->get('mid', '0', 'int');
-			$downloader = new Dump_File;
+			$downloader = new JBSMDownload;
 			$downloader->download($mid);
 
 			die;
@@ -303,7 +302,6 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($task == 'avplayer')
 		{
-			$input           = new JInput;
 			$mediacode       = $this->input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
 			echo $mediacode;
@@ -320,8 +318,7 @@ class BiblestudyController extends JControllerLegacy
 	public function playHit()
 	{
 		$input = new JInput;
-		JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-		$getMedia = new jbsMedia;
+		$getMedia = new JBSMMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
 
@@ -376,7 +373,7 @@ class BiblestudyController extends JControllerLegacy
 		}
 		$path = JBSMUpload::getpath($url, $tempfile);
 
-		// Check filetype is allowed
+		// Check file type is allowed
 		$allow = JBSMUpload::checkfile($temp);
 
 		if ($allow)

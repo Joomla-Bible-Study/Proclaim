@@ -32,7 +32,7 @@ class BiblestudyControllerTeacher extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object  $model  The model.
+	 * @param   JModelLegacy  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *

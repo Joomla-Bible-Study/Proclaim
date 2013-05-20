@@ -8,15 +8,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 /**
  * Bible Study stats support class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class JbStats
+class JBSMStats
 {
 
 	/**

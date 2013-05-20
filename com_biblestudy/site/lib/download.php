@@ -19,7 +19,7 @@ jimport('joomla.environment.response');
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class Dump_File
+class JBSMDownload
 {
 
 	/**

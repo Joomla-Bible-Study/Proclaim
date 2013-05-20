@@ -7,8 +7,6 @@
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-
 /**
  * Update on All upgrades for migrating from old DB's
  *
