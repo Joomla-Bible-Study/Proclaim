@@ -967,12 +967,7 @@ class JBSMElements
 							. $media->malttext . "' /></a>";
 
 
-						if ($type == 0)
-						{
-							// FIXME look like this function is no longer in teh code table need to find what it did. TOM
-							// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
-							$media1_link = "<p>Need to Fixme</p>";
-						}
+
 					}
 					else
 					{
@@ -998,19 +993,11 @@ class JBSMElements
 							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
 					}
-					else
-					{
-						// FIXME Looks like this is not in code need to find. TOM
-						// $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
-						$media1_link = "<p>Need to Fixme</p>";
-					}
+
 
 					break;
 
-				case 2:
-					// FIXME Looks like this is not in code need to find. TOM
-					$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
-					break;
+
 
 				case 3:
 					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
