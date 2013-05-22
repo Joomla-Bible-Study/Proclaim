@@ -159,8 +159,6 @@
 
 .podcastsubscribe {
     clear: both;
-    display: table;
-    width: 100%;
     background-color: #eee;
     border-radius: 15px 15px 15px 15px;
     border: 1px solid grey;
