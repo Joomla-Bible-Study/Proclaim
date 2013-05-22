@@ -9,6 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 if (BIBLESTUDY_CHECKREL)
 {
 	JHtml::_('behavior.keepalive');
@@ -18,7 +19,6 @@ if (BIBLESTUDY_CHECKREL)
 JHtml::_('behavior.formvalidation');
 
 // Create shortcut to parameters.
-//$params = $this->state->get('params');
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;

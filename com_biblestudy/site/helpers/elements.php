@@ -8,11 +8,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-
 /**
  * Class for Elements
  *
@@ -814,7 +809,7 @@ class JBSMElements
 	{
 		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
-		$getMedia = new jbsMedia;
+		$getMedia = new JBSMMedia;
 		jimport('joomla.application.component.helper');
 
 		if (!isset($row->id))
@@ -880,9 +875,7 @@ class JBSMElements
 			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
 
-
 			$mediatable .= '<td>';
-
 
 			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
 			$filesize = $this->getFilesize($media->size);
@@ -1034,9 +1027,11 @@ class JBSMElements
 				}
 				else
 				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
+					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+						$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
-				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') .
+					'" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
 			}
 			switch ($link_type)
 			{

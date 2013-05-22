@@ -10,8 +10,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
-JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
-
 /**
  * View class for Admin
  *
@@ -90,7 +88,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->loadHelper('dbhelper');
 		$language = JFactory::getLanguage();
 		$language->load('com_installer');
 
@@ -114,11 +111,10 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->jversion      = $this->get('CompVersion');
 
 		// End for database
-		$this->loadHelper('params');
 		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->getCfg('tmp_path');
 
-		$stats             = new jbStats;
+		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
 		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
 		$popups            = $stats->popups();
@@ -156,11 +152,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		}
 
 		// Check for SermonSpeaker and PreachIt
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('extension_id, name, element')->from('#__extensions');
-		$db->setQuery($query);
-		$extensions = $db->loadObjectList();
+		$extensions = $this->get('SSorPI');
 
 		foreach ($extensions as $extension)
 		{
@@ -253,7 +245,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	}
 
 	/**
-	 * Added for Sermonspeaker and preachit.
+	 * Added for SermonSpeaker and PreachIt.
 	 *
 	 * @param   string  $component  Component it is coming from
 	 *

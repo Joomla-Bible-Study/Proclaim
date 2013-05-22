@@ -440,4 +440,19 @@ class BiblestudyModelAdmin extends JModelAdmin
 		return $jversion;
 	}
 
+	/**
+	 * Check for SermonSpeaker and PreachIt
+	 *
+	 * @return object
+	 */
+	public function getSSorPI()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('extension_id, name, element')->from('#__extensions');
+		$db->setQuery($query);
+
+		return $db->loadObjectList();
+	}
+
 }

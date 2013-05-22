@@ -8,14 +8,6 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('JBSRestore', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.restore.php');
-JLoader::register('JBSExport', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.backup.php');
-JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('JBSconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.sermonspeakerconvert.class.php');
-JLoader::register('JBSPIconvert', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.preachitconvert.class.php');
-JLoader::register('JBSMFixAlias', BIBLESTUDY_PATH_ADMIN_HELPERS . '/alias.php');
-
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -38,7 +30,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    1.6
 	 */
@@ -228,7 +220,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function checkassets()
 	{
-		$asset       = new fixJBSAssets;
+		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
 		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
 		parent::display();
@@ -241,7 +233,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function fixAssets()
 	{
-		$asset = new fixJBSAssets;
+		$asset = new JBSMAssets;
 		$asset->fixAssets();
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.checkassets');
 	}
@@ -253,7 +245,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function convertSermonSpeaker()
 	{
-		$convert      = new JBSconvert;
+		$convert      = new JBSMSSConvert;
 		$ssconversion = $convert->convertSS();
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $ssconversion);
 	}
@@ -265,7 +257,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function convertPreachIt()
 	{
-		$convert      = new JBSPIconvert;
+		$convert      = new JBSMPIconvert;
 		$piconversion = $convert->convertPI();
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $piconversion);
 	}
@@ -294,6 +286,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function dbReset()
 	{
 		$user = JFactory::getUser();
+
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
@@ -307,7 +300,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 	}
 
-
 	/**
 	 * Alias Updates
 	 *
@@ -317,7 +309,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function aliasUpdate()
 	{
-		$alias  = new JBSMFixAlias;
+		$alias  = new JBSMAlias;
 		$update = $alias->updateAlias();
 		$this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
@@ -326,7 +318,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Do the import
 	 *
-	 * @param   boolean $parent     Source of info
+	 * @param   boolean  $parent  Source of info
 	 *
 	 * @return void
 	 */
@@ -357,7 +349,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		else
 		{
-			$import = new JBSRestore;
+			$import = new JBSMRestore;
 			$result = $import->importdb($parent);
 		}
 		if ($result || $copysuccess)
@@ -380,7 +372,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function import()
 	{
 		$application = JFactory::getApplication();
-		$import      = new JBSRestore;
+		$import      = new JBSMRestore;
 		$parent      = false;
 		$result      = $import->importdb($parent);
 
@@ -402,7 +394,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string $oldprefix  Old table Prefix
+	 * @param   string  $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */

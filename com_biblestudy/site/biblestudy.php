@@ -10,14 +10,22 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Include dependancies
-JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
+// Include dependencies
+JLoader::register('JBSMRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Difines
  */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
-if (version_compare(JVERSION, '3.0', 'ge'))
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+
+jimport('joomla.version');
+$version = new JVersion;
+
+if ($version->RELEASE == '3.0')
 {
 	$versionName = true;
 }

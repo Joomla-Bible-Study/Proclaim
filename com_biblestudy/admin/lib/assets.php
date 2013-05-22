@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.4
  */
-class FixJBSAssets
+class JBSMAssets
 {
 
 	/**
@@ -320,6 +320,7 @@ class FixJBSAssets
 	private static function deleteasset($data)
 	{
 		$db = JFactory::getDBO();
+
 		if (isset($data->jasset_id))
 		{
 			if ($data->jasset_id >= 2)
