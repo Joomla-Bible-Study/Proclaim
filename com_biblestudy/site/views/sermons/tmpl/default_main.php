@@ -191,3 +191,4 @@ $teachers = $params->get('teacher_id');
 	}
 	?>
 </div><!--end of bspagecontainer div-->
+<div class="clearfix"></div>
