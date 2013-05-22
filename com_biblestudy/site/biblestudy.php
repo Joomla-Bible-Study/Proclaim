@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.de
 jimport('joomla.version');
 $version = new JVersion;
 
-if ($version->RELEASE == '3.0')
+if (version_compare(JVERSION, '3.0', 'ge'))
 {
 	$versionName = true;
 }
