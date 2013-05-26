@@ -2,9 +2,9 @@
 /**
  * Live Update Package
  *
- * @package   LiveUpdate
- * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
@@ -15,12 +15,29 @@ if (!class_exists('JoomlaCompatView'))
 {
 	if (interface_exists('JView'))
 	{
+		/**
+		 * Live Update Package
+		 *
+		 * @package    LiveUpdate
+		 * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+		 * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+		 * @since      8.0.0
+		 */
 		abstract class JoomlaCompatView extends JViewLegacy
 		{
 		}
 	}
 	else
 	{
+
+		/**
+		 * Live Update Package
+		 *
+		 * @package    LiveUpdate
+		 * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+		 * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+		 * @since      8.0.0
+		 */
 		class JoomlaCompatView extends JView
 		{
 		}
@@ -29,13 +46,18 @@ if (!class_exists('JoomlaCompatView'))
 
 /**
  * The Live Update MVC view
+ *
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @since      8.0.0
  */
 class LiveUpdateView extends JoomlaCompatView
 {
 	/**
 	 * Display
 	 *
-	 * @param null $tpl
+	 * @param   null $tpl  ?
 	 *
 	 * @return mixed|void
 	 */
@@ -53,7 +75,8 @@ class LiveUpdateView extends JoomlaCompatView
 			$document->addStyleSheet($url, 'text/css');
 		}
 
-		$requeryURL = rtrim(JURI::base(), '/') . '/index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&force=1';
+		$requeryURL = rtrim(JURI::base(), '/') . '/index.php?option=' .
+			JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&force=1';
 		$this->assign('requeryURL', $requeryURL);
 
 		$model = $this->getModel();
@@ -87,6 +110,7 @@ ENDCSS;
 
 				// Are there messages to display ?
 				$showMessage = false;
+
 				if (is_object($state))
 				{
 					$message1    = $state->get('message');
@@ -102,7 +126,8 @@ ENDCSS;
 			case 'nagscreen':
 				$this->setLayout('nagscreen');
 				$this->assign('updateInfo', LiveUpdate::getUpdateInformation());
-				$this->assign('runUpdateURL', 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=startupdate&skipnag=1');
+				$this->assign('runUpdateURL', 'index.php?option=' . JRequest::getCmd('option', '') .
+					'&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=startupdate&skipnag=1');
 				break;
 
 			case 'overview':
@@ -111,7 +136,8 @@ ENDCSS;
 
 				$force = JRequest::getInt('force', 0);
 				$this->assign('updateInfo', LiveUpdate::getUpdateInformation($force));
-				$this->assign('runUpdateURL', 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=startupdate');
+				$this->assign('runUpdateURL', 'index.php?option=' . JRequest::getCmd('option', '') .
+					'&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=startupdate');
 
 				$needsAuth = !($config->getAuthorization()) && ($config->requiresAuthorization());
 				$this->assign('needsAuth', $needsAuth);

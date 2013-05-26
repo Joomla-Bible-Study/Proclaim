@@ -38,6 +38,8 @@
                             </li>
                             <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
                             <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a>
+                            </li>
                             <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
                         </ul>
                     </li>
@@ -54,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">419</span></a></li>
+                                <span class="label label-info">329</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -99,13 +101,12 @@
             <li class="nav-header">
                 <i class="icon-custom icon-method"></i> Methods
                 <ul>
-                    <li class="method public inherited"><a href="#method_get" title="get :: "><span class="description">get()
-        </span>
+                    <li class="method public inherited"><a href="#method_get" title="get :: Get"><span
+                            class="description">Get</span>
                         <pre>get()</pre>
                     </a></li>
-                    <li class="method public inherited"><a href="#method_getInstance" title="getInstance :: "><span
-                            class="description">getInstance()
-        </span>
+                    <li class="method public inherited"><a href="#method_getInstance"
+                                                           title="getInstance :: Instance"><span class="description">Instance</span>
                         <pre>getInstance()</pre>
                     </a></li>
                     <li class="method public inherited"><a href="#method_getRegistry"
@@ -113,12 +114,10 @@
                             class="description">Returns the internally used registry</span>
                         <pre>getRegistry()</pre>
                     </a></li>
-                    <li class="method public "><a href="#method_load" title="load :: "><span class="description">load()
-        </span>
+                    <li class="method public "><a href="#method_load" title="load :: Load"><span class="description">Load</span>
                         <pre>load()</pre>
                     </a></li>
-                    <li class="method public "><a href="#method_save" title="save :: "><span class="description">save()
-        </span>
+                    <li class="method public "><a href="#method_save" title="save :: Save"><span class="description">Save</span>
                         <pre>save()</pre>
                     </a></li>
                     <li class="method public inherited"><a href="#method_set" title="set :: "><span class="description">set()
@@ -144,11 +143,12 @@
             </li>
             <li class="nav-header private">» Private
                 <ul>
-                    <li class="property private "><a href="#property_component" title="$component :: "><span
+                    <li class="property private "><a href="#property_component"
+                                                     title="$component :: Component Name"><span
                             class="description"></span>
                         <pre>$component</pre>
                     </a></li>
-                    <li class="property private "><a href="#property_key" title="$key :: "><span
+                    <li class="property private "><a href="#property_key" title="$key :: Key"><span
                             class="description"></span>
                         <pre>$key</pre>
                     </a></li>
@@ -190,9 +190,8 @@
 
                 <div class="element clickable method public method_get" data-toggle="collapse"
                      data-target=".method_get .collapse">
-                    <h2>get()
-                    </h2>
-                    <pre>get($key, $default) </pre>
+                    <h2>Get</h2>
+                    <pre>get(string $key, string $default) : mixed</pre>
                     <div class="labels"><span class="label">Inherited</span></div>
                     <div class="row collapse">
                         <div class="detail-description">
@@ -205,8 +204,17 @@
                             </table>
                             <h3>Parameters</h3>
 
-                            <div class="subelement argument"><h4>$key</h4></div>
-                            <div class="subelement argument"><h4>$default</h4></div>
+                            <div class="subelement argument">
+                                <h4>$key</h4>
+                                <code>string</code>
+                            </div>
+                            <div class="subelement argument">
+                                <h4>$default</h4>
+                                <code>string</code>
+                            </div>
+                            <h3>Returns</h3>
+
+                            <div class="subelement response"><code>mixed</code></div>
                         </div>
                     </div>
                 </div>
@@ -214,8 +222,7 @@
 
                 <div class="element clickable method public method_getInstance" data-toggle="collapse"
                      data-target=".method_getInstance .collapse">
-                    <h2>getInstance()
-                    </h2>
+                    <h2>Instance</h2>
                     <pre>getInstance(string $type, array $config) : <a href="../classes/LiveUpdateStorage.html">\LiveUpdateStorage</a></pre>
                     <div class="labels">
                         <span class="label">Inherited</span><span class="label">Static</span>
@@ -272,16 +279,19 @@
 
                 <div class="element clickable method public method_load" data-toggle="collapse"
                      data-target=".method_load .collapse">
-                    <h2>load()
-                    </h2>
-                    <pre>load($config) </pre>
+                    <h2>Load</h2>
+                    <pre>load(string $config) : void</pre>
                     <div class="labels"></div>
                     <div class="row collapse">
                         <div class="detail-description">
                             <div class="long_description"></div>
                             <h3>Parameters</h3>
 
-                            <div class="subelement argument"><h4>$config</h4></div>
+                            <div class="subelement argument">
+                                <h4>$config</h4>
+                                <code>string</code>
+
+                                <p>Config</p></div>
                         </div>
                     </div>
                 </div>
@@ -289,9 +299,8 @@
 
                 <div class="element clickable method public method_save" data-toggle="collapse"
                      data-target=".method_save .collapse">
-                    <h2>save()
-                    </h2>
-                    <pre>save() </pre>
+                    <h2>Save</h2>
+                    <pre>save() : void</pre>
                     <div class="labels"></div>
                     <div class="row collapse">
                         <div class="detail-description">
@@ -328,7 +337,7 @@
                 <div class="element clickable method public method_setRegistry" data-toggle="collapse"
                      data-target=".method_setRegistry .collapse">
                     <h2>Replaces the internally used registry with the one supplied</h2>
-                    <pre>setRegistry(\JRegistry $registry) </pre>
+                    <pre>setRegistry(\JRegistry $registry) : void</pre>
                     <div class="labels"><span class="label">Inherited</span></div>
                     <div class="row collapse">
                         <div class="detail-description">
@@ -374,7 +383,7 @@
                 <div class="element clickable property private property_component" data-toggle="collapse"
                      data-target=".property_component .collapse">
                     <h2></h2>
-                    <pre>$component </pre>
+                    <pre>$component : null</pre>
                     <div class="labels"></div>
                     <div class="row collapse">
                         <div class="detail-description">
@@ -387,7 +396,7 @@
                 <div class="element clickable property private property_key" data-toggle="collapse"
                      data-target=".property_key .collapse">
                     <h2></h2>
-                    <pre>$key </pre>
+                    <pre>$key : null</pre>
                     <div class="labels"></div>
                     <div class="row collapse">
                         <div class="detail-description">
@@ -404,7 +413,7 @@
         Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
         provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
         Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-        generated on 2013-05-26T01:30:15-05:00.<br></footer>
+        generated on 2013-05-26T02:50:12-05:00.<br></footer>
 </div>
 </div>
 </body>

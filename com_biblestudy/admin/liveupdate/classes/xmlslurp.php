@@ -2,13 +2,21 @@
 /**
  * Live Update Package
  *
- * @package   LiveUpdate
- * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
 
+/**
+ * Live Update XML Slurp
+ *
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @since      8.0.0
+ */
 class LiveUpdateXMLSlurp extends JObject
 {
 	/**
@@ -21,8 +29,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Get Info
 	 *
-	 * @param $extensionName
-	 * @param $xmlName
+	 * @param   string $extensionName  ?
+	 * @param   string $xmlName        ?
 	 *
 	 * @return mixed
 	 */
@@ -39,8 +47,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Gets the version information of an extension by reading its XML file
 	 *
-	 * @param string $extensionName The name of the extension, e.g. com_foobar, mod_foobar, plg_foobar or tpl_foobar.
-	 * @param string $xmlName       The name of the XML manifest filename. If empty uses $extensionName.xml
+	 * @param   string $extensionName  The name of the extension, e.g. com_foobar, mod_foobar, plg_foobar or tpl_foobar.
+	 * @param   string $xmlName        The name of the XML manifest filename. If empty uses $extensionName.xml
 	 *
 	 * @return array
 	 */
@@ -83,8 +91,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Gets the version information of a component by reading its XML file
 	 *
-	 * @param string $extensionName The name of the extension, e.g. com_foobar
-	 * @param string $xmlName       The name of the XML manifest filename. If empty uses $extensionName.xml
+	 * @param   string $extensionName  The name of the extension, e.g. com_foobar
+	 * @param   string $xmlName        The name of the XML manifest filename. If empty uses $extensionName.xml
 	 *
 	 * @return array
 	 */
@@ -116,7 +124,10 @@ class LiveUpdateXMLSlurp extends JObject
 		{
 			$filename = $this->searchForManifest($path);
 
-			if ($filename === false) $filename = null;
+			if ($filename === false)
+			{
+				$filename = null;
+			}
 		}
 
 		if (empty($filename))
@@ -151,8 +162,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Gets the version information of a module by reading its XML file
 	 *
-	 * @param string $extensionName The name of the extension, e.g. mod_foobar
-	 * @param string $xmlName       The name of the XML manifest filename. If empty uses $extensionName.xml
+	 * @param   string $extensionName  The name of the extension, e.g. mod_foobar
+	 * @param   string $xmlName        The name of the XML manifest filename. If empty uses $extensionName.xml
 	 *
 	 * @return array
 	 */
@@ -255,8 +266,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Gets the version information of a plugin by reading its XML file
 	 *
-	 * @param string $extensionName The name of the plugin, e.g. plg_foobar
-	 * @param string $xmlName       The name of the XML manifest filename. If empty uses $extensionName.xml
+	 * @param   string $extensionName  The name of the plugin, e.g. plg_foobar
+	 * @param   string $xmlName        The name of the XML manifest filename. If empty uses $extensionName.xml
 	 *
 	 * @return array
 	 */
@@ -316,8 +327,8 @@ class LiveUpdateXMLSlurp extends JObject
 	/**
 	 * Gets the version information of a template by reading its XML file
 	 *
-	 * @param string $extensionName The name of the template, e.g. tpl_foobar
-	 * @param string $xmlName       The name of the XML manifest filename. If empty uses $extensionName.xml or templateDetails.xml
+	 * @param   string $extensionName  The name of the template, e.g. tpl_foobar
+	 * @param   string $xmlName        The name of the XML manifest filename. If empty uses $extensionName.xml or templateDetails.xml
 	 *
 	 * @return array
 	 */
@@ -336,7 +347,11 @@ class LiveUpdateXMLSlurp extends JObject
 		{
 			// Then look for front-end templates
 			$path = JPATH_SITE . '/templates/' . $altExtensionName;
-			if (!JFolder::exists($path)) return array('version' => '', 'date' => '');
+
+			if (!JFolder::exists($path))
+			{
+				return array('version' => '', 'date' => '');
+			}
 		}
 
 		$filename = "$path/$xmlName";
@@ -388,8 +403,8 @@ class LiveUpdateXMLSlurp extends JObject
 	 * extension's directory, but in administrator/manifests. Kudos to @mbabker
 	 * for sharing this method!
 	 *
-	 * @param string $extensionName
-	 * @param string $xmlName
+	 * @param   string $extensionName  ?
+	 * @param   string $xmlName        ?
 	 *
 	 * @return array
 	 */
@@ -450,7 +465,7 @@ class LiveUpdateXMLSlurp extends JObject
 	 * Scans a directory for XML manifest files. The first XML file to be a
 	 * manifest wins.
 	 *
-	 * @var $path string The path to look into
+	 * @param   string $path  The path to look into
 	 *
 	 * @return string|bool The full path to a manifest file or false if not found
 	 */
@@ -458,22 +473,26 @@ class LiveUpdateXMLSlurp extends JObject
 	{
 		jimport('joomla.filesystem.folder');
 		$files = JFolder::files($path, '\.xml$', false, true);
-		if (!empty($files)) foreach ($files as $filename)
+
+		if (!empty($files))
 		{
-			try
+			foreach ($files as $filename)
 			{
-				$xml = new SimpleXMLElement($filename, LIBXML_NONET, true);
-			}
-			catch (Exception $e)
-			{
-				continue;
-			}
+				try
+				{
+					$xml = new SimpleXMLElement($filename, LIBXML_NONET, true);
+				}
+				catch (Exception $e)
+				{
+					continue;
+				}
 
-			// Check for extension (since 1.6) and install (supported through 2.5)
-			if (($xml->getName() != 'extension' && $xml->getName() != 'install')) continue;
-			unset($xml);
+				// Check for extension (since 1.6) and install (supported through 2.5)
+				if (($xml->getName() != 'extension' && $xml->getName() != 'install')) continue;
+				unset($xml);
 
-			return $filename;
+				return $filename;
+			}
 		}
 
 		return false;

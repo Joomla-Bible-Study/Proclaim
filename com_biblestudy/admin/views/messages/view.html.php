@@ -42,41 +42,57 @@ class BiblestudyViewMessages extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	public $canDo;
 
 	/**
+	 * Books
+	 *
 	 * @var object
 	 */
 	public $books;
 
 	/**
+	 * Teachers
+	 *
 	 * @var object
 	 */
 	public $teachers;
 
 	/**
+	 * Series
+	 *
 	 * @var object
 	 */
 	public $series;
 
 	/**
+	 * Message Types
+	 *
 	 * @var object
 	 */
 	public $messageTypes;
 
 	/**
+	 * Years
+	 *
 	 * @var object
 	 */
 	public $years;
 
 	/**
+	 * Filter Levels
+	 *
 	 * @var array
 	 */
 	public $f_levels;
 
 	/**
+	 * Side Bar
+	 *
 	 * @var object
 	 */
 	public $sidebar;

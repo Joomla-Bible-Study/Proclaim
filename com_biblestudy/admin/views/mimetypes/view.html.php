@@ -41,12 +41,16 @@ class BiblestudyViewMimetypes extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
+	/** @var  array Filter Levels */
 	public $f_levels;
 
+	/** @var  array Side Bar */
 	public $sidebar;
 
 	/**

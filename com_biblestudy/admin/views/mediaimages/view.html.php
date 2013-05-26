@@ -40,21 +40,38 @@ class BiblestudyViewMediaimages extends JViewLegacy
 	 */
 	protected $state;
 
+	/**
+	 * Directory
+	 *
+	 * @var string
+	 */
 	public $directory;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	public $canDo;
 
+	/**
+	 * Filter Levels
+	 *
+	 * @var string
+	 */
 	public $f_levels;
 
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 */
 	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

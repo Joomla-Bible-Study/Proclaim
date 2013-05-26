@@ -38,14 +38,16 @@ class BiblestudyViewMigration extends JViewLegacy
 	/** @var array Array of PHP Function to parse. */
 	private $_afterStack = array();
 
+	/** @var string More */
 	protected $more;
 
+	/** @var  string Percentage */
 	protected $percentage;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

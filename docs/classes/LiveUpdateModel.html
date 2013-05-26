@@ -38,6 +38,8 @@
                             </li>
                             <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
                             <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a>
+                            </li>
                             <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
                         </ul>
                     </li>
@@ -54,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">419</span></a></li>
+                                <span class="label label-info">329</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -101,29 +103,24 @@
                 <li class="nav-header">
                     <i class="icon-custom icon-method"></i> Methods
                     <ul>
-                        <li class="method public "><a href="#method_cleanup" title="cleanup :: "><span
-                                class="description">cleanup()
-        </span>
+                        <li class="method public "><a href="#method_cleanup" title="cleanup :: Cleanup"><span
+                                class="description">Cleanup</span>
                             <pre>cleanup()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_download" title="download :: "><span
-                                class="description">download()
-        </span>
+                        <li class="method public "><a href="#method_download" title="download :: Download"><span
+                                class="description">Download</span>
                             <pre>download()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_extract" title="extract :: "><span
-                                class="description">extract()
-        </span>
+                        <li class="method public "><a href="#method_extract" title="extract :: Extract"><span
+                                class="description">Extract</span>
                             <pre>extract()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_getSRPURL" title="getSRPURL :: "><span
-                                class="description">getSRPURL()
-        </span>
+                        <li class="method public "><a href="#method_getSRPURL" title="getSRPURL :: SRPURL"><span
+                                class="description">SRPURL</span>
                             <pre>getSRPURL()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_install" title="install :: "><span
-                                class="description">install()
-        </span>
+                        <li class="method public "><a href="#method_install" title="install :: Install"><span
+                                class="description">Install</span>
                             <pre>install()</pre>
                         </a></li>
                     </ul>
@@ -152,9 +149,8 @@
 
                     <div class="element clickable method public method_cleanup" data-toggle="collapse"
                          data-target=".method_cleanup .collapse">
-                        <h2>cleanup()
-                        </h2>
-                        <pre>cleanup() </pre>
+                        <h2>Cleanup</h2>
+                        <pre>cleanup() : void</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
@@ -166,13 +162,15 @@
 
                     <div class="element clickable method public method_download" data-toggle="collapse"
                          data-target=".method_download .collapse">
-                        <h2>download()
-                        </h2>
-                        <pre>download() </pre>
+                        <h2>Download</h2>
+                        <pre>download() : bool</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>bool</code></div>
                             </div>
                         </div>
                     </div>
@@ -180,13 +178,15 @@
 
                     <div class="element clickable method public method_extract" data-toggle="collapse"
                          data-target=".method_extract .collapse">
-                        <h2>extract()
-                        </h2>
-                        <pre>extract() </pre>
+                        <h2>Extract</h2>
+                        <pre>extract() : bool</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>bool</code></div>
                             </div>
                         </div>
                     </div>
@@ -194,16 +194,24 @@
 
                     <div class="element clickable method public method_getSRPURL" data-toggle="collapse"
                          data-target=".method_getSRPURL .collapse">
-                        <h2>getSRPURL()
-                        </h2>
-                        <pre>getSRPURL($return) </pre>
+                        <h2>SRPURL</h2>
+                        <pre>getSRPURL(string $return) : bool | string</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$return</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$return</h4>
+                                    <code>string</code>
+
+                                    <p>Return info</p></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response">
+                                    <code>bool</code><code>string</code>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -211,13 +219,15 @@
 
                     <div class="element clickable method public method_install" data-toggle="collapse"
                          data-target=".method_install .collapse">
-                        <h2>install()
-                        </h2>
-                        <pre>install() </pre>
+                        <h2>Install</h2>
+                        <pre>install() : bool</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>bool</code></div>
                             </div>
                         </div>
                     </div>
@@ -230,7 +240,7 @@
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
             provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T01:30:15-05:00.<br></footer>
+            generated on 2013-05-26T02:50:12-05:00.<br></footer>
     </div>
 </div>
 </body>

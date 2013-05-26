@@ -27,7 +27,7 @@ class LiveUpdateStorageFile extends LiveUpdateStorage
 	/**
 	 * Load
 	 *
-	 * @param $config
+	 * @param   string $config  ?
 	 *
 	 * @return void
 	 */

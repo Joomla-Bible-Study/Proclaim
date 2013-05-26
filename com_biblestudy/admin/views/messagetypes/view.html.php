@@ -42,21 +42,30 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
 	/**
+	 * Filter Levels
+	 *
 	 * @var array
 	 */
 	public $f_levels;
 
+	/**
+	 * Side Bar
+	 *
+	 * @var object
+	 */
 	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

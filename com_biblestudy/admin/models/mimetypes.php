@@ -20,6 +20,11 @@ jimport('joomla.application.component.modellist');
  */
 class BiblestudyModelMimetypes extends JModelList
 {
+	/**
+	 * Deletes
+	 *
+	 * @var string
+	 */
 	private $_deletes;
 
 	/**

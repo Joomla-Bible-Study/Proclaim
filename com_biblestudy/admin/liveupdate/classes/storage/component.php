@@ -35,7 +35,7 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 	/**
 	 * Load
 	 *
-	 * @param string $config Config
+	 * @param   string $config  Config
 	 *
 	 * @return void
 	 */

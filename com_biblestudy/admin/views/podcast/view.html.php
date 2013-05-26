@@ -1,5 +1,4 @@
 <?php
-
 /**
  * JView html
  *
@@ -49,6 +48,8 @@ class BiblestudyViewPodcast extends JViewLegacy
 	protected $defaults;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
@@ -56,7 +57,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

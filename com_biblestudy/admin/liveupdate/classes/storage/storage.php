@@ -2,9 +2,9 @@
 /**
  * Live Update Package
  *
- * @package   LiveUpdate
- * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
@@ -12,8 +12,11 @@ defined('_JEXEC') or die();
 /**
  * Abstract class for the update parameters storage
  *
- * @author nicholas
- *
+ * @package    LiveUpdate
+ * @author     nicholas
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @since      8.0.0
  */
 class LiveUpdateStorage
 {
@@ -27,8 +30,8 @@ class LiveUpdateStorage
 	/**
 	 * Instance
 	 *
-	 * @param string $type
-	 * @param array  $config
+	 * @param   string $type    ?
+	 * @param   array  $config  ?
 	 *
 	 * @return LiveUpdateStorage
 	 */
@@ -65,7 +68,7 @@ class LiveUpdateStorage
 	/**
 	 * Replaces the internally used registry with the one supplied
 	 *
-	 * @param JRegistry $registry
+	 * @param   JRegistry $registry  ?
 	 *
 	 * @return void
 	 */
@@ -74,7 +77,14 @@ class LiveUpdateStorage
 		self::$registry = $registry;
 	}
 
-
+	/**
+	 * Set
+	 *
+	 * @param   string $key    ?
+	 * @param   string $value  ?
+	 *
+	 * @return void
+	 */
 	public final function set($key, $value)
 	{
 		if ($key == 'updatedata')
@@ -98,8 +108,8 @@ class LiveUpdateStorage
 	/**
 	 * Get
 	 *
-	 * @param string $key
-	 * @param string $default
+	 * @param   string $key      ?
+	 * @param   string $default  ?
 	 *
 	 * @return mixed
 	 */
@@ -138,7 +148,7 @@ class LiveUpdateStorage
 	/**
 	 * Load
 	 *
-	 * @param $config
+	 * @param   string $config  ?
 	 *
 	 * @return void
 	 */

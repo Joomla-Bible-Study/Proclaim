@@ -2,9 +2,9 @@
 /**
  * Live Update Package
  *
- * @package   LiveUpdate
- * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
@@ -16,7 +16,12 @@ if (!class_exists('JoomlaCompatController'))
 	if (interface_exists('JController'))
 	{
 		/**
-		 * The Live Update MVC controller
+		 * The Live Update MVC controller\
+		 *
+		 * @package    LiveUpdate
+		 * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+		 * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+		 * @since      8.0.0
 		 */
 		abstract class JoomlaCompatController extends JControllerLegacy
 		{
@@ -26,6 +31,11 @@ if (!class_exists('JoomlaCompatController'))
 	{
 		/**
 		 * The Live Update MVC controller
+		 *
+		 * @package    LiveUpdate
+		 * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+		 * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+		 * @since      8.0.0
 		 */
 		class JoomlaCompatController extends JController
 		{
@@ -35,15 +45,18 @@ if (!class_exists('JoomlaCompatController'))
 
 /**
  * The Live Update MVC controller
+ *
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @since      8.0.0
  */
 class LiveUpdateController extends JoomlaCompatController
 {
 	/**
 	 * Object constructor
 	 *
-	 * @param array $config
-	 *
-	 * @return LiveUpdateController
+	 * @param   array $config  ??
 	 */
 	public function __construct($config = array())
 	{
@@ -54,6 +67,8 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Runs the overview page task
+	 *
+	 * @return void
 	 */
 	public function overview()
 	{
@@ -62,13 +77,17 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Starts the update procedure. If the FTP credentials are required, it asks for them.
+	 *
+	 * @return void
 	 */
 	public function startupdate()
 	{
 		$updateInfo = LiveUpdate::getUpdateInformation();
+
 		if ($updateInfo->stability != 'stable')
 		{
 			$skipNag = JRequest::getBool('skipnag', false);
+
 			if (!$skipNag)
 			{
 				$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=nagscreen');
@@ -77,6 +96,7 @@ class LiveUpdateController extends JoomlaCompatController
 		}
 
 		$ftp = $this->setCredentialsFromRequest('ftp');
+
 		if ($ftp === true)
 		{
 			// The user needs to supply the FTP credentials
@@ -92,17 +112,21 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Download the update package
+	 *
+	 * @return void
 	 */
 	public function download()
 	{
 		$ftp    = $this->setCredentialsFromRequest('ftp');
 		$model  = $this->getThisModel();
 		$result = $model->download();
+
 		if (!$result)
 		{
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_DOWNLOAD_FAILED');
-			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') .
+			'&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
 		}
 		else
 		{
@@ -110,6 +134,7 @@ class LiveUpdateController extends JoomlaCompatController
 			$url  = 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=extract';
 			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
 			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+
 			if ($user)
 			{
 				$url .= '&username=' . urlencode($user) . '&password=' . urlencode($pass);
@@ -121,17 +146,21 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Extract
+	 *
+	 * @return void
 	 */
 	public function extract()
 	{
 		$ftp    = $this->setCredentialsFromRequest('ftp');
 		$model  = $this->getThisModel();
 		$result = $model->extract();
+
 		if (!$result)
 		{
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_EXTRACT_FAILED');
-			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') .
+			'&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
 		}
 		else
 		{
@@ -139,6 +168,7 @@ class LiveUpdateController extends JoomlaCompatController
 			$url  = 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=install';
 			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
 			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+
 			if ($user)
 			{
 				$url .= '&username=' . urlencode($user) . '&password=' . urlencode($pass);
@@ -148,9 +178,11 @@ class LiveUpdateController extends JoomlaCompatController
 			$app       = JFactory::getApplication();
 			$jResponse = $app->triggerEvent('onSRPEnabled');
 			$status    = false;
+
 			if (!empty($jResponse))
 			{
 				$status = false;
+
 				foreach ($jResponse as $response)
 				{
 					$status = $status || $response;
@@ -162,6 +194,7 @@ class LiveUpdateController extends JoomlaCompatController
 			{
 				$return = $url;
 				$url    = $model->getSRPURL($return);
+
 				if (!$url)
 				{
 					$url = $return;
@@ -175,12 +208,15 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Install
+	 *
+	 * @return void
 	 */
 	public function install()
 	{
 		$ftp    = $this->setCredentialsFromRequest('ftp');
 		$model  = $this->getThisModel();
 		$result = $model->install();
+
 		if (!$result)
 		{
 			// Installation failed
@@ -200,6 +236,8 @@ class LiveUpdateController extends JoomlaCompatController
 
 	/**
 	 * Cleanup
+	 *
+	 * @return void
 	 */
 	public function cleanup()
 	{
@@ -217,7 +255,10 @@ class LiveUpdateController extends JoomlaCompatController
 	/**
 	 * Displays the current view
 	 *
-	 * @param bool $cachable Ignored!
+	 * @param   bool $cachable   Ignored!
+	 * @param   bool $urlparams  Ignored!
+	 *
+	 * @return void
 	 */
 	public final function display($cachable = false, $urlparams = false)
 	{
@@ -255,7 +296,7 @@ class LiveUpdateController extends JoomlaCompatController
 			$basePath = $this->basePath;
 			$tPath    = dirname(__FILE__) . '/tmpl';
 
-			require_once('view.php');
+			require_once 'view.php';
 			$view = new LiveUpdateView(array('base_path' => $basePath, 'template_path' => $tPath));
 		}
 
@@ -273,20 +314,23 @@ class LiveUpdateController extends JoomlaCompatController
 
 		if (is_null($model))
 		{
-			require_once('model.php');
-			$model = new LiveUpdateModel();
+			require_once 'model.php';
+			$model = new LiveUpdateModel;
 			$task  = $this->task;
 
 			$model->setState('task', $task);
 
 			$app  = JFactory::getApplication();
 			$menu = $app->getMenu();
+
 			if (is_object($menu))
 			{
 				$item = $menu->getActive();
+
 				if ($item)
 				{
 					$params = $menu->getParams($item->id);
+
 					// Set Default State Data
 					$model->setState('parameters.menu', $params);
 				}
@@ -300,7 +344,7 @@ class LiveUpdateController extends JoomlaCompatController
 	/**
 	 * Credentials From Request
 	 *
-	 * @param $client
+	 * @param   string $client  ??
 	 *
 	 * @return bool|object
 	 */
@@ -310,6 +354,7 @@ class LiveUpdateController extends JoomlaCompatController
 		jimport('joomla.client.helper');
 		$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
 		$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
+
 		if ($user != '' && $pass != '')
 		{
 			// Add credentials to the session

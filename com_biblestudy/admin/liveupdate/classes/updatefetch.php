@@ -1,8 +1,10 @@
 <?php
 /**
- * @package   LiveUpdate
- * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * Live Update Package
+ *
+ * @package    LiveUpdate
+ * @copyright  Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
+ * @license    GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
@@ -30,6 +32,8 @@ class LiveUpdateFetch extends JObject
 	/**
 	 * One-stop-shop function which fetches update information and tells you
 	 * if there are updates available or not, or if updates are not supported.
+	 *
+	 * @param   bool $force  ?
 	 *
 	 * @return int 0 = no updates, 1 = updates available, -1 = updates not supported, -2 = fetching updates crashes the server
 	 */
@@ -124,7 +128,7 @@ class LiveUpdateFetch extends JObject
 	 * Get the latest version (update) information, either from the cache or
 	 * from the update server.
 	 *
-	 * @param $force bool Set to true to force fetching fresh data from the server
+	 * @param   bool $force  bool Set to true to force fetching fresh data from the server
 	 *
 	 * @return stdClass The update information, in object format
 	 */
@@ -193,7 +197,7 @@ class LiveUpdateFetch extends JObject
 	 * Retrieves the update data from the server, unless previous runs indicate
 	 * that the download process gets stuck and ends up in a WSOD.
 	 *
-	 * @param bool $force Set to true to force fetching new data no matter if the process is marked as stuck
+	 * @param   bool $force  Set to true to force fetching new data no matter if the process is marked as stuck
 	 *
 	 * @return stdClass
 	 */
@@ -257,15 +261,17 @@ class LiveUpdateFetch extends JObject
 		$url     = $extInfo['updateurl'];
 
 		$process = curl_init($url);
-		$config  = new LiveUpdateConfig();
+		$config  = new LiveUpdateConfig;
 		$config->applyCACert($process);
 		curl_setopt($process, CURLOPT_HEADER, 0);
+
 		// Pretend we are Firefox, so that webservers play nice with us
 		curl_setopt($process, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.14) Gecko/20110105 Firefox/3.6.14');
 		curl_setopt($process, CURLOPT_ENCODING, 'gzip');
 		curl_setopt($process, CURLOPT_TIMEOUT, 10);
 		curl_setopt($process, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($process, CURLOPT_SSL_VERIFYPEER, false);
+
 		// The @ sign allows the next line to fail if open_basedir is set or if safe mode is enabled
 		@curl_setopt($process, CURLOPT_FOLLOWLOCATION, 1);
 		@curl_setopt($process, CURLOPT_MAXREDIRS, 20);
@@ -293,7 +299,7 @@ class LiveUpdateFetch extends JObject
 	/**
 	 * Parses the raw INI data into an array of update information
 	 *
-	 * @param string $rawData The raw INI data
+	 * @param   string $rawData  The raw INI data
 	 *
 	 * @return array The parsed data
 	 */
@@ -333,14 +339,17 @@ class LiveUpdateFetch extends JObject
 		if (array_key_exists('platforms', $iniData))
 		{
 			$rawPlatforms = explode(',', $iniData['platforms']);
+
 			foreach ($rawPlatforms as $platform)
 			{
 				$platform = trim($platform);
+
 				if (substr($platform, 0, 7) != 'joomla/')
 				{
 					continue;
 				}
 				$platform = substr($platform, 7);
+
 				if ($currentPlatform == $platform)
 				{
 					$supportedPlatform = true;
@@ -362,9 +371,11 @@ class LiveUpdateFetch extends JObject
 		$ret['date']    = array_key_exists('date', $iniData) ? $iniData['date'] : '';
 		$config         = LiveUpdateConfig::getInstance();
 		$auth           = $config->getAuthorization();
+
 		if (!array_key_exists('link', $iniData)) $iniData['link'] = '';
 		$glue               = strpos($iniData['link'], '?') === false ? '?' : '&';
 		$ret['downloadURL'] = $iniData['link'] . (empty($auth) ? '' : $glue . $auth);
+
 		if (array_key_exists('stability', $iniData))
 		{
 			$stability = $iniData['stability'];
@@ -373,6 +384,7 @@ class LiveUpdateFetch extends JObject
 		{
 			// Stability not defined; guesswork mode enabled
 			$version = $ret['version'];
+
 			if (preg_match('#^[0-9\.]*a[0-9\.]*#', $version) == 1)
 			{
 				$stability = 'alpha';

@@ -31,6 +31,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'mediafile.ordering';
+
 if ($saveOrder && BIBLESTUDY_CHECKREL)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';

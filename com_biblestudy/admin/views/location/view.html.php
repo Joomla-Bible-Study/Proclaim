@@ -1,5 +1,4 @@
 <?php
-
 /**
  * JView html
  *
@@ -50,6 +49,8 @@ class BiblestudyViewLocation extends JViewLegacy
 	protected $defaults;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
