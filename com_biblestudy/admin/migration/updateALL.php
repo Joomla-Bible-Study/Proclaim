@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -791,7 +793,7 @@ class MigrationUpgrade
 	/**
 	 * Add Asset Column
 	 *
-	 * @param   array  $table  Table name to affect
+	 * @param   array $table  Table name to affect
 	 *
 	 * @return boolean
 	 */

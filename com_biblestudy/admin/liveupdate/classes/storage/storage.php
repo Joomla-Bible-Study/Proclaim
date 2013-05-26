@@ -1,14 +1,17 @@
 <?php
 /**
- * @package LiveUpdate
+ * Live Update Package
+ *
+ * @package   LiveUpdate
  * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
 
 /**
  * Abstract class for the update parameters storage
+ *
  * @author nicholas
  *
  */
@@ -16,14 +19,17 @@ class LiveUpdateStorage
 {
 	/**
 	 * The update data registry
+	 *
 	 * @var JRegistry
 	 */
 	public static $registry = null;
 
 	/**
+	 * Instance
 	 *
 	 * @param string $type
-	 * @param array $config
+	 * @param array  $config
+	 *
 	 * @return LiveUpdateStorage
 	 */
 	public static function getInstance($type, $config)
@@ -31,15 +37,18 @@ class LiveUpdateStorage
 		static $instances = array();
 
 		$sig = md5($type, serialize($config));
-		if(!array_key_exists($sig, $instances)) {
-			require_once dirname(__FILE__).'/'.strtolower($type).'.php';
-			$className = 'LiveUpdateStorage'.ucfirst($type);
-			$object = new $className($config);
+
+		if (!array_key_exists($sig, $instances))
+		{
+			require_once dirname(__FILE__) . '/' . strtolower($type) . '.php';
+			$className = 'LiveUpdateStorage' . ucfirst($type);
+			$object    = new $className($config);
 			$object->load($config);
 			$newRegistry = clone(self::$registry);
 			$object->setRegistry($newRegistry);
 			$instances[$sig] = $object;
 		}
+
 		return $instances[$sig];
 	}
 
@@ -57,6 +66,8 @@ class LiveUpdateStorage
 	 * Replaces the internally used registry with the one supplied
 	 *
 	 * @param JRegistry $registry
+	 *
+	 * @return void
 	 */
 	public function setRegistry($registry)
 	{
@@ -66,34 +77,72 @@ class LiveUpdateStorage
 
 	public final function set($key, $value)
 	{
-		if($key == 'updatedata') {
-			if(function_exists('json_encode') && function_exists('json_decode')) {
+		if ($key == 'updatedata')
+		{
+			if (function_exists('json_encode') && function_exists('json_decode'))
+			{
 				$value = json_encode($value);
-			} elseif(function_exists('base64_encode') && function_exists('base64_decode')) {
+			}
+			elseif (function_exists('base64_encode') && function_exists('base64_decode'))
+			{
 				$value = base64_encode(serialize($value));
-			} else {
+			}
+			else
+			{
 				$value = serialize($value);
 			}
 		}
 		self::$registry->set("update.$key", $value);
 	}
 
+	/**
+	 * Get
+	 *
+	 * @param string $key
+	 * @param string $default
+	 *
+	 * @return mixed
+	 */
 	public final function get($key, $default)
 	{
 		$value = self::$registry->get("update.$key", $default);
-		if($key == 'updatedata') {
-			if(function_exists('json_encode') && function_exists('json_decode')) {
+
+		if ($key == 'updatedata')
+		{
+			if (function_exists('json_encode') && function_exists('json_decode'))
+			{
 				$value = json_decode($value);
-			} elseif(function_exists('base64_encode') && function_exists('base64_decode')) {
+			}
+			elseif (function_exists('base64_encode') && function_exists('base64_decode'))
+			{
 				$value = unserialize(base64_decode($value));
-			} else {
+			}
+			else
+			{
 				$value = unserialize($value);
 			}
 		}
+
 		return $value;
 	}
 
-	public function save() {}
+	/**
+	 * Save
+	 *
+	 * @return void
+	 */
+	public function save()
+	{
+	}
 
-	public function load($config) {}
+	/**
+	 * Load
+	 *
+	 * @param $config
+	 *
+	 * @return void
+	 */
+	public function load($config)
+	{
+	}
 }

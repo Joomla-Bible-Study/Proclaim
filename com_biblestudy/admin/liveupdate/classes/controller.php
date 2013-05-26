@@ -1,19 +1,35 @@
 <?php
 /**
- * @package LiveUpdate
+ * Live Update Package
+ *
+ * @package   LiveUpdate
  * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-if(!class_exists('JoomlaCompatController')) {
-	if(interface_exists('JController')) {
-		abstract class JoomlaCompatController extends JControllerLegacy {}
-	} else {
-		class JoomlaCompatController extends JController {}
+if (!class_exists('JoomlaCompatController'))
+{
+	if (interface_exists('JController'))
+	{
+		/**
+		 * The Live Update MVC controller
+		 */
+		abstract class JoomlaCompatController extends JControllerLegacy
+		{
+		}
+	}
+	else
+	{
+		/**
+		 * The Live Update MVC controller
+		 */
+		class JoomlaCompatController extends JController
+		{
+		}
 	}
 }
 
@@ -23,9 +39,10 @@ if(!class_exists('JoomlaCompatController')) {
 class LiveUpdateController extends JoomlaCompatController
 {
 	/**
-	 * Object contructor 
+	 * Object constructor
+	 *
 	 * @param array $config
-	 * 
+	 *
 	 * @return LiveUpdateController
 	 */
 	public function __construct($config = array())
@@ -34,7 +51,7 @@ class LiveUpdateController extends JoomlaCompatController
 
 		$this->registerDefaultTask('overview');
 	}
-	
+
 	/**
 	 * Runs the overview page task
 	 */
@@ -42,140 +59,169 @@ class LiveUpdateController extends JoomlaCompatController
 	{
 		$this->display();
 	}
-	
+
 	/**
 	 * Starts the update procedure. If the FTP credentials are required, it asks for them.
 	 */
 	public function startupdate()
 	{
 		$updateInfo = LiveUpdate::getUpdateInformation();
-		if($updateInfo->stability != 'stable') {
+		if ($updateInfo->stability != 'stable')
+		{
 			$skipNag = JRequest::getBool('skipnag', false);
-			if(!$skipNag) {
-				$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=nagscreen');
+			if (!$skipNag)
+			{
+				$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=nagscreen');
 				$this->redirect();
 			}
 		}
-		
+
 		$ftp = $this->setCredentialsFromRequest('ftp');
-		if($ftp === true) {
+		if ($ftp === true)
+		{
 			// The user needs to supply the FTP credentials
 			$this->display();
-		} else {
+		}
+		else
+		{
 			// No FTP credentials required; proceed with the download
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=download');
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=download');
 			$this->redirect();
 		}
 	}
-	
+
 	/**
 	 * Download the update package
 	 */
 	public function download()
 	{
-		$ftp = $this->setCredentialsFromRequest('ftp');
-		$model = $this->getThisModel();
+		$ftp    = $this->setCredentialsFromRequest('ftp');
+		$model  = $this->getThisModel();
 		$result = $model->download();
-		if(!$result) {
+		if (!$result)
+		{
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_DOWNLOAD_FAILED');
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=overview', $msg, 'error');
-		} else {
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
+		}
+		else
+		{
 			// Download successful. Let's extract the package.
-			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=extract';
+			$url  = 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=extract';
 			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
 			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
-			if($user) {
-				$url .= '&username='.urlencode($user).'&password='.urlencode($pass);
-			}			
+			if ($user)
+			{
+				$url .= '&username=' . urlencode($user) . '&password=' . urlencode($pass);
+			}
 			$this->setRedirect($url);
 		}
 		$this->redirect();
 	}
-	
+
+	/**
+	 * Extract
+	 */
 	public function extract()
 	{
-		$ftp = $this->setCredentialsFromRequest('ftp');
-		$model = $this->getThisModel();
+		$ftp    = $this->setCredentialsFromRequest('ftp');
+		$model  = $this->getThisModel();
 		$result = $model->extract();
-		if(!$result) {
+		if (!$result)
+		{
 			// Download failed
 			$msg = JText::_('LIVEUPDATE_EXTRACT_FAILED');
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=overview', $msg, 'error');
-		} else {
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview', $msg, 'error');
+		}
+		else
+		{
 			// Extract successful. Let's install the package.
-			$url = 'index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=install';
+			$url  = 'index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=install';
 			$user = JRequest::getString('username', null, 'GET', JREQUEST_ALLOWRAW);
 			$pass = JRequest::getString('password', null, 'GET', JREQUEST_ALLOWRAW);
-			if($user) {
-				$url .= '&username='.urlencode($user).'&password='.urlencode($pass);
+			if ($user)
+			{
+				$url .= '&username=' . urlencode($user) . '&password=' . urlencode($pass);
 			}
-			
+
 			// Do we have SRP installed yet?
-			$app = JFactory::getApplication();
+			$app       = JFactory::getApplication();
 			$jResponse = $app->triggerEvent('onSRPEnabled');
-			$status = false;
-			if(!empty($jResponse)) {
+			$status    = false;
+			if (!empty($jResponse))
+			{
 				$status = false;
-				foreach($jResponse as $response)
+				foreach ($jResponse as $response)
 				{
 					$status = $status || $response;
 				}
 			}
-			
+
 			// SRP enabled, use it
-			if($status) {
+			if ($status)
+			{
 				$return = $url;
-				$url = $model->getSRPURL($return);
-				if(!$url) {
+				$url    = $model->getSRPURL($return);
+				if (!$url)
+				{
 					$url = $return;
 				}
 			}
-			
+
 			$this->setRedirect($url);
 		}
 		$this->redirect();
 	}
-	
+
+	/**
+	 * Install
+	 */
 	public function install()
 	{
-		$ftp = $this->setCredentialsFromRequest('ftp');
-		$model = $this->getThisModel();
+		$ftp    = $this->setCredentialsFromRequest('ftp');
+		$model  = $this->getThisModel();
 		$result = $model->install();
-		if(!$result) {
+		if (!$result)
+		{
 			// Installation failed
 			$model->cleanup();
-			$this->setRedirect('index.php?option='.JRequest::getCmd('option','').'&view='.JRequest::getCmd('view','liveupdate').'&task=overview');
+			$this->setRedirect('index.php?option=' . JRequest::getCmd('option', '') . '&view=' . JRequest::getCmd('view', 'liveupdate') . '&task=overview');
 			$this->redirect();
-		} else {
+		}
+		else
+		{
 			// Installation successful. Show the installation message.
 			$cache = JFactory::getCache('mod_menu');
-			$cache->clean();				
-			
+			$cache->clean();
+
 			$this->display();
 		}
 	}
-	
+
+	/**
+	 * Cleanup
+	 */
 	public function cleanup()
 	{
 		// Perform the cleanup
-		$ftp = $this->setCredentialsFromRequest('ftp');
+		$ftp   = $this->setCredentialsFromRequest('ftp');
 		$model = $this->getThisModel();
 		$model->cleanup();
-		
+
 		// Force reload update information
 		$dummy = LiveUpdate::getUpdateInformation(true);
-		
+
 		die('OK');
 	}
-	
+
 	/**
 	 * Displays the current view
+	 *
 	 * @param bool $cachable Ignored!
 	 */
 	public final function display($cachable = false, $urlparams = false)
 	{
-		$viewLayout	= JRequest::getCmd( 'layout', 'default' );
+		$viewLayout = JRequest::getCmd('layout', 'default');
 
 		$view = $this->getThisView();
 
@@ -185,7 +231,7 @@ class LiveUpdateController extends JoomlaCompatController
 
 		// Assign the FTP credentials from the request, or return TRUE if they are required
 		jimport('joomla.client.helper');
-		$ftp	= $this->setCredentialsFromRequest('ftp');
+		$ftp = $this->setCredentialsFromRequest('ftp');
 		$view->assignRef('ftp', $ftp);
 
 		// Set the layout
@@ -195,52 +241,69 @@ class LiveUpdateController extends JoomlaCompatController
 		$view->display();
 	}
 
+	/**
+	 * This View
+	 *
+	 * @return LiveUpdateView
+	 */
 	public final function getThisView()
 	{
 		static $view = null;
-		
-		if(is_null($view))
+
+		if (is_null($view))
 		{
 			$basePath = $this->basePath;
-			$tPath = dirname(__FILE__).'/tmpl';
-			
+			$tPath    = dirname(__FILE__) . '/tmpl';
+
 			require_once('view.php');
-			$view = new LiveUpdateView(array('base_path'=>$basePath, 'template_path'=>$tPath));
+			$view = new LiveUpdateView(array('base_path' => $basePath, 'template_path' => $tPath));
 		}
-		
+
 		return $view;
 	}
-	
+
+	/**
+	 * This Model
+	 *
+	 * @return LiveUpdateModel
+	 */
 	public final function getThisModel()
 	{
 		static $model = null;
-		
-		if(is_null($model))
+
+		if (is_null($model))
 		{
 			require_once('model.php');
 			$model = new LiveUpdateModel();
-			$task = $this->task;
-			
-			$model->setState( 'task', $task );
-			
-			$app	= JFactory::getApplication();
-			$menu	= $app->getMenu();
-			if (is_object( $menu ))
+			$task  = $this->task;
+
+			$model->setState('task', $task);
+
+			$app  = JFactory::getApplication();
+			$menu = $app->getMenu();
+			if (is_object($menu))
 			{
 				$item = $menu->getActive();
 				if ($item)
 				{
-					$params	= $menu->getParams($item->id);
+					$params = $menu->getParams($item->id);
 					// Set Default State Data
-					$model->setState( 'parameters.menu', $params );
+					$model->setState('parameters.menu', $params);
 				}
 			}
-			
+
 		}
-		
+
 		return $model;
 	}
-	
+
+	/**
+	 * Credentials From Request
+	 *
+	 * @param $client
+	 *
+	 * @return bool|object
+	 */
 	private function setCredentialsFromRequest($client)
 	{
 		// Determine wether FTP credentials have been passed along with the current request
@@ -250,9 +313,12 @@ class LiveUpdateController extends JoomlaCompatController
 		if ($user != '' && $pass != '')
 		{
 			// Add credentials to the session
-			if (JClientHelper::setCredentials($client, $user, $pass)) {
+			if (JClientHelper::setCredentials($client, $user, $pass))
+			{
 				$return = false;
-			} else {
+			}
+			else
+			{
 				$return = JError::raiseWarning('SOME_ERROR_CODE', 'JClientHelper::setCredentialsFromRequest failed');
 			}
 		}
@@ -263,5 +329,5 @@ class LiveUpdateController extends JoomlaCompatController
 		}
 
 		return $return;
-	}	
+	}
 }

@@ -22,6 +22,11 @@ class JBSMImageLib
 
 	// Public abstract static function resize($img);
 
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 }
@@ -34,7 +39,11 @@ class JBSMImageLib
  */
 class ImageMagickLib extends ImageLib
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
@@ -72,7 +81,11 @@ class ImageMagickLib extends ImageLib
  */
 class GDLib extends ImageLib
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**

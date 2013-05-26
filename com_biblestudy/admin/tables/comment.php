@@ -75,6 +75,11 @@ class TableComment extends JTable
 	 */
 	public $user_email = null;
 
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
 	public $title;
 
 	/**

@@ -21,6 +21,8 @@ defined('_JEXEC') or die;
 class JBSMServer
 {
 	/**
+	 * Extension Name
+	 *
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';

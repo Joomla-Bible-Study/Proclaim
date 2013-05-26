@@ -49,6 +49,11 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	private $_allow_deletes = null;
 
+	/**
+	 * Number of Deletes
+	 *
+	 * @var int
+	 */
 	private $_deletes;
 
 	/**

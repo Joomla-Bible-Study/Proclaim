@@ -17,7 +17,11 @@ defined('_JEXEC') or die;
  */
 class JBSMDbHelper
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**

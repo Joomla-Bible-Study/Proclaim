@@ -1,10 +1,12 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -22,7 +24,7 @@ class BiblestudyControllerServer extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A named array of configuration variables.
+	 * @param   array $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */

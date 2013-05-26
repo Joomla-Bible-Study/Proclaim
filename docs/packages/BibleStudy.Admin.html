@@ -1,79 +1,150 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>Joomla Bible Study API » BibleStudy\Admin</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <meta charset="utf-8">
+    <title>Joomla Bible Study API » BibleStudy\Admin</title>
+    <meta name="author" content="Mike van Riel">
+    <meta name="description" content="">
+    <link href="../css/template.css" rel="stylesheet" media="all">
+    <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/template.js" type="text/javascript"></script>
+    <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Joomla Bible Study API</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">484</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a
+                class="brand" href="../index.html">Joomla Bible Study API</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a>Packages</a></li>
+                            <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a>
+                            </li>
+                            <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+                            <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                                <span class="label label-info">419</span></a></li>
+                            <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                                <ul>
+                                    <li>todo 
+                                        <span class="label label-info">38</span>
+                                    </li>
+                                    <li>fixme 
+                                        <span class="label label-info">1</span>
+                                    </li>
+                                </ul>
+                            </a></li>
+                            <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                                <span class="label label-info">12</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a>
+    </div>
 </div>
 <div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
 <div class="row">
 <div class="span4">
 <div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+    <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 <ul class="side-nav nav nav-list">
 <li class="nav-header">
-<i class="icon-map-marker"></i> Packages</li>
+    <i class="icon-map-marker"></i> Packages
+</li>
 <li>
-<a href="../packages/BibleStudy.Admin.html" title="Admin"><i class="icon-folder-open"></i>Admin</a><ul class="nav nav-list nav-packages"></ul>
+    <a href="../packages/BibleStudy.Admin.html" title="Admin"><i class="icon-folder-open"></i>Admin</a>
+    <ul class="nav nav-list nav-packages"></ul>
 </li>
 <li class="nav-header">
-<i class="icon-custom icon-function"></i> Functions</li>
-<li class="function  "><a href="#function_addCSS" title="addCSS :: Global css"><span class="description">Global css</span><pre>addCSS</pre></a></li>
-<li class="function  "><a href="#function_addJS" title="addJS :: Global JS"><span class="description">Global JS</span><pre>addJS</pre></a></li>
+    <i class="icon-custom icon-function"></i> Functions
+</li>
+<li class="function  "><a href="#function_Biblestudy_error" title="Biblestudy_error :: Trigger JBS Errors"><span
+        class="description">Trigger JBS Errors</span>
+    <pre>Biblestudy_error</pre>
+</a></li>
+<li class="function  "><a href="#function_Check_Db_error" title="Check_Db_error :: Check db Error"><span
+        class="description">Check db Error</span>
+    <pre>Check_Db_error</pre>
+</a></li>
+<li class="function  "><a href="#function_Check_Db_warning" title="Check_Db_warning :: Check db warning"><span
+        class="description">Check db warning</span>
+    <pre>Check_Db_warning</pre>
+</a></li>
+<li class="function  "><a href="#function_Debug_Assert_callback" title="Debug_Assert_callback :: Default assert call back function
+If certain things fail hard we MUST know about it"><span class="description">Default assert call back function
+If certain things fail hard we MUST know about it</span>
+    <pre>Debug_Assert_callback</pre>
+</a></li>
+<li class="function  "><a href="#function_Debug_Call_Stack_info"
+                          title="Debug_Call_Stack_info :: Show the callstack to this point in a decent format"><span
+        class="description">Show the callstack to this point in a decent format</span>
+    <pre>Debug_Call_Stack_info</pre>
+</a></li>
+<li class="function  "><a href="#function_Debug_vars"
+                          title="Debug_vars :: Little helper to created a formatted output of variables"><span
+        class="description">Little helper to created a formatted output of variables</span>
+    <pre>Debug_vars</pre>
+</a></li>
+<li class="function  "><a href="#function_Trigger_Db_error" title="Trigger_Db_error :: Production error handling"><span
+        class="description">Production error handling</span>
+    <pre>Trigger_Db_error</pre>
+</a></li>
+<li class="function  "><a href="#function_Trigger_Db_warning" title="Trigger_Db_warning :: DB Warning"><span
+        class="description">DB Warning</span>
+    <pre>Trigger_Db_warning</pre>
+</a></li>
+<li class="function  "><a href="#function_addCSS" title="addCSS :: Global css"><span
+        class="description">Global css</span>
+    <pre>addCSS</pre>
+</a></li>
+<li class="function  "><a href="#function_addJS" title="addJS :: Global JS"><span class="description">Global JS</span>
+    <pre>addJS</pre>
+</a></li>
 <li class="nav-header">
-<i class="icon-custom icon-class"></i> Classes</li>
+    <i class="icon-custom icon-class"></i> Classes
+</li>
 <li><a href="#Com_BiblestudyInstallerScript" title="BibleStudy Install Script">Com_BiblestudyInstallerScript</a></li>
 <li><a href="#BiblestudyController" title="JController for BibleStudy Admin class">BiblestudyController</a></li>
 <li><a href="#BiblestudyControllerAdmin" title="Controller for Admin">BiblestudyControllerAdmin</a></li>
@@ -84,19 +155,26 @@
 <li><a href="#BiblestudyControllerFolders" title="Folders list controller class">BiblestudyControllerFolders</a></li>
 <li><a href="#BiblestudyControllerInstall" title="Controller for Admin">BiblestudyControllerInstall</a></li>
 <li><a href="#BiblestudyControllerLocation" title="Location controller class">BiblestudyControllerLocation</a></li>
-<li><a href="#BiblestudyControllerLocations" title="Locations list controller class">BiblestudyControllerLocations</a></li>
+<li><a href="#BiblestudyControllerLocations" title="Locations list controller class">BiblestudyControllerLocations</a>
+</li>
 <li><a href="#BiblestudyControllerMediafile" title="Controller For MediaFile">BiblestudyControllerMediafile</a></li>
-<li><a href="#BiblestudyControllerMediafiles" title="MediaFiles list controller class">BiblestudyControllerMediafiles</a></li>
+<li><a href="#BiblestudyControllerMediafiles"
+       title="MediaFiles list controller class">BiblestudyControllerMediafiles</a></li>
 <li><a href="#BiblestudyControllerMediafile" title="Controller for a MediaFile">BiblestudyControllerMediafile</a></li>
 <li><a href="#BiblestudyControllerMediaimage" title="Controller for MediaImage">BiblestudyControllerMediaimage</a></li>
-<li><a href="#BiblestudyControllerMediaimages" title="MediaImages list controller class">BiblestudyControllerMediaimages</a></li>
+<li><a href="#BiblestudyControllerMediaimages"
+       title="MediaImages list controller class">BiblestudyControllerMediaimages</a></li>
 <li><a href="#BiblestudyControllerMessage" title="Controller for Message">BiblestudyControllerMessage</a></li>
-<li><a href="#BiblestudyControllerMessages" title="Messages list controller class.">BiblestudyControllerMessages</a></li>
-<li><a href="#BiblestudyControllerMessagetype" title="Controller for MessageType">BiblestudyControllerMessagetype</a></li>
-<li><a href="#BiblestudyControllerMessagetypes" title="MessageType list controller class.">BiblestudyControllerMessagetypes</a></li>
+<li><a href="#BiblestudyControllerMessages" title="Messages list controller class.">BiblestudyControllerMessages</a>
+</li>
+<li><a href="#BiblestudyControllerMessagetype" title="Controller for MessageType">BiblestudyControllerMessagetype</a>
+</li>
+<li><a href="#BiblestudyControllerMessagetypes" title="MessageType list controller class.">BiblestudyControllerMessagetypes</a>
+</li>
 <li><a href="#BiblestudyControllerMigration" title="Class Migration Controller">BiblestudyControllerMigration</a></li>
 <li><a href="#BiblestudyControllerMimetype" title="Controller for MimeType">BiblestudyControllerMimetype</a></li>
-<li><a href="#BiblestudyControllerMimetypes" title="Mimetypes list controller class.">BiblestudyControllerMimetypes</a></li>
+<li><a href="#BiblestudyControllerMimetypes" title="Mimetypes list controller class.">BiblestudyControllerMimetypes</a>
+</li>
 <li><a href="#BiblestudyControllerPodcast" title="Podcast form class">BiblestudyControllerPodcast</a></li>
 <li><a href="#BiblestudyControllerPodcasts" title="Controller for Podcasts">BiblestudyControllerPodcasts</a></li>
 <li><a href="#BiblestudyControllerSerie" title="Controller for a Serie">BiblestudyControllerSerie</a></li>
@@ -108,10 +186,13 @@
 <li><a href="#BiblestudyControllerStyle" title="Style Class">BiblestudyControllerStyle</a></li>
 <li><a href="#BiblestudyControllerStyles" title="Styles list controller class.">BiblestudyControllerStyles</a></li>
 <li><a href="#BiblestudyControllerTeacher" title="Controller for Teacher">BiblestudyControllerTeacher</a></li>
-<li><a href="#BiblestudyControllerTeachers" title="Teachers list controller class.">BiblestudyControllerTeachers</a></li>
+<li><a href="#BiblestudyControllerTeachers" title="Teachers list controller class.">BiblestudyControllerTeachers</a>
+</li>
 <li><a href="#BiblestudyControllerTemplate" title="Template controller class">BiblestudyControllerTemplate</a></li>
-<li><a href="#BiblestudyControllerTemplatecode" title="Template Code controller class">BiblestudyControllerTemplatecode</a></li>
-<li><a href="#BiblestudyControllerTemplatecodes" title="TemplateCodes list controller class.">BiblestudyControllerTemplatecodes</a></li>
+<li><a href="#BiblestudyControllerTemplatecode"
+       title="Template Code controller class">BiblestudyControllerTemplatecode</a></li>
+<li><a href="#BiblestudyControllerTemplatecodes" title="TemplateCodes list controller class.">BiblestudyControllerTemplatecodes</a>
+</li>
 <li><a href="#BiblestudyControllerTemplates" title="Controller for Templates">BiblestudyControllerTemplates</a></li>
 <li><a href="#BiblestudyControllerTopic" title="Topic controller class">BiblestudyControllerTopic</a></li>
 <li><a href="#BiblestudyControllerTopics" title="Teachers list controller class.">BiblestudyControllerTopics</a></li>
@@ -133,7 +214,9 @@ params.">JBSMImageLib</a></li>
 <li><a href="#JBSMFreshInstall" title="Fresh install class">JBSMFreshInstall</a></li>
 <li><a href="#JBS800Update" title="Update for 8.0.0 class">JBS800Update</a></li>
 <li><a href="#JBS701Update" title="Update for 7.0.1 class">JBS701Update</a></li>
-<li><a href="#JBS702Update" title="Inserts some css code to fix pagination problem and add a tag for the captcha of comments">JBS702Update</a></li>
+<li><a href="#JBS702Update"
+       title="Inserts some css code to fix pagination problem and add a tag for the captcha of comments">JBS702Update</a>
+</li>
 <li><a href="#JBS710Update" title="Update for 7.1.0 class">JBS710Update</a></li>
 <li><a href="#FixJBSAssets" title="Asset Fix class">FixJBSAssets</a></li>
 <li><a href="#JBSExport" title="JBS Export class">JBSExport</a></li>
@@ -147,27 +230,43 @@ PreachIT Converter system">JBSPIconvert</a></li>
 <li><a href="#BiblestudyModelAdmin" title="Admin admin model class">BiblestudyModelAdmin</a></li>
 <li><a href="#BiblestudyModelComment" title="Comment model class">BiblestudyModelComment</a></li>
 <li><a href="#BiblestudyModelComments" title="Comments model class">BiblestudyModelComments</a></li>
-<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
+<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a>
+</li>
 <li><a href="#JFormFieldFilesize" title="Form Field class for the FileSize">JFormFieldFilesize</a></li>
 <li><a href="#JFormFieldFilters" title="Form Field class for the Filters.">JFormFieldFilters</a></li>
-<li><a href="#JFormFieldLinkoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldLinkoptions</a></li>
-<li><a href="#JFormFieldListoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldListoptions</a></li>
-<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a></li>
-<li><a href="#JFormFieldLocationslist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldLocationslist</a></li>
-<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a></li>
-<li><a href="#JFormFieldMessagetypelist" title="Message Type List Form Field class for the Joomla Bible Study component">JFormFieldMessagetypelist</a></li>
-<li><a href="#JFormFieldModal_Seriesdetail" title="Supports a modal series picker.">JFormFieldModal_Seriesdetail</a></li>
+<li><a href="#JFormFieldLinkoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldLinkoptions</a>
+</li>
+<li><a href="#JFormFieldListoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldListoptions</a>
+</li>
+<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a>
+</li>
+<li><a href="#JFormFieldLocationslist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldLocationslist</a>
+</li>
+<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a>
+</li>
+<li><a href="#JFormFieldMessagetypelist"
+       title="Message Type List Form Field class for the Joomla Bible Study component">JFormFieldMessagetypelist</a>
+</li>
+<li><a href="#JFormFieldModal_Seriesdetail" title="Supports a modal series picker.">JFormFieldModal_Seriesdetail</a>
+</li>
 <li><a href="#JFormFieldModal_Study" title="Field class for Modal_Study">JFormFieldModal_Study</a></li>
 <li><a href="#JFormFieldModal_Studydetails" title="Supports a modal study picker.">JFormFieldModal_Studydetails</a></li>
-<li><a href="#JFormFieldModal_Teacherdisplay" title="Supports a modal study picker.">JFormFieldModal_Teacherdisplay</a></li>
-<li><a href="#JFormFieldSerieslist" title="Series List Form Field class for the Joomla Bible Study component">JFormFieldSerieslist</a></li>
-<li><a href="#JFormFieldSeriesoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSeriesoptions</a></li>
-<li><a href="#JFormFieldSharelist" title="Message Type List Form Field class for the Joomla Bible Study component">JFormFieldSharelist</a></li>
-<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a></li>
+<li><a href="#JFormFieldModal_Teacherdisplay" title="Supports a modal study picker.">JFormFieldModal_Teacherdisplay</a>
+</li>
+<li><a href="#JFormFieldSerieslist" title="Series List Form Field class for the Joomla Bible Study component">JFormFieldSerieslist</a>
+</li>
+<li><a href="#JFormFieldSeriesoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSeriesoptions</a>
+</li>
+<li><a href="#JFormFieldSharelist" title="Message Type List Form Field class for the Joomla Bible Study component">JFormFieldSharelist</a>
+</li>
+<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a>
+</li>
 <li><a href="#JFormFieldTopics" title="Form Field class for the Topics">JFormFieldTopics</a></li>
 <li><a href="#JFormFieldTopicslist" title="Topics List Form Field class for the Joomla Bible Study component
 Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
-<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a></li>
+<li><a href="#JFormFieldVirtuemart"
+       title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a>
+</li>
 <li><a href="#BiblestudyModelFolder" title="Folder model class">BiblestudyModelFolder</a></li>
 <li><a href="#BiblestudyModelFolders" title="Folders model class">BiblestudyModelFolders</a></li>
 <li><a href="#BiblestudyModelLocation" title="Location model class">BiblestudyModelLocation</a></li>
@@ -263,1578 +362,2482 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyModelCommentform" title="Comment model class">BiblestudyModelCommentform</a></li>
 <li><a href="#BiblestudyModelCommentlist" title="Comments model class">BiblestudyModelCommentlist</a></li>
 <li><a href="#BiblestudyViewCommentform" title="View class for Comment">BiblestudyViewCommentform</a></li>
-<li><a href="#BiblestudyViewCommentlist" title="View class for CommentList extends Comments">BiblestudyViewCommentlist</a></li>
+<li><a href="#BiblestudyViewCommentlist"
+       title="View class for CommentList extends Comments">BiblestudyViewCommentlist</a></li>
 <li class="nav-header">
-<i class="icon-custom icon-constant"></i> Constants</li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL :: "><span class="description">BIBLESTUDY_CHECKREL</span><pre>BIBLESTUDY_CHECKREL</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL :: "><span class="description">BIBLESTUDY_CHECKREL</span><pre>BIBLESTUDY_CHECKREL</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_RELPATH" title="BIBLESTUDY_COMPONENT_RELPATH :: "><span class="description">BIBLESTUDY_COMPONENT_RELPATH</span><pre>BIBLESTUDY_COMPONENT_RELPATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_DB_MISSING_COLUMN" title="BIBLESTUDY_DB_MISSING_COLUMN :: "><span class="description">BIBLESTUDY_DB_MISSING_COLUMN</span><pre>BIBLESTUDY_DB_MISSING_COLUMN</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_FILE_INSTALL" title="BIBLESTUDY_FILE_INSTALL :: "><span class="description">BIBLESTUDY_FILE_INSTALL</span><pre>BIBLESTUDY_FILE_INSTALL</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_LANGUAGE_DEFAULT" title="BIBLESTUDY_LANGUAGE_DEFAULT :: "><span class="description">BIBLESTUDY_LANGUAGE_DEFAULT</span><pre>BIBLESTUDY_LANGUAGE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_MEDIA_PATH" title="BIBLESTUDY_MEDIA_PATH :: "><span class="description">BIBLESTUDY_MEDIA_PATH</span><pre>BIBLESTUDY_MEDIA_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH" title="BIBLESTUDY_PATH :: "><span class="description">BIBLESTUDY_PATH</span><pre>BIBLESTUDY_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN" title="BIBLESTUDY_PATH_ADMIN :: "><span class="description">BIBLESTUDY_PATH_ADMIN</span><pre>BIBLESTUDY_PATH_ADMIN</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_HELPERS" title="BIBLESTUDY_PATH_ADMIN_HELPERS :: "><span class="description">BIBLESTUDY_PATH_ADMIN_HELPERS</span><pre>BIBLESTUDY_PATH_ADMIN_HELPERS</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_IMAGES" title="BIBLESTUDY_PATH_ADMIN_IMAGES :: "><span class="description">BIBLESTUDY_PATH_ADMIN_IMAGES</span><pre>BIBLESTUDY_PATH_ADMIN_IMAGES</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_INSTALL" title="BIBLESTUDY_PATH_ADMIN_INSTALL :: "><span class="description">BIBLESTUDY_PATH_ADMIN_INSTALL</span><pre>BIBLESTUDY_PATH_ADMIN_INSTALL</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" title="BIBLESTUDY_PATH_ADMIN_LANGUAGE :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LANGUAGE</span><pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LIB</span><pre>BIBLESTUDY_PATH_ADMIN_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS :: "><span class="description">BIBLESTUDY_PATH_HELPERS</span><pre>BIBLESTUDY_PATH_HELPERS</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_IMAGES" title="BIBLESTUDY_PATH_IMAGES :: "><span class="description">BIBLESTUDY_PATH_IMAGES</span><pre>BIBLESTUDY_PATH_IMAGES</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_LIB" title="BIBLESTUDY_PATH_LIB :: "><span class="description">BIBLESTUDY_PATH_LIB</span><pre>BIBLESTUDY_PATH_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH" title="BIBLESTUDY_ROOT_PATH :: "><span class="description">BIBLESTUDY_ROOT_PATH</span><pre>BIBLESTUDY_ROOT_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH_ADMIN" title="BIBLESTUDY_ROOT_PATH_ADMIN :: "><span class="description">BIBLESTUDY_ROOT_PATH_ADMIN</span><pre>BIBLESTUDY_ROOT_PATH_ADMIN</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_HOUR" title="BIBLESTUDY_SECONDS_IN_HOUR :: "><span class="description">BIBLESTUDY_SECONDS_IN_HOUR</span><pre>BIBLESTUDY_SECONDS_IN_HOUR</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_YEAR" title="BIBLESTUDY_SECONDS_IN_YEAR :: "><span class="description">BIBLESTUDY_SECONDS_IN_YEAR</span><pre>BIBLESTUDY_SECONDS_IN_YEAR</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_TEMPLATE_DEFAULT" title="BIBLESTUDY_TEMPLATE_DEFAULT :: "><span class="description">BIBLESTUDY_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_TEMPLATE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION" title="BIBLESTUDY_VERSION :: "><span class="description">BIBLESTUDY_VERSION</span><pre>BIBLESTUDY_VERSION</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_BUILD" title="BIBLESTUDY_VERSION_BUILD :: "><span class="description">BIBLESTUDY_VERSION_BUILD</span><pre>BIBLESTUDY_VERSION_BUILD</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_DATE" title="BIBLESTUDY_VERSION_DATE :: "><span class="description">BIBLESTUDY_VERSION_DATE</span><pre>BIBLESTUDY_VERSION_DATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_UPDATEFILE" title="BIBLESTUDY_VERSION_UPDATEFILE :: "><span class="description">BIBLESTUDY_VERSION_UPDATEFILE</span><pre>BIBLESTUDY_VERSION_UPDATEFILE</pre></a></li>
-<li class="constant  "><a href="#constant_VMLANG" title="VMLANG :: "><span class="description">VMLANG</span><pre>VMLANG</pre></a></li>
+    <i class="icon-custom icon-constant"></i> Constants
+</li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL :: "><span
+        class="description">BIBLESTUDY_CHECKREL</span>
+    <pre>BIBLESTUDY_CHECKREL</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL :: "><span
+        class="description">BIBLESTUDY_CHECKREL</span>
+    <pre>BIBLESTUDY_CHECKREL</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME :: "><span
+        class="description">BIBLESTUDY_COMPONENT_NAME</span>
+    <pre>BIBLESTUDY_COMPONENT_NAME</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_RELPATH" title="BIBLESTUDY_COMPONENT_RELPATH :: "><span
+        class="description">BIBLESTUDY_COMPONENT_RELPATH</span>
+    <pre>BIBLESTUDY_COMPONENT_RELPATH</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_DB_MISSING_COLUMN" title="BIBLESTUDY_DB_MISSING_COLUMN :: "><span
+        class="description">BIBLESTUDY_DB_MISSING_COLUMN</span>
+    <pre>BIBLESTUDY_DB_MISSING_COLUMN</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_FILE_INSTALL" title="BIBLESTUDY_FILE_INSTALL :: "><span
+        class="description">BIBLESTUDY_FILE_INSTALL</span>
+    <pre>BIBLESTUDY_FILE_INSTALL</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_LANGUAGE_DEFAULT" title="BIBLESTUDY_LANGUAGE_DEFAULT :: "><span
+        class="description">BIBLESTUDY_LANGUAGE_DEFAULT</span>
+    <pre>BIBLESTUDY_LANGUAGE_DEFAULT</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_MEDIA_PATH" title="BIBLESTUDY_MEDIA_PATH :: "><span
+        class="description">BIBLESTUDY_MEDIA_PATH</span>
+    <pre>BIBLESTUDY_MEDIA_PATH</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH" title="BIBLESTUDY_PATH :: "><span class="description">BIBLESTUDY_PATH</span>
+    <pre>BIBLESTUDY_PATH</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN" title="BIBLESTUDY_PATH_ADMIN :: "><span
+        class="description">BIBLESTUDY_PATH_ADMIN</span>
+    <pre>BIBLESTUDY_PATH_ADMIN</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_HELPERS" title="BIBLESTUDY_PATH_ADMIN_HELPERS :: "><span
+        class="description">BIBLESTUDY_PATH_ADMIN_HELPERS</span>
+    <pre>BIBLESTUDY_PATH_ADMIN_HELPERS</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_IMAGES" title="BIBLESTUDY_PATH_ADMIN_IMAGES :: "><span
+        class="description">BIBLESTUDY_PATH_ADMIN_IMAGES</span>
+    <pre>BIBLESTUDY_PATH_ADMIN_IMAGES</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_INSTALL" title="BIBLESTUDY_PATH_ADMIN_INSTALL :: "><span
+        class="description">BIBLESTUDY_PATH_ADMIN_INSTALL</span>
+    <pre>BIBLESTUDY_PATH_ADMIN_INSTALL</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE"
+                          title="BIBLESTUDY_PATH_ADMIN_LANGUAGE :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LANGUAGE</span>
+    <pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB :: "><span
+        class="description">BIBLESTUDY_PATH_ADMIN_LIB</span>
+    <pre>BIBLESTUDY_PATH_ADMIN_LIB</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS :: "><span
+        class="description">BIBLESTUDY_PATH_HELPERS</span>
+    <pre>BIBLESTUDY_PATH_HELPERS</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_IMAGES" title="BIBLESTUDY_PATH_IMAGES :: "><span
+        class="description">BIBLESTUDY_PATH_IMAGES</span>
+    <pre>BIBLESTUDY_PATH_IMAGES</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_LIB" title="BIBLESTUDY_PATH_LIB :: "><span
+        class="description">BIBLESTUDY_PATH_LIB</span>
+    <pre>BIBLESTUDY_PATH_LIB</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE :: "><span
+        class="description">BIBLESTUDY_PATH_TEMPLATE</span>
+    <pre>BIBLESTUDY_PATH_TEMPLATE</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT"
+                          title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span>
+    <pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH" title="BIBLESTUDY_ROOT_PATH :: "><span
+        class="description">BIBLESTUDY_ROOT_PATH</span>
+    <pre>BIBLESTUDY_ROOT_PATH</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH_ADMIN" title="BIBLESTUDY_ROOT_PATH_ADMIN :: "><span
+        class="description">BIBLESTUDY_ROOT_PATH_ADMIN</span>
+    <pre>BIBLESTUDY_ROOT_PATH_ADMIN</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_HOUR" title="BIBLESTUDY_SECONDS_IN_HOUR :: "><span
+        class="description">BIBLESTUDY_SECONDS_IN_HOUR</span>
+    <pre>BIBLESTUDY_SECONDS_IN_HOUR</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_YEAR" title="BIBLESTUDY_SECONDS_IN_YEAR :: "><span
+        class="description">BIBLESTUDY_SECONDS_IN_YEAR</span>
+    <pre>BIBLESTUDY_SECONDS_IN_YEAR</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_TEMPLATE_DEFAULT" title="BIBLESTUDY_TEMPLATE_DEFAULT :: "><span
+        class="description">BIBLESTUDY_TEMPLATE_DEFAULT</span>
+    <pre>BIBLESTUDY_TEMPLATE_DEFAULT</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION" title="BIBLESTUDY_VERSION :: "><span class="description">BIBLESTUDY_VERSION</span>
+    <pre>BIBLESTUDY_VERSION</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_BUILD" title="BIBLESTUDY_VERSION_BUILD :: "><span
+        class="description">BIBLESTUDY_VERSION_BUILD</span>
+    <pre>BIBLESTUDY_VERSION_BUILD</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_DATE" title="BIBLESTUDY_VERSION_DATE :: "><span
+        class="description">BIBLESTUDY_VERSION_DATE</span>
+    <pre>BIBLESTUDY_VERSION_DATE</pre>
+</a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_UPDATEFILE" title="BIBLESTUDY_VERSION_UPDATEFILE :: "><span
+        class="description">BIBLESTUDY_VERSION_UPDATEFILE</span>
+    <pre>BIBLESTUDY_VERSION_UPDATEFILE</pre>
+</a></li>
+<li class="constant  "><a href="#constant_VMLANG" title="VMLANG :: "><span class="description">VMLANG</span>
+    <pre>VMLANG</pre>
+</a></li>
 </ul>
 </div>
 <div class="span8 package-contents">
-<ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../packages/BibleStudy.Admin.html">Admin</a>
-</li>
-</li></ul>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span>
+    <li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../packages/BibleStudy.Admin.html">Admin</a>
+    </li>
+    </li></ul>
 <div class="package-indent">
 <h3>
-<i class="icon-custom icon-function"></i> Functions</h3>
-<a id="function_addCSS"></a><div class="element clickable function  function_addCSS" data-toggle="collapse" data-target=".function_addCSS .collapse">
-<h2>Global css</h2>
-<pre>addCSS() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>1.7.0</td>
-</tr></table>
-</div></div>
+    <i class="icon-custom icon-function"></i> Functions</h3>
+<a id="function_Biblestudy_error"></a>
+
+<div class="element clickable function  function_Biblestudy_error" data-toggle="collapse"
+     data-target=".function_Biblestudy_error .collapse">
+    <h2>Trigger JBS Errors</h2>
+    <pre>Biblestudy_error(string $message, int $level, int $back) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$message</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$level</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$back</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
 </div>
-<a id="function_addJS"></a><div class="element clickable function  function_addJS" data-toggle="collapse" data-target=".function_addJS .collapse">
-<h2>Global JS</h2>
-<pre>addJS() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-</div></div>
+<a id="function_Check_Db_error"></a>
+
+<div class="element clickable function  function_Check_Db_error" data-toggle="collapse"
+     data-target=".function_Check_Db_error .collapse">
+    <h2>Check db Error</h2>
+    <pre>Check_Db_error(string $text, int $back) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$text</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$back</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="function_Check_Db_warning"></a>
+
+<div class="element clickable function  function_Check_Db_warning" data-toggle="collapse"
+     data-target=".function_Check_Db_warning .collapse">
+    <h2>Check db warning</h2>
+    <pre>Check_Db_warning(string $text) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$text</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="function_Debug_Assert_callback"></a>
+
+<div class="element clickable function  function_Debug_Assert_callback" data-toggle="collapse"
+     data-target=".function_Debug_Assert_callback .collapse">
+    <h2>Default assert call back function
+        If certain things fail hard we MUST know about it</h2>
+    <pre>Debug_Assert_callback(string $script, int $line, string $message) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$script</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$line</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$message</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="function_Debug_Call_Stack_info"></a>
+
+<div class="element clickable function  function_Debug_Call_Stack_info" data-toggle="collapse"
+     data-target=".function_Debug_Call_Stack_info .collapse">
+    <h2>Show the callstack to this point in a decent format</h2>
+    <pre>Debug_Call_Stack_info(int $back) : object</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$back</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>object</code></div>
+        </div>
+    </div>
+</div>
+<a id="function_Debug_vars"></a>
+
+<div class="element clickable function  function_Debug_vars" data-toggle="collapse"
+     data-target=".function_Debug_vars .collapse">
+    <h2>Little helper to created a formatted output of variables</h2>
+    <pre>Debug_vars(array $varlist) : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$varlist</h4>
+                <code>array</code>
+
+                <p>?</p>
+            </div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
+        </div>
+    </div>
+</div>
+<a id="function_Trigger_Db_error"></a>
+
+<div class="element clickable function  function_Trigger_Db_error" data-toggle="collapse"
+     data-target=".function_Trigger_Db_error .collapse">
+    <h2>Production error handling</h2>
+    <pre>Trigger_Db_error(string $text, int $back) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$text</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+            <div class="subelement argument">
+                <h4>$back</h4>
+                <code>int</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="function_Trigger_Db_warning"></a>
+
+<div class="element clickable function  function_Trigger_Db_warning" data-toggle="collapse"
+     data-target=".function_Trigger_Db_warning .collapse">
+    <h2>DB Warning</h2>
+    <pre>Trigger_Db_warning(string $text) : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$text</h4>
+                <code>string</code>
+
+                <p>?</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="function_addCSS"></a>
+
+<div class="element clickable function  function_addCSS" data-toggle="collapse"
+     data-target=".function_addCSS .collapse">
+    <h2>Global css</h2>
+    <pre>addCSS() : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>since</th>
+                    <td>1.7.0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<a id="function_addJS"></a>
+
+<div class="element clickable function  function_addJS" data-toggle="collapse" data-target=".function_addJS .collapse">
+    <h2>Global JS</h2>
+    <pre>addJS() : void</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>since</th>
+                    <td>7.0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 <h3>
-<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+    <i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+
 <div id="BibleStudyModelMigration" class="element ajax clickable class">
-<h1>BibleStudyModelMigration<a href="../classes/BibleStudyModelMigration.html">¶</a>
-</h1>
-<p class="short_description">class Migration model</p>
-<div class="details collapse"></div>
-<a href="../classes/BibleStudyModelMigration.html" class="more">« More »</a>
+    <h1>BibleStudyModelMigration<a href="../classes/BibleStudyModelMigration.html">¶</a>
+    </h1>
+
+    <p class="short_description">class Migration model</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BibleStudyModelMigration.html" class="more">« More »</a>
 </div>
 <div id="BibleStudyViewFolder" class="element ajax clickable class">
-<h1>BibleStudyViewFolder<a href="../classes/BibleStudyViewFolder.html">¶</a>
-</h1>
-<p class="short_description">View class for Folder</p>
-<div class="details collapse"></div>
-<a href="../classes/BibleStudyViewFolder.html" class="more">« More »</a>
+    <h1>BibleStudyViewFolder<a href="../classes/BibleStudyViewFolder.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Folder</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BibleStudyViewFolder.html" class="more">« More »</a>
 </div>
 <div id="BibleStudyViewFolders" class="element ajax clickable class">
-<h1>BibleStudyViewFolders<a href="../classes/BibleStudyViewFolders.html">¶</a>
-</h1>
-<p class="short_description">View class for Folders</p>
-<div class="details collapse"></div>
-<a href="../classes/BibleStudyViewFolders.html" class="more">« More »</a>
+    <h1>BibleStudyViewFolders<a href="../classes/BibleStudyViewFolders.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Folders</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BibleStudyViewFolders.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyController" class="element ajax clickable class">
-<h1>BiblestudyController<a href="../classes/BiblestudyController.html">¶</a>
-</h1>
-<p class="short_description">JController for BibleStudy Admin class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyController.html" class="more">« More »</a>
+    <h1>BiblestudyController<a href="../classes/BiblestudyController.html">¶</a>
+    </h1>
+
+    <p class="short_description">JController for BibleStudy Admin class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyController.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerAdmin" class="element ajax clickable class">
-<h1>BiblestudyControllerAdmin<a href="../classes/BiblestudyControllerAdmin.html">¶</a>
-</h1>
-<p class="short_description">Controller for Admin</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerAdmin.html" class="more">« More »</a>
+    <h1>BiblestudyControllerAdmin<a href="../classes/BiblestudyControllerAdmin.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Admin</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerAdmin.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerComment" class="element ajax clickable class">
-<h1>BiblestudyControllerComment<a href="../classes/BiblestudyControllerComment.html">¶</a>
-</h1>
-<p class="short_description">Controller for a Comment</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerComment.html" class="more">« More »</a>
+    <h1>BiblestudyControllerComment<a href="../classes/BiblestudyControllerComment.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for a Comment</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerComment.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerCommentform" class="element ajax clickable class">
-<h1>BiblestudyControllerCommentform<a href="../classes/BiblestudyControllerCommentform.html">¶</a>
-</h1>
-<p class="short_description">Controller for a Comment</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerCommentform.html" class="more">« More »</a>
+    <h1>BiblestudyControllerCommentform<a href="../classes/BiblestudyControllerCommentform.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for a Comment</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerCommentform.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerCommentlist" class="element ajax clickable class">
-<h1>BiblestudyControllerCommentlist<a href="../classes/BiblestudyControllerCommentlist.html">¶</a>
-</h1>
-<p class="short_description">Controller for Comments</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerCommentlist.html" class="more">« More »</a>
+    <h1>BiblestudyControllerCommentlist<a href="../classes/BiblestudyControllerCommentlist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Comments</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerCommentlist.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerComments" class="element ajax clickable class">
-<h1>BiblestudyControllerComments<a href="../classes/BiblestudyControllerComments.html">¶</a>
-</h1>
-<p class="short_description">Controller for Comments</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerComments.html" class="more">« More »</a>
+    <h1>BiblestudyControllerComments<a href="../classes/BiblestudyControllerComments.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Comments</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerComments.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerCpanel" class="element ajax clickable class">
-<h1>BiblestudyControllerCpanel<a href="../classes/BiblestudyControllerCpanel.html">¶</a>
-</h1>
-<p class="short_description">Controller for the Cpanel</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerCpanel.html" class="more">« More »</a>
+    <h1>BiblestudyControllerCpanel<a href="../classes/BiblestudyControllerCpanel.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for the Cpanel</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerCpanel.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerFolder" class="element ajax clickable class">
-<h1>BiblestudyControllerFolder<a href="../classes/BiblestudyControllerFolder.html">¶</a>
-</h1>
-<p class="short_description">Controller for Folder</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerFolder.html" class="more">« More »</a>
+    <h1>BiblestudyControllerFolder<a href="../classes/BiblestudyControllerFolder.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Folder</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerFolder.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerFolders" class="element ajax clickable class">
-<h1>BiblestudyControllerFolders<a href="../classes/BiblestudyControllerFolders.html">¶</a>
-</h1>
-<p class="short_description">Folders list controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerFolders.html" class="more">« More »</a>
+    <h1>BiblestudyControllerFolders<a href="../classes/BiblestudyControllerFolders.html">¶</a>
+    </h1>
+
+    <p class="short_description">Folders list controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerFolders.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerInstall" class="element ajax clickable class">
-<h1>BiblestudyControllerInstall<a href="../classes/BiblestudyControllerInstall.html">¶</a>
-</h1>
-<p class="short_description">Controller for Admin</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerInstall.html" class="more">« More »</a>
+    <h1>BiblestudyControllerInstall<a href="../classes/BiblestudyControllerInstall.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Admin</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerInstall.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerLocation" class="element ajax clickable class">
-<h1>BiblestudyControllerLocation<a href="../classes/BiblestudyControllerLocation.html">¶</a>
-</h1>
-<p class="short_description">Location controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerLocation.html" class="more">« More »</a>
+    <h1>BiblestudyControllerLocation<a href="../classes/BiblestudyControllerLocation.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerLocation.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerLocations" class="element ajax clickable class">
-<h1>BiblestudyControllerLocations<a href="../classes/BiblestudyControllerLocations.html">¶</a>
-</h1>
-<p class="short_description">Locations list controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerLocations.html" class="more">« More »</a>
+    <h1>BiblestudyControllerLocations<a href="../classes/BiblestudyControllerLocations.html">¶</a>
+    </h1>
+
+    <p class="short_description">Locations list controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerLocations.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMediafile" class="element ajax clickable class">
-<h1>BiblestudyControllerMediafile<a href="../classes/BiblestudyControllerMediafile.html">¶</a>
-</h1>
-<p class="short_description">Controller For MediaFile</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMediafile.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMediafile<a href="../classes/BiblestudyControllerMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller For MediaFile</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMediafile.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMediafile" class="element ajax clickable class">
-<h1>BiblestudyControllerMediafile<a href="../classes/BiblestudyControllerMediafile.html">¶</a>
-</h1>
-<p class="short_description">Controller for a MediaFile</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMediafile.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMediafile<a href="../classes/BiblestudyControllerMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for a MediaFile</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMediafile.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMediafiles" class="element ajax clickable class">
-<h1>BiblestudyControllerMediafiles<a href="../classes/BiblestudyControllerMediafiles.html">¶</a>
-</h1>
-<p class="short_description">MediaFiles list controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMediafiles.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMediafiles<a href="../classes/BiblestudyControllerMediafiles.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaFiles list controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMediafiles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMediaimage" class="element ajax clickable class">
-<h1>BiblestudyControllerMediaimage<a href="../classes/BiblestudyControllerMediaimage.html">¶</a>
-</h1>
-<p class="short_description">Controller for MediaImage</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMediaimage.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMediaimage<a href="../classes/BiblestudyControllerMediaimage.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for MediaImage</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMediaimage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMediaimages" class="element ajax clickable class">
-<h1>BiblestudyControllerMediaimages<a href="../classes/BiblestudyControllerMediaimages.html">¶</a>
-</h1>
-<p class="short_description">MediaImages list controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMediaimages.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMediaimages<a href="../classes/BiblestudyControllerMediaimages.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaImages list controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMediaimages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMessage" class="element ajax clickable class">
-<h1>BiblestudyControllerMessage<a href="../classes/BiblestudyControllerMessage.html">¶</a>
-</h1>
-<p class="short_description">Controller for Message</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMessage.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMessage<a href="../classes/BiblestudyControllerMessage.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Message</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMessage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMessages" class="element ajax clickable class">
-<h1>BiblestudyControllerMessages<a href="../classes/BiblestudyControllerMessages.html">¶</a>
-</h1>
-<p class="short_description">Messages list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMessages.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMessages<a href="../classes/BiblestudyControllerMessages.html">¶</a>
+    </h1>
+
+    <p class="short_description">Messages list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMessages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMessagetype" class="element ajax clickable class">
-<h1>BiblestudyControllerMessagetype<a href="../classes/BiblestudyControllerMessagetype.html">¶</a>
-</h1>
-<p class="short_description">Controller for MessageType</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMessagetype.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMessagetype<a href="../classes/BiblestudyControllerMessagetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for MessageType</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMessagetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMessagetypes" class="element ajax clickable class">
-<h1>BiblestudyControllerMessagetypes<a href="../classes/BiblestudyControllerMessagetypes.html">¶</a>
-</h1>
-<p class="short_description">MessageType list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMessagetypes.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMessagetypes<a href="../classes/BiblestudyControllerMessagetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">MessageType list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMessagetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMigration" class="element ajax clickable class">
-<h1>BiblestudyControllerMigration<a href="../classes/BiblestudyControllerMigration.html">¶</a>
-</h1>
-<p class="short_description">Class Migration Controller</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMigration.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMigration<a href="../classes/BiblestudyControllerMigration.html">¶</a>
+    </h1>
+
+    <p class="short_description">Class Migration Controller</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMigration.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMimetype" class="element ajax clickable class">
-<h1>BiblestudyControllerMimetype<a href="../classes/BiblestudyControllerMimetype.html">¶</a>
-</h1>
-<p class="short_description">Controller for MimeType</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMimetype.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMimetype<a href="../classes/BiblestudyControllerMimetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for MimeType</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMimetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerMimetypes" class="element ajax clickable class">
-<h1>BiblestudyControllerMimetypes<a href="../classes/BiblestudyControllerMimetypes.html">¶</a>
-</h1>
-<p class="short_description">Mimetypes list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerMimetypes.html" class="more">« More »</a>
+    <h1>BiblestudyControllerMimetypes<a href="../classes/BiblestudyControllerMimetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">Mimetypes list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerMimetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerPodcast" class="element ajax clickable class">
-<h1>BiblestudyControllerPodcast<a href="../classes/BiblestudyControllerPodcast.html">¶</a>
-</h1>
-<p class="short_description">Podcast form class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerPodcast.html" class="more">« More »</a>
+    <h1>BiblestudyControllerPodcast<a href="../classes/BiblestudyControllerPodcast.html">¶</a>
+    </h1>
+
+    <p class="short_description">Podcast form class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerPodcast.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerPodcasts" class="element ajax clickable class">
-<h1>BiblestudyControllerPodcasts<a href="../classes/BiblestudyControllerPodcasts.html">¶</a>
-</h1>
-<p class="short_description">Controller for Podcasts</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerPodcasts.html" class="more">« More »</a>
+    <h1>BiblestudyControllerPodcasts<a href="../classes/BiblestudyControllerPodcasts.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Podcasts</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerPodcasts.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerSerie" class="element ajax clickable class">
-<h1>BiblestudyControllerSerie<a href="../classes/BiblestudyControllerSerie.html">¶</a>
-</h1>
-<p class="short_description">Controller for a Serie</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerSerie.html" class="more">« More »</a>
+    <h1>BiblestudyControllerSerie<a href="../classes/BiblestudyControllerSerie.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for a Serie</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerSerie.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerSeries" class="element ajax clickable class">
-<h1>BiblestudyControllerSeries<a href="../classes/BiblestudyControllerSeries.html">¶</a>
-</h1>
-<p class="short_description">Series list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerSeries.html" class="more">« More »</a>
+    <h1>BiblestudyControllerSeries<a href="../classes/BiblestudyControllerSeries.html">¶</a>
+    </h1>
+
+    <p class="short_description">Series list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerSeries.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerServer" class="element ajax clickable class">
-<h1>BiblestudyControllerServer<a href="../classes/BiblestudyControllerServer.html">¶</a>
-</h1>
-<p class="short_description">Controller for Server</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerServer.html" class="more">« More »</a>
+    <h1>BiblestudyControllerServer<a href="../classes/BiblestudyControllerServer.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Server</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerServer.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerServers" class="element ajax clickable class">
-<h1>BiblestudyControllerServers<a href="../classes/BiblestudyControllerServers.html">¶</a>
-</h1>
-<p class="short_description">Servers list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerServers.html" class="more">« More »</a>
+    <h1>BiblestudyControllerServers<a href="../classes/BiblestudyControllerServers.html">¶</a>
+    </h1>
+
+    <p class="short_description">Servers list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerServers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerShare" class="element ajax clickable class">
-<h1>BiblestudyControllerShare<a href="../classes/BiblestudyControllerShare.html">¶</a>
-</h1>
-<p class="short_description">Share controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerShare.html" class="more">« More »</a>
+    <h1>BiblestudyControllerShare<a href="../classes/BiblestudyControllerShare.html">¶</a>
+    </h1>
+
+    <p class="short_description">Share controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerShare.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerShares" class="element ajax clickable class">
-<h1>BiblestudyControllerShares<a href="../classes/BiblestudyControllerShares.html">¶</a>
-</h1>
-<p class="short_description">Shares list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerShares.html" class="more">« More »</a>
+    <h1>BiblestudyControllerShares<a href="../classes/BiblestudyControllerShares.html">¶</a>
+    </h1>
+
+    <p class="short_description">Shares list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerShares.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerStyle" class="element ajax clickable class">
-<h1>BiblestudyControllerStyle<a href="../classes/BiblestudyControllerStyle.html">¶</a>
-</h1>
-<p class="short_description">Style Class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerStyle.html" class="more">« More »</a>
+    <h1>BiblestudyControllerStyle<a href="../classes/BiblestudyControllerStyle.html">¶</a>
+    </h1>
+
+    <p class="short_description">Style Class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerStyle.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerStyles" class="element ajax clickable class">
-<h1>BiblestudyControllerStyles<a href="../classes/BiblestudyControllerStyles.html">¶</a>
-</h1>
-<p class="short_description">Styles list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerStyles.html" class="more">« More »</a>
+    <h1>BiblestudyControllerStyles<a href="../classes/BiblestudyControllerStyles.html">¶</a>
+    </h1>
+
+    <p class="short_description">Styles list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerStyles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTeacher" class="element ajax clickable class">
-<h1>BiblestudyControllerTeacher<a href="../classes/BiblestudyControllerTeacher.html">¶</a>
-</h1>
-<p class="short_description">Controller for Teacher</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTeacher.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTeacher<a href="../classes/BiblestudyControllerTeacher.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Teacher</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTeacher.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTeachers" class="element ajax clickable class">
-<h1>BiblestudyControllerTeachers<a href="../classes/BiblestudyControllerTeachers.html">¶</a>
-</h1>
-<p class="short_description">Teachers list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTeachers.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTeachers<a href="../classes/BiblestudyControllerTeachers.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teachers list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTeachers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTemplate" class="element ajax clickable class">
-<h1>BiblestudyControllerTemplate<a href="../classes/BiblestudyControllerTemplate.html">¶</a>
-</h1>
-<p class="short_description">Template controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTemplate.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTemplate<a href="../classes/BiblestudyControllerTemplate.html">¶</a>
+    </h1>
+
+    <p class="short_description">Template controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTemplate.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTemplatecode" class="element ajax clickable class">
-<h1>BiblestudyControllerTemplatecode<a href="../classes/BiblestudyControllerTemplatecode.html">¶</a>
-</h1>
-<p class="short_description">Template Code controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTemplatecode.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTemplatecode<a href="../classes/BiblestudyControllerTemplatecode.html">¶</a>
+    </h1>
+
+    <p class="short_description">Template Code controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTemplatecode.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTemplatecodes" class="element ajax clickable class">
-<h1>BiblestudyControllerTemplatecodes<a href="../classes/BiblestudyControllerTemplatecodes.html">¶</a>
-</h1>
-<p class="short_description">TemplateCodes list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTemplatecodes.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTemplatecodes<a href="../classes/BiblestudyControllerTemplatecodes.html">¶</a>
+    </h1>
+
+    <p class="short_description">TemplateCodes list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTemplatecodes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTemplates" class="element ajax clickable class">
-<h1>BiblestudyControllerTemplates<a href="../classes/BiblestudyControllerTemplates.html">¶</a>
-</h1>
-<p class="short_description">Controller for Templates</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTemplates.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTemplates<a href="../classes/BiblestudyControllerTemplates.html">¶</a>
+    </h1>
+
+    <p class="short_description">Controller for Templates</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTemplates.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTopic" class="element ajax clickable class">
-<h1>BiblestudyControllerTopic<a href="../classes/BiblestudyControllerTopic.html">¶</a>
-</h1>
-<p class="short_description">Topic controller class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTopic.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTopic<a href="../classes/BiblestudyControllerTopic.html">¶</a>
+    </h1>
+
+    <p class="short_description">Topic controller class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTopic.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyControllerTopics" class="element ajax clickable class">
-<h1>BiblestudyControllerTopics<a href="../classes/BiblestudyControllerTopics.html">¶</a>
-</h1>
-<p class="short_description">Teachers list controller class.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyControllerTopics.html" class="more">« More »</a>
+    <h1>BiblestudyControllerTopics<a href="../classes/BiblestudyControllerTopics.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teachers list controller class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyControllerTopics.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelAdmin" class="element ajax clickable class">
-<h1>BiblestudyModelAdmin<a href="../classes/BiblestudyModelAdmin.html">¶</a>
-</h1>
-<p class="short_description">Admin admin model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelAdmin.html" class="more">« More »</a>
+    <h1>BiblestudyModelAdmin<a href="../classes/BiblestudyModelAdmin.html">¶</a>
+    </h1>
+
+    <p class="short_description">Admin admin model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelAdmin.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelComment" class="element ajax clickable class">
-<h1>BiblestudyModelComment<a href="../classes/BiblestudyModelComment.html">¶</a>
-</h1>
-<p class="short_description">Comment model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelComment.html" class="more">« More »</a>
+    <h1>BiblestudyModelComment<a href="../classes/BiblestudyModelComment.html">¶</a>
+    </h1>
+
+    <p class="short_description">Comment model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelComment.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelCommentform" class="element ajax clickable class">
-<h1>BiblestudyModelCommentform<a href="../classes/BiblestudyModelCommentform.html">¶</a>
-</h1>
-<p class="short_description">Comment model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelCommentform.html" class="more">« More »</a>
+    <h1>BiblestudyModelCommentform<a href="../classes/BiblestudyModelCommentform.html">¶</a>
+    </h1>
+
+    <p class="short_description">Comment model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelCommentform.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelCommentlist" class="element ajax clickable class">
-<h1>BiblestudyModelCommentlist<a href="../classes/BiblestudyModelCommentlist.html">¶</a>
-</h1>
-<p class="short_description">Comments model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelCommentlist.html" class="more">« More »</a>
+    <h1>BiblestudyModelCommentlist<a href="../classes/BiblestudyModelCommentlist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Comments model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelCommentlist.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelComments" class="element ajax clickable class">
-<h1>BiblestudyModelComments<a href="../classes/BiblestudyModelComments.html">¶</a>
-</h1>
-<p class="short_description">Comments model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelComments.html" class="more">« More »</a>
+    <h1>BiblestudyModelComments<a href="../classes/BiblestudyModelComments.html">¶</a>
+    </h1>
+
+    <p class="short_description">Comments model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelComments.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelFolder" class="element ajax clickable class">
-<h1>BiblestudyModelFolder<a href="../classes/BiblestudyModelFolder.html">¶</a>
-</h1>
-<p class="short_description">Folder model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelFolder.html" class="more">« More »</a>
+    <h1>BiblestudyModelFolder<a href="../classes/BiblestudyModelFolder.html">¶</a>
+    </h1>
+
+    <p class="short_description">Folder model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelFolder.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelFolders" class="element ajax clickable class">
-<h1>BiblestudyModelFolders<a href="../classes/BiblestudyModelFolders.html">¶</a>
-</h1>
-<p class="short_description">Folders model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelFolders.html" class="more">« More »</a>
+    <h1>BiblestudyModelFolders<a href="../classes/BiblestudyModelFolders.html">¶</a>
+    </h1>
+
+    <p class="short_description">Folders model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelFolders.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelLocation" class="element ajax clickable class">
-<h1>BiblestudyModelLocation<a href="../classes/BiblestudyModelLocation.html">¶</a>
-</h1>
-<p class="short_description">Location model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelLocation.html" class="more">« More »</a>
+    <h1>BiblestudyModelLocation<a href="../classes/BiblestudyModelLocation.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelLocation.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelLocations" class="element ajax clickable class">
-<h1>BiblestudyModelLocations<a href="../classes/BiblestudyModelLocations.html">¶</a>
-</h1>
-<p class="short_description">Locations model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelLocations.html" class="more">« More »</a>
+    <h1>BiblestudyModelLocations<a href="../classes/BiblestudyModelLocations.html">¶</a>
+    </h1>
+
+    <p class="short_description">Locations model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelLocations.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMediafile" class="element ajax clickable class">
-<h1>BiblestudyModelMediafile<a href="../classes/BiblestudyModelMediafile.html">¶</a>
-</h1>
-<p class="short_description">MediaFile model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMediafile.html" class="more">« More »</a>
+    <h1>BiblestudyModelMediafile<a href="../classes/BiblestudyModelMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaFile model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMediafile.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMediafiles" class="element ajax clickable class">
-<h1>BiblestudyModelMediafiles<a href="../classes/BiblestudyModelMediafiles.html">¶</a>
-</h1>
-<p class="short_description">MediaFiles model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMediafiles.html" class="more">« More »</a>
+    <h1>BiblestudyModelMediafiles<a href="../classes/BiblestudyModelMediafiles.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaFiles model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMediafiles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMediaimage" class="element ajax clickable class">
-<h1>BiblestudyModelMediaimage<a href="../classes/BiblestudyModelMediaimage.html">¶</a>
-</h1>
-<p class="short_description">MediaImage model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMediaimage.html" class="more">« More »</a>
+    <h1>BiblestudyModelMediaimage<a href="../classes/BiblestudyModelMediaimage.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaImage model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMediaimage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMediaimages" class="element ajax clickable class">
-<h1>BiblestudyModelMediaimages<a href="../classes/BiblestudyModelMediaimages.html">¶</a>
-</h1>
-<p class="short_description">MediaImages model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMediaimages.html" class="more">« More »</a>
+    <h1>BiblestudyModelMediaimages<a href="../classes/BiblestudyModelMediaimages.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaImages model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMediaimages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMessage" class="element ajax clickable class">
-<h1>BiblestudyModelMessage<a href="../classes/BiblestudyModelMessage.html">¶</a>
-</h1>
-<p class="short_description">Message model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMessage.html" class="more">« More »</a>
+    <h1>BiblestudyModelMessage<a href="../classes/BiblestudyModelMessage.html">¶</a>
+    </h1>
+
+    <p class="short_description">Message model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMessage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMessages" class="element ajax clickable class">
-<h1>BiblestudyModelMessages<a href="../classes/BiblestudyModelMessages.html">¶</a>
-</h1>
-<p class="short_description">Message model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMessages.html" class="more">« More »</a>
+    <h1>BiblestudyModelMessages<a href="../classes/BiblestudyModelMessages.html">¶</a>
+    </h1>
+
+    <p class="short_description">Message model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMessages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMessagetype" class="element ajax clickable class">
-<h1>BiblestudyModelMessagetype<a href="../classes/BiblestudyModelMessagetype.html">¶</a>
-</h1>
-<p class="short_description">MessageType model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMessagetype.html" class="more">« More »</a>
+    <h1>BiblestudyModelMessagetype<a href="../classes/BiblestudyModelMessagetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">MessageType model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMessagetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMessagetypes" class="element ajax clickable class">
-<h1>BiblestudyModelMessagetypes<a href="../classes/BiblestudyModelMessagetypes.html">¶</a>
-</h1>
-<p class="short_description">MessageType model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMessagetypes.html" class="more">« More »</a>
+    <h1>BiblestudyModelMessagetypes<a href="../classes/BiblestudyModelMessagetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">MessageType model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMessagetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMimetype" class="element ajax clickable class">
-<h1>BiblestudyModelMimetype<a href="../classes/BiblestudyModelMimetype.html">¶</a>
-</h1>
-<p class="short_description">MimeType Admin model</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMimetype.html" class="more">« More »</a>
+    <h1>BiblestudyModelMimetype<a href="../classes/BiblestudyModelMimetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">MimeType Admin model</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMimetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelMimetypes" class="element ajax clickable class">
-<h1>BiblestudyModelMimetypes<a href="../classes/BiblestudyModelMimetypes.html">¶</a>
-</h1>
-<p class="short_description">MimeTypes model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelMimetypes.html" class="more">« More »</a>
+    <h1>BiblestudyModelMimetypes<a href="../classes/BiblestudyModelMimetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">MimeTypes model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelMimetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelPodcast" class="element ajax clickable class">
-<h1>BiblestudyModelPodcast<a href="../classes/BiblestudyModelPodcast.html">¶</a>
-</h1>
-<p class="short_description">Podcast model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelPodcast.html" class="more">« More »</a>
+    <h1>BiblestudyModelPodcast<a href="../classes/BiblestudyModelPodcast.html">¶</a>
+    </h1>
+
+    <p class="short_description">Podcast model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelPodcast.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelPodcasts" class="element ajax clickable class">
-<h1>BiblestudyModelPodcasts<a href="../classes/BiblestudyModelPodcasts.html">¶</a>
-</h1>
-<p class="short_description">Podcasts model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelPodcasts.html" class="more">« More »</a>
+    <h1>BiblestudyModelPodcasts<a href="../classes/BiblestudyModelPodcasts.html">¶</a>
+    </h1>
+
+    <p class="short_description">Podcasts model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelPodcasts.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelSerie" class="element ajax clickable class">
-<h1>BiblestudyModelSerie<a href="../classes/BiblestudyModelSerie.html">¶</a>
-</h1>
-<p class="short_description">Serie admin model</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelSerie.html" class="more">« More »</a>
+    <h1>BiblestudyModelSerie<a href="../classes/BiblestudyModelSerie.html">¶</a>
+    </h1>
+
+    <p class="short_description">Serie admin model</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelSerie.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelSeries" class="element ajax clickable class">
-<h1>BiblestudyModelSeries<a href="../classes/BiblestudyModelSeries.html">¶</a>
-</h1>
-<p class="short_description">Series model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelSeries.html" class="more">« More »</a>
+    <h1>BiblestudyModelSeries<a href="../classes/BiblestudyModelSeries.html">¶</a>
+    </h1>
+
+    <p class="short_description">Series model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelSeries.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelServer" class="element ajax clickable class">
-<h1>BiblestudyModelServer<a href="../classes/BiblestudyModelServer.html">¶</a>
-</h1>
-<p class="short_description">Server admin model</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelServer.html" class="more">« More »</a>
+    <h1>BiblestudyModelServer<a href="../classes/BiblestudyModelServer.html">¶</a>
+    </h1>
+
+    <p class="short_description">Server admin model</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelServer.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelServers" class="element ajax clickable class">
-<h1>BiblestudyModelServers<a href="../classes/BiblestudyModelServers.html">¶</a>
-</h1>
-<p class="short_description">Servers model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelServers.html" class="more">« More »</a>
+    <h1>BiblestudyModelServers<a href="../classes/BiblestudyModelServers.html">¶</a>
+    </h1>
+
+    <p class="short_description">Servers model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelServers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelShare" class="element ajax clickable class">
-<h1>BiblestudyModelShare<a href="../classes/BiblestudyModelShare.html">¶</a>
-</h1>
-<p class="short_description">Share model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelShare.html" class="more">« More »</a>
+    <h1>BiblestudyModelShare<a href="../classes/BiblestudyModelShare.html">¶</a>
+    </h1>
+
+    <p class="short_description">Share model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelShare.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelShares" class="element ajax clickable class">
-<h1>BiblestudyModelShares<a href="../classes/BiblestudyModelShares.html">¶</a>
-</h1>
-<p class="short_description">Shares model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelShares.html" class="more">« More »</a>
+    <h1>BiblestudyModelShares<a href="../classes/BiblestudyModelShares.html">¶</a>
+    </h1>
+
+    <p class="short_description">Shares model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelShares.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelStyle" class="element ajax clickable class">
-<h1>BiblestudyModelStyle<a href="../classes/BiblestudyModelStyle.html">¶</a>
-</h1>
-<p class="short_description">Style Model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelStyle.html" class="more">« More »</a>
+    <h1>BiblestudyModelStyle<a href="../classes/BiblestudyModelStyle.html">¶</a>
+    </h1>
+
+    <p class="short_description">Style Model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelStyle.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTeacher" class="element ajax clickable class">
-<h1>BiblestudyModelTeacher<a href="../classes/BiblestudyModelTeacher.html">¶</a>
-</h1>
-<p class="short_description">Teacher model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTeacher.html" class="more">« More »</a>
+    <h1>BiblestudyModelTeacher<a href="../classes/BiblestudyModelTeacher.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teacher model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTeacher.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTeachers" class="element ajax clickable class">
-<h1>BiblestudyModelTeachers<a href="../classes/BiblestudyModelTeachers.html">¶</a>
-</h1>
-<p class="short_description">Teachers model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTeachers.html" class="more">« More »</a>
+    <h1>BiblestudyModelTeachers<a href="../classes/BiblestudyModelTeachers.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teachers model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTeachers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTemplate" class="element ajax clickable class">
-<h1>BiblestudyModelTemplate<a href="../classes/BiblestudyModelTemplate.html">¶</a>
-</h1>
-<p class="short_description">Template model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTemplate.html" class="more">« More »</a>
+    <h1>BiblestudyModelTemplate<a href="../classes/BiblestudyModelTemplate.html">¶</a>
+    </h1>
+
+    <p class="short_description">Template model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTemplate.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTemplatecode" class="element ajax clickable class">
-<h1>BiblestudyModelTemplatecode<a href="../classes/BiblestudyModelTemplatecode.html">¶</a>
-</h1>
-<p class="short_description">HelloWorld Model</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTemplatecode.html" class="more">« More »</a>
+    <h1>BiblestudyModelTemplatecode<a href="../classes/BiblestudyModelTemplatecode.html">¶</a>
+    </h1>
+
+    <p class="short_description">HelloWorld Model</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTemplatecode.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTemplatecodes" class="element ajax clickable class">
-<h1>BiblestudyModelTemplatecodes<a href="../classes/BiblestudyModelTemplatecodes.html">¶</a>
-</h1>
-<p class="short_description">Template codes model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTemplatecodes.html" class="more">« More »</a>
+    <h1>BiblestudyModelTemplatecodes<a href="../classes/BiblestudyModelTemplatecodes.html">¶</a>
+    </h1>
+
+    <p class="short_description">Template codes model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTemplatecodes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTemplates" class="element ajax clickable class">
-<h1>BiblestudyModelTemplates<a href="../classes/BiblestudyModelTemplates.html">¶</a>
-</h1>
-<p class="short_description">Templates model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTemplates.html" class="more">« More »</a>
+    <h1>BiblestudyModelTemplates<a href="../classes/BiblestudyModelTemplates.html">¶</a>
+    </h1>
+
+    <p class="short_description">Templates model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTemplates.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTopic" class="element ajax clickable class">
-<h1>BiblestudyModelTopic<a href="../classes/BiblestudyModelTopic.html">¶</a>
-</h1>
-<p class="short_description">Topic Model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTopic.html" class="more">« More »</a>
+    <h1>BiblestudyModelTopic<a href="../classes/BiblestudyModelTopic.html">¶</a>
+    </h1>
+
+    <p class="short_description">Topic Model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTopic.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelTopics" class="element ajax clickable class">
-<h1>BiblestudyModelTopics<a href="../classes/BiblestudyModelTopics.html">¶</a>
-</h1>
-<p class="short_description">Topics model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelTopics.html" class="more">« More »</a>
+    <h1>BiblestudyModelTopics<a href="../classes/BiblestudyModelTopics.html">¶</a>
+    </h1>
+
+    <p class="short_description">Topics model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelTopics.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyModelstyles" class="element ajax clickable class">
-<h1>BiblestudyModelstyles<a href="../classes/BiblestudyModelstyles.html">¶</a>
-</h1>
-<p class="short_description">Styles list model class</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelstyles.html" class="more">« More »</a>
+    <h1>BiblestudyModelstyles<a href="../classes/BiblestudyModelstyles.html">¶</a>
+    </h1>
+
+    <p class="short_description">Styles list model class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyModelstyles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewAdmin" class="element ajax clickable class">
-<h1>BiblestudyViewAdmin<a href="../classes/BiblestudyViewAdmin.html">¶</a>
-</h1>
-<p class="short_description">View class for Admin</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewAdmin.html" class="more">« More »</a>
+    <h1>BiblestudyViewAdmin<a href="../classes/BiblestudyViewAdmin.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Admin</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewAdmin.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewComment" class="element ajax clickable class">
-<h1>BiblestudyViewComment<a href="../classes/BiblestudyViewComment.html">¶</a>
-</h1>
-<p class="short_description">View class for Comment</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewComment.html" class="more">« More »</a>
+    <h1>BiblestudyViewComment<a href="../classes/BiblestudyViewComment.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Comment</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewComment.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewCommentform" class="element ajax clickable class">
-<h1>BiblestudyViewCommentform<a href="../classes/BiblestudyViewCommentform.html">¶</a>
-</h1>
-<p class="short_description">View class for Comment</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewCommentform.html" class="more">« More »</a>
+    <h1>BiblestudyViewCommentform<a href="../classes/BiblestudyViewCommentform.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Comment</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewCommentform.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewCommentlist" class="element ajax clickable class">
-<h1>BiblestudyViewCommentlist<a href="../classes/BiblestudyViewCommentlist.html">¶</a>
-</h1>
-<p class="short_description">View class for CommentList extends Comments</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewCommentlist.html" class="more">« More »</a>
+    <h1>BiblestudyViewCommentlist<a href="../classes/BiblestudyViewCommentlist.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for CommentList extends Comments</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewCommentlist.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewComments" class="element ajax clickable class">
-<h1>BiblestudyViewComments<a href="../classes/BiblestudyViewComments.html">¶</a>
-</h1>
-<p class="short_description">View class for Comments</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewComments.html" class="more">« More »</a>
+    <h1>BiblestudyViewComments<a href="../classes/BiblestudyViewComments.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Comments</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewComments.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewCpanel" class="element ajax clickable class">
-<h1>BiblestudyViewCpanel<a href="../classes/BiblestudyViewCpanel.html">¶</a>
-</h1>
-<p class="short_description">JView class for Cpanel</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewCpanel.html" class="more">« More »</a>
+    <h1>BiblestudyViewCpanel<a href="../classes/BiblestudyViewCpanel.html">¶</a>
+    </h1>
+
+    <p class="short_description">JView class for Cpanel</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewCpanel.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewInstall" class="element ajax clickable class">
-<h1>BiblestudyViewInstall<a href="../classes/BiblestudyViewInstall.html">¶</a>
-</h1>
-<p class="short_description">JView class for Install</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewInstall.html" class="more">« More »</a>
+    <h1>BiblestudyViewInstall<a href="../classes/BiblestudyViewInstall.html">¶</a>
+    </h1>
+
+    <p class="short_description">JView class for Install</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewInstall.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewLocation" class="element ajax clickable class">
-<h1>BiblestudyViewLocation<a href="../classes/BiblestudyViewLocation.html">¶</a>
-</h1>
-<p class="short_description">View class for Location</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewLocation.html" class="more">« More »</a>
+    <h1>BiblestudyViewLocation<a href="../classes/BiblestudyViewLocation.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Location</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewLocation.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewLocations" class="element ajax clickable class">
-<h1>BiblestudyViewLocations<a href="../classes/BiblestudyViewLocations.html">¶</a>
-</h1>
-<p class="short_description">View class for Locations</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewLocations.html" class="more">« More »</a>
+    <h1>BiblestudyViewLocations<a href="../classes/BiblestudyViewLocations.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Locations</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewLocations.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMediafile" class="element ajax clickable class">
-<h1>BiblestudyViewMediafile<a href="../classes/BiblestudyViewMediafile.html">¶</a>
-</h1>
-<p class="short_description">View class for MediaFile</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMediafile.html" class="more">« More »</a>
+    <h1>BiblestudyViewMediafile<a href="../classes/BiblestudyViewMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for MediaFile</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMediafile.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMediafiles" class="element ajax clickable class">
-<h1>BiblestudyViewMediafiles<a href="../classes/BiblestudyViewMediafiles.html">¶</a>
-</h1>
-<p class="short_description">View class for Mediafiles</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMediafiles.html" class="more">« More »</a>
+    <h1>BiblestudyViewMediafiles<a href="../classes/BiblestudyViewMediafiles.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Mediafiles</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMediafiles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMediaimage" class="element ajax clickable class">
-<h1>BiblestudyViewMediaimage<a href="../classes/BiblestudyViewMediaimage.html">¶</a>
-</h1>
-<p class="short_description">View class for Mediaimage</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMediaimage.html" class="more">« More »</a>
+    <h1>BiblestudyViewMediaimage<a href="../classes/BiblestudyViewMediaimage.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Mediaimage</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMediaimage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMediaimages" class="element ajax clickable class">
-<h1>BiblestudyViewMediaimages<a href="../classes/BiblestudyViewMediaimages.html">¶</a>
-</h1>
-<p class="short_description">View class for Mediaimages</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMediaimages.html" class="more">« More »</a>
+    <h1>BiblestudyViewMediaimages<a href="../classes/BiblestudyViewMediaimages.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Mediaimages</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMediaimages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMessage" class="element ajax clickable class">
-<h1>BiblestudyViewMessage<a href="../classes/BiblestudyViewMessage.html">¶</a>
-</h1>
-<p class="short_description">View class for Message</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMessage.html" class="more">« More »</a>
+    <h1>BiblestudyViewMessage<a href="../classes/BiblestudyViewMessage.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Message</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMessage.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMessages" class="element ajax clickable class">
-<h1>BiblestudyViewMessages<a href="../classes/BiblestudyViewMessages.html">¶</a>
-</h1>
-<p class="short_description">View class for a list of Messages.</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMessages.html" class="more">« More »</a>
+    <h1>BiblestudyViewMessages<a href="../classes/BiblestudyViewMessages.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for a list of Messages.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMessages.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMessagetype" class="element ajax clickable class">
-<h1>BiblestudyViewMessagetype<a href="../classes/BiblestudyViewMessagetype.html">¶</a>
-</h1>
-<p class="short_description">View class for Messagetype</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMessagetype.html" class="more">« More »</a>
+    <h1>BiblestudyViewMessagetype<a href="../classes/BiblestudyViewMessagetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Messagetype</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMessagetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMessagetypes" class="element ajax clickable class">
-<h1>BiblestudyViewMessagetypes<a href="../classes/BiblestudyViewMessagetypes.html">¶</a>
-</h1>
-<p class="short_description">View class for Messagetype</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMessagetypes.html" class="more">« More »</a>
+    <h1>BiblestudyViewMessagetypes<a href="../classes/BiblestudyViewMessagetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Messagetype</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMessagetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMigration" class="element ajax clickable class">
-<h1>BiblestudyViewMigration<a href="../classes/BiblestudyViewMigration.html">¶</a>
-</h1>
-<p class="short_description">View class for Migration</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMigration.html" class="more">« More »</a>
+    <h1>BiblestudyViewMigration<a href="../classes/BiblestudyViewMigration.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Migration</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMigration.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMimetype" class="element ajax clickable class">
-<h1>BiblestudyViewMimetype<a href="../classes/BiblestudyViewMimetype.html">¶</a>
-</h1>
-<p class="short_description">View class for Mimetype</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMimetype.html" class="more">« More »</a>
+    <h1>BiblestudyViewMimetype<a href="../classes/BiblestudyViewMimetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Mimetype</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMimetype.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewMimetypes" class="element ajax clickable class">
-<h1>BiblestudyViewMimetypes<a href="../classes/BiblestudyViewMimetypes.html">¶</a>
-</h1>
-<p class="short_description">View class for Mimetypes</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewMimetypes.html" class="more">« More »</a>
+    <h1>BiblestudyViewMimetypes<a href="../classes/BiblestudyViewMimetypes.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Mimetypes</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewMimetypes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewPodcast" class="element ajax clickable class">
-<h1>BiblestudyViewPodcast<a href="../classes/BiblestudyViewPodcast.html">¶</a>
-</h1>
-<p class="short_description">View class for Podcast</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewPodcast.html" class="more">« More »</a>
+    <h1>BiblestudyViewPodcast<a href="../classes/BiblestudyViewPodcast.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Podcast</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewPodcast.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewPodcasts" class="element ajax clickable class">
-<h1>BiblestudyViewPodcasts<a href="../classes/BiblestudyViewPodcasts.html">¶</a>
-</h1>
-<p class="short_description">View class for Podcasts</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewPodcasts.html" class="more">« More »</a>
+    <h1>BiblestudyViewPodcasts<a href="../classes/BiblestudyViewPodcasts.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Podcasts</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewPodcasts.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewSerie" class="element ajax clickable class">
-<h1>BiblestudyViewSerie<a href="../classes/BiblestudyViewSerie.html">¶</a>
-</h1>
-<p class="short_description">JView class for Serie</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewSerie.html" class="more">« More »</a>
+    <h1>BiblestudyViewSerie<a href="../classes/BiblestudyViewSerie.html">¶</a>
+    </h1>
+
+    <p class="short_description">JView class for Serie</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewSerie.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewSeries" class="element ajax clickable class">
-<h1>BiblestudyViewSeries<a href="../classes/BiblestudyViewSeries.html">¶</a>
-</h1>
-<p class="short_description">View class for Series</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewSeries.html" class="more">« More »</a>
+    <h1>BiblestudyViewSeries<a href="../classes/BiblestudyViewSeries.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Series</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewSeries.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewServer" class="element ajax clickable class">
-<h1>BiblestudyViewServer<a href="../classes/BiblestudyViewServer.html">¶</a>
-</h1>
-<p class="short_description">View class for Server</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewServer.html" class="more">« More »</a>
+    <h1>BiblestudyViewServer<a href="../classes/BiblestudyViewServer.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Server</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewServer.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewServers" class="element ajax clickable class">
-<h1>BiblestudyViewServers<a href="../classes/BiblestudyViewServers.html">¶</a>
-</h1>
-<p class="short_description">View class for Servers</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewServers.html" class="more">« More »</a>
+    <h1>BiblestudyViewServers<a href="../classes/BiblestudyViewServers.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Servers</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewServers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewShare" class="element ajax clickable class">
-<h1>BiblestudyViewShare<a href="../classes/BiblestudyViewShare.html">¶</a>
-</h1>
-<p class="short_description">View class for Share</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewShare.html" class="more">« More »</a>
+    <h1>BiblestudyViewShare<a href="../classes/BiblestudyViewShare.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Share</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewShare.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewShares" class="element ajax clickable class">
-<h1>BiblestudyViewShares<a href="../classes/BiblestudyViewShares.html">¶</a>
-</h1>
-<p class="short_description">View class for a list of Shares</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewShares.html" class="more">« More »</a>
+    <h1>BiblestudyViewShares<a href="../classes/BiblestudyViewShares.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for a list of Shares</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewShares.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewStyle" class="element ajax clickable class">
-<h1>BiblestudyViewStyle<a href="../classes/BiblestudyViewStyle.html">¶</a>
-</h1>
-<p class="short_description">View class for Style</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewStyle.html" class="more">« More »</a>
+    <h1>BiblestudyViewStyle<a href="../classes/BiblestudyViewStyle.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Style</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewStyle.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewStyles" class="element ajax clickable class">
-<h1>BiblestudyViewStyles<a href="../classes/BiblestudyViewStyles.html">¶</a>
-</h1>
-<p class="short_description">View class for Styles</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewStyles.html" class="more">« More »</a>
+    <h1>BiblestudyViewStyles<a href="../classes/BiblestudyViewStyles.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Styles</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewStyles.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTeacher" class="element ajax clickable class">
-<h1>BiblestudyViewTeacher<a href="../classes/BiblestudyViewTeacher.html">¶</a>
-</h1>
-<p class="short_description">View class for Teacher</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTeacher.html" class="more">« More »</a>
+    <h1>BiblestudyViewTeacher<a href="../classes/BiblestudyViewTeacher.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Teacher</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTeacher.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTeachers" class="element ajax clickable class">
-<h1>BiblestudyViewTeachers<a href="../classes/BiblestudyViewTeachers.html">¶</a>
-</h1>
-<p class="short_description">View class for Teachers</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTeachers.html" class="more">« More »</a>
+    <h1>BiblestudyViewTeachers<a href="../classes/BiblestudyViewTeachers.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Teachers</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTeachers.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTemplate" class="element ajax clickable class">
-<h1>BiblestudyViewTemplate<a href="../classes/BiblestudyViewTemplate.html">¶</a>
-</h1>
-<p class="short_description">View class for Template</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTemplate.html" class="more">« More »</a>
+    <h1>BiblestudyViewTemplate<a href="../classes/BiblestudyViewTemplate.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Template</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTemplate.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTemplatecode" class="element ajax clickable class">
-<h1>BiblestudyViewTemplatecode<a href="../classes/BiblestudyViewTemplatecode.html">¶</a>
-</h1>
-<p class="short_description">View class for TemplateCode</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTemplatecode.html" class="more">« More »</a>
+    <h1>BiblestudyViewTemplatecode<a href="../classes/BiblestudyViewTemplatecode.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for TemplateCode</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTemplatecode.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTemplatecodes" class="element ajax clickable class">
-<h1>BiblestudyViewTemplatecodes<a href="../classes/BiblestudyViewTemplatecodes.html">¶</a>
-</h1>
-<p class="short_description">View class for TemplateCodes</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTemplatecodes.html" class="more">« More »</a>
+    <h1>BiblestudyViewTemplatecodes<a href="../classes/BiblestudyViewTemplatecodes.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for TemplateCodes</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTemplatecodes.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTemplates" class="element ajax clickable class">
-<h1>BiblestudyViewTemplates<a href="../classes/BiblestudyViewTemplates.html">¶</a>
-</h1>
-<p class="short_description">View class for Templates</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTemplates.html" class="more">« More »</a>
+    <h1>BiblestudyViewTemplates<a href="../classes/BiblestudyViewTemplates.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Templates</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTemplates.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTopic" class="element ajax clickable class">
-<h1>BiblestudyViewTopic<a href="../classes/BiblestudyViewTopic.html">¶</a>
-</h1>
-<p class="short_description">View class for Topic</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTopic.html" class="more">« More »</a>
+    <h1>BiblestudyViewTopic<a href="../classes/BiblestudyViewTopic.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Topic</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTopic.html" class="more">« More »</a>
 </div>
 <div id="BiblestudyViewTopics" class="element ajax clickable class">
-<h1>BiblestudyViewTopics<a href="../classes/BiblestudyViewTopics.html">¶</a>
-</h1>
-<p class="short_description">View class for Topics</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyViewTopics.html" class="more">« More »</a>
+    <h1>BiblestudyViewTopics<a href="../classes/BiblestudyViewTopics.html">¶</a>
+    </h1>
+
+    <p class="short_description">View class for Topics</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/BiblestudyViewTopics.html" class="more">« More »</a>
 </div>
 <div id="CBiblestudyVersion" class="element ajax clickable class">
-<h1>CBiblestudyVersion<a href="../classes/CBiblestudyVersion.html">¶</a>
-</h1>
-<p class="short_description">BibleSutdy Version Class</p>
-<div class="details collapse"></div>
-<a href="../classes/CBiblestudyVersion.html" class="more">« More »</a>
+    <h1>CBiblestudyVersion<a href="../classes/CBiblestudyVersion.html">¶</a>
+    </h1>
+
+    <p class="short_description">BibleSutdy Version Class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/CBiblestudyVersion.html" class="more">« More »</a>
 </div>
 <div id="Com_BiblestudyInstallerScript" class="element ajax clickable class">
-<h1>Com_BiblestudyInstallerScript<a href="../classes/Com_BiblestudyInstallerScript.html">¶</a>
-</h1>
-<p class="short_description">BibleStudy Install Script</p>
-<div class="details collapse"></div>
-<a href="../classes/Com_BiblestudyInstallerScript.html" class="more">« More »</a>
+    <h1>Com_BiblestudyInstallerScript<a href="../classes/Com_BiblestudyInstallerScript.html">¶</a>
+    </h1>
+
+    <p class="short_description">BibleStudy Install Script</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/Com_BiblestudyInstallerScript.html" class="more">« More »</a>
 </div>
 <div id="FixJBSAssets" class="element ajax clickable class">
-<h1>FixJBSAssets<a href="../classes/FixJBSAssets.html">¶</a>
-</h1>
-<p class="short_description">Asset Fix class</p>
-<div class="details collapse"></div>
-<a href="../classes/FixJBSAssets.html" class="more">« More »</a>
+    <h1>FixJBSAssets<a href="../classes/FixJBSAssets.html">¶</a>
+    </h1>
+
+    <p class="short_description">Asset Fix class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/FixJBSAssets.html" class="more">« More »</a>
 </div>
 <div id="GDLib" class="element ajax clickable class">
-<h1>GDLib<a href="../classes/GDLib.html">¶</a>
-</h1>
-<p class="short_description">Abstraction layer for the GD PHP library</p>
-<div class="details collapse"></div>
-<a href="../classes/GDLib.html" class="more">« More »</a>
+    <h1>GDLib<a href="../classes/GDLib.html">¶</a>
+    </h1>
+
+    <p class="short_description">Abstraction layer for the GD PHP library</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/GDLib.html" class="more">« More »</a>
 </div>
 <div id="ImageMagickLib" class="element ajax clickable class">
-<h1>ImageMagickLib<a href="../classes/ImageMagickLib.html">¶</a>
-</h1>
-<p class="short_description">Abstraction layer for the ImageMagick PHP library</p>
-<div class="details collapse"></div>
-<a href="../classes/ImageMagickLib.html" class="more">« More »</a>
+    <h1>ImageMagickLib<a href="../classes/ImageMagickLib.html">¶</a>
+    </h1>
+
+    <p class="short_description">Abstraction layer for the ImageMagick PHP library</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/ImageMagickLib.html" class="more">« More »</a>
 </div>
 <div id="JBS701Update" class="element ajax clickable class">
-<h1>JBS701Update<a href="../classes/JBS701Update.html">¶</a>
-</h1>
-<p class="short_description">Update for 7.0.1 class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBS701Update.html" class="more">« More »</a>
+    <h1>JBS701Update<a href="../classes/JBS701Update.html">¶</a>
+    </h1>
+
+    <p class="short_description">Update for 7.0.1 class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBS701Update.html" class="more">« More »</a>
 </div>
 <div id="JBS702Update" class="element ajax clickable class">
-<h1>JBS702Update<a href="../classes/JBS702Update.html">¶</a>
-</h1>
-<p class="short_description">Inserts some css code to fix pagination problem and add a tag for the captcha of comments</p>
-<div class="details collapse"></div>
-<a href="../classes/JBS702Update.html" class="more">« More »</a>
+    <h1>JBS702Update<a href="../classes/JBS702Update.html">¶</a>
+    </h1>
+
+    <p class="short_description">Inserts some css code to fix pagination problem and add a tag for the captcha of
+        comments</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBS702Update.html" class="more">« More »</a>
 </div>
 <div id="JBS710Update" class="element ajax clickable class">
-<h1>JBS710Update<a href="../classes/JBS710Update.html">¶</a>
-</h1>
-<p class="short_description">Update for 7.1.0 class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBS710Update.html" class="more">« More »</a>
+    <h1>JBS710Update<a href="../classes/JBS710Update.html">¶</a>
+    </h1>
+
+    <p class="short_description">Update for 7.1.0 class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBS710Update.html" class="more">« More »</a>
 </div>
 <div id="JBS800Update" class="element ajax clickable class">
-<h1>JBS800Update<a href="../classes/JBS800Update.html">¶</a>
-</h1>
-<p class="short_description">Update for 8.0.0 class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBS800Update.html" class="more">« More »</a>
+    <h1>JBS800Update<a href="../classes/JBS800Update.html">¶</a>
+    </h1>
+
+    <p class="short_description">Update for 8.0.0 class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBS800Update.html" class="more">« More »</a>
 </div>
 <div id="JBSConvert" class="element ajax clickable class">
-<h1>JBSConvert<a href="../classes/JBSConvert.html">¶</a>
-</h1>
-<p class="short_description">Class script to convert SermonSpeaker 3.4 to Joomla Bible Study</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSConvert.html" class="more">« More »</a>
+    <h1>JBSConvert<a href="../classes/JBSConvert.html">¶</a>
+    </h1>
+
+    <p class="short_description">Class script to convert SermonSpeaker 3.4 to Joomla Bible Study</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSConvert.html" class="more">« More »</a>
 </div>
 <div id="JBSExport" class="element ajax clickable class">
-<h1>JBSExport<a href="../classes/JBSExport.html">¶</a>
-</h1>
-<p class="short_description">JBS Export class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSExport.html" class="more">« More »</a>
+    <h1>JBSExport<a href="../classes/JBSExport.html">¶</a>
+    </h1>
+
+    <p class="short_description">JBS Export class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSExport.html" class="more">« More »</a>
 </div>
 <div id="JBSMBibleStudyHelper" class="element ajax clickable class">
-<h1>JBSMBibleStudyHelper<a href="../classes/JBSMBibleStudyHelper.html">¶</a>
-</h1>
-<p class="short_description">BibleStudy Helper class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMBibleStudyHelper.html" class="more">« More »</a>
+    <h1>JBSMBibleStudyHelper<a href="../classes/JBSMBibleStudyHelper.html">¶</a>
+    </h1>
+
+    <p class="short_description">BibleStudy Helper class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMBibleStudyHelper.html" class="more">« More »</a>
 </div>
 <div id="JBSMDbHelper" class="element ajax clickable class">
-<h1>JBSMDbHelper<a href="../classes/JBSMDbHelper.html">¶</a>
-</h1>
-<p class="short_description">Database Helper class for version 7.1.0</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMDbHelper.html" class="more">« More »</a>
+    <h1>JBSMDbHelper<a href="../classes/JBSMDbHelper.html">¶</a>
+    </h1>
+
+    <p class="short_description">Database Helper class for version 7.1.0</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMDbHelper.html" class="more">« More »</a>
 </div>
 <div id="JBSMFixAlias" class="element ajax clickable class">
-<h1>JBSMFixAlias<a href="../classes/JBSMFixAlias.html">¶</a>
-</h1>
-<p class="short_description">Class for updating the alias in certain tables</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMFixAlias.html" class="more">« More »</a>
+    <h1>JBSMFixAlias<a href="../classes/JBSMFixAlias.html">¶</a>
+    </h1>
+
+    <p class="short_description">Class for updating the alias in certain tables</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMFixAlias.html" class="more">« More »</a>
 </div>
 <div id="JBSMFreshInstall" class="element ajax clickable class">
-<h1>JBSMFreshInstall<a href="../classes/JBSMFreshInstall.html">¶</a>
-</h1>
-<p class="short_description">Fresh install class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMFreshInstall.html" class="more">« More »</a>
+    <h1>JBSMFreshInstall<a href="../classes/JBSMFreshInstall.html">¶</a>
+    </h1>
+
+    <p class="short_description">Fresh install class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMFreshInstall.html" class="more">« More »</a>
 </div>
 <div id="JBSMHelper" class="element ajax clickable class">
-<h1>JBSMHelper<a href="../classes/JBSMHelper.html">¶</a>
-</h1>
-<p class="short_description">Core Bible Study Helper</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMHelper.html" class="more">« More »</a>
+    <h1>JBSMHelper<a href="../classes/JBSMHelper.html">¶</a>
+    </h1>
+
+    <p class="short_description">Core Bible Study Helper</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMHelper.html" class="more">« More »</a>
 </div>
 <div id="JBSMImage" class="element ajax clickable class">
-<h1>JBSMImage<a href="../classes/JBSMImage.html">¶</a>
-</h1>
-<p class="short_description">Class for Joomla! Bible Sutdy Image</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMImage.html" class="more">« More »</a>
+    <h1>JBSMImage<a href="../classes/JBSMImage.html">¶</a>
+    </h1>
+
+    <p class="short_description">Class for Joomla! Bible Sutdy Image</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMImage.html" class="more">« More »</a>
 </div>
 <div id="JBSMImageLib" class="element ajax clickable class">
-<h1>JBSMImageLib<a href="../classes/JBSMImageLib.html">¶</a>
-</h1>
-<p class="short_description">Creates an instance of the necessary library class, as specified in the admin
-params.</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMImageLib.html" class="more">« More »</a>
+    <h1>JBSMImageLib<a href="../classes/JBSMImageLib.html">¶</a>
+    </h1>
+
+    <p class="short_description">Creates an instance of the necessary library class, as specified in the admin
+        params.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMImageLib.html" class="more">« More »</a>
 </div>
 <div id="JBSMParams" class="element ajax clickable class">
-<h1>JBSMParams<a href="../classes/JBSMParams.html">¶</a>
-</h1>
-<p class="short_description">This is for Retrieving Admin and Template db</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMParams.html" class="more">« More »</a>
+    <h1>JBSMParams<a href="../classes/JBSMParams.html">¶</a>
+    </h1>
+
+    <p class="short_description">This is for Retrieving Admin and Template db</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMParams.html" class="more">« More »</a>
 </div>
 <div id="JBSMServer" class="element ajax clickable class">
-<h1>JBSMServer<a href="../classes/JBSMServer.html">¶</a>
-</h1>
-<p class="short_description">Class Server Helper</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMServer.html" class="more">« More »</a>
+    <h1>JBSMServer<a href="../classes/JBSMServer.html">¶</a>
+    </h1>
+
+    <p class="short_description">Class Server Helper</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMServer.html" class="more">« More »</a>
 </div>
 <div id="JBSMTags" class="element ajax clickable class">
-<h1>JBSMTags<a href="../classes/JBSMTags.html">¶</a>
-</h1>
-<p class="short_description">Tags Helper</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMTags.html" class="more">« More »</a>
+    <h1>JBSMTags<a href="../classes/JBSMTags.html">¶</a>
+    </h1>
+
+    <p class="short_description">Tags Helper</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMTags.html" class="more">« More »</a>
 </div>
 <div id="JBSMTemplate" class="element ajax clickable class">
-<h1>JBSMTemplate<a href="../classes/JBSMTemplate.html">¶</a>
-</h1>
-<p class="short_description">Template helper class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMTemplate.html" class="more">« More »</a>
+    <h1>JBSMTemplate<a href="../classes/JBSMTemplate.html">¶</a>
+    </h1>
+
+    <p class="short_description">Template helper class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMTemplate.html" class="more">« More »</a>
 </div>
 <div id="JBSMTranslated" class="element ajax clickable class">
-<h1>JBSMTranslated<a href="../classes/JBSMTranslated.html">¶</a>
-</h1>
-<p class="short_description">class for Translated Helper</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMTranslated.html" class="more">« More »</a>
+    <h1>JBSMTranslated<a href="../classes/JBSMTranslated.html">¶</a>
+    </h1>
+
+    <p class="short_description">class for Translated Helper</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSMTranslated.html" class="more">« More »</a>
 </div>
 <div id="JBSPIconvert" class="element ajax clickable class">
-<h1>JBSPIconvert<a href="../classes/JBSPIconvert.html">¶</a>
-</h1>
-<p class="short_description">Convert Class
-PreachIT Converter system</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSPIconvert.html" class="more">« More »</a>
+    <h1>JBSPIconvert<a href="../classes/JBSPIconvert.html">¶</a>
+    </h1>
+
+    <p class="short_description">Convert Class
+        PreachIT Converter system</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSPIconvert.html" class="more">« More »</a>
 </div>
 <div id="JBSRestore" class="element ajax clickable class">
-<h1>JBSRestore<a href="../classes/JBSRestore.html">¶</a>
-</h1>
-<p class="short_description">Restore class</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSRestore.html" class="more">« More »</a>
+    <h1>JBSRestore<a href="../classes/JBSRestore.html">¶</a>
+    </h1>
+
+    <p class="short_description">Restore class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JBSRestore.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldDocman" class="element ajax clickable class">
-<h1>JFormFieldDocman<a href="../classes/JFormFieldDocman.html">¶</a>
-</h1>
-<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldDocman.html" class="more">« More »</a>
+    <h1>JFormFieldDocman<a href="../classes/JFormFieldDocman.html">¶</a>
+    </h1>
+
+    <p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldDocman.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldFilesize" class="element ajax clickable class">
-<h1>JFormFieldFilesize<a href="../classes/JFormFieldFilesize.html">¶</a>
-</h1>
-<p class="short_description">Form Field class for the FileSize</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldFilesize.html" class="more">« More »</a>
+    <h1>JFormFieldFilesize<a href="../classes/JFormFieldFilesize.html">¶</a>
+    </h1>
+
+    <p class="short_description">Form Field class for the FileSize</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldFilesize.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldFilters" class="element ajax clickable class">
-<h1>JFormFieldFilters<a href="../classes/JFormFieldFilters.html">¶</a>
-</h1>
-<p class="short_description">Form Field class for the Filters.</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldFilters.html" class="more">« More »</a>
+    <h1>JFormFieldFilters<a href="../classes/JFormFieldFilters.html">¶</a>
+    </h1>
+
+    <p class="short_description">Form Field class for the Filters.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldFilters.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldLinkoptions" class="element ajax clickable class">
-<h1>JFormFieldLinkoptions<a href="../classes/JFormFieldLinkoptions.html">¶</a>
-</h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldLinkoptions.html" class="more">« More »</a>
+    <h1>JFormFieldLinkoptions<a href="../classes/JFormFieldLinkoptions.html">¶</a>
+    </h1>
+
+    <p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldLinkoptions.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldListoptions" class="element ajax clickable class">
-<h1>JFormFieldListoptions<a href="../classes/JFormFieldListoptions.html">¶</a>
-</h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldListoptions.html" class="more">« More »</a>
+    <h1>JFormFieldListoptions<a href="../classes/JFormFieldListoptions.html">¶</a>
+    </h1>
+
+    <p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldListoptions.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldLocationslist" class="element ajax clickable class">
-<h1>JFormFieldLocationslist<a href="../classes/JFormFieldLocationslist.html">¶</a>
-</h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldLocationslist.html" class="more">« More »</a>
+    <h1>JFormFieldLocationslist<a href="../classes/JFormFieldLocationslist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldLocationslist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldMediafile" class="element ajax clickable class">
-<h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
-</h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
+    <h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldMediafile" class="element ajax clickable class">
-<h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
-</h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
+    <h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldMessagetypelist" class="element ajax clickable class">
-<h1>JFormFieldMessagetypelist<a href="../classes/JFormFieldMessagetypelist.html">¶</a>
-</h1>
-<p class="short_description">Message Type List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldMessagetypelist.html" class="more">« More »</a>
+    <h1>JFormFieldMessagetypelist<a href="../classes/JFormFieldMessagetypelist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Message Type List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldMessagetypelist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldModal_Seriesdetail" class="element ajax clickable class">
-<h1>JFormFieldModal_Seriesdetail<a href="../classes/JFormFieldModal_Seriesdetail.html">¶</a>
-</h1>
-<p class="short_description">Supports a modal series picker.</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldModal_Seriesdetail.html" class="more">« More »</a>
+    <h1>JFormFieldModal_Seriesdetail<a href="../classes/JFormFieldModal_Seriesdetail.html">¶</a>
+    </h1>
+
+    <p class="short_description">Supports a modal series picker.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldModal_Seriesdetail.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldModal_Study" class="element ajax clickable class">
-<h1>JFormFieldModal_Study<a href="../classes/JFormFieldModal_Study.html">¶</a>
-</h1>
-<p class="short_description">Field class for Modal_Study</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldModal_Study.html" class="more">« More »</a>
+    <h1>JFormFieldModal_Study<a href="../classes/JFormFieldModal_Study.html">¶</a>
+    </h1>
+
+    <p class="short_description">Field class for Modal_Study</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldModal_Study.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldModal_Studydetails" class="element ajax clickable class">
-<h1>JFormFieldModal_Studydetails<a href="../classes/JFormFieldModal_Studydetails.html">¶</a>
-</h1>
-<p class="short_description">Supports a modal study picker.</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldModal_Studydetails.html" class="more">« More »</a>
+    <h1>JFormFieldModal_Studydetails<a href="../classes/JFormFieldModal_Studydetails.html">¶</a>
+    </h1>
+
+    <p class="short_description">Supports a modal study picker.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldModal_Studydetails.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldModal_Teacherdisplay" class="element ajax clickable class">
-<h1>JFormFieldModal_Teacherdisplay<a href="../classes/JFormFieldModal_Teacherdisplay.html">¶</a>
-</h1>
-<p class="short_description">Supports a modal study picker.</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldModal_Teacherdisplay.html" class="more">« More »</a>
+    <h1>JFormFieldModal_Teacherdisplay<a href="../classes/JFormFieldModal_Teacherdisplay.html">¶</a>
+    </h1>
+
+    <p class="short_description">Supports a modal study picker.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldModal_Teacherdisplay.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldSerieslist" class="element ajax clickable class">
-<h1>JFormFieldSerieslist<a href="../classes/JFormFieldSerieslist.html">¶</a>
-</h1>
-<p class="short_description">Series List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldSerieslist.html" class="more">« More »</a>
+    <h1>JFormFieldSerieslist<a href="../classes/JFormFieldSerieslist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Series List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldSerieslist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldSeriesoptions" class="element ajax clickable class">
-<h1>JFormFieldSeriesoptions<a href="../classes/JFormFieldSeriesoptions.html">¶</a>
-</h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldSeriesoptions.html" class="more">« More »</a>
+    <h1>JFormFieldSeriesoptions<a href="../classes/JFormFieldSeriesoptions.html">¶</a>
+    </h1>
+
+    <p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldSeriesoptions.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldSharelist" class="element ajax clickable class">
-<h1>JFormFieldSharelist<a href="../classes/JFormFieldSharelist.html">¶</a>
-</h1>
-<p class="short_description">Message Type List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldSharelist.html" class="more">« More »</a>
+    <h1>JFormFieldSharelist<a href="../classes/JFormFieldSharelist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Message Type List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldSharelist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldTeacherlist" class="element ajax clickable class">
-<h1>JFormFieldTeacherlist<a href="../classes/JFormFieldTeacherlist.html">¶</a>
-</h1>
-<p class="short_description">Teachers List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldTeacherlist.html" class="more">« More »</a>
+    <h1>JFormFieldTeacherlist<a href="../classes/JFormFieldTeacherlist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teachers List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldTeacherlist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldTopics" class="element ajax clickable class">
-<h1>JFormFieldTopics<a href="../classes/JFormFieldTopics.html">¶</a>
-</h1>
-<p class="short_description">Form Field class for the Topics</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldTopics.html" class="more">« More »</a>
+    <h1>JFormFieldTopics<a href="../classes/JFormFieldTopics.html">¶</a>
+    </h1>
+
+    <p class="short_description">Form Field class for the Topics</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldTopics.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldTopicslist" class="element ajax clickable class">
-<h1>JFormFieldTopicslist<a href="../classes/JFormFieldTopicslist.html">¶</a>
-</h1>
-<p class="short_description">Topics List Form Field class for the Joomla Bible Study component
-Displays a topics list of ALL published topics</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldTopicslist.html" class="more">« More »</a>
+    <h1>JFormFieldTopicslist<a href="../classes/JFormFieldTopicslist.html">¶</a>
+    </h1>
+
+    <p class="short_description">Topics List Form Field class for the Joomla Bible Study component
+        Displays a topics list of ALL published topics</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldTopicslist.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldVirtuemart" class="element ajax clickable class">
-<h1>JFormFieldVirtuemart<a href="../classes/JFormFieldVirtuemart.html">¶</a>
-</h1>
-<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
-<div class="details collapse"></div>
-<a href="../classes/JFormFieldVirtuemart.html" class="more">« More »</a>
+    <h1>JFormFieldVirtuemart<a href="../classes/JFormFieldVirtuemart.html">¶</a>
+    </h1>
+
+    <p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JFormFieldVirtuemart.html" class="more">« More »</a>
 </div>
 <div id="JHtmlBiblestudy" class="element ajax clickable class">
-<h1>JHtmlBiblestudy<a href="../classes/JHtmlBiblestudy.html">¶</a>
-</h1>
-<p class="short_description">Biblestudy HTML class.</p>
-<div class="details collapse"></div>
-<a href="../classes/JHtmlBiblestudy.html" class="more">« More »</a>
+    <h1>JHtmlBiblestudy<a href="../classes/JHtmlBiblestudy.html">¶</a>
+    </h1>
+
+    <p class="short_description">Biblestudy HTML class.</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JHtmlBiblestudy.html" class="more">« More »</a>
 </div>
 <div id="JbStats" class="element ajax clickable class">
-<h1>JbStats<a href="../classes/JbStats.html">¶</a>
-</h1>
-<p class="short_description">Bible Study stats support class</p>
-<div class="details collapse"></div>
-<a href="../classes/JbStats.html" class="more">« More »</a>
+    <h1>JbStats<a href="../classes/JbStats.html">¶</a>
+    </h1>
+
+    <p class="short_description">Bible Study stats support class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/JbStats.html" class="more">« More »</a>
 </div>
 <div id="MigrationUpgrade" class="element ajax clickable class">
-<h1>MigrationUpgrade<a href="../classes/MigrationUpgrade.html">¶</a>
-</h1>
-<p class="short_description">Update on All upgrades for migrating from old DB's</p>
-<div class="details collapse"></div>
-<a href="../classes/MigrationUpgrade.html" class="more">« More »</a>
+    <h1>MigrationUpgrade<a href="../classes/MigrationUpgrade.html">¶</a>
+    </h1>
+
+    <p class="short_description">Update on All upgrades for migrating from old DB's</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/MigrationUpgrade.html" class="more">« More »</a>
 </div>
 <div id="TableAdmin" class="element ajax clickable class">
-<h1>TableAdmin<a href="../classes/TableAdmin.html">¶</a>
-</h1>
-<p class="short_description">Admin table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableAdmin.html" class="more">« More »</a>
+    <h1>TableAdmin<a href="../classes/TableAdmin.html">¶</a>
+    </h1>
+
+    <p class="short_description">Admin table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableAdmin.html" class="more">« More »</a>
 </div>
 <div id="TableComment" class="element ajax clickable class">
-<h1>TableComment<a href="../classes/TableComment.html">¶</a>
-</h1>
-<p class="short_description">Table class for Comment</p>
-<div class="details collapse"></div>
-<a href="../classes/TableComment.html" class="more">« More »</a>
+    <h1>TableComment<a href="../classes/TableComment.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Comment</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableComment.html" class="more">« More »</a>
 </div>
 <div id="TableFolder" class="element ajax clickable class">
-<h1>TableFolder<a href="../classes/TableFolder.html">¶</a>
-</h1>
-<p class="short_description">Table class for Folder</p>
-<div class="details collapse"></div>
-<a href="../classes/TableFolder.html" class="more">« More »</a>
+    <h1>TableFolder<a href="../classes/TableFolder.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Folder</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableFolder.html" class="more">« More »</a>
 </div>
 <div id="TableLocation" class="element ajax clickable class">
-<h1>TableLocation<a href="../classes/TableLocation.html">¶</a>
-</h1>
-<p class="short_description">Location table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableLocation.html" class="more">« More »</a>
+    <h1>TableLocation<a href="../classes/TableLocation.html">¶</a>
+    </h1>
+
+    <p class="short_description">Location table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableLocation.html" class="more">« More »</a>
 </div>
 <div id="TableMediafile" class="element ajax clickable class">
-<h1>TableMediafile<a href="../classes/TableMediafile.html">¶</a>
-</h1>
-<p class="short_description">Table class for MediaFile</p>
-<div class="details collapse"></div>
-<a href="../classes/TableMediafile.html" class="more">« More »</a>
+    <h1>TableMediafile<a href="../classes/TableMediafile.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for MediaFile</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableMediafile.html" class="more">« More »</a>
 </div>
 <div id="TableMediaimage" class="element ajax clickable class">
-<h1>TableMediaimage<a href="../classes/TableMediaimage.html">¶</a>
-</h1>
-<p class="short_description">MediaImage table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableMediaimage.html" class="more">« More »</a>
+    <h1>TableMediaimage<a href="../classes/TableMediaimage.html">¶</a>
+    </h1>
+
+    <p class="short_description">MediaImage table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableMediaimage.html" class="more">« More »</a>
 </div>
 <div id="TableMessage" class="element ajax clickable class">
-<h1>TableMessage<a href="../classes/TableMessage.html">¶</a>
-</h1>
-<p class="short_description">Table class for Message</p>
-<div class="details collapse"></div>
-<a href="../classes/TableMessage.html" class="more">« More »</a>
+    <h1>TableMessage<a href="../classes/TableMessage.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Message</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableMessage.html" class="more">« More »</a>
 </div>
 <div id="TableMessagetype" class="element ajax clickable class">
-<h1>TableMessagetype<a href="../classes/TableMessagetype.html">¶</a>
-</h1>
-<p class="short_description">MessageType table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableMessagetype.html" class="more">« More »</a>
+    <h1>TableMessagetype<a href="../classes/TableMessagetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">MessageType table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableMessagetype.html" class="more">« More »</a>
 </div>
 <div id="TableMimetype" class="element ajax clickable class">
-<h1>TableMimetype<a href="../classes/TableMimetype.html">¶</a>
-</h1>
-<p class="short_description">Table class for MimeType</p>
-<div class="details collapse"></div>
-<a href="../classes/TableMimetype.html" class="more">« More »</a>
+    <h1>TableMimetype<a href="../classes/TableMimetype.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for MimeType</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableMimetype.html" class="more">« More »</a>
 </div>
 <div id="TablePodcast" class="element ajax clickable class">
-<h1>TablePodcast<a href="../classes/TablePodcast.html">¶</a>
-</h1>
-<p class="short_description">Podcast table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TablePodcast.html" class="more">« More »</a>
+    <h1>TablePodcast<a href="../classes/TablePodcast.html">¶</a>
+    </h1>
+
+    <p class="short_description">Podcast table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TablePodcast.html" class="more">« More »</a>
 </div>
 <div id="TableSerie" class="element ajax clickable class">
-<h1>TableSerie<a href="../classes/TableSerie.html">¶</a>
-</h1>
-<p class="short_description">Seris JTable class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableSerie.html" class="more">« More »</a>
+    <h1>TableSerie<a href="../classes/TableSerie.html">¶</a>
+    </h1>
+
+    <p class="short_description">Seris JTable class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableSerie.html" class="more">« More »</a>
 </div>
 <div id="TableServer" class="element ajax clickable class">
-<h1>TableServer<a href="../classes/TableServer.html">¶</a>
-</h1>
-<p class="short_description">Table class for Server</p>
-<div class="details collapse"></div>
-<a href="../classes/TableServer.html" class="more">« More »</a>
+    <h1>TableServer<a href="../classes/TableServer.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Server</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableServer.html" class="more">« More »</a>
 </div>
 <div id="TableShare" class="element ajax clickable class">
-<h1>TableShare<a href="../classes/TableShare.html">¶</a>
-</h1>
-<p class="short_description">Table class for Share</p>
-<div class="details collapse"></div>
-<a href="../classes/TableShare.html" class="more">« More »</a>
+    <h1>TableShare<a href="../classes/TableShare.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Share</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableShare.html" class="more">« More »</a>
 </div>
 <div id="TableStudyTopics" class="element ajax clickable class">
-<h1>TableStudyTopics<a href="../classes/TableStudyTopics.html">¶</a>
-</h1>
-<p class="short_description">StudyTopics table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableStudyTopics.html" class="more">« More »</a>
+    <h1>TableStudyTopics<a href="../classes/TableStudyTopics.html">¶</a>
+    </h1>
+
+    <p class="short_description">StudyTopics table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableStudyTopics.html" class="more">« More »</a>
 </div>
 <div id="TableStyle" class="element ajax clickable class">
-<h1>TableStyle<a href="../classes/TableStyle.html">¶</a>
-</h1>
-<p class="short_description">Table class for Style</p>
-<div class="details collapse"></div>
-<a href="../classes/TableStyle.html" class="more">« More »</a>
+    <h1>TableStyle<a href="../classes/TableStyle.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Style</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableStyle.html" class="more">« More »</a>
 </div>
 <div id="TableTeacher" class="element ajax clickable class">
-<h1>TableTeacher<a href="../classes/TableTeacher.html">¶</a>
-</h1>
-<p class="short_description">Teacher table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableTeacher.html" class="more">« More »</a>
+    <h1>TableTeacher<a href="../classes/TableTeacher.html">¶</a>
+    </h1>
+
+    <p class="short_description">Teacher table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableTeacher.html" class="more">« More »</a>
 </div>
 <div id="TableTemplate" class="element ajax clickable class">
-<h1>TableTemplate<a href="../classes/TableTemplate.html">¶</a>
-</h1>
-<p class="short_description">Table class for Template</p>
-<div class="details collapse"></div>
-<a href="../classes/TableTemplate.html" class="more">« More »</a>
+    <h1>TableTemplate<a href="../classes/TableTemplate.html">¶</a>
+    </h1>
+
+    <p class="short_description">Table class for Template</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableTemplate.html" class="more">« More »</a>
 </div>
 <div id="TableTemplatecode" class="element ajax clickable class">
-<h1>TableTemplatecode<a href="../classes/TableTemplatecode.html">¶</a>
-</h1>
-<p class="short_description">TemplateCode table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableTemplatecode.html" class="more">« More »</a>
+    <h1>TableTemplatecode<a href="../classes/TableTemplatecode.html">¶</a>
+    </h1>
+
+    <p class="short_description">TemplateCode table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableTemplatecode.html" class="more">« More »</a>
 </div>
 <div id="TableTopic" class="element ajax clickable class">
-<h1>TableTopic<a href="../classes/TableTopic.html">¶</a>
-</h1>
-<p class="short_description">Topic table class</p>
-<div class="details collapse"></div>
-<a href="../classes/TableTopic.html" class="more">« More »</a>
+    <h1>TableTopic<a href="../classes/TableTopic.html">¶</a>
+    </h1>
+
+    <p class="short_description">Topic table class</p>
+
+    <div class="details collapse"></div>
+    <a href="../classes/TableTopic.html" class="more">« More »</a>
 </div>
 <h3>
-<i class="icon-custom icon-constant"></i> Constants</h3>
-<a id="constant_BIBLESTUDY_CHECKREL"> </a><div class="element clickable constant  constant_BIBLESTUDY_CHECKREL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_CHECKREL .collapse">
-<h2>BIBLESTUDY_CHECKREL</h2>
-<pre>BIBLESTUDY_CHECKREL </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+    <i class="icon-custom icon-constant"></i> Constants</h3>
+<a id="constant_BIBLESTUDY_CHECKREL"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_CHECKREL" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_CHECKREL .collapse">
+    <h2>BIBLESTUDY_CHECKREL</h2>
+    <pre>BIBLESTUDY_CHECKREL </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_CHECKREL"> </a><div class="element clickable constant  constant_BIBLESTUDY_CHECKREL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_CHECKREL .collapse">
-<h2>BIBLESTUDY_CHECKREL</h2>
-<pre>BIBLESTUDY_CHECKREL </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_CHECKREL"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_CHECKREL" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_CHECKREL .collapse">
+    <h2>BIBLESTUDY_CHECKREL</h2>
+    <pre>BIBLESTUDY_CHECKREL </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_COMPONENT_NAME"> </a><div class="element clickable constant  constant_BIBLESTUDY_COMPONENT_NAME" data-toggle="collapse" data-target=".constant_BIBLESTUDY_COMPONENT_NAME .collapse">
-<h2>BIBLESTUDY_COMPONENT_NAME</h2>
-<pre>BIBLESTUDY_COMPONENT_NAME </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_COMPONENT_NAME"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_COMPONENT_NAME" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_COMPONENT_NAME .collapse">
+    <h2>BIBLESTUDY_COMPONENT_NAME</h2>
+    <pre>BIBLESTUDY_COMPONENT_NAME </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_COMPONENT_RELPATH"> </a><div class="element clickable constant  constant_BIBLESTUDY_COMPONENT_RELPATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_COMPONENT_RELPATH .collapse">
-<h2>BIBLESTUDY_COMPONENT_RELPATH</h2>
-<pre>BIBLESTUDY_COMPONENT_RELPATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_COMPONENT_RELPATH"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_COMPONENT_RELPATH" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_COMPONENT_RELPATH .collapse">
+    <h2>BIBLESTUDY_COMPONENT_RELPATH</h2>
+    <pre>BIBLESTUDY_COMPONENT_RELPATH </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_DB_MISSING_COLUMN"> </a><div class="element clickable constant  constant_BIBLESTUDY_DB_MISSING_COLUMN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_DB_MISSING_COLUMN .collapse">
-<h2>BIBLESTUDY_DB_MISSING_COLUMN</h2>
-<pre>BIBLESTUDY_DB_MISSING_COLUMN </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_DB_MISSING_COLUMN"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_DB_MISSING_COLUMN" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_DB_MISSING_COLUMN .collapse">
+    <h2>BIBLESTUDY_DB_MISSING_COLUMN</h2>
+    <pre>BIBLESTUDY_DB_MISSING_COLUMN </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_FILE_INSTALL"> </a><div class="element clickable constant  constant_BIBLESTUDY_FILE_INSTALL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_FILE_INSTALL .collapse">
-<h2>BIBLESTUDY_FILE_INSTALL</h2>
-<pre>BIBLESTUDY_FILE_INSTALL </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_FILE_INSTALL"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_FILE_INSTALL" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_FILE_INSTALL .collapse">
+    <h2>BIBLESTUDY_FILE_INSTALL</h2>
+    <pre>BIBLESTUDY_FILE_INSTALL </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_LANGUAGE_DEFAULT"> </a><div class="element clickable constant  constant_BIBLESTUDY_LANGUAGE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_LANGUAGE_DEFAULT .collapse">
-<h2>BIBLESTUDY_LANGUAGE_DEFAULT</h2>
-<pre>BIBLESTUDY_LANGUAGE_DEFAULT </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_LANGUAGE_DEFAULT"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_LANGUAGE_DEFAULT" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_LANGUAGE_DEFAULT .collapse">
+    <h2>BIBLESTUDY_LANGUAGE_DEFAULT</h2>
+    <pre>BIBLESTUDY_LANGUAGE_DEFAULT </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_MEDIA_PATH"> </a><div class="element clickable constant  constant_BIBLESTUDY_MEDIA_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_MEDIA_PATH .collapse">
-<h2>BIBLESTUDY_MEDIA_PATH</h2>
-<pre>BIBLESTUDY_MEDIA_PATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_MEDIA_PATH"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_MEDIA_PATH" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_MEDIA_PATH .collapse">
+    <h2>BIBLESTUDY_MEDIA_PATH</h2>
+    <pre>BIBLESTUDY_MEDIA_PATH </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH .collapse">
-<h2>BIBLESTUDY_PATH</h2>
-<pre>BIBLESTUDY_PATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH .collapse">
+    <h2>BIBLESTUDY_PATH</h2>
+    <pre>BIBLESTUDY_PATH </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN</h2>
-<pre>BIBLESTUDY_PATH_ADMIN </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN_HELPERS"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_HELPERS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_HELPERS .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN_HELPERS</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_HELPERS </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN_HELPERS"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_HELPERS" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN_HELPERS .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN_HELPERS</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN_HELPERS </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN_IMAGES"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_IMAGES .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN_IMAGES</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_IMAGES </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN_IMAGES"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_IMAGES" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN_IMAGES .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN_IMAGES</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN_IMAGES </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN_INSTALL"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_INSTALL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_INSTALL .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN_INSTALL</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_INSTALL </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN_INSTALL"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_INSTALL" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN_INSTALL .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN_INSTALL</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN_INSTALL </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN_LANGUAGE</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN_LANGUAGE</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_ADMIN_LIB"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_LIB .collapse">
-<h2>BIBLESTUDY_PATH_ADMIN_LIB</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_LIB </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_ADMIN_LIB"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LIB" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_ADMIN_LIB .collapse">
+    <h2>BIBLESTUDY_PATH_ADMIN_LIB</h2>
+    <pre>BIBLESTUDY_PATH_ADMIN_LIB </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_HELPERS"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_HELPERS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_HELPERS .collapse">
-<h2>BIBLESTUDY_PATH_HELPERS</h2>
-<pre>BIBLESTUDY_PATH_HELPERS </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_HELPERS"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_HELPERS" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_HELPERS .collapse">
+    <h2>BIBLESTUDY_PATH_HELPERS</h2>
+    <pre>BIBLESTUDY_PATH_HELPERS </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_IMAGES"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_IMAGES .collapse">
-<h2>BIBLESTUDY_PATH_IMAGES</h2>
-<pre>BIBLESTUDY_PATH_IMAGES </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_IMAGES"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_IMAGES" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_IMAGES .collapse">
+    <h2>BIBLESTUDY_PATH_IMAGES</h2>
+    <pre>BIBLESTUDY_PATH_IMAGES </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_LIB"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_LIB .collapse">
-<h2>BIBLESTUDY_PATH_LIB</h2>
-<pre>BIBLESTUDY_PATH_LIB </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_LIB"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_LIB" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_LIB .collapse">
+    <h2>BIBLESTUDY_PATH_LIB</h2>
+    <pre>BIBLESTUDY_PATH_LIB </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_TEMPLATE"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TEMPLATE .collapse">
-<h2>BIBLESTUDY_PATH_TEMPLATE</h2>
-<pre>BIBLESTUDY_PATH_TEMPLATE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_TEMPLATE"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_TEMPLATE .collapse">
+    <h2>BIBLESTUDY_PATH_TEMPLATE</h2>
+    <pre>BIBLESTUDY_PATH_TEMPLATE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT"> </a><div class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT .collapse">
-<h2>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</h2>
-<pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT .collapse">
+    <h2>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</h2>
+    <pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_ROOT_PATH"> </a><div class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_ROOT_PATH .collapse">
-<h2>BIBLESTUDY_ROOT_PATH</h2>
-<pre>BIBLESTUDY_ROOT_PATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_ROOT_PATH"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_ROOT_PATH .collapse">
+    <h2>BIBLESTUDY_ROOT_PATH</h2>
+    <pre>BIBLESTUDY_ROOT_PATH </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_ROOT_PATH_ADMIN"> </a><div class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH_ADMIN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_ROOT_PATH_ADMIN .collapse">
-<h2>BIBLESTUDY_ROOT_PATH_ADMIN</h2>
-<pre>BIBLESTUDY_ROOT_PATH_ADMIN </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_ROOT_PATH_ADMIN"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH_ADMIN" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_ROOT_PATH_ADMIN .collapse">
+    <h2>BIBLESTUDY_ROOT_PATH_ADMIN</h2>
+    <pre>BIBLESTUDY_ROOT_PATH_ADMIN </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_SECONDS_IN_HOUR"> </a><div class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_HOUR" data-toggle="collapse" data-target=".constant_BIBLESTUDY_SECONDS_IN_HOUR .collapse">
-<h2>BIBLESTUDY_SECONDS_IN_HOUR</h2>
-<pre>BIBLESTUDY_SECONDS_IN_HOUR </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_SECONDS_IN_HOUR"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_HOUR" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_SECONDS_IN_HOUR .collapse">
+    <h2>BIBLESTUDY_SECONDS_IN_HOUR</h2>
+    <pre>BIBLESTUDY_SECONDS_IN_HOUR </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_SECONDS_IN_YEAR"> </a><div class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_YEAR" data-toggle="collapse" data-target=".constant_BIBLESTUDY_SECONDS_IN_YEAR .collapse">
-<h2>BIBLESTUDY_SECONDS_IN_YEAR</h2>
-<pre>BIBLESTUDY_SECONDS_IN_YEAR </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_SECONDS_IN_YEAR"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_YEAR" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_SECONDS_IN_YEAR .collapse">
+    <h2>BIBLESTUDY_SECONDS_IN_YEAR</h2>
+    <pre>BIBLESTUDY_SECONDS_IN_YEAR </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_TEMPLATE_DEFAULT"> </a><div class="element clickable constant  constant_BIBLESTUDY_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_TEMPLATE_DEFAULT .collapse">
-<h2>BIBLESTUDY_TEMPLATE_DEFAULT</h2>
-<pre>BIBLESTUDY_TEMPLATE_DEFAULT </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_TEMPLATE_DEFAULT"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_TEMPLATE_DEFAULT" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_TEMPLATE_DEFAULT .collapse">
+    <h2>BIBLESTUDY_TEMPLATE_DEFAULT</h2>
+    <pre>BIBLESTUDY_TEMPLATE_DEFAULT </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_VERSION"> </a><div class="element clickable constant  constant_BIBLESTUDY_VERSION" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION .collapse">
-<h2>BIBLESTUDY_VERSION</h2>
-<pre>BIBLESTUDY_VERSION </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_VERSION"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_VERSION" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_VERSION .collapse">
+    <h2>BIBLESTUDY_VERSION</h2>
+    <pre>BIBLESTUDY_VERSION </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_VERSION_BUILD"> </a><div class="element clickable constant  constant_BIBLESTUDY_VERSION_BUILD" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_BUILD .collapse">
-<h2>BIBLESTUDY_VERSION_BUILD</h2>
-<pre>BIBLESTUDY_VERSION_BUILD </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_VERSION_BUILD"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_VERSION_BUILD" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_VERSION_BUILD .collapse">
+    <h2>BIBLESTUDY_VERSION_BUILD</h2>
+    <pre>BIBLESTUDY_VERSION_BUILD </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_VERSION_DATE"> </a><div class="element clickable constant  constant_BIBLESTUDY_VERSION_DATE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_DATE .collapse">
-<h2>BIBLESTUDY_VERSION_DATE</h2>
-<pre>BIBLESTUDY_VERSION_DATE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_VERSION_DATE"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_VERSION_DATE" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_VERSION_DATE .collapse">
+    <h2>BIBLESTUDY_VERSION_DATE</h2>
+    <pre>BIBLESTUDY_VERSION_DATE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_BIBLESTUDY_VERSION_UPDATEFILE"> </a><div class="element clickable constant  constant_BIBLESTUDY_VERSION_UPDATEFILE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_UPDATEFILE .collapse">
-<h2>BIBLESTUDY_VERSION_UPDATEFILE</h2>
-<pre>BIBLESTUDY_VERSION_UPDATEFILE </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_BIBLESTUDY_VERSION_UPDATEFILE"> </a>
+
+<div class="element clickable constant  constant_BIBLESTUDY_VERSION_UPDATEFILE" data-toggle="collapse"
+     data-target=".constant_BIBLESTUDY_VERSION_UPDATEFILE .collapse">
+    <h2>BIBLESTUDY_VERSION_UPDATEFILE</h2>
+    <pre>BIBLESTUDY_VERSION_UPDATEFILE </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
-<a id="constant_VMLANG"> </a><div class="element clickable constant  constant_VMLANG" data-toggle="collapse" data-target=".constant_VMLANG .collapse">
-<h2>VMLANG</h2>
-<pre>VMLANG </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<a id="constant_VMLANG"> </a>
+
+<div class="element clickable constant  constant_VMLANG" data-toggle="collapse"
+     data-target=".constant_VMLANG .collapse">
+    <h2>VMLANG</h2>
+    <pre>VMLANG </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
 </div>
 </div>
 </div>
 </div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T01:09:38-05:00.<br></footer></div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+        generated on 2013-05-26T01:29:45-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>

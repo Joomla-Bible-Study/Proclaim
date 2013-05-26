@@ -19,18 +19,22 @@ defined('_JEXEC') or die;
  */
 class JBSMImage
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
 	 * Get Image
 	 *
-	 * @param   string  $path  Path to file
+	 * @param   string $path  Path to file
 	 *
 	 * @return JObject
 	 *
 	 * @FIXME need to see if this is a JObject or stdClass. If JObject we must set all of the JObject like set('var','value')
-     * @FIXME It's just a stdClass
+	 * @FIXME It's just a stdClass
 	 */
 	public static function getImage($path)
 	{

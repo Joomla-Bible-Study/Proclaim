@@ -22,7 +22,11 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  */
 class JBSMParams
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**

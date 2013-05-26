@@ -19,6 +19,8 @@ defined('_JEXEC') or die;
 class JBSMFixAlias
 {
 	/**
+	 * Extension Name
+	 *
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';
@@ -69,8 +71,8 @@ class JBSMFixAlias
 	/**
 	 * Get Table fields for updating.
 	 *
-	 * @param   string  $table  Table
-	 * @param   string  $title  Title
+	 * @param   string $table  Table
+	 * @param   string $title  Title
 	 *
 	 * @return boolean|array
 	 */
