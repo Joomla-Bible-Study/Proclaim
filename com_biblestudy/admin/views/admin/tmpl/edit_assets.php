@@ -3,7 +3,7 @@
  * Admin Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,30 +12,30 @@ defined('_JEXEC') or die;
 
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
-    <div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
+	<div class="row-fluid">
+		<div class="span6 form-horizontal">
+			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
 
-            <div class="span2">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.checkassets') ?>"><img
-                        src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
-                        alt="Check Assets" height="48" width="48" style="clear: right"/>
+			<div class="span2">
+				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.checkassets') ?>"><img
+						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
+						alt="Check Assets" height="48" width="48" style="clear: right"/>
 
-                    <div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
-                </a>
-            </div>
-            <div class="span2">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.fixAssets') ?>"><img
-                        src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
-                        alt="Fix Assets" height="48" width="48"/>
+					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
+				</a>
+			</div>
+			<div class="span2">
+				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.fixAssets') ?>"><img
+						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
+						alt="Fix Assets" height="48" width="48"/>
 
-                    <div><?php echo JText::_('JBS_ADM_FIX'); ?></div>
-                </a>
-            </div>
-            <div class="clearfix"></div>
-            <div class="table">
+					<div><?php echo JText::_('JBS_ADM_FIX'); ?></div>
+				</a>
+			</div>
+			<div class="clearfix"></div>
+			<div class="table">
 				<?php
-				$input        = new JInput;
+				$input = new JInput;
 				$checkassets2 = $input->get('checkassets', null, 'array');
 
 				if ($checkassets2)
@@ -95,12 +95,12 @@ defined('_JEXEC') or die;
 					echo '</table>';
 				}
 				?>
-            </div>
-            <input type="hidden" name="option" value="com_biblestudy"/>
-            <input type="hidden" name="task" value="admin.checkassets"/>
-            <input type="hidden" name="controller" value="admin"/>
-            <input type="hidden" name="tooltype" value=""/>
+			</div>
+			<input type="hidden" name="option" value="com_biblestudy"/>
+			<input type="hidden" name="task" value="admin.checkassets"/>
+			<input type="hidden" name="controller" value="admin"/>
+			<input type="hidden" name="tooltype" value=""/>
 			<?php echo JHtml::_('form.token'); ?>
-        </div>
-    </div>
+		</div>
+	</div>
 </form>

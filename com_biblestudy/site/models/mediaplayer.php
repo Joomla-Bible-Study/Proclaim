@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -25,7 +25,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -40,7 +40,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Set ID
 	 *
-	 * @param   int  $id  ID To Set
+	 * @param   int $id  ID To Set
 	 *
 	 * @return void
 	 */
@@ -63,17 +63,17 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 		{
 			$query = $this->_db->getQuery(true);
 			$query->select('mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type,'
-				. 'mf.podcast_id, mf.published AS mfpub, mf.createdate,'
-				. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-				. 's.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-				. ' s.media_hours, s.media_minutes, s.media_seconds, s.series_id, s.studynumber, s.studytext,'
-				. 's.booknumber2, s.chapter_begin2, s.chapter_end2, s.verse_begin2, s.verse_end2,'
-				. ' sr.id AS srid, sr.server_path,'
-				. ' f.id AS fid, f.folderpath,'
-				. ' t.id AS tid, t.teachername,'
-				. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-				. ' st.id AS stid, st.series_text AS stext,'
-				. ' mt.id AS mtid, mt.mimetype')
+			. 'mf.podcast_id, mf.published AS mfpub, mf.createdate,'
+			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+			. 's.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+			. ' s.media_hours, s.media_minutes, s.media_seconds, s.series_id, s.studynumber, s.studytext,'
+			. 's.booknumber2, s.chapter_begin2, s.chapter_end2, s.verse_begin2, s.verse_end2,'
+			. ' sr.id AS srid, sr.server_path,'
+			. ' f.id AS fid, f.folderpath,'
+			. ' t.id AS tid, t.teachername,'
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+			. ' st.id AS stid, st.series_text AS stext,'
+			. ' mt.id AS mtid, mt.mimetype')
 				->from('#__bsms_mediafiles AS mf')
 				->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 				->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
@@ -178,8 +178,8 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Publish record
 	 *
-	 * @param   array  $cid      Id's
-	 * @param   int    $publish  State
+	 * @param   array $cid      Id's
+	 * @param   int   $publish  State
 	 *
 	 * @return boolean
 	 */
@@ -206,13 +206,13 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   string  $direction  ACS or DEC
+	 * @param   string $direction  ACS or DEC
 	 *
 	 * @access    public
 	 *
 	 * @return    boolean    True on success
 	 *
-	 * @since    1.5
+	 * @since     1.5
 	 */
 	public function move($direction)
 	{
@@ -236,14 +236,14 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   array   $cid    Id's
-	 * @param   string  $order  Order ASC or DEC
+	 * @param   array  $cid    Id's
+	 * @param   string $order  Order ASC or DEC
 	 *
 	 * @access    public
 	 *
 	 * @return    boolean    True on success
 	 *
-	 * @since    1.5
+	 * @since     1.5
 	 */
 	public function saveorder($cid = array(), $order)
 	{

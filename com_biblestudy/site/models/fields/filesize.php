@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -49,8 +49,8 @@ class JFormFieldFilesize extends JFormField
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
-			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-			$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
+		' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
+		$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
 	}
 
 	/**
@@ -69,11 +69,11 @@ class JFormFieldFilesize extends JFormField
 			var wint = (screen.height - Wheight) / 2;
 
 			var msg1=window.open("' . JURI::base() .
-			'components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
-			if (!msg1.closed) {
-				msg1.focus();
-			}
-		}');
+		'components/com_biblestudy/convert1.htm","Window","scrollbars=1,width="+Wwidth+",height="+Wheight+",top="+wint+",left="+winl);
+		if (!msg1.closed) {
+			msg1.focus();
+		}
+	}');
 
 		return '<a href="javascript:openConverter1();">' . JText::_('JBS_MED_FILESIZE_CONVERTER') . '</a>';
 	}

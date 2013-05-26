@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -39,7 +41,7 @@ class JFormFieldLinkoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_LINK_TO_DETAILS'));
 		$options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_LINK_TO_DETAILS_TOOLTIP'));
 		$options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_LINK_TO_MEDIA'));
-        $options[] = JHtml::_('select.option', '9', JText::_('JBS_TPL_LINK_TO_DOWNLOAD'));
+		$options[] = JHtml::_('select.option', '9', JText::_('JBS_TPL_LINK_TO_DOWNLOAD'));
 		$options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP'));
 		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
 		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));

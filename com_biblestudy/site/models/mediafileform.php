@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,7 +22,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -62,7 +62,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Method to get article data.
 	 *
-	 * @param   integer  $pk  The id of the article.
+	 * @param   integer $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */

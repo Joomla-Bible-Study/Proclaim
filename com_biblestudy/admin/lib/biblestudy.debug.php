@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,9 +19,9 @@ assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
  * Default assert call back function
  * If certain things fail hard we MUST know about it
  *
- * @param   string  $script   ?
- * @param   int     $line     ?
- * @param   string  $message  ?
+ * @param   string $script   ?
+ * @param   int    $line     ?
+ * @param   string $message  ?
  *
  * @return void
  */
@@ -39,8 +39,8 @@ function Debug_Assert_callback($script, $line, $message)
 /**
  * Production error handling
  *
- * @param   string  $text  ?
- * @param   int     $back  ?
+ * @param   string $text  ?
+ * @param   int    $back  ?
  *
  * @return void
  */
@@ -56,26 +56,26 @@ function Trigger_Db_error($text = '', $back = 0)
 	$biblestudyPHPVersion   = $CBiblestudyVersion->PHPVersion();
 	$biblestudyMySQLVersion = $CBiblestudyVersion->MySQLVersion();
 	?>
-<!-- Version Info -->
-<div class="fbfooter">
-    Installed version:
-	<?php echo $biblestudyVersion; ?>
-    | php
-	<?php echo $biblestudyPHPVersion; ?>
-    | mysql
-	<?php echo $biblestudyMySQLVersion; ?>
-</div>
-<!-- /Version Info -->
+	<!-- Version Info -->
+	<div class="fbfooter">
+		Installed version:
+		<?php echo $biblestudyVersion; ?>
+		| php
+		<?php echo $biblestudyPHPVersion; ?>
+		| mysql
+		<?php echo $biblestudyMySQLVersion; ?>
+	</div>
+	<!-- /Version Info -->
 
-<?php
+	<?php
 	biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
 }
 
 /**
  * Check db Error
  *
- * @param   string  $text  ?
- * @param   int     $back  ?
+ * @param   string $text  ?
+ * @param   int    $back  ?
  *
  * @return void
  */
@@ -92,7 +92,7 @@ function Check_Db_error($text = '', $back = 0)
 /**
  * Check db warning
  *
- * @param   string  $text  ?
+ * @param   string $text  ?
  *
  * @return void
  */
@@ -109,7 +109,7 @@ function Check_Db_warning($text = '')
 /**
  * DB Warning
  *
- * @param   string  $text  ?
+ * @param   string $text  ?
  *
  * @return void
  */
@@ -122,7 +122,7 @@ function Trigger_Db_warning($text = '')
 /**
  * Little helper to created a formatted output of variables
  *
- * @param   array  $varlist  ?
+ * @param   array $varlist  ?
  *
  * @return string
  */
@@ -194,7 +194,7 @@ function Debug_vars($varlist)
 /**
  * Show the callstack to this point in a decent format
  *
- * @param   int  $back  ?
+ * @param   int $back  ?
  *
  * @return object
  */
@@ -208,9 +208,9 @@ function Debug_Call_Stack_info($back = 1)
 /**
  * Trigger JBS Errors
  *
- * @param   string  $message  ?
- * @param   int     $level    ?
- * @param   int     $back     ?
+ * @param   string $message  ?
+ * @param   int    $level    ?
+ * @param   int    $back     ?
  *
  * @return void
  */
@@ -220,6 +220,6 @@ function Biblestudy_error($message, $level = E_USER_NOTICE, $back = 1)
 	$caller = $trace[$back];
 	trigger_error(
 		$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' . $caller['file']
-			. '</strong> on line <strong>' . $caller['line'] . '</strong>' . "\n<br /><br />Error reported", $level
+		. '</strong> on line <strong>' . $caller['line'] . '</strong>' . "\n<br /><br />Error reported", $level
 	);
 }

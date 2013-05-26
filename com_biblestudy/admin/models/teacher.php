@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  */
@@ -30,9 +30,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
+	 * @param   string $name     The table name. Optional.
+	 * @param   string $prefix   The class prefix. Optional.
+	 * @param   array  $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 *
@@ -46,7 +46,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   int  $pk  The id of the primary key.
+	 * @param   int $pk  The id of the primary key.
 	 *
 	 * @return    mixed    Object on success, false on failure.
 	 *
@@ -67,8 +67,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data      Data for the form.
+	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -124,11 +124,10 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 
-
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   JTable $table  A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -154,7 +153,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = JFactory::getDbo();
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_teachers');
 				$db->setQuery($query);
@@ -168,7 +167,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -182,8 +181,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group      The cache group
+	 * @param   integer $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -194,7 +193,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 
 
 }

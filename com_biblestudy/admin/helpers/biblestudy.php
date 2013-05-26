@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -27,8 +29,8 @@ class JBSMBibleStudyHelper
 	/**
 	 * Get Actions
 	 *
-	 * @param   int     $Itemid  ID
-	 * @param   string  $type    Type
+	 * @param   int    $Itemid  ID
+	 * @param   string $type    Type
 	 *
 	 * @return JObject
 	 */
@@ -142,7 +144,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName  The name of the active view.
 	 *
 	 * @return void
 	 *
@@ -212,9 +214,9 @@ class JBSMBibleStudyHelper
 	/**
 	 *  Rendering Menu based on Joomla! Version.
 	 *
-	 * @param   string  $text   ?
-	 * @param   string  $url    ?
-	 * @param   string  $vName  ?
+	 * @param   string $text   ?
+	 * @param   string $url    ?
+	 * @param   string $vName  ?
 	 *
 	 * @return void
 	 */
@@ -233,7 +235,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Applies the content tag filters to arbitrary text as per settings for current user group
 	 *
-	 * @param   string  $text  The string to filter
+	 * @param   string $text  The string to filter
 	 *
 	 * @return string The filtered string
 	 */
@@ -398,7 +400,7 @@ class JBSMBibleStudyHelper
 
 		if (!isset($admin_params->debuge))
 		{
-			$admin_params = new stdClass;
+			$admin_params        = new stdClass;
 			$admin_params->debug = 1;
 		}
 

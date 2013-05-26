@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -10,10 +10,10 @@ defined('_JEXEC') or die;
 
 
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-require_once (JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
-require_once (JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
-require_once (JPATH_COMPONENT . '/helpers/related.php');
-require_once (JPATH_COMPONENT . '/helpers/biblegateway.php');
+require_once(JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
+require_once(JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
+require_once(JPATH_COMPONENT . '/helpers/related.php');
+require_once(JPATH_COMPONENT . '/helpers/biblegateway.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
@@ -67,7 +67,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -87,11 +87,11 @@ class BiblestudyViewSermon extends JViewLegacy
 			$dispatcher = JDispatcher::getInstance();
 		}
 
-		$this->item  = $this->get('Item');
-		$this->print = $app->input->getBool('print');
-		$this->state = $this->get('State');
-		$this->user  = $user;
-        $this->comments = $this->get('comments');
+		$this->item     = $this->get('Item');
+		$this->print    = $app->input->getBool('print');
+		$this->state    = $this->get('State');
+		$this->user     = $user;
+		$this->comments = $this->get('comments');
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -489,7 +489,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
 			$this->document->setTitle(
 				$this->item->page_title . ' - '
-					. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
+				. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
 			);
 		}
 
@@ -502,7 +502,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string  $tpl  ?
+	 * @param   string $tpl  ?
 	 *
 	 * @return void
 	 */

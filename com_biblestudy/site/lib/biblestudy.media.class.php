@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -27,9 +27,9 @@ class jbsMedia
 	/**
 	 * Return Media Table
 	 *
-	 * @param   object  $row           Table info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $row           Table info
+	 * @param   object $params        Item Params
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return null|string
 	 */
@@ -190,7 +190,7 @@ class jbsMedia
 	/**
 	 * Get Media ID
 	 *
-	 * @param   int  $id  ID of media
+	 * @param   int $id  ID of media
 	 *
 	 * @return object
 	 */
@@ -210,7 +210,7 @@ class jbsMedia
 	/**
 	 * Get Media info Row1
 	 *
-	 * @param   int  $id  ID of media Row
+	 * @param   int $id  ID of media Row
 	 *
 	 * @return object|boolean
 	 */
@@ -223,11 +223,11 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-			. ' #__bsms_media.media_image_name AS imname,'
-			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+		. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+		. ' #__bsms_media.media_image_name AS imname,'
+		. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+		. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+		. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
 
 		$query->from('#__bsms_mediafiles');
 
@@ -262,7 +262,7 @@ class jbsMedia
 	/**
 	 * Get Media info Row2
 	 *
-	 * @param   int  $id  ID of Row
+	 * @param   int $id  ID of Row
 	 *
 	 * @return object|boolean
 	 */
@@ -272,13 +272,13 @@ class jbsMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
-			. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
-			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-			. ' #__bsms_media.media_alttext AS malttext,'
-			. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype')
+		. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
+		. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
+		. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
+		. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
+		. ' #__bsms_media.media_alttext AS malttext,'
+		. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
+		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
@@ -305,10 +305,10 @@ class jbsMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   object  $admin_params  Admin params
-	 * @param   object  $params        System params
-	 * @param   object  $itemparams    Itam Params //@todo Thinking this could be munged into the $params
-	 * @param   object  $media         Media info
+	 * @param   object $admin_params  Admin params
+	 * @param   object $params        System params
+	 * @param   object $itemparams    Itam Params //@todo Thinking this could be munged into the $params
+	 * @param   object $media         Media info
 	 *
 	 * @return object
 	 */
@@ -329,12 +329,12 @@ class jbsMedia
 
 		/**
 		 * @desc Players - from Template:
-		 * First we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
-		 * popuptype = whether AVR should be window or lightbox (handled in avr code)
-		 * internal_popup = whether direct or internal player should be popup/new window or inline
-		 * From media file:
-		 * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
-		 * internal_popup 0 = inline, 1 = popup, 2 = global settings
+		 *       First we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
+		 *       popuptype = whether AVR should be window or lightbox (handled in avr code)
+		 *       internal_popup = whether direct or internal player should be popup/new window or inline
+		 *       From media file:
+		 *       player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
+		 *       internal_popup 0 = inline, 1 = popup, 2 = global settings
 		 *
 		 * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR (no longer supported),
 		 *      3 = All Videos or JPlayer, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player, 8 = embed code
@@ -414,8 +414,8 @@ class jbsMedia
 	/**
 	 * Return Docman Media
 	 *
-	 * @param   object  $media  Media
-	 * @param   object  $image  Image
+	 * @param   object $media  Media
+	 * @param   object $image  Image
 	 *
 	 * @return string
 	 * FIXME ASAP getDuration is not working.
@@ -439,8 +439,8 @@ class jbsMedia
 	/**
 	 * Return Articles.
 	 *
-	 * @param   object  $media  Media
-	 * @param   object  $image  Image
+	 * @param   object $media  Media
+	 * @param   object $image  Image
 	 *
 	 * @return string
 	 */
@@ -460,9 +460,9 @@ class jbsMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object  $media   Media
-	 * @param   object  $params  Item Params
-	 * @param   object  $image   Image
+	 * @param   object $media   Media
+	 * @param   object $params  Item Params
+	 * @param   object $image   Image
 	 *
 	 * @return string
 	 */
@@ -481,11 +481,11 @@ class jbsMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   object  $params      System Params
-	 * @param   object  $itemparams  Item Params //@todo need to merge with $params
-	 * @param   object  $player      Player code
-	 * @param   object  $image       Image info
-	 * @param   object  $media       Media
+	 * @param   object $params      System Params
+	 * @param   object $itemparams  Item Params //@todo need to merge with $params
+	 * @param   object $player      Player code
+	 * @param   object $image       Image info
+	 * @param   object $media       Media
 	 *
 	 * @return string
 	 */
@@ -683,8 +683,8 @@ class jbsMedia
 	/**
 	 * Return AVMedia Code.
 	 *
-	 * @param   string  $mediacode  Media stirng
-	 * @param   object  $media      Media info
+	 * @param   string $mediacode  Media stirng
+	 * @param   object $media      Media info
 	 *
 	 * @return string
 	 */
@@ -710,7 +710,7 @@ class jbsMedia
 	/**
 	 * Update Hit count for playes.
 	 *
-	 * @param   int  $id  ID to apply the hit to.
+	 * @param   int $id  ID to apply the hit to.
 	 *
 	 * @return boolean
 	 */

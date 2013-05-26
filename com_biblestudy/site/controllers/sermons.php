@@ -4,7 +4,7 @@
  * Controller Sermons
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -29,7 +29,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 *
 	 * @var string
 	 */
-	public  $mediaCode;
+	public $mediaCode;
 
 	/**
 	 * Method to display the view
