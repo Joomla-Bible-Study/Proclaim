@@ -49,16 +49,22 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	protected $defaults;
 
 	/**
+	 * Default Code for the Edit if content is null
+	 *
 	 * @var string
 	 */
 	public $defaultcode;
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	public $canDo;
@@ -66,7 +72,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

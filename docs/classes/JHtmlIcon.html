@@ -56,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">329</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -103,9 +103,8 @@
                 <li class="nav-header">
                     <i class="icon-custom icon-method"></i> Methods
                     <ul>
-                        <li class="method public "><a href="#method_create" title="create :: "><span
-                                class="description">create()
-        </span>
+                        <li class="method public "><a href="#method_create" title="create :: Create"><span
+                                class="description">Create</span>
                             <pre>create()</pre>
                         </a></li>
                         <li class="method public "><a href="#method_edit"
@@ -113,18 +112,16 @@
                                 class="description">Display an edit icon for the article.</span>
                             <pre>edit()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_email" title="email :: "><span class="description">email()
-        </span>
+                        <li class="method public "><a href="#method_email" title="email :: Email"><span
+                                class="description">Email</span>
                             <pre>email()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_print_popup" title="print_popup :: "><span
-                                class="description">print_popup()
-        </span>
+                        <li class="method public "><a href="#method_print_popup"
+                                                      title="print_popup :: Print Popup"><span class="description">Print Popup</span>
                             <pre>print_popup()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_print_screen" title="print_screen :: "><span
-                                class="description">print_screen()
-        </span>
+                        <li class="method public "><a href="#method_print_screen"
+                                                      title="print_screen :: Print Screen"><span class="description">Print Screen</span>
                             <pre>print_screen()</pre>
                         </a></li>
                     </ul>
@@ -171,17 +168,27 @@
 
                     <div class="element clickable method public method_create" data-toggle="collapse"
                          data-target=".method_create .collapse">
-                        <h2>create()
-                        </h2>
-                        <pre>create($category, $params) </pre>
+                        <h2>Create</h2>
+                        <pre>create(string $category, \JRegistry $params) : string</pre>
                         <div class="labels"><span class="label">Static</span></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$category</h4></div>
-                                <div class="subelement argument"><h4>$params</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$category</h4>
+                                    <code>string</code>
+
+                                    <p>Category</p></div>
+                                <div class="subelement argument">
+                                    <h4>$params</h4>
+                                    <code>\JRegistry</code>
+
+                                    <p>Params</p></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>string</code></div>
                             </div>
                         </div>
                     </div>
@@ -233,18 +240,32 @@
 
                     <div class="element clickable method public method_email" data-toggle="collapse"
                          data-target=".method_email .collapse">
-                        <h2>email()
-                        </h2>
-                        <pre>email($article, $params, $attribs) </pre>
+                        <h2>Email</h2>
+                        <pre>email(string $article, \JRegistry $params, array $attribs) : mixed</pre>
                         <div class="labels"><span class="label">Static</span></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$article</h4></div>
-                                <div class="subelement argument"><h4>$params</h4></div>
-                                <div class="subelement argument"><h4>$attribs</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$article</h4>
+                                    <code>string</code>
+
+                                    <p>Article</p></div>
+                                <div class="subelement argument">
+                                    <h4>$params</h4>
+                                    <code>\JRegistry</code>
+
+                                    <p>Params</p></div>
+                                <div class="subelement argument">
+                                    <h4>$attribs</h4>
+                                    <code>array</code>
+
+                                    <p>Attribs</p></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>mixed</code></div>
                             </div>
                         </div>
                     </div>
@@ -252,18 +273,32 @@
 
                     <div class="element clickable method public method_print_popup" data-toggle="collapse"
                          data-target=".method_print_popup .collapse">
-                        <h2>print_popup()
-                        </h2>
-                        <pre>print_popup($article, $params, $attribs) </pre>
+                        <h2>Print Popup</h2>
+                        <pre>print_popup(object $article, \JRegistry $params, array $attribs) : mixed</pre>
                         <div class="labels"><span class="label">Static</span></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$article</h4></div>
-                                <div class="subelement argument"><h4>$params</h4></div>
-                                <div class="subelement argument"><h4>$attribs</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$article</h4>
+                                    <code>object</code>
+
+                                    <p>Article</p></div>
+                                <div class="subelement argument">
+                                    <h4>$params</h4>
+                                    <code>\JRegistry</code>
+
+                                    <p>Params</p></div>
+                                <div class="subelement argument">
+                                    <h4>$attribs</h4>
+                                    <code>array</code>
+
+                                    <p>Attribs</p></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>mixed</code></div>
                             </div>
                         </div>
                     </div>
@@ -271,18 +306,32 @@
 
                     <div class="element clickable method public method_print_screen" data-toggle="collapse"
                          data-target=".method_print_screen .collapse">
-                        <h2>print_screen()
-                        </h2>
-                        <pre>print_screen($article, $params, $attribs) </pre>
+                        <h2>Print Screen</h2>
+                        <pre>print_screen(object $article, \JRegistry $params, array $attribs) : string</pre>
                         <div class="labels"><span class="label">Static</span></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$article</h4></div>
-                                <div class="subelement argument"><h4>$params</h4></div>
-                                <div class="subelement argument"><h4>$attribs</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$article</h4>
+                                    <code>object</code>
+
+                                    <p>Article</p></div>
+                                <div class="subelement argument">
+                                    <h4>$params</h4>
+                                    <code>\JRegistry</code>
+
+                                    <p>Params</p></div>
+                                <div class="subelement argument">
+                                    <h4>$attribs</h4>
+                                    <code>array</code>
+
+                                    <p>Attribs</p></div>
+                                <h3>Returns</h3>
+
+                                <div class="subelement response"><code>string</code></div>
                             </div>
                         </div>
                     </div>
@@ -295,7 +344,7 @@
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
             provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T02:50:56-05:00.<br></footer>
+            generated on 2013-05-26T21:07:11-05:00.<br></footer>
     </div>
 </div>
 </body>

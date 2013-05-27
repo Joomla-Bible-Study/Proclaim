@@ -1,5 +1,4 @@
 <?php
-
 /**
  * BibleStudy Download Class
  *
@@ -25,7 +24,7 @@ class Dump_File
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param   int  $mid  ID of media
+	 * @param   int $mid  ID of media
 	 *
 	 * @since 6.1.2
 	 * @return null
@@ -52,11 +51,11 @@ class Dump_File
 		$params = $registry;
 
 		$protocol = $params->get('protocol', 'http://');
-		$query = $db->getQuery(true);
+		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
+		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
 			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
@@ -191,7 +190,7 @@ class Dump_File
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param   int  $mid  Media ID
+	 * @param   int $mid  Media ID
 	 *
 	 * @return  boolean
 	 *
@@ -199,7 +198,7 @@ class Dump_File
 	 */
 	protected function hitDownloads($mid)
 	{
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')->set($db->qn('downloads') . ' = ' . $db->q('downloads') . ' + 1 ')->where('id = ' . (int) $db->q($mid));
 		$db->setQuery($query);
@@ -211,7 +210,7 @@ class Dump_File
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object  $url  URL
+	 * @param   object $url  URL
 	 *
 	 * @return  boolean
 	 */

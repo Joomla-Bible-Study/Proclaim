@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -21,7 +23,7 @@ class PodcastSubscribe
 	/**
 	 * Build Subscribe Table
 	 *
-	 * @param   string  $introtext  Intro Text
+	 * @param   string $introtext  Intro Text
 	 *
 	 * @return string
 	 */
@@ -86,7 +88,7 @@ class PodcastSubscribe
 	/**
 	 * Build Standard Podcast
 	 *
-	 * @param   object  $podcast  Podcast Info
+	 * @param   object $podcast  Podcast Info
 	 *
 	 * @return string
 	 */
@@ -117,7 +119,7 @@ class PodcastSubscribe
 	/**
 	 * Build Alternate Podcast
 	 *
-	 * @param   object  $podcast  Podcast info
+	 * @param   object $podcast  Podcast info
 	 *
 	 * @return string
 	 */
@@ -174,8 +176,8 @@ class PodcastSubscribe
 	/**
 	 * Build Podcast Image
 	 *
-	 * @param   array  $podcastimagefromdb  Podcast image
-	 * @param   array  $words               Alt podcast image text
+	 * @param   array $podcastimagefromdb  Podcast image
+	 * @param   array $words               Alt podcast image text
 	 *
 	 * @return string
 	 */

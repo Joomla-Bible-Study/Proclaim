@@ -56,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">329</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -123,8 +123,7 @@
                                 class="description">Save</span>
                             <pre>save()</pre>
                         </a></li>
-                        <li class="method public "><a href="#method_set" title="set :: "><span class="description">set()
-        </span>
+                        <li class="method public "><a href="#method_set" title="set :: Set"><span class="description">Set</span>
                             <pre>set()</pre>
                         </a></li>
                         <li class="method public "><a href="#method_setRegistry"
@@ -164,8 +163,24 @@
                     <div class="long_description"></div>
                     <table class="table table-bordered">
                         <tr>
+                            <th>package</th>
+                            <td><a href="../packages/LiveUpdate.html">LiveUpdate</a></td>
+                        </tr>
+                        <tr>
                             <th>author</th>
                             <td><a href="">nicholas</a></td>
+                        </tr>
+                        <tr>
+                            <th>copyright</th>
+                            <td>Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com</td>
+                        </tr>
+                        <tr>
+                            <th>license</th>
+                            <td><a href="">GNU LGPLv3 or later &lt;http://www.gnu.org/copyleft/lesser.html&gt;</a></td>
+                        </tr>
+                        <tr>
+                            <th>since</th>
+                            <td>8.0.0</td>
                         </tr>
                     </table>
                     <h3>
@@ -185,10 +200,14 @@
                                 <div class="subelement argument">
                                     <h4>$key</h4>
                                     <code>string</code>
+
+                                    <p>?</p>
                                 </div>
                                 <div class="subelement argument">
                                     <h4>$default</h4>
                                     <code>string</code>
+
+                                    <p>?</p>
                                 </div>
                                 <h3>Returns</h3>
 
@@ -211,10 +230,14 @@
                                 <div class="subelement argument">
                                     <h4>$type</h4>
                                     <code>string</code>
+
+                                    <p>?</p>
                                 </div>
                                 <div class="subelement argument">
                                     <h4>$config</h4>
                                     <code>array</code>
+
+                                    <p>?</p>
                                 </div>
                                 <h3>Returns</h3>
 
@@ -244,14 +267,19 @@
                     <div class="element clickable method public method_load" data-toggle="collapse"
                          data-target=".method_load .collapse">
                         <h2>Load</h2>
-                        <pre>load($config) : void</pre>
+                        <pre>load(string $config) : void</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$config</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$config</h4>
+                                    <code>string</code>
+
+                                    <p>?</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -272,17 +300,26 @@
 
                     <div class="element clickable method public method_set" data-toggle="collapse"
                          data-target=".method_set .collapse">
-                        <h2>set()
-                        </h2>
-                        <pre>set($key, $value) </pre>
+                        <h2>Set</h2>
+                        <pre>set(string $key, string $value) : void</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$key</h4></div>
-                                <div class="subelement argument"><h4>$value</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$key</h4>
+                                    <code>string</code>
+
+                                    <p>?</p>
+                                </div>
+                                <div class="subelement argument">
+                                    <h4>$value</h4>
+                                    <code>string</code>
+
+                                    <p>?</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -301,6 +338,8 @@
                                 <div class="subelement argument">
                                     <h4>$registry</h4>
                                     <code>\JRegistry</code>
+
+                                    <p>?</p>
                                 </div>
                             </div>
                         </div>
@@ -329,7 +368,7 @@
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
             provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T02:50:12-05:00.<br></footer>
+            generated on 2013-05-26T21:07:05-05:00.<br></footer>
     </div>
 </div>
 </body>

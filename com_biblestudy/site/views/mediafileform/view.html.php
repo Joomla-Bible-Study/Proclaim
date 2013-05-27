@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -58,14 +60,19 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	protected $admin;
 
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Upload Folder */
 	public $upload_folder;
 
+	/** @var  string Upload Folder */
 	public $upload_server;
 
+	/** @var  JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  string Can Do */
 	protected $canDo;
 
 	/**

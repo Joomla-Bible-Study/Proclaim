@@ -48,11 +48,15 @@ class BiblestudyViewStyle extends JViewLegacy
 	protected $defaults;
 
 	/**
+	 * Default Style
+	 *
 	 * @var string
 	 */
 	protected $defaultstyle;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;

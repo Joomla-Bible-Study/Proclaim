@@ -1,13 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
@@ -21,61 +22,53 @@ JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params
 class BiblestudyViewMessagelist extends JViewLegacy
 {
 
-	/**
-	 * Items
-	 *
-	 * @var array
-	 */
+	/** @var array Items */
 	protected $items;
 
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
+	/** @var array Pagination */
 	protected $pagination;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+	/** @var array State */
 	protected $state;
 
-	/**
-	 * @var object
-	 */
+	/** @var object Admin */
 	protected $admin;
 
+	/** @var  string Can Do */
 	public $canDo;
 
+	/** @var  string Books */
 	public $books;
 
+	/** @var  JRegistry Teachers */
 	public $teachers;
 
+	/** @var  string Series */
 	public $series;
 
+	/** @var  string Message Types */
 	public $messageTypes;
 
+	/** @var  string Years */
 	public $years;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry Params */
 	protected $params;
 
+	/** @var  string New Link */
 	public $newlink;
 
+	/** @var  string Document */
 	public $document;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
-	public function display ($tpl = null)
+	public function display($tpl = null)
 	{
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -118,7 +111,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-					. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		$this->_prepareDocument();
@@ -131,7 +124,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function _prepareDocument ()
+	protected function _prepareDocument()
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();

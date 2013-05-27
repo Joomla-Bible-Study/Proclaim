@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -22,6 +24,8 @@ JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php
 class JBSMElements
 {
 	/**
+	 * Extension Name
+	 *
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';
@@ -29,11 +33,11 @@ class JBSMElements
 	/**
 	 * Get Elementid
 	 *
-	 * @param   int        $rowid         ID
-	 * @param   JTable     $row           Table info
-	 * @param   JRegistry  $params        Component / System Params
-	 * @param   JRegistry  $admin_params  Admin Settings
-	 * @param   int        $template      Template ID
+	 * @param   int       $rowid         ID
+	 * @param   JTable    $row           Table info
+	 * @param   JRegistry $params        Component / System Params
+	 * @param   JRegistry $admin_params  Admin Settings
+	 * @param   int       $template      Template ID
 	 *
 	 * @todo Redo to MVC Standers under a class
 	 * @return object
@@ -247,12 +251,12 @@ class JBSMElements
 				$elementid->element .= $this->getTextlink($params, $row, $textorpdf, $admin_params, $template) . '</td><td>';
 				$textorpdf = 'pdf';
 				$elementid->element .= $this->getTextlink(
-					$params,
-					$row,
-					$textorpdf,
-					$admin_params,
-					$template
-				) . '</td></tr></table>';
+						$params,
+						$row,
+						$textorpdf,
+						$admin_params,
+						$template
+					) . '</td></tr></table>';
 				break;
 			case 19:
 				$elementid->id         = 'details';
@@ -386,10 +390,10 @@ class JBSMElements
 	/**
 	 * Get Scripture
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   object  $row           Row Info
-	 * @param   string  $esv           ESV String
-	 * @param   string  $scripturerow  Scripture Row
+	 * @param   object $params        Item Params
+	 * @param   object $row           Row Info
+	 * @param   string $esv           ESV String
+	 * @param   string $scripturerow  Scripture Row
 	 *
 	 * @return string
 	 */
@@ -580,8 +584,8 @@ class JBSMElements
 	/**
 	 * Get Duration
 	 *
-	 * @param   object  $params  Item Params
-	 * @param   object  $row     Row info
+	 * @param   object $params  Item Params
+	 * @param   object $row     Row info
 	 *
 	 * @return  null|string
 	 */
@@ -635,8 +639,8 @@ class JBSMElements
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   object  $params     Item Params
-	 * @param   string  $studydate  Study Date
+	 * @param   object $params     Item Params
+	 * @param   string $studydate  Study Date
 	 *
 	 * @return string
 	 */
@@ -692,7 +696,7 @@ class JBSMElements
 	/**
 	 * Function to get File Size
 	 *
-	 * @param   string  $file_size  Size in bytes
+	 * @param   string $file_size  Size in bytes
 	 *
 	 * @return null|string
 	 */
@@ -735,11 +739,11 @@ class JBSMElements
 	/**
 	 * Get Textlink
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   object     $row           JTable
-	 * @param   string     $textorpdf     Text Or PDF location
-	 * @param   JRegistry  $admin_params  Admin info
-	 * @param   int        $template      Template ID
+	 * @param   JRegistry $params        Item Params
+	 * @param   object    $row           JTable
+	 * @param   string    $textorpdf     Text Or PDF location
+	 * @param   JRegistry $admin_params  Admin info
+	 * @param   int       $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -804,9 +808,9 @@ class JBSMElements
 	/**
 	 * Get MediaTable
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   object  $row           JTable
-	 * @param   object  $admin_params  Admin Info
+	 * @param   object $params        Item Params
+	 * @param   object $row           JTable
+	 * @param   object $admin_params  Admin Info
 	 *
 	 * @return boolean|null|string
 	 */
@@ -822,14 +826,14 @@ class JBSMElements
 			return false;
 		}
 		$database = JFactory::getDBO();
-		$images = new JBSMImages;
+		$images   = new JBSMImages;
 
 		if (!isset($admin_params->default_download_image))
 		{
 			$admin_params->default_download_image = 'download.png';
 		}
 
-		$download_tmp = $images->getMediaImage($admin_params->default_download_image, $media = null);
+		$download_tmp   = $images->getMediaImage($admin_params->default_download_image, $media = null);
 		$download_image = $download_tmp->path;
 
 		// Predefine var
@@ -838,11 +842,11 @@ class JBSMElements
 		$filesize     = null;
 		$query        = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-			. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-			. ' #__bsms_media.media_alttext AS malttext,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext')
+		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+		. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
+		. ' #__bsms_media.media_alttext AS malttext,'
+		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
@@ -852,8 +856,8 @@ class JBSMElements
 			->where('#__bsms_mediafiles.published = 1')
 			->order('ordering asc, #__bsms_mediafiles.mime_type asc');
 		$database->setQuery($query);
-		$media1 = $database->loadObjectList('id');
-		$rows2  = count($media1);
+		$media1      = $database->loadObjectList('id');
+		$rows2       = count($media1);
 		$compat_mode = $admin_params->get('compat_mode');
 
 		if ($rows2 < 1)
@@ -967,7 +971,6 @@ class JBSMElements
 							. $media->malttext . "' /></a>";
 
 
-
 					}
 					else
 					{
@@ -996,7 +999,6 @@ class JBSMElements
 
 
 					break;
-
 
 
 				case 3:
@@ -1092,12 +1094,12 @@ class JBSMElements
 	/**
 	 * Get Docman
 	 *
-	 * @param   object  $media     Media
-	 * @param   int     $width     Width
-	 * @param   int     $height    Height
-	 * @param   string  $src       Sorce of Image
-	 * @param   string  $duration  Duration
-	 * @param   int     $filesize  File Size of Doc
+	 * @param   object $media     Media
+	 * @param   int    $width     Width
+	 * @param   int    $height    Height
+	 * @param   string $src       Sorce of Image
+	 * @param   string $duration  Duration
+	 * @param   int    $filesize  File Size of Doc
 	 *
 	 * @return string
 	 */
@@ -1114,10 +1116,10 @@ class JBSMElements
 	/**
 	 * Get Article
 	 *
-	 * @param   object  $media   Media
-	 * @param   int     $width   Width
-	 * @param   int     $height  Height
-	 * @param   string  $src     URL of image
+	 * @param   object $media   Media
+	 * @param   int    $width   Width
+	 * @param   int    $height  Height
+	 * @param   string $src     URL of image
 	 *
 	 * @return string
 	 */
@@ -1133,11 +1135,11 @@ class JBSMElements
 	/**
 	 * Get Virtuart
 	 *
-	 * @param   object  $media   Media info
-	 * @param   int     $width   Width
-	 * @param   int     $height  Height
-	 * @param   string  $src     Source
-	 * @param   object  $params  Item Params
+	 * @param   object $media   Media info
+	 * @param   int    $width   Width
+	 * @param   int    $height  Height
+	 * @param   string $src     Source
+	 * @param   object $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -1155,7 +1157,7 @@ class JBSMElements
 	/**
 	 * Get MediaRows
 	 *
-	 * @param   int  $study_id  ID
+	 * @param   int $study_id  ID
 	 *
 	 * @return object
 	 */
@@ -1164,11 +1166,11 @@ class JBSMElements
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('SELECT #_bsms_mediafiles.*,'
-			. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
-			. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
-			. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
-			. ' #_bsms_media.media_alttext AS malttext,'
-			. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
+		. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
+		. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
+		. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
+		. ' #_bsms_media.media_alttext AS malttext,'
+		. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
 			->from('#_bsms_mediafiles')
 			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
 			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
@@ -1186,8 +1188,8 @@ class JBSMElements
 	/**
 	 * Get Store
 	 *
-	 * @param   object  $params  Params
-	 * @param   object  $row     Row info
+	 * @param   object $params  Params
+	 * @param   object $row     Row info
 	 *
 	 * @return string
 	 *
@@ -1205,7 +1207,7 @@ class JBSMElements
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
-			. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path')
+		. ' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path')
 			->from('#__bsms_studies AS s')
 			->leftJoin('#__bsms_media AS m ON ( m.id = s.image_cd )')
 			->leftJoin('#__bsms_servers AS sr ON ( sr.id = s.server_cd )')
@@ -1214,7 +1216,7 @@ class JBSMElements
 		$cd    = $database->loadObject();
 		$query = $database->getQuery(true);
 		$query->select('m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
-			. ' s.image_dvd, s.prod_dvd, s.server_dvd, sr.id AS srid, sr.server_path')
+		. ' s.image_dvd, s.prod_dvd, s.server_dvd, sr.id AS srid, sr.server_path')
 			->from('#__bsms_studies AS s')
 			->leftJoin('#__bsms_media AS m ON ( m.id = s.image_dvd )')
 			->leftJoin('#__bsms_servers AS sr ON ( sr.id = s.server_dvd )')
@@ -1287,9 +1289,9 @@ class JBSMElements
 	/**
 	 * Get File Path
 	 *
-	 * @param   string  $id3      ID
-	 * @param   string  $idfield  ID Filed
-	 * @param   string  $mime     MimeType info
+	 * @param   string $id3      ID
+	 * @param   string $idfield  ID Filed
+	 * @param   string $mime     MimeType info
 	 *
 	 * @return string
 	 *
@@ -1302,8 +1304,8 @@ class JBSMElements
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath')
+		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
 			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
@@ -1337,7 +1339,7 @@ class JBSMElements
 	/**
 	 * Only Return the Body of a html doc.
 	 *
-	 * @param   string  $html  Html document
+	 * @param   string $html  Html document
 	 *
 	 * @return string
 	 *

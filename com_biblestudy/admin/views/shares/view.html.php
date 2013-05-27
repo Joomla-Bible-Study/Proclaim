@@ -42,12 +42,16 @@ class BiblestudyViewShares extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
+	/** @var  array Filter Levels */
 	protected $f_levels;
 
+	/** @var  object Side Bar */
 	public $sidebar;
 
 	/**

@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for Servers
  *
@@ -42,12 +41,16 @@ class BiblestudyViewServers extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
+	/** @var  array Filter Levels */
 	protected $f_levels;
 
+	/** @var  object Side Bar */
 	protected $sidebar;
 
 	/**

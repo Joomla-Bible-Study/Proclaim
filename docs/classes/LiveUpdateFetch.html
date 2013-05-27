@@ -56,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">329</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -183,7 +183,7 @@ that the download process gets stuck and ends up in a WSOD.</span>
                          data-target=".method_getUpdateInformation .collapse">
                         <h2>Get the latest version (update) information, either from the cache or
                             from the update server.</h2>
-                        <pre>getUpdateInformation($force) : <a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></pre>
+                        <pre>getUpdateInformation(bool $force) : <a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
@@ -192,6 +192,7 @@ that the download process gets stuck and ends up in a WSOD.</span>
 
                                 <div class="subelement argument">
                                     <h4>$force</h4>
+                                    <code>bool</code>
 
                                     <p>bool Set to true to force fetching fresh data from the server</p></div>
                                 <h3>Returns</h3>
@@ -209,14 +210,19 @@ that the download process gets stuck and ends up in a WSOD.</span>
                          data-target=".method_hasUpdates .collapse">
                         <h2>One-stop-shop function which fetches update information and tells you
                             if there are updates available or not, or if updates are not supported.</h2>
-                        <pre>hasUpdates($force) : int</pre>
+                        <pre>hasUpdates(bool $force) : int</pre>
                         <div class="labels"></div>
                         <div class="row collapse">
                             <div class="detail-description">
                                 <div class="long_description"></div>
                                 <h3>Parameters</h3>
 
-                                <div class="subelement argument"><h4>$force</h4></div>
+                                <div class="subelement argument">
+                                    <h4>$force</h4>
+                                    <code>bool</code>
+
+                                    <p>?</p>
+                                </div>
                                 <h3>Returns</h3>
 
                                 <div class="subelement response">
@@ -351,7 +357,7 @@ that the download process gets stuck and ends up in a WSOD.</span>
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
             provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T02:50:12-05:00.<br></footer>
+            generated on 2013-05-26T21:07:05-05:00.<br></footer>
     </div>
 </div>
 </body>

@@ -35,21 +35,29 @@ class BiblestudyViewTemplate extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Item
+	 *
 	 * @var object
 	 */
 	protected $item;
 
 	/**
+	 * Types
+	 *
 	 * @var object
 	 */
 	protected $types;
 
 	/**
+	 * Form
+	 *
 	 * @var object
 	 */
 	protected $form;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
@@ -57,7 +65,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

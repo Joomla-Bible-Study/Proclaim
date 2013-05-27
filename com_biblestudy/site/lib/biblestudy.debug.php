@@ -20,17 +20,20 @@ assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 
 /**
+ * Class JBS Debug
  *
- */
+ * @package  BibleStudy.Admin
+ * @since    7.0.0
+ * */
 class JBSDebug
 {
 	/**
 	 * Default assert call back funtion
 	 * If certain things fail hard we MUST know about it
 	 *
-	 * @param   string  $script   Script
-	 * @param   string  $line     Line
-	 * @param   string  $message  Message
+	 * @param   string $script   Script
+	 * @param   string $line     Line
+	 * @param   string $message  Message
 	 *
 	 * @return null
 	 */
@@ -48,8 +51,8 @@ class JBSDebug
 	/**
 	 * Production error handling
 	 *
-	 * @param   string  $text  Text
-	 * @param   int     $back  ID
+	 * @param   string $text  Text
+	 * @param   int    $back  ID
 	 *
 	 * @return  null
 	 */
@@ -64,25 +67,25 @@ class JBSDebug
 		$biblestudyPHPVersion   = BiblestudyVersion::PHPVersion();
 		$biblestudyMySQLVersion = BiblestudyVersion::MySQLVersion();
 		?>
-    <!-- Version Info -->
-    <div class="fbfooter">
-        Installed version:
-		<?php echo $biblestudyVersion; ?>
-        | php
-		<?php echo $biblestudyPHPVersion; ?>
-        | mysql
-		<?php echo $biblestudyMySQLVersion; ?>
-    </div>
-    <!-- /Version Info -->
-	<?php
+		<!-- Version Info -->
+		<div class="fbfooter">
+			Installed version:
+			<?php echo $biblestudyVersion; ?>
+			| php
+			<?php echo $biblestudyPHPVersion; ?>
+			| mysql
+			<?php echo $biblestudyMySQLVersion; ?>
+		</div>
+		<!-- /Version Info -->
+		<?php
 		biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
 	}
 
 	/**
 	 * System to Check for DB errors
 	 *
-	 * @param   string  $text  Text to Disaply
-	 * @param   int     $back  ID to return
+	 * @param   string $text  Text to Disaply
+	 * @param   int    $back  ID to return
 	 *
 	 * @return null
 	 */
@@ -99,7 +102,7 @@ class JBSDebug
 	/**
 	 * Check DB Warning
 	 *
-	 * @param   string  $text  Text
+	 * @param   string $text  Text
 	 *
 	 * @return null
 	 */
@@ -116,7 +119,7 @@ class JBSDebug
 	/**
 	 * Trigger DB Warning
 	 *
-	 * @param   string  $text  Text
+	 * @param   string $text  Text
 	 *
 	 * @return  null
 	 */
@@ -129,7 +132,7 @@ class JBSDebug
 	/**
 	 * Little helper to created a formatted output of variables
 	 *
-	 * @param   array  $varlist  List ov Var
+	 * @param   array $varlist  List ov Var
 	 *
 	 * @return string
 	 */
@@ -200,7 +203,7 @@ class JBSDebug
 	/**
 	 * Show the callstackinfo to this point in a decent format
 	 *
-	 * @param   int  $back  Back info
+	 * @param   int $back  Back info
 	 *
 	 * @return string
 	 */
@@ -214,9 +217,9 @@ class JBSDebug
 	/**
 	 * System to get BibleStudy Error
 	 *
-	 * @param   string  $message  Message to display
-	 * @param   int     $level    Lever of Notice
-	 * @param   int     $back     Id to return
+	 * @param   string $message  Message to display
+	 * @param   int    $level    Lever of Notice
+	 * @param   int    $back     Id to return
 	 *
 	 * @return null
 	 */
@@ -226,8 +229,8 @@ class JBSDebug
 		$caller = $trace[$back];
 		trigger_error(
 			$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' .
-				$caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong>' .
-				"\n<br /><br />Error reported",
+			$caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong>' .
+			"\n<br /><br />Error reported",
 			$level
 		);
 	}

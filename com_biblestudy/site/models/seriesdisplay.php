@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -29,7 +31,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -52,14 +54,14 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$pk    = $app->input->get('id', '', 'int');
+		$pk = $app->input->get('id', '', 'int');
 		$this->setState('series.id', $pk);
 
 		$offset = $app->input->get('limitstart', '', 'int');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params   = $app->getParams();
 		$template = JBSMParams::getTemplateparams();
 		$this->setState('template', $template);
 
@@ -78,7 +80,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int  $pk  The id of the study.
+	 * @param   int $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @throws Exception

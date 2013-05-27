@@ -1,5 +1,4 @@
 <?php
-
 /**
  * JView html
  *
@@ -10,7 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
@@ -46,18 +44,22 @@ class BiblestudyViewTeachers extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
+	/** @var  array Filter Levels */
 	protected $f_levels;
 
+	/** @var  object Side Bar */
 	protected $sidebar;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

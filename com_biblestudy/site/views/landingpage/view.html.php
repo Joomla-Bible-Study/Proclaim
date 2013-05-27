@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -21,14 +23,19 @@ JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestud
  */
 class BiblestudyViewLandingpage extends JViewLegacy
 {
+	/** @var  string Request URL */
 	public $request_url;
 
 	/**
+	 * Params
+	 *
 	 * @var JRegistry
 	 */
 	public $params;
 
 	/**
+	 * Admin Params
+	 *
 	 * @var JRegistry
 	 */
 	public $admin_params;
@@ -36,7 +43,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -133,9 +140,9 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$filter_orders      = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
 		$search             = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
-		$app       = JFactory::getApplication();
-		$menu      = $app->getMenu();
-		$item      = $menu->getActive();
+		$app  = JFactory::getApplication();
+		$menu = $app->getMenu();
+		$item = $menu->getActive();
 
 		// Get the main study list image
 		$main              = $images->mainStudyImage();

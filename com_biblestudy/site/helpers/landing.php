@@ -1,9 +1,8 @@
 <?php
-
 /**
- * Location Helper
+ * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Site
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -25,9 +24,9 @@ class JBSMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            Item ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            Item ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -101,7 +100,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.location_id')
 			->where('b.location_id > 0')
 			->where('a.published = 1')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
@@ -249,9 +248,9 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   int     $id            Item ID
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $params        Item Params
+	 * @param   int    $id            Item ID
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -324,7 +323,7 @@ class JBSMLanding
 			->where('b.language in (' . $language . ')')
 			->where('a.list_show = 1 and a.published = 1')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.ordering, a.teachername ' . $order);
 		$db->setQuery($query);
@@ -495,9 +494,9 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   int     $id            ID
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $params        Item Params
+	 * @param   int    $id            ID
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 *
@@ -575,7 +574,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.series_id')
 			->where('a.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->order('a.series_text ' . $order);
 		$db->setQuery($query);
 
@@ -747,9 +746,9 @@ class JBSMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            Item ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            Item ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -820,7 +819,7 @@ class JBSMLanding
 			->from('#__bsms_studies')
 			->where('language in (' . $language . ')')
 			->where('access IN (' . $groups . ')')
-            ->where('published = 1')
+			->where('published = 1')
 			->order('year(studydate) ' . $order);
 		$db->setQuery($query);
 
@@ -916,9 +915,9 @@ class JBSMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -929,13 +928,14 @@ class JBSMLanding
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy();
+		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$JViewLegacy->loadHelper('helper');
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
 		$limit     = $params->get('landingtopicslimit');
+
 		if (!$limit)
 		{
 			$limit = 10000;
@@ -944,6 +944,7 @@ class JBSMLanding
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
 		$registry = new JRegistry;
+
 		if (isset($item->prams))
 		{
 			$registry->loadString($item->params);
@@ -989,7 +990,7 @@ class JBSMLanding
 			->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
 			->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
 			->where('#__bsms_topics.published = 1')
-            ->where('#__bsms_studies.published = 1')
+			->where('#__bsms_studies.published = 1')
 			->order('#__bsms_topics.topic_text ' . $order)
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
@@ -1083,9 +1084,9 @@ class JBSMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -1161,7 +1162,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.id = b.messagetype')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->order('a.message_type ' . $order);
 		$db->setQuery($query);
@@ -1305,7 +1306,7 @@ class JBSMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   JRegistry  $params  Item Params
+	 * @param   JRegistry $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -1375,7 +1376,7 @@ class JBSMLanding
 			->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
-            ->where('b.published = 1')
+			->where('b.published = 1')
 			->order('a.booknumber ' . $order);
 		$db->setQuery($query);
 

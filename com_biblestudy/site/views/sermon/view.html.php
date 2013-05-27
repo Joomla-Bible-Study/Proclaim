@@ -1,6 +1,8 @@
 <?php
 /**
- * @package    BibleStudy.Site
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
@@ -8,15 +10,12 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
-//require_once (BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-require_once(JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
-require_once(JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
-require_once(JPATH_COMPONENT . '/helpers/related.php');
-require_once(JPATH_COMPONENT . '/helpers/biblegateway.php');
+JLoader::register('JBSPagebuilder', JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
+JLoader::register('PodcastSubscribe', JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
+JLoader::register('RelatedStudies', JPATH_COMPONENT . '/helpers/related.php');
+JLoader::register('ShowScripture', JPATH_COMPONENT . '/helpers/biblegateway.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
 
 /**
  * View class for Sermon
@@ -29,39 +28,43 @@ JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.clas
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
-	/**
-	 * @var object
-	 */
+	/** @var object Item */
 	protected $item;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry Params */
 	protected $params;
 
+	/** @var  string Print */
 	protected $print;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry State */
 	protected $state;
 
+	/** @var  string User */
 	protected $user;
 
+	/** @var  string Passage */
 	protected $passage;
 
+	/** @var  string Related */
 	protected $related;
 
+	/** @var  string Subscribe */
 	protected $subscribe;
 
+	/** @var  int Menu ID */
 	protected $menuid;
 
+	/** @var  string Details Link */
 	protected $detailslink;
 
+	/** @var  string Page */
 	protected $page;
 
+	/** @var  string Template */
 	protected $template;
 
+	/** @var  string Article */
 	protected $article;
 
 	/**
@@ -92,6 +95,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

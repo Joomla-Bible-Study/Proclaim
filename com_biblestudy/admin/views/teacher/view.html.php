@@ -48,6 +48,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	protected $admin;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;

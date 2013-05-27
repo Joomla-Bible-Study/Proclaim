@@ -1,7 +1,6 @@
 <?php
-
 /**
- * JView html
+ * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
