@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="search" method="upgrade">
     <name>PLG_BIBLESTUDY_SEARCH</name>
-    <creationDate>Oct 05, 2012</creationDate>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
     <copyright>2007-11 Joomla Bible Study</copyright>
     <license>GNU/GPL</license>
-    <version>8.0.b2</version>
+    <version>8.0.0</version>
+    <creationDate>May 31, 2013</creationDate>
     <description>PLG_SEARCH_BIBLESTUDYSEARCH_XML_DESCRIPTION</description>
     <files>
         <filename plugin="biblestudysearch">biblestudysearch.php</filename>
