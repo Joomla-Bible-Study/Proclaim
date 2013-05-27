@@ -38,6 +38,8 @@
                             </li>
                             <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
                             <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a>
+                            </li>
                             <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
                         </ul>
                     </li>
@@ -54,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">598</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -109,9 +111,8 @@ CSS and media provided by Live Update."><span class="description">Override this 
 CSS and media provided by Live Update.</span>
                     <pre>addMedia()</pre>
                 </a></li>
-                <li class="method public "><a href="#method_applyCACert" title="applyCACert :: "><span
-                        class="description">applyCACert()
-        </span>
+                <li class="method public "><a href="#method_applyCACert" title="applyCACert :: Apply CA Cart"><span
+                        class="description">Apply CA Cart</span>
                     <pre>applyCACert()</pre>
                 </a></li>
                 <li class="method public "><a href="#method_getAuthorization"
@@ -128,9 +129,9 @@ CSS and media provided by Live Update.</span>
                                               title="getInstance :: Singleton implementation"><span class="description">Singleton implementation</span>
                     <pre>getInstance()</pre>
                 </a></li>
-                <li class="method public "><a href="#method_getMinimumStability" title="getMinimumStability :: "><span
-                        class="description">getMinimumStability()
-        </span>
+                <li class="method public "><a href="#method_getMinimumStability"
+                                              title="getMinimumStability :: Get Minimum Stability"><span
+                        class="description">Get Minimum Stability</span>
                     <pre>getMinimumStability()</pre>
                 </a></li>
                 <li class="method public "><a href="#method_getStorageAdapterPreferences"
@@ -143,14 +144,14 @@ CSS and media provided by Live Update.</span>
                         class="description">Returns the URL to the update INI stream.</span>
                     <pre>getUpdateURL()</pre>
                 </a></li>
-                <li class="method public "><a href="#method_getVersionStrategy" title="getVersionStrategy :: "><span
-                        class="description">getVersionStrategy()
-        </span>
+                <li class="method public "><a href="#method_getVersionStrategy"
+                                              title="getVersionStrategy :: Get Version Strategy"><span
+                        class="description">Get Version Strategy</span>
                     <pre>getVersionStrategy()</pre>
                 </a></li>
                 <li class="method public "><a href="#method_requiresAuthorization"
-                                              title="requiresAuthorization :: "><span class="description">requiresAuthorization()
-        </span>
+                                              title="requiresAuthorization :: Requires Authorization"><span
+                        class="description">Requires Authorization</span>
                     <pre>requiresAuthorization()</pre>
                 </a></li>
             </ul>
@@ -308,16 +309,20 @@ populate the class' properties.</span>
 
 <div class="element clickable method public method_applyCACert" data-toggle="collapse"
      data-target=".method_applyCACert .collapse">
-    <h2>applyCACert()
-    </h2>
-    <pre>applyCACert($ch) </pre>
+    <h2>Apply CA Cart</h2>
+    <pre>applyCACert(resource $ch) : void</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"></div>
             <h3>Parameters</h3>
 
-            <div class="subelement argument"><h4>$ch</h4></div>
+            <div class="subelement argument">
+                <h4>$ch</h4>
+                <code>resource</code>
+
+                <p>&$ch chanel</p>
+            </div>
         </div>
     </div>
 </div>
@@ -326,13 +331,16 @@ populate the class' properties.</span>
 <div class="element clickable method public method_getAuthorization" data-toggle="collapse"
      data-target=".method_getAuthorization .collapse">
     <h2>Gets the authorization string to append to the download URL.</h2>
-    <pre>getAuthorization() </pre>
+    <pre>getAuthorization() : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"><p>It returns either the
                 download ID or username/password pair. Please override the class constructor, not
                 this method, if you want to fetch these values.</p></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
         </div>
     </div>
 </div>
@@ -377,13 +385,15 @@ populate the class' properties.</span>
 
 <div class="element clickable method public method_getMinimumStability" data-toggle="collapse"
      data-target=".method_getMinimumStability .collapse">
-    <h2>getMinimumStability()
-    </h2>
-    <pre>getMinimumStability() </pre>
+    <h2>Get Minimum Stability</h2>
+    <pre>getMinimumStability() : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
         </div>
     </div>
 </div>
@@ -408,13 +418,16 @@ populate the class' properties.</span>
 <div class="element clickable method public method_getUpdateURL" data-toggle="collapse"
      data-target=".method_getUpdateURL .collapse">
     <h2>Returns the URL to the update INI stream.</h2>
-    <pre>getUpdateURL() </pre>
+    <pre>getUpdateURL() : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"><p>By default it returns the value to
                 the protected $_updateURL property of the class. Override with your implementation
                 if you want to modify its logic.</p></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
         </div>
     </div>
 </div>
@@ -422,13 +435,15 @@ populate the class' properties.</span>
 
 <div class="element clickable method public method_getVersionStrategy" data-toggle="collapse"
      data-target=".method_getVersionStrategy .collapse">
-    <h2>getVersionStrategy()
-    </h2>
-    <pre>getVersionStrategy() </pre>
+    <h2>Get Version Strategy</h2>
+    <pre>getVersionStrategy() : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
         </div>
     </div>
 </div>
@@ -436,13 +451,15 @@ populate the class' properties.</span>
 
 <div class="element clickable method public method_requiresAuthorization" data-toggle="collapse"
      data-target=".method_requiresAuthorization .collapse">
-    <h2>requiresAuthorization()
-    </h2>
-    <pre>requiresAuthorization() </pre>
+    <h2>Requires Authorization</h2>
+    <pre>requiresAuthorization() : bool</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
             <div class="long_description"></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>bool</code></div>
         </div>
     </div>
 </div>
@@ -451,7 +468,7 @@ populate the class' properties.</span>
 <div class="element clickable method protected method_populateAuthorization" data-toggle="collapse"
      data-target=".method_populateAuthorization .collapse">
     <h2>Fetch username/password and Download ID from the component's configuration.</h2>
-    <pre>populateAuthorization() </pre>
+    <pre>populateAuthorization() : void</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -465,7 +482,7 @@ populate the class' properties.</span>
      data-target=".method_populateExtensionInfo .collapse">
     <h2>Get the current version from the XML manifest of the extension and
         populate the class' properties.</h2>
-    <pre>populateExtensionInfo() </pre>
+    <pre>populateExtensionInfo() : void</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -684,7 +701,7 @@ populate the class' properties.</span>
         Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
         provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
         Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-        generated on 2013-05-24T22:08:07-05:00.<br></footer>
+        generated on 2013-05-26T21:07:04-05:00.<br></footer>
 </div>
 </div>
 </body>

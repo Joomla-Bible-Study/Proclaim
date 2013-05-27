@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -29,12 +31,12 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get listing
 	 *
-	 * @param   object     $row           Item Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   string     $oddeven       ?Number patten?
-	 * @param   object     $admin_params  Admin info
-	 * @param   int        $template      Template ID
-	 * @param   string     $ismodule      If coming form a Module
+	 * @param   object    $row           Item Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   string    $oddeven       ?Number patten?
+	 * @param   object    $admin_params  Admin info
+	 * @param   int       $template      Template ID
+	 * @param   string    $ismodule      If coming form a Module
 	 *
 	 * @return string
 	 */
@@ -813,23 +815,23 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Cell
 	 *
-	 * @param   int        $elementid     Element ID
-	 * @param   string     $element       Element
-	 * @param   int        $rowcolid      Row Column ID
-	 * @param   string     $colspan       Column Span
-	 * @param   string     $rowspan       Row Span
-	 * @param   string     $lastcol       Last Column
-	 * @param   string     $islink        is a Link
-	 * @param   string     $id3           ID3
-	 * @param   int        $tid           Template ID
-	 * @param   string     $smenu         Sermon Menu
-	 * @param   string     $tmenu         Template Menu
-	 * @param   string     $entry_access  Access Entry
-	 * @param   string     $allow_entry   Allow Entry
-	 * @param   JRegistry  $params        Itom Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $row           Row info
-	 * @param   int        $template      Template ID
+	 * @param   int       $elementid     Element ID
+	 * @param   string    $element       Element
+	 * @param   int       $rowcolid      Row Column ID
+	 * @param   string    $colspan       Column Span
+	 * @param   string    $rowspan       Row Span
+	 * @param   string    $lastcol       Last Column
+	 * @param   string    $islink        is a Link
+	 * @param   string    $id3           ID3
+	 * @param   int       $tid           Template ID
+	 * @param   string    $smenu         Sermon Menu
+	 * @param   string    $tmenu         Template Menu
+	 * @param   string    $entry_access  Access Entry
+	 * @param   string    $allow_entry   Allow Entry
+	 * @param   JRegistry $params        Itom Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $row           Row info
+	 * @param   int       $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -914,15 +916,15 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Link
 	 *
-	 * @param   string     $islink        IS A Link
-	 * @param   string     $id3           ID3
-	 * @param   int        $tid           Template Id
-	 * @param   string     $smenu         Sermon Menu
-	 * @param   string     $tmenu         Teacher Menu
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $row           Item Info
-	 * @param   int        $template      Template
+	 * @param   string    $islink        IS A Link
+	 * @param   string    $id3           ID3
+	 * @param   int       $tid           Template Id
+	 * @param   string    $smenu         Sermon Menu
+	 * @param   string    $tmenu         Teacher Menu
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $row           Item Info
+	 * @param   int       $template      Template
 	 *
 	 * @return string
 	 */
@@ -1006,10 +1008,10 @@ class JBSMListing extends JBSMElements
 				$column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
 				break;
 
-            case 9 :
-                // Case 9 is a link to download
-                $column  .= '<a href="index.php?option=com_biblestudy&amp;mid=' .
-                    $row->download_id . '&amp;view=sermons&amp;task=download">';
+			case 9 :
+				// Case 9 is a link to download
+				$column .= '<a href="index.php?option=com_biblestudy&amp;mid=' .
+					$row->download_id . '&amp;view=sermons&amp;task=download">';
 		}
 
 		return $column;
@@ -1018,10 +1020,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object     $row           Item Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   object    $row           Item Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
 	 *
 	 * @return object
 	 */
@@ -1063,10 +1065,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object     $row           Item Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   object    $row           Item Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
 	 *
 	 * @return object
 	 */
@@ -1145,10 +1147,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string     $link          Link
-	 * @param   object     $row           Item Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   string    $link          Link
+	 * @param   object    $row           Item Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return null|string
 	 *
@@ -1351,11 +1353,11 @@ class JBSMListing extends JBSMElements
 	/**
 	 * make a URL small
 	 *
-	 * @param   string  $url      Url
-	 * @param   string  $login    Login
-	 * @param   string  $appkey   AppKey
-	 * @param   string  $format   Format
-	 * @param   string  $version  Version
+	 * @param   string $url      Url
+	 * @param   string $login    Login
+	 * @param   string $appkey   AppKey
+	 * @param   string $format   Format
+	 * @param   string $version  Version
 	 *
 	 * @return string
 	 */
@@ -1388,8 +1390,8 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Passage
 	 *
-	 * @param   object  $params  Item Params
-	 * @param   object  $row     Item Info
+	 * @param   object $params  Item Params
+	 * @param   object $row     Item Info
 	 *
 	 * @return string
 	 */
@@ -1437,9 +1439,9 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int     $id3     Study ID ID
-	 * @param   string  $islink  Is a Link
-	 * @param   object  $params  Item Params
+	 * @param   int    $id3     Study ID ID
+	 * @param   string $islink  Is a Link
+	 * @param   object $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -1495,10 +1497,10 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Title
 	 *
-	 * @param   JRegistry  $params        System Params
-	 * @param   object     $row           Item info
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template
+	 * @param   JRegistry $params        System Params
+	 * @param   object    $row           Item info
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   int       $template      Template
 	 *
 	 * @return string
 	 */
@@ -1590,12 +1592,12 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Header
 	 *
-	 * @param   object     $row           JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template ID
-	 * @param   int        $showheader    Show Hide item
-	 * @param   int        $ismodule      ?
+	 * @param   object    $row           JTable
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   int       $template      Template ID
+	 * @param   int       $showheader    Show Hide item
+	 * @param   int       $ismodule      ?
 	 *
 	 * @return string
 	 */
@@ -2087,16 +2089,16 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Header Cell
 	 *
-	 * @param   int        $rowid         Table Row ID
-	 * @param   object     $row           Item info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $lastcol       Last Column
-	 * @param   int        $colspan       Column Span
-	 * @param   int        $rowspan       Row Span
-	 * @param   int        $rowcolid      RowCol Id
-	 * @param   string     $nh            ?
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template ID
+	 * @param   int       $rowid         Table Row ID
+	 * @param   object    $row           Item info
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $lastcol       Last Column
+	 * @param   int       $colspan       Column Span
+	 * @param   int       $rowspan       Row Span
+	 * @param   int       $rowcolid      RowCol Id
+	 * @param   string    $nh            ?
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   int       $template      Template ID
 	 *
 	 * @return string
 	 */
@@ -2111,8 +2113,8 @@ class JBSMListing extends JBSMElements
 			$elementid->id         = 'jbsmedia';
 		}
 		else
-		{ 
-			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template); 
+		{
+			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
 		}
 
 		if (!isset($elementid->id))
@@ -2156,8 +2158,8 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int        $rowcolid  Row ID Column
-	 * @param   JRegistry  $params    Item Params
+	 * @param   int       $rowcolid  Row ID Column
+	 * @param   JRegistry $params    Item Params
 	 *
 	 * @return string
 	 */

@@ -2,11 +2,11 @@
 <extension version="2.5" type="plugin" group="finder" method="upgrade">
     <name>PLG_FINDER_BIBLESTUDY</name>
     <author>Joomla Bible Study Team</author>
-    <creationDate>Oct 25, 2012</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <copyright>(C) 2007 - 2012 Joomla Bible Study All rights reserved.</copyright>
-    <version>8.0.b2</version>
+    <version>8.0.0</version>
+    <creationDate>May 31, 2013</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>PLG_FINDER_BIBLESTUDY_XML_DESCRIPTION</description>
     <files>

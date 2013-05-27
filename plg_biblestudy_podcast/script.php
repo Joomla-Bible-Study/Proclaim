@@ -1,10 +1,11 @@
 <?php
 /**
- * @package     BibleStudy
- * @subpackage  Plugin.JBSPodcast
- * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        http://www.JoomlaBibleStudy.org
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -22,7 +23,7 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to install the component
 	 *
-	 * @param   string  $parent  is the class calling this method
+	 * @param   string $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -34,7 +35,7 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string  $parent  is the class calling this method
+	 * @param   string $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -47,7 +48,7 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to update the component
 	 *
-	 * @param   string  $parent  is the class calling this method
+	 * @param   string $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -92,8 +93,8 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param   string  $type    is the type of change (install, update or discover_install)
-	 * @param   string  $parent  is the class calling this method
+	 * @param   string $type    is the type of change (install, update or discover_install)
+	 * @param   string $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -104,8 +105,8 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string  $type    is the type of change (install, update or discover_install)
-	 * @param   string  $parent  is the class calling this method
+	 * @param   string $type    is the type of change (install, update or discover_install)
+	 * @param   string $parent  is the class calling this method
 	 *
 	 * @return void
 	 */

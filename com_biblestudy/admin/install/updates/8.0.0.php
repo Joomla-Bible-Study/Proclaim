@@ -1,10 +1,12 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @Copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -24,7 +26,7 @@ class JBS800Update
 	 *
 	 * @return boolean
 	 */
-	public function update800 ()
+	public function update800()
 	{
 		self::migrate_topics();
 		self::fix_mediafile_params();
@@ -37,13 +39,13 @@ class JBS800Update
 	 *
 	 * @return bool
 	 */
-	private function migrate_topics ()
+	private function migrate_topics()
 	{
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
 		$query->select('id, params')
-				->from('#__bsms_topics');
+			->from('#__bsms_topics');
 
 		$registry = new JRegistry;
 		$db->setQuery($query);
@@ -90,7 +92,7 @@ class JBS800Update
 				// Delete old topic
 				$query = $db->getQuery(true);
 				$query->delete('#__bsms_topics')
-						->where('id = ' . $topic->id);
+					->where('id = ' . $topic->id);
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -110,20 +112,20 @@ class JBS800Update
 	/**
 	 * Update studies to reference newly created topics
 	 *
-	 * @param   Object  $topic_table   Object containing the saved topic record
-	 * @param   String  $old_topic_id  Reference to the old topic id
+	 * @param   Object $topic_table   Object containing the saved topic record
+	 * @param   String $old_topic_id  Reference to the old topic id
 	 *
 	 * @return void
 	 */
-	private function update_studies ($topic_table, $old_topic_id)
+	private function update_studies($topic_table, $old_topic_id)
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('studytopics.id, studytopics.topic_id, studytopics.study_id, study.language as study_language')
-				->from('#__bsms_studytopics AS studytopics')
-				->join('LEFT', '#__bsms_topics as topic ON topic.id = studytopics.topic_id')
-				->join('LEFT', '#__bsms_studies as study on study.id = studytopics.study_id')
-				->where('studytopics.topic_id = ' . $old_topic_id);
+			->from('#__bsms_studytopics AS studytopics')
+			->join('LEFT', '#__bsms_topics as topic ON topic.id = studytopics.topic_id')
+			->join('LEFT', '#__bsms_studies as study on study.id = studytopics.study_id')
+			->where('studytopics.topic_id = ' . $old_topic_id);
 
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
@@ -135,8 +137,8 @@ class JBS800Update
 				// Change study topic reference
 				$query = $db->getQuery(true);
 				$query->update('#__bsms_studytopics as studytopics')
-						->set('topic_id = ' . $topic_table->id)
-						->where('studytopics.id = ' . $result->id);
+					->set('topic_id = ' . $topic_table->id)
+					->where('studytopics.id = ' . $result->id);
 				$db->setQuery($query);
 
 				if (!$db->execute())
@@ -154,13 +156,13 @@ class JBS800Update
 	 *
 	 * @return mixed
 	 */
-	public function fix_mediafile_params ()
+	public function fix_mediafile_params()
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
-				->from('#__bsms_mediafiles')
-				->where('`params` LIKE ' . $db->q('%internal_popup%'));
+			->from('#__bsms_mediafiles')
+			->where('`params` LIKE ' . $db->q('%internal_popup%'));
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -232,8 +234,8 @@ class JBS800Update
 			$paramsString = json_encode($new_params);
 			$query        = $db->getQuery(true);
 			$query->update('#__bsms_mediafiles')
-					->set('params = ' . $db->q($paramsString))
-					->where('id = ' . $db->q($result->id));
+				->set('params = ' . $db->q($paramsString))
+				->where('id = ' . $db->q($result->id));
 			$db->setQuery($query);
 
 			if (!$db->execute())
