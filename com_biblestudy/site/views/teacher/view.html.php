@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,32 +23,35 @@ JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
-	/**
-	 * @var object
-	 */
+
+	/** @var  object Item */
 	protected $item;
 
+	/** @var  String Contact */
 	protected $contact;
 
-	/**
-	 * @var JRegistry
-	 */
+	/**  @var JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  JObject Admin */
 	protected $admin;
 
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  JObject Template Info */
 	protected $template;
 
+	/** @var  JObject Template Studies */
 	protected $teacherstudies;
 
+	/** @var  JObject Print */
 	protected $print;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -62,11 +67,11 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$images  = new JBSMImages;
+		$images = new JBSMImages;
 
 		$this->admin        = JBSMParams::getAdmin();
 		$this->admin_params = $this->admin->params;
-		$input = new JInput;
+		$input              = new JInput;
 
 		$template = JBSMParams::getTemplateparams();
 
@@ -87,10 +92,10 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		// Add the slug
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(
-			' ',
-			'-',
-			htmlspecialchars_decode($item->teachername, ENT_QUOTES)
-		) . ':' . $item->id;
+				' ',
+				'-',
+				htmlspecialchars_decode($item->teachername, ENT_QUOTES)
+			) . ':' . $item->id;
 		$id         = $input->get('id', '0', 'get');
 		$item->id   = $id;
 

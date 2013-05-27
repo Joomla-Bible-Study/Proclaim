@@ -1,11 +1,11 @@
 <?php
 /**
- * @package     BibleStudy
- * @subpackage  JBSMigration.Admin
- * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        http://www.JoomlaBibleStudy.org
- * @since       7.0.2
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.file');
@@ -48,7 +48,7 @@ class JBSExport
 	/**
 	 * Creates Backup File.
 	 *
-	 * @param   string  $localfilename  File Name on local server
+	 * @param   string $localfilename  File Name on local server
 	 *
 	 * @return boolean
 	 */
@@ -75,7 +75,7 @@ class JBSExport
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string  $table  Table Name exp: #__bsms_admin
+	 * @param   string $table  Table Name exp: #__bsms_admin
 	 *
 	 * @return boolean
 	 */
@@ -157,9 +157,9 @@ class JBSExport
 	/**
 	 * File output
 	 *
-	 * @param   string  $file       ?
-	 * @param   string  $name       ?
-	 * @param   string  $mime_type  ?
+	 * @param   string $file       ?
+	 * @param   string $name       ?
+	 * @param   string $mime_type  ?
 	 *
 	 * @return boolean
 	 */
@@ -312,8 +312,8 @@ class JBSExport
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
-		$bsms = 'bsms_';
-		$objects = array();
+		$bsms      = 'bsms_';
+		$objects   = array();
 
 		foreach ($tables as $table)
 		{

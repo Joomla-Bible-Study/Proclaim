@@ -38,6 +38,8 @@
                             </li>
                             <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
                             <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a>
+                            </li>
                             <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
                         </ul>
                     </li>
@@ -54,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">598</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -128,73 +130,74 @@
         <li class="nav-header">
             <i class="icon-custom icon-property"></i> Properties
             <ul>
-                <li class="property public "><a href="#property_assets" title="$assets :: "><span
+                <li class="property public "><a href="#property_assets" title="$assets :: Assets"><span
                         class="description"></span>
                     <pre>$assets</pre>
                 </a></li>
-                <li class="property public "><a href="#property_canDo" title="$canDo :: "><span
+                <li class="property public "><a href="#property_canDo" title="$canDo :: Can Do"><span
                         class="description"></span>
                     <pre>$canDo</pre>
                 </a></li>
-                <li class="property public "><a href="#property_changeSet" title="$changeSet :: "><span
+                <li class="property public "><a href="#property_changeSet" title="$changeSet :: Change Set"><span
                         class="description"></span>
                     <pre>$changeSet</pre>
                 </a></li>
-                <li class="property public "><a href="#property_errorCount" title="$errorCount :: "><span
+                <li class="property public "><a href="#property_errorCount" title="$errorCount :: Error Count"><span
                         class="description"></span>
                     <pre>$errorCount</pre>
                 </a></li>
-                <li class="property public "><a href="#property_errors" title="$errors :: "><span
+                <li class="property public "><a href="#property_errors" title="$errors :: Errors"><span
                         class="description"></span>
                     <pre>$errors</pre>
                 </a></li>
-                <li class="property public "><a href="#property_filterParams" title="$filterParams :: "><span
-                        class="description"></span>
+                <li class="property public "><a href="#property_filterParams"
+                                                title="$filterParams :: Filter Params"><span class="description"></span>
                     <pre>$filterParams</pre>
                 </a></li>
-                <li class="property public "><a href="#property_jversion" title="$jversion :: "><span
+                <li class="property public "><a href="#property_jversion"
+                                                title="$jversion :: Joomla BibleStudy Version"><span
                         class="description"></span>
                     <pre>$jversion</pre>
                 </a></li>
-                <li class="property public "><a href="#property_lists" title="$lists :: "><span
+                <li class="property public "><a href="#property_lists" title="$lists :: Lists"><span
                         class="description"></span>
                     <pre>$lists</pre>
                 </a></li>
-                <li class="property public "><a href="#property_pagination" title="$pagination :: "><span
+                <li class="property public "><a href="#property_pagination" title="$pagination :: Pagination"><span
                         class="description"></span>
                     <pre>$pagination</pre>
                 </a></li>
-                <li class="property public "><a href="#property_pi" title="$pi :: "><span class="description"></span>
+                <li class="property public "><a href="#property_pi" title="$pi :: PI"><span class="description"></span>
                     <pre>$pi</pre>
                 </a></li>
-                <li class="property public "><a href="#property_playerstats" title="$playerstats :: "><span
+                <li class="property public "><a href="#property_playerstats" title="$playerstats :: Player Stats"><span
                         class="description"></span>
                     <pre>$playerstats</pre>
                 </a></li>
-                <li class="property public "><a href="#property_popups" title="$popups :: "><span
+                <li class="property public "><a href="#property_popups" title="$popups :: Popups"><span
                         class="description"></span>
                     <pre>$popups</pre>
                 </a></li>
-                <li class="property public "><a href="#property_results" title="$results :: "><span
+                <li class="property public "><a href="#property_results" title="$results :: Results"><span
                         class="description"></span>
                     <pre>$results</pre>
                 </a></li>
-                <li class="property public "><a href="#property_schemaVersion" title="$schemaVersion :: "><span
+                <li class="property public "><a href="#property_schemaVersion" title="$schemaVersion :: Schema Version"><span
                         class="description"></span>
                     <pre>$schemaVersion</pre>
                 </a></li>
-                <li class="property public "><a href="#property_ss" title="$ss :: "><span class="description"></span>
+                <li class="property public "><a href="#property_ss" title="$ss :: SS"><span class="description"></span>
                     <pre>$ss</pre>
                 </a></li>
-                <li class="property public "><a href="#property_tmp_dest" title="$tmp_dest :: "><span
+                <li class="property public "><a href="#property_tmp_dest" title="$tmp_dest :: Temp Destination"><span
                         class="description"></span>
                     <pre>$tmp_dest</pre>
                 </a></li>
-                <li class="property public "><a href="#property_updateVersion" title="$updateVersion :: "><span
+                <li class="property public "><a href="#property_updateVersion" title="$updateVersion :: Update Version"><span
                         class="description"></span>
                     <pre>$updateVersion</pre>
                 </a></li>
-                <li class="property public "><a href="#property_version" title="$version :: "><span
+                <li class="property public "><a href="#property_version" title="$version :: Version"><span
                         class="description"></span>
                     <pre>$version</pre>
                 </a></li>
@@ -361,7 +364,7 @@
 <div class="element clickable property public property_assets" data-toggle="collapse"
      data-target=".property_assets .collapse">
     <h2></h2>
-    <pre>$assets </pre>
+    <pre>$assets : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -374,7 +377,7 @@
 <div class="element clickable property public property_canDo" data-toggle="collapse"
      data-target=".property_canDo .collapse">
     <h2></h2>
-    <pre>$canDo </pre>
+    <pre>$canDo : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -387,7 +390,7 @@
 <div class="element clickable property public property_changeSet" data-toggle="collapse"
      data-target=".property_changeSet .collapse">
     <h2></h2>
-    <pre>$changeSet </pre>
+    <pre>$changeSet : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -400,7 +403,7 @@
 <div class="element clickable property public property_errorCount" data-toggle="collapse"
      data-target=".property_errorCount .collapse">
     <h2></h2>
-    <pre>$errorCount </pre>
+    <pre>$errorCount : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -413,7 +416,7 @@
 <div class="element clickable property public property_errors" data-toggle="collapse"
      data-target=".property_errors .collapse">
     <h2></h2>
-    <pre>$errors </pre>
+    <pre>$errors : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -426,7 +429,7 @@
 <div class="element clickable property public property_filterParams" data-toggle="collapse"
      data-target=".property_filterParams .collapse">
     <h2></h2>
-    <pre>$filterParams </pre>
+    <pre>$filterParams : \JRegistry</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -439,7 +442,7 @@
 <div class="element clickable property public property_jversion" data-toggle="collapse"
      data-target=".property_jversion .collapse">
     <h2></h2>
-    <pre>$jversion </pre>
+    <pre>$jversion : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -452,7 +455,7 @@
 <div class="element clickable property public property_lists" data-toggle="collapse"
      data-target=".property_lists .collapse">
     <h2></h2>
-    <pre>$lists </pre>
+    <pre>$lists : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -465,7 +468,7 @@
 <div class="element clickable property public property_pagination" data-toggle="collapse"
      data-target=".property_pagination .collapse">
     <h2></h2>
-    <pre>$pagination </pre>
+    <pre>$pagination : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -477,7 +480,7 @@
 
 <div class="element clickable property public property_pi" data-toggle="collapse" data-target=".property_pi .collapse">
     <h2></h2>
-    <pre>$pi </pre>
+    <pre>$pi : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -490,7 +493,7 @@
 <div class="element clickable property public property_playerstats" data-toggle="collapse"
      data-target=".property_playerstats .collapse">
     <h2></h2>
-    <pre>$playerstats </pre>
+    <pre>$playerstats : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -503,7 +506,7 @@
 <div class="element clickable property public property_popups" data-toggle="collapse"
      data-target=".property_popups .collapse">
     <h2></h2>
-    <pre>$popups </pre>
+    <pre>$popups : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -516,7 +519,7 @@
 <div class="element clickable property public property_results" data-toggle="collapse"
      data-target=".property_results .collapse">
     <h2></h2>
-    <pre>$results </pre>
+    <pre>$results : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -529,7 +532,7 @@
 <div class="element clickable property public property_schemaVersion" data-toggle="collapse"
      data-target=".property_schemaVersion .collapse">
     <h2></h2>
-    <pre>$schemaVersion </pre>
+    <pre>$schemaVersion : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -541,7 +544,7 @@
 
 <div class="element clickable property public property_ss" data-toggle="collapse" data-target=".property_ss .collapse">
     <h2></h2>
-    <pre>$ss </pre>
+    <pre>$ss : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -554,7 +557,7 @@
 <div class="element clickable property public property_tmp_dest" data-toggle="collapse"
      data-target=".property_tmp_dest .collapse">
     <h2></h2>
-    <pre>$tmp_dest </pre>
+    <pre>$tmp_dest : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -567,7 +570,7 @@
 <div class="element clickable property public property_updateVersion" data-toggle="collapse"
      data-target=".property_updateVersion .collapse">
     <h2></h2>
-    <pre>$updateVersion </pre>
+    <pre>$updateVersion : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -580,7 +583,7 @@
 <div class="element clickable property public property_version" data-toggle="collapse"
      data-target=".property_version .collapse">
     <h2></h2>
-    <pre>$version </pre>
+    <pre>$version : string</pre>
     <div class="labels"></div>
     <div class="row collapse">
         <div class="detail-description">
@@ -636,7 +639,7 @@
         Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
         provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
         Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-        generated on 2013-05-24T22:08:12-05:00.<br></footer>
+        generated on 2013-05-26T21:07:09-05:00.<br></footer>
 </div>
 </div>
 </body>

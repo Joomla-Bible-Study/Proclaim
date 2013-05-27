@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,12 +26,13 @@ jimport('joomla.application.component.controller');
  */
 class BiblestudyController extends JControllerLegacy
 {
+	/** @var  string Media Code */
 	public $mediaCode;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config   An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
@@ -58,8 +61,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable   If true, the view output will be cached
+	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -212,7 +215,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string  $params  To pass to the email
+	 * @param   string $params  To pass to the email
 	 *
 	 * @return void
 	 */

@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -28,9 +30,10 @@ abstract class JBSMHelperRoute
 	protected static $lookup;
 
 	/**
-	 * Get Artical Rout
+	 * Get Article Route
 	 *
-	 * @param   int  $id  The route of the study item
+	 * @param   int $id        The route of the study item
+	 * @param   int $language  The route of the study item
 	 *
 	 * @return string
 	 */
@@ -79,7 +82,7 @@ abstract class JBSMHelperRoute
 	/**
 	 * Get Teacher Route
 	 *
-	 * @param   int  $id  The route of the teacher item
+	 * @param   int $id  The route of the teacher item
 	 *
 	 * @return string
 	 */
@@ -98,7 +101,7 @@ abstract class JBSMHelperRoute
 	/**
 	 * Get Series Route
 	 *
-	 * @param   int  $id  ID
+	 * @param   int $id  ID
 	 *
 	 * @return string
 	 */
@@ -117,7 +120,7 @@ abstract class JBSMHelperRoute
 	/**
 	 * Find Item
 	 *
-	 * @param   string  $needles  ?
+	 * @param   string $needles  ?
 	 *
 	 * @return mixed
 	 */

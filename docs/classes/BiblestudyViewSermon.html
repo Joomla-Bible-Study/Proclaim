@@ -38,6 +38,8 @@
                             </li>
                             <li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
                             <li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+                            <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a>
+                            </li>
                             <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
                         </ul>
                     </li>
@@ -54,7 +56,7 @@
                             Reports <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                                <span class="label label-info">598</span></a></li>
+                                <span class="label label-info">0</span></a></li>
                             <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                                 <ul>
                                     <li>todo 
@@ -132,55 +134,50 @@
         <li class="nav-header protected">» Protected
             <ul>
                 <li class="property protected "><a href="#property_article" title="$article :: "><span
-                        class="description"></span>
+                        class="description">Article</span>
                     <pre>$article</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_detailslink" title="$detailslink :: "><span
-                        class="description"></span>
+                        class="description">Details Link</span>
                     <pre>$detailslink</pre>
                 </a></li>
-                <li class="property protected "><a href="#property_item" title="$item :: "><span
-                        class="description"></span>
+                <li class="property protected "><a href="#property_item" title="$item :: "><span class="description">Item</span>
                     <pre>$item</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_menuid" title="$menuid :: "><span
-                        class="description"></span>
+                        class="description">Menu ID</span>
                     <pre>$menuid</pre>
                 </a></li>
-                <li class="property protected "><a href="#property_page" title="$page :: "><span
-                        class="description"></span>
+                <li class="property protected "><a href="#property_page" title="$page :: "><span class="description">Page</span>
                     <pre>$page</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_params" title="$params :: "><span
-                        class="description"></span>
+                        class="description">Params</span>
                     <pre>$params</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_passage" title="$passage :: "><span
-                        class="description"></span>
+                        class="description">Passage</span>
                     <pre>$passage</pre>
                 </a></li>
-                <li class="property protected "><a href="#property_print" title="$print :: "><span
-                        class="description"></span>
+                <li class="property protected "><a href="#property_print" title="$print :: "><span class="description">Print</span>
                     <pre>$print</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_related" title="$related :: "><span
-                        class="description"></span>
+                        class="description">Related</span>
                     <pre>$related</pre>
                 </a></li>
-                <li class="property protected "><a href="#property_state" title="$state :: "><span
-                        class="description"></span>
+                <li class="property protected "><a href="#property_state" title="$state :: "><span class="description">State</span>
                     <pre>$state</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_subscribe" title="$subscribe :: "><span
-                        class="description"></span>
+                        class="description">Subscribe</span>
                     <pre>$subscribe</pre>
                 </a></li>
                 <li class="property protected "><a href="#property_template" title="$template :: "><span
-                        class="description"></span>
+                        class="description">Template</span>
                     <pre>$template</pre>
                 </a></li>
-                <li class="property protected "><a href="#property_user" title="$user :: "><span
-                        class="description"></span>
+                <li class="property protected "><a href="#property_user" title="$user :: "><span class="description">User</span>
                     <pre>$user</pre>
                 </a></li>
             </ul>
@@ -303,8 +300,8 @@
 
             <div class="element clickable property protected property_article" data-toggle="collapse"
                  data-target=".property_article .collapse">
-                <h2></h2>
-                <pre>$article </pre>
+                <h2>Article</h2>
+                <pre>$article : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -316,8 +313,8 @@
 
             <div class="element clickable property protected property_detailslink" data-toggle="collapse"
                  data-target=".property_detailslink .collapse">
-                <h2></h2>
-                <pre>$detailslink </pre>
+                <h2>Details Link</h2>
+                <pre>$detailslink : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -329,7 +326,7 @@
 
             <div class="element clickable property protected property_item" data-toggle="collapse"
                  data-target=".property_item .collapse">
-                <h2></h2>
+                <h2>Item</h2>
                 <pre>$item : object</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
@@ -342,8 +339,8 @@
 
             <div class="element clickable property protected property_menuid" data-toggle="collapse"
                  data-target=".property_menuid .collapse">
-                <h2></h2>
-                <pre>$menuid </pre>
+                <h2>Menu ID</h2>
+                <pre>$menuid : int</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -355,8 +352,8 @@
 
             <div class="element clickable property protected property_page" data-toggle="collapse"
                  data-target=".property_page .collapse">
-                <h2></h2>
-                <pre>$page </pre>
+                <h2>Page</h2>
+                <pre>$page : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -368,7 +365,7 @@
 
             <div class="element clickable property protected property_params" data-toggle="collapse"
                  data-target=".property_params .collapse">
-                <h2></h2>
+                <h2>Params</h2>
                 <pre>$params : \JRegistry</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
@@ -381,8 +378,8 @@
 
             <div class="element clickable property protected property_passage" data-toggle="collapse"
                  data-target=".property_passage .collapse">
-                <h2></h2>
-                <pre>$passage </pre>
+                <h2>Passage</h2>
+                <pre>$passage : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -394,8 +391,8 @@
 
             <div class="element clickable property protected property_print" data-toggle="collapse"
                  data-target=".property_print .collapse">
-                <h2></h2>
-                <pre>$print </pre>
+                <h2>Print</h2>
+                <pre>$print : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -407,8 +404,8 @@
 
             <div class="element clickable property protected property_related" data-toggle="collapse"
                  data-target=".property_related .collapse">
-                <h2></h2>
-                <pre>$related </pre>
+                <h2>Related</h2>
+                <pre>$related : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -420,7 +417,7 @@
 
             <div class="element clickable property protected property_state" data-toggle="collapse"
                  data-target=".property_state .collapse">
-                <h2></h2>
+                <h2>State</h2>
                 <pre>$state : \JRegistry</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
@@ -433,8 +430,8 @@
 
             <div class="element clickable property protected property_subscribe" data-toggle="collapse"
                  data-target=".property_subscribe .collapse">
-                <h2></h2>
-                <pre>$subscribe </pre>
+                <h2>Subscribe</h2>
+                <pre>$subscribe : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -446,8 +443,8 @@
 
             <div class="element clickable property protected property_template" data-toggle="collapse"
                  data-target=".property_template .collapse">
-                <h2></h2>
-                <pre>$template </pre>
+                <h2>Template</h2>
+                <pre>$template : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -459,8 +456,8 @@
 
             <div class="element clickable property protected property_user" data-toggle="collapse"
                  data-target=".property_user .collapse">
-                <h2></h2>
-                <pre>$user </pre>
+                <h2>User</h2>
+                <pre>$user : string</pre>
                 <div class="labels"></div>
                 <div class="row collapse">
                     <div class="detail-description">
@@ -477,7 +474,7 @@
         Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
         provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
         Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-        generated on 2013-05-24T22:08:17-05:00.<br></footer>
+        generated on 2013-05-26T21:07:13-05:00.<br></footer>
 </div>
 </div>
 </body>

@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -27,16 +29,18 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 class JBSPagebuilder
 {
 
+	/** @var string Extension Name */
 	public $extension = 'com_biblestudy';
 
+	/** @var  string Event */
 	public $event;
 
 	/**
 	 * Build Page
 	 *
-	 * @param   object  $item          Item info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $item          Item info
+	 * @param   object $params        Item Params
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return object
 	 */
@@ -218,9 +222,9 @@ class JBSPagebuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array   $mediaids      ID of Media
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   array  $mediaids      ID of Media
+	 * @param   object $params        Item Params
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -307,12 +311,12 @@ class JBSPagebuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string  $whereitem     ?
-	 * @param   string  $wherefield    ?
-	 * @param   object  $params        Item params
-	 * @param   object  $admin_params  Admin params
-	 * @param   int     $limit         Limit of Records
-	 * @param   string  $order         DESC or ASC
+	 * @param   string $whereitem     ?
+	 * @param   string $wherefield    ?
+	 * @param   object $params        Item params
+	 * @param   object $admin_params  Admin params
+	 * @param   int    $limit         Limit of Records
+	 * @param   string $order         DESC or ASC
 	 *
 	 * @return object
 	 */
@@ -415,8 +419,8 @@ class JBSPagebuilder
 	/**
 	 * Run Content Plugins
 	 *
-	 * @param   object  $item    Item info
-	 * @param   object  $params  Item params
+	 * @param   object $item    Item info
+	 * @param   object $params  Item params
 	 *
 	 * @return object
 	 */
