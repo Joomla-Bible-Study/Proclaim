@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,8 +24,8 @@ class BiblestudyModelMediaimage extends JModelAdmin
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data  An array of input data.
+	 * @param   string $key   The name of the key for the primary key.
 	 *
 	 * @return      boolean
 	 *
@@ -38,8 +40,8 @@ class BiblestudyModelMediaimage extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data      Data for the form.
+	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -80,8 +82,8 @@ class BiblestudyModelMediaimage extends JModelAdmin
 	/**
 	 * Clean the cache
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group      The cache group
+	 * @param   integer $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *

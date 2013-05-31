@@ -1,10 +1,11 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * @since      7.0.2
  * */
 defined('_JEXEC') or die;
 
@@ -43,7 +44,7 @@ class JBSExport
 	/**
 	 * Export DB//
 	 *
-	 * @param   int  $run  ID
+	 * @param   int $run  ID
 	 *
 	 * @return boolean
 	 */
@@ -94,7 +95,7 @@ class JBSExport
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string  $table  Table name
+	 * @param   string $table  Table name
 	 *
 	 * @return boolean|string
 	 */
@@ -181,7 +182,7 @@ class JBSExport
 	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
 	 * failed, return value is FALSE.
 	 *
-	 * @param   string  $fileData  Data to write. Set to null to close the file handle.
+	 * @param   string $fileData  Data to write. Set to null to close the file handle.
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
 	 */
@@ -226,9 +227,9 @@ class JBSExport
 	/**
 	 * File output
 	 *
-	 * @param   string  $file       File Name
-	 * @param   string  $name       Name output
-	 * @param   string  $mime_type  Meme_Type
+	 * @param   string $file       File Name
+	 * @param   string $name       Name output
+	 * @param   string $mime_type  Meme_Type
 	 *
 	 * @return void
 	 */

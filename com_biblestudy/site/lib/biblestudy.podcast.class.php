@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -307,11 +309,11 @@ class JBSMPodcast
                         	   <item>
                         		<title>' . $title . '</title>
                         		<link>http://' . $podinfo->website . '/index.php?' . rawurlencode(
-							'option=com_biblestudy&view=sermon&id='
-						) . $episode->sid . $detailstemplateid . '</link>
+								'option=com_biblestudy&view=sermon&id='
+							) . $episode->sid . $detailstemplateid . '</link>
                         		<comments>http://' . $podinfo->website . '/index.php?' . rawurlencode(
-							'option=com_biblestudy&view=sermon&id='
-						) . $episode->sid . $detailstemplateid . '</comments>
+								'option=com_biblestudy&view=sermon&id='
+							) . $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $episode->teachername . '</itunes:author>
                         		<dc:creator>' . $episode->teachername . '</dc:creator>
                         		<description>' . $description . '</description>
@@ -321,32 +323,32 @@ class JBSMPodcast
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(
-							"%02d",
-							$episode->media_minutes
-						) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
+								"%02d",
+								$episode->media_minutes
+							) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
 
 						// Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
 						if ($episode->article_id > 1)
 						{
 							$episodedetailtemp .=
 								'<enclosure url="http://' . $episode->server_path .
-									'/index.php?option=com_content&amp;view=article&amp;id=' .
-									$episode->article_id . '" length="' . $episode->size . '" type="' .
-									$episode->mimetype . '" />
+								'/index.php?option=com_content&amp;view=article&amp;id=' .
+								$episode->article_id . '" length="' . $episode->size . '" type="' .
+								$episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path .
-									'/index.php?option=com_content&amp;view=article&amp;id=' .
-									$episode->article_id . '</guid>';
+								'/index.php?option=com_content&amp;view=article&amp;id=' .
+								$episode->article_id . '</guid>';
 						}
 						if ($episode->docMan_id > 1)
 						{
 							$episodedetailtemp .=
 								'<enclosure url="http://' . $episode->server_path .
-									'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-									$episode->docMan_id . '" length="' . $episode->size . '" type="' .
-									$episode->mimetype . '" />
+								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
+								$episode->docMan_id . '" length="' . $episode->size . '" type="' .
+								$episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path .
-									'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-									$episode->docMan_id . '</guid>';
+								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
+								$episode->docMan_id . '</guid>';
 						}
 						else
 						{
@@ -356,7 +358,7 @@ class JBSMPodcast
 									"%20",
 									$episode->filename
 								) . '" length="' . $episode->size . '" type="'
-									. $episode->mimetype . '" />
+								. $episode->mimetype . '" />
                         			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(
 									' ',
 									"%20",
@@ -412,8 +414,8 @@ class JBSMPodcast
 	/**
 	 * Get Episodes
 	 *
-	 * @param   int     $id     Id for Episode
-	 * @param   string  $limit  Limit of records
+	 * @param   int    $id     Id for Episode
+	 * @param   string $limit  Limit of records
 	 *
 	 * @return object
 	 */
@@ -426,18 +428,18 @@ class JBSMPodcast
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
-			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
-			. ' mf.published AS mfpub, mf.createdate, mf.params,'
-			. ' mf.docMan_id, mf.article_id,'
-			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-			. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-			. ' s.media_hours, s.media_minutes, s.media_seconds,'
-			. ' se.series_text,'
-			. ' sr.id AS srid, sr.server_path,'
-			. ' f.id AS fid, f.folderpath,'
-			. ' t.id AS tid, t.teachername,'
-			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-			. ' mt.id AS mtid, mt.mimetype')
+		. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
+		. ' mf.published AS mfpub, mf.createdate, mf.params,'
+		. ' mf.docMan_id, mf.article_id,'
+		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+		. ' s.media_hours, s.media_minutes, s.media_seconds,'
+		. ' se.series_text,'
+		. ' sr.id AS srid, sr.server_path,'
+		. ' f.id AS fid, f.folderpath,'
+		. ' t.id AS tid, t.teachername,'
+		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+		. ' mt.id AS mtid, mt.mimetype')
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
@@ -458,8 +460,8 @@ class JBSMPodcast
 	/**
 	 * Write the File
 	 *
-	 * @param   string  $file         File Name
-	 * @param   string  $filecontent  File Content
+	 * @param   string $file         File Name
+	 * @param   string $filecontent  File Content
 	 *
 	 * @return boolean|string
 	 */
