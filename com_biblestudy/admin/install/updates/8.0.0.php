@@ -41,13 +41,11 @@ class JBS800Update
 	 */
 	private function migrate_topics()
 	{
-		$db = JFactory::getDBO();
-
-		$query = $db->getQuery(true);
+		$db       = JFactory::getDBO();
+		$registry = new JRegistry;
+		$query    = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_topics');
-
-		$registry = new JRegistry;
 		$db->setQuery($query);
 		$topics = $db->loadObjectList();
 
