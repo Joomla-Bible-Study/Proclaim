@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -44,28 +46,36 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 */
 	protected $state;
 
+	/** @var  string Can Do */
 	public $canDo;
 
+	/** @var  string Media Types */
 	public $mediatypes;
 
 	/**
+	 * Admin
+	 *
 	 * @var object
 	 */
 	protected $admin;
 
 	/**
+	 * Params
+	 *
 	 * @var JRegistry
 	 */
 	protected $params;
 
+	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
 
+	/** @var  string New Link */
 	public $newlink;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */

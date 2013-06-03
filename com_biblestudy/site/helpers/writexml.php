@@ -1,10 +1,9 @@
 <?php
-
 /**
- * WrteXML Helper
+ * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,9 +23,9 @@ function writeXML()
 	$podcastresults = array();
 	$files          = array();
 	$path1          = JPATH_SITE . '/components/com_biblestudy/helpers/';
-	include_once($path1 . 'custom.php');
+	include_once $path1 . 'custom.php';
 	$JBSMCustom = new JBSMCustom;
-	include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/helper.php');
+	include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/helper.php';
 	$admin_params = JBSMParams::getAdmin();
 	$config       = JFactory::getConfig();
 	$lb_abspath   = JPATH_SITE;
@@ -161,25 +160,25 @@ function writeXML()
 
 			$query = $db->getQuery(true);
 			$query->select('p.id AS pid, p.podcastlimit,'
-				. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
-				. ' mf.published AS mfpub, mf.createdate, mf.params,'
-				. ' mf.docMan_id, mf.article_id,'
-				. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end,'
-				. ' s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-				. ' s.media_hours, s.media_minutes, s.media_seconds,'
-				. ' sr.id AS srid, sr.server_path,'
-				. ' f.id AS fid, f.folderpath,'
-				. ' t.id AS tid, t.teachername,'
-				. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-				. ' mt.id AS mtid, mt.mimetype')
+			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
+			. ' mf.published AS mfpub, mf.createdate, mf.params,'
+			. ' mf.docMan_id, mf.article_id,'
+			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end,'
+			. ' s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+			. ' s.media_hours, s.media_minutes, s.media_seconds,'
+			. ' sr.id AS srid, sr.server_path,'
+			. ' f.id AS fid, f.folderpath,'
+			. ' t.id AS tid, t.teachername,'
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+			. ' mt.id AS mtid, mt.mimetype')
 				->from('#__bsms_mediafiles AS mf')
 				->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 				->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
-			->leftJoin('#__bsms_folders AS f ON (f.id = mf.path)')
-			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
-			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
-			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
+				->leftJoin('#__bsms_folders AS f ON (f.id = mf.path)')
+				->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
+				->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
+				->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
+				->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
 				->where($where)->where('s.published = ' . 1)->where('mf.published = ' . 1)
 				->order('createdate desc');
 			$db->setQuery($query, 0, $limit);
@@ -268,24 +267,24 @@ function writeXML()
 					{
 						$episodedetailtemp .=
 							'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id='
-								. $episode->article_id . '" length="' . $episode->size . '" type="'
-								. $episode->mimetype . '" />
+							. $episode->article_id . '" length="' . $episode->size . '" type="'
+							. $episode->mimetype . '" />
 			<guid>http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id=' . $episode->article_id . '</guid>';
 					}
 					if ($episode->docMan_id > 1)
 					{
 						$episodedetailtemp .=
 							'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid='
-								. $episode->docMan_id . '" length="' . $episode->size . '" type="'
-								. $episode->mimetype . '" />
+							. $episode->docMan_id . '" length="' . $episode->size . '" type="'
+							. $episode->mimetype . '" />
 			<guid>http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $episode->docMan_id . '</guid>';
 					}
 					else
 					{
 						$episodedetailtemp .=
 							'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename)
-								. '" length="' . $episode->size . '" type="'
-								. $episode->mimetype . '" />
+							. '" length="' . $episode->size . '" type="'
+							. $episode->mimetype . '" />
 			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</guid>';
 					}
 					$episodedetailtemp .= '

@@ -1,10 +1,12 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -172,8 +174,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Duplicate Check
 	 *
-	 * @param   int  $study_id  Study ID
-	 * @param   int  $topic_id  Topic ID
+	 * @param   int $study_id  Study ID
+	 * @param   int $topic_id  Topic ID
 	 *
 	 * @return boolean
 	 *
@@ -299,7 +301,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param   string  $data  The form data.
+	 * @param   string $data  The form data.
 	 *
 	 * @return boolean
 	 *
@@ -320,8 +322,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Routine to save the topics(tags)
 	 *
-	 * @param   int     $pks   Is the id of the record being saved.
-	 * @param   string  $data  from post
+	 * @param   int    $pks   Is the id of the record being saved.
+	 * @param   string $data  from post
 	 *
 	 * @return boolean
 	 *
@@ -377,8 +379,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data      Data for the form.
+	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return string
 	 *
@@ -457,9 +459,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
+	 * @param   string $type    The table type to instantiate
+	 * @param   string $prefix  A prefix for the table class name. Optional.
+	 * @param   array  $config  Configuration array for model. Optional.
 	 *
 	 * @return    JTable    A database object
 	 *
@@ -473,7 +475,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   JTable $table  A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -511,7 +513,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -525,8 +527,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group      The cache group
+	 * @param   integer $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -541,8 +543,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array    $pks    An array of primary key ids.
-	 * @param   integer  $order  +1 or -1
+	 * @param   array   $pks    An array of primary key ids.
+	 * @param   integer $order  +1 or -1
 	 *
 	 * @return  mixed
 	 *
@@ -609,9 +611,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
-	 * @param   array  $commands  An array of commands to perform.
-	 * @param   array  $pks       An array of item ids.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   array $commands  An array of commands to perform.
+	 * @param   array $pks       An array of item ids.
+	 * @param   array $contexts  An array of item contexts.
 	 *
 	 * @return    boolean     Returns true on success, false on failure.
 	 *
@@ -672,9 +674,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   string $value     The new value matching a client.
+	 * @param   array  $pks       An array of row IDs.
+	 * @param   array  $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -718,9 +720,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   string $value     The new value matching a client.
+	 * @param   array  $pks       An array of row IDs.
+	 * @param   array  $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -764,9 +766,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   string $value     The new value matching a client.
+	 * @param   array  $pks       An array of row IDs.
+	 * @param   array  $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *

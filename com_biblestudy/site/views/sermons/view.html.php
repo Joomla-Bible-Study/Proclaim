@@ -1,26 +1,20 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-// @todo redo the require_once to JLoader
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.images.class.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.stats.class.php');
 JLoader::register('JbStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
-
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('PodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
-
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
@@ -54,116 +48,162 @@ class BiblestudyViewSermons extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Page Links
+	 *
 	 * @var string
 	 */
 	protected $pagelinks;
 
 	/**
+	 * Limit Box
+	 *
 	 * @var string
 	 */
 	protected $limitbox;
 
 	/**
-	 * @var JRegistry
+	 * Admin Info
+	 *
+	 * @var JObject
 	 */
 	protected $admin;
 
 	/**
+	 * Admin Params
+	 *
 	 * @var JRegistry
 	 */
 	protected $admin_params;
 
 	/**
+	 * Params
+	 *
 	 * @var JRegistry
 	 */
 	protected $params;
 
 	/**
+	 * Study
+	 *
 	 * @var object
 	 */
 	protected $study;
 
 	/**
+	 * Subscribe
+	 *
 	 * @var string
 	 */
 	protected $subscribe;
 
 	/**
+	 * Series
+	 *
 	 * @var string
 	 */
 	protected $series;
 
 	/**
+	 * Teachers
+	 *
 	 * @var string
 	 */
 	protected $teachers;
 
 	/**
+	 * Message Types
+	 *
 	 * @var string
 	 */
 	protected $messageTypes;
 
 	/**
+	 * Years
+	 *
 	 * @var string
 	 */
 	protected $years;
 
 	/**
+	 * Locations
+	 *
 	 * @var string
 	 */
 	protected $locations;
 
 	/**
+	 * Topics
+	 *
 	 * @var string
 	 */
 	protected $topics;
 
 	/**
+	 * Orders
+	 *
 	 * @var string
 	 */
 	protected $orders;
 
 	/**
+	 * Books
+	 *
 	 * @var string
 	 */
 	protected $books;
 
 	/**
+	 * Templates
+	 *
 	 * @var object
 	 */
 	protected $template;
 
 	/**
+	 * Order
+	 *
 	 * @var string
 	 */
 	protected $order;
 
 	/**
+	 * Topic
+	 *
 	 * @var array
 	 */
 	protected $topic;
 
 	/**
+	 * Main
+	 *
 	 * @var object
 	 */
 	protected $main;
 
 	/**
+	 * Page
+	 *
 	 * @var object
 	 */
 	protected $page;
 
 	/**
+	 * Request Url
+	 *
 	 * @var string
 	 */
 	protected $request_url;
 
 	/**
+	 * Document
+	 *
 	 * @var object
 	 */
 	public $document;
 
 	/**
+	 * Limit Start
+	 *
 	 * @var int
 	 */
 	protected $limitstart;
@@ -171,7 +211,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -439,6 +479,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
+
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));

@@ -4,7 +4,7 @@
  * Image Helper
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,18 +19,22 @@ defined('_JEXEC') or die;
  */
 class JBSMImage
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
 	 * Get Image
 	 *
-	 * @param   string  $path  Path to file
+	 * @param   string $path  Path to file
 	 *
 	 * @return JObject
 	 *
 	 * @FIXME need to see if this is a JObject or stdClass. If JObject we must set all of the JObject like set('var','value')
-     * @FIXME It's just a stdClass
+	 * @FIXME It's just a stdClass
 	 */
 	public static function getImage($path)
 	{

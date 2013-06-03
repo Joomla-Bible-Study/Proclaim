@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -47,34 +49,46 @@ class BiblestudyViewMessage extends JViewLegacy
 	protected $admin;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
 
+	/**
+	 * Media Files
+	 *
+	 * @var string
+	 */
 	protected $mediafiles;
 
+	/**
+	 * Admin Params
+	 *
+	 * @var JRegistry
+	 */
 	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
 	 * @see     fetch()
 	 * @since   11.1
 	 */
-	public function display ($tpl = null)
+	public function display($tpl = null)
 	{
-		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
-		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
+		$this->form       = $this->get("Form");
+		$this->item       = $this->get("Item");
+		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
+		$input            = new JInput;
+		$option           = $input->get('option', '', 'cmd');
 		$this->mediafiles = $this->get('MediaFiles');
 
-		//set some variables for use by the modal mediafile entry form from a study
+		// Set some variables for use by the modal mediafile entry form from a study
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
@@ -133,7 +147,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 *
 	 * @since 7.0.0
 	 */
-	protected function addToolbar ()
+	protected function addToolbar()
 	{
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
@@ -185,7 +199,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 *
 	 * @since    7.1.0
 	 */
-	protected function setDocument ()
+	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
