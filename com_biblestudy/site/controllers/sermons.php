@@ -72,7 +72,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
-			echo $mediacode;
+			//echo $mediacode;
 		}
 	}
 
