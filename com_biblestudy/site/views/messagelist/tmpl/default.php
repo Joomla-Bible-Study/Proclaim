@@ -141,7 +141,7 @@ $saveOrder = $listOrder == 'ordering';
 					</td>
 					<td class="center">
 						<div class="btn-group">
-							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagelist.', $canChange, 'cb', '', ''); ?>
+                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagelist.', $canChange, 'cb', '', ''); ?>
 						</div>
 					</td>
 					<td class="nowrap small hidden-phone">
