@@ -11,41 +11,36 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Base this model on the backend version.
-// -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php';
-JLoader::register(
-	'BiblestudyControllerMessages',
-	JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php'
-);
+jimport('joomla.application.component.controlleradmin');
 
 /**
- * Controller class for Messages
+ * Controller for MediaFiles
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
+class BiblestudyControllerMessagelist extends JControllerAdmin
 {
 
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string $name    The name of the model
-	 * @param   string $prefix  The prefix for the PHP class name
-	 * @param   array  $config  Set ignore request
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.0
-	 */
-	public function &getModel(
-		$name = 'Mediafileform',
-		$prefix = 'BiblestudyModel',
-		$config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
+    /**
+     * Proxy for getModel
+     *
+     * @param   string  $name    The name of the model
+     * @param   string  $prefix  The prefix for the PHP class name
+     * @param   array   $config  Set ignore request
+     *
+     * @return JModel
+     *
+     * @since 7.0
+     */
+    public function &getModel(
+        $name = 'MessageForm',
+        $prefix = 'BiblestudyModel',
+        $config = array('ignore_request' => true))
+    {
+        $model = parent::getModel($name, $prefix, $config);
 
-		return $model;
-	}
+        return $model;
+    }
 
 }
