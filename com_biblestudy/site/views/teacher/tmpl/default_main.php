@@ -219,13 +219,17 @@ if (!$studieslisttemplateid)
                     <table class="table table-striped bslisttable">
                         <tbody>
 							<?php
+                            if (isset($this->teacherstudies[0]))
+                            {
+                                $header = $JBSMTeacher->getHeader(
+                                    $this->teacherstudies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'),
+                                    $ismodule = 0
+                                );
+                                echo $header;
+                            }
 							foreach ($this->teacherstudies as $row)
 							{ // Run through each row of the data result from the model
-								$header = $JBSMTeacher->getHeader(
-									$row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'),
-									$ismodule = 0
-								);
-								echo $header;
+
 								$class1  = 'bsodd';
 								$class2  = 'bseven';
 								$oddeven = $class1;
