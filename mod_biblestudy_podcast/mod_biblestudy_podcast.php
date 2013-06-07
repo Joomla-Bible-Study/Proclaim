@@ -25,6 +25,7 @@ else
 {
 	$templateparams = modBibleStudyPodcast::getTemplateParams($params);
 }
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 JLoader::register('PodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 
 // Load the css
