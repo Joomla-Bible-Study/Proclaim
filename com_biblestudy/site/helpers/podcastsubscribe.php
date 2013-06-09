@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php.php');
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 
 /**
  * A helper to return buttons for podcast subscriptions
