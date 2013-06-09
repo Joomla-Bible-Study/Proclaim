@@ -27,7 +27,7 @@ else
 }
 require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
 JLoader::register('PodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
-
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 // Load the css
 $document = JFactory::getDocument();
 $css      = $templateparams->get('css');
