@@ -167,7 +167,7 @@ class plgSearchBiblestudysearch extends JPlugin
 						$query->select("#__bsms_books.bookname AS title, a.chapter_begin, CONCAT(a.studytitle,' - ',a.studyintro) AS text," .
 								" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 								" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text," .
-								" #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
+								" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
 								" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href," .
 								" '2' AS browsernav"
 						);
@@ -176,7 +176,7 @@ class plgSearchBiblestudysearch extends JPlugin
 					{
 						$query->select("#__bsms_books.bookname AS title, a.chapter_begin, a.studytitle AS text, a.studydate AS created," .
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
-							" #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid," .
+							" #__bsms_series.id AS seriesid, #__bsms_series.series_text," .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, 'Bible Studies' AS section," .
 							" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
@@ -188,7 +188,7 @@ class plgSearchBiblestudysearch extends JPlugin
 						$query->select("a.studytitle AS title, a.studyintro, #__bsms_books.bookname AS book, a.chapter_begin," .
 							" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 							" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text," .
-							" #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id," .
+							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id," .
 							" 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id," .
 							" '&t=" . $template . "') AS href, '2' AS browsernav");
 					}
@@ -196,7 +196,7 @@ class plgSearchBiblestudysearch extends JPlugin
 					{
 						$query->select("#__bsms_books.bookname AS book, a.chapter_begin, a.studytitle AS title, a.studydate AS created," .
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
-							"  #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid," .
+							"  #__bsms_series.id AS seriesid, #__bsms_series.series_text," .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
 							" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
