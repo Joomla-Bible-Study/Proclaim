@@ -66,7 +66,8 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
-
+            //update the database to show a new time
+            $this->updatetime();
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
@@ -232,9 +233,9 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->update('#__jbspodcast_timeset')->set('timeset = ' . $time);
-		$db->setQuery($query);
+        $query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' .$time;
+        $db->setQuery($query);
+        $db->query();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
