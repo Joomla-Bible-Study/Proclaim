@@ -9,16 +9,42 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('behavior.keepalive');
-	JHtml::_('behavior.tooltip');
-	JHtml::_('behavior.calendar');
-}
+
+JHtml::_('behavior.keepalive');
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
 
-// Create shortcut to parameters.
-//$params = $this->state->get('params');
+// Load the tooltip behavior.
+if (BIBLESTUDY_CHECKREL)
+{
+    JHtml::_('formbehavior.chosen', 'select');
+}
+else
+{
+    JHtml::_('behavior.tooltip');
+    JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+    JHtml::script('media/com_biblestudy/jui/js/jquery.js');
+    JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
+    JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+    JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
+    JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+    JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+}
+
+JHtml::script('media/com_biblestudy/js/noconflict.js');
+JHtml::script('media/com_biblestudy/js/biblestudy.js');
+?>
+<script type="text/javascript">
+Joomla.submitbutton = function (task) {
+    if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        Joomla.submitform(task, document.getElementById('item-form'));
+    } else {
+        alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+		}
+}
+</script>
+<?php
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
@@ -26,7 +52,7 @@ $input  = $app->input;
 
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
+      method="post" name="adminForm" id="item-form" class="form-validate form-vertical">
 <div class="btn-toolbar">
     <div class="btn-group">
         <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('sermon.save')">
