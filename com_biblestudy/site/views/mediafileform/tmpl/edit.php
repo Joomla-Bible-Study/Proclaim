@@ -505,8 +505,8 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('media_image'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('media_image'); ?>
-		</div>
+            <?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
+        </div>
 	</div>
 	<div class="control-group">
 		<div class="control-label">
