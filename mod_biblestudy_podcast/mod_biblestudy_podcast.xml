@@ -7,7 +7,7 @@
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <version>8.0.0</version>
-    <creationDate>May 31, 2013</creationDate>
+    <creationDate>June 12, 2013</creationDate>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
