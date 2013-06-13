@@ -81,11 +81,11 @@ function addJS()
 {
 	if (!BIBLESTUDY_CHECKREL)
 	{
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.min.js');
-		JHTML::script('/media/com_biblestudy/jui/js/bootstrap.js');
-		JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.sortable.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.min.js');
+		JHTML::script('media/com_biblestudy/jui/js/bootstrap.js');
+		JHTML::script('media/com_biblestudy/jui/js/chosen.jquery.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.ui.sortable.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
 	}
 }
