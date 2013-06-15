@@ -79,8 +79,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An array that holds the plugin configuration
+	 * @param   object &$subject  The object to observe
+	 * @param   array  $config    An array that holds the plugin configuration
 	 *
 	 * @since   7.1.0
 	 */
@@ -95,9 +95,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * changed. This is fired when the item category is published or unpublished
 	 * from the list view.
 	 *
-	 * @param   string   $extension  The extension whose category has been updated.
-	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value      The value of the state that the content has been changed to.
+	 * @param   string  $extension  The extension whose category has been updated.
+	 * @param   array   $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer $value      The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -115,8 +115,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   string $context  The context of the action being performed.
+	 * @param   JTable $table    A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -145,9 +145,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to determine if the access level of an item changed.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content has just been created
+	 * @param   string  $context  The context of the content passed to the plugin.
+	 * @param   JTable  $row      A JTable object
+	 * @param   boolean $isNew    If the content has just been created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -179,9 +179,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content is just about to be created
+	 * @param   string  $context  The context of the content passed to the plugin.
+	 * @param   JTable  $row      A JTable object
+	 * @param   boolean $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -209,9 +209,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string   $context  The context for the content passed to the plugin.
-	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 * @param   string  $context  The context for the content passed to the plugin.
+	 * @param   array   $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer $value    The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -234,8 +234,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format
+	 * @param   FinderIndexerResult $item    The item to index as an FinderIndexerResult object.
+	 * @param   string              $format  The item format
 	 *
 	 * @return  void
 	 *
@@ -302,7 +302,14 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		$this->indexer->index($item);
+		if (BIBLESTUDY_CHECKREL)
+		{
+			$this->indexer->index($item);
+		}
+		else
+		{
+			FinderIndexer::index($item);
+		}
 	}
 
 	/**
@@ -315,7 +322,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	protected function setup()
 	{
 		// Load dependent classes.
-		//require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
 		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
 
 		return true;
@@ -344,7 +350,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $sql  A JDatabaseQuery object or null.
+	 * @param   mixed $sql  A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *

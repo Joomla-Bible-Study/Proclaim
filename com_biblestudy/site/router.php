@@ -20,12 +20,6 @@ function biblestudyBuildRoute(&$query)
 {
 	$segments = array();
 
-	// Get a menu item based on Itemid or currently active
-	$app      = JFactory::getApplication('site');
-	$menu     = $app->getMenu();
-	$params   = $app->getParams();
-	$advanced = $params->get('sef_advanced_link', 0);
-
 	if (isset($query['view']))
 	{
 		if ($query['view'] == 'mediafile')
