@@ -1,4 +1,4 @@
-ver<?php
+<?php
 /**
  * Part of Joomla BibleStudy Package
  *
@@ -122,6 +122,6 @@ class BiblestudyControllerMessage extends JControllerForm
 
 		JRequest::setVar('jform', $data, 'post', 'array');
 
-		parent::save();
+		return parent::save($key,$urlVar);
 	}
 }
