@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -18,18 +20,38 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class BiblestudyViewInstall extends JViewLegacy
 {
+	/**
+	 * Messages
+	 *
+	 * @var string
+	 */
 	public $msg;
 
+	/**
+	 * Joomla Bible Study Name
+	 *
+	 * @var string
+	 */
 	public $jbsname;
 
+	/**
+	 * Joomla Bible Study Type
+	 *
+	 * @var string
+	 */
 	public $jbstype;
 
+	/**
+	 * Status
+	 *
+	 * @var JObject
+	 */
 	public $status;
 
 	/**
 	 * Display
 	 *
-	 * @param   string  $tpl  Template to display
+	 * @param   string $tpl  Template to display
 	 *
 	 * @return null
 	 */

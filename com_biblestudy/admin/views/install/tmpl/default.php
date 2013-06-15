@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
 </div>
 <?php endif; ?>
 
-<h1> 
+<h1>
     <img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
     <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $this->jbstype . '_TEXT'); ?>
 </h1>
@@ -99,24 +99,24 @@ defined('_JEXEC') or die;
 
                 <h3 style="text-align: left;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
             </a>
-        
+
         </td>
 
         </tr>
-       
+
         <tr><td>
           <p><a href="http://www.joomlabiblestudy.org/forum.html"
               target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-        
+
         <p><a href="http://www.joomlabiblestudy.org"
               target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-        
+
             <p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
               target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-        
+
         <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>
             All rights reserved.</p>
-        
+
         </td>
         </tr>
     </tbody>

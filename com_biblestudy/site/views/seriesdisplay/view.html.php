@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -47,24 +49,34 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 */
 	protected $pagination = null;
 
+	/** @var  JObject Admin */
 	protected $admin;
 
+	/** @var  JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  JObject Page */
 	protected $page;
 
+	/** @var  JObject Series Studies */
 	protected $seriesstudies;
 
+	/** @var  JObject Template */
 	protected $template;
 
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Article */
 	protected $article;
 
+	/** @var  string Passage Link */
 	protected $passage_link;
 
+	/** @var  JObject Studies */
 	protected $studies;
 
+	/** @var  string Request URL */
 	protected $request_url;
 
 	/**

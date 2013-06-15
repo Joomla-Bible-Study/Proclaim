@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -16,13 +18,14 @@ defined('_JEXEC') or die;
  */
 class JBSMShowScripture
 {
+	/** @var  string Link */
 	public $link;
 
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object  $row     Item Info
-	 * @param   object  $params  Item Params
+	 * @param   object $row     Item Info
+	 * @param   object $params  Item Params
 	 *
 	 * @return boolean
 	 */
@@ -74,8 +77,8 @@ class JBSMShowScripture
 	/**
 	 * Get HideShow
 	 *
-	 * @param   object  $row        ?
-	 * @param   string  $reference  ?
+	 * @param   object $row        ?
+	 * @param   string $reference  ?
 	 *
 	 * @return string
 	 */
@@ -96,8 +99,8 @@ class JBSMShowScripture
 	/**
 	 * Get Show
 	 *
-	 * @param   string  $row        ?
-	 * @param   string  $reference  ?
+	 * @param   string $row        ?
+	 * @param   string $reference  ?
 	 *
 	 * @return string
 	 */
@@ -113,8 +116,8 @@ class JBSMShowScripture
 	/**
 	 * Get Link
 	 *
-	 * @param   object  $row        ?
-	 * @param   string  $reference  ?
+	 * @param   object $row        ?
+	 * @param   string $reference  ?
 	 *
 	 * @return string
 	 */
@@ -138,7 +141,7 @@ class JBSMShowScripture
 	/**
 	 * Create Form of Reference
 	 *
-	 * @param   object  $row  ?
+	 * @param   object $row  ?
 	 *
 	 * @return string
 	 */
@@ -168,8 +171,8 @@ class JBSMShowScripture
 	/**
 	 * Get Bible Gateway References
 	 *
-	 * @param   string  $reference  ?
-	 * @param   string  $version    ?
+	 * @param   string $reference  ?
+	 * @param   string $version    ?
 	 *
 	 * @return string
 	 */

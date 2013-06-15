@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,7 +21,7 @@ class JBSMMedia
 	/**
 	 * Get Media
 	 *
-	 * @param   int  $id  ID
+	 * @param   int $id  ID
 	 *
 	 * @return object
 	 */
@@ -28,11 +30,11 @@ class JBSMMedia
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-				. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-				. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-				. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-				. ' #__bsms_media.media_alttext AS malttext,'
-				. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+			. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
+			. ' #__bsms_media.media_alttext AS malttext,'
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
 		);
 
 		$query->from('#__bsms_mediafiles');
@@ -57,9 +59,9 @@ class JBSMMedia
 	/**
 	 * Get Internal Player
 	 *
-	 * @param   object     $media         Media Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object    $media         Media Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -105,9 +107,9 @@ class JBSMMedia
 	/**
 	 * Get Download Link
 	 *
-	 * @param   object     $media         Media Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Prams
+	 * @param   object    $media         Media Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Prams
 	 *
 	 * @return string|boolean
 	 *
@@ -183,9 +185,9 @@ class JBSMMedia
 	/**
 	 * Get Media File
 	 *
-	 * @param   object     $media         Media info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object    $media         Media info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -241,9 +243,9 @@ class JBSMMedia
 	/**
 	 * Get Type Icon
 	 *
-	 * @param   object     $media         JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object    $media         JTable
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -280,9 +282,9 @@ class JBSMMedia
 	/**
 	 * Get PDF
 	 *
-	 * @param   object     $row           Media Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object    $row           Media Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -303,9 +305,9 @@ class JBSMMedia
 	/**
 	 * Get Media For List
 	 *
-	 * @param   object     $row           Media Info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object    $row           Media Info
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return void
 	 *

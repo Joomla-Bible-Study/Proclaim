@@ -169,7 +169,7 @@ $sortFields = $this->getSortFields();
                 </td>
                 <td class="center">
                     <div class="btn-group">
-						<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
+						<?php echo JHtml::_('jgrid.published', $item->published, $i, 'commentlist.', $canChange, 'cb', '', ''); ?>
                     </div>
                 </td>
 

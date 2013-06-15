@@ -3,7 +3,7 @@
  * Core Admin BibleStudy file
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -83,11 +83,11 @@ function addJS()
 {
 	if (!BIBLESTUDY_CHECKREL)
 	{
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.min.js');
-		JHTML::script('/media/com_biblestudy/jui/js/bootstrap.js');
-		JHTML::script('/media/com_biblestudy/jui/js/chosen.jquery.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery.ui.sortable.js');
-		JHTML::script('/media/com_biblestudy/jui/js/jquery-noconflict.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.min.js');
+		JHTML::script('media/com_biblestudy/jui/js/bootstrap.js');
+		JHTML::script('media/com_biblestudy/jui/js/chosen.jquery.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery.ui.sortable.js');
+		JHTML::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
 	}
 }

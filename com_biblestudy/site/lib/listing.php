@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -961,11 +963,11 @@ class JBSMListing extends JBSMElements
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
 				$column .= '<a href="' . $link . '">';
@@ -1053,7 +1055,7 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   JTable     $row           Item Info
+	 * @param   object     $row           Item Info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 * @param   object     $template      Template
@@ -1580,7 +1582,7 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Header
 	 *
-	 * @param   JTable     $row           JTable
+	 * @param   object     $row           JTable
 	 * @param   JRegistry  $params        Item Params
 	 * @param   JRegistry  $admin_params  Admin Params
 	 * @param   int        $template      Template ID
@@ -1771,6 +1773,7 @@ class JBSMListing extends JBSMElements
 				$params->set('row1col1', 100);
 			}
 			$listing .= $this->getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
+
 
 			if ($columns > 1 && $params->get('r1c1span') < 2)
 			{
@@ -2077,7 +2080,7 @@ class JBSMListing extends JBSMElements
 	 * Get Header Cell
 	 *
 	 * @param   int        $rowid         Table Row ID
-	 * @param   JTable     $row           Item info
+	 * @param   object     $row           Item info
 	 * @param   JRegistry  $params        Item Params
 	 * @param   int        $lastcol       Last Column
 	 * @param   int        $colspan       Column Span

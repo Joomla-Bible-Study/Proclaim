@@ -3,7 +3,7 @@
  * Teachers view subset main
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -28,8 +28,7 @@ defined('_JEXEC') or die;
 		{
 			$teacherdisplay = $item->teachername;
 
-			if ($item->title)
-			{
+			if($item->title)
 				$teacherdisplay .= ' - ' . $item->title;
 			}
 			// Alternate the row color

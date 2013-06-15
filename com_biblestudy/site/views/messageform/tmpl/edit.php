@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,13 +12,34 @@ defined('_JEXEC') or die;
 
 if (BIBLESTUDY_CHECKREL)
 {
-	JHtml::_('behavior.keepalive');
-	JHtml::_('behavior.tooltip');
-	JHtml::_('behavior.calendar');
+    JHtml::_('formbehavior.chosen', 'select');
 }
-JHtml::_('behavior.formvalidation');
+else
+{
+    JHtml::_('behavior.tooltip');
+    JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+    JHtml::script('media/com_biblestudy/jui/js/jquery.js');
+    JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
+    JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
+    JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
+    JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+    JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+}
 
 // Create shortcut to parameters.
+JHtml::script('media/com_biblestudy/js/noconflict.js');
+JHtml::script('media/com_biblestudy/js/biblestudy.js');
+?>
+<script type="text/javascript">
+Joomla.submitbutton = function (task) {
+    if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        Joomla.submitform(task, document.getElementById('item-form'));
+    } else {
+        alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+		}
+}
+</script>
+<?php
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;

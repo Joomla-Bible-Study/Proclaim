@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -43,25 +45,31 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	protected $admin;
 
+	/** @var  string Can Do */
 	public $canDo;
 
+	/** @var  string Books */
 	public $books;
 
+	/** @var  JRegistry Teachers */
 	public $teachers;
 
+	/** @var  string Series */
 	public $series;
 
+	/** @var  string Message Types */
 	public $messageTypes;
 
+	/** @var  string Years */
 	public $years;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry Params */
 	protected $params;
 
+	/** @var  string New Link */
 	public $newlink;
 
+	/** @var  string Document */
 	public $document;
 
 	/**
@@ -127,7 +135,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function _prepareDocument ()
+	protected function _prepareDocument()
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();

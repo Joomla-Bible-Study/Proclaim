@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,39 +21,43 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
-	/**
-	 * @var object
-	 */
+	/** @var object Item */
 	protected $item;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry Params */
 	protected $params;
 
+	/** @var  string Print */
 	protected $print;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry State */
 	protected $state;
 
+	/** @var  string User */
 	protected $user;
 
+	/** @var  string Passage */
 	protected $passage;
 
+	/** @var  string Related */
 	protected $related;
 
+	/** @var  string Subscribe */
 	protected $subscribe;
 
+	/** @var  int Menu ID */
 	protected $menuid;
 
+	/** @var  string Details Link */
 	protected $detailslink;
 
+	/** @var  string Page */
 	protected $page;
 
+	/** @var  string Template */
 	protected $template;
 
+	/** @var  string Article */
 	protected $article;
 
 	/**

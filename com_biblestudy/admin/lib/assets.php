@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -276,8 +278,8 @@ class JBSMAssets
 	/**
 	 * Set Asset
 	 *
-	 * @param   object  $data       Data
-	 * @param   string  $assetname  Asset Name
+	 * @param   object $data       Data
+	 * @param   string $assetname  Asset Name
 	 *
 	 * @return boolean
 	 */
@@ -313,7 +315,7 @@ class JBSMAssets
 	/**
 	 * Delete assets
 	 *
-	 * @param   object  $data  Data
+	 * @param   object $data  Data
 	 *
 	 * @return boolean
 	 */

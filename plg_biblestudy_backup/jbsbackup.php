@@ -70,17 +70,16 @@ class PlgSystemjbsbackup extends JPlugin
 			$dobackup = $this->doBackup();
 
 			// If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
-			if ($dobackup)
-			{
-				$updatetime = $this->updatetime();
 
-				// Check to see if we need to email anything
-				if ($check && $params->get('email') > 0)
-				{
-					$this->doEmail($params, $dobackup);
-				}
-				$this->updatefiles($params);
-			}
+            $updatetime = $this->updatetime();
+
+            // Check to see if we need to email anything
+            if ($check && $params->get('email') > 0)
+            {
+                $this->doEmail($params, $dobackup);
+            }
+            //$this->updatefiles($params);
+
 		}
 	}
 
@@ -228,9 +227,9 @@ class PlgSystemjbsbackup extends JPlugin
 	{
 		$time = time();
 		$db   = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->update('#__jbsbackup_timeset')->set('backup = ' . $time);
+        $query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
 		$db->setQuery($query);
+        $db->query();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)

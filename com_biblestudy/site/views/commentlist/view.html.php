@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -106,8 +108,9 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	/**
 	 * Add the page title to browser.
 	 *
+	 * @return  void
+	 *
 	 * @since    7.1.0
-	 * @return void
 	 */
 	protected function setDocument()
 	{

@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Admin Controller
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -36,8 +35,8 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Core Display
 	 *
-	 * @param   boolean  $cachable   Cachable system
-	 * @param   boolean  $urlparams  Url params
+	 * @param   boolean $cachable   Cachable system
+	 * @param   boolean $urlparams  Url params
 	 *
 	 * @return  JController        This object to support chaining.
 	 */

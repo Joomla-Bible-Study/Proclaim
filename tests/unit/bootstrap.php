@@ -82,15 +82,15 @@ if (!defined('JPATH_THEMES'))
 }
 
 // Import the platform in legacy mode.
-require_once JPATH_PLATFORM . '/import.php';
+//require_once JPATH_PLATFORM . '/import.php';
 
 
 // Force library to be in JError legacy mode
-JError::setErrorHandling(E_NOTICE, 'message');
-JError::setErrorHandling(E_WARNING, 'message');
+//JError::setErrorHandling(E_NOTICE, 'message');
+//JError::setErrorHandling(E_WARNING, 'message');
 
 // Bootstrap the CMS libraries.
-require_once JPATH_LIBRARIES . '/cms.php';
+//require_once JPATH_LIBRARIES . '/cms.php';
 
 // Register the core Joomla test classes.
 //JLoader::registerPrefix('Test', __DIR__ . '/core');

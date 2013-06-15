@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -33,21 +35,29 @@ class BiblestudyViewTemplate extends JViewLegacy
 	protected $state;
 
 	/**
+	 * Item
+	 *
 	 * @var object
 	 */
 	protected $item;
 
 	/**
+	 * Types
+	 *
 	 * @var object
 	 */
 	protected $types;
 
 	/**
+	 * Form
+	 *
 	 * @var object
 	 */
 	protected $form;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	protected $canDo;
@@ -55,7 +65,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

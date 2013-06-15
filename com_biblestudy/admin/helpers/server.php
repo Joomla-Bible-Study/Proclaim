@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -13,10 +15,14 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    8.0.0
+ *
+ * @todo Looks like this could go into the dbhelper.php file. TOM - what is this even for. I don't think I wrote this.
  */
 class JBSMServer
 {
 	/**
+	 * Extension Name
+	 *
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';

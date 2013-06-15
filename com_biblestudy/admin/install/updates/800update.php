@@ -1,10 +1,12 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -37,13 +39,11 @@ class JBSM800Update
 	 */
 	private function migrate_topics()
 	{
-		$db = JFactory::getDBO();
-
-		$query = $db->getQuery(true);
+		$db       = JFactory::getDBO();
+		$registry = new JRegistry;
+		$query    = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_topics');
-
-		$registry = new JRegistry;
 		$db->setQuery($query);
 		$topics = $db->loadObjectList();
 
@@ -156,8 +156,8 @@ class JBSM800Update
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
-			->from('#__bsms_mediafiles')
-			->where('`params` LIKE ' . $db->q('%internal_popup%'));
+				->from('#__bsms_mediafiles')
+				->where('`params` LIKE ' . $db->q('%internal_popup%'));
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 

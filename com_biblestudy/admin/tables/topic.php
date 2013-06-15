@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -48,7 +50,7 @@ class TableTopic extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   JDatabaseDriver &$db  Database connector object
 	 */
 	public function Tabletopic(& $db)
 	{
@@ -60,19 +62,19 @@ class TableTopic extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
-     * @todo    Consider deprecating this override
+	 * @todo    Consider deprecating this override
 	 * @link    http://docs.joomla.org/JTable/bind
 	 * @since   11.1
 	 */
 	public function bind($array, $ignore = '')
 	{
-        if(is_object($array))
-            return parent::bind($array, $ignore);
+		if (is_object($array))
+			return parent::bind($array, $ignore);
 
 		if (isset($array['params']) && is_array($array['params']))
 		{
@@ -127,8 +129,8 @@ class TableTopic extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable   $table  A JTable object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   JTable  $table  A JTable object for the asset parent.
+	 * @param   integer $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -145,9 +147,9 @@ class TableTopic extends JTable
 	/**
 	 * Overloaded load function
 	 *
-	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                           set the instance property value is used.
-	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 * @param   mixed   $keys      An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                             set the instance property value is used.
+	 * @param   boolean $reset     True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *
@@ -173,8 +175,8 @@ class TableTopic extends JTable
 	/**
 	 * check and (re-)construct the alias before storing the topic
 	 *
-	 * @param   array  $data      Data of record
-	 * @param   int    $recordId  id
+	 * @param   array $data      Data of record
+	 * @param   int   $recordId  id
 	 *
 	 * @return      boolean true on success
 	 *

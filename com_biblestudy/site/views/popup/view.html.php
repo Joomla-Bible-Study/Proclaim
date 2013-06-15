@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -18,48 +20,67 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewPopup extends JViewLegacy
 {
+	/** @var  string Player */
 	public $player;
 
+	/** @var  string Media */
 	public $media;
 
-	public $getMedia;
-
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Scripture Text */
 	public $scripture;
 
+	/** @var  string Date */
 	public $date;
 
+	/** @var  string Length */
 	public $lenght;
 
+	/** @var  string Series Thumbnail */
 	public $series_thumbnail;
 
+	/** @var  string Teacher Image */
 	public $teacherimage;
 
+	/** @var  string Path 1 */
 	public $path1;
 
+	/** @var  string Width */
 	public $playerwidth;
 
+	/** @var  string Player Height */
 	public $playerheight;
 
+	/** @var  JRegistry Extra Params */
 	protected $extraparams;
 
+	/** @var  string Flash Vars */
 	public $flashvars;
 
+	/** @var  string Back Color */
 	public $backcolor;
 
+	/** @var  string Front Color */
 	public $frontcolor;
 
+	/** @var  string Light Color */
 	public $lightcolor;
 
+	/** @var  string Screen Color */
 	public $screencolor;
 
+	/** @var  string Auto Start */
 	public $autostart;
 
+	/** @var  string Player Idle Hide */
 	public $playeridlehide;
 
+	/** @var  string Header Text */
 	public $headertext;
 
+	/** @var  string Footer Text */
 	public $footertext;
 
 	/**

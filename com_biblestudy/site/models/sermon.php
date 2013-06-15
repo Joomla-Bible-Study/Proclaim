@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -32,7 +34,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -44,13 +46,13 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int  $pk  ID
+	 * @param   int $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @todo     this look like it could be moved to a helper.
-	 * @since    1.5
+	 * @todo      this look like it could be moved to a helper.
+	 * @since     1.5
 	 */
 	public function hit($pk = null)
 	{
@@ -100,7 +102,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int  $pk  The id of the study.
+	 * @param   int $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
