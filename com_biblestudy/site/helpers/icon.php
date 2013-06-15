@@ -25,9 +25,9 @@ class JHtmlIcon
 	/**
 	 * Print popup button
 	 *
-	 * @param   object     $article  Article
-	 * @param   JRegistry  $params   Params
-	 * @param   array      $attribs  Array of Attributes
+	 * @param   object    $article  Article
+	 * @param   JRegistry $params   Params
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return mixed
 	 */
@@ -58,8 +58,8 @@ class JHtmlIcon
 	/**
 	 * Create Button
 	 *
-	 * @param   int        $category  Category id
-	 * @param   JRegistry  $params    Params
+	 * @param   int       $category  Category id
+	 * @param   JRegistry $params    Params
 	 *
 	 * @return string
 	 */
@@ -88,9 +88,9 @@ class JHtmlIcon
 	/**
 	 * Email button
 	 *
-	 * @param   object     $article  Article
-	 * @param   JRegistry  $params   Params
-	 * @param   array      $attribs  Array of Attributes
+	 * @param   object    $article  Article
+	 * @param   JRegistry $params   Params
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return mixed
 	 */
@@ -128,9 +128,9 @@ class JHtmlIcon
 	 * This icon will not display in a popup window, nor if the article is trashed.
 	 * Edit access checks must be performed in the calling code.
 	 *
-	 * @param   object     $article  The article in question.
-	 * @param   JRegistry  $params   The article parameters
-	 * @param   array      $attribs  Not used??
+	 * @param   object    $article  The article in question.
+	 * @param   JRegistry $params   The article parameters
+	 * @param   array     $attribs  Not used??
 	 *
 	 * @return    string    The HTML for the article edit icon.
 	 *
@@ -179,9 +179,9 @@ class JHtmlIcon
 	/**
 	 * Print Screen button
 	 *
-	 * @param   object     $article  Article
-	 * @param   JRegistry  $params   Params
-	 * @param   array      $attribs  Array of Attributes
+	 * @param   object    $article  Article
+	 * @param   JRegistry $params   Params
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return string
 	 */

@@ -10,42 +10,43 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe         = JFactory::getApplication();
-$input             = new JInput;
-$option            = $input->get('option', '', 'cmd');
-$message           = $input->get('msg', '', 'string');
-$database          = JFactory::getDBO();
-$teacher_menu1     = $this->params->get('teacher_id');
-$teacher_menu      = $teacher_menu1[0];
-$topic_menu1       = $this->params->get('topic_id');
-$topic_menu        = $topic_menu1[0];
-$book_menu1        = $this->params->get('booknumber');
-$book_menu         = $book_menu1[0];
-$location_menu1    = $this->params->get('locations');
-$location_menu     = $location_menu1[0];
-$series_menu1      = $this->params->get('series_id');
-$series_menu       = $series_menu1[0];
+$mainframe = JFactory::getApplication();
+$input = new JInput;
+$option = $input->get('option', '', 'cmd');
+$message = $input->get('msg', '', 'string');
+$database = JFactory::getDBO();
+$teacher_menu1 = $this->params->get('teacher_id');
+$teacher_menu = $teacher_menu1[0];
+$topic_menu1 = $this->params->get('topic_id');
+$topic_menu = $topic_menu1[0];
+$book_menu1 = $this->params->get('booknumber');
+$book_menu = $book_menu1[0];
+$location_menu1 = $this->params->get('locations');
+$location_menu = $location_menu1[0];
+$series_menu1 = $this->params->get('series_id');
+$series_menu = $series_menu1[0];
 $messagetype_menu1 = $this->params->get('messagetype');
-$messagetype_menu  = $messagetype_menu1[0];
-$params            = $this->params;
-$teachers          = $params->get('teacher_id');
-$jview             = new JViewLegacy;
+$messagetype_menu = $messagetype_menu1[0];
+$params = $this->params;
+$teachers = $params->get('teacher_id');
+$jview = new JViewLegacy;
 $jview->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
-      method="post">
-    <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-        <div id="bsheader">
-            <h1 class="componentheading">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
+	method="post">
+	<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+		<div id="bsheader">
+			<h1 class="componentheading">
 				<?php
 				if ($this->params->get('show_page_image') > 0)
 				{
 					?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>"
-                         alt="<?php echo $this->params->get('page_title'); ?>"
-                         width="<?php echo $this->main->width; ?>"
-                         height="<?php echo $this->main->height; ?>"/>
+					<img src="<?php echo JURI::base() . $this->main->path; ?>"
+					     alt="<?php echo $this->params->get('page_title'); ?>"
+					     width="<?php echo $this->main->width; ?>"
+					     height="<?php echo $this->main->height; ?>"/>
 					<?php
 					// End of column for logo
 				}
@@ -56,7 +57,7 @@ $JBSMTeacher = new JBSMTeacher;
 					echo $this->params->get('page_title');
 				}
 				?>
-            </h1>
+			</h1>
 			<?php
 			if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 			{
@@ -68,30 +69,30 @@ $JBSMTeacher = new JBSMTeacher;
 				}
 			}
 			?>
-        </div>
-        <!--header-->
+		</div>
+		<!--header-->
 
-        <table class="table table-striped" id="listintro">
-            <tr>
-                <td>
-                    <p>
+		<table class="table table-striped" id="listintro">
+			<tr>
+				<td>
+					<p>
 						<?php
 						if ($params->get('intro_show') == 1)
 						{
 							echo $params->get('list_intro');
 						}
 						?>
-                    </p>
-                </td>
-            </tr>
-        </table>
+					</p>
+				</td>
+			</tr>
+		</table>
 
-        <div id="bsdropdownmenu">
+		<div id="bsdropdownmenu">
 			<?php
 			if ($this->params->get('use_go_button') > 0)
 			{
 				?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>"/></span>
-				<?php
+			<?php
 			}
 
 			if ($this->params->get('show_pagination') == 1)
@@ -140,8 +141,8 @@ $JBSMTeacher = new JBSMTeacher;
 				echo $this->popular;
 			}
 			?>
-        </div>
-        <!--dropdownmenu-->
+		</div>
+		<!--dropdownmenu-->
 		<?php
 		switch ($params->get('wrapcode'))
 		{
@@ -180,17 +181,17 @@ $JBSMTeacher = new JBSMTeacher;
 				break;
 		}
 		?>
-        <div class="listingfooter">
+		<div class="listingfooter">
 			<?php
 			echo $this->pagination->getPagesLinks();
 			echo $this->pagination->getPagesCounter();
 			?>
-        </div>
-        <!--end of bsfooter div-->
-    </div>
-    <!--end of bspagecontainer div-->
-    <input name="option" value="com_biblestudy" type="hidden">
-    <input name="task" value="" type="hidden">
-    <input name="boxchecked" value="0" type="hidden">
-    <input name="controller" value="sermons" type="hidden">
+		</div>
+		<!--end of bsfooter div-->
+	</div>
+	<!--end of bspagecontainer div-->
+	<input name="option" value="com_biblestudy" type="hidden">
+	<input name="task" value="" type="hidden">
+	<input name="boxchecked" value="0" type="hidden">
+	<input name="controller" value="sermons" type="hidden">
 </form>

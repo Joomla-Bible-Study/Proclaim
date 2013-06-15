@@ -86,7 +86,7 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -113,10 +113,10 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		jimport('joomla.application.component.helper');
 
-		$this->getMedia   = new JBSMMedia;
-		$this->media  = $this->getMedia->getMediaRows2($mediaid);
-		$template     = JBSMParams::getTemplateparams();
-		$this->params = $template->params;
+		$this->getMedia = new JBSMMedia;
+		$this->media    = $this->getMedia->getMediaRows2($mediaid);
+		$template       = JBSMParams::getTemplateparams();
+		$this->params   = $template->params;
 
 		/*
 		 *  Convert parameter fields to objects.
@@ -229,11 +229,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string  $text       Text info
-	 * @param   object  $media      Media info
-	 * @param   string  $scripture  scripture
-	 * @param   string  $date       Date
-	 * @param   string  $length     Length of Title
+	 * @param   string $text       Text info
+	 * @param   object $media      Media info
+	 * @param   string $scripture  scripture
+	 * @param   string $date       Date
+	 * @param   string $length     Length of Title
 	 *
 	 * @return object
 	 */

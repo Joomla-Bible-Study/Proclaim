@@ -22,7 +22,7 @@ class JBSMStats
 	/**
 	 * Total plays of media files per study
 	 *
-	 * @param   int  $id  Id number of study
+	 * @param   int $id  Id number of study
 	 *
 	 * @return int Total plays form the media
 	 */
@@ -43,8 +43,8 @@ class JBSMStats
 	/**
 	 * Total messages in Bible Study
 	 *
-	 * @param   string  $start  ?
-	 * @param   string  $end    ?
+	 * @param   string $start  ?
+	 * @param   string $end    ?
 	 *
 	 * @return int Total Messages
 	 */
@@ -80,8 +80,8 @@ class JBSMStats
 	/**
 	 * Total topics in Bible Study
 	 *
-	 * @param   string  $start  ?
-	 * @param   string  $end    ?
+	 * @param   string $start  ?
+	 * @param   string $end    ?
 	 *
 	 * @return int  Total Topics
 	 */
@@ -287,7 +287,7 @@ class JBSMStats
 		$query = $db->getQuery(true);
 		$query
 			->select(
-			'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
+				'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
 				'#__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
@@ -303,8 +303,8 @@ class JBSMStats
 		{
 			$top_studies .=
 				$result->downloads . ' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;d=' .
-					$result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
-					'<br>';
+				$result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
+				'<br>';
 		}
 
 		return $top_studies;
@@ -323,7 +323,7 @@ class JBSMStats
 		$query     = $db->getQuery(true);
 		$query
 			->select(
-			'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
+				'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
 				' #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')

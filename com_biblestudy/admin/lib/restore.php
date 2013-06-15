@@ -22,7 +22,7 @@ class JBSMRestore
 	/**
 	 * Import DB
 	 *
-	 * @param   boolean  $perent  Switch to see if it is coming from migration or restore.
+	 * @param   boolean $perent  Switch to see if it is coming from migration or restore.
 	 *
 	 * @return boolean
 	 */
@@ -155,8 +155,8 @@ class JBSMRestore
 	/**
 	 * Install DB
 	 *
-	 * @param   string   $tmp_src  Temp info
-	 * @param   boolean  $parent   To tell if coming from migration
+	 * @param   string  $tmp_src  Temp info
+	 * @param   boolean $parent   To tell if coming from migration
 	 *
 	 * @return boolean if db installed correctly.
 	 */
@@ -258,7 +258,7 @@ class JBSMRestore
 	/**
 	 * Restor DB for exesting Joomla Bible Study
 	 *
-	 * @param   string  $backuprestore  ?
+	 * @param   string $backuprestore  ?
 	 *
 	 * @return boolean See if the restore worked.
 	 */

@@ -63,8 +63,8 @@ class BiblestudyModelLocation extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data      Data for the form.
+	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -105,7 +105,7 @@ class BiblestudyModelLocation extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -119,8 +119,8 @@ class BiblestudyModelLocation extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group      The cache group
+	 * @param   integer $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *

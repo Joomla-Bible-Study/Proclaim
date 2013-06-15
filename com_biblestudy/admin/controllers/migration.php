@@ -25,7 +25,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -37,7 +37,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   string  $task  An optional associative array of configuration settings.
+	 * @param   string $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
 	 */

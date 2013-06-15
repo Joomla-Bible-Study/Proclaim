@@ -75,11 +75,11 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
-	public function display ($tpl = null)
+	public function display($tpl = null)
 	{
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -122,7 +122,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-					. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		$this->_prepareDocument();

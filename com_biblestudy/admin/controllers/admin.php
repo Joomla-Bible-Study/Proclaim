@@ -32,7 +32,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A named array of configuration variables.
+	 * @param   array $config  A named array of configuration variables.
 	 *
 	 * @since    1.6
 	 */
@@ -320,7 +320,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Do the import
 	 *
-	 * @param   boolean  $parent  Source of info
+	 * @param   boolean $parent  Source of info
 	 *
 	 * @return void
 	 */
@@ -396,7 +396,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string  $oldprefix  Old table Prefix
+	 * @param   string $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */

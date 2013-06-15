@@ -28,17 +28,18 @@ defined('_JEXEC') or die;
 		{
 			$teacherdisplay = $item->teachername;
 
-			if($item->title)
+			if ($item->title)
+			{
 				$teacherdisplay .= ' - ' . $item->title;
 			}
+
 			// Alternate the row color
 			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 			?>
 
 			<tr class="<?php echo $oddeven; ?> ">
 				<td class="bsm_teacherthumbnail_list">
-					<?php
-					if ($item->thumb || $item->teacher_thumbnail)
+					<?php if ($item->thumb || $item->teacher_thumbnail)
 					{
 						echo $item->image;
 					}

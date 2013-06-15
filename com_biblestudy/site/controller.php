@@ -29,9 +29,17 @@ class BiblestudyController extends JControllerLegacy
 	public $mediaCode;
 
 	/**
+	 * Hold a JInput object for easier access to the input variables.
+	 *
+	 * @var    JInput
+	 * @since  12.2
+	 */
+	protected $input;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config   An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
@@ -60,8 +68,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable   If true, the view output will be cached
+	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -83,10 +91,7 @@ class BiblestudyController extends JControllerLegacy
 			$cachable = false;
 		}
 
-		if ($user->get('id') ||
-			($_SERVER['REQUEST_METHOD'] == 'POST' &&
-				($vName == 'archive'))
-		)
+		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] == 'POST' && ($vName == 'archive')))
 		{
 			$cachable = false;
 		}
@@ -214,7 +219,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string  $params  To pass to the email
+	 * @param   string $params  To pass to the email
 	 *
 	 * @return void
 	 */

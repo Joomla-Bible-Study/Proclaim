@@ -177,288 +177,288 @@ takes an array of properties to ignore when binding.</span>
     </ul>
 </div>
 <div class="span8">
-    <a id="\TableMediaimage"></a>
-    <ul class="breadcrumb">
-        <li>
-            <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-        </li>
-        <li><a href="../namespaces/global.html">global</a></li>
-        <li class="active">
-            <span class="divider">\</span><a href="../classes/TableMediaimage.html">TableMediaimage</a>
-        </li>
-    </ul>
-    <div class="element class">
-        <p class="short_description">MediaImage table class</p>
+<a id="\TableMediaimage"></a>
+<ul class="breadcrumb">
+    <li>
+        <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+    </li>
+    <li><a href="../namespaces/global.html">global</a></li>
+    <li class="active">
+        <span class="divider">\</span><a href="../classes/TableMediaimage.html">TableMediaimage</a>
+    </li>
+</ul>
+<div class="element class">
+<p class="short_description">MediaImage table class</p>
 
-        <div class="details">
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+    <tr>
+        <th>package</th>
+        <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+    </tr>
+    <tr>
+        <th>since</th>
+        <td>7.0.0</td>
+    </tr>
+</table>
+<h3>
+    <i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_TableMediaimage"></a>
+
+<div class="element clickable method public method_TableMediaimage" data-toggle="collapse"
+     data-target=".method_TableMediaimage .collapse">
+    <h2>Constructor</h2>
+    <pre>TableMediaimage(\JDatabaseDriver $db) </pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
             <div class="long_description"></div>
-            <table class="table table-bordered">
-                <tr>
-                    <th>package</th>
-                    <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-                </tr>
-                <tr>
-                    <th>since</th>
-                    <td>7.0.0</td>
-                </tr>
-            </table>
-            <h3>
-                <i class="icon-custom icon-method"></i> Methods</h3>
-            <a id="method_TableMediaimage"></a>
+            <h3>Parameters</h3>
 
-            <div class="element clickable method public method_TableMediaimage" data-toggle="collapse"
-                 data-target=".method_TableMediaimage .collapse">
-                <h2>Constructor</h2>
-                <pre>TableMediaimage(\JDatabaseDriver $db) </pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                        <h3>Parameters</h3>
+            <div class="subelement argument">
+                <h4>$db</h4>
+                <code>\JDatabaseDriver</code>
 
-                        <div class="subelement argument">
-                            <h4>$db</h4>
-                            <code>\JDatabaseDriver</code>
-
-                            <p>&$db Database connector object</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a id="method_bind"></a>
-
-            <div class="element clickable method public method_bind" data-toggle="collapse"
-                 data-target=".method_bind .collapse">
-                <h2>Method to bind an associative array or object to the JTable instance.This
-                    method only binds properties that are publicly accessible and optionally
-                    takes an array of properties to ignore when binding.</h2>
-                <pre>bind(mixed $array, mixed $ignore) : boolean</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>link</th>
-                                <td><a href="http://docs.joomla.org/JTable/bind">http://docs.joomla.org/JTable/bind</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>since</th>
-                                <td>11.1</td>
-                            </tr>
-                        </table>
-                        <h3>Parameters</h3>
-
-                        <div class="subelement argument">
-                            <h4>$array</h4>
-                            <code>mixed</code>
-
-                            <p>An associative array or object to bind to the JTable instance.</p></div>
-                        <div class="subelement argument">
-                            <h4>$ignore</h4>
-                            <code>mixed</code>
-
-                            <p>An optional array or space separated list of properties to ignore while binding.</p>
-                        </div>
-                        <h3>Returns</h3>
-
-                        <div class="subelement response">
-                            <code>boolean</code>True on success.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a id="method__getAssetName"></a>
-
-            <div class="element clickable method protected method__getAssetName" data-toggle="collapse"
-                 data-target=".method__getAssetName .collapse">
-                <h2>Method to compute the default name of the asset.</h2>
-                <pre>_getAssetName() : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"><p>The default name is in the form <code>table_name.id</code>
-                            where id is the value of the primary key of the table.</p></div>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>since</th>
-                                <td>1.6</td>
-                            </tr>
-                        </table>
-                        <h3>Returns</h3>
-
-                        <div class="subelement response"><code>string</code></div>
-                    </div>
-                </div>
-            </div>
-            <a id="method__getAssetParentId"></a>
-
-            <div class="element clickable method protected method__getAssetParentId" data-toggle="collapse"
-                 data-target=".method__getAssetParentId .collapse">
-                <h2>Method to get the parent asset under which to register this one.</h2>
-                <pre>_getAssetParentId(\JTable $table, integer $id) : integer</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"><p>By default, all assets are registered to the ROOT node with ID
-                            1.
-                            The extended class can define a table and id to lookup. If the
-                            asset does not exist it will be created.</p></div>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>since</th>
-                                <td>11.1</td>
-                            </tr>
-                        </table>
-                        <h3>Parameters</h3>
-
-                        <div class="subelement argument">
-                            <h4>$table</h4>
-                            <code>\JTable</code>
-
-                            <p>A JTable object for the asset parent.</p></div>
-                        <div class="subelement argument">
-                            <h4>$id</h4>
-                            <code>integer</code>
-
-                            <p>Id to look up</p></div>
-                        <h3>Returns</h3>
-
-                        <div class="subelement response"><code>integer</code></div>
-                    </div>
-                </div>
-            </div>
-            <a id="method__getAssetTitle"></a>
-
-            <div class="element clickable method protected method__getAssetTitle" data-toggle="collapse"
-                 data-target=".method__getAssetTitle .collapse">
-                <h2>Method to return the title to use for the asset table.</h2>
-                <pre>_getAssetTitle() : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>since</th>
-                                <td>1.6</td>
-                            </tr>
-                        </table>
-                        <h3>Returns</h3>
-
-                        <div class="subelement response"><code>string</code></div>
-                    </div>
-                </div>
-            </div>
-            <h3>
-                <i class="icon-custom icon-property"></i> Properties</h3>
-            <a id="property_id"> </a>
-
-            <div class="element clickable property public property_id" data-toggle="collapse"
-                 data-target=".property_id .collapse">
-                <h2></h2>
-                <pre>$id : int</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_media_alttext"> </a>
-
-            <div class="element clickable property public property_media_alttext" data-toggle="collapse"
-                 data-target=".property_media_alttext .collapse">
-                <h2></h2>
-                <pre>$media_alttext : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_media_extension"> </a>
-
-            <div class="element clickable property public property_media_extension" data-toggle="collapse"
-                 data-target=".property_media_extension .collapse">
-                <h2></h2>
-                <pre>$media_extension : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_media_image_name"> </a>
-
-            <div class="element clickable property public property_media_image_name" data-toggle="collapse"
-                 data-target=".property_media_image_name .collapse">
-                <h2></h2>
-                <pre>$media_image_name : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_media_image_path"> </a>
-
-            <div class="element clickable property public property_media_image_path" data-toggle="collapse"
-                 data-target=".property_media_image_path .collapse">
-                <h2></h2>
-                <pre>$media_image_path : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_media_text"> </a>
-
-            <div class="element clickable property public property_media_text" data-toggle="collapse"
-                 data-target=".property_media_text .collapse">
-                <h2></h2>
-                <pre>$media_text : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_path2"> </a>
-
-            <div class="element clickable property public property_path2" data-toggle="collapse"
-                 data-target=".property_path2 .collapse">
-                <h2></h2>
-                <pre>$path2 : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
-            </div>
-            <a id="property_published"> </a>
-
-            <div class="element clickable property public property_published" data-toggle="collapse"
-                 data-target=".property_published .collapse">
-                <h2></h2>
-                <pre>$published : string</pre>
-                <div class="labels"></div>
-                <div class="row collapse">
-                    <div class="detail-description">
-                        <div class="long_description"></div>
-                    </div>
-                </div>
+                <p>&$db Database connector object</p>
             </div>
         </div>
     </div>
+</div>
+<a id="method_bind"></a>
+
+<div class="element clickable method public method_bind" data-toggle="collapse"
+     data-target=".method_bind .collapse">
+    <h2>Method to bind an associative array or object to the JTable instance.This
+        method only binds properties that are publicly accessible and optionally
+        takes an array of properties to ignore when binding.</h2>
+    <pre>bind(mixed $array, mixed $ignore) : boolean</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>link</th>
+                    <td><a href="http://docs.joomla.org/JTable/bind">http://docs.joomla.org/JTable/bind</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>since</th>
+                    <td>11.1</td>
+                </tr>
+            </table>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$array</h4>
+                <code>mixed</code>
+
+                <p>An associative array or object to bind to the JTable instance.</p></div>
+            <div class="subelement argument">
+                <h4>$ignore</h4>
+                <code>mixed</code>
+
+                <p>An optional array or space separated list of properties to ignore while binding.</p>
+            </div>
+            <h3>Returns</h3>
+
+            <div class="subelement response">
+                <code>boolean</code>True on success.
+            </div>
+        </div>
+    </div>
+</div>
+<a id="method__getAssetName"></a>
+
+<div class="element clickable method protected method__getAssetName" data-toggle="collapse"
+     data-target=".method__getAssetName .collapse">
+    <h2>Method to compute the default name of the asset.</h2>
+    <pre>_getAssetName() : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"><p>The default name is in the form <code>table_name.id</code>
+                where id is the value of the primary key of the table.</p></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>since</th>
+                    <td>1.6</td>
+                </tr>
+            </table>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
+        </div>
+    </div>
+</div>
+<a id="method__getAssetParentId"></a>
+
+<div class="element clickable method protected method__getAssetParentId" data-toggle="collapse"
+     data-target=".method__getAssetParentId .collapse">
+    <h2>Method to get the parent asset under which to register this one.</h2>
+    <pre>_getAssetParentId(\JTable $table, integer $id) : integer</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"><p>By default, all assets are registered to the ROOT node with ID
+                1.
+                The extended class can define a table and id to lookup. If the
+                asset does not exist it will be created.</p></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>since</th>
+                    <td>11.1</td>
+                </tr>
+            </table>
+            <h3>Parameters</h3>
+
+            <div class="subelement argument">
+                <h4>$table</h4>
+                <code>\JTable</code>
+
+                <p>A JTable object for the asset parent.</p></div>
+            <div class="subelement argument">
+                <h4>$id</h4>
+                <code>integer</code>
+
+                <p>Id to look up</p></div>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>integer</code></div>
+        </div>
+    </div>
+</div>
+<a id="method__getAssetTitle"></a>
+
+<div class="element clickable method protected method__getAssetTitle" data-toggle="collapse"
+     data-target=".method__getAssetTitle .collapse">
+    <h2>Method to return the title to use for the asset table.</h2>
+    <pre>_getAssetTitle() : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>since</th>
+                    <td>1.6</td>
+                </tr>
+            </table>
+            <h3>Returns</h3>
+
+            <div class="subelement response"><code>string</code></div>
+        </div>
+    </div>
+</div>
+<h3>
+    <i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_id"> </a>
+
+<div class="element clickable property public property_id" data-toggle="collapse"
+     data-target=".property_id .collapse">
+    <h2></h2>
+    <pre>$id : int</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_media_alttext"> </a>
+
+<div class="element clickable property public property_media_alttext" data-toggle="collapse"
+     data-target=".property_media_alttext .collapse">
+    <h2></h2>
+    <pre>$media_alttext : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_media_extension"> </a>
+
+<div class="element clickable property public property_media_extension" data-toggle="collapse"
+     data-target=".property_media_extension .collapse">
+    <h2></h2>
+    <pre>$media_extension : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_media_image_name"> </a>
+
+<div class="element clickable property public property_media_image_name" data-toggle="collapse"
+     data-target=".property_media_image_name .collapse">
+    <h2></h2>
+    <pre>$media_image_name : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_media_image_path"> </a>
+
+<div class="element clickable property public property_media_image_path" data-toggle="collapse"
+     data-target=".property_media_image_path .collapse">
+    <h2></h2>
+    <pre>$media_image_path : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_media_text"> </a>
+
+<div class="element clickable property public property_media_text" data-toggle="collapse"
+     data-target=".property_media_text .collapse">
+    <h2></h2>
+    <pre>$media_text : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_path2"> </a>
+
+<div class="element clickable property public property_path2" data-toggle="collapse"
+     data-target=".property_path2 .collapse">
+    <h2></h2>
+    <pre>$path2 : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+<a id="property_published"> </a>
+
+<div class="element clickable property public property_published" data-toggle="collapse"
+     data-target=".property_published .collapse">
+    <h2></h2>
+    <pre>$published : string</pre>
+    <div class="labels"></div>
+    <div class="row collapse">
+        <div class="detail-description">
+            <div class="long_description"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="row">

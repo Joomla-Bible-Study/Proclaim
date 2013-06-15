@@ -21,12 +21,12 @@ class JBSMCustom extends JBSMElements
 	/**
 	 * Get Custom page
 	 *
-	 * @param   int        $rowid         ID of Row
-	 * @param   string     $custom        Custom String
-	 * @param   JTable     $row           Row info
-	 * @param   JRegistry  $params        Params for intro
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template ID
+	 * @param   int       $rowid         ID of Row
+	 * @param   string    $custom        Custom String
+	 * @param   JTable    $row           Row info
+	 * @param   JRegistry $params        Params for intro
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   int       $template      Template ID
 	 *
 	 * @return object
 	 */
@@ -58,7 +58,7 @@ class JBSMCustom extends JBSMElements
 	/**
 	 * Get Element Number.
 	 *
-	 * @param   int  $rowid  Row ID
+	 * @param   int $rowid  Row ID
 	 *
 	 * @return int
 	 */

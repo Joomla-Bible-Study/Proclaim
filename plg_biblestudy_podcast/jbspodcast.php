@@ -26,8 +26,8 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -66,8 +66,8 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
-            //update the database to show a new time
-            $this->updatetime();
+			//update the database to show a new time
+			$this->updatetime();
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
@@ -91,7 +91,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -122,7 +122,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -233,9 +233,9 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-        $query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' .$time;
-        $db->setQuery($query);
-        $db->query();
+		$query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' . $time;
+		$db->setQuery($query);
+		$db->query();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -269,8 +269,8 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Do Email
 	 *
-	 * @param   JRegistry  $params     ?
-	 * @param   object     $dopodcast  ?
+	 * @param   JRegistry $params     ?
+	 * @param   object    $dopodcast  ?
 	 *
 	 * @return void
 	 */

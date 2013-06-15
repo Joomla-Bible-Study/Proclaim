@@ -52,8 +52,8 @@ class TableShare extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -115,8 +115,8 @@ class TableShare extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable   $table  A JTable object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   JTable  $table  A JTable object for the asset parent.
+	 * @param   integer $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -133,7 +133,7 @@ class TableShare extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   JDatabaseDriver &$db  Database connector object
 	 */
 	public function TableShare(& $db)
 	{

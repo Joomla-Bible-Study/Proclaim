@@ -21,9 +21,9 @@ class JBSMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            Item ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            Item ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -245,9 +245,9 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   int     $id            Item ID
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $params        Item Params
+	 * @param   int    $id            Item ID
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -490,9 +490,9 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   int     $id            ID
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $params        Item Params
+	 * @param   int    $id            ID
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 *
@@ -742,19 +742,19 @@ class JBSMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            Item ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            Item ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
 	public function getYearsLandingPage($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
-		$user        = JFactory::getUser();
-		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
+		$mainframe = JFactory::getApplication();
+		$db        = JFactory::getDBO();
+		$user      = JFactory::getUser();
+		$input     = new JInput;
+		$option    = $input->get('option', '', 'cmd');
 		$year      = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -908,19 +908,19 @@ class JBSMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
 	public function getTopicsLandingPage($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
+		$mainframe = JFactory::getApplication();
+		$user      = JFactory::getUser();
+		$db        = JFactory::getDBO();
+		$input     = new JInput;
+		$option    = $input->get('option', '', 'cmd');
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -1074,9 +1074,9 @@ class JBSMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   JRegistry  $params        Item Params
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   JRegistry $params        Item Params
+	 * @param   int       $id            ID
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -1292,7 +1292,7 @@ class JBSMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   JRegistry  $params  Item Params
+	 * @param   JRegistry $params  Item Params
 	 *
 	 * @return string
 	 */

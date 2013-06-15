@@ -80,7 +80,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -134,7 +134,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		// Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-		$document = JFactory::getDocument();
+		$document            = JFactory::getDocument();
 
 		if (!BIBLESTUDY_CHECKREL)
 		{

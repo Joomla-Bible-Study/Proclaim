@@ -10,9 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe   = JFactory::getApplication();
-$input       = new JInput;
-$option      = $input->get('option', '', 'cmd');
+$mainframe = JFactory::getApplication();
+$input = new JInput;
+$option = $input->get('option', '', 'cmd');
 $JViewLegacy = new JViewLegacy;
 $JViewLegacy->loadHelper('serieslist');
 $JBSMSerieslist = new JBSMSerieslist;
@@ -20,7 +20,7 @@ JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 
 $params = $this->params;
-$url    = $params->get('stylesheet');
+$url = $params->get('stylesheet');
 
 if ($url)
 {
@@ -28,9 +28,9 @@ if ($url)
 }
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
-    <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-        <div id="bsmHeader">
-            <h1 class="componentheading">
+	<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+		<div id="bsmHeader">
+			<h1 class="componentheading">
 				<?php
 				if ($this->params->get('show_page_image_series') > 0)
 				{
@@ -45,9 +45,9 @@ if ($url)
 					echo $this->params->get('series_title');
 				}
 				?>
-            </h1>
-            <!--header-->
-            <div id="bsdropdownmenu">
+			</h1>
+			<!--header-->
+			<div id="bsdropdownmenu">
 
 				<?php
 				if ($this->params->get('search_series') > 0)
@@ -55,14 +55,14 @@ if ($url)
 					echo $this->page->series;
 				}
 				?>
-            </div>
-            <!--dropdownmenu-->
-            <table class="table table-striped" id="seriestable">
-                <tbody>
+			</div>
+			<!--dropdownmenu-->
+			<table class="table table-striped" id="seriestable">
+				<tbody>
 				<?php
 				// This sets the alternativing colors for the background of the table cells
-				$class1  = 'bsodd';
-				$class2  = 'bseven';
+				$class1 = 'bsodd';
+				$class2 = 'bseven';
 				$oddeven = $class1;
 
 				foreach ($this->items as $row)
@@ -80,16 +80,16 @@ if ($url)
 					echo $listing;
 				}
 				?>
-                </tbody>
-            </table>
-            <div class="listingfooter">
-            </div>
-            <!--end of bsfooter div-->
-        </div>
-        <!--end of bspagecontainer div-->
-        <input name="option" value="com_biblestudy" type="hidden">
-        <input name="task" value="" type="hidden">
-        <input name="boxchecked" value="0" type="hidden">
-        <input name="controller" value="seriesdisplays" type="hidden">
-    </div>
+				</tbody>
+			</table>
+			<div class="listingfooter">
+			</div>
+			<!--end of bsfooter div-->
+		</div>
+		<!--end of bspagecontainer div-->
+		<input name="option" value="com_biblestudy" type="hidden">
+		<input name="task" value="" type="hidden">
+		<input name="boxchecked" value="0" type="hidden">
+		<input name="controller" value="seriesdisplays" type="hidden">
+	</div>
 </form>

@@ -79,14 +79,14 @@
     </div>
 </div>
 <div id="___" class="container">
-    <noscript>
-        <div class="alert alert-warning">
-            Javascript is disabled; several features are only available
-            if Javascript is enabled.
-        </div>
-    </noscript>
-    <div class="row">
-        <div class="span4">
+<noscript>
+    <div class="alert alert-warning">
+        Javascript is disabled; several features are only available
+        if Javascript is enabled.
+    </div>
+</noscript>
+<div class="row">
+<div class="span4">
             <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active"
                                                                                       title="Show public elements">
                 Public
@@ -94,229 +94,229 @@
                     class="btn private" title="Show private elements">Private
             </button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span>
 
-            <div class="btn-group view pull-right" data-toggle="buttons-radio">
-                <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i>
-                </button>
-                <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    <div class="btn-group view pull-right" data-toggle="buttons-radio">
+        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i>
+        </button>
+        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+    </div>
+    <ul class="side-nav nav nav-list">
+        <li class="nav-header">
+            <i class="icon-custom icon-method"></i> Methods
+            <ul>
+                <li class="method public "><a href="#method_getModel"
+                                              title="getModel :: Proxy for getModel"><span class="description">Proxy for getModel</span>
+                    <pre>getModel()</pre>
+                </a></li>
+                <li class="method public "><a href="#method_getTemplate"
+                                              title="getTemplate :: Get Template Settings"><span
+                        class="description">Get Template Settings</span>
+                    <pre>getTemplate()</pre>
+                </a></li>
+                <li class="method public "><a href="#method_performDB"
+                                              title="performDB :: Perform DB Query"><span class="description">Perform DB Query</span>
+                    <pre>performDB()</pre>
+                </a></li>
+                <li class="method public "><a href="#method_template_export"
+                                              title="template_export :: Export the Template"><span
+                        class="description">Export the Template</span>
+                    <pre>template_export()</pre>
+                </a></li>
+                <li class="method public "><a href="#method_template_import"
+                                              title="template_import :: Import Template"><span
+                        class="description">Import Template</span>
+                    <pre>template_import()</pre>
+                </a></li>
+            </ul>
+        </li>
+        <li class="nav-header private">» Private
+            <ul>
+                <li class="method private "><a href="#method_getExportSetting"
+                                               title="getExportSetting :: Get Exported Template Settings"><span
+                        class="description">Get Exported Template Settings</span>
+                    <pre>getExportSetting()</pre>
+                </a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="span8">
+    <a id="\BiblestudyControllerTemplates"></a>
+    <ul class="breadcrumb">
+        <li>
+            <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+        </li>
+        <li><a href="../namespaces/global.html">global</a></li>
+        <li class="active">
+            <span class="divider">\</span><a href="../classes/BiblestudyControllerTemplates.html">BiblestudyControllerTemplates</a>
+        </li>
+    </ul>
+    <div class="element class">
+        <p class="short_description">Controller for Templates</p>
+
+        <div class="details">
+            <div class="long_description"></div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>package</th>
+                    <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+                </tr>
+                <tr>
+                    <th>since</th>
+                    <td>7.0.0</td>
+                </tr>
+            </table>
+            <h3>
+                <i class="icon-custom icon-method"></i> Methods</h3>
+            <a id="method_getModel"></a>
+
+            <div class="element clickable method public method_getModel" data-toggle="collapse"
+                 data-target=".method_getModel .collapse">
+                <h2>Proxy for getModel</h2>
+                <pre>getModel(string $name, string $prefix) : \JModel</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>since</th>
+                                <td>7.0.0</td>
+                            </tr>
+                        </table>
+                        <h3>Parameters</h3>
+
+                        <div class="subelement argument">
+                            <h4>$name</h4>
+                            <code>string</code>
+
+                            <p>The name of the model</p></div>
+                        <div class="subelement argument">
+                            <h4>$prefix</h4>
+                            <code>string</code>
+
+                            <p>The prefix for the PHP class name</p></div>
+                        <h3>Returns</h3>
+
+                        <div class="subelement response"><code>\JModel</code></div>
+                    </div>
+                </div>
             </div>
-            <ul class="side-nav nav nav-list">
-                <li class="nav-header">
-                    <i class="icon-custom icon-method"></i> Methods
-                    <ul>
-                        <li class="method public "><a href="#method_getModel"
-                                                      title="getModel :: Proxy for getModel"><span class="description">Proxy for getModel</span>
-                            <pre>getModel()</pre>
-                        </a></li>
-                        <li class="method public "><a href="#method_getTemplate"
-                                                      title="getTemplate :: Get Template Settings"><span
-                                class="description">Get Template Settings</span>
-                            <pre>getTemplate()</pre>
-                        </a></li>
-                        <li class="method public "><a href="#method_performDB"
-                                                      title="performDB :: Perform DB Query"><span class="description">Perform DB Query</span>
-                            <pre>performDB()</pre>
-                        </a></li>
-                        <li class="method public "><a href="#method_template_export"
-                                                      title="template_export :: Export the Template"><span
-                                class="description">Export the Template</span>
-                            <pre>template_export()</pre>
-                        </a></li>
-                        <li class="method public "><a href="#method_template_import"
-                                                      title="template_import :: Import Template"><span
-                                class="description">Import Template</span>
-                            <pre>template_import()</pre>
-                        </a></li>
-                    </ul>
-                </li>
-                <li class="nav-header private">» Private
-                    <ul>
-                        <li class="method private "><a href="#method_getExportSetting"
-                                                       title="getExportSetting :: Get Exported Template Settings"><span
-                                class="description">Get Exported Template Settings</span>
-                            <pre>getExportSetting()</pre>
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <div class="span8">
-            <a id="\BiblestudyControllerTemplates"></a>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-                </li>
-                <li><a href="../namespaces/global.html">global</a></li>
-                <li class="active">
-                    <span class="divider">\</span><a href="../classes/BiblestudyControllerTemplates.html">BiblestudyControllerTemplates</a>
-                </li>
-            </ul>
-            <div class="element class">
-                <p class="short_description">Controller for Templates</p>
+            <a id="method_getTemplate"></a>
 
-                <div class="details">
-                    <div class="long_description"></div>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>package</th>
-                            <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-                        </tr>
-                        <tr>
-                            <th>since</th>
-                            <td>7.0.0</td>
-                        </tr>
-                    </table>
-                    <h3>
-                        <i class="icon-custom icon-method"></i> Methods</h3>
-                    <a id="method_getModel"></a>
+            <div class="element clickable method public method_getTemplate" data-toggle="collapse"
+                 data-target=".method_getTemplate .collapse">
+                <h2>Get Template Settings</h2>
+                <pre>getTemplate(array $template) : boolean | string</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <h3>Parameters</h3>
 
-                    <div class="element clickable method public method_getModel" data-toggle="collapse"
-                         data-target=".method_getModel .collapse">
-                        <h2>Proxy for getModel</h2>
-                        <pre>getModel(string $name, string $prefix) : \JModel</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <th>since</th>
-                                        <td>7.0.0</td>
-                                    </tr>
-                                </table>
-                                <h3>Parameters</h3>
+                        <div class="subelement argument">
+                            <h4>$template</h4>
+                            <code>array</code>
 
-                                <div class="subelement argument">
-                                    <h4>$name</h4>
-                                    <code>string</code>
+                            <p>?</p>
+                        </div>
+                        <h3>Returns</h3>
 
-                                    <p>The name of the model</p></div>
-                                <div class="subelement argument">
-                                    <h4>$prefix</h4>
-                                    <code>string</code>
-
-                                    <p>The prefix for the PHP class name</p></div>
-                                <h3>Returns</h3>
-
-                                <div class="subelement response"><code>\JModel</code></div>
-                            </div>
+                        <div class="subelement response">
+                            <code>boolean</code><code>string</code>
                         </div>
                     </div>
-                    <a id="method_getTemplate"></a>
+                </div>
+            </div>
+            <a id="method_performDB"></a>
 
-                    <div class="element clickable method public method_getTemplate" data-toggle="collapse"
-                         data-target=".method_getTemplate .collapse">
-                        <h2>Get Template Settings</h2>
-                        <pre>getTemplate(array $template) : boolean | string</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <h3>Parameters</h3>
+            <div class="element clickable method public method_performDB" data-toggle="collapse"
+                 data-target=".method_performDB .collapse">
+                <h2>Perform DB Query</h2>
+                <pre>performDB(string $query) : boolean</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <h3>Parameters</h3>
 
-                                <div class="subelement argument">
-                                    <h4>$template</h4>
-                                    <code>array</code>
+                        <div class="subelement argument">
+                            <h4>$query</h4>
+                            <code>string</code>
 
-                                    <p>?</p>
-                                </div>
-                                <h3>Returns</h3>
+                            <p>Query</p></div>
+                        <h3>Returns</h3>
 
-                                <div class="subelement response">
-                                    <code>boolean</code><code>string</code>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="subelement response"><code>boolean</code></div>
                     </div>
-                    <a id="method_performDB"></a>
+                </div>
+            </div>
+            <a id="method_template_export"></a>
 
-                    <div class="element clickable method public method_performDB" data-toggle="collapse"
-                         data-target=".method_performDB .collapse">
-                        <h2>Perform DB Query</h2>
-                        <pre>performDB(string $query) : boolean</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <h3>Parameters</h3>
+            <div class="element clickable method public method_template_export" data-toggle="collapse"
+                 data-target=".method_template_export .collapse">
+                <h2>Export the Template</h2>
+                <pre>template_export() : boolean</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <h3>Returns</h3>
 
-                                <div class="subelement argument">
-                                    <h4>$query</h4>
-                                    <code>string</code>
-
-                                    <p>Query</p></div>
-                                <h3>Returns</h3>
-
-                                <div class="subelement response"><code>boolean</code></div>
-                            </div>
-                        </div>
+                        <div class="subelement response"><code>boolean</code></div>
                     </div>
-                    <a id="method_template_export"></a>
+                </div>
+            </div>
+            <a id="method_template_import"></a>
 
-                    <div class="element clickable method public method_template_export" data-toggle="collapse"
-                         data-target=".method_template_export .collapse">
-                        <h2>Export the Template</h2>
-                        <pre>template_export() : boolean</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <h3>Returns</h3>
+            <div class="element clickable method public method_template_import" data-toggle="collapse"
+                 data-target=".method_template_import .collapse">
+                <h2>Import Template</h2>
+                <pre>template_import() : boolean</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <h3>Returns</h3>
 
-                                <div class="subelement response"><code>boolean</code></div>
-                            </div>
-                        </div>
+                        <div class="subelement response"><code>boolean</code></div>
                     </div>
-                    <a id="method_template_import"></a>
+                </div>
+            </div>
+            <a id="method_getExportSetting"></a>
 
-                    <div class="element clickable method public method_template_import" data-toggle="collapse"
-                         data-target=".method_template_import .collapse">
-                        <h2>Import Template</h2>
-                        <pre>template_import() : boolean</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <h3>Returns</h3>
+            <div class="element clickable method private method_getExportSetting" data-toggle="collapse"
+                 data-target=".method_getExportSetting .collapse">
+                <h2>Get Exported Template Settings</h2>
+                <pre>getExportSetting(object $result) : string</pre>
+                <div class="labels"></div>
+                <div class="row collapse">
+                    <div class="detail-description">
+                        <div class="long_description"></div>
+                        <h3>Parameters</h3>
 
-                                <div class="subelement response"><code>boolean</code></div>
-                            </div>
+                        <div class="subelement argument">
+                            <h4>$result</h4>
+                            <code>object</code>
+
+                            <p>?</p>
                         </div>
-                    </div>
-                    <a id="method_getExportSetting"></a>
+                        <h3>Returns</h3>
 
-                    <div class="element clickable method private method_getExportSetting" data-toggle="collapse"
-                         data-target=".method_getExportSetting .collapse">
-                        <h2>Get Exported Template Settings</h2>
-                        <pre>getExportSetting(object $result) : string</pre>
-                        <div class="labels"></div>
-                        <div class="row collapse">
-                            <div class="detail-description">
-                                <div class="long_description"></div>
-                                <h3>Parameters</h3>
-
-                                <div class="subelement argument">
-                                    <h4>$result</h4>
-                                    <code>object</code>
-
-                                    <p>?</p>
-                                </div>
-                                <h3>Returns</h3>
-
-                                <div class="subelement response"><code>string</code></div>
-                            </div>
-                        </div>
+                        <div class="subelement response"><code>string</code></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
-            provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-26T21:07:03-05:00.<br></footer>
-    </div>
+</div>
+</div>
+<div class="row">
+    <footer class="span12">
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons
+        provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+        generated on 2013-05-26T21:07:03-05:00.<br></footer>
+</div>
 </div>
 </body>
 </html>

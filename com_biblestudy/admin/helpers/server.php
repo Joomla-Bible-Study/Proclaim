@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    8.0.0
  *
- * @todo Looks like this could go into the dbhelper.php file. TOM - what is this even for. I don't think I wrote this.
+ * @todo     Looks like this could go into the dbhelper.php file. TOM - what is this even for. I don't think I wrote this.
  */
 class JBSMServer
 {
@@ -30,7 +30,7 @@ class JBSMServer
 	/**
 	 * Get Server
 	 *
-	 * @param   int  $serverid  Server ID
+	 * @param   int $serverid  Server ID
 	 *
 	 * @return object
 	 */
@@ -50,7 +50,7 @@ class JBSMServer
 	/**
 	 * Get Folder
 	 *
-	 * @param   int  $folderId  Folder ID
+	 * @param   int $folderId  Folder ID
 	 *
 	 * @return object
 	 */

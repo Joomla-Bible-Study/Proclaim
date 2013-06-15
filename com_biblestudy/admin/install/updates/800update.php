@@ -107,8 +107,8 @@ class JBSM800Update
 	/**
 	 * Update studies to reference newly created topics
 	 *
-	 * @param   Object  $topic_table   Object containing the saved topic record
-	 * @param   String  $old_topic_id  Reference to the old topic id
+	 * @param   Object $topic_table   Object containing the saved topic record
+	 * @param   String $old_topic_id  Reference to the old topic id
 	 *
 	 * @return void
 	 */
@@ -156,8 +156,8 @@ class JBSM800Update
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
-				->from('#__bsms_mediafiles')
-				->where('`params` LIKE ' . $db->q('%internal_popup%'));
+			->from('#__bsms_mediafiles')
+			->where('`params` LIKE ' . $db->q('%internal_popup%'));
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 

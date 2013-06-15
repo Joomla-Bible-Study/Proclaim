@@ -43,7 +43,7 @@ class JBSMBackup
 	/**
 	 * Export DB//
 	 *
-	 * @param   int  $run  ID
+	 * @param   int $run  ID
 	 *
 	 * @return boolean
 	 */
@@ -94,7 +94,7 @@ class JBSMBackup
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string  $table  Table name
+	 * @param   string $table  Table name
 	 *
 	 * @return boolean|string
 	 */
@@ -181,7 +181,7 @@ class JBSMBackup
 	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
 	 * failed, return value is FALSE.
 	 *
-	 * @param   string  $fileData  Data to write. Set to null to close the file handle.
+	 * @param   string $fileData  Data to write. Set to null to close the file handle.
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
 	 */
@@ -228,9 +228,9 @@ class JBSMBackup
 	/**
 	 * File output
 	 *
-	 * @param   string  $file       File Name
-	 * @param   string  $name       Name output
-	 * @param   string  $mime_type  Meme_Type
+	 * @param   string $file       File Name
+	 * @param   string $name       Name output
+	 * @param   string $mime_type  Meme_Type
 	 *
 	 * @return void
 	 */
@@ -341,7 +341,7 @@ class JBSMBackup
 		// You may want to change this
 		$chunksize  = 1 * (1024 * 1024);
 		$bytes_sent = 0;
-		$fp = fopen($file, 'r');
+		$fp         = fopen($file, 'r');
 
 		if ($fp)
 		{

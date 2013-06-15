@@ -63,7 +63,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -486,7 +486,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
 			$this->document->setTitle(
 				$this->item->page_title . ' - '
-					. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
+				. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
 			);
 		}
 
@@ -499,7 +499,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string  $tpl  ?
+	 * @param   string $tpl  ?
 	 *
 	 * @return void
 	 */
