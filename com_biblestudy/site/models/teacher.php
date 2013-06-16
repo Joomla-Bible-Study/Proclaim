@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -64,7 +66,7 @@ class BiblestudyModelTeacher extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int  $pk  The id of the study.
+	 * @param   int $pk  The id of the study.
 	 *
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
@@ -99,7 +101,7 @@ class BiblestudyModelTeacher extends JModelItem
 
 				$this->_item[$pk] = $data;
 			}
-			catch (JException $e)
+			catch (Exception $e)
 			{
 				if ($e->getCode() == 404)
 				{

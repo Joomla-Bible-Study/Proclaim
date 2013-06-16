@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -15,13 +17,17 @@ defined('_JEXEC') or die;
  */
 class JBSMDbHelper
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
 	 * System to Check if Table Exists
 	 *
-	 * @param    string  $cktable  Table to check for exp:"#__bsms_admin
+	 * @param    string $cktable  Table to check for exp:"#__bsms_admin
 	 *
 	 * @return bool  If table is there True else False if not.
 	 */
@@ -35,6 +41,7 @@ class JBSMDbHelper
 		foreach ($tables AS $table)
 		{
 			$tableAF = str_replace($prefix, "#__", $table);
+
 			if ($tableAF == $cktable)
 			{
 				return true;
@@ -48,8 +55,8 @@ class JBSMDbHelper
 	/**
 	 * Discover the fields in a table
 	 *
-	 * @param   string  $table  Is the table you are checking
-	 * @param   string  $field  Checking against.
+	 * @param   string $table  Is the table you are checking
+	 * @param   string $field  Checking against.
 	 *
 	 * @return boolean false equals field does not exist
 	 */
@@ -73,8 +80,8 @@ class JBSMDbHelper
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
-	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
-	 * @param   string  $from    Where the query is coming from for msg
+	 * @param   array  $tables  Tables is an array of tables, fields, type of query and optional command line
+	 * @param   string $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
 	 */
@@ -162,8 +169,8 @@ class JBSMDbHelper
 	/**
 	 * performs a database query
 	 *
-	 * @param   string  $query  Is a Joomla ready query
-	 * @param   string  $from   Where the sorce of the query comes from
+	 * @param   string $query  Is a Joomla ready query
+	 * @param   string $from   Where the sorce of the query comes from
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
@@ -189,11 +196,11 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
+	 * Checks a table for the existence of a field, if it does not find it, runs the Admin model fix()
 	 *
-	 * @param   string   $table        table is the table you are checking
-	 * @param   string   $field        field you are checking
-	 * @param   boolean  $description  ?
+	 * @param   string  $table        table is the table you are checking
+	 * @param   string  $field        field you are checking
+	 * @param   boolean $description  ?
 	 *
 	 * @return boolean
 	 */
@@ -215,7 +222,7 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Get Opjects for tables
+	 * Get Objects for tables
 	 *
 	 * @return array
 	 */
@@ -225,8 +232,8 @@ class JBSMDbHelper
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
-		$bsms = 'bsms_';
-		$objects = array();
+		$bsms      = 'bsms_';
+		$objects   = array();
 
 		foreach ($tables as $table)
 		{
@@ -295,10 +302,10 @@ class JBSMDbHelper
 	/**
 	 * Fixupcss.
 	 *
-	 * @param   string   $filename  Name of css file
-	 * @param   boolean  $parent    if coming form the update script
-	 * @param   string   $newcss    New css style
-	 * @param   int      $id        this is the id of record to be fixed
+	 * @param   string  $filename  Name of css file
+	 * @param   boolean $parent    if coming form the update script
+	 * @param   string  $newcss    New css style
+	 * @param   int     $id        this is the id of record to be fixed
 	 *
 	 * @return boolean
 	 *
@@ -307,7 +314,7 @@ class JBSMDbHelper
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
 		$app = JFactory::getApplication();
-		/* Start by getting exesting Style */
+		/* Start by getting existing Style */
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
@@ -335,7 +342,7 @@ class JBSMDbHelper
 		);
 		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
 
-		/* now see if we are adding newcss to the db css */
+		/* now see if we are adding new css to the db css */
 		if ($parent || $newcss)
 		{
 			$newcss = $db->escape($newcss) . ' ' . $oldcss;
@@ -361,7 +368,7 @@ class JBSMDbHelper
 
 		if (!$db->execute())
 		{
-			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
 
 			return false;
 		}
@@ -379,8 +386,8 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object  $result  Objectlist that we will get the id from.
-	 * @param   string  $table   Table to be reloaded.
+	 * @param   object $result  Objectlist that we will get the id from.
+	 * @param   string $table   Table to be reloaded.
 	 *
 	 * @return boolean
 	 *
@@ -397,7 +404,8 @@ class JBSMDbHelper
 		try
 		{
 			$table->load($result->id);
-            //this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
+
+			// This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 			@$table->store();
 		}
 		catch (Exception $e)
@@ -457,7 +465,7 @@ class JBSMDbHelper
 
 					if (!$db->execute())
 					{
-						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 
 						return false;
 					}
@@ -479,10 +487,8 @@ class JBSMDbHelper
 	public static function CleanStudyTopics()
 	{
 
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
-
-
+		$app   = JFactory::getApplication();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
@@ -500,7 +506,11 @@ class JBSMDbHelper
 				foreach ($resulta AS $study_topics)
 				{
 					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id)->where('topic_id = ' . $study_topics->topic_id)->order('id desc');
+					$query->select('id')
+						->from('#__bsms_studytopics')
+						->where('study_id = ' . $result->id)
+						->where('topic_id = ' . $study_topics->topic_id)
+						->order('id desc');
 					$db->setQuery($query);
 					$results = $db->loadObjectList();
 					$records = count($results);
@@ -512,8 +522,10 @@ class JBSMDbHelper
 							if ($t < $records)
 							{
 								$query = $db->getQuery(true);
-								$query->delete('#__bsms_studytopics')->where('id = ' . $id->id);
+								$query->delete('#__bsms_studytopics')
+									->where('id = ' . $id->id);
 								$db->setQuery($query);
+
 								if (!$db->execute())
 								{
 									$app->enqueueMessage('Error with Deleting duplicat topics record ' . $id->id, 'error');

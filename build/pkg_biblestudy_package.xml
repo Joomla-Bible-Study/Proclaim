@@ -2,11 +2,11 @@
 <extension type="package" version="2.5">
     <name>Package Joomla Bible Study</name>
     <packagename>biblestudy_package</packagename>
-    <version>7.1.2</version>
+    <version>8.0.0</version>
     <description>
         <![CDATA[Joomla Bible Study is one of the most popular Bible Study System available today. <a href='index.php?option=com_biblestudy'>Next to Finish install</a>]]></description>
-    <creationDate>Oct 25, 2012</creationDate>
-    <copyright>(C) 2007-2011 Copyright Joomla Bible Study</copyright>
+    <creationDate>June 12, 2013</creationDate>
+    <copyright>(C) 2007-2013 Copyright Joomla Bible Study</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblesutdy.org</authorEmail>

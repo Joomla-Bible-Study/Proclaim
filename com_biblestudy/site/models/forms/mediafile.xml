@@ -15,10 +15,11 @@
                format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
         <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
                description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
-        <field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
-               description="JBS_MED_CHOOSE_PODCAST_DESC" class="inputbox" multiple="true"
+        <field name="podcast_id"  size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
+               description="JBS_MED_CHOOSE_PODCAST_DESC"
                query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-               key_field="id" value_field="title">
+               key_field="id" value_field="title" multiple="true" default="-1">
+            <option value="-1">JBS_CMN_SELECT_PODCAST</option>
         </field>
         <field name="link_type" type="list" extension="com_biblestudy"
                label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"

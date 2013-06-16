@@ -1,8 +1,10 @@
 <?php
 /**
- * @package LiveUpdate
+ * Live Update Package
+ *
+ * @package   LiveUpdate
  * @copyright Copyright (c)2010-2013 Nicholas K. Dionysopoulos / AkeebaBackup.com
- * @license GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
+ * @license   GNU LGPLv3 or later <http://www.gnu.org/copyleft/lesser.html>
  */
 
 defined('_JEXEC') or die();
@@ -11,38 +13,62 @@ defined('_JEXEC') or die();
  * Live Update Component Storage Class
  * Allows to store the update data to a component's parameters. This is the most reliable method.
  * Its configuration options are:
- * component	string	The name of the component which will store our data. If not specified the extension name will be used.
- * key			string	The name of the component parameter where the serialized data will be stored. If not specified "liveupdate" will be used.
+ * component    string    The name of the component which will store our data. If not specified the extension name will be used.
+ * key            string    The name of the component parameter where the serialized data will be stored. If not specified "liveupdate" will be used.
  */
 class LiveUpdateStorageComponent extends LiveUpdateStorage
 {
+	/**
+	 * Component Name
+	 *
+	 * @var null
+	 */
 	private static $component = null;
+
+	/**
+	 * Key
+	 *
+	 * @var null
+	 */
 	private static $key = null;
 
+	/**
+	 * Load
+	 *
+	 * @param   string $config  Config
+	 *
+	 * @return void
+	 */
 	public function load($config)
 	{
-		if(!array_key_exists('component', $config)) {
+		if (!array_key_exists('component', $config))
+		{
 			self::$component = $config['extensionName'];
-		} else {
+		}
+		else
+		{
 			self::$component = $config['component'];
 		}
 
-		if(!array_key_exists('key', $config)) {
+		if (!array_key_exists('key', $config))
+		{
 			self::$key = 'liveupdate';
-		} else {
+		}
+		else
+		{
 			self::$key = $config['key'];
 		}
 
 		// Not using JComponentHelper to avoid conflicts ;)
-		$db = JFactory::getDbo();
+		$db  = JFactory::getDbo();
 		$sql = $db->getQuery(true)
 			->select($db->qn('params'))
 			->from($db->qn('#__extensions'))
-			->where($db->qn('type').' = '.$db->q('component'))
-			->where($db->qn('element').' = '.$db->q(self::$component));
+			->where($db->qn('type') . ' = ' . $db->q('component'))
+			->where($db->qn('element') . ' = ' . $db->q(self::$component));
 		$db->setQuery($sql);
 		$rawparams = $db->loadResult();
-		$params = new JRegistry();
+		$params    = new JRegistry;
 		$params->loadString($rawparams, 'JSON');
 
 		$data = $params->get(self::$key, '');
@@ -53,6 +79,11 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 		self::$registry->loadString($data, 'INI');
 	}
 
+	/**
+	 * Save
+	 *
+	 * @return void
+	 */
 	public function save()
 	{
 		$data = self::$registry->toString('INI');
@@ -69,22 +100,22 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 		$sql = $db->getQuery(true)
 			->select($db->qn('params'))
 			->from($db->qn('#__extensions'))
-			->where($db->qn('type').' = '.$db->q('component'))
-			->where($db->qn('element').' = '.$db->q(self::$component));
+			->where($db->qn('type') . ' = ' . $db->q('component'))
+			->where($db->qn('element') . ' = ' . $db->q(self::$component));
 		$db->setQuery($sql);
 		$rawparams = $db->loadResult();
-		$params = new JRegistry();
+		$params    = new JRegistry;
 		$params->loadString($rawparams, 'JSON');
 
 		$params->set(self::$key, $data);
 
 		// Joomla! 1.6
 		$data = $params->toString('JSON');
-		$sql = $db->getQuery(true)
+		$sql  = $db->getQuery(true)
 			->update($db->qn('#__extensions'))
-			->set($db->qn('params').' = '.$db->q($data))
-			->where($db->qn('type').' = '.$db->q('component'))
-			->where($db->qn('element').' = '.$db->q(self::$component));
+			->set($db->qn('params') . ' = ' . $db->q($data))
+			->where($db->qn('type') . ' = ' . $db->q('component'))
+			->where($db->qn('element') . ' = ' . $db->q(self::$component));
 
 		$db->setQuery($sql);
 		$db->query();

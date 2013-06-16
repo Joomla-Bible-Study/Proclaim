@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -10,19 +12,13 @@ defined('_JEXEC') or die;
 /**
  * BibleStudy Build Route
  *
- * @param   array  &$query  Info to Query
+ * @param   array &$query  Info to Query
  *
  * @return string
  */
 function biblestudyBuildRoute(&$query)
 {
 	$segments = array();
-
-	// Get a menu item based on Itemid or currently active
-	$app      = JFactory::getApplication('site');
-	$menu     = $app->getMenu();
-	$params   = $app->getParams();
-	$advanced = $params->get('sef_advanced_link', 0);
 
 	if (isset($query['view']))
 	{
@@ -64,21 +60,13 @@ function biblestudyBuildRoute(&$query)
 /**
  * BibleStudy Parse Route
  *
- * @param   array  $segments  Parse Route Info
+ * @param   array $segments  Parse Route Info
  *
  * @return object
  */
 function biblestudyParseRoute($segments)
 {
 	$vars = array();
-
-	// Get the active menu item.
-	$app      = JFactory::getApplication();
-	$menu     = $app->getMenu();
-	$item     = $menu->getActive();
-	$params   = JComponentHelper::getParams('com_biblestudy');
-	$advanced = $params->get('sef_advanced_link', 0);
-
 
 	// Count route segments
 	$count = count($segments);

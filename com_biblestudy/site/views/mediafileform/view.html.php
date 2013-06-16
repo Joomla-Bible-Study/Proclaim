@@ -1,17 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
-JLoader::register('JBSMHelper', BIBLESTUDY_PATH_HELPERS . '/biblestudy.php');
-JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 /**
  * View class for MediaFile
@@ -58,20 +55,25 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	protected $admin;
 
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Upload Folder */
 	public $upload_folder;
 
+	/** @var  string Upload Folder */
 	public $upload_server;
 
+	/** @var  JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  string Can Do */
 	protected $canDo;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */

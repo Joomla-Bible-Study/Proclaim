@@ -27,7 +27,7 @@
         <option value="1">JBS_CMN_YES</option>
     </field>
 
-    <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY"/>
+    <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" readonly="true"/>
 
     <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" required="true"/>
     <field name="alias"

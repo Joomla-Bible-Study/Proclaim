@@ -1,21 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-// @todo need to work over the JLoader. TOM
-JLoader::register('JBSMImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
-JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('image');
-$JViewLegacy->loadHelper('helper');
 
 /**
  *  Class for Series List
@@ -30,12 +23,12 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesList
 	 *
-	 * @param   object     $row           JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   string     $oddeven       Odd Even
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
-	 * @param   string     $view          View
+	 * @param   object    $row           JTable
+	 * @param   JRegistry $params        Item Params
+	 * @param   string    $oddeven       Odd Even
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
+	 * @param   string    $view          View
 	 *
 	 * @return string
 	 */
@@ -135,11 +128,11 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesLink
 	 *
-	 * @param   string     $islink        Is a link
-	 * @param   object     $row           Row Info
-	 * @param   string     $element       Element
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   string    $islink        Is a link
+	 * @param   object    $row           Row Info
+	 * @param   string    $element       Element
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -163,11 +156,11 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get StudiesLink
 	 *
-	 * @param   string     $islink        Is a Link
-	 * @param   object     $row           JTable
-	 * @param   object     $element       Element
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   string    $islink        Is a Link
+	 * @param   object    $row           JTable
+	 * @param   object    $element       Element
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -182,14 +175,14 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Element
 	 *
-	 * @param   string     $r              ?
-	 * @param   object     $row            JTable
-	 * @param   int        $listelementid  Elemint ID
-	 * @param   string     $custom         Costum
-	 * @param   string     $islink         Is a Link
-	 * @param   JRegistry  $admin_params   Admin Params
-	 * @param   JRegistry  $params         Item Params
-	 * @param   string     $view           View
+	 * @param   string    $r              ?
+	 * @param   object    $row            JTable
+	 * @param   int       $listelementid  Elemint ID
+	 * @param   string    $custom         Costum
+	 * @param   string    $islink         Is a Link
+	 * @param   JRegistry $admin_params   Admin Params
+	 * @param   JRegistry $params         Item Params
+	 * @param   string    $view           View
 	 *
 	 * @return string
 	 */
@@ -305,13 +298,13 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string     $r              ?
-	 * @param   object     $row            JTable
-	 * @param   object     $customelement  ?
-	 * @param   string     $custom         ?
-	 * @param   string     $islink         Is a Link
-	 * @param   JRegistry  $admin_params   Admin Params
-	 * @param   JRegistry  $params         Item Params
+	 * @param   string    $r              ?
+	 * @param   object    $row            JTable
+	 * @param   object    $customelement  ?
+	 * @param   string    $custom         ?
+	 * @param   string    $islink         Is a Link
+	 * @param   JRegistry $admin_params   Admin Params
+	 * @param   JRegistry $params         Item Params
 	 *
 	 * @return string
 	 */
@@ -337,7 +330,7 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series ElementNumber
 	 *
-	 * @param   string  $subcustom  ?
+	 * @param   string $subcustom  ?
 	 *
 	 * @return int
 	 */
@@ -382,9 +375,9 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesStudies DBO
 	 *
-	 * @param   int        $id      ID
-	 * @param   JRegistry  $params  Item Params
-	 * @param   string     $limit   Limit of Records
+	 * @param   int       $id      ID
+	 * @param   JRegistry $params  Item Params
+	 * @param   string    $limit   Limit of Records
 	 *
 	 * @return array
 	 */
@@ -416,12 +409,12 @@ class JBSMSerieslist extends JBSMListing
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$query  = $db->getQuery(true);
 		$query->select('s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
-			. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
-			. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
-			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
-			. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text ')
+		. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
+		. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
+		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+		. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
+		. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
+		. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text ')
 			->from('#__bsms_studies AS s')
 			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
 			->leftJoin('#__bsms_teachers AS t ON (s.teacher_id = t.id)')
@@ -453,17 +446,17 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get SeriesStudies
 	 *
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template ID
+	 * @param   int       $id            ID
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   int       $template      Template ID
 	 *
 	 * @return string
 	 */
 	public function getSeriesstudies($id, $params, $admin_params, $template)
 	{
-		
-        $limit   = '';
+
+		$limit   = '';
 		$input   = new JInput;
 		$nolimit = $input->get('nolimit', '', 'int');
 
@@ -485,7 +478,7 @@ class JBSMSerieslist extends JBSMListing
 		$class2  = 'bseven';
 		$oddeven = $class1;
 
-		foreach ($result AS $row) 
+		foreach ($result AS $row)
 		{
 			if ($oddeven == $class1)
 			{ // Alternate the color background
@@ -506,7 +499,7 @@ class JBSMSerieslist extends JBSMListing
 				$studies .= ' lastrow';
 			}
 			$studies .= '">';
-            
+
 			$element = $this->getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
 
 			if ($params->get('series_detail_islink1') > 0)
@@ -551,10 +544,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object     $row           JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   object    $row           JTable
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
 	 *
 	 * @return object
 	 */
@@ -578,10 +571,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object     $row           JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   object    $row           JTable
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
 	 *
 	 * @return object
 	 */
@@ -604,10 +597,10 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int        $id            ID
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   object     $template      Template
+	 * @param   int       $id            ID
+	 * @param   JRegistry $params        Item Params
+	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $template      Template
 	 *
 	 * @return string
 	 */
@@ -692,8 +685,8 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Footer
 	 *
-	 * @param   object  $template  Template
-	 * @param   int     $id        ID
+	 * @param   object $template  Template
+	 * @param   int    $id        ID
 	 *
 	 * @return string
 	 *

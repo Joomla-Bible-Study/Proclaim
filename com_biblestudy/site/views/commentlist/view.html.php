@@ -1,14 +1,14 @@
 <?php
 /**
- * @package    BibleStudy
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for CommentList extends Comments
@@ -46,7 +46,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -65,6 +65,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			return;
 		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
+
 		// Check permissions to enter studies
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -106,6 +107,8 @@ class BiblestudyViewCommentlist extends JViewLegacy
 
 	/**
 	 * Add the page title to browser.
+	 *
+	 * @return  void
 	 *
 	 * @since    7.1.0
 	 */

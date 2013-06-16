@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -16,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class JBSMFreshInstall
 {
-
 	/**
 	 * Install CSS on Fresh install
 	 *
@@ -25,7 +26,7 @@ class JBSMFreshInstall
 	public static function installCSS()
 	{
 		$db    = JFactory::getDBO();
-		$dest  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/site/biblestudy.css';
+		$dest  = JPATH_SITE . '/media/com_biblestudy/css/site/biblestudy.css';
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_styles')

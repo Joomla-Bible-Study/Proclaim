@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,69 +16,98 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.1.0
  */
-class JBSPIconvert
+class JBSMPIconvert
 {
 
 	/**
+	 * Array of Comments Id's
+	 *
 	 * @var array
 	 */
 	public $commentsids;
 
 	/**
+	 * Array of Servers Id's
+	 *
 	 * @var array
 	 */
 	public $serversids;
 
 	/**
+	 * Array of Folders Id's
+	 *
 	 * @var array
 	 */
 	public $foldersids;
 
 	/**
+	 * Array of Studies Id's
+	 *
 	 * @var array
 	 */
 	public $studiesids;
 
 	/**
+	 * Array of Media-Files Id's
+	 *
 	 * @var array
 	 */
 	public $mediafilesids;
 
 	/**
+	 * Array of Teachers Id's
+	 *
 	 * @var array
 	 */
 	public $teachersids;
 
 	/**
+	 * Array of Series Id's
+	 *
 	 * @var array
 	 */
 	public $seriesids;
 
 	/**
+	 * Array of Podcasts Id's
+	 *
 	 * @var array
 	 */
 	public $podcastids;
 
 	/**
+	 * Array of Locations
+	 *
 	 * @var array
 	 */
 	public $locations;
 
 	/**
+	 * ???
+	 *
 	 * @var int
 	 */
 	public $cnoadd;
 
 	/**
+	 * Can Add switch
+	 *
 	 * @var int
 	 */
 	public $cadd;
 
 	/**
+	 * Comment object
+	 *
 	 * @var object
 	 */
 	public $picomments;
 
+	/**
+	 * Number of Podcasts
+	 *
+	 * @var int
+	 */
 	public $podcasts;
 
 	/**
@@ -569,7 +600,6 @@ class JBSPIconvert
 				$datastudies->params         = $params;
 				$datastudies->access         = $access;
 
-
 				if (!$db->insertObject('#__bsms_studies', $datastudies, 'id'))
 				{
 					$snoadd++;
@@ -655,10 +685,10 @@ class JBSPIconvert
 	/**
 	 * Insert Media into BibleStudy
 	 *
-	 * @param   object  $pi     ?
-	 * @param   string  $type   Type of Media
-	 * @param   int     $newid  New ID
-	 * @param   int     $oldid  Old ID
+	 * @param   object $pi     ?
+	 * @param   string $type   Type of Media
+	 * @param   int    $newid  New ID
+	 * @param   int    $oldid  Old ID
 	 *
 	 * @return boolean
 	 *
@@ -679,6 +709,7 @@ class JBSPIconvert
 		$mediacode   = '';
 		$link_type   = '';
 		$player      = '';
+		$pod         = array();
 		$query       = $db->getQuery(true);
 		$query->select('*')->from('#__pipodmes');
 		$db->setQuery($query);
@@ -980,8 +1011,8 @@ class JBSPIconvert
 	/**
 	 * Insert Comments
 	 *
-	 * @param   int  $oldid  ?
-	 * @param   int  $newid  ?
+	 * @param   int $oldid  ?
+	 * @param   int $newid  ?
 	 *
 	 * @return boolean
 	 *

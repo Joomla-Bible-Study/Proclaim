@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -23,8 +25,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
+	 * @param   string $name    The name of the model
+	 * @param   string $prefix  The prefix for the PHP class name
 	 *
 	 * @return JModel
 	 *
@@ -342,7 +344,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Exported Template Settings
 	 *
-	 * @param   object  $result  ?
+	 * @param   object $result  ?
 	 *
 	 * @return string
 	 */
@@ -431,7 +433,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   array  $template  ?
+	 * @param   array $template  ?
 	 *
 	 * @return boolean|string
 	 */
@@ -461,7 +463,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Perform DB Query
 	 *
-	 * @param   string  $query  Query
+	 * @param   string $query  Query
 	 *
 	 * @return boolean
 	 */

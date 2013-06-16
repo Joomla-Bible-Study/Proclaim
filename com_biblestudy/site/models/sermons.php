@@ -1,15 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
 
 jimport('joomla.application.component.modellist');
 
@@ -30,7 +29,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -71,8 +70,8 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering   An optional ordering field.
+	 * @param   string $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -141,8 +140,8 @@ class BiblestudyModelSermons extends JModelList
 		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
 		parent::populateState('study.studydate', 'DESC');
-		$input      = new JInput;
-		$value      = $input->get('start', '', 'int');
+		$input = new JInput;
+		$value = $input->get('start', '', 'int');
 		$this->setState('list.start', $value);
 	}
 
@@ -153,7 +152,7 @@ class BiblestudyModelSermons extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -200,7 +199,7 @@ class BiblestudyModelSermons extends JModelList
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
 		                study.verse_end2, study.verse_begin2 ') . ','
-				. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -518,9 +517,9 @@ class BiblestudyModelSermons extends JModelList
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
-						' AND study.chapter_begin >= ' . $chb .
-						' AND study.chapter_end <= ' . $che . ')' .
-						'OR study.booknumber2 = ' . (int) $book
+					' AND study.chapter_begin >= ' . $chb .
+					' AND study.chapter_end <= ' . $che . ')' .
+					'OR study.booknumber2 = ' . (int) $book
 				);
 			}
 			else
@@ -633,7 +632,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array  $items  Books
+	 * @param   array $items  Books
 	 *
 	 * @return object
 	 *
@@ -830,7 +829,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int  $id  ID
+	 * @param   int $id  ID
 	 *
 	 * @return array
 	 *
@@ -888,7 +887,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @param   int  $id  ID of Download
+	 * @param   int $id  ID of Download
 	 *
 	 * @return string
 	 *

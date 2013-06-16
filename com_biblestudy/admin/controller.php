@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Admin Controller
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,12 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Bible Study Core Defines
  */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-
-JLoader::register('JBSMUpload', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/upload.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
-JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 
 /**
@@ -41,10 +35,10 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Core Display
 	 *
-	 * @param   boolean  $cachable   Cachable system
-	 * @param   boolean  $urlparams  Url params
+	 * @param   boolean $cachable   Cachable system
+	 * @param   boolean $urlparams  Url params
 	 *
-	 * @return  JController		This object to support chaining.
+	 * @return  JController        This object to support chaining.
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
@@ -268,9 +262,9 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function resetHits()
 	{
-		$app = JFactory::getApplication();
-		$id  = $app->input->getInt('id', 0, 'get');
-		$db  = JFactory::getDBO();
+		$app   = JFactory::getApplication();
+		$id    = $app->input->getInt('id', 0, 'get');
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits=' . 0)
@@ -279,7 +273,7 @@ class BiblestudyController extends JControllerLegacy
 
 		if (!$db->execute())
 		{
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_HITS');
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS');
 		}
 		else
 		{
@@ -296,9 +290,9 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function resetDownloads()
 	{
-		$app = JFactory::getApplication();
-		$id  = $app->input->getInt('id', 0, 'get');
-		$db  = JFactory::getDBO();
+		$app   = JFactory::getApplication();
+		$id    = $app->input->getInt('id', 0, 'get');
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = ' . 0)
@@ -307,7 +301,7 @@ class BiblestudyController extends JControllerLegacy
 
 		if (!$db->execute())
 		{
-			$msg   = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS');
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS');
 		}
 		else
 		{
@@ -327,7 +321,7 @@ class BiblestudyController extends JControllerLegacy
 		$jinput = new JInput;
 		$id     = $jinput->getInt('id', 0, 'get');
 		$db     = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$query  = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = ' . 0)
 			->where('id = ' . (int) $id);

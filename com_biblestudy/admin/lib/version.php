@@ -1,7 +1,9 @@
 <?php
 /**
+ * Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  *
@@ -9,7 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// use default translations if none are available
+// Use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
 	DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
@@ -24,14 +26,14 @@ if (!defined('_BIBLESTUDY_LICENSE'))
 }
 
 /**
- * BibleSutdy Version Class
+ * BibleStudy Version Class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.2
  *
- * @use This is used by biblestudy.debug.php
+ * @use      This is used by biblestudy.debug.php
  */
-class CBiblestudyVersion
+class JBSMBiblestudyVersion
 {
 
 	/**
@@ -81,7 +83,7 @@ class CBiblestudyVersion
 		$version = self::versionObject();
 
 		return '<table><tr><td><strong>' . JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY') . '</strong></td></tr><tr><td>' . JText::_('JBS_CPL_CURRENT_VERSION')
-			. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
+		. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
 	}
 
 	/**

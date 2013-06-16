@@ -1,13 +1,14 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 /**
  * Restore class
  *
@@ -15,13 +16,13 @@ JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.asset
  * @since    7.0.4
  * @todo     Rename Class to be better suted for restore
  */
-class JBSRestore
+class JBSMRestore
 {
 
 	/**
 	 * Import DB
 	 *
-	 * @param   boolean  $perent  Switch to see if it is coming from migration or restore.
+	 * @param   boolean $perent  Switch to see if it is coming from migration or restore.
 	 *
 	 * @return boolean
 	 */
@@ -154,8 +155,8 @@ class JBSRestore
 	/**
 	 * Install DB
 	 *
-	 * @param   string   $tmp_src  Temp info
-	 * @param   boolean  $parent   To tell if coming from migration
+	 * @param   string  $tmp_src  Temp info
+	 * @param   boolean $parent   To tell if coming from migration
 	 *
 	 * @return boolean if db installed correctly.
 	 */
@@ -257,7 +258,7 @@ class JBSRestore
 	/**
 	 * Restor DB for exesting Joomla Bible Study
 	 *
-	 * @param   string  $backuprestore  ?
+	 * @param   string $backuprestore  ?
 	 *
 	 * @return boolean See if the restore worked.
 	 */
@@ -320,6 +321,7 @@ class JBSRestore
 	{
 		$input = new JInput;
 		$p_dir = $input->getString('install_directory');
+
 		return $p_dir;
 	}
 
@@ -334,8 +336,8 @@ class JBSRestore
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
-		$prefix . $bsms = 'bsms_';
-		$objects = array();
+		$bsms      = 'bsms_';
+		$objects   = array();
 
 		foreach ($tables as $table)
 		{

@@ -1,13 +1,12 @@
 <?php
-
 /**
- * Related Helper
+ * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- **/
+ * */
 
 defined('_JEXEC') or die;
 
@@ -17,15 +16,16 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.1.0
  */
-class RelatedStudies
+class JBSMRelatedStudies
 {
+	/** @var  string Score */
 	public $score;
 
 	/**
 	 * Get Related
 	 *
-	 * @param   object  $row     JTable
-	 * @param   object  $params  Item Params
+	 * @param   object $row     JTable
+	 * @param   object $params  Item Params
 	 *
 	 * @return boolean
 	 *
@@ -98,9 +98,9 @@ class RelatedStudies
 	/**
 	 * Parse keys
 	 *
-	 * @param   string  $source   ?
-	 * @param   string  $compare  ?
-	 * @param   int     $id       ?
+	 * @param   string $source   ?
+	 * @param   string $compare  ?
+	 * @param   int    $id       ?
 	 *
 	 * @return boolean
 	 */
@@ -201,8 +201,8 @@ class RelatedStudies
 	/**
 	 * Look for Related Links.
 	 *
-	 * @param   array      $scored  ?
-	 * @param   JRegistry  $params  Item Params
+	 * @param   array     $scored  ?
+	 * @param   JRegistry $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -280,7 +280,7 @@ class RelatedStudies
 	/**
 	 * Remove Common Words form render.
 	 *
-	 * @param   string  $input  Home
+	 * @param   string $input  Home
 	 *
 	 * @return array
 	 */
