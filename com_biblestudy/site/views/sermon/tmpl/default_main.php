@@ -19,11 +19,6 @@ $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 $params = $this->item->params;
 $user = JFactory::getUser();
 $canEdit = $params->get('access-edit');
-
-$JViewLegacy = new JViewLegacy;
-
-$JViewLegacy->loadHelper('title');
-$JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 $row = $this->item;
 ?>
@@ -100,7 +95,6 @@ $row = $this->item;
 		<?php
 		if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1)
 		{
-			$JViewLegacy->loadHelper('header');
 			$header = $JBSMTeacher->getHeader(
 				$row, $this->item->params, $this->item->admin_params, $this->template,
 				$showheader = $this->item->params->get('use_headers_view'), $ismodule = 0

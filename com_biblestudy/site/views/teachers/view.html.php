@@ -111,9 +111,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 
 		// Load the Admin settings and params from the template
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin(true);
-		$this->loadHelper('image');
 		$template = JBSMParams::getTemplateparams();
 
 		// Convert parameter fields to objects.

@@ -87,7 +87,6 @@ class BiblestudyViewMessagelist extends JViewLegacy
 
 		// Load the Admin settings and params from the template
 		$this->admin = JBSMParams::getAdmin(true);
-		$this->loadHelper('image');
 		$template = JBSMParams::getTemplateparams();
 
 		// Convert parameter fields to objects.

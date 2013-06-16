@@ -311,8 +311,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-		JViewLegacy::loadHelper('image');
-
 		$uri = new JUri;
 
 		$filter_topic       = $this->state->get('filter.topic');
@@ -335,9 +333,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->topics       = $this->get('Topics');
 		$this->orders       = $this->get('Orders');
 		$this->books        = $this->get('Books');
-
-		// This is the helper for scripture formatting
-		JViewLegacy::loadHelper('scripture');
 
 		// End scripture helper
 		// Get the data for the drop down boxes

@@ -21,8 +21,6 @@ if ($url)
 {
 	$document->addStyleSheet($url);
 }
-$jview = new JViewLegacy;
-$jview->loadHelper('serieslist');
 $JBSMSerieslist = new JBSMSerieslist;
 $t = $this->params->get('serieslisttemplateid');
 

@@ -13,8 +13,6 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('serieslist');
 $JBSMSerieslist = new JBSMSerieslist;
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
