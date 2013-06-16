@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -36,14 +38,16 @@ class BiblestudyViewMigration extends JViewLegacy
 	/** @var array Array of PHP Function to parse. */
 	private $_afterStack = array();
 
+	/** @var string More */
 	protected $more;
 
+	/** @var  string Percentage */
 	protected $percentage;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

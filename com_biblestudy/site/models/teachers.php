@@ -1,10 +1,9 @@
 <?php
-
 /**
- * Teachers Model
+ * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -62,8 +61,8 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Populate the State
 	 *
-	 * @param   string  $ordering   ?
-	 * @param   string  $direction  ?
+	 * @param   string $ordering   ?
+	 * @param   string $direction  ?
 	 *
 	 * @return void
 	 */

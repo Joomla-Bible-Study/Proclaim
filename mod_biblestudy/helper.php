@@ -24,7 +24,7 @@ class ModJBSMHelper
 	/**
 	 * Get Latest
 	 *
-	 * @param   JObject  $params  Item Params
+	 * @param   JObject $params  Item Params
 	 *
 	 * @return array
 	 */
@@ -67,12 +67,12 @@ class ModJBSMHelper
 		$query->from('#__bsms_studies AS study');
 
 		$query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
+                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
                         study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
                         study.media_seconds, study.series_id, study.chapter_begin2, study.chapter_end2, study.verse_begin2,
 						study.verse_end2, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
                         study.user_id, study.studynumber,'
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+		. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 
 		// Join over mediafile ids
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
@@ -327,7 +327,7 @@ class ModJBSMHelper
 	/**
 	 * Get Template Setting
 	 *
-	 * @param   JRegistry  $params  Item params
+	 * @param   JRegistry $params  Item params
 	 *
 	 * @return object
 	 */
@@ -335,7 +335,7 @@ class ModJBSMHelper
 	{
 		$db         = JFactory::getDBO();
 		$templateid = $params->get('modulemenuid', 1);
-		$query = $db->getQuery(true);
+		$query      = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_templates')->where('published = 1')->where('id = ' . $templateid);
 		$db->setQuery($query);
 		$template = $db->loadObjectList();
@@ -362,8 +362,8 @@ class ModJBSMHelper
 	/**
 	 * Render Study
 	 *
-	 * @param   string   $study   Study ?
-	 * @param   JObject  $params  Params
+	 * @param   string  $study   Study ?
+	 * @param   JObject $params  Params
 	 *
 	 * @return void
 	 *

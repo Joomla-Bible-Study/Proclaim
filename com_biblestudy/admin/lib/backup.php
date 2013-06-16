@@ -1,15 +1,13 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * @since      7.0.2
  * */
 defined('_JEXEC') or die;
-
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-JLoader::register('JBSMDbHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/dbhelper.php');
 
 /**
  * JBS Export class
@@ -19,11 +17,13 @@ JLoader::register('JBSMDbHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/dbhelper.php
  *
  * @todo     Look like we are duplicating the Class
  */
-class JBSExport
+class JBSMBackup
 {
-	// **********************************************************************
-	// File handling fields
-	// **********************************************************************
+	/*
+    **********************************************************************
+	* File handling fields
+	**********************************************************************
+	 */
 
 	/** @var string Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated) */
 	protected $dumpFile = '';
@@ -32,7 +32,7 @@ class JBSExport
 	protected $data_cache = '';
 
 	/** @var resource Filepointer to the current dump part */
-	private $fp = null;
+	private $_fp = null;
 
 	/** @var string Absolute path to the temp file */
 	protected $tempFile = '';
@@ -43,7 +43,7 @@ class JBSExport
 	/**
 	 * Export DB//
 	 *
-	 * @param   int  $run  ID
+	 * @param   int $run  ID
 	 *
 	 * @return boolean
 	 */
@@ -94,7 +94,7 @@ class JBSExport
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string  $table  Table name
+	 * @param   string $table  Table name
 	 *
 	 * @return boolean|string
 	 */
@@ -181,17 +181,19 @@ class JBSExport
 	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
 	 * failed, return value is FALSE.
 	 *
-	 * @param   string  $fileData  Data to write. Set to null to close the file handle.
+	 * @param   string $fileData  Data to write. Set to null to close the file handle.
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
 	 */
 	protected function writeline(&$fileData)
 	{
 		$app = JFactory::getApplication();
-		if (!$this->fp)
+
+		if (!$this->_fp)
 		{
-			$this->fp = @fopen($this->dumpFile, 'a');
-			if ($this->fp === false)
+			$this->_fp = @fopen($this->dumpFile, 'a');
+
+			if ($this->_fp === false)
 			{
 				$app->enqueueMessage('Could not open ' . $this->dumpFile . ' for append, in DB dump.', 'error');
 
@@ -201,16 +203,16 @@ class JBSExport
 
 		if (is_null($fileData))
 		{
-			if (is_resource($this->fp)) @fclose($this->fp);
-			$this->fp = null;
+			if (is_resource($this->_fp)) @fclose($this->_fp);
+			$this->_fp = null;
 
 			return true;
 		}
 		else
 		{
-			if ($this->fp)
+			if ($this->_fp)
 			{
-				$ret = fwrite($this->fp, $fileData);
+				$ret = fwrite($this->_fp, $fileData);
 				@clearstatcache();
 
 				// Make sure that all data was written to disk
@@ -226,9 +228,9 @@ class JBSExport
 	/**
 	 * File output
 	 *
-	 * @param   string  $file       File Name
-	 * @param   string  $name       Name output
-	 * @param   string  $mime_type  Meme_Type
+	 * @param   string $file       File Name
+	 * @param   string $name       Name output
+	 * @param   string $mime_type  Meme_Type
 	 *
 	 * @return void
 	 */
@@ -243,7 +245,7 @@ class JBSExport
 		// Turn off output buffering to decrease cpu usage
 		@ob_end_clean();
 
-		// disable execution time limit
+		// Disable execution time limit
 		set_time_limit(0);
 
 		// Required for IE, otherwise Content-Disposition may be ignored
@@ -300,7 +302,8 @@ class JBSExport
 		header("Content-Transfer-Encoding: binary");
 
 		$size = filesize($file);
-		// workaround for int overflow
+
+		// Workaround for int overflow
 		if ($size < 0)
 		{
 			$size = exec('ls -al "' . $file . '" | awk \'BEGIN {FS=" "}{print $5}\'');
@@ -338,8 +341,9 @@ class JBSExport
 		// You may want to change this
 		$chunksize  = 1 * (1024 * 1024);
 		$bytes_sent = 0;
+		$fp         = fopen($file, 'r');
 
-		if ($fp = fopen($file, 'r'))
+		if ($fp)
 		{
 			// Fast forward within file, if requested
 			if (isset($_SERVER['HTTP_RANGE']))

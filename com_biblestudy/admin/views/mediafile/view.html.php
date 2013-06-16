@@ -1,14 +1,14 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMUpload', JPATH_SITE . '/components/com_biblestudy/helpers/upload.php');
 
 /**
  * View class for MediaFile
@@ -48,19 +48,23 @@ class BiblestudyViewMediafile extends JViewLegacy
 	protected $admin;
 
 	/**
+	 * Can Do
+	 *
 	 * @var object
 	 */
 	public $canDo;
 
 	/**
-	 * @var object
+	 * Admin Params
+	 *
+	 * @var JRegistry
 	 */
 	public $admin_params;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -76,7 +80,6 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 
 		// Load the Admin settings
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new JRegistry;
 		$registry->loadString($this->admin->params);

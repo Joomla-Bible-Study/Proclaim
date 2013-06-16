@@ -1,10 +1,12 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -22,9 +24,9 @@ class BiblestudyModelTopic extends JModelAdmin
 	/**
 	 * Get Table
 	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
+	 * @param   string $name     The table name. Optional.
+	 * @param   string $prefix   The class prefix. Optional.
+	 * @param   array  $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 */
@@ -33,41 +35,41 @@ class BiblestudyModelTopic extends JModelAdmin
 		return JTable::getInstance($name, $prefix, $options);
 	}
 
-    /**
-     * Get the form data
-     *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-     *
-     * @return  mixed  A JForm object on success, false on failure
-     *
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true)
-    {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
+	/**
+	 * Get the form data
+	 *
+	 * @param   array   $data      Data for the form.
+	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
 
-        if (empty($form))
-        {
-            return false;
-        }
+		if (empty($form))
+		{
+			return false;
+		}
 
-        // Modify the form based on access controls.
-        if (!$this->canEditState((object) $data))
-        {
-            // Disable fields for display.
-            $form->setFieldAttribute('ordering', 'disabled', 'true');
-            $form->setFieldAttribute('published', 'disabled', 'true');
+		// Modify the form based on access controls.
+		if (!$this->canEditState((object) $data))
+		{
+			// Disable fields for display.
+			$form->setFieldAttribute('ordering', 'disabled', 'true');
+			$form->setFieldAttribute('published', 'disabled', 'true');
 
-            // Disable fields while saving.
-            // The controller has already verified this is a record you can edit.
-            $form->setFieldAttribute('ordering', 'filter', 'unset');
-            $form->setFieldAttribute('published', 'filter', 'unset');
-        }
+			// Disable fields while saving.
+			// The controller has already verified this is a record you can edit.
+			$form->setFieldAttribute('ordering', 'filter', 'unset');
+			$form->setFieldAttribute('published', 'filter', 'unset');
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
 	/**
 	 * Load Form Data
@@ -91,7 +93,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   integer $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -105,8 +107,8 @@ class BiblestudyModelTopic extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group      The cache group
+	 * @param   integer $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *

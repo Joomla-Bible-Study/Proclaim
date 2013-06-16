@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -9,8 +11,6 @@
 defined('_JEXEC') or die;
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('fixJBSAssets', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.assets.php');
 JLoader::register('MigrationUpgrade', JPATH_ADMINISTRATOR . '/components/com_biblestudy/migration/updateALL.php');
 
 
@@ -212,7 +212,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 *  Run the Migration will there is time.
 	 *
-	 * @param   bool  $resetTimer  If the time must be reset
+	 * @param   bool $resetTimer  If the time must be reset
 	 *
 	 * @return bool
 	 */
@@ -589,7 +589,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * System to Update based on versions
 	 *
-	 * @param   string  $version  Version to update
+	 * @param   string $version  Version to update
 	 *
 	 * @return boolean
 	 */
@@ -647,7 +647,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Function to do updates after 7.0.2 using the SQL Stack
 	 *
-	 * @param   string  $value  The File to run sql.
+	 * @param   string $value  The File to run sql.
 	 *
 	 * @return boolean
 	 *
@@ -701,8 +701,8 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Set the schema version for an extension by looking at its latest update
 	 *
-	 * @param   string   $version  Version number
-	 * @param   integer  $eid      Extension ID
+	 * @param   string  $version  Version number
+	 * @param   integer $eid      Extension ID
 	 *
 	 * @return  void
 	 *
@@ -779,7 +779,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 
 			// Final step is to fix assets
-			$assets = new FixJBSAssets;
+			$assets = new JBSMAssets;
 			$assets->fixAssets();
 			$installer = new Com_BiblestudyInstallerScript;
 			$installer->fixMenus();

@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.4
  */
-class FixJBSAssets
+class JBSMAssets
 {
 
 	/**
@@ -276,8 +278,8 @@ class FixJBSAssets
 	/**
 	 * Set Asset
 	 *
-	 * @param   object  $data       Data
-	 * @param   string  $assetname  Asset Name
+	 * @param   object $data       Data
+	 * @param   string $assetname  Asset Name
 	 *
 	 * @return boolean
 	 */
@@ -313,13 +315,14 @@ class FixJBSAssets
 	/**
 	 * Delete assets
 	 *
-	 * @param   object  $data  Data
+	 * @param   object $data  Data
 	 *
 	 * @return boolean
 	 */
 	private static function deleteasset($data)
 	{
 		$db = JFactory::getDBO();
+
 		if (isset($data->jasset_id))
 		{
 			if ($data->jasset_id >= 2)

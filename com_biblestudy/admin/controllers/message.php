@@ -1,7 +1,9 @@
-ver<?php
+<?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -29,7 +31,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A named array of configuration variables.
+	 * @param   array $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -71,7 +73,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object  $model  The model.
+	 * @param   object $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -93,29 +95,33 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string $key     The name of the primary key of the URL variable.
+	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 */
-	public function save($key = null, $urlVar = null) {
-        $model = $this->getModel('Topic');
-        $data = JRequest::setVar('jform', array(), 'post', 'array');
-        $topic_ids = array();
+	public function save($key = null, $urlVar = null)
+	{
+		$model     = $this->getModel('Topic');
+		$data      = JRequest::setVar('jform', array(), 'post', 'array');
+		$topic_ids = array();
 
-        //Non-numeric topics are assumed to be new and are added to the database
-        $topics  = explode(',', $data['topics']);
-        foreach($topics as $topic) {
-            if(!is_numeric($topic) && !empty($topic)) {
-                $model->save(array('topic_text' => $topic, 'language' => $data['language']));
-                $topic_ids[] = $model->getState('topic.id');
-            }else
-                $topic_ids[] = $topic;
-        }
-        $data['topics'] = implode(',', $topic_ids);
+		//Non-numeric topics are assumed to be new and are added to the database
+		$topics = explode(',', $data['topics']);
+		foreach ($topics as $topic)
+		{
+			if (!is_numeric($topic) && !empty($topic))
+			{
+				$model->save(array('topic_text' => $topic, 'language' => $data['language']));
+				$topic_ids[] = $model->getState('topic.id');
+			}
+			else
+				$topic_ids[] = $topic;
+		}
+		$data['topics'] = implode(',', $topic_ids);
 
-        JRequest::setVar('jform', $data, 'post', 'array');
+		JRequest::setVar('jform', $data, 'post', 'array');
 
-        parent::save();
-    }
+		return parent::save($key,$urlVar);
+	}
 }

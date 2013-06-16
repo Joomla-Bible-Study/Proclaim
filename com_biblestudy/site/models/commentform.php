@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -9,7 +11,6 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-// --require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php';
 JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
 /**
  * Comment model class
@@ -54,7 +55,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer  $pk  The id of the primary key.
+	 * @param   integer $pk  The id of the primary key.
 	 *
 	 * @return  mixed    Object on success, false on failure.
 	 */

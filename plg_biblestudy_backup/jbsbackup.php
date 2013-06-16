@@ -28,8 +28,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -70,32 +70,31 @@ class PlgSystemjbsbackup extends JPlugin
 			$dobackup = $this->doBackup();
 
 			// If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
-			if ($dobackup)
-			{
-				$updatetime = $this->updatetime();
 
-				// Check to see if we need to email anything
-				if ($check && $params->get('email') > 0)
-				{
-					$this->doEmail($params, $dobackup);
-				}
-				$this->updatefiles($params);
+			$updatetime = $this->updatetime();
+
+			// Check to see if we need to email anything
+			if ($check && $params->get('email') > 0)
+			{
+				$this->doEmail($params, $dobackup);
 			}
+			//$this->updatefiles($params);
+
 		}
 	}
 
 	/**
 	 * Check Time
 	 *
-	 * @param   object  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
 	public function checktime($params)
 	{
 
-		$now = time();
-		$db  = JFactory::getDBO();
+		$now   = time();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -118,7 +117,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -128,8 +127,8 @@ class PlgSystemjbsbackup extends JPlugin
 		$config    = JFactory::getConfig();
 		$offset    = $config->get('config.offset');
 
-		$now = time();
-		$db  = JFactory::getDBO();
+		$now   = time();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -226,11 +225,11 @@ class PlgSystemjbsbackup extends JPlugin
 	 */
 	public function updatetime()
 	{
-		$time = time();
-		$db   = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->update('#__jbsbackup_timeset')->set('backup = ' . $time);
+		$time  = time();
+		$db    = JFactory::getDBO();
+		$query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
 		$db->setQuery($query);
+		$db->query();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -261,8 +260,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   object  $params    ?
-	 * @param   object  $dobackup  ?
+	 * @param   object $params    ?
+	 * @param   object $dobackup  ?
 	 *
 	 * @return void
 	 */
@@ -320,7 +319,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Update files
 	 *
-	 * @param   object  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return void
 	 */

@@ -1,14 +1,14 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- */
+ * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 
 if (version_compare(JVERSION, '2.5', 'ge'))
 {
@@ -23,14 +23,24 @@ if (version_compare(JVERSION, '2.5', 'ge'))
  */
 class BiblestudyModelMessages extends JModelList
 {
+	/**
+	 * Data
+	 *
+	 * @var string
+	 */
 	private $_data;
 
+	/**
+	 * Files
+	 *
+	 * @var array
+	 */
 	private $_files;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -64,7 +74,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @param   int  $id  ID to get Downloads
+	 * @param   int $id  ID to get Downloads
 	 *
 	 * @return string
 	 */
@@ -90,7 +100,7 @@ class BiblestudyModelMessages extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -148,8 +158,8 @@ class BiblestudyModelMessages extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering   An optional ordering field.
+	 * @param   string $direction  An optional direction (asc|desc).
 	 *
 	 * @return    void
 	 *
@@ -205,8 +215,9 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-		// force a language
+		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
+
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
@@ -338,6 +349,7 @@ class BiblestudyModelMessages extends JModelList
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
+
 		if (!empty($search))
 		{
 			if (stripos($search, 'id:') === 0)
@@ -378,7 +390,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array  $items  Items for entries
+	 * @param   array $items  Items for entries
 	 *
 	 * @since 7.0
 	 * @return object
@@ -512,7 +524,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int  $id  ID for plays
+	 * @param   int $id  ID for plays
 	 *
 	 * @since 7.0
 	 * @return array

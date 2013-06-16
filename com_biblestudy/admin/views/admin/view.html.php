@@ -3,14 +3,12 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
-
-JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
 
 /**
  * View class for Admin
@@ -42,46 +40,136 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	protected $state;
 
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
 	public $version;
 
+	/**
+	 * Can Do
+	 *
+	 * @var string
+	 */
 	public $canDo;
 
+	/**
+	 * Change Set
+	 *
+	 * @var string
+	 */
 	public $changeSet;
 
+	/**
+	 * Errors
+	 *
+	 * @var string
+	 */
 	public $errors;
 
+	/**
+	 * Results
+	 *
+	 * @var string
+	 */
 	public $results;
 
+	/**
+	 * Schema Version
+	 *
+	 * @var string
+	 */
 	public $schemaVersion;
 
+	/**
+	 * Update Version
+	 *
+	 * @var string
+	 */
 	public $updateVersion;
 
+	/**
+	 * Filter Params
+	 *
+	 * @var JRegistry
+	 */
 	public $filterParams;
 
+	/**
+	 * Pagination
+	 *
+	 * @var string
+	 */
 	public $pagination;
 
+	/**
+	 * Error Count
+	 *
+	 * @var string
+	 */
 	public $errorCount;
 
+	/**
+	 * Joomla BibleStudy Version
+	 *
+	 * @var string
+	 */
 	public $jversion;
 
+	/**
+	 * Temp Destination
+	 *
+	 * @var string
+	 */
 	public $tmp_dest;
 
+	/**
+	 * Player Stats
+	 *
+	 * @var string
+	 */
 	public $playerstats;
 
+	/**
+	 * Assets
+	 *
+	 * @var string
+	 */
 	public $assets;
 
+	/**
+	 * Popups
+	 *
+	 * @var string
+	 */
 	public $popups;
 
+	/**
+	 * SS
+	 *
+	 * @var string
+	 */
 	public $ss;
 
+	/**
+	 * Lists
+	 *
+	 * @var string
+	 */
 	public $lists;
 
+	/**
+	 * PI
+	 *
+	 * @var string
+	 */
 	public $pi;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -90,7 +178,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->loadHelper('dbhelper');
 		$language = JFactory::getLanguage();
 		$language->load('com_installer');
 
@@ -114,11 +201,10 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->jversion      = $this->get('CompVersion');
 
 		// End for database
-		$this->loadHelper('params');
 		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->getCfg('tmp_path');
 
-		$stats             = new jbStats;
+		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
 		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
 		$popups            = $stats->popups();
@@ -156,11 +242,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		}
 
 		// Check for SermonSpeaker and PreachIt
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('extension_id, name, element')->from('#__extensions');
-		$db->setQuery($query);
-		$extensions = $db->loadObjectList();
+		$extensions = $this->get('SSorPI');
 
 		foreach ($extensions as $extension)
 		{
@@ -253,9 +335,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 	}
 
 	/**
-	 * Added for Sermonspeaker and preachit.
+	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string  $component  Component it is coming from
+	 * @param   string $component  Component it is coming from
 	 *
 	 * @return boolean
 	 *

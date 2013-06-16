@@ -1,18 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php';
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//require_once JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 
 /**
  * View class for SeriesDisplays
@@ -23,35 +19,34 @@ JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
-	/**
-	 * @var object
-	 */
+	/** @var object Admin Info */
 	protected $admin;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  JObject Items */
 	protected $items;
 
+	/** @var  JObject Template */
 	protected $template;
 
+	/** @var  JObject Pagination */
 	protected $pagination;
 
+	/** @var  string Request Url */
 	protected $request_url;
 
-	/**
-	 * @var JRegistry
-	 */
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  String Page */
 	protected $page;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -63,14 +58,11 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
-		JViewLegacy::loadHelper('image');
 
 		$document = JFactory::getDocument();
 
 		//  $model = $this->getModel();
 		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$t = $input->get('t', 1, 'int');
@@ -112,7 +104,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 
-
 		// Import Scripts
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
@@ -132,7 +123,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$pagebuilder   = new JBSPagebuilder;
+		$pagebuilder   = new JBSMPagebuilder;
 		$items         = $this->get('Items');
 		$images        = new JBSMImages;
 
@@ -185,14 +176,9 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->page->counter   = $pagination->getPagesCounter();
 		$series                = $this->get('Series');
 
-		// This is the helper for scripture formatting
-		// @todo move to JLouder. tom
-		$this->loadHelper('scripture');
-
 		// End scripture helper
 		$this->template   = $template;
 		$this->pagination = $pagination;
-
 
 		// Get the main study list image
 		$mainimage        = $images->mainStudyImage();
