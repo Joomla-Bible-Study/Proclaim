@@ -126,6 +126,6 @@ class BiblestudyControllerMessage extends JControllerForm
 
 		$jinput->set('jform', $data);
 
-		return parent::save($key, $urlVar);
+		return parent::save();
 	}
 }
