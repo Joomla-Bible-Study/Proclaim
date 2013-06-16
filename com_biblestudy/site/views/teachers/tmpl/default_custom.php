@@ -23,8 +23,6 @@ if (!$t)
 	$t = $input->get('t', 1, 'int');
 }
 $admin_params = $this->admin_params;
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
 <div id="biblestudy" class="noRefTagger">

@@ -24,8 +24,6 @@ $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu = $messagetype_menu1[0];
 $params = $this->params;
 
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 // @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');

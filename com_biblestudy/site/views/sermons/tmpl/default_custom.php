@@ -29,8 +29,6 @@ $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu = $messagetype_menu1[0];
 $params = $this->params;
 $teachers = $params->get('teacher_id');
-$jview = new JViewLegacy;
-$jview->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
 <form

@@ -26,6 +26,9 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Media */
 	public $media;
 
+	/** @var  JObject Media info */
+	public $getMedia;
+
 	/** @var  JRegistry Params */
 	protected $params;
 
@@ -134,7 +137,6 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$this->loadHelper('elements');
 		$JBSMElements    = new JBSMElements;
 		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
