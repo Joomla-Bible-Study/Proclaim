@@ -1,17 +1,14 @@
 <?php
-
 /**
  * Message JViewLegacy
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 /**
  * View class for Message
@@ -65,20 +62,25 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 */
 	protected $admin;
 
+	/** @var  string Media Files */
 	public $mediafiles;
 
+	/** @var  string Can Do */
 	public $canDo;
 
+	/** @var  JRegistry Params */
 	public $params;
 
+	/** @var  string User */
 	public $user;
 
+	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -96,7 +98,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$input        = new JInput;
 		$option       = $input->get('option', '', 'cmd');
-		$JApplication = new JApplication();
+		$JApplication = new JApplication;
 		$JApplication->setUserState($option . 'sid', $this->item->id);
 		$JApplication->setUserState($option . 'sdate', $this->item->studydate);
 		$input->set('sid', $this->item->id);
@@ -130,10 +132,10 @@ class BiblestudyViewMessageform extends JViewLegacy
 		// Create a shortcut to the parameters.
 		$params = & $this->state->params;
 
-		//Escape strings for HTML output
+		// Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$document            = JFactory::getDocument();
 
-		$document = JFactory::getDocument();
 		if (!BIBLESTUDY_CHECKREL)
 		{
 			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
@@ -193,6 +195,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
+
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));

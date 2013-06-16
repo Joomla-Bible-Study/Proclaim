@@ -1,13 +1,15 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_INSTALL . '/updates');
 
 /**
  * Update on All upgrades for migrating from old DB's
@@ -791,7 +793,7 @@ class MigrationUpgrade
 	/**
 	 * Add Asset Column
 	 *
-	 * @param   array  $table  Table name to affect
+	 * @param   array $table  Table name to affect
 	 *
 	 * @return boolean
 	 */
@@ -1401,8 +1403,7 @@ class MigrationUpgrade
 	 */
 	public function upgrade710()
 	{
-		JLoader::register('JBS710Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/update710.php');
-		$migrate = new JBS710Update;
+		$migrate = new JBSM710Update;
 
 		if (!$migrate->update710())
 		{
@@ -1419,8 +1420,7 @@ class MigrationUpgrade
 	 */
 	public function upgrade701()
 	{
-		JLoader::register('JBS701Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/update701.php');
-		$migrate = new JBS701Update;
+		$migrate = new JBSM701Update;
 
 		if (!$migrate->do701update())
 		{
@@ -1437,8 +1437,7 @@ class MigrationUpgrade
 	 */
 	public function upgrade800()
 	{
-		JLoader::register('JBS800Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/8.0.0.php');
-		$migrate = new JBS800Update;
+		$migrate = new JBSM800Update;
 
 		if (!$migrate->update800())
 		{

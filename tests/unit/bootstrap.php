@@ -15,7 +15,6 @@
 define('_JEXEC', 1);
 
 
-
 // Fix magic quotes.
 ini_set('magic_quotes_runtime', 0);
 
@@ -34,15 +33,15 @@ if (!defined('JPATH_TESTS'))
 }
 if (!defined('JPATH_PLATFORM'))
 {
-	define('JPATH_PLATFORM', realpath(dirname(dirname(__FILE__)).'/.joomla-cms/libraries'));
+	define('JPATH_PLATFORM', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
 }
 if (!defined('JPATH_LIBRARIES'))
 {
-	define('JPATH_LIBRARIES', realpath(dirname(dirname(__FILE__)).'/.joomla-cms/libraries'));
+	define('JPATH_LIBRARIES', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', realpath(dirname(dirname(__FILE__)).'/.joomla-cms'));
+	define('JPATH_BASE', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms'));
 }
 if (!defined('JPATH_ROOT'))
 {
@@ -82,15 +81,15 @@ if (!defined('JPATH_THEMES'))
 }
 
 // Import the platform in legacy mode.
-require_once JPATH_PLATFORM . '/import.php';
+//require_once JPATH_PLATFORM . '/import.php';
 
 
 // Force library to be in JError legacy mode
-JError::setErrorHandling(E_NOTICE, 'message');
-JError::setErrorHandling(E_WARNING, 'message');
+//JError::setErrorHandling(E_NOTICE, 'message');
+//JError::setErrorHandling(E_WARNING, 'message');
 
 // Bootstrap the CMS libraries.
-require_once JPATH_LIBRARIES . '/cms.php';
+//require_once JPATH_LIBRARIES . '/cms.php';
 
 // Register the core Joomla test classes.
 //JLoader::registerPrefix('Test', __DIR__ . '/core');

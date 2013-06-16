@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -103,7 +103,7 @@ $input = $app->input;
 						<div class="tab-pane" id="permissions">
 							<div class="control-group">
 								<div class="control-label">
-									<?php echo JText::_('JBS_CMN_FIELDSET_RULES');?>
+									<?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?>
 								</div>
 								<div class="controls">
 									<?php echo $this->form->getInput('rules'); ?>
@@ -119,7 +119,7 @@ $input = $app->input;
 		</div>
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS');?></h4>
+			<h4><?php echo JText::_('JDETAILS'); ?></h4>
 			<hr/>
 			<div class="control-group">
 				<div class="control-label">

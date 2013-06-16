@@ -4,7 +4,7 @@
  * Image Helper
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,31 +12,32 @@
 defined('_JEXEC') or die;
 
 /**
- * Class for Joomla! Bible Sutdy Image
+ * Class for Joomla! Bible Study Image
  *
  * @package  BibleStudy.Admin
  * @since    7.1.2
  */
 class JBSMImage
 {
-
+	/**
+	 * Extension Name
+	 *
+	 * @var string
+	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
 	 * Get Image
 	 *
-	 * @param   string  $path  Path to file
+	 * @param   string $path  Path to file
 	 *
-	 * @return JObject
-	 *
-	 * @FIXME need to see if this is a JObject or stdClass. If JObject we must set all of the JObject like set('var','value')
-     * @FIXME It's just a stdClass
+	 * @return object
 	 */
 	public static function getImage($path)
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$tmp       = new JObject;
+		$tmp       = new stdClass;
 		$tmp->path = $path;
 
 		if (!empty($path))

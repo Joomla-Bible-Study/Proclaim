@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -11,9 +13,8 @@ defined('_JEXEC') or die;
 /**
  * Bible Study Core Difines
  */
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
-JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -24,12 +25,21 @@ jimport('joomla.application.component.controller');
  */
 class BiblestudyController extends JControllerLegacy
 {
+	/** @var  string Media Code */
 	public $mediaCode;
+
+	/**
+	 * Hold a JInput object for easier access to the input variables.
+	 *
+	 * @var    JInput
+	 * @since  12.2
+	 */
+	protected $input;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config   An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
@@ -58,8 +68,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable   If true, the view output will be cached
+	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -81,10 +91,7 @@ class BiblestudyController extends JControllerLegacy
 			$cachable = false;
 		}
 
-		if ($user->get('id') ||
-			($_SERVER['REQUEST_METHOD'] == 'POST' &&
-				($vName == 'archive'))
-		)
+		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] == 'POST' && ($vName == 'archive')))
 		{
 			$cachable = false;
 		}
@@ -160,7 +167,7 @@ class BiblestudyController extends JControllerLegacy
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
-			require_once(JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php');
+			require_once JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php';
 			$privatekey = $params->get('private_key');
 			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
 			$response   = $this->input->get('recaptcha_response_field', '', 'string');
@@ -212,7 +219,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string  $params  To pass to the email
+	 * @param   string $params  To pass to the email
 	 *
 	 * @return void
 	 */
@@ -279,13 +286,12 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function download()
 	{
-		JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
 		$task = $this->input->get('task');
 
 		if ($task == 'download')
 		{
 			$mid        = $this->input->get('mid', '0', 'int');
-			$downloader = new Dump_File;
+			$downloader = new JBSMDownload;
 			$downloader->download($mid);
 
 			die;
@@ -303,7 +309,6 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($task == 'avplayer')
 		{
-			$input           = new JInput;
 			$mediacode       = $this->input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
 			echo $mediacode;
@@ -319,9 +324,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		$input = new JInput;
-		JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-		$getMedia = new jbsMedia;
+		$input    = new JInput;
+		$getMedia = new JBSMMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
 
@@ -376,7 +380,7 @@ class BiblestudyController extends JControllerLegacy
 		}
 		$path = JBSMUpload::getpath($url, $tempfile);
 
-		// Check filetype is allowed
+		// Check file type is allowed
 		$allow = JBSMUpload::checkfile($temp);
 
 		if ($allow)

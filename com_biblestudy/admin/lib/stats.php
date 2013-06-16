@@ -1,14 +1,14 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 /**
  * Bible Study stats support class
@@ -16,13 +16,13 @@ JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class JbStats
+class JBSMStats
 {
 
 	/**
 	 * Total plays of media files per study
 	 *
-	 * @param   int  $id  Id number of study
+	 * @param   int $id  Id number of study
 	 *
 	 * @return int Total plays form the media
 	 */
@@ -43,8 +43,8 @@ class JbStats
 	/**
 	 * Total messages in Bible Study
 	 *
-	 * @param   string  $start  ?
-	 * @param   string  $end    ?
+	 * @param   string $start  ?
+	 * @param   string $end    ?
 	 *
 	 * @return int Total Messages
 	 */
@@ -80,8 +80,8 @@ class JbStats
 	/**
 	 * Total topics in Bible Study
 	 *
-	 * @param   string  $start  ?
-	 * @param   string  $end    ?
+	 * @param   string $start  ?
+	 * @param   string $end    ?
 	 *
 	 * @return int  Total Topics
 	 */
@@ -287,7 +287,7 @@ class JbStats
 		$query = $db->getQuery(true);
 		$query
 			->select(
-			'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
+				'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
 				'#__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
@@ -303,8 +303,8 @@ class JbStats
 		{
 			$top_studies .=
 				$result->downloads . ' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;d=' .
-					$result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
-					'<br>';
+				$result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
+				'<br>';
 		}
 
 		return $top_studies;
@@ -323,7 +323,7 @@ class JbStats
 		$query     = $db->getQuery(true);
 		$query
 			->select(
-			'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
+				'#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
 				' #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate ')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')

@@ -1,17 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('BiblestudyHelper', JPATH_COMPONENT . '/helpers/images.php');
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
 
 /**
  * Landing page list view class
@@ -21,14 +18,19 @@ JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestud
  */
 class BiblestudyViewLandingpage extends JViewLegacy
 {
+	/** @var  string Request URL */
 	public $request_url;
 
 	/**
+	 * Params
+	 *
 	 * @var JRegistry
 	 */
 	public $params;
 
 	/**
+	 * Admin Params
+	 *
 	 * @var JRegistry
 	 */
 	public $admin_params;
@@ -36,7 +38,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -46,7 +48,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
-		JViewLegacy::loadHelper('image');
 
 		// Load the Admin settings and params from the template
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
@@ -88,7 +89,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		JViewLegacy::loadHelper('helper');
 		$images   = new JBSMImages;
 		$showhide = $images->getShowhide();
 
@@ -133,9 +133,9 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$filter_orders      = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
 		$search             = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
-		$app       = JFactory::getApplication();
-		$menu      = $app->getMenu();
-		$item      = $menu->getActive();
+		$app  = JFactory::getApplication();
+		$menu = $app->getMenu();
+		$item = $menu->getActive();
 
 		// Get the main study list image
 		$main              = $images->mainStudyImage();

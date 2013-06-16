@@ -3,7 +3,7 @@
  * Bible Study Defines
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Version information
 define('BIBLESTUDY_VERSION', '8.0.0');
-define('BIBLESTUDY_VERSION_DATE', '2013-04-22');
+define('BIBLESTUDY_VERSION_DATE', '2013-06-12');
 define('BIBLESTUDY_VERSION_BUILD', '3437');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 

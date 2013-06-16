@@ -1,7 +1,9 @@
 <?php
 /**
+ * Part of Joomla BibleStudy Package
+ *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -47,12 +49,17 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	private $_allow_deletes = null;
 
+	/**
+	 * Number of Deletes
+	 *
+	 * @var int
+	 */
 	private $_deletes;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -97,8 +104,8 @@ class BiblestudyModelLocations extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering   An optional ordering field.
+	 * @param   string $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

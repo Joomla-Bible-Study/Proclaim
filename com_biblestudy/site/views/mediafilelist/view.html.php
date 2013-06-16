@@ -1,14 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 
 jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
@@ -44,32 +44,40 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 */
 	protected $state;
 
+	/** @var  string Can Do */
 	public $canDo;
 
+	/** @var  string Media Types */
 	public $mediatypes;
 
 	/**
+	 * Admin
+	 *
 	 * @var object
 	 */
 	protected $admin;
 
 	/**
+	 * Params
+	 *
 	 * @var JRegistry
 	 */
 	protected $params;
 
+	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
 
+	/** @var  string New Link */
 	public $newlink;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
-	public function display ($tpl = null)
+	public function display($tpl = null)
 	{
 		$app              = JFactory::getApplication();
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafilesedit');
@@ -80,6 +88,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->admin      = JBSMParams::getAdmin();
 		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
 		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+
 		if (!BIBLESTUDY_CHECKREL)
 		{
 			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
@@ -110,8 +119,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit"  class="btn btn-primary">'
-					. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafileform&task=mediafileform.edit"  class="btn btn-primary">'
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
 		}
 
 		// Escape strings for HTML output
@@ -127,7 +136,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @return void
 	 */
-	protected function _prepareDocument ()
+	protected function _prepareDocument()
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
@@ -186,7 +195,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields ()
+	protected function getSortFields()
 	{
 		return array(
 			'study.studytitle'     => JText::_('JBS_CMN_STUDY_TITLE'),

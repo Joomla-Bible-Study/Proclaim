@@ -1,22 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-// @todo dos not include from core controller need to look into why it is thinking it is apart of the com_content controller
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
-
-// @todo need to lok and see if image helper and biblestudy.images.class.php are both needed.
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 
 /**
  * Class to build page elements in use by custom template files
@@ -24,19 +16,21 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
  * @package  BibleStudy.Site
  * @since    7.0.1
  */
-class JBSPagebuilder
+class JBSMPageBuilder
 {
 
+	/** @var string Extension Name */
 	public $extension = 'com_biblestudy';
 
+	/** @var  string Event */
 	public $event;
 
 	/**
 	 * Build Page
 	 *
-	 * @param   object  $item          Item info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object $item          Item info
+	 * @param   object $params        Item Params
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return object
 	 */
@@ -218,16 +212,16 @@ class JBSPagebuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array   $mediaids      ID of Media
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   array  $mediaids      ID of Media
+	 * @param   object $params        Item Params
+	 * @param   object $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
 	private function mediaBuilder($mediaids, $params, $admin_params)
 	{
 		$images        = new JBSMImages;
-		$mediaelements = new jbsMedia;
+		$mediaelements = new JBSMMedia;
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -307,12 +301,12 @@ class JBSPagebuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string  $whereitem     ?
-	 * @param   string  $wherefield    ?
-	 * @param   object  $params        Item params
-	 * @param   object  $admin_params  Admin params
-	 * @param   int     $limit         Limit of Records
-	 * @param   string  $order         DESC or ASC
+	 * @param   string $whereitem     ?
+	 * @param   string $wherefield    ?
+	 * @param   object $params        Item params
+	 * @param   object $admin_params  Admin params
+	 * @param   int    $limit         Limit of Records
+	 * @param   string $order         DESC or ASC
 	 *
 	 * @return object
 	 */
@@ -415,8 +409,8 @@ class JBSPagebuilder
 	/**
 	 * Run Content Plugins
 	 *
-	 * @param   object  $item    Item info
-	 * @param   object  $params  Item params
+	 * @param   object $item    Item info
+	 * @param   object $params  Item params
 	 *
 	 * @return object
 	 */

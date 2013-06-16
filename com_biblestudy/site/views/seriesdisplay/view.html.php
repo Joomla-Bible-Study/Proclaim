@@ -1,20 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-//require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-//require_once (BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//include_once (BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 
 /**
  * View class for SeriesDisplay
@@ -55,30 +49,40 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 */
 	protected $pagination = null;
 
+	/** @var  JObject Admin */
 	protected $admin;
 
+	/** @var  JRegistry Admin Params */
 	protected $admin_params;
 
+	/** @var  JObject Page */
 	protected $page;
 
+	/** @var  JObject Series Studies */
 	protected $seriesstudies;
 
+	/** @var  JObject Template */
 	protected $template;
 
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Article */
 	protected $article;
 
+	/** @var  string Passage Link */
 	protected $passage_link;
 
+	/** @var  JObject Studies */
 	protected $studies;
 
+	/** @var  string Request URL */
 	protected $request_url;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -97,9 +101,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$dispatcher    = JDispatcher::getInstance();
 
 		// Get the menu item object
-		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$items       = $this->get('Item');
 		$this->state = $this->get('State');
@@ -132,7 +133,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. ':' . $items->id;
 
 		// Get studies associated with the series
-		$pagebuilder = new JBSPagebuilder;
+		$pagebuilder = new JBSMPagebuilder;
 		$whereitem   = $items->id;
 		$wherefield  = 'study.series_id';
 

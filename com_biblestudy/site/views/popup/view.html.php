@@ -1,17 +1,14 @@
 <?php
 /**
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
-JLoader::register('JBSMImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 // This is the popup window for the teachings.  We could put anything in this window.
 
@@ -23,52 +20,76 @@ JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
  */
 class BiblestudyViewPopup extends JViewLegacy
 {
+	/** @var  string Player */
 	public $player;
 
+	/** @var  string Media */
 	public $media;
 
+	/** @var  JObject Media info */
+	public $getMedia;
+
+	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  string Scripture Text */
 	public $scripture;
 
+	/** @var  string Date */
 	public $date;
 
+	/** @var  string Length */
 	public $lenght;
 
+	/** @var  string Series Thumbnail */
 	public $series_thumbnail;
 
+	/** @var  string Teacher Image */
 	public $teacherimage;
 
+	/** @var  string Path 1 */
 	public $path1;
 
+	/** @var  string Width */
 	public $playerwidth;
 
+	/** @var  string Player Height */
 	public $playerheight;
 
+	/** @var  JRegistry Extra Params */
 	protected $extraparams;
 
+	/** @var  string Flash Vars */
 	public $flashvars;
 
+	/** @var  string Back Color */
 	public $backcolor;
 
+	/** @var  string Front Color */
 	public $frontcolor;
 
+	/** @var  string Light Color */
 	public $lightcolor;
 
+	/** @var  string Screen Color */
 	public $screencolor;
 
+	/** @var  string Auto Start */
 	public $autostart;
 
+	/** @var  string Player Idle Hide */
 	public $playeridlehide;
 
+	/** @var  string Header Text */
 	public $headertext;
 
+	/** @var  string Footer Text */
 	public $footertext;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -95,10 +116,10 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		jimport('joomla.application.component.helper');
 
-		$getMedia     = new jbsMedia;
-		$this->media  = $getMedia->getMediaRows2($mediaid);
-		$template     = JBSMParams::getTemplateparams();
-		$this->params = $template->params;
+		$this->getMedia = new JBSMMedia;
+		$this->media    = $this->getMedia->getMediaRows2($mediaid);
+		$template       = JBSMParams::getTemplateparams();
+		$this->params   = $template->params;
 
 		/*
 		 *  Convert parameter fields to objects.
@@ -116,7 +137,6 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$this->loadHelper('elements');
 		$JBSMElements    = new JBSMElements;
 		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
@@ -124,7 +144,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		/*
 		 *  The popup window call the counter function
 		 */
-		$getMedia->hitPlay($mediaid);
+		$this->getMedia->hitPlay($mediaid);
 		$this->lenght = $JBSMElements->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;
@@ -211,11 +231,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string  $text       Text info
-	 * @param   object  $media      Media info
-	 * @param   string  $scripture  scripture
-	 * @param   string  $date       Date
-	 * @param   string  $length     Length of Title
+	 * @param   string $text       Text info
+	 * @param   object $media      Media info
+	 * @param   string $scripture  scripture
+	 * @param   string $date       Date
+	 * @param   string $length     Length of Title
 	 *
 	 * @return object
 	 */
