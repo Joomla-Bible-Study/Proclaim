@@ -168,10 +168,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			JToolBarHelper::trash('mediafiles.trash');
 			JToolBarHelper::divider();
 		}
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::deleteList('', 'mediafiles.delete', 'JTOOLBAR_EMPTY_TRASH');
-		}
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
