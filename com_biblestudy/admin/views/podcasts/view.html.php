@@ -125,14 +125,13 @@ class BiblestudyViewPodcasts extends JViewLegacy
 			JToolBarHelper::unpublishList('podcasts.unpublish');
 			JToolBarHelper::archiveList('podcasts.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+        }
+		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('podcasts.trash');
-
-			if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-			{
-				JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
-			}
 		}
 		if ($this->canDo->get('core.create'))
 		{

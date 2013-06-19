@@ -151,15 +151,15 @@ class BiblestudyViewSeries extends JViewLegacy
 			JToolBarHelper::unpublishList('series.unpublish');
 			JToolBarHelper::archiveList('series.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('series.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'series.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('series.trash');
+        }
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{

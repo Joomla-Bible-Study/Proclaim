@@ -150,10 +150,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 			JToolBarHelper::unpublishList('messagetypes.unpublish');
 			JToolBarHelper::archiveList('messagetypes.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('messagetypes.trash');
-		}
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
@@ -171,7 +168,10 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('messagetypes.trash');
+        }
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messagetypes');

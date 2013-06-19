@@ -147,14 +147,13 @@ class BiblestudyViewShares extends JViewLegacy
 			JToolBarHelper::unpublishList('shares.unpublish');
 			JToolBarHelper::archiveList('shares.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
+        }
+		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('shares.trash');
-
-			if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-			{
-				JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
-			}
 		}
 		if (BIBLESTUDY_CHECKREL)
 		{
