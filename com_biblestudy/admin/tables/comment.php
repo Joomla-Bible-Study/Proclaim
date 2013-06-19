@@ -143,4 +143,5 @@ class TableComment extends JTable
 		return $asset->id;
 	}
 
+
 }
