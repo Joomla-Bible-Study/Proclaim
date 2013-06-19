@@ -163,14 +163,15 @@ class BiblestudyViewMediaimages extends JViewLegacy
 			JToolBarHelper::unpublishList('mediaimages.unpublish');
 			JToolBarHelper::archiveList('mediaimages.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('mediaimages.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'mediaimages.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('mediaimages.trash');
+        }
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediaimages');

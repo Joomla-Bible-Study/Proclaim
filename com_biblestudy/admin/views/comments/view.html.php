@@ -142,14 +142,15 @@ class BiblestudyViewComments extends JViewLegacy
 			JToolBarHelper::publishList('comments.publish');
 			JToolBarHelper::unpublishList('comments.unpublish');
 		}
-		if ($canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('comments.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
+        elseif ($canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('comments.trash');
+        }
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
