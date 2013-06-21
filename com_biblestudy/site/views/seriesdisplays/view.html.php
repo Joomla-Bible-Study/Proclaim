@@ -58,14 +58,11 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
-		JViewLegacy::loadHelper('image');
 
 		$document = JFactory::getDocument();
 
 		//  $model = $this->getModel();
 		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$t = $input->get('t', 1, 'int');
@@ -178,10 +175,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
 		$series                = $this->get('Series');
-
-		// This is the helper for scripture formatting
-		// @todo move to JLouder. tom
-		$this->loadHelper('scripture');
 
 		// End scripture helper
 		$this->template   = $template;

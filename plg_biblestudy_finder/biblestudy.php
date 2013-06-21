@@ -1,5 +1,7 @@
 <?php
 /**
+ * Finder adapter for Biblestudy.
+ *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -293,7 +295,14 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		$this->indexer->index($item);
+		if (BIBLESTUDY_CHECKREL)
+		{
+			$this->indexer->index($item);
+		}
+		else
+		{
+			FinderIndexer::index($item);
+		}
 	}
 
 	/**

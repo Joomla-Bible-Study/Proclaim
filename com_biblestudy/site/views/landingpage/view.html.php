@@ -48,7 +48,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
-		JViewLegacy::loadHelper('image');
 
 		// Load the Admin settings and params from the template
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
@@ -90,7 +89,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		JViewLegacy::loadHelper('helper');
 		$images   = new JBSMImages;
 		$showhide = $images->getShowhide();
 

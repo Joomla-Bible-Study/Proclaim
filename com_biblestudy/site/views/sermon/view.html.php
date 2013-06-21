@@ -279,8 +279,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$article->text          = $this->item->secondary_reference;
 		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->secondary_reference = $article->text;
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
 
 		// Get the podcast subscription
 		$podcast         = new JBSMPodcastSubscribe;
