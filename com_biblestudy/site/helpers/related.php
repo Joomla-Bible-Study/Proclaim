@@ -38,10 +38,11 @@ class RelatedStudies
 		$topicsgo    = false;
 		$registry    = new JRegistry;
 		$registry->loadString($row->params);
-		$params   = $registry;
-		$keywords = $params->get('metakey');
+		//$params   = $registry;
+		$keywords = $registry->get('metakey');
 
-		// $topics     = $row->topics_id;
+		$topics     = $row->tp_id;
+
 		$topicslist = $this->getTopics();
 
 		if (!$keywords)
@@ -57,6 +58,9 @@ class RelatedStudies
 			}
 		}
 
+        if (!$topics) {
+            $topicsgo = false;
+        }
 		if (!$keygo && !$topicsgo)
 		{
 			return false;
@@ -72,25 +76,22 @@ class RelatedStudies
 
 			if ($compare)
 			{
-				$keywordsresults = $this->parseKeys($keywords, $compare, $study->id);
+				$this->parseKeys($keywords, $compare, $study->id); //dump($this->score, '1: ');
 			}
-			/*
-			if ($study->topics_id)
-			{
-				$topicsresults = $this->parseKeys($topics, $study->topics_id, $study->id);
-			} */
+
+
 			if ($study->tp_id)
 			{
-				$studytopics = $this->parseKeys($topicslist, $study->tp_id, $study->id);
+				$this->parseKeys($topicslist, $study->tp_id, $study->id); //dump($this->score, '2: ');
 			}
 		}
 
-
+//only one item in score here
 		if (!$this->score)
 		{
 			return false;
 		}
-		$related = $this->getRelatedLinks($this->score, $params);
+		$related = $this->getRelatedLinks();
 
 		return $related;
 	}
@@ -110,7 +111,7 @@ class RelatedStudies
 		$compareisarray = false;
 		$sourcearray    = array();
 		$comparearray   = array();
-		$this->score    = null;
+
 
 		if (substr_count($source, ','))
 		{
@@ -206,10 +207,10 @@ class RelatedStudies
 	 *
 	 * @return string
 	 */
-	public function getRelatedLinks($scored, $params)
+	public function getRelatedLinks()
 	{
 		$db           = JFactory::getDBO();
-		$scored       = array_count_values($scored);
+		$scored       = array_count_values($this->score);
 		$sorted       = arsort($scored);
 		$output       = array_slice($scored, 0, 20, true);
 		$links        = array();
@@ -225,7 +226,7 @@ class RelatedStudies
 			$query = $db->getQuery('true');
 			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
 			$query->from('#__bsms_studies as s');
-			$query->select('b.id, b.bookname');
+			$query->select('b.bookname');
 			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
 			$query->where('s.id = ' . $link);
 			$db->setQuery($query);

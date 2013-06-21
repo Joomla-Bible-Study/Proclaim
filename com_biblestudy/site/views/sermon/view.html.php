@@ -96,6 +96,10 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
 
+        //Get related items. Moved here because the params were getting messed up lower in the script
+        $relatedstudies = new RelatedStudies;
+        $this->related = $relatedstudies->getRelated($this->item, $this->item->params);
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -128,7 +132,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 
-		// Check to see which parameters should take priority
+/*		// Check to see which parameters should take priority
 		if ($active)
 		{
 			$currentLink = $active->link;
@@ -178,7 +182,7 @@ class BiblestudyViewSermon extends JViewLegacy
 				$this->setLayout($layout);
 			}
 		}
-
+*/
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
@@ -200,10 +204,9 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
-		$relatedstudies = new RelatedStudies;
+
 
 		$template      = $this->get('template');
-		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
