@@ -42,7 +42,7 @@
                description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
                type="spacer"/>
         <field name="description" type="editor" class="inputbox"
-               label="JBS_CMN_DESCRIPTION" filter="JBSMHelper::filterText"
+               label="JBS_CMN_DESCRIPTION" filter="JBSMBibleStudyHelper::filterText"
                buttons="true"/>
         <field name="series_thumbnail" type="media" size="46" class="span12"
                label="JBS_SER_SERIES_THUMBNAIL_IMAGE" labelclass="control-label"/>

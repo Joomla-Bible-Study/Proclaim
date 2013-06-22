@@ -150,14 +150,15 @@ class BiblestudyViewLocations extends JViewLegacy
 			JToolBarHelper::unpublishList('locations.unpublish');
 			JToolBarHelper::archiveList('locations.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('locations.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'locations.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('locations.trash');
+        }
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{

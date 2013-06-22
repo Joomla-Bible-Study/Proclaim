@@ -65,7 +65,7 @@
             />
 
     <field name="studyintro" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION"
-           filter="JBSMHelper::filterText" buttons="true"/>
+           filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
 
     <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
@@ -138,7 +138,7 @@
     </field>
     <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE"/>
     <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-           filter="JBSMHelper::filterText" buttons="true"/>
+           filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="message" validate="rules"/>
