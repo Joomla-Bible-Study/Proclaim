@@ -27,6 +27,10 @@ if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 
 include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 
+if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
+{
+	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
+}
 
 if (version_compare(JVERSION, '3.0', 'ge'))
 {

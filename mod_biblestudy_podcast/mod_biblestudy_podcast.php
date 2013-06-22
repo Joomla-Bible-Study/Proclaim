@@ -19,15 +19,16 @@ $templateparams = null;
 
 if (!$go)
 {
-	echo "Extension Bible Study not present or enabled";
+	throw new Exception("Extension Bible Study not present or enabled");
 }
 else
 {
 	$templateparams = modBibleStudyPodcast::getTemplateParams($params);
 }
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 JLoader::register('PodcastSubscribe', JPATH_ROOT . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+
 // Load the css
 $document = JFactory::getDocument();
 $css      = $templateparams->get('css');
