@@ -16,8 +16,6 @@ defined('_JEXEC') or die;
  * @property mixed document
  * @package  BibleStudy.Site
  * @since    7.0.0
- *
- * @todo     Still need to fix all the problems.
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
@@ -495,7 +493,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	}
 
 	/**
-	 * Display PageBrack
+	 * Display PageBrake
 	 *
 	 * @param   string $tpl  ?
 	 *
