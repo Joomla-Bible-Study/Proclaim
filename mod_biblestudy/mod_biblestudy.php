@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Mod_Biblesutdy core file
  *
@@ -12,9 +11,8 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-//require_once BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php';
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-require_once __DIR__ . '/helper.php';
+JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
+require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
 $document = JFactory::getDocument();
@@ -32,7 +30,7 @@ $items        = ModJBSMHelper::getLatest($params);
 // Attempt to change mysql for error in large select
 $db = JFactory::getDBO();
 $db->setQuery('SET SQL_BIG_SELECTS=1');
-$db->query();
+$db->execute();
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
@@ -102,6 +100,7 @@ foreach ($items AS $item)
 $list      = $items;
 $link_text = $params->get('pagetext', 'More Bible Studies');
 $jinput    = new JInput;
+
 if (!$templatemenuid)
 {
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
