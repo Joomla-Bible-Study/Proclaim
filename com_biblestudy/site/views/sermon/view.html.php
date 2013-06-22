@@ -174,7 +174,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$this->setLayout($layout);
 			}
-		}
+		} */
 
 		$offset = $this->state->get('list.offset');
 
