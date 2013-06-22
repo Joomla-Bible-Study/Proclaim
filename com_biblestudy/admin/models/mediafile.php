@@ -54,11 +54,11 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			$user = JFactory::getUser();
 
-			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
-		}
+            return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 	/**
 	 * Method to move a mediafile listing

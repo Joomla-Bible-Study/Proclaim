@@ -684,3 +684,4 @@ class JBSMBibleStudyHelper
 		return $options;
 	}
 }
+

@@ -136,15 +136,15 @@ class BiblestudyViewMimetypes extends JViewLegacy
 			JToolBarHelper::unpublishList('mimetypes.unpublish');
 			JToolBarHelper::archiveList('mimetypes.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('mimetypes.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'mimetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('mimetypes.trash');
+        }
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mimetypes');

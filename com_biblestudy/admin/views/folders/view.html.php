@@ -150,14 +150,15 @@ class BibleStudyViewFolders extends JViewLegacy
 			JToolBarHelper::unpublishList('folders.unpublish');
 			JToolBarHelper::archiveList('folders.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('folders.trash');
-		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'folders.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('folders.trash');
+        }
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{

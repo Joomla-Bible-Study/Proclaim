@@ -119,30 +119,30 @@ class BiblestudyModelSerie extends JModelAdmin
 		return $newIds;
 	}
 
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record  A record object.
-	 *
-	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since    1.6
-	 */
-	protected function canDelete($record)
-	{
-		if (!empty($record->id))
-		{
-			if ($record->state != -2)
-			{
-				return false;
-			}
-			$user = JFactory::getUser();
+    /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object $record  A record object.
+     *
+     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     *
+     * @since    1.6
+     */
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            if ($record->published != -2)
+            {
+                return false;
+            }
+            $user = JFactory::getUser();
 
-			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
-		}
+            return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 	/**
 	 * Method to test whether a record can be deleted.
