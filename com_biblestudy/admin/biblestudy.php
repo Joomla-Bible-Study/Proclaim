@@ -38,7 +38,7 @@ else
 }
 
 // Register helper class
-JLoader::register('JBSMBibleStudyHelper', __DIR__ . '/helpers/biblestudy.php');
+JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
 
 addCSS();
 addJS();
