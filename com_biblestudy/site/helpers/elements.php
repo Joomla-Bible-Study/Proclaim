@@ -265,11 +265,11 @@ class JBSMElements
 				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 20:
-                $mediaclass = new jbsMedia();
-                $elementid->id = 'jbsmedia';
-                $elementid->headertext = JText::_('JBS_CMN_MEDIA');
-                $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
-                break;
+				$mediaclass            = new jbsMedia;
+				$elementid->id         = 'jbsmedia';
+				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
+				$elementid->element    = $mediaclass->getMediaTable($row, $params, $admin_params);
+				break;
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -675,7 +675,7 @@ class JBSMElements
 				$date = JHTML::date($studydate, "j/n/Y");
 				break;
 			case 8:
-				$date = JHTML::date($studydate, 'DATE_FORMAT_LC');
+				$date = JHTML::date($studydate, JText::_('DATE_FORMAT_LC'));
 				break;
 			case 9:
 				$date = JHTML::date($studydate, "Y/M/D");
