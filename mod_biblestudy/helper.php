@@ -24,7 +24,7 @@ class ModJBSMHelper
 	/**
 	 * Get Latest
 	 *
-	 * @param   JObject $params  Item Params
+	 * @param   JObject  $params  Item Params
 	 *
 	 * @return array
 	 */
@@ -34,7 +34,7 @@ class ModJBSMHelper
 
 		$db = JFactory::getDbo();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
-		$db->query();
+		$db->execute();
 		$query            = $db->getQuery(true);
 		$teacher          = $params->get('teacher_id');
 		$topic            = $params->get('topic_id');

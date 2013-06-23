@@ -25,7 +25,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.0.1';
+	private $_release = '8.0.2';
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -34,6 +34,14 @@ class Com_BiblestudyInstallerScript
 	 * @var string
 	 */
 	private $_minimum_joomla_release = '2.5.6';
+
+	/**
+	 * Find minimum required PHP version for this extension.
+	 * It will be read from the version attribute (install tag) in the manifest file
+	 *
+	 * @var string
+	 */
+	private $_minimum_php = '5.3.13';
 
 	/**
 	 * The component's name
@@ -103,9 +111,19 @@ class Com_BiblestudyInstallerScript
 				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
 			}
 		}
+		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
+
+		if ($install_good)
+		{
+			$install_good = version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
+		}
+		else
+		{
+			$install_good = false;
+		}
 
 		// Only allow to install on minimum Joomla! version
-		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
+		return $install_good;
 	}
 
 	/**
