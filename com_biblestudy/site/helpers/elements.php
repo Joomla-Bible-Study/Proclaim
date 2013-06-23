@@ -644,37 +644,37 @@ class JBSMElements
 		switch ($params->get('date_format'))
 		{
 			case 0:
-				$date = JHTML::_('date', $studydate, "M j, Y");
+				$date = JHTML::date($studydate, "M j, Y");
 				break;
 			case 1:
-				$date = JHTML::_('date', $studydate, "M J");
+				$date = JHTML::date($studydate, "M J");
 				break;
 			case 2:
-				$date = JHTML::_('date', $studydate, "n/j/Y");
+				$date = JHTML::date($studydate, "n/j/Y");
 				break;
 			case 3:
-				$date = JHTML::_('date', $studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j");
 				break;
 			case 4:
-				$date = JHTML::_('date', $studydate, "l, F j, Y");
+				$date = JHTML::date($studydate, "l, F j, Y");
 				break;
 			case 5:
-				$date = JHTML::_('date', $studydate, "F j, Y");
+				$date = JHTML::date($studydate, "F j, Y");
 				break;
 			case 6:
-				$date = JHTML::_('date', $studydate, "j F Y");
+				$date = JHTML::date($studydate, "j F Y");
 				break;
 			case 7:
-				$date = JHTML::_('date', $studydate, "j/n/Y");
+				$date = JHTML::date($studydate, "j/n/Y");
 				break;
 			case 8:
-				$date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
+				$date = JHTML::date($studydate, 'DATE_FORMAT_LC');
 				break;
 			case 9:
-				$date = JHTML::_('date', $studydate, "Y/M/D");
+				$date = JHTML::date($studydate, "Y/M/D");
 				break;
 			default:
-				$date = JHTML::_('date', $studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j");
 				break;
 		}
 
@@ -682,7 +682,7 @@ class JBSMElements
 
 		if ($customDate != '')
 		{
-			$date = JHTML::_('date', $studydate, $customDate);
+			$date = JHTML::date($studydate, $customDate);
 		}
 
 		return $date;
