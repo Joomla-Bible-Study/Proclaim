@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  */
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
 
-JLoader::register('JBSMUpload', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/upload.php');
+JLoader::register('JBSMUpload', JPATH_SITE . '/components/com_biblestudy/helpers/upload.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
 JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
@@ -356,7 +356,7 @@ class BiblestudyController extends JControllerLegacy
 	public function uploadflash()
 	{
 		$app = JFactory::getApplication();
-		$app->checkSession() or jexit('Invalid Token');
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$jinput = $app->input;
 		$option = $jinput->getCmd('option');
 		jimport('joomla.filesystem.file');
@@ -517,21 +517,21 @@ class BiblestudyController extends JControllerLegacy
 	public function upload()
 	{
 		$app = JFactory::getApplication();
-		$app->checkSession() or jexit('Invalid Token');
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 		$jinput    = $app->input;
 		$option    = $jinput->getCmd('option');
 		$uploadmsg = '';
+		$size      = 0;
 		$serverid  = $jinput->getInt('upload_server', '', 'post');
 		$folderid  = $jinput->getInt('upload_folder', '', 'post');
-		$form      = $jinput->getArray('jform');
+		$form      = $jinput->get('jform', array(), 'post', 'array');
 		$returnid  = $form['id'];
-		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' .
-			$returnid;
+		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $form['id'];
 		$path      = JBSMUpload::getpath($url, '');
-		$file      = $jinput->getArray('uploadfile');
+		$file      = $jinput->get('uploadfile');
 
-		// Check filetype allowed
-		$allow = JBSMUpload::checkfile($file['name']);
+		// Check file type allowed
+		$allow = JBSMUpload::checkfile($file);
 
 		if ($allow)
 		{
@@ -544,10 +544,11 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
+			$size = filesize($filename->path);
 		}
-		$mediafileid = $jinput->getInt('id', '', 'post');
-		$app->setUserState($option . 'fname', $file['name']);
-		$app->setUserState($option . 'size', $file['size']);
+
+		$app->setUserState($option . 'fname', $file);
+		$app->setUserState($option . 'size', $size);
 		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
 		$layout = $jinput->getWord('layout');
