@@ -561,18 +561,20 @@ class jbsMedia
 				switch ($player->type)
 				{
 					case 2: // Inline
+						$base = JUri::base();
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
     jwplayer('placeholder').setup({
-	    'file' : '<?php echo $path; ?>',
-	    'height' : '<?php echo $height; ?>',
-	    'width' : '<?php echo $width; ?>',
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
-        'backcolor':'<?php echo $backcolor; ?>',
-        'frontcolor':'<?php echo $frontcolor; ?>',
-        'lightcolor':'<?php echo $lightcolor; ?>',
-        'screencolor':'<?php echo $screencolor; ?>',
+	    'file' : '" . $path . "',
+	    'height' : '" . $height . "',
+	    'width' : '" . $width . "',
+        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+        'flashplayer':'" . $base . "/media/com_biblestudy/player/jwplayer.flash.swf',
+        'backcolor':'" . $backcolor . "',
+        'frontcolor':'" . $frontcolor . "',
+        'lightcolor':'" . $lightcolor . "',
+        'screencolor':'" . $screencolor . "',
     });
 </script>";
 						break;

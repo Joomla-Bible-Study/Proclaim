@@ -41,7 +41,7 @@ if ($this->params->get('player') == 1 || $this->player == 1)
         'height':'<?php echo $this->playerheight; ?>',
         'width':'<?php echo $this->playerwidth; ?>',
         'image':'<?php echo $this->params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>',
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf',
+        'flashplayer':'<?php echo JURI::base() ?>/media/com_biblestudy/player/jwplayer.flash.swf',
         'autostart':'<?php echo $this->autostart; ?>',
         'backcolor':'<?php echo $this->backcolor; ?>',
         'frontcolor':'<?php echo $this->frontcolor; ?>',
