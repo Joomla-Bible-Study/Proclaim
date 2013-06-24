@@ -648,6 +648,8 @@ class JBSMElements
 	 */
 	public function getstudyDate($params, $studydate)
 	{
+        if (!$this->MyCheckDate($studydate)){$date = $studydate; return $date; }
+
 		switch ($params->get('date_format'))
 		{
 			case 0:
@@ -694,8 +696,21 @@ class JBSMElements
 
 		return $date;
 	}
-
-	/**
+    /**
+     * Check whether date is valid YYYY-MM-DD format
+     *
+     * @param   string $datein  Study Date
+     *
+     * @return boolean
+     */
+    function MyCheckDate( $datein ) {
+        if (preg_match ("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein)) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /**
 	 * Function to get File Size
 	 *
 	 * @param   string $file_size  Size in bytes
