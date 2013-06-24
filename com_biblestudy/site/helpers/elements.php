@@ -648,7 +648,10 @@ class JBSMElements
 	 */
 	public function getstudyDate($params, $studydate)
 	{
-        if (!$this->MyCheckDate($studydate)){$date = $studydate; return $date; }
+        if (!$this->MyCheckDate($studydate))
+            {
+                $date = $studydate; return $date;
+            }
 
 		switch ($params->get('date_format'))
 		{
@@ -704,7 +707,8 @@ class JBSMElements
      * @return boolean
      */
     function MyCheckDate( $datein ) {
-        if (preg_match ("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein)) {
+        if (preg_match ("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein))
+        {
             return true;
         }else{
             return false;
