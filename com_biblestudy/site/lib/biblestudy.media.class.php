@@ -570,7 +570,7 @@ class jbsMedia
 	    'height' : '" . $height . "',
 	    'width' : '" . $width . "',
         'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
-        'flashplayer':'" . $base . "/media/com_biblestudy/player/jwplayer.flash.swf',
+        'flashplayer':'" . $base . "media/com_biblestudy/player/jwplayer.flash.swf',
         'backcolor':'" . $backcolor . "',
         'frontcolor':'" . $frontcolor . "',
         'lightcolor':'" . $lightcolor . "',
