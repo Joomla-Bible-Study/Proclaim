@@ -524,11 +524,12 @@ class BiblestudyController extends JControllerLegacy
 		$size      = 0;
 		$serverid  = $jinput->getInt('upload_server', '', 'post');
 		$folderid  = $jinput->getInt('upload_folder', '', 'post');
-		$form      = $jinput->files->get('uploadfile');
+		$form      = $jinput->get('jform', array(), 'post', 'array');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $form['id'];
 		$path      = JBSMUpload::getpath($url, '');
-		$file      = $form['name'];
+		$file      = $jinput->files->get('uploadfile');
+
 		// Check file type allowed
 		$allow = JBSMUpload::checkfile($file);
 
@@ -543,13 +544,13 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
-			$size = filesize($filename->path);
+
+			$app->setUserState($option . 'fname', $filename->file);
+			$app->setUserState($option . 'size', $file['size']);
+			$app->setUserState($option . 'serverid', $serverid);
+			$app->setUserState($option . 'folderid', $folderid);
 		}
 
-		$app->setUserState($option . 'fname', $file);
-		$app->setUserState($option . 'size', $size);
-		$app->setUserState($option . 'serverid', $serverid);
-		$app->setUserState($option . 'folderid', $folderid);
 		$layout = $jinput->getWord('layout');
 
 		if ($layout == 'modal')
