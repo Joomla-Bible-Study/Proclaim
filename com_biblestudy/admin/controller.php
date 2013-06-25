@@ -524,12 +524,11 @@ class BiblestudyController extends JControllerLegacy
 		$size      = 0;
 		$serverid  = $jinput->getInt('upload_server', '', 'post');
 		$folderid  = $jinput->getInt('upload_folder', '', 'post');
-		$form      = $jinput->get('jform', array(), 'post', 'array');
+		$form      = $jinput->files->get('uploadfile');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $form['id'];
 		$path      = JBSMUpload::getpath($url, '');
-		$file      = $jinput->get('uploadfile');
-
+		$file      = $form['name'];
 		// Check file type allowed
 		$allow = JBSMUpload::checkfile($file);
 

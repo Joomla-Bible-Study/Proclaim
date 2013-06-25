@@ -175,7 +175,7 @@ else
 {
 	$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
 } echo JRoute::_($url);
-?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
+?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal" enctype="multipart/form-data">
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
@@ -372,13 +372,10 @@ else
                     <td>
 
                         <input type="file" name="uploadfile" value=""/>
-	                    <?php if ($this->form->getValue('id') != null)
-	                    { ?>
+
                         <button type="button" onclick="submitbutton('upload')">
 							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
-	                    <?php } else {?>
-	                    <p>Please Save record before uploading media.</p>
-	                    <?php } ?>
+
                     </td>
                     <td></td>
                 </tr>
