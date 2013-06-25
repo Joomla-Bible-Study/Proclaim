@@ -73,8 +73,8 @@ class BiblestudyController extends JControllerLegacy
 		/* Set the default view name and format from the Request.
 		   Note we are using a_id to avoid collisions with the router and the return page.
 		   Frontend is a bit messier than the backend. */
-        $input = JFactory::getApplication()->input;
-        $id    = $input->getInt('a_id');
+		$input = JFactory::getApplication()->input;
+		$id    = $input->getInt('a_id');
 		$vName = $input->get('view', 'landingpage', 'cmd');
 		$input->set('view', $vName);
 
@@ -143,8 +143,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function comment()
 	{
-        $input = JFactory::getApplication()->input;
-        $mainframe = JFactory::getApplication();
+		$input     = JFactory::getApplication()->input;
+		$mainframe = JFactory::getApplication();
 		$option    = $input->get('option', '', 'cmd');
 
 		$model = $this->getModel('sermon');
@@ -223,8 +223,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function commentsEmail($params)
 	{
-        $input = JFactory::getApplication()->input;
-        $mainframe  = JFactory::getApplication();
+		$input      = JFactory::getApplication()->input;
+		$mainframe  = JFactory::getApplication();
 		$menuitemid = $input->get('Itemid', '', 'int');
 
 		if ($menuitemid)
@@ -285,8 +285,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function download()
 	{
-        $input = JFactory::getApplication()->input;
-        JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
+		$input = JFactory::getApplication()->input;
+		JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
 		$task = $input->get('task');
 
 		if ($task == 'download')
@@ -306,14 +306,15 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function avplayer()
 	{
-        $input = JFactory::getApplication()->input;
-        $task = $input->get('task', '', 'cmd');
+		$input = JFactory::getApplication()->input;
+		$task  = $input->get('task', '', 'cmd');
 
 		if ($task == 'avplayer')
 		{
 			$input           = new JInput;
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
+
 			//echo $mediacode;
 
 			return;
@@ -353,7 +354,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function uploadflash()
 	{
-        $input = JFactory::getApplication()->input;
+		$input = JFactory::getApplication()->input;
 		// JRequest::checktoken() or jexit('Invalid Token');
 		$option = $input->get('option', '', 'cmd');
 		jimport('joomla.filesystem.file');
@@ -506,8 +507,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function upload()
 	{
-        $input = JFactory::getApplication()->input;
-        $option    = $input->get('option', '', 'cmd');
+		$input     = JFactory::getApplication()->input;
+		$option    = $input->get('option', '', 'cmd');
 		$uploadmsg = '';
 		$serverid  = $input->get('upload_server', '', 'int');
 		$folderid  = $input->get('upload_folder', '', 'int');
@@ -533,12 +534,12 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
+			$app = JFactory::getApplication();
+			$app->setUserState($option . 'fname', $filename->file);
+			$app->setUserState($option . 'size', $file['size']);
+			$app->setUserState($option . 'serverid', $serverid);
+			$app->setUserState($option . 'folderid', $folderid);
 		}
-		$app = JFactory::getApplication();
-		$app->setUserState($option . 'fname', $file['name']);
-		$app->setUserState($option . 'size', $file['size']);
-		$app->setUserState($option . 'serverid', $serverid);
-		$app->setUserState($option . 'folderid', $folderid);
 
 		if ($layout == 'modal')
 		{
