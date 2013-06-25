@@ -372,8 +372,13 @@ else
                     <td>
 
                         <input type="file" name="uploadfile" value=""/>
+	                    <?php if ($this->form->getValue('id') != null)
+	                    { ?>
                         <button type="button" onclick="submitbutton('upload')">
 							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
+	                    <?php } else {?>
+	                    <p>Please Save record before uploading media.</p>
+	                    <?php } ?>
                     </td>
                     <td></td>
                 </tr>
