@@ -41,7 +41,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_php = '5.3.13';
+	private $_minimum_php = '5.3.1';
 
 	/**
 	 * The component's name
