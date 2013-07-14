@@ -76,12 +76,12 @@ class JBSMPodcast
                 	<itunes:subtitle>' . $podinfo->title . '</itunes:subtitle>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>http://' . $podinfo->image . '</url>
+                		<url>'.JURI::root() . $podinfo->image . '</url>
                 		<title>' . $podinfo->title . '</title>
                 		<height>' . $podinfo->imageh . '</height>
                 		<width>' . $podinfo->imagew . '</width>
                 	</image>
-                	<itunes:image href="http://' . $podinfo->podcastimage . '" />
+                	<itunes:image href="'.JURI::root() . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />

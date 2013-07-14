@@ -6,8 +6,8 @@
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>8.0.0</version>
-    <creationDate>June 12, 2013</creationDate>
+    <version>8.0.1</version>
+    <creationDate>June 23, 2013</creationDate>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy">mod_biblestudy.php</filename>
