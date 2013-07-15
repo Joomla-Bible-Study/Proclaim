@@ -1,11 +1,10 @@
 Joomla-Bible-Study
 ==================
-Status [![Build Status](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png)](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study)
+Status
 -----------
-###Branches
-**development:** 8.1.0
+[![Build Status](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development)](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study) **development:** 8.1.0
 
-**master:** 8.0.2 
+[![Build Status](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master)](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study) **master:** 8.0.2
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
