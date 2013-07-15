@@ -2,9 +2,26 @@ Joomla-Bible-Study
 ==================
 Status
 -----------
-[![Build Status](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development)](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study) **development:** 8.1.0
-
-[![Build Status](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master)](https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study) **master:** 8.0.2
+<table>
+    <tr>
+        <th>Code</th>
+        <th>Branch</th>
+        <th>Version</th>
+        <th>Release Date</th>
+    </tr>
+    <tr>
+        <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
+        <td>Development</td>
+        <td>8.1.0</td>
+        <td>October 25, 2013</td>
+    </tr>
+    <tr>
+        <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
+        <td>Master</td>
+        <td>8.0.2</td>
+        <td>June 25, 2013</td>
+    </tr>
+</table>
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
