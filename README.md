@@ -8,18 +8,21 @@ Status
         <th>Branch</th>
         <th>Version</th>
         <th>Release Date</th>
+        <th>Joomla Version</th>
     </tr>
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td>Development</td>
         <td>8.1.0</td>
         <td>October 25, 2013</td>
+        <td align="center">3.1.x</td>
     </tr>
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td>Master</td>
         <td>8.0.2</td>
         <td>June 25, 2013</td>
+        <td align="center">2.5.x</td>
     </tr>
 </table>
 
