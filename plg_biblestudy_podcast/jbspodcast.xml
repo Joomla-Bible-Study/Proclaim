@@ -46,9 +46,9 @@
                        label="JBS_PLG_PODCAST_TO_EMAIL" description="JBS_PLG_PODCAST_TO_EMAIL_DESC"/>
                 <field name="subject" type="text"
                        default="Joomla Bible Study Podcast(s) Published" size="60"
-                       label="JBS_PLG_PODCAST_SUBJECT" description=""/>
+                       label="JBS_PLG_PODCAST_EMAIL_SUBJECT" description=""/>
                 <field name="body" type="text" default="Podcast(s) publishing status:"
-                       size="60" label="JBS_PLG_PODCAST_BODY" description=""/>
+                       size="60" label="JBS_PLG_PODCAST_EMAIL_BODY" description=""/>
                 <field name="method" type="list" default="0"
                        label="JBS_PLG_PODCAST_PUBLISH_METHOD" description="JBS_PLG_PODCAST_PUBLISH_METHOD_DESC">
                     <option value="0">JBS_PLG_PODCAST_HOURS</option>

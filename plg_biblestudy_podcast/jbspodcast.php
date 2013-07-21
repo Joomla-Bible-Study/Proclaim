@@ -288,12 +288,12 @@ class PlgSystemJbspodcast extends JPlugin
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
-		$Body = $params->def('Body', '<strong>' . JText::_('JBS_PLG_PODCAST_TITLE') . ': ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . $date . '<br />';
+		$Body = $params->get('body') . '<br />';
+		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2    = '';
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
-		$Subject  = $params->def('subject', JText::_('JBS_PLG_PODCAST_UPDATE'));
+		$Subject  = $params->get('subject');
 		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));
