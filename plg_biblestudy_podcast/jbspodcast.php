@@ -1,10 +1,10 @@
 <?php
 /**
- * Podcast Plugin
+ * Joomla BibleStudy Podcast Plugin
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
- * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
