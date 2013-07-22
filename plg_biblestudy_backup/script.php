@@ -43,7 +43,7 @@ class plgSystemjbsbackupInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		echo '<p>' . JText::_('PLG_JBSBACKUP_UNINSTALL_TEXT') . '</p>';
+		echo '<p>' . JText::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
@@ -75,10 +75,10 @@ class plgSystemjbsbackupInstallerScript
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
-			`timeset` varchar(14) NOT NULL DEFAULT '',
-			`backup` varchar(14) DEFAULT NULL,
-			PRIMARY KEY (`timeset`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+					`timeset` varchar(14) NOT NULL DEFAULT '',
+					`backup` varchar(14) DEFAULT NULL,
+					PRIMARY KEY (`timeset`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
 			$db->execute();
 			$data          = new stdClass;
@@ -86,7 +86,7 @@ class plgSystemjbsbackupInstallerScript
 			$data->backup  = 1281646339;
 			$db->insertObject('#__jbsbackup_timeset', $data);
 		}
-		echo '<p>' . JText::_('PLG_JBSBACKUP_UPDATE_TEXT') . '</p>';
+		echo '<p>' . JText::_('JBS_PLG_BACKUP_UPDATE_TEXT') . '</p>';
 	}
 
 	/**
@@ -99,7 +99,6 @@ class plgSystemjbsbackupInstallerScript
 	 */
 	public function preflight($type, $parent)
 	{
-		// --echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 	/**
@@ -112,7 +111,6 @@ class plgSystemjbsbackupInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		// --echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 }
