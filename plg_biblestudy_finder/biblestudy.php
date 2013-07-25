@@ -260,7 +260,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->id);
+		$item->route = JBSMRoute::getArticleRoute($item->id);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.

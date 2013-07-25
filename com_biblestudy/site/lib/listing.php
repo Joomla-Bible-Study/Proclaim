@@ -963,11 +963,11 @@ class JBSMListing extends JBSMElements
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
 				$column .= '<a href="' . $link . '">';
