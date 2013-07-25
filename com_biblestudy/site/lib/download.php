@@ -24,7 +24,7 @@ class JBSMDownload
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param   int $mid  ID of media
+	 * @param   int  $mid  ID of media
 	 *
 	 * @since 6.1.2
 	 * @return null
@@ -110,7 +110,6 @@ class JBSMDownload
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 		header("Accept-Ranges:  bytes");
 
-
 		// Modified by Rene
 		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
 		$newFileSize = $size - 1;
@@ -190,7 +189,7 @@ class JBSMDownload
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param   int $mid  Media ID
+	 * @param   int  $mid  Media ID
 	 *
 	 * @return  boolean
 	 *
@@ -210,7 +209,7 @@ class JBSMDownload
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object $url  URL
+	 * @param   object  $url  URL
 	 *
 	 * @return  boolean
 	 */
