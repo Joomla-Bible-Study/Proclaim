@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="search" method="upgrade">
-    <name>PLG_BIBLESTUDY_SEARCH</name>
+    <name>JBS_PLG_SEARCH</name>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
@@ -8,7 +8,7 @@
     <license>GNU/GPL</license>
     <version>8.0.0</version>
     <creationDate>June 12, 2013</creationDate>
-    <description>PLG_SEARCH_BIBLESTUDYSEARCH_XML_DESCRIPTION</description>
+    <description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
     <files>
         <filename plugin="biblestudysearch">biblestudysearch.php</filename>
         <filename>index.html</filename>
@@ -30,14 +30,14 @@
                     <option value="1">JBS_PLG_SEARCH_STUDY_FIRST</option>
                 </field>
                 <field name="search_content" type="radio" default="1"
-                       description="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_CONTENT_DESC"
-                       label="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_CONTENT_LABEL">
+                	   label="JBS_PLG_SEARCH_FIELD_CONTENT"
+                       description="JBS_PLG_SEARCH_FIELD_CONTENT_DESC">
                     <option value="0">JOFF</option>
                     <option value="1">JON</option>
                 </field>
                 <field name="search_archived" type="radio" default="0"
-                       description="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_ARCHIVED_DESC"
-                       label="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_ARCHIVED_LABEL">
+                	   label="JBS_PLG_SEARCH_FIELD_ARCHIVED"
+                       description="JBS_PLG_SEARCH_FIELD_ARCHIVED_DESC">
                     <option value="0">JOFF</option>
                     <option value="1">JON</option>
                 </field>
