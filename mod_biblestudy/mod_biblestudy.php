@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Mod_Biblesutdy core file
  *
@@ -11,7 +10,8 @@
  * */
 defined('_JEXEC') or die;
 
-require_once __DIR__ . '/helper.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
 $document = JFactory::getDocument();
@@ -29,7 +29,7 @@ $items        = ModJBSMHelper::getLatest($params);
 // Attempt to change mysql for error in large select
 $db = JFactory::getDBO();
 $db->setQuery('SET SQL_BIG_SELECTS=1');
-$db->query();
+$db->execute();
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
