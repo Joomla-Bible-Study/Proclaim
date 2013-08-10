@@ -36,6 +36,14 @@ class Com_BiblestudyInstallerScript
 	private $_minimum_joomla_release = '2.5.6';
 
 	/**
+	 * Find minimum required PHP version for this extension.
+	 * It will be read from the version attribute (install tag) in the manifest file
+	 *
+	 * @var string
+	 */
+	private $_minimum_php = '5.3.1';
+
+	/**
 	 * The component's name
 	 *
 	 * @var string
@@ -48,8 +56,8 @@ class Com_BiblestudyInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string         $type    Type of install
-	 * @param   JInstallerFile $parent  Where it is coming from
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 */
@@ -103,15 +111,26 @@ class Com_BiblestudyInstallerScript
 				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
 			}
 		}
+		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
+
+		if (!$install_good)
+		{
+			$install_good = version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
+		}
+		else
+		{
+			JFactory::$application->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
+			$install_good = false;
+		}
 
 		// Only allow to install on minimum Joomla! version
-		return version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
+		return $install_good;
 	}
 
 	/**
 	 * Install
 	 *
-	 * @param   JInstallerFile $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
 	 * @return  void
 	 */
@@ -151,14 +170,12 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall
 	 *
-	 * @param   JInstallerFile $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
 	 * @return   void
 	 */
 	public function uninstall($parent)
 	{
-
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$dbhelper    = new JBSMDbHelper;
 		$drop_result = '';
 
@@ -234,7 +251,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update
 	 *
-	 * @param   JInstallerFile $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
 	 * @return   void
 	 */
@@ -252,8 +269,8 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string         $type    Type of install
-	 * @param   JInstallerFile $parent  Where it is coming from
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return   void
 	 */
@@ -311,7 +328,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Get a variable from the manifest file (actually, from the manifest cache).
 	 *
-	 * @param   string $name  Name of param
+	 * @param   string  $name  Name of param
 	 *
 	 * @return string
 	 */
@@ -331,7 +348,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * sets parameter values in the component's row of the extension table
 	 *
-	 * @param   array $param_array  Array of params to set.
+	 * @param   array  $param_array  Array of params to set.
 	 *
 	 * @return   void
 	 */

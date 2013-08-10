@@ -19,7 +19,7 @@ $templateparams = null;
 
 if (!$go)
 {
-	echo "Extension Bible Study not present or enabled";
+	throw new Exception("Extension Bible Study not present or enabled");
 }
 else
 {
