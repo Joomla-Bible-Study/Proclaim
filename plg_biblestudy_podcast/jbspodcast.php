@@ -1,10 +1,10 @@
 <?php
 /**
- * Podcast Plugin
+ * Joomla BibleStudy Podcast Plugin
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
- * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 /* Import library dependencies */
 jimport('joomla.plugin.plugin');
+
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 /**
  * Podcast plugin class
@@ -66,8 +68,10 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
-			//update the database to show a new time
+
+			// Update the database to show a new time
 			$this->updatetime();
+
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
@@ -288,12 +292,12 @@ class PlgSystemJbspodcast extends JPlugin
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
-		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSPODCAST_TITLE') . ': ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . $date . '<br />';
+		$Body = $params->get('body') . '<br />';
+		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2    = '';
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
-		$Subject  = $params->def('subject', JText::_('PLG_JBSPODCAST_UPDATE'));
+		$Subject  = $params->get('subject');
 		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));

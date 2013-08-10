@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="finder" method="upgrade">
-    <name>PLG_FINDER_BIBLESTUDY</name>
+    <name>JBS_PLG_FINDER</name>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -8,7 +8,7 @@
     <version>8.0.0</version>
     <creationDate>June 12, 2013</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
-    <description>PLG_FINDER_BIBLESTUDY_XML_DESCRIPTION</description>
+    <description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
     <files>
         <file plugin="biblestudy">biblestudy.php</file>
         <filename>index.html</filename>
