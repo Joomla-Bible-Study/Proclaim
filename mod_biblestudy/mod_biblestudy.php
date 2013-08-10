@@ -10,6 +10,7 @@
  * */
 defined('_JEXEC') or die;
 
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
