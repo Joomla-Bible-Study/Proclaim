@@ -17,14 +17,14 @@ $ismodule = 1;
 $JBSMListing = new JBSMListing;
 ?>
 <div id="biblestudy" class="noRefTagger">
-	<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
+	<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?>
 	<!-- This div is the container for the whole page -->
-	<table id="bsmsmoduletable">
 		<?php
 		$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
 		echo $header;
 		?>
-		<tbody>
+		</div>
+		<div>
 		<?php
 		$class1 = 'bsodd';
 		$class2 = 'bseven';
@@ -45,8 +45,7 @@ $JBSMListing = new JBSMListing;
 			echo $listing;
 		}
 		?>
-		</tbody>
-	</table>
+	</div>
 </div>
 <div style="clear: both;"></div>
 <div class="modulelistingfooter">
