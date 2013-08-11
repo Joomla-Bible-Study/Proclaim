@@ -181,7 +181,7 @@ class JBSMListing extends JBSMElements
 		}
 
 		// This begins the row of the display data
-		$listing = '<tr class="' . $oddeven;
+		$listing = '<div class="' . $oddeven;
 
 		if ($lastrow == 1)
 		{
@@ -325,7 +325,7 @@ class JBSMListing extends JBSMElements
 				);
 			}
 		}
-		$listing .= '</tr>';
+		$listing .= '</div>';
 
 		// This ends the row of the data to be displayed
 
@@ -339,7 +339,7 @@ class JBSMListing extends JBSMElements
 		{
 			$lastrow = 1;
 		}
-		$listing .= '<tr class="' . $oddeven;
+		$listing .= '<div class="' . $oddeven;
 
 		// This begins the row of the display data
 
@@ -482,7 +482,7 @@ class JBSMListing extends JBSMElements
 				);
 			}
 		}
-		$listing .= '</tr>';
+		$listing .= '</div>';
 
 		// This ends the row of the data to be displayed
 
@@ -498,7 +498,7 @@ class JBSMListing extends JBSMElements
 		}
 
 		// This begins the row of the display data
-		$listing .= '<tr class="' . $oddeven;
+		$listing .= '<div class="' . $oddeven;
 
 		if ($lastrow == 1)
 		{
@@ -641,7 +641,7 @@ class JBSMListing extends JBSMElements
 		}
 
 		// This ends the row of the data to be displayed
-		$listing .= '</tr>';
+		$listing .= '</div>';
 
 		// End of row 3
 		// Beginning of row 4
@@ -653,7 +653,7 @@ class JBSMListing extends JBSMElements
 		}
 
 		// This begins the row of the display data
-		$listing .= '<tr class="' . $oddeven;
+		$listing .= '<div class="' . $oddeven;
 
 		if ($lastrow == 1)
 		{
@@ -797,7 +797,7 @@ class JBSMListing extends JBSMElements
 		}
 
 		// This ends the row of the data to be displayed
-		$listing .= '</tr>';
+		$listing .= '</div>';
 
 		return $listing;
 	}
@@ -845,7 +845,7 @@ class JBSMListing extends JBSMElements
 		$template)
 	{
 
-		$cell = '<td class="' . $rowcolid . ' ' . $elementid;
+		$cell = '<div class="' . $rowcolid . ' ' . $elementid;
 
 		if ($lastcol == 1)
 		{
@@ -898,7 +898,7 @@ class JBSMListing extends JBSMElements
 				$cell .= '</a>';
 				break;
 		}
-		$cell .= '</td>';
+		$cell .= '</div>';
 
 		return $cell;
 	}
@@ -1502,7 +1502,7 @@ class JBSMListing extends JBSMElements
 
 		if ($params->get('title_line_1') > 0)
 		{
-			$title = '<table class="table" id="titletable"><tbody><tr><td class="titlefirstline">';
+			$title = '<div id="titletable"><div class="titlefirstline">';
 
 			switch ($params->get('title_line_1'))
 			{
@@ -1534,12 +1534,12 @@ class JBSMListing extends JBSMElements
 					$title .= $elementid->element;
 					break;
 			}
-			$title .= '</td></tr>';
+			$title .= '</div>';
 		}
 
 		if ($params->get('title_line_2') > 0)
 		{
-			$title .= '<tr><td class="titlesecondline" >';
+			$title .= '<div class="titlesecondline" >';
 
 			switch ($params->get('title_line_2'))
 			{
@@ -1571,10 +1571,10 @@ class JBSMListing extends JBSMElements
 					$title .= $elementid->element;
 					break;
 			}
-			$title .= '</td></tr>';
+			$title .= '</div>';
 
 		} // End of if title2
-		$title .= '</tbody></table>';
+		$title .= '</div>';
 
 		return $title;
 	}
@@ -1737,20 +1737,20 @@ class JBSMListing extends JBSMElements
 
 		if ($nh)
 		{
-			$listing = '<tr>';
+			$listing = '<div>';
 
 			while ($columns > 0)
 			{
-				$listing .= '<th class="firstrow"></th>';
+				$listing .= '<span class="firstrow"></span>';
 				$columns--;
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 		}
 		else
 		{
 			// Here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
 
-			$listing = '<tr';
+			$listing = '<div';
 
 			if ($rows == 1)
 			{
@@ -1826,7 +1826,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			$lastrow = 0;
 
@@ -1835,7 +1835,7 @@ class JBSMListing extends JBSMElements
 				$lastrow = 1;
 			}
 			// This begins the row of the display data
-			$listing .= '<tr';
+			$listing .= '<div';
 
 			if ($lastrow == 1)
 			{
@@ -1908,7 +1908,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			// Test to see if Lastrow is not (int) 0
 			if ($lastrow == 0)
@@ -1991,10 +1991,10 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			// This begins the row of the display data
-			$listing .= '<tr';
+			$listing .= '<div';
 			$lastrow = 0;
 
 			if ($rows == 4)
@@ -2069,7 +2069,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 		}
 
 		// End of if else for $nh
