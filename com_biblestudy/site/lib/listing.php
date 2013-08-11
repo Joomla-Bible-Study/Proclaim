@@ -1737,20 +1737,20 @@ class JBSMListing extends JBSMElements
 
 		if ($nh)
 		{
-			$listing = '<tr>';
+			$listing = '<div>';
 
 			while ($columns > 0)
 			{
-				$listing .= '<th class="firstrow"></th>';
+				$listing .= '<span class="firstrow"></span>';
 				$columns--;
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 		}
 		else
 		{
 			// Here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
 
-			$listing = '<tr';
+			$listing = '<div';
 
 			if ($rows == 1)
 			{
@@ -1826,7 +1826,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			$lastrow = 0;
 
@@ -1835,7 +1835,7 @@ class JBSMListing extends JBSMElements
 				$lastrow = 1;
 			}
 			// This begins the row of the display data
-			$listing .= '<tr';
+			$listing .= '<div';
 
 			if ($lastrow == 1)
 			{
@@ -1908,7 +1908,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			// Test to see if Lastrow is not (int) 0
 			if ($lastrow == 0)
@@ -1991,10 +1991,10 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 
 			// This begins the row of the display data
-			$listing .= '<tr';
+			$listing .= '<div';
 			$lastrow = 0;
 
 			if ($rows == 4)
@@ -2069,7 +2069,7 @@ class JBSMListing extends JBSMElements
 				}
 				$listing .= $this->getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
 			}
-			$listing .= '</tr>';
+			$listing .= '</div>';
 		}
 
 		// End of if else for $nh
