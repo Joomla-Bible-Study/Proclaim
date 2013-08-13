@@ -11,25 +11,25 @@
 defined('_JEXEC') or die;
 
 $show_link = $params->get('show_link', 1);
-$pagetext  = $params->get('pagetext');
-$ismodule  = 1;
+$pagetext = $params->get('pagetext');
+$ismodule = 1;
 
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 $JBSMListing = new JBSMListing;
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
-    <!-- This div is the container for the whole page -->
-    <table id="bsmsmoduletable">
+	<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
+	<!-- This div is the container for the whole page -->
+	<table id="bsmsmoduletable">
 		<?php
 		$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
 		echo $header;
 		?>
-        <tbody>
+		<tbody>
 		<?php
-		$class1  = 'bsodd';
-		$class2  = 'bseven';
+		$class1 = 'bsodd';
+		$class2 = 'bseven';
 		$oddeven = $class1;
 
 		foreach ($list as $study)
@@ -47,12 +47,12 @@ $JBSMListing = new JBSMListing;
 			echo $listing;
 		}
 		?>
-        </tbody>
-    </table>
+		</tbody>
+	</table>
 </div>
 <div style="clear: both;"></div>
 <div class="modulelistingfooter">
-    <br/>
+	<br/>
 	<?php
 	if ($params->get('show_link') > 0)
 	{

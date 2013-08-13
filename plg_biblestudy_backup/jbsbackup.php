@@ -5,7 +5,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -292,7 +292,6 @@ class PlgSystemjbsbackup extends JPlugin
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$date = date('r');
 		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
 		$Body .= JText::_('Process run at: ') . $date . '<br />';
 		$Body .= '';

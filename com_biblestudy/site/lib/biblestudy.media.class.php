@@ -504,13 +504,11 @@ class jbsMedia
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
 
-		if ($media->spath == 'localhost')
-		{
-			$media->spath = 'localhost/';
-		}
-
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
+		/**
+		 * @todo There is no $row referenced to this function so this will fail
+		 */
 
 		// This one IS needed
 		$duration = $JBSMElements->getDuration($params, $media);
@@ -569,8 +567,8 @@ class jbsMedia
 									<script language=\"javascript\" type=\"text/javascript\">
     jwplayer('placeholder').setup({
 	    'file' : '" . $path . "',
-	    'height' : '" . $player->playerheight . "',
-	    'width' : '" . $player->playerwidth . "',
+	    'height' : '" . $height . "',
+	    'width' : '" . $width . "',
         'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
         'flashplayer':'" . $base . "media/com_biblestudy/player/jwplayer.flash.swf',
         'backcolor':'" . $backcolor . "',
