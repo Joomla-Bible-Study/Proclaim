@@ -64,13 +64,13 @@
                 <field name="day1" type="list" default="0" label="JBS_PLG_BACKUP_DAY1"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour1" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY1" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -103,13 +103,13 @@
                 <field name="day2" type="list" default="0" label="JBS_PLG_BACKUP_DAY2"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour2" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY2" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -142,13 +142,13 @@
                 <field name="day3" type="list" default="0" label="JBS_PLG_BACKUP_DAY3"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour3" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY3" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -181,13 +181,13 @@
                 <field name="day4" type="list" default="0" label="JBS_PLG_BACKUP_DAY4"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour4" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY4" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -220,13 +220,13 @@
                 <field name="day5" type="list" default="0" label="JBS_PLG_BACKUP_DAY5"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour5" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY5" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -259,13 +259,13 @@
                 <field name="day6" type="list" default="0" label="JBS_PLG_BACKUP_DAY6"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour6" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY6" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -298,13 +298,13 @@
                 <field name="day7" type="list" default="0" label="JBS_PLG_BACKUP_DAY7"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour7" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY7" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -337,13 +337,13 @@
                 <field name="day8" type="list" default="0" label="JBS_PLG_BACKUP_DAY8"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour8" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY8" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -376,13 +376,13 @@
                 <field name="day9" type="list" default="0" label="JBS_PLG_BACKUP_DAY9"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour9" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY9" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
@@ -415,13 +415,13 @@
                 <field name="day10" type="list" default="0" label="JBS_PLG_BACKUP_DAY10"
                        description="JBS_PLG_BACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
-                    <option value="0">JBS_PLG_BACKUP_SUNDAY</option>
-                    <option value="1">JBS_PLG_BACKUP_MONDAY</option>
-                    <option value="2">JBS_PLG_BACKUP_TUESDAY</option>
-                    <option value="3">JBS_PLG_BACKUP_WEDNESDAY</option>
-                    <option value="4">JBS_PLG_BACKUP_THURSDAY</option>
-                    <option value="5">JBS_PLG_BACKUP_FRIDAY</option>
-                    <option value="6">JBS_PLG_BACKUP_SATURDAY</option>
+                    <option value="0">SUNDAY</option>
+                    <option value="1">MONDAY</option>
+                    <option value="2">TUESDAY</option>
+                    <option value="3">WEDNESDAY</option>
+                    <option value="4">THURSDAY</option>
+                    <option value="5">FRIDAY</option>
+                    <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour10" type="list" default="0"
                        label="JBS_PLG_BACKUP_HOUR_DAY10" description="JBS_PLG_BACKUP_CHOOSE_HOUR">
