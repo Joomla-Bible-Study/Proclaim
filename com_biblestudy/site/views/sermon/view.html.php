@@ -87,9 +87,9 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
 
-        //Get related items. Moved here because the params were getting messed up lower in the script
-        $relatedstudies = new RelatedStudies;
-        $this->related = $relatedstudies->getRelated($this->item, $this->item->params);
+		// Get related items. Moved here because the params were getting messed up lower in the script
+		$relatedstudies = new JBSMRelatedStudies;
+		$this->related  = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -123,57 +123,57 @@ class BiblestudyViewSermon extends JViewLegacy
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 
-/*		// Check to see which parameters should take priority
-		if ($active)
-		{
-			$currentLink = $active->link;
-
-			// If the current view is the active item and an article view for this article, then the menu item params take priority
-			if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
-			{
-				// $item->params are the article params, $temp are the menu item params
-				// Merge so that the menu item params take priority
-				$item->params->merge($temp);
-
-				// Load layout from active query (in case it is an alternative menu item)
-				if (isset($active->query['layout']))
+		/*		// Check to see which parameters should take priority
+				if ($active)
 				{
-					$this->setLayout($active->query['layout']);
+					$currentLink = $active->link;
+
+					// If the current view is the active item and an article view for this article, then the menu item params take priority
+					if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
+					{
+						// $item->params are the article params, $temp are the menu item params
+						// Merge so that the menu item params take priority
+						$item->params->merge($temp);
+
+						// Load layout from active query (in case it is an alternative menu item)
+						if (isset($active->query['layout']))
+						{
+							$this->setLayout($active->query['layout']);
+						}
+					}
+					else
+					{
+						// Current view is not a single article, so the article params take priority here
+						// Merge the menu item params with the article params so that the article params take priority
+						$temp->merge($item->params);
+						$item->params = $temp;
+
+						// Check for alternative layouts (since we are not in a single-article menu item)
+						// Single-article menu item layout takes priority over alt layout for an article
+						$layout = $item->params->get('sermon_layout');
+
+						if ($layout)
+						{
+							$this->setLayout($layout);
+						}
+					}
 				}
-			}
-			else
-			{
-				// Current view is not a single article, so the article params take priority here
-				// Merge the menu item params with the article params so that the article params take priority
-				$temp->merge($item->params);
-				$item->params = $temp;
-
-				// Check for alternative layouts (since we are not in a single-article menu item)
-				// Single-article menu item layout takes priority over alt layout for an article
-				$layout = $item->params->get('sermon_layout');
-
-				if ($layout)
+				else
 				{
-					$this->setLayout($layout);
+					// Merge so that article params take priority
+					$temp->merge($item->params);
+					$item->params = $temp;
+
+					// Check for alternative layouts (since we are not in a single-article menu item)
+					// Single-article menu item layout takes priority over alt layout for an article
+					$layout = $item->params->get('sermon_layout');
+
+					if ($layout)
+					{
+						$this->setLayout($layout);
+					}
 				}
-			}
-		}
-		else
-		{
-			// Merge so that article params take priority
-			$temp->merge($item->params);
-			$item->params = $temp;
-
-			// Check for alternative layouts (since we are not in a single-article menu item)
-			// Single-article menu item layout takes priority over alt layout for an article
-			$layout = $item->params->get('sermon_layout');
-
-			if ($layout)
-			{
-				$this->setLayout($layout);
-			}
-		}
-*/
+		*/
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
@@ -195,10 +195,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
-		$relatedstudies = new JBSMRelatedStudies;
-
-
-		$template      = $this->get('template');
+		$template = $this->get('template');
 
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');

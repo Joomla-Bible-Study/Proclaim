@@ -62,6 +62,7 @@ defined('_JEXEC') or die;
 	?>
 	<div class=\
 	'direct\'>
+	<?php var_dump($this->path1); ?>
 	<iframe src="<?php echo $this->path1; ?>" width="100%" height="100%" scrolling="no" frameborder="1"
 	        marginheight="0" marginwidth="0">
 		<?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>

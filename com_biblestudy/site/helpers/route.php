@@ -184,4 +184,12 @@ abstract class JBSMRoute
 		return false;
 	}
 
+	public static function addScheme($url, $scheme = 'http://')
+	{
+		if (parse_url($url, PHP_URL_SCHEME) === null) {
+			return $scheme . $url;
+		}
+		return $url;
+	}
+
 }

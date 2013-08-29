@@ -587,6 +587,18 @@ class JBSMElements
 	public function getDuration($params, $row)
 	{
 
+		if (!isset($row->media_hours))
+		{
+			$row->media_hours = '00';
+		}
+		if (!isset($row->media_minutes))
+		{
+			$row->media_minutes = '00';
+		}
+		if (!isset($row->media_seconds))
+		{
+			$row->media_seconds = '00';
+		}
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
 
 		if (!$duration)
@@ -641,10 +653,12 @@ class JBSMElements
 	 */
 	public function getstudyDate($params, $studydate)
 	{
-        if (!$this->MyCheckDate($studydate))
-            {
-                $date = $studydate; return $date;
-            }
+		if (!$this->MyCheckDate($studydate))
+		{
+			$date = $studydate;
+
+			return $date;
+		}
 
 		switch ($params->get('date_format'))
 		{
@@ -692,22 +706,27 @@ class JBSMElements
 
 		return $date;
 	}
-    /**
-     * Check whether date is valid YYYY-MM-DD format
-     *
-     * @param   string $datein  Study Date
-     *
-     * @return boolean
-     */
-    function MyCheckDate( $datein ) {
-        if (preg_match ("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein))
-        {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    /**
+
+	/**
+	 * Check whether date is valid YYYY-MM-DD format
+	 *
+	 * @param   string $datein  Study Date
+	 *
+	 * @return boolean
+	 */
+	function MyCheckDate($datein)
+	{
+		if (preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
 	 * Function to get File Size
 	 *
 	 * @param   string $file_size  Size in bytes
@@ -832,7 +851,6 @@ class JBSMElements
 	{
 		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
-		$getMedia = new JBSMMedia;
 		jimport('joomla.application.component.helper');
 
 		if (!isset($row->id))
@@ -897,7 +915,6 @@ class JBSMElements
 			$template   = $input->get('t', '1', 'int');
 			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
-
 			$mediatable .= '<td>';
 
 			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
@@ -909,7 +926,15 @@ class JBSMElements
 			$src      = JURI::base() . $image->path;
 			$height   = $image->height;
 			$width    = $image->width;
-			$path1    = $media->spath . $media->fpath . $media->filename;
+
+			if ($media->spath == 'localhost')
+			{
+				$path1 = JURI::base() . $media->fpath . $media->filename;
+			}
+			else
+			{
+				$path1 = $media->spath . $media->fpath . $media->filename;
+			}
 
 			if (!preg_match("@^'http?://@i", $path1))
 			{
@@ -968,55 +993,56 @@ class JBSMElements
 			{
 				$type = $item;
 			}
-			$media1_link = null;
+			$media1_link          = null;
+			$jbsmedia             = new JBSMMedia;
+			$player               = new stdClass;
+			$player->type         = $media->link_type;
+			$player->playerheight = $playerheight;
+			$player->playerwidth  = $playerwidth;
+			$player->player       = $playertype;
+			$media1_link         = $jbsmedia->getPlayerCode($params, $itemparams, $player, $image, $media);
 
-			switch ($playertype)
-			{
-				case 0:
-
-					if ($params->get('direct_internal', 0) == 1)
-					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
-							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
-							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
-							. $media->malttext . "' /></a>";
-
-
-					}
-					else
-					{
-						$media1_link = '<a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $media->special . '"><img src="' . $src
-							. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-							. '" height="' . $height . '" border="0" /></a>';
-					}
-
-					$media1_link .= '<a href="' . $path1 . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid='
-						. $media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="'
-						. $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' . $media->special . '"><img src="'
-						. $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-						. '" height="' . $height . '" border="0" /></a>';
-
-					break;
-
-				case 1:
-					if ($type == 1)
-					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
-							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
-							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
-					}
-
-
-					break;
-
-
-				case 3:
-					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
-					break;
-			}
+//			switch ($playertype)
+//			{
+//				case 0:
+//
+//					if ($params->get('direct_internal', 0) == 1)
+//					{
+//						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
+//							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
+//							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
+//							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
+//							. $media->malttext . "' /></a>";
+//
+//
+//					}
+//					else
+//					{
+//						$media1_link = '<a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+//							. $filesize . '" target="' . $media->special . '"><img src="' . $src
+//							. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
+//							. '" height="' . $height . '" border="0" /></a>';
+//					}
+//
+//					break;
+//
+//				case 1:
+//					if ($type == 1)
+//					{
+//						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
+//							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
+//							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
+//							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+//					}
+//
+//
+//					break;
+//
+//
+//				case 3:
+//					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
+//					break;
+//			}
 
 			if ($media->docMan_id > 0)
 			{

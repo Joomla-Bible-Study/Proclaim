@@ -793,6 +793,7 @@ class JBSMMedia
 		$screencolor  = $params->get('screencolor', '0xFFFFFF');
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
+		dump($player, 'PlayerCode player');
 
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
@@ -804,7 +805,15 @@ class JBSMMedia
 		$duration = $JBSMElements->getDuration($params, $media);
 
 		$mimetype = $media->mimetext;
-		$path     = $media->spath . $media->fpath . $media->filename;
+
+		if ($media->spath == 'localhost')
+		{
+			$path = JURI::base() . $media->fpath . $media->filename;
+		}
+		else
+		{
+			$path = $media->spath . $media->fpath . $media->filename;
+		}
 
 		if (!isset($media->malttext))
 		{
@@ -815,6 +824,7 @@ class JBSMMedia
 			$protocol = $params->get('protocol', 'http://');
 			$path     = $protocol . $path;
 		}
+
 		switch ($player->player)
 		{
 
@@ -830,8 +840,6 @@ class JBSMMedia
 							. $filesize . '" target="' .
 							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
-
-						return $playercode;
 						break;
 
 					case 1: // Popup window
