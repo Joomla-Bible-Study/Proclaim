@@ -184,11 +184,19 @@ abstract class JBSMRoute
 		return false;
 	}
 
+	/**
+	 * @param    string $url     URL of website
+	 * @param    string $scheme  Scheme that need to lead with.
+	 *
+	 * @return string  The fixed URL
+	 */
 	public static function addScheme($url, $scheme = 'http://')
 	{
-		if (parse_url($url, PHP_URL_SCHEME) === null) {
+		if (parse_url($url, PHP_URL_SCHEME) === null)
+		{
 			return $scheme . $url;
 		}
+
 		return $url;
 	}
 
