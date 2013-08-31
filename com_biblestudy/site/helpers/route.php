@@ -88,10 +88,6 @@ abstract class JBSMRoute
 	 */
 	public static function getTeacherRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
 
@@ -107,10 +103,6 @@ abstract class JBSMRoute
 	 */
 	public static function getSeriesRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
 

@@ -111,6 +111,7 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$document = JFactory::getDocument();
 
+		// @todo need to make work with ssl confections.
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
@@ -292,5 +293,3 @@ class BiblestudyViewPopup extends JViewLegacy
 	}
 
 }
-
-// End of class

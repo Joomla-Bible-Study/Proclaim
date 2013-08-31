@@ -927,19 +927,6 @@ class JBSMElements
 			$height   = $image->height;
 			$width    = $image->width;
 
-			if ($media->spath == 'localhost')
-			{
-				$path1 = JURI::base() . $media->fpath . $media->filename;
-			}
-			else
-			{
-				$path1 = $media->spath . $media->fpath . $media->filename;
-			}
-
-			if (!preg_match("@^'http?://@i", $path1))
-			{
-				$path1 = 'http://' . $path1;
-			}
 			$playerwidth  = $params->get('player_width');
 			$playerheight = $params->get('player_height');
 
@@ -1000,49 +987,8 @@ class JBSMElements
 			$player->playerheight = $playerheight;
 			$player->playerwidth  = $playerwidth;
 			$player->player       = $playertype;
-			$media1_link         = $jbsmedia->getPlayerCode($params, $itemparams, $player, $image, $media);
+			$media1_link          = $jbsmedia->getPlayerCode($params, $itemparams, $player, $image, $media);
 
-//			switch ($playertype)
-//			{
-//				case 0:
-//
-//					if ($params->get('direct_internal', 0) == 1)
-//					{
-//						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
-//							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
-//							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
-//							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
-//							. $media->malttext . "' /></a>";
-//
-//
-//					}
-//					else
-//					{
-//						$media1_link = '<a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-//							. $filesize . '" target="' . $media->special . '"><img src="' . $src
-//							. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-//							. '" height="' . $height . '" border="0" /></a>';
-//					}
-//
-//					break;
-//
-//				case 1:
-//					if ($type == 1)
-//					{
-//						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
-//							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
-//							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
-//							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
-//					}
-//
-//
-//					break;
-//
-//
-//				case 3:
-//					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
-//					break;
-//			}
 
 			if ($media->docMan_id > 0)
 			{
@@ -1137,11 +1083,13 @@ class JBSMElements
 	 * @param   object $media     Media
 	 * @param   int    $width     Width
 	 * @param   int    $height    Height
-	 * @param   string $src       Sorce of Image
+	 * @param   string $src       Source of Image
 	 * @param   string $duration  Duration
 	 * @param   int    $filesize  File Size of Doc
 	 *
 	 * @return string
+	 *
+	 * @todo Duplicate of media.php line 716
 	 */
 	public function getDocman($media, $width, $height, $src, $duration, $filesize)
 	{
@@ -1162,6 +1110,8 @@ class JBSMElements
 	 * @param   string $src     URL of image
 	 *
 	 * @return string
+	 *
+	 * @todo Duplicate of media.php line 739
 	 */
 	public function getArticle($media, $width, $height, $src)
 	{
@@ -1182,6 +1132,8 @@ class JBSMElements
 	 * @param   object $params  Item Params
 	 *
 	 * @return string
+	 *
+	 * @todo Duplicate of media.php line 761 need to combine bcc
 	 */
 	public function getVirtuemart($media, $width, $height, $src, $params)
 	{
@@ -1201,29 +1153,29 @@ class JBSMElements
 	 *
 	 * @return object
 	 */
-	public function getMediaRows($study_id)
-	{
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('SELECT #_bsms_mediafiles.*,'
-		. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
-		. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
-		. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
-		. ' #_bsms_media.media_alttext AS malttext,'
-		. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
-			->from('#_bsms_mediafiles')
-			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
-			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
-			->leftJoin('#_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)')
-			->leftJoin('#_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)')
-			->where('#_bsms_mediafiles.study_id = ' . $study_id)
-			->where('#_bsms_mediafiles.published = ' . 1)
-			->order('ordering asc, #_bsms_mediafiles.mime_type asc');
-		$database->setQuery($query);
-		$mediaRows = $database->loadObjectList();
-
-		return $mediaRows;
-	}
+//	public function getMediaRows($study_id)
+//	{
+//		$database = JFactory::getDBO();
+//		$query    = $database->getQuery(true);
+//		$query->select('SELECT #_bsms_mediafiles.*,'
+//		. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
+//		. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
+//		. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
+//		. ' #_bsms_media.media_alttext AS malttext,'
+//		. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
+//			->from('#_bsms_mediafiles')
+//			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
+//			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
+//			->leftJoin('#_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)')
+//			->leftJoin('#_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)')
+//			->where('#_bsms_mediafiles.study_id = ' . $study_id)
+//			->where('#_bsms_mediafiles.published = ' . 1)
+//			->order('ordering asc, #_bsms_mediafiles.mime_type asc');
+//		$database->setQuery($query);
+//		$mediaRows = $database->loadObjectList();
+//
+//		return $mediaRows;
+//	}
 
 	/**
 	 * Get Store
@@ -1237,9 +1189,6 @@ class JBSMElements
 	 */
 	private function getStore($params, $row)
 	{
-
-		$mainframe = JFactory::getApplication();
-
 		// Placing for starter of var
 		$imagew = null;
 		$imageh = null;
@@ -1295,8 +1244,6 @@ class JBSMElements
 
 			if ($dvd->mid > 0)
 			{
-				$src = JURI::base() . $dvd->media_image_path;
-
 				if ($imagew)
 				{
 					$width = $imagew;
@@ -1339,8 +1286,6 @@ class JBSMElements
 	 */
 	public function getFilepath($id3, $idfield, $mime)
 	{
-		$mainframe = JFactory::getApplication();
-
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
@@ -1357,12 +1302,7 @@ class JBSMElements
 		if ($filepathresults)
 		{
 			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
-
-			// Check url for "http://" prefix, and add it if it doesn't exist
-			if (!preg_match('@^(?:http://)?([^/]+)@i', $filepath))
-			{
-				$filepath = 'http://' . $filepath;
-			}
+			$filepath = JBSMRoute::addScheme($filepath);
 		}
 		elseif (isset($filepathresults->docMan_id))
 		{
