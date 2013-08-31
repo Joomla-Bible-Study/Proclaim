@@ -555,7 +555,6 @@ class JBSMStats
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
 			JText::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final        = array();
-		$final2       = array();
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);

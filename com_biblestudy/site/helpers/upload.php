@@ -213,7 +213,7 @@ class JBSMUpload
 
 		foreach ($blacklist as $ext)
 		{
-			if (preg_match("/$ext\$/i", $file))
+			if (preg_match("/$ext\$/i", $file['name']))
 			{
 				$allow = false;
 			}

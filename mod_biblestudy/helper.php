@@ -24,7 +24,7 @@ class ModJBSMHelper
 	/**
 	 * Get Latest
 	 *
-	 * @param   JObject  $params  Item Params
+	 * @param   JObject $params  Item Params
 	 *
 	 * @return array
 	 */

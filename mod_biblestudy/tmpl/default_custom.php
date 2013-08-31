@@ -72,7 +72,7 @@ switch ($params->get('module_wrapcode'))
     <br/>
 
 	<?php
-	$link_text = $params->get('pagetext', 'More Bible Studies');
+	$link_text = $params->get('pagetext');
 
 	if ($params->get('show_link') > 0)
 	{

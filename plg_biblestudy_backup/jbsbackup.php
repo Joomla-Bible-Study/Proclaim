@@ -5,7 +5,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -278,26 +278,26 @@ class PlgSystemjbsbackup extends JPlugin
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('PLG_JBSBACKUP_ERROR');
+			$msg = JText::_('JBS_PLG_BACKUP_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('PLG_JBSBACKUP_SUCCESS');
+			$msg = JText::_('JBS_PLG_BACKUP_SUCCESS');
 		}
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
-		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . $date . '<br />';
+		$Body = $params->get('body') . '<br />';
+		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2 = '';
 
 		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
 		$Body2 .= $msg;
 
 		$Body3    = $Body . $Body2;
-		$Subject  = $params->def('subject', JText::_('PLG_JBSBACKUP_REPORT'));
+		$Subject  = $params->get('subject');
 		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));

@@ -22,9 +22,6 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
-jimport('joomla.version');
-$version = new JVersion;
-
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {
 	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
