@@ -126,9 +126,9 @@ class TableAdmin extends JTable
 	 * Method to load a row from the database by primary key and bind the fields
 	 * to the JTable instance properties.
 	 *
-	 * @param   mixed   $keys      An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                             set the instance property value is used.
-	 * @param   boolean $reset     True to reset the default values before loading the new row.
+	 * @param   mixed   $keys          An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                                 set the instance property value is used.
+	 * @param   boolean $reset         True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *

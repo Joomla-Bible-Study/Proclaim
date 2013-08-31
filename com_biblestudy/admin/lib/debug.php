@@ -1,16 +1,12 @@
 <?php
 /**
- * BibleStudy Debug File
- *
- * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @package    BibleStudy
+ * @copyright  (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-$biblestudy_db = JFactory::getDBO();
 
 // Debugging helpers
 // First lets set some assertion settings for the code
@@ -20,24 +16,24 @@ assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 
 /**
- * Class JBS Debug
+ * Class JBSMDebug
  *
- * @package  BibleStudy.Admin
- * @since    7.0.0
- * */
-class JBSDebug
+ * @package  BibleStudy
+ * @since    8.1.0
+ */
+Class JBSMDebug
 {
 	/**
-	 * Default assert call back funtion
+	 * Default assert call back function
 	 * If certain things fail hard we MUST know about it
 	 *
-	 * @param   string $script   Script
-	 * @param   string $line     Line
-	 * @param   string $message  Message
+	 * @param   string  $script   ?
+	 * @param   int     $line     ?
+	 * @param   string  $message  ?
 	 *
-	 * @return null
+	 * @return void
 	 */
-	public function debug_assert_callback($script, $line, $message)
+	public function Debug_Assert_callback($script, $line, $message)
 	{
 		echo "<h1>Assertion failed!</h1><br />
         Script: <strong>$script</strong><br />
@@ -45,27 +41,27 @@ class JBSDebug
         Condition: <br /><pre>$message</pre>";
 
 		// Now display the call stack
-		echo debug_callstackinfo();
+		echo Debug_Call_Stack_info();
 	}
 
 	/**
 	 * Production error handling
 	 *
-	 * @param   string $text  Text
-	 * @param   int    $back  ID
+	 * @param   string  $text  ?
+	 * @param   int     $back  ?
 	 *
-	 * @return  null
+	 * @return void
 	 */
-	public function trigger_dberror($text = '', $back = 0)
+	public function Trigger_Db_error($text = '', $back = 0)
 	{
-		$biblestudy_db = JFactory::getDBO();
-		$dberror       = $biblestudy_db->stderr(true);
-		echo debug_callstackinfo($back + 1);
+		$db      = JFactory::getDBO();
+		$dberror = $db->stderr(true);
+		echo Debug_Call_Stack_info($back + 1);
 
-		include_once BIBLESTUDY_PATH_LIB . DIRECTORY_SEPARATOR . 'biblestudy.version.php';
-		$biblestudyVersion      = BiblestudyVersion::version();
-		$biblestudyPHPVersion   = BiblestudyVersion::PHPVersion();
-		$biblestudyMySQLVersion = BiblestudyVersion::MySQLVersion();
+		$CBiblestudyVersion     = new JBSMBiblestudyVersion;
+		$biblestudyVersion      = $CBiblestudyVersion->version();
+		$biblestudyPHPVersion   = $CBiblestudyVersion->PHPVersion();
+		$biblestudyMySQLVersion = $CBiblestudyVersion->MySQLVersion();
 		?>
 		<!-- Version Info -->
 		<div class="fbfooter">
@@ -77,68 +73,69 @@ class JBSDebug
 			<?php echo $biblestudyMySQLVersion; ?>
 		</div>
 		<!-- /Version Info -->
+
 		<?php
 		biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
 	}
 
 	/**
-	 * System to Check for DB errors
+	 * Check db Error
 	 *
-	 * @param   string $text  Text to Disaply
-	 * @param   int    $back  ID to return
+	 * @param   string  $text  ?
+	 * @param   int     $back  ?
 	 *
-	 * @return null
+	 * @return void
 	 */
-	public function check_dberror($text = '', $back = 0)
+	public function Check_Db_error($text = '', $back = 0)
 	{
-		$biblestudy_db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		if ($biblestudy_db->getErrorNum() != 0)
+		if ($db->getErrorNum() != 0)
 		{
-			trigger_dberror($text, $back + 1);
+			Trigger_Db_error($text, $back + 1);
 		}
 	}
 
 	/**
-	 * Check DB Warning
+	 * Check db warning
 	 *
-	 * @param   string $text  Text
+	 * @param   string  $text  ?
 	 *
-	 * @return null
+	 * @return void
 	 */
-	public function Check_dbwarning($text = '')
+	public function Check_Db_warning($text = '')
 	{
-		$biblestudy_db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		if ($biblestudy_db->getErrorNum() != 0)
+		if ($db->getErrorNum() != 0)
 		{
-			trigger_dbwarning($text);
+			Trigger_Db_warning($text);
 		}
 	}
 
 	/**
-	 * Trigger DB Warning
+	 * DB Warning
 	 *
-	 * @param   string $text  Text
+	 * @param   string  $text  ?
 	 *
-	 * @return  null
+	 * @return void
 	 */
-	public function Trigger_dbwarning($text = '')
+	public function Trigger_Db_warning($text = '')
 	{
-		$biblestudy_db = JFactory::getDBO();
-		biblestudy_error($text . '<br />' . $biblestudy_db->stderr(true), E_USER_WARNING);
+		$db = JFactory::getDBO();
+		biblestudy_error($text . '<br />' . $db->stderr(true), E_USER_WARNING);
 	}
 
 	/**
 	 * Little helper to created a formatted output of variables
 	 *
-	 * @param   array $varlist  List ov Var
+	 * @param   array  $varlist  ?
 	 *
 	 * @return string
 	 */
 	public function Debug_vars($varlist)
 	{
-		$output = '<table class="table" border=1><tr> <th>variable</th> <th>value</th> </tr>';
+		$output = '<table border=1><tr> <th>variable</th> <th>value</th> </tr>';
 
 		foreach ($varlist as $key => $value)
 		{
@@ -149,10 +146,11 @@ class JBSDebug
 
 				if (count($value) > 0)
 				{
-					$output .= '"<table class="table" border=1><tr> <th>key</th> <th>value</th> </tr>';
+					$output .= '"<table border=1><tr> <th>key</th> <th>value</th> </tr>';
 
 					foreach ($value as $skey => $svalue)
 					{
+
 						if (is_array($svalue))
 						{
 							$output .= '<tr><td>[' . $skey . ']</td><td>Nested Array</td></tr>';
@@ -201,13 +199,13 @@ class JBSDebug
 	}
 
 	/**
-	 * Show the callstackinfo to this point in a decent format
+	 * Show the callstack to this point in a decent format
 	 *
-	 * @param   int $back  Back info
+	 * @param   int  $back  ?
 	 *
-	 * @return string
+	 * @return object
 	 */
-	public function Debug_callstackinfo($back = 1)
+	public function Debug_Call_Stack_info($back = 1)
 	{
 		$trace = array_slice(debug_backtrace(), $back);
 
@@ -215,23 +213,21 @@ class JBSDebug
 	}
 
 	/**
-	 * System to get BibleStudy Error
+	 * Trigger JBS Errors
 	 *
-	 * @param   string $message  Message to display
-	 * @param   int    $level    Lever of Notice
-	 * @param   int    $back     Id to return
+	 * @param   string  $message  ?
+	 * @param   int     $level    ?
+	 * @param   int     $back     ?
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function Biblestudy_error($message, $level = E_USER_NOTICE, $back = 1)
 	{
 		$trace  = debug_backtrace();
 		$caller = $trace[$back];
 		trigger_error(
-			$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' .
-			$caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong>' .
-			"\n<br /><br />Error reported",
-			$level
+			$message . ' in <strong>' . $caller['function'] . '()</strong> called from <strong>' . $caller['file']
+				. '</strong> on line <strong>' . $caller['line'] . '</strong>' . "\n<br /><br />Error reported", $level
 		);
 	}
 }

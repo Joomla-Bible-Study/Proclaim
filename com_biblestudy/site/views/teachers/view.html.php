@@ -10,10 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 /**
  * View class for Teachers
  *
@@ -115,9 +111,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 
 		// Load the Admin settings and params from the template
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin(true);
-		$this->loadHelper('image');
 		$template = JBSMParams::getTemplateparams();
 
 		// Convert parameter fields to objects.
@@ -159,7 +153,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 		$images = new JBSMImages;
 
-		$pagebuilder = new JBSPagebuilder;
+		$pagebuilder = new JBSMPagebuilder;
 
 		foreach ($items as $i => $item)
 		{

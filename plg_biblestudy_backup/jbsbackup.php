@@ -28,8 +28,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -69,7 +69,7 @@ class PlgSystemjbsbackup extends JPlugin
 			// Perform the backup and email and update time and zip file
 			$dobackup = $this->doBackup();
 
-			// If we have run the backup check and it returned no errors then the last thing we do is reset the time we did it to current
+			// If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
 
 			$updatetime = $this->updatetime();
 
@@ -78,6 +78,7 @@ class PlgSystemjbsbackup extends JPlugin
 			{
 				$this->doEmail($params, $dobackup);
 			}
+			//$this->updatefiles($params);
 
 		}
 	}
@@ -85,7 +86,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -116,7 +117,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -137,7 +138,6 @@ class PlgSystemjbsbackup extends JPlugin
 		$date       = getdate($now);
 		$day        = $date['wday'];
 		$systemhour = $date['hours'];
-
 		if ($params->get('offset', '0') > 0)
 		{
 			$hour = $systemhour + $offset;
@@ -229,7 +229,7 @@ class PlgSystemjbsbackup extends JPlugin
 		$db    = JFactory::getDBO();
 		$query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
 		$db->setQuery($query);
-		$db->execute();
+		$db->query();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -245,7 +245,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Do the backup
 	 *
-	 * @return boolean
+	 * @return object
 	 */
 	public function doBackup()
 	{
@@ -260,8 +260,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   JRegistry  $params    Component Paramas
-	 * @param   string     $dobackup  File of Backup
+	 * @param   object $params    ?
+	 * @param   object $dobackup  ?
 	 *
 	 * @return void
 	 */
@@ -278,56 +278,48 @@ class PlgSystemjbsbackup extends JPlugin
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('PLG_JBSBACKUP_ERROR');
+			$msg = JText::_('JBS_PLG_BACKUP_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('PLG_JBSBACKUP_SUCCESS');
-		}
-		if ($params->def('fromname', $fromname))
-		{
-
-			$fromname = $params->def('fromname', $fromname);
+			$msg = JText::_('JBS_PLG_BACKUP_SUCCESS');
 		}
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . $date . '<br />';
-		$Body .= '';
-		$Body .= $msg;
-		$Subject = $params->def('subject', JText::_('PLG_JBSBACKUP_REPORT'));
+		$year = '(' . date('Y') . ')';
+		$date = date('r');
+		$Body = $params->get('body') . '<br />';
+		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
+		$Body2 = '';
+
+		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
+		$Body2 .= $msg;
+
+		$Body3    = $Body . $Body2;
+		$Subject  = $params->get('subject');
+		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));
-
-		if (count($recipients) < 1)
-		{
-			$recipients    = array();
-			$recipients[0] = $mailfrom;
-		}
 
 		foreach ($recipients AS $recipient)
 		{
 			$mail->addRecipient($recipient);
-		}
+			$mail->setSubject($Subject . ' ' . $livesite);
+			$mail->setBody($Body3);
 
-		$mail->setSubject($Subject . ' ' . $livesite);
-		$mail->setBody($Body);
-
-		if ($params->get('includedb') == 1)
-		{
-			$mail->addAttachment($dobackup);
-		}
-		if (!$mail->Send())
-		{
-			JLog::add('JBSM Bakup Plugin email faild.', 404, 'JBSM', DateTime::W3C);
+			if ($params->get('includedb') == 1)
+			{
+				$mail->addAttachment($dobackup);
+			}
+			$mail->Send();
 		}
 	}
 
 	/**
 	 * Update files
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return void
 	 */

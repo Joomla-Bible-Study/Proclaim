@@ -9,8 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -25,7 +23,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 *
 	 * @since   12.2
 	 */
@@ -41,7 +39,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function fixAssets()
 	{
-		$asset      = new fixJBSAssets;
+		$asset      = new JBSMAssets;
 		$fix_assets = $asset->fixAssets();
 		$input      = new JInput;
 		$input->set('messages', $fix_assets);

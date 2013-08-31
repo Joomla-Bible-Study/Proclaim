@@ -10,15 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// @todo need to work over the JLoader. TOM
-JLoader::register('JBSMImages', JPATH_ROOT . '/lib/biblestudy.images.class.php.php');
-JLoader::register('JBSMTranslated', JPATH_ADMINISTRATOR . '/helpers/translated.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('image');
-$JViewLegacy->loadHelper('helper');
-
 /**
  *  Class for Series List
  *

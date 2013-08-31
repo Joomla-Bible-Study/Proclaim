@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.1.0
  */
-class JBSMFixAlias
+class JBSMAlias
 {
 	/**
 	 * Extension Name

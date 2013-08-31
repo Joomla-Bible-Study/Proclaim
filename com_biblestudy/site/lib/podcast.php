@@ -11,14 +11,6 @@
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
-/* Put in do to this file is used in a plugin. */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-
-JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
-JLoader::register('JBSMElements', JPATH_SITE . '/components/com_biblestudy/helpers/elements.php');
-JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/helper.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 /**
  * BibleStudy Podcast Class
  *

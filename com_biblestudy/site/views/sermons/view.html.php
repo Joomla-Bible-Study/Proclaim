@@ -10,13 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JbStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-JLoader::register('PodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-
 /**
  * View for Sermons class
  *
@@ -246,7 +239,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$params = $this->state->params;
 
 		$this->admin_params = $this->admin->params;
-		$page_builder       = new JBSPagebuilder;
+		$page_builder       = new JBSMPagebuilder;
 
 		for ($i = 0, $n = count($items); $i < $n; $i++)
 		{
@@ -315,10 +308,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Get the podcast subscription
-		$podcast         = new PodcastSubscribe;
+		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
-
-		JViewLegacy::loadHelper('image');
 
 		$uri = new JUri;
 
@@ -343,9 +334,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->orders       = $this->get('Orders');
 		$this->books        = $this->get('Books');
 
-		// This is the helper for scripture formatting
-		JViewLegacy::loadHelper('scripture');
-
 		// End scripture helper
 		// Get the data for the drop down boxes
 		$this->template   = $this->state->get('template');
@@ -356,7 +344,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->main       = $images->mainStudyImage();
 
 		// Get the Popular stats
-		$stats               = new jbStats;
+		$stats               = new JBSMStats;
 		$this->page          = new stdClass;
 		$this->page->popular = $stats->top_score_site();
 
@@ -391,7 +379,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			. $go, 'value', 'text', "$filter_languages"
 		);
 
-		// Build the teacher dropdown
+		// Build the teacher drop down
 		$types[]              = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
 		$types                = array_merge($types, $this->teachers);
 		$this->page->teachers = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" '

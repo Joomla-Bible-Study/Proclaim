@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.1.0
  */
-class JBSPIconvert
+class JBSMPIconvert
 {
 
 	/**
@@ -600,7 +600,6 @@ class JBSPIconvert
 				$datastudies->params         = $params;
 				$datastudies->access         = $access;
 
-
 				if (!$db->insertObject('#__bsms_studies', $datastudies, 'id'))
 				{
 					$snoadd++;
@@ -710,6 +709,7 @@ class JBSPIconvert
 		$mediacode   = '';
 		$link_type   = '';
 		$player      = '';
+		$pod         = array();
 		$query       = $db->getQuery(true);
 		$query->select('*')->from('#__pipodmes');
 		$db->setQuery($query);

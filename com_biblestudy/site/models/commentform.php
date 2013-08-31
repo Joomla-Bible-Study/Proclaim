@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-// --require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php';
 JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
 /**
  * Comment model class

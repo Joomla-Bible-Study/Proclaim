@@ -13,9 +13,7 @@ defined('_JEXEC') or die();
 $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 $JBSMListing = new JBSMListing;
-
 $params = $this->params;
 ?>
 <div id="biblestudy" class="noRefTagger">

@@ -13,7 +13,6 @@ jimport('joomla.application.component.controller');
 jimport('joomla.html.parameter');
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Class Migration Controller
@@ -26,7 +25,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -38,7 +37,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   string  $task  An optional associative array of configuration settings.
+	 * @param   string $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
 	 */

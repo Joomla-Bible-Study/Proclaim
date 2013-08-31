@@ -15,7 +15,6 @@
 define('_JEXEC', 1);
 
 
-
 // Fix magic quotes.
 ini_set('magic_quotes_runtime', 0);
 
@@ -34,15 +33,15 @@ if (!defined('JPATH_TESTS'))
 }
 if (!defined('JPATH_PLATFORM'))
 {
-	define('JPATH_PLATFORM', realpath(dirname(dirname(__FILE__)).'/.joomla-cms/libraries'));
+	define('JPATH_PLATFORM', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
 }
 if (!defined('JPATH_LIBRARIES'))
 {
-	define('JPATH_LIBRARIES', realpath(dirname(dirname(__FILE__)).'/.joomla-cms/libraries'));
+	define('JPATH_LIBRARIES', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', realpath(dirname(dirname(__FILE__)).'/.joomla-cms'));
+	define('JPATH_BASE', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms'));
 }
 if (!defined('JPATH_ROOT'))
 {

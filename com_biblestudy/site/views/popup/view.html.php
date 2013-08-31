@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
-JLoader::register('JBSMImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 // This is the popup window for the teachings.  We could put anything in this window.
 
 /**
@@ -30,6 +25,9 @@ class BiblestudyViewPopup extends JViewLegacy
 
 	/** @var  string Media */
 	public $media;
+
+	/** @var  JObject Media info */
+	public $getMedia;
 
 	/** @var  JRegistry Params */
 	protected $params;
@@ -118,10 +116,10 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		jimport('joomla.application.component.helper');
 
-		$getMedia     = new jbsMedia;
-		$this->media  = $getMedia->getMediaRows2($mediaid);
-		$template     = JBSMParams::getTemplateparams();
-		$this->params = $template->params;
+		$this->getMedia = new JBSMMedia;
+		$this->media    = $this->getMedia->getMediaRows2($mediaid);
+		$template       = JBSMParams::getTemplateparams();
+		$this->params   = $template->params;
 
 		/*
 		 *  Convert parameter fields to objects.
@@ -139,7 +137,6 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$this->loadHelper('elements');
 		$JBSMElements    = new JBSMElements;
 		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
@@ -147,7 +144,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		/*
 		 *  The popup window call the counter function
 		 */
-		$getMedia->hitPlay($mediaid);
+		$this->getMedia->hitPlay($mediaid);
 		$this->lenght = $JBSMElements->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;

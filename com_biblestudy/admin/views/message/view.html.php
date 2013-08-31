@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 /**
  * View class for Message
  *
@@ -92,7 +91,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new JRegistry;
 		$registry->loadString($this->admin->params);

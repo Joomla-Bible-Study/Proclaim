@@ -266,7 +266,7 @@ abstract class JHtmlBiblestudy
 		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_PLAYER')
-				. '::' . JText::_('JBS_MED_PLAYER_DESC') . '">',
+			. '::' . JText::_('JBS_MED_PLAYER_DESC') . '">',
 			JText::_('JBS_MED_PLAYER'), '</label>', '<select name="batch[player]" class="inputbox" id="batch-player">',
 			'<option value="">' . JText::_('JBS_CMN_PLAYER_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::playerlist(), 'value', 'text'), '</select>'
@@ -287,7 +287,7 @@ abstract class JHtmlBiblestudy
 		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON')
-				. '::' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
+			. '::' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
 			JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'), '</label>',
 			'<select name="batch[link_type]" class="inputbox" id="batch-link_type">',
 			'<option value="">' . JText::_('JBS_CMN_DOWNLOAD_NOCHANGE') . '</option>',
@@ -309,7 +309,7 @@ abstract class JHtmlBiblestudy
 		// Create the batch selector to change the popup on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_INTERNAL_POPUP')
-				. '::' . JText::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
+			. '::' . JText::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
 			JText::_('JBS_MED_POPUP'), '</label>', '<select name="batch[popup]" class="inputbox" id="batch-popup">',
 			'<option value="">' . JText::_('JBS_CMN_POPUP_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::popuplist(), 'value', 'text'), '</select>'
@@ -330,7 +330,7 @@ abstract class JHtmlBiblestudy
 		// Create the batch selector to change the player on a selection list.
 		$lines = array(
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_IMAGE')
-				. '::' . JText::_('JBS_MED_IMAGE_DESC') . '">',
+			. '::' . JText::_('JBS_MED_IMAGE_DESC') . '">',
 			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
 			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
 			'<option value="">' . JText::_('JBS_CMN_MEDIATYPE_NOCHANGE') . '</option>',

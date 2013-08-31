@@ -18,13 +18,13 @@ jimport('joomla.environment.response');
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class Dump_File
+class JBSMDownload
 {
 
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param   int $mid  ID of media
+	 * @param   int  $mid  ID of media
 	 *
 	 * @since 6.1.2
 	 * @return null
@@ -110,7 +110,6 @@ class Dump_File
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 		header("Accept-Ranges:  bytes");
 
-
 		// Modified by Rene
 		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
 		$newFileSize = $size - 1;
@@ -190,7 +189,7 @@ class Dump_File
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param   int $mid  Media ID
+	 * @param   int  $mid  Media ID
 	 *
 	 * @return  boolean
 	 *
@@ -210,7 +209,7 @@ class Dump_File
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object $url  URL
+	 * @param   object  $url  URL
 	 *
 	 * @return  boolean
 	 */

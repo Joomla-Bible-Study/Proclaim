@@ -152,38 +152,38 @@ class TablePodcast extends JTable
 	 */
 	public $episodetitle = null;
 
-    /**
-     * Custom
-     *
-     * @var string
-     */
-    public $custom = null;
+	/**
+	 * Custom
+	 *
+	 * @var string
+	 */
+	public $custom = null;
 
-    /**
-     * Details template ID
-     *
-     * @var string
-     */
-    public $episodesubtitle = null;
+	/**
+	 * Details template ID
+	 *
+	 * @var string
+	 */
+	public $episodesubtitle = null;
 
-    /**
-     * Custom
-     *
-     * @var string
-     */
-    public $customsubtitle = null;
+	/**
+	 * Custom
+	 *
+	 * @var string
+	 */
+	public $customsubtitle = null;
 
-    /**
-     * Details template ID
-     *
-     * @var string
-     */
+	/**
+	 * Details template ID
+	 *
+	 * @var string
+	 */
 	public $detailstemplateid = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   JDatabaseDriver &$db  Database connector object
 	 */
 	public function Tablepodcast(& $db)
 	{
@@ -195,8 +195,8 @@ class TablePodcast extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -258,8 +258,8 @@ class TablePodcast extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable   $table  A JTable object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   JTable  $table  A JTable object for the asset parent.
+	 * @param   integer $id     Id to look up
 	 *
 	 * @return  integer
 	 *

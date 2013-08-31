@@ -10,15 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-
 /**
  * Scripture Show class.
  *
  * @package  BibleStudy.Site
  * @since    7.1.0
  */
-class ShowScripture
+class JBSMShowScripture
 {
 	/** @var  string Link */
 	public $link;

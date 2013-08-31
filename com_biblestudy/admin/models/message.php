@@ -11,8 +11,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
-JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
-JLoader::register('JBSMTranslated', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
 
 /**
  * Message model class
@@ -278,7 +276,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
-	 * Returns a list of mediafiles associated with this study
+	 * Returns a list of media files associated with this study
 	 *
 	 * @since   7.0
 	 * @return object
