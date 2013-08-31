@@ -102,7 +102,7 @@ foreach ($items AS $item)
 	$item->detailslink = $pelements->detailslink;
 }
 $list      = $items;
-$link_text = $params->get('pagetext', 'More Bible Studies');
+$link_text = $params->get('pagetext');
 $jinput    = new JInput;
 
 if (!$templatemenuid)
