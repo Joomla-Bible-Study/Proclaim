@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.1.0
  */
-class RelatedStudies
+class JBSMRelatedStudies
 {
 	/** @var  string Score */
 	public $score;

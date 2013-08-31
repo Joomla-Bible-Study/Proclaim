@@ -29,9 +29,11 @@ defined('_JEXEC') or die;
 			$teacherdisplay = $item->teachername;
 
 			if ($item->title)
+			{
 				$teacherdisplay .= ' - ' . $item->title;
+			}
 
-			//Alternate the row color
+			// Alternate the row color
 			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 			?>
 

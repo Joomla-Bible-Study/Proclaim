@@ -15,7 +15,7 @@ defined('_JEXEC') or die();
  * @package  BibleStudy.Admin
  * @since    7.1.0
  */
-class JBSConvert
+class JBSMSSConvert
 {
 
 	/**

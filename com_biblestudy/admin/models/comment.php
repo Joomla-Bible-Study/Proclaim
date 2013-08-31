@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-JLoader::register('JBSMBibleStudyHelper', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/biblestudy.php');
-
 /**
  * Comment model class
  *

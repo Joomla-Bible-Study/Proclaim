@@ -46,14 +46,15 @@ $saveOrder = $listOrder == 'ordering';
 				<label for="filter_search"
 				       class="element-invisible"><?php echo JText::_('JBS_MED_FILENAME'); ?>
 					: </label>
-				<input type="text" name="filter_search"placeholder="<?php echo JText::_('JBS_MED_FILENAME') ?>"
+				<input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_MED_FILENAME') ?>"
 				       id="filter_search"
 				       value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
 				       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
 			</div>
 			<div class="btn-group pull-left hidden-phone">
-				<button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
-							class="icon-search"></i></button>
+				<button class="btn tip hasTooltip" type="submit"
+				        title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
+						class="icon-search"></i></button>
 				<button class="btn tip hasTooltip" type="button"
 				        onclick="document.id('filter_filename').value='';this.form.submit();"
 				        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
@@ -127,7 +128,7 @@ $saveOrder = $listOrder == 'ordering';
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$item->max_ordering = 0; //??
+				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
 				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);

@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImage', BIBLESTUDY_PATH_ADMIN_HELPERS . '/image.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSAdmin', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.admin.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-
 /**
  * Class for Elements
  *
@@ -265,11 +260,9 @@ class JBSMElements
 				$elementid->element    = self::getTextlink($params, $row, $textorpdf, $admin_params, $template);
 				break;
 			case 20:
-				$mediaclass            = new jbsMedia;
 				$elementid->id         = 'jbsmedia';
 				$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-				$elementid->element    = $mediaclass->getMediaTable($row, $params, $admin_params);
-				break;
+				$elementid->element    = self::getMediaTable($params, $row, $admin_params);
 				break;
 			case 22:
 				$elementid->id         = 'store';
@@ -826,6 +819,291 @@ class JBSMElements
 		return $linktext;
 	}
 
+	/**
+	 * Get MediaTable
+	 *
+	 * @param   object $params        Item Params
+	 * @param   object $row           JTable
+	 * @param   object $admin_params  Admin Info
+	 *
+	 * @return boolean|null|string
+	 */
+	public function getMediatable($params, $row, $admin_params)
+	{
+		// @todo not sure if we should be loading parameter. ?bcc to Tom
+		jimport('joomla.html.parameter');
+		$getMedia = new JBSMMedia;
+		jimport('joomla.application.component.helper');
+
+		if (!isset($row->id))
+		{
+			return false;
+		}
+		$database = JFactory::getDBO();
+		$images   = new JBSMImages;
+
+		if (!isset($admin_params->default_download_image))
+		{
+			$admin_params->default_download_image = 'download.png';
+		}
+
+		$download_tmp   = $images->getMediaImage($admin_params->default_download_image, $media = null);
+		$download_image = $download_tmp->path;
+
+		// Predefine var
+		$media1_link  = null;
+		$downloadlink = null;
+		$filesize     = null;
+		$query        = $database->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
+		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+		. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
+		. ' #__bsms_media.media_alttext AS malttext,'
+		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
+			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
+			->where('#__bsms_mediafiles.study_id = ' . $row->id)
+			->where('#__bsms_mediafiles.published = 1')
+			->order('ordering asc, #__bsms_mediafiles.mime_type asc');
+		$database->setQuery($query);
+		$media1      = $database->loadObjectList('id');
+		$rows2       = count($media1);
+		$compat_mode = $admin_params->get('compat_mode');
+
+		if ($rows2 < 1)
+		{
+			$mediatable = null;
+
+			return $mediatable;
+		}
+		$mediatable = '<div><table class="table mediatable"><tbody><tr>';
+		$row_count  = 0;
+
+		foreach ($media1 as $media)
+		{
+			$row_count++;
+
+			// Load the parameters
+			// Convert parameter fields to objects.
+			$registry = new JRegistry;
+			$registry->loadString($media->params);
+			$itemparams = $registry;
+			$input      = new JInput;
+			$Itemid     = $input->get('Itemid', '1', 'int');
+			$template   = $input->get('t', '1', 'int');
+			$images     = new JBSMImages;
+			$image      = $images->getMediaImage($media->path2, $media->impath);
+
+			$mediatable .= '<td>';
+
+			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
+			$filesize = $this->getFilesize($media->size);
+
+			// This one IS needed
+			$duration = $this->getDuration($params, $row);
+			$mimetype = $media->mimetext;
+			$src      = JURI::base() . $image->path;
+			$height   = $image->height;
+			$width    = $image->width;
+			$path1    = $media->spath . $media->fpath . $media->filename;
+
+			if (!preg_match("@^'http?://@i", $path1))
+			{
+				$path1 = 'http://' . $path1;
+			}
+			$playerwidth  = $params->get('player_width');
+			$playerheight = $params->get('player_height');
+
+			if ($itemparams->get('playerheight'))
+			{
+				$playerheight = $itemparams->get('playerheight');
+			}
+			if ($itemparams->get('playerwidth'))
+			{
+				$playerwidth = $itemparams->get('playerwidth');
+			}
+			$playerwidth  = $playerwidth + 20;
+			$playerheight = $playerheight + $params->get('popupmargin', '50');
+
+			/* Players - from Template:
+			   media_player = internal player for all files
+			   useravr = use avr for all files
+			   useav = use All Videos plugin for all files
+			   popuptype = whether AVR should be window or lightbox (handled in avr code)
+			   media_player = use internal player for all files
+			   internal_popup = whether direct or internal player should be popup or inline
+			   From media file:
+			   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+			   internal_popup 0 = inline 1 = popup, 2 = global settings */
+
+			$playertype = 0;
+
+			if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
+			{
+				$playertype = 1;
+			}
+
+			if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
+			{
+				$playertype = 2;
+			}
+
+			if ($params->get('useav') == 1 || $itemparams->get('player') == 3)
+			{
+				$playertype = 3;
+			}
+			// $item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
+			$item           = $itemparams->get('internal_popup');
+			$internal_popup = $params->get('internal_popup', 0);
+
+			if ($item < 3)
+			{
+				$type = $internal_popup;
+			}
+			else
+			{
+				$type = $item;
+			}
+			$media1_link = null;
+
+			switch ($playertype)
+			{
+				case 0:
+
+					if ($params->get('direct_internal', 0) == 1)
+					{
+						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
+							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
+							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
+							. $media->malttext . "' /></a>";
+
+
+					}
+					else
+					{
+						$media1_link = '<a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							. $filesize . '" target="' . $media->special . '"><img src="' . $src
+							. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
+							. '" height="' . $height . '" border="0" /></a>';
+					}
+
+					$media1_link .= '<a href="' . $path1 . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid='
+						. $media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="'
+						. $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' . $media->special . '"><img src="'
+						. $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
+						. '" height="' . $height . '" border="0" /></a>';
+
+					break;
+
+				case 1:
+					if ($type == 1)
+					{
+						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
+							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
+							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
+							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+					}
+
+
+					break;
+
+
+				case 3:
+					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
+					break;
+			}
+
+			if ($media->docMan_id > 0)
+			{
+				$media1_link = $this->getDocman($media, $width, $height, $src, $duration, $filesize);
+			}
+			if ($media->article_id > 0)
+			{
+				$media1_link = $this->getArticle($media, $width, $height, $src);
+			}
+			if ($media->virtueMart_id > 0)
+			{
+				$media1_link = $this->getVirtuemart($media, $width, $height, $src, $params);
+			}
+
+			// Here is where we begin to build the mediatable variable
+			// Here we test to see if docMan or article is used
+
+			$link_type = $media->link_type;
+
+			if ($link_type > 0)
+			{
+				$width        = $download_tmp->width;
+				$height       = $download_tmp->height;
+				$downloadlink = null;
+
+				if ($compat_mode == 0)
+				{
+					$downloadlink = '<a href="index.php?option=com_biblestudy&amp;id=' . $media->id . '&amp;view=sermons&amp;controller=sermons&amp;task=download">';
+				}
+				else
+				{
+					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+						$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
+				}
+				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') .
+					'" height="' . $height . '" width="' . $width . '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+			}
+			switch ($link_type)
+			{
+				case 0:
+					$mediatable .= $media1_link;
+					break;
+
+				case 1:
+					$mediatable .= $media1_link . $downloadlink;
+					break;
+
+				case 2:
+					$mediatable .= '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
+					break;
+			}
+			$mediatable .= '</td>';
+
+		} // End of foreach of media results
+
+		$mediatable .= '</tr>';
+
+		if ($params->get('show_filesize') > 0)
+		{
+			$mediatable .= '<tr>';
+
+			foreach ($media1 as $media)
+			{
+				switch ($params->get('show_filesize'))
+				{
+					case 1:
+						$filesize = $this->getFilesize($media->size);
+						break;
+					case 2:
+						$filesize = $media->comment;
+						break;
+					case 3:
+						($media->comment ? $filesize = $media->comment : $filesize = $this->getFilesize($media->size));
+						break;
+				}
+
+				$mediatable .= '<td><span class="bsfilesize">' . $filesize . '</span></td>';
+
+			} // End second foreach
+			$mediatable .= '</tr>';
+
+		} // End of if show_filesize
+
+		$mediatable .= '</tbody></table></div>';
+
+		return $mediatable;
+	}
 
 	/**
 	 * Get Docman

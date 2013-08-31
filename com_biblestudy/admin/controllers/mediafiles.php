@@ -24,7 +24,7 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -34,9 +34,9 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Set ignore request
+	 * @param   string $name    The name of the model
+	 * @param   string $prefix  The prefix for the PHP class name
+	 * @param   array  $config  Set ignore request
 	 *
 	 * @return JModel
 	 *

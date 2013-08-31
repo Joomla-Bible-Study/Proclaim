@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.2
  */
-class JBS702Update
+class JBSM702Update
 {
 
 	/**

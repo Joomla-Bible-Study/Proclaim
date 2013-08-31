@@ -22,7 +22,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemjbsbackup extends JPlugin
+class PlgSystemJbsbackup extends JPlugin
 {
 
 	/**
@@ -33,7 +33,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
-	public function __construct(& $subject, $config)
+	public function __construct (& $subject, $config)
 	{
 
 		parent::__construct($subject, $config);
@@ -47,7 +47,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return void
 	 */
-	public function onAfterInitialise()
+	public function onAfterInitialise ()
 	{
 
 		$params = $this->params;
@@ -90,7 +90,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	public function checktime($params)
+	public function checktime ($params)
 	{
 
 		$now   = time();
@@ -121,7 +121,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	public function checkdays($params)
+	public function checkdays ($params)
 	{
 		$checkdays = false;
 		$config    = JFactory::getConfig();
@@ -223,7 +223,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	public function updatetime()
+	public function updatetime ()
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
@@ -247,7 +247,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return object
 	 */
-	public function doBackup()
+	public function doBackup ()
 	{
 		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
 		include_once $path1 . 'biblestudy.backup.php';
@@ -265,7 +265,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return void
 	 */
-	public function doEmail($params, $dobackup)
+	public function doEmail ($params, $dobackup)
 	{
 		$livesite = JURI::root();
 		$config   = JFactory::getConfig();
@@ -287,13 +287,10 @@ class PlgSystemjbsbackup extends JPlugin
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$year = '(' . date('Y') . ')';
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';
 		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2 = '';
-
-		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
 		$Body2 .= $msg;
 
 		$Body3    = $Body . $Body2;
@@ -302,18 +299,23 @@ class PlgSystemjbsbackup extends JPlugin
 
 		$recipients = explode(",", $params->get('recipients'));
 
-		foreach ($recipients AS $recipient)
+		if (is_array($recipients))
 		{
-			$mail->addRecipient($recipient);
-			$mail->setSubject($Subject . ' ' . $livesite);
-			$mail->setBody($Body3);
-
-			if ($params->get('includedb') == 1)
-			{
-				$mail->addAttachment($dobackup);
-			}
-			$mail->Send();
+			$mail->addRecipient(array($recipients, $FromName));
+		} else
+		{
+			$mail->addRecipient(array($mailfrom, $FromName));
 		}
+		$mail->isHTML(true);
+		$mail->Encoding = 'base64';
+		$mail->setSubject($Subject . ' ' . $livesite);
+		$mail->setBody($Body3);
+
+		if ($params->get('includedb') == 1)
+		{
+			$mail->addAttachment($dobackup);
+		}
+		$mail->Send();
 	}
 
 	/**
@@ -323,7 +325,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 *
 	 * @return void
 	 */
-	public function updatefiles($params)
+	public function updatefiles ($params)
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');

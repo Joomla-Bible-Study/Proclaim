@@ -147,9 +147,9 @@ class TableTopic extends JTable
 	/**
 	 * Overloaded load function
 	 *
-	 * @param   mixed   $keys      An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                             set the instance property value is used.
-	 * @param   boolean $reset     True to reset the default values before loading the new row.
+	 * @param   mixed   $keys          An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                                 set the instance property value is used.
+	 * @param   boolean $reset         True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *

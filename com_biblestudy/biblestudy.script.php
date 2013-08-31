@@ -176,8 +176,6 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$dbhelper    = new JBSMDbHelper;
 		$drop_result = '';
 

@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 /* Import library dependencies */
 jimport('joomla.plugin.plugin');
 
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
 /**
  * Podcast plugin class
  *
@@ -66,8 +68,10 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
-			//update the database to show a new time
+
+			// Update the database to show a new time
 			$this->updatetime();
+
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
@@ -255,7 +259,11 @@ class PlgSystemJbspodcast extends JPlugin
 	 */
 	public function doPodcast()
 	{
-		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+
 		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 

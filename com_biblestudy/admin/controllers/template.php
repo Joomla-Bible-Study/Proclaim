@@ -24,7 +24,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A named array of configuration variables.
+	 * @param   array $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -86,7 +86,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   string  $template  ?
+	 * @param   string $template  ?
 	 *
 	 * @return boolean|string
 	 *

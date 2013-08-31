@@ -13,12 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Bible Study Core Defines
  */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-
-JLoader::register('JBSMUpload', JPATH_SITE . '/components/com_biblestudy/helpers/upload.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('JBSMServer', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/server.php');
-JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 
 /**

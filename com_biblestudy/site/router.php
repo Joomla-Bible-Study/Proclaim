@@ -68,14 +68,6 @@ function biblestudyParseRoute($segments)
 {
 	$vars = array();
 
-	// Get the active menu item.
-	$app      = JFactory::getApplication();
-	$menu     = $app->getMenu();
-	$item     = $menu->getActive();
-	$params   = JComponentHelper::getParams('com_biblestudy');
-	$advanced = $params->get('sef_advanced_link', 0);
-
-
 	// Count route segments
 	$count = count($segments);
 

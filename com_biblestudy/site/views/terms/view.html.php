@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-
 // This is the popup window for the teachings.  We could put anything in this window.
 /**
  * View class for Terms
@@ -159,5 +157,3 @@ class BiblestudyViewTerms extends JViewLegacy
 	}
 
 }
-
-//end of class
