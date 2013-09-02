@@ -308,12 +308,10 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
-                        		<link>http://' . $podinfo->website . '/index.php?' . rawurlencode(
-								'option=com_biblestudy&view=sermon&id='
-							) . $episode->sid . $detailstemplateid . '</link>
-                        		<comments>http://' . $podinfo->website . '/index.php?' . rawurlencode(
-								'option=com_biblestudy&view=sermon&id='
-							) . $episode->sid . $detailstemplateid . '</comments>
+                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+							. $episode->sid . $detailstemplateid . '</link>
+                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $episode->teachername . '</itunes:author>
                         		<dc:creator>' . $episode->teachername . '</dc:creator>
                         		<description>' . $description . '</description>
