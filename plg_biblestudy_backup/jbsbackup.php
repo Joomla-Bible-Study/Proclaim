@@ -85,7 +85,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object $params  ?
+	 * @param   JRegistry  $params  ?
 	 *
 	 * @return boolean
 	 */
