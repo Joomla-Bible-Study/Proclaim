@@ -20,8 +20,8 @@ Status
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td>Master</td>
-        <td>8.0.2</td>
-        <td>June 25, 2013</td>
+        <td>8.0.4</td>
+        <td>Sep 20, 2013</td>
         <td align="center">2.5.11+</td>
     </tr>
 </table>
