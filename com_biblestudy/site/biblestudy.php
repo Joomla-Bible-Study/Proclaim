@@ -11,11 +11,16 @@
 defined('_JEXEC') or die;
 
 // Include dependencies
-JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
+JLoader::register('JBSMRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Defines
  */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {

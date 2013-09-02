@@ -28,8 +28,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -85,7 +85,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   object $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -278,11 +278,11 @@ class PlgSystemjbsbackup extends JPlugin
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('PLG_JBSBACKUP_ERROR');
+			$msg = JText::_('JBS_PLG_BACKUP_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('PLG_JBSBACKUP_SUCCESS');
+			$msg = JText::_('JBS_PLG_BACKUP_SUCCESS');
 		}
 		if ($params->def('fromname', $fromname))
 		{

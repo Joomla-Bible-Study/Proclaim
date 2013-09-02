@@ -9,8 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-$jview = new JViewLegacy;
-$jview->loadHelper('serieslist');
 $serieslisting = new JBSMSerieslist;
 $t = $this->params->get('serieslisttemplateid');
 $input = new JInput;
@@ -54,7 +52,6 @@ if (!$t)
 		<table class="table table-striped bslisttable">
 			<tr>
 				<td><?php
-					$jview->loadHelper('header');
 					$header = $serieslisting->getHeader(
 						$this->seriesstudies, $this->params, $this->admin_params, $this->template,
 						$showheader = $this->params->get('use_headers_list'), $ismodule = 0

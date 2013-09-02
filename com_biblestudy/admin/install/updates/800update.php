@@ -7,10 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Update for 8.0.0 class
@@ -18,7 +16,7 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @package  BibleStudy.Admin
  * @since    8.0.0
  */
-class JBS800Update
+class JBSM800Update
 {
 
 	/**
@@ -57,7 +55,7 @@ class JBS800Update
 				/**
 				 * Leave record alone, since it would load language from ini file
 				 *
-				 * @depricated 8.2.0
+				 * @deprecated 8.2.0
 				 **/
 				// Case: Params is not null
 			}
@@ -105,7 +103,6 @@ class JBS800Update
 
 		return true;
 	}
-
 
 	/**
 	 * Update studies to reference newly created topics

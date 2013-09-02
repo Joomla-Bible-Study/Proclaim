@@ -41,6 +41,7 @@ class JBSMDbHelper
 		foreach ($tables AS $table)
 		{
 			$tableAF = str_replace($prefix, "#__", $table);
+
 			if ($tableAF == $cktable)
 			{
 				return true;
@@ -195,7 +196,7 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
+	 * Checks a table for the existence of a field, if it does not find it, runs the Admin model fix()
 	 *
 	 * @param   string  $table        table is the table you are checking
 	 * @param   string  $field        field you are checking
@@ -221,7 +222,7 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Get Opjects for tables
+	 * Get Objects for tables
 	 *
 	 * @return array
 	 */
@@ -313,7 +314,7 @@ class JBSMDbHelper
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
 		$app = JFactory::getApplication();
-		/* Start by getting exesting Style */
+		/* Start by getting existing Style */
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
@@ -341,7 +342,7 @@ class JBSMDbHelper
 		);
 		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
 
-		/* now see if we are adding newcss to the db css */
+		/* now see if we are adding new css to the db css */
 		if ($parent || $newcss)
 		{
 			$newcss = $db->escape($newcss) . ' ' . $oldcss;
@@ -367,7 +368,7 @@ class JBSMDbHelper
 
 		if (!$db->execute())
 		{
-			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
 
 			return false;
 		}
@@ -403,7 +404,8 @@ class JBSMDbHelper
 		try
 		{
 			$table->load($result->id);
-			//this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
+
+			// This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 			@$table->store();
 		}
 		catch (Exception $e)
@@ -463,7 +465,7 @@ class JBSMDbHelper
 
 					if (!$db->execute())
 					{
-						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 
 						return false;
 					}
@@ -485,10 +487,8 @@ class JBSMDbHelper
 	public static function CleanStudyTopics()
 	{
 
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
-
-
+		$app   = JFactory::getApplication();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
@@ -506,7 +506,11 @@ class JBSMDbHelper
 				foreach ($resulta AS $study_topics)
 				{
 					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id)->where('topic_id = ' . $study_topics->topic_id)->order('id desc');
+					$query->select('id')
+						->from('#__bsms_studytopics')
+						->where('study_id = ' . $result->id)
+						->where('topic_id = ' . $study_topics->topic_id)
+						->order('id desc');
 					$db->setQuery($query);
 					$results = $db->loadObjectList();
 					$records = count($results);
@@ -518,8 +522,10 @@ class JBSMDbHelper
 							if ($t < $records)
 							{
 								$query = $db->getQuery(true);
-								$query->delete('#__bsms_studytopics')->where('id = ' . $id->id);
+								$query->delete('#__bsms_studytopics')
+									->where('id = ' . $id->id);
 								$db->setQuery($query);
+
 								if (!$db->execute())
 								{
 									$app->enqueueMessage('Error with Deleting duplicat topics record ' . $id->id, 'error');

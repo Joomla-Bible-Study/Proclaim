@@ -66,7 +66,6 @@ class JFormFieldModal_studydetails extends JFormField
 		// Add the script to the document head.
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-
 		// Get the title of the linked chart
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);

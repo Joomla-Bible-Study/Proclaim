@@ -148,7 +148,6 @@ class BiblestudyModelTopics extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-		JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 		$translate = new JBSMTranslated;
 
 		foreach ($items as $item)

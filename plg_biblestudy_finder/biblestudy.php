@@ -23,7 +23,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */
-class plgFinderBiblestudy extends FinderIndexerAdapter
+class PlgFinderBiblestudy extends FinderIndexerAdapter
 {
 
 	/**
@@ -261,7 +261,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->id);
+		$item->route = JBSMRoute::getArticleRoute($item->id);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -315,9 +315,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
-		// Load dependent classes.
-		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
-
 		return true;
 	}
 

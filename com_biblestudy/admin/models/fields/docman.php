@@ -37,7 +37,7 @@ class JFormFieldDocman extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-        /* @todo check for docman 2.0 way of doing this */
+		/* @todo check for docman 2.0 way of doing this */
 		// Check to see if Docman is installed
 		jimport('joomla.filesystem.folder');
 

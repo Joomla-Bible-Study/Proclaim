@@ -24,7 +24,7 @@ class BiblestudyControllerTopic extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A named array of configuration variables.
+	 * @param   array $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */

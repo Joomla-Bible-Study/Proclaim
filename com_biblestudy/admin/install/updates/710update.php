@@ -6,11 +6,9 @@
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * */
+ */
 //No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * Update for 7.1.0 class
@@ -19,7 +17,7 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @since    7.1.0
  * @todo     need to update to new SQL and Joomla @BCC
  */
-class JBS710Update
+class JBSM710Update
 {
 
 	/**
@@ -37,8 +35,10 @@ class JBS710Update
 		$src = JPATH_SITE . '/tmp/biblestudy.css';
 
 		// There is no existing css so let us check for a backup
-		$backup  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-		$default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+		$backup  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
+			DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+		$default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
+			DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
 
 		// If there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
 

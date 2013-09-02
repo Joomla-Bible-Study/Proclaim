@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-
 /**
  * Class custom helper
  *
@@ -25,9 +23,9 @@ class JBSMCustom extends JBSMElements
 	 *
 	 * @param   int       $rowid         ID of Row
 	 * @param   string    $custom        Custom String
-	 * @param   object    $row           Row info
+	 * @param   JTable    $row           Row info
 	 * @param   JRegistry $params        Params for intro
-	 * @param   object    $admin_params  Admin Params
+	 * @param   JRegistry $admin_params  Admin Params
 	 * @param   int       $template      Template ID
 	 *
 	 * @return object

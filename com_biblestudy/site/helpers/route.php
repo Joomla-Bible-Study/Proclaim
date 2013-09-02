@@ -19,7 +19,7 @@ jimport('joomla.application.component.helper');
  * @package  BibleStudy.Site
  * @since    7.2
  */
-abstract class JBSMHelperRoute
+abstract class JBSMRoute
 {
 
 	/**
@@ -30,10 +30,10 @@ abstract class JBSMHelperRoute
 	protected static $lookup;
 
 	/**
-	 * Get Article Route
+	 * Get Article Rout
 	 *
 	 * @param   int $id        The route of the study item
-	 * @param   int $language  The route of the study item
+	 * @param   int $language  The state of language
 	 *
 	 * @return string
 	 */

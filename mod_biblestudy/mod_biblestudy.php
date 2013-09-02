@@ -10,8 +10,7 @@
  * */
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
@@ -48,7 +47,12 @@ for ($i = 0; $i < $count; $i++)
 		}
 	}
 }
-$pagebuilder = new JBSPagebuilder;
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+
+$pagebuilder = new JBSMPagebuilder;
 
 foreach ($items AS $item)
 {

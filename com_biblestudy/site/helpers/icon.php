@@ -23,18 +23,18 @@ class JHtmlIcon
 {
 
 	/**
-	 * Print Popup
+	 * Print popup button
 	 *
 	 * @param   object    $article  Article
 	 * @param   JRegistry $params   Params
-	 * @param   array     $attribs  Attribs
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return mixed
 	 */
 	public static function print_popup($article, $params, $attribs = array())
 	{
-		$url = JBSMHelperRoute::getArticleRoute($article->slug);
-		$url .= '&tmpl=component&print=1&layout=default&page=' . @ $request->limitstart;
+		$url = JBSMRoute::getArticleRoute($article->slug);
+		$url .= '&tmpl=component&print=1&layout=default';
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 
@@ -56,9 +56,9 @@ class JHtmlIcon
 	}
 
 	/**
-	 * Create
+	 * Create Button
 	 *
-	 * @param   string    $category  Category
+	 * @param   int       $category  Category id
 	 * @param   JRegistry $params    Params
 	 *
 	 * @return string
@@ -86,11 +86,11 @@ class JHtmlIcon
 	}
 
 	/**
-	 * Email
+	 * Email button
 	 *
-	 * @param   string    $article  Article
+	 * @param   object    $article  Article
 	 * @param   JRegistry $params   Params
-	 * @param   array     $attribs  Attribs
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return mixed
 	 */
@@ -128,9 +128,9 @@ class JHtmlIcon
 	 * This icon will not display in a popup window, nor if the article is trashed.
 	 * Edit access checks must be performed in the calling code.
 	 *
-	 * @param    object $article  The article in question.
-	 * @param    object $params   The article parameters
-	 * @param    array  $attribs  Not used??
+	 * @param   object    $article  The article in question.
+	 * @param   JRegistry $params   The article parameters
+	 * @param   array     $attribs  Not used??
 	 *
 	 * @return    string    The HTML for the article edit icon.
 	 *
@@ -145,13 +145,13 @@ class JHtmlIcon
 		// Ignore if in a popup window.
 		if ($params && $params->get('popup'))
 		{
-			return;
+			return false;
 		}
 
 		// Ignore if the state is negative (trashed).
 		if ($article->published < 0)
 		{
-			return;
+			return false;
 		}
 
 		JHtml::_('behavior.tooltip');
@@ -177,11 +177,11 @@ class JHtmlIcon
 	}
 
 	/**
-	 * Print Screen
+	 * Print Screen button
 	 *
 	 * @param   object    $article  Article
 	 * @param   JRegistry $params   Params
-	 * @param   array     $attribs  Attribs
+	 * @param   array     $attribs  Array of Attributes
 	 *
 	 * @return string
 	 */
