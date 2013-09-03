@@ -567,6 +567,11 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
 		// Styles from tooltip.css moved to css/biblestudy.css
 		// Import Stylesheets
