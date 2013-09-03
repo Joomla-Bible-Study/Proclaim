@@ -21,6 +21,65 @@ JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.clas
  */
 class JBSMTeacher extends JBSMListing
 {
+    /** Get Teacher for Fluid layout
+     @param object $params
+     @return array*/
+    public function getTeachersFluid($params)
+    {
+        $input       = new JInput;
+        $option      = $input->get('option', '', 'cmd');
+        $teachers    =  array();
+        $teacherid  = null;
+        $teacherids = new stdClass;
+        $t          = $params->get('teachertemplateid');
+        if (!$t)
+        {
+            $t = $input->get('t', 1, 'int');
+        }
+        $viewtype = $input->get('view');
+
+        if ($viewtype == 'sermons')
+        {
+            $teacherid  = $params->get('listteachers');
+            $teacherids = explode(",", $params->get('listteachers'));
+        }
+        if ($viewtype == 'sermon' && $id != 0)
+        {
+            $teacherids->id = $id;
+        }
+
+        if (!isset($teacherids))
+        {
+            return $teachers;
+        }
+        foreach ($teacherids as $teach)
+        {
+            $database = JFactory::getDBO();
+            $query    = $database->getQuery(true);
+            $query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
+            $database->setQuery($query);
+            $result = $database->loadObject();
+            // Check to see if com_contact used instead
+            if ($result->contact)
+            {
+                require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+                $contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
+                $this->contact = $contactmodel->getItem($pk = $result->contact);
+                // Substitute contact info from com_contacts for duplicate fields
+                $result->title       = $this->contact->con_position;
+                $result->teachername = $this->contact->name;
+                $image        = $this->contact->image;
+            }
+            if ($result->teacher_thumbnail){$image = $result->teacher_thumbnail;}
+            else {$image = $result->thumb;}
+            if ($result->title){$teachername = $result->title.' '.$result->teachername;}
+            else {$teachername = $result->teachername;}
+            $teachers[] = array('name'=>$teachername, 'image'=>$image,'t'=>$t);
+
+        }
+        $teacherscount = count($teachers);
+        return array('teachers'=>$teachers, 'count'=>$teacherscount);
+    }
 	/**
 	 * Get Teacher
 	 *

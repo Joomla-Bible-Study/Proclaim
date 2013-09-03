@@ -13,12 +13,40 @@ if (BIBLESTUDY_CHECKREL)
 {
     JHtml::_('bootstrap.framework');
 }
+$JViewLegacy = new JViewLegacy;
+$JViewLegacy->loadHelper('teacher');
+$JBSMTeacher = new JBSMTeacher;
+$teacher = $JBSMTeacher->getTeachersFluid($this->params);
+$count = ($teacher['count']);
+$teachers = $teacher['teachers'];
 ?>
 
 <div class="container-fluid">
 <div class="hero-unit">
-    <h2>Bible Studies</h2>
-    <p>We offer some of the best teaching around with our pastor.</p>
+    <div class="row-fluid">
+        <div class="span4">
+            <ul class="thumbnails">
+                <?php $spans = 12 - $count;
+                foreach ($teachers as $teach)
+                {
+                    foreach ($teach as $tea)
+                    {dump($tea);
+                        echo '<li class="span'.$spans.'">';
+                        echo '<img class="thumbnail img-rounded" src="'.JURI::base().$tea->image.'">';
+                        echo '<div class="caption"><p>'.$tea->name.'</p>';
+                        echo '</li>';
+                    }
+                }
+                ?>
+                <img class="img-rounded" src="<?php echo JURI::base();?>tom.jpg">
+                <div class="caption"><p>Pastor Tom Fuller</p></div>
+            </ul>
+        </div>
+        <div class="span8">
+            <h2>Bible Studies</h2>
+            <p>At Calvary Chapel Newberg we go through the Bible, chapter by chapter, verse by verse. Our aim is to understand the history, culture, language, theology, and application of God's Word into our lives today. You'll find a lively and engaging format to every study!</p>
+        </div>
+    </div>
 </div>
 </div><!-- .hero-unit -->
 <nav class="navbar">
