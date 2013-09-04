@@ -40,8 +40,7 @@ class JBSMTeacher extends JBSMListing
 
         if ($viewtype == 'sermons')
         {
-            $teacherid  = $params->get('listteachers');
-            $teacherids = explode(",", $params->get('listteachers'));
+            $teacherids = $params->get('listteachers');
         }
         if ($viewtype == 'sermon' && $id != 0)
         {
@@ -74,11 +73,11 @@ class JBSMTeacher extends JBSMListing
             else {$image = $result->thumb;}
             if ($result->title){$teachername = $result->title.' '.$result->teachername;}
             else {$teachername = $result->teachername;}
-            $teachers[] = array('name'=>$teachername, 'image'=>$image,'t'=>$t);
+            $teachers[] = array('name'=>$teachername, 'image'=>$image,'t'=>$t,'id'=>$result->id);
 
         }
-        $teacherscount = count($teachers);
-        return array('teachers'=>$teachers, 'count'=>$teacherscount);
+
+        return $teachers;
     }
 	/**
 	 * Get Teacher

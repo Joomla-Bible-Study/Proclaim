@@ -310,16 +310,18 @@
             <field name="intro_show" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_INTRO_SHOW" description="JBS_TPL_LISTITEMS_INTRO_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_TPL_LISTITEMS_SHOW_BELOW_TEACHERS</option>
-                <option value="2">JBS_TPL_LISTITEMS_SHOW_BESIDE_TEACHERS</option>
+                <option value="1">JBS_CMN_SHOW</option>
             </field>
             <field name="list_teacher_show" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW" description="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="listteachers" type="text" default=""
-                   label="JBS_TPL_LISTITEMS_LISTTEACHERS" description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC"/>
+            <field name="listteachers" type="sql"
+                   query="SELECT * FROM #__bsms_teachers WHERE published = 1"
+                   key_field="id" value_field="teachername" default="-1" multiple="true"
+                   size="10" label="JBS_TPL_LISTITEMS_LISTTEACHERS" description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC">
+            </field>
             <field name="teacherlink" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_TEACHERLINK" description="JBS_TPL_LISTITEMS_TEACHERLINK_DESC">
                 <option value="0">JBS_TPL_HIDE_LINK</option>

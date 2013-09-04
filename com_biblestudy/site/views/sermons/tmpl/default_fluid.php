@@ -16,39 +16,46 @@ if (BIBLESTUDY_CHECKREL)
 $JViewLegacy = new JViewLegacy;
 $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
-$teacher = $JBSMTeacher->getTeachersFluid($this->params);
-$count = ($teacher['count']);
-$teachers = $teacher['teachers'];
+$teachers = $JBSMTeacher->getTeachersFluid($this->params);
 ?>
 
 <div class="container-fluid">
-<div class="hero-unit">
-    <div class="row-fluid">
-        <div class="span4">
+<?php if ($this->params->get('intro_show') > 0)
+{ ?>
+<div class="hero-unit" style="padding: 30px;">
+    <?php
+    if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
+    {
+        ?>
+    <div class="row-fluid" >
             <ul class="thumbnails">
-                <?php $spans = 12 - $count;
-                foreach ($teachers as $teach)
+                <?php $spans = 12 / count($teachers);
+                foreach ($teachers as $teacher)
                 {
-                    foreach ($teach as $tea)
-                    {dump($tea);
                         echo '<li class="span'.$spans.'">';
-                        echo '<img class="thumbnail img-rounded" src="'.JURI::base().$tea->image.'">';
-                        echo '<div class="caption"><p>'.$tea->name.'</p>';
+                        if ($this->params->get('teacherlink')> 0)
+                        {echo '<a href="index.php?option=com_biblestudy&view=teacher&id='.$teacher['id'].'&t='.$teacher['t'].'" ><img class="img-polaroid" src="'.JURI::base().$teacher['image'].'"></a>';}
+                        else {echo '<img class="img-polaroid" src="'.JURI::base().$teacher['image'].'">';}
+                        if ($this->params->get('teacherlink')> 0)
+                        {echo '<div class="caption"><p><a href="index.php?option=com_biblestudy&view=teacher&id='.$teacher['id'].'&t='.$teacher['t'].'">'.$teacher['name'].'</a></p>';}
+                        else {echo '<div class="caption"><p>'.$teacher['name'].'</p></div>';}
                         echo '</li>';
-                    }
                 }
                 ?>
-                <img class="img-rounded" src="<?php echo JURI::base();?>tom.jpg">
-                <div class="caption"><p>Pastor Tom Fuller</p></div>
             </ul>
-        </div>
-        <div class="span8">
-            <h2>Bible Studies</h2>
-            <p>At Calvary Chapel Newberg we go through the Bible, chapter by chapter, verse by verse. Our aim is to understand the history, culture, language, theology, and application of God's Word into our lives today. You'll find a lively and engaging format to every study!</p>
+    </div>
+    <?php } ?>
+    <div class="row-fluid">
+        <div class="span12">
+            <?php if ($this->params->get('show_page_image') > 0){?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>"><?php }?>
+            <?php if ($this->params->get('show_page_title') == 1){?><h2><?php echo $this->params->get('page_title');?></h2><?php }?>
+            <?php if ($this->params->get('list_intro')){?><p><?php echo $this->params->get('list_intro');?></p><?php }?>
         </div>
     </div>
 </div>
+
 </div><!-- .hero-unit -->
+<?php }?>
 <nav class="navbar">
     <div class="navbar-inner">
         <div class="container-fluid">
