@@ -129,7 +129,8 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Search
 --
-ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+-- Removed at 8.0.4 do to error in JSchemaChangeset::getInstance;
+-- ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Series
 --
