@@ -4,6 +4,9 @@
 .c9revisions
 .DS_Store
 .joomla-dev
+.buildpath
+.project
+.settings/
 
 # Test Related Files #
 /tests/system/servers/configdef.php
