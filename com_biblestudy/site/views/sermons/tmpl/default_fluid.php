@@ -56,76 +56,46 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 
 </div><!-- .hero-unit -->
 <?php }?>
-<nav class="navbar">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-<a class="brand" href="#">Home</a>
-           <div class="nav-collapse">
-                <!-- Link or button to toggle dropdown -->
-                <ul class="nav nav-pull-right">
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">System</a>
-                        <ul class="dropdown-menu ">
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Books</a>
-                        <ul class="dropdown-menu  ">
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class="divider"></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action1</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action2</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action3</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action4</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action5</a></li>
-                            <li class=""><a data-toggle="dropdown" href="#">Another action6</a></li>
-                        </ul>
-                    </li>
+<div class="container-fluid">
+    <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            Books
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a tabindex="-1" href="#">Action</a></li>
+            <li><a tabindex="-1" href="#">Another action</a></li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">More options</a>
+                <ul class="dropdown-menu">
+                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                    <li><a tabindex="-1" href="#">Something else here</a></li>
                 </ul>
+            <li><a tabindex="-1" href="#">Something else here</a></li>
+        </ul>
+    </div>
+    <form class="btn-group">
+    <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            Teachers
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a tabindex="-1" href="#">Action</a></li>
+            <li><a tabindex="-1" href="#">Another action</a></li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">More options</a>
+                <ul class="dropdown-menu">
+                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                </ul>
+            <li><a tabindex="-1" href="#">Something else here</a></li>
+        </ul>
+    </div>
 
-           </div>
-        </div>
 
-</nav>
-
+    </form>
+</div>
 <div class="container-fluid">
 
     <div class="row-fluid">
