@@ -65,6 +65,20 @@ elseif (empty($this->item->study_id))
 	$folder = $this->admin_params->get('path');
 }
 ?>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('#uploader').pluploadQueue({
+			runtimes: 'flash,html5',
+			url: 'index.php?option=com_biblestudy&controller=mediafile',
+			max_file_size: '10mb',
+			chunk_size: '1mb',
+			unique_name: true,
+
+			// Flash settings
+			flash_swf_url: '<?php echo JURI::root().'media/com_biblestudy/jui/js/plupload.flash.swf'; ?>'
+		});
+	});
+</script>
 <script>
 	function openConverter1() {
 		var Wheight = 125;
@@ -147,22 +161,6 @@ elseif (empty($this->item->study_id))
 	function sizebutton(remotefilesize) {
 		var objTB = document.getElementById("size");
 		objTB.value = remotefilesize;
-	}
-
-	function showupload() {
-		var id = 'SWFUpload_0';
-		if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '') {
-			document.getElementById(id).style.display = 'inline';
-		}
-		else {
-			document.getElementById(id).style.display = 'none';
-		}
-	}
-
-	if (window.addEventListener) {
-		window.addEventListener('load', showupload, false);
-	} else if (window.attachEvent) {
-		window.attachEvent('load', showupload);
 	}
 </script>
 <form action="<?php
@@ -353,33 +351,22 @@ echo JRoute::_($url);
 
 </div>
 <div class="tab-pane" id="upload">
+	<div id="uploader">
+		<p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
+    </div>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
 		</div>
 		<div class="controls">
-			<table class="adminlist">
-
-				<tbody>
-				<tr>
-					<td>
-						<?php echo $this->upload_server; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-						<?php echo $this->upload_folder; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-
-						<input type="file" name="uploadfile" value=""/>
-						<button type="button" onclick="submitbutton('upload')">
-							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
-					</td>
-					<td></td>
-				</tr>
-				</tbody>
-			</table>
+			<select>
+				<optgroup label="Local Server"">
+					<option value="server 1">Server 1</option>
+				</optgroup>
+				<optgroup label="Local Server 2"">
+					<option value="server 2">Server 2</option>
+				</optgroup>
+			</select>
 		</div>
 	</div>
 </div>
