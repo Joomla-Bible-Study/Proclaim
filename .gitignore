@@ -6,7 +6,7 @@
 .joomla-dev
 .buildpath
 .project
-.settings/
+.settings
 
 # Test Related Files #
 /tests/system/servers/configdef.php
