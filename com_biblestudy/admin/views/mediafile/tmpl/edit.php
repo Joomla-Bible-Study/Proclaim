@@ -73,6 +73,9 @@ elseif (empty($this->item->study_id))
 			max_file_size: '10mb',
 			chunk_size: '1mb',
 			unique_name: true,
+			multipart_params: {
+				"location" : 1.2
+			},
 
 			// Flash settings
 			flash_swf_url: '<?php echo JURI::root().'media/com_biblestudy/jui/js/plupload.flash.swf'; ?>'
@@ -309,21 +312,13 @@ echo JRoute::_($url);
 </div>
 <div class="tab-pane" id="file">
 	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('server'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('path'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
-		</div>
-	</div>
+        <div class="control-label">
+            <?php echo $this->form->getLabel('serverFolders'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('serverFolders', null, empty($this->item->study_id) ? $folder : null); ?>
+        </div>
+    </div>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('filename'); ?>
@@ -348,7 +343,6 @@ echo JRoute::_($url);
 			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
 		</div>
 	</div>
-
 </div>
 <div class="tab-pane" id="upload">
 	<div id="uploader">
@@ -356,10 +350,11 @@ echo JRoute::_($url);
     </div>
     <div class="control-group">
         <div class="control-label">
-            <?php echo $this->form->getLabel('folder'); ?>
+            <?php echo $this->form->getLabel('localFolder'); ?>
         </div>
         <div class="controls">
-            <?php echo $this->form->getInput('folder', null, empty($this->item->study_id) ? $folder : null); ?>
+            <?php echo $this->form->getInput('localFolder', null, empty($this->item->study_id) ? $folder : null); ?>
+            <p class="text-warning"><strong>NOTE:</strong> Uploading is only supported locally.</p>
         </div>
     </div>
 </div>

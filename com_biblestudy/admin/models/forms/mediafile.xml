@@ -121,9 +121,18 @@
         <option value="-1">JBS_MED_SELECT_DOCMAN</option>
     </field>
     <field
-            name="folder"
+            name="serverFolders"
             type="folders"
             label="JBS_MED_PATH_OR_FOLDER"
+            description="JBS_MED_PATH_OR_FOLDER_DESC"
+            class="inputbox">
+        <option value="0">JOPTION_USE_DEFAULT</option>
+    </field>
+    <field
+            name="localFolder"
+            type="folders"
+            label="JBS_MED_PATH_OR_FOLDER"
+            filter="local"
             description="JBS_MED_PATH_OR_FOLDER_DESC"
             class="inputbox">
         <option value="0">JOPTION_USE_DEFAULT</option>
