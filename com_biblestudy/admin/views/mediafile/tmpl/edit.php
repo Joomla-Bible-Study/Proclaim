@@ -354,21 +354,14 @@ echo JRoute::_($url);
 	<div id="uploader">
 		<p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
     </div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
-		</div>
-		<div class="controls">
-			<select>
-				<optgroup label="Local Server"">
-					<option value="server 1">Server 1</option>
-				</optgroup>
-				<optgroup label="Local Server 2"">
-					<option value="server 2">Server 2</option>
-				</optgroup>
-			</select>
-		</div>
-	</div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('folder'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('folder', null, empty($this->item->study_id) ? $folder : null); ?>
+        </div>
+    </div>
 </div>
 <div class="tab-pane" id="mediatype">
 

@@ -120,6 +120,14 @@
            default="-1">
         <option value="-1">JBS_MED_SELECT_DOCMAN</option>
     </field>
+    <field
+            name="folder"
+            type="folders"
+            label="JBS_MED_PATH_OR_FOLDER"
+            description="JBS_MED_PATH_OR_FOLDER_DESC"
+            class="inputbox">
+        <option value="0">JOPTION_USE_DEFAULT</option>
+    </field>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="mediafile" validate="rules"/>
