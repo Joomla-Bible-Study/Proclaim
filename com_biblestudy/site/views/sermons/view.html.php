@@ -333,7 +333,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$filter_orders      = $this->state->get('filter.orders');
 		$filter_languages   = $this->state->get('filter.languages');
 
-		// Remove the studies the user is not allowed to see
+
 
 		$this->teachers     = $this->get('Teachers');
 		$this->series       = $this->get('Series');
@@ -461,7 +461,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->params      = $params;
 
 		$this->_prepareDocument();
-
+        //get the drop down menus
+        $drops = $this->getDropdowns();
 		parent::display($tpl);
 	}
 
@@ -579,4 +580,73 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 	}
 
+public function getDropdowns()
+{
+    //$this->params = $this->state->params;
+    $ddteachers = $this->params->get('ddteachers');
+    $ddyears = $this->params->get('ddyears');
+    $ddmessagetype = $this->params->get('ddmessagetype');
+    $ddbooks = $this->params->get('ddbooks');
+    $ddlocations = $this->params->get('ddlocations');
+    $ddorder = $this->params->get('ddorder');
+    $ddlanguage = $this->params->get('ddlanguage');
+    $ddseries = $this->params->get('ddseries');
+    $ddtopics = $this->params->get('ddtopics');
+    $ddgobutton = $this->params->get('ddgobutton');
+    $ddpopular = $this->params->get('ddpopular');
+    $dropdownorder = array(
+        'teachers'=>$ddteachers,
+        'years'=>$ddyears,
+        'messagetype'=>$ddmessagetype,
+        'books'=>$ddbooks,
+        'locations'=>$ddlocations,
+        'order'=>$ddorder,
+        'language'=>$ddlanguage,
+        'series'=>$ddseries,
+        'topics'=>$ddtopics,
+        'gobutton'=>$ddgobutton,
+        'popular'=>$ddpopular
+        );
+    $menus = array();
+    $filter_topic       = $this->state->get('filter.topic');
+    $filter_book        = $this->state->get('filter.book');
+    $filter_teacher     = $this->state->get('filter.teacher');
+    $filter_series      = $this->state->get('filter.series');
+    $filter_messagetype = $this->state->get('filter.messageType');
+    $filter_year        = $this->state->get('filter.year');
+    $filter_location    = $this->state->get('filter.location');
+    $filter_orders      = $this->state->get('filter.orders');
+    $filter_languages   = $this->state->get('filter.languages');
+
+    $this->teachers     = $this->get('Teachers');
+    $this->series       = $this->get('Series');
+    $this->messageTypes = $this->get('MessageTypes');
+    $this->years        = $this->get('Years');
+    $this->locations    = $this->get('Locations');
+    $this->topics       = $this->get('Topics');
+    $this->orders       = $this->get('Orders');
+    $this->books        = $this->get('Books');
+
+    // Build go button
+    if ($this->params->get('use_go_button', 0) == 0)
+    {
+        $go = 'onchange="this.form.submit()"';
+    }
+    else
+    {
+        $go = null;
+    }
+    $gobutton = '<button type="submit" class="btn" id="gobutton">' . JText::_('JBS_STY_GO_BUTTON') . '</button>';
+    // Get the Popular stats
+    $stats               = new jbStats;
+    $this->page->popular = $stats->top_score_site();
+
+    foreach ($dropdownorder as $key=>$value)
+    {
+        if ($this->params->get('use_go_button') > 0){$menus[] = array('element'=>$key, 'order'=>$value);}
+        if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1){$menus[] = array('element'=>$key, 'order'=>$value);}
+    }
+    $dropdowns = array();
+    return $dropdowns;
+}
 }

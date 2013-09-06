@@ -57,43 +57,16 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 </div><!-- .hero-unit -->
 <?php }?>
 <div class="container-fluid">
-    <div class="btn-group">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            Books
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="#">Action</a></li>
-            <li><a tabindex="-1" href="#">Another action</a></li>
-            <li class="dropdown-submenu">
-                <a tabindex="-1" href="#">More options</a>
-                <ul class="dropdown-menu">
-                    <li><a tabindex="-1" href="#">Something else here</a></li>
-                    <li><a tabindex="-1" href="#">Something else here</a></li>
-                </ul>
-            <li><a tabindex="-1" href="#">Something else here</a></li>
-        </ul>
-    </div>
-    <form class="btn-group">
-    <div class="btn-group">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            Teachers
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="#">Action</a></li>
-            <li><a tabindex="-1" href="#">Another action</a></li>
-            <li class="dropdown-submenu">
-                <a tabindex="-1" href="#">More options</a>
-                <ul class="dropdown-menu">
-                    <li><a tabindex="-1" href="#">Something else here</a></li>
-                    <li><a tabindex="-1" href="#">Something else here</a></li>
-                </ul>
-            <li><a tabindex="-1" href="#">Something else here</a></li>
-        </ul>
-    </div>
 
-
+        <div class="btn-group">
+            <label for="filter_teacher" id="filter_teacher"
+                   class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
+            <select name="filter_teacher" class="input-medium" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
+                <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
+            </select>
+        </div>
+<?php echo $this->page->teachers;?>
     </form>
 </div>
 <div class="container-fluid">

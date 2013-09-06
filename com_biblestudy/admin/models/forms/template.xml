@@ -277,11 +277,6 @@
             </field>
         </fieldset>
         <fieldset name="LISTITEMS">
-            <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST"
-                   description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
             <field name="default_order" type="list" default="DESC"
                    label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC">
                 <option value="DESC">JBS_CMN_DESCENDING</option>
@@ -343,15 +338,41 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="use_go_button" type="list" default="1"
-                   label="JBS_TPL_LISTITEMS_USE_GO_BUTTON" description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_DESC">
-                <option value="0">JBS_CMN_DONT_USE</option>
-                <option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
+            <field name="ddbooks" type="list" default="1" label="JBS_TPL_ORDER_BOOK" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="booklist" type="list" default="0"
                    label="JBS_TPL_LISTITEMS_BOOKLIST" description="JBS_TPL_LISTITEMS_BOOKLIST_DESC">
                 <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
                 <option value="1">JBS_TPL_SHOW_BOOKS_W_STUDIES</option>
+            </field>
+            <field name="use_go_button" type="list" default="1"
+                   label="JBS_TPL_LISTITEMS_USE_GO_BUTTON" description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_DESC">
+                <option value="0">JBS_CMN_DONT_USE</option>
+                <option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
+            </field>
+            <field name="ddgobutton" type="list" default="2" label="JBS_TPL_ORDER_GO" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="show_teacher_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
@@ -360,11 +381,37 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
+            <field name="ddteachers" type="list" default="3" label="JBS_TPL_ORDER_TEACHER" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </field>
             <field name="show_series_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
+            </field>
+            <field name="ddseries" type="list" default="4" label="JBS_TPL_ORDER_SERIES" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="show_type_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC">
@@ -372,21 +419,73 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
+            <field name="ddmessagetype" type="list" default="5" label="JBS_TPL_ORDER_MESSAGETYPE" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </field>
             <field name="show_year_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
+            </field>
+            <field name="ddyears" type="list" default="6" label="JBS_TPL_ORDER_YEARS" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="show_order_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
+            <field name="ddorder" type="list" default="7" label="JBS_TPL_ORDER_ORDER" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </field>
             <field name="show_topic_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
+            </field>
+            <field name="ddtopics" type="list" default="8" label="JBS_TPL_ORDER_TOPICS" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="show_locations_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
@@ -395,10 +494,54 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
+            <field name="ddlocations" type="list" default="9" label="JBS_TPL_ORDER_LOCATIONS" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </field>
             <field name="show_popular" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_POPULAR" description="JBS_TPL_LISTITEMS_SHOW_POPULAR_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
+            </field>
+            <field name="ddpopular" type="list" default="10" label="JBS_TPL_ORDER_POPULAR" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </field>
+            <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST"
+                   description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="ddlanguage" type="list" default="11" label="JBS_TPL_ORDER_LANGUAGE" DESC="JBS_TPL_ORDER_DESC">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
             </field>
             <field name="show_pagination" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
