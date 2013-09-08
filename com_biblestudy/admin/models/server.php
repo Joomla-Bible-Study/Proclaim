@@ -123,15 +123,20 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Get the form.
-		$form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($data)) {
+            $item = $this->getItem();
+		}else {
+            $this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
+        }
 
-		if (empty($form))
-		{
-			return false;
-		}
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
-		return $form;
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
 	}
 
 	/**
@@ -204,7 +209,7 @@ class BiblestudyModelServer extends JModelAdmin
             $table->server_type = $type;
         }
 
-        $this->setState('server.type', $table->type);
+        $this->setState('server.type', $table->server_type);
 
         // Convert to the JObject before adding the params.
         $properties = $table->getProperties(1);

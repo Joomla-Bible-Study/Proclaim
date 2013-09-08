@@ -34,6 +34,26 @@ class BiblestudyControllerServer extends JControllerForm
 	}
 
     /**
+     * Resets the User state for the server type. Needed to allow the value from the DB to be used
+     *
+     * @param   null $key
+     * @param   null $urlVar
+     * @return  bool
+     *
+     * @since   8.1.0
+     */
+    public function edit($key = null, $urlVar = null) {
+        $app = JFactory::getApplication();
+        $result = parent::edit();
+
+        if($result) {
+            $app->setUserState('com_biblestudy.edit.server.type', null);
+        }
+
+        return true;
+    }
+
+    /**
      * Sets the type of endpoint currently being configured.
      *
      * @return  void
