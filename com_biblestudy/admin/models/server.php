@@ -201,7 +201,7 @@ class BiblestudyModelServer extends JModelAdmin
 
         // Prime required properties
         if($type = $this->getState('server.type')) {
-            $table->type = $type;
+            $table->server_type = $type;
         }
 
         $this->setState('server.type', $table->type);

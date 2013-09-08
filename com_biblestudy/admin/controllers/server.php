@@ -44,7 +44,7 @@ class BiblestudyControllerServer extends JControllerForm
         $input = $app->input;
 
         $data = $input->get('jform', array(), 'post', 'array');
-        $type = json_decode(base64_decode($data['type']));
+        $type = json_decode(base64_decode($data['server_type']));
 
         $recordId = isset($type->id) ? $type->id: 0;
 

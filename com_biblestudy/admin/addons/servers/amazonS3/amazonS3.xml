@@ -5,7 +5,7 @@
 
     <fieldset name="params">
         <fields name="params">
-            <field name="key" type="text" labelclass="control-label" label="*AWS_KEY*" description="*AWS_KEY*"/>
+            <field name="key" type="text" inputclass="input-medium" label="*AWS_KEY*" description="*AWS_KEY*"/>
             <field name="secret" type="text" labelclass="control-label" label="*AWS_SECRET*" description="*AWS_SECRET*"/>
         </fields>
     </fieldset>

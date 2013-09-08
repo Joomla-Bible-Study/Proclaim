@@ -24,7 +24,7 @@ $this->config = $this->form->getFieldset('params');
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
         if(task == 'server.setType') {
-            document.id('item-form').elements['jform[type]'].value = type;
+            document.id('item-form').elements['jform[server_type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
         } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
@@ -63,10 +63,10 @@ $this->config = $this->form->getFieldset('params');
 					</div>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('type'); ?>
+							<?php echo $this->form->getLabel('server_type'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('type'); ?>
+							<?php echo $this->form->getInput('server_type'); ?>
 						</div>
 					</div>
 				</div>
