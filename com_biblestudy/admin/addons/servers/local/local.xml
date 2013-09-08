@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server type="storage" supports="*.*">
+    <name>Local Server</name>
+    <description>Use the same server serving this website as a source of media.</description>
+</server>
