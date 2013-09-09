@@ -69,7 +69,7 @@ elseif (empty($this->item->study_id))
 	jQuery(document).ready(function() {
 		jQuery('#uploader').pluploadQueue({
 			runtimes: 'flash,html5',
-			url: 'index.php?option=com_biblestudy&controller=mediafile',
+			url: 'index.php?option=com_biblestudy&task=mediafile.upload',
 			max_file_size: '10mb',
 			chunk_size: '1mb',
 			unique_name: true,

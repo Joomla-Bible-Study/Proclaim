@@ -207,7 +207,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = &JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_MEDIA_FILES_CREATING') : JText::sprintf('JBS_TITLE_MEDIA_FILES_EDITING', $this->item->filename));
 	
 		// Add PLUpload Resources

@@ -40,6 +40,12 @@ class BiblestudyControllerMediafile extends JControllerForm
 		parent::__construct($config);
 	}
 
+    public function upload() {
+        require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'addons'.DS.'servers'.DS.'server.php');
+
+        $servers = JBSServer::getInstance();
+    }
+
 	/**
 	 * Method to run batch operations.
 	 *
