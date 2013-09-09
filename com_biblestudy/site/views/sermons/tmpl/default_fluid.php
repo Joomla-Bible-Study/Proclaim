@@ -58,15 +58,8 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 <?php }?>
 <div class="container-fluid">
 
-        <div class="btn-group">
-            <label for="filter_teacher" id="filter_teacher"
-                   class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-            <select name="filter_teacher" class="input-medium" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
-                <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
-            </select>
-        </div>
-<?php echo $this->page->teachers;?>
+        <?php echo $this->page->dropdowns;
+        //echo $this->page->teachers;?>
     </form>
 </div>
 <div class="container-fluid">
