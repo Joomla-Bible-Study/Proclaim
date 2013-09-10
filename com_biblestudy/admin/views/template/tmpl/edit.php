@@ -138,6 +138,36 @@ $input = $app->input;
 					<?php echo JText::_('JBS_TPL_TOOLTIP_ITEMS'); ?>
 				</a>
 			</li>
+            <li class="">
+                <a href="#list-10" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-11" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-12" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-13" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-14" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+                </a>
+            </li>
+            <li class="">
+                <a href="#list-15" data-toggle="tab">
+                    <?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+                </a>
+            </li>
 			<li class="">
 				<a href="#list-5" data-toggle="tab">
 					<?php echo JText::_('JBS_TPL_STUDY_LIST_ROW1'); ?>
@@ -219,6 +249,78 @@ $input = $app->input;
 					</div>
 				<?php endforeach; ?>
 			</div>
+            <div class="tab-pane" id="list-10">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="list-11">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="list-12">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="list-13">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="list-14">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="list-15">
+                <?php foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field): ?>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $field->label;?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $field->input; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
 			<div class="tab-pane" id="list-5">
 				<?php foreach ($this->form->getFieldset('ROW1') as $field): ?>
 					<div class="control-group">

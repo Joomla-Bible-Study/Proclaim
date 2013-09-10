@@ -28,7 +28,23 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
  */
 class JBSMListing extends JBSMElements
 {
-	/**
+    /**
+     * Get Fluid Listing
+     *
+     */
+    public function getFluidListing()
+    {
+        //$list = array();
+        $list[] = array('row'=>1,'col'=>1,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
+        $list[] = array('row'=>1,'col'=>2,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
+        $list[] = array('row'=>1,'col'=>3,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
+        $list[] = array('row'=>2,'col'=>1,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
+        $list[] = array('row'=>2,'col'=>2,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
+        //$listing = (object) $list;
+       // dump($list);
+        return $list;
+    }
+    /**
 	 * Get listing
 	 *
 	 * @param   object    $row           Item Info

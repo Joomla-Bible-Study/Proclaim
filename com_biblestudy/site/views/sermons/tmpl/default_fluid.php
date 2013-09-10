@@ -22,7 +22,7 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 <div class="container-fluid">
 <?php if ($this->params->get('intro_show') > 0)
 { ?>
-<div class="hero-unit" style="padding: 30px;">
+<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
     <?php
     if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
     {
@@ -58,9 +58,18 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 <?php }?>
 <div class="container-fluid">
 
-        <?php echo $this->page->dropdowns;
-        //echo $this->page->teachers;?>
-    </form>
+        <?php echo $this->page->dropdowns;?>
+        <?php $listing = new JBSMListing;
+        $list = $listing->getFluidListing();
+        foreach ($list as $key=>$value)
+        {
+            foreach ($value as $k=>$v)
+            {
+                echo $k.' - '. $v.'<br />';
+            }
+        }
+        ?>
+
 </div>
 <div class="container-fluid">
 
