@@ -18,4 +18,8 @@ class JBSServerAmazonS3 extends JBSServer {
     {
         // TODO: Implement upload() method.
     }
+    
+    public function test() {
+    	return "hello from amazon";
+    }
 }

@@ -74,7 +74,7 @@ elseif (empty($this->item->study_id))
 			chunk_size: '1mb',
 			unique_name: true,
 			multipart_params: {
-				"location" : 1.2
+				"location" : jQuery('#jform_localFolder').find(':selected').val()
 			},
 
 			// Flash settings

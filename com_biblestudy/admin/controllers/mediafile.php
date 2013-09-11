@@ -41,9 +41,21 @@ class BiblestudyControllerMediafile extends JControllerForm
 	}
 
     public function upload() {
-        require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'addons'.DS.'servers'.DS.'server.php');
-
-        $servers = JBSServer::getInstance();
+    	$location = array();
+    	
+    	$app = JFactory::getApplication();
+    	$input = $app->input;
+    	
+    	$location_data = explode(".", $input->get("location", null, "STRING"));
+        $location['server_id'] = $location_data[0];
+        $location['folder_id'] = $location_data[1];
+        
+        //Get Server information
+        $server = $this->getModel("Server")->getItem($location['server_id']);
+        
+    	$adapter = JBSServer::getInstance();
+    	
+    	die($server->test());
     }
 
 	/**

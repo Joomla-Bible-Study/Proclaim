@@ -57,12 +57,6 @@ class JFormFieldFolders extends JFormFieldGroupedList
         $query->order('foldername');
         $query->join('LEFT', '#__bsms_servers as server on server.id = folder.server_id');
         $query->where('server.published=1');
-        
-        $filter = (string)$this->element['filter'];
-        
-        if($filter)
-        	$query->where('server.server_type = "'.$filter.'"');
-        
 
         // Set the query and load the styles.
         $db->setQuery($query);
