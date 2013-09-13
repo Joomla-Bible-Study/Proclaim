@@ -32,17 +32,71 @@ class JBSMListing extends JBSMElements
      * Get Fluid Listing
      *
      */
-    public function getFluidListing()
+    public function getFluidListing($items, $params, $admin_params, $template)
     {
-        //$list = array();
-        $list[] = array('row'=>1,'col'=>1,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
-        $list[] = array('row'=>1,'col'=>2,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
-        $list[] = array('row'=>1,'col'=>3,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
-        $list[] = array('row'=>2,'col'=>1,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
-        $list[] = array('row'=>2,'col'=>2,'rowspan'=>0,'colspan'=>0,'element'=>'p','custom'=>'','item'=>'Drawing Close to God','title'=>'Study Title');
-        //$listing = (object) $list;
-       // dump($list);
+        //$row = new stdClass;
+        $list = null;
+        $header = $this->getFluidHeader($items[0]);
+        foreach ($items as $item)
+        {
+            $mediatemp = array();
+            $mediatemp = explode(',',$item->mids);
+            foreach ($mediatemp as $mtemp)
+            {$medias[] = $mtemp;}
+        }
+        //get the media files in one query
+        $db    = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
+        . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+        . ' #__bsms_media.media_image_name AS imname,'
+        . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+        . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+        . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+        $query->from('#__bsms_mediafiles');
+        $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
+        $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
+        $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
+        $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+        $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
+        $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+        $where2   = array();
+        $subquery = '(';
+        foreach ($medias as $media)
+        {
+            $where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
+        }
+        $subquery .= implode(' OR ', $where2);
+        $subquery .= ')';
+        $query->where($subquery);
+        $query->where('#__bsms_mediafiles.published = 1');
+        $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
+        $db->setQuery($query);
+        $mediafiles = $db->loadObjectList();
+
+        foreach ($items as $item)
+        {
+            $row[]= $this->getFluidRow($item, $params, $admin_params, $template);
+        }
         return $list;
+    }
+
+    /**
+     * Get Header
+     */
+    public function getFluidHeader($item)
+    {
+        $header = null;
+        return $header;
+    }
+
+    /**
+     * Get Fluid Row
+     */
+    public function getFluidRow($item, $params, $admin_params, $template)
+    {
+        $row = null;
+        return $row;
     }
     /**
 	 * Get listing

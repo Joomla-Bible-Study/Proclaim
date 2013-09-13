@@ -60,14 +60,8 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 
         <?php echo $this->page->dropdowns;?>
         <?php $listing = new JBSMListing;
-        $list = $listing->getFluidListing();
-        foreach ($list as $key=>$value)
-        {
-            foreach ($value as $k=>$v)
-            {
-                echo $k.' - '. $v.'<br />';
-            }
-        }
+        $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
+        echo $list;
         ?>
 
 </div>
