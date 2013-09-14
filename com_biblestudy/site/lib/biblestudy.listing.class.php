@@ -73,11 +73,24 @@ class JBSMListing extends JBSMElements
         $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
         $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
-
+        // next we go through and attach the media files as an array to their study
         foreach ($items as $item)
         {
-            $row[]= $this->getFluidRow($item, $params, $admin_params, $template);
+            $studymedia = array();
+            foreach ($mediafiles as $mediafile)
+            {
+                if ($mediafile->study_id == $item->id)
+                {
+                    $studymedia[] = $mediafile;
+                }
+            }
+            if (isset($studymedia))
+            {
+                $item->mediafiles = $studymedia;
+                $row[]= $this->getFluidRow($item, $params, $admin_params, $template);
+            }
         }
+
         return $list;
     }
 
