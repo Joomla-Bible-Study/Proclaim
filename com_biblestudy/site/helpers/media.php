@@ -794,11 +794,13 @@ class JBSMMedia
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
 
+		if ($media->spath == 'localhost')
+		{
+			$media->spath = 'localhost/';
+		}
+
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
-		/**
-		 * @todo There is no $row referenced to this function so this will fail
-		 */
 
 		// This one IS needed
 		$duration = $JBSMElements->getDuration($params, $media);
@@ -817,13 +819,10 @@ class JBSMMedia
 		}
 		switch ($player->player)
 		{
-
 			case 0: // Direct
 				switch ($player->type)
 				{
-
 					case 2: // New window
-
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
@@ -855,20 +854,20 @@ class JBSMMedia
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
     jwplayer('placeholder').setup({
-	    'file' : '<?php echo $path; ?>',
-	    'height' : '<?php echo $height; ?>',
-	    'width' : '<?php echo $width; ?>',
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
-        'backcolor':'<?php echo $backcolor; ?>',
-        'frontcolor':'<?php echo $frontcolor; ?>',
-        'lightcolor':'<?php echo $lightcolor; ?>',
-        'screencolor':'<?php echo $screencolor; ?>',
+	    'file' : '" . $path . "',
+	    'height' : '" . $player->playerheight . "',
+	    'width' : '" . $player->playerwidth . "',
+        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+        'flashplayer':'" . JUri::base() . "media/com_biblestudy/player/jwplayer.flash.swf',
+        'backcolor':'" . $backcolor . "',
+        'frontcolor':'" . $frontcolor . "',
+        'lightcolor':'" . $lightcolor . "',
+        'screencolor':'" . $screencolor . "',
     });
 </script>";
 						break;
 
 					case 1: // Popup
-
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
@@ -957,7 +956,6 @@ class JBSMMedia
 				break;
 
 			case 8: // Embed code
-
 				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
