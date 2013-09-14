@@ -14,7 +14,7 @@ defined('JPATH_PLATFORM') or die;
  * @package  BibleStudy.Admin
  * @since    8.1.0
  */
-abstract class JHtmlbsLytebox
+abstract class JHtmlLytebox
 {
 	/**
 	 * @var    array  Array containing information for loaded files
@@ -47,7 +47,7 @@ abstract class JHtmlbsLytebox
 			$config = JFactory::getConfig();
 			$debug  = (boolean) $config->get('debug');
 		}
-		JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false, $debug);
+		JHtml::script('media/com_biblestudy/lytebox/lytebox.js');
 		self::loadCss();
 
 		self::$loaded[__METHOD__] = true;
@@ -66,6 +66,6 @@ abstract class JHtmlbsLytebox
 	 */
 	public static function loadCss($attribs = array())
 	{
-		JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);
+		JHtml::stylesheet('media/com_biblestudy/lytebox/lytebox.css');
 	}
 }

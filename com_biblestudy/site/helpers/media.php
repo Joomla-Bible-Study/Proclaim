@@ -874,14 +874,18 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						JHTML::_('behavior.modal');
+						JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+						JHtml::_('fancybox.framework');
 						$player->playerwidth  = $player->playerwidth + 30;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode = "<a class='modal' href='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
-							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
-							$player->playerheight . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
-						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
-							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
+						$playercode = '<a href="' . $path . '" id="' . $media->filename . '" class="video_link"><img src="' . $src .
+							'" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							' ' . $filesize . '" width= "' . $width . '" height="' . $height . '" border="0" /></a>';
+						//$playercode = "<a class='lytebox' href='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
+//							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
+//							$player->playerheight . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+//						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+//							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
 						return $playercode;
 						break;
