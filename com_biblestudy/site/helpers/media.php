@@ -689,7 +689,7 @@ class JBSMMedia
 		switch ($item_playertype)
 		{
 			case 3:
-				$player->type = $param_playertype;
+				$player->type = (int) $param_playertype;
 				break;
 
 			case 2:
@@ -775,7 +775,9 @@ class JBSMMedia
 	 *
 	 * @param   object $params      System Params
 	 * @param   object $itemparams  Item Params //@todo need to merge with $params
-	 * @param   object $player      Player code
+	 * @param   object $player      Player code:
+	 *                              player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+	 *                              internal_popup 0 = inline 1 = popup, 2 = global settings
 	 * @param   object $image       Image info
 	 * @param   object $media       Media
 	 *
@@ -817,13 +819,26 @@ class JBSMMedia
 			$protocol = $params->get('protocol', 'http://');
 			$path     = $protocol . $path;
 		}
+
+		/* Players - from Template:
+		   media_player = internal player for all files
+		   useravr = use avr for all files
+		   useav = use All Videos plugin for all files
+		   popuptype = whether AVR should be window or lightbox (handled in avr code)
+		   media_player = use internal player for all files
+		   internal_popup = whether direct or internal player should be popup or inline
+		   From media file:
+		   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+		   internal_popup 0 = inline 1 = popup, 2 = global settings */
+
 		switch ($player->player)
 		{
 			case 0: // Direct
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						$playercode = "<a class='modal' href='#' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+						JHTML::_('behavior.modal');
+						$playercode = "<a class='modal' href='" . $path . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
 						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
 							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
@@ -858,7 +873,12 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						$playercode = "<a class='modal' href='#' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+						JHTML::_('behavior.modal');
+						$player->playerwidth  = $player->playerwidth + 30;
+						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
+						$playercode = "<a class='modal' href='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
+							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
+							$player->playerheight . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
 						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
 							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
