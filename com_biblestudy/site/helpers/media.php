@@ -837,9 +837,10 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						JHTML::_('behavior.modal');
-						$playercode = "<a class='modal' href='" . $path . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth .
-							", y:" . $player->playerheight . "}}\">
+						JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = "<a title='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' class='fancybox fancybox.iframe fancybox.gallery' href='" . $path . "' \">
 						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
 							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
@@ -875,17 +876,11 @@ class JBSMMedia
 				{
 					case 3: // Squeezebox view
 						JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
-						JHtml::_('fancybox.framework');
-						$player->playerwidth  = $player->playerwidth + 30;
-						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode = '<a href="' . $path . '" id="' . $media->filename . '" class="video_link"><img src="' . $src .
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = '<a href="index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t='
+							. $template . '&amp;mediaid=' . $media->id . '&amp;tmpl=component" class="fancybox fancybox.iframe"><img src="' . $src .
 							'" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width= "' . $width . '" height="' . $height . '" border="0" /></a>';
-						//$playercode = "<a class='lytebox' href='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
-//							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
-//							$player->playerheight . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
-//						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
-//							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
 						return $playercode;
 						break;
@@ -894,18 +889,18 @@ class JBSMMedia
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
-    jwplayer('placeholder').setup({
-	    'file' : '" . $path . "',
-	    'height' : '" . $player->playerheight . "',
-	    'width' : '" . $player->playerwidth . "',
-        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
-        'flashplayer':'" . JUri::base() . "media/com_biblestudy/player/jwplayer.flash.swf',
-        'backcolor':'" . $backcolor . "',
-        'frontcolor':'" . $frontcolor . "',
-        'lightcolor':'" . $lightcolor . "',
-        'screencolor':'" . $screencolor . "',
-    });
-</script>";
+								    jwplayer('placeholder').setup({
+									    'file' : '" . $path . "',
+									    'height' : '" . $player->playerheight . "',
+									    'width' : '" . $player->playerwidth . "',
+								        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+								        'flashplayer':'" . JUri::base() . "media/com_biblestudy/player/jwplayer.flash.swf',
+								        'backcolor':'" . $backcolor . "',
+								        'frontcolor':'" . $frontcolor . "',
+								        'lightcolor':'" . $lightcolor . "',
+								        'screencolor':'" . $screencolor . "',
+								    });
+								</script>";
 						break;
 
 					case 1: // Popup
