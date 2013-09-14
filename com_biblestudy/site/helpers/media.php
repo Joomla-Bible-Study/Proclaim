@@ -838,7 +838,8 @@ class JBSMMedia
 				{
 					case 3: // Squeezebox view
 						JHTML::_('behavior.modal');
-						$playercode = "<a class='modal' href='" . $path . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+						$playercode = "<a class='modal' href='" . $path . "' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth .
+							", y:" . $player->playerheight . "}}\">
 						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
 							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
 
