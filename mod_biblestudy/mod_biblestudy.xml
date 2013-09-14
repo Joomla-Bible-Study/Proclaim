@@ -37,7 +37,7 @@
                 <field name="moduleitems" type="text" default="5"
                        label="JBS_MDL_ITEMS" description="JBS_MDL_ITEMS_DESC" size="10"/>
                 <field name="use_headers" type="radio" default="1"
-                	   label="JBS_MDL_USE_LIST_HEADER" description="JBS_MDL_USE_LIST_HEADER_DESC">
+                       label="JBS_MDL_USE_LIST_HEADER" description="JBS_MDL_USE_LIST_HEADER_DESC">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
@@ -57,7 +57,7 @@
             <fieldset name="JBS_TPL_FILTERS" label="JBS_TPL_FILTERS"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
                 <field name="condition" type="radio" default="1"
-                	   label="JBS_MDL_AND_OR" description="JBS_MDL_AND_OR_DESC">
+                       label="JBS_MDL_AND_OR" description="JBS_MDL_AND_OR_DESC">
                     <option value="0">JBS_MDL_OR</option>
                     <option value="1">JBS_MDL_AND</option>
                 </field>
@@ -272,6 +272,7 @@
                        label="JBS_TPL_MEDIA_INTERNAL_POPUP" description="JBS_TPL_MEDIA_INTERNAL_POPUP_DESC">
                     <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
                     <option value="2">JBS_CMN_INLINE</option>
+                    <option value="3">JBS_CMN_SQUEEZEBOX</option>
                 </field>
                 <field name="player_width" type="text" default="400"
                        label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>

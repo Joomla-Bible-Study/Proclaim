@@ -822,6 +822,14 @@ class JBSMMedia
 			case 0: // Direct
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						$playercode = "<a class='modal' href='#' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
+
+						return $playercode;
+						break;
+
 					case 2: // New window
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
@@ -849,6 +857,14 @@ class JBSMMedia
 			case 1: // Internal
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						$playercode = "<a class='modal' href='#' rel=\"{handler: 'iframe', size: {x:" . $player->playerwidth . ", y:" . $player->playerheight . "}}\">
+						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
+
+						return $playercode;
+						break;
+
 					case 2: // Inline
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
