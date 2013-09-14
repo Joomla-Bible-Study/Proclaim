@@ -641,45 +641,57 @@ class JBSMElements
 	 */
 	public function getstudyDate($params, $studydate)
 	{
-        if (!$this->MyCheckDate($studydate))
-            {
-                $date = $studydate; return $date;
-            }
+		if (!$this->MyCheckDate($studydate))
+		{
+			$date = $studydate;
+
+			return $date;
+		}
+		$offset = $params->get('offset', 'false');
+
+		if ($offset == 'false')
+		{
+			$offset = false;
+		}
+		elseif ($offset == 'true')
+		{
+			$offset = true;
+		}
 
 		switch ($params->get('date_format'))
 		{
 			case 0:
-				$date = JHTML::date($studydate, "M j, Y");
+				$date = JHTML::date($studydate, "M j, Y", $offset);
 				break;
 			case 1:
-				$date = JHTML::date($studydate, "M J");
+				$date = JHTML::date($studydate, "M J", $offset);
 				break;
 			case 2:
-				$date = JHTML::date($studydate, "n/j/Y");
+				$date = JHTML::date($studydate, "n/j/Y", $offset);
 				break;
 			case 3:
-				$date = JHTML::date($studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j", $offset);
 				break;
 			case 4:
-				$date = JHTML::date($studydate, "l, F j, Y");
+				$date = JHTML::date($studydate, "l, F j, Y", $offset);
 				break;
 			case 5:
-				$date = JHTML::date($studydate, "F j, Y");
+				$date = JHTML::date($studydate, "F j, Y", $offset);
 				break;
 			case 6:
-				$date = JHTML::date($studydate, "j F Y");
+				$date = JHTML::date($studydate, "j F Y", $offset);
 				break;
 			case 7:
-				$date = JHTML::date($studydate, "j/n/Y");
+				$date = JHTML::date($studydate, "j/n/Y", $offset);
 				break;
 			case 8:
-				$date = JHTML::date($studydate, JText::_('DATE_FORMAT_LC'));
+				$date = JHTML::date($studydate, JText::_('DATE_FORMAT_LC'), $offset);
 				break;
 			case 9:
-				$date = JHTML::date($studydate, "Y/M/D");
+				$date = JHTML::date($studydate, "Y/M/D", $offset);
 				break;
 			default:
-				$date = JHTML::date($studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j", $offset);
 				break;
 		}
 
@@ -687,27 +699,32 @@ class JBSMElements
 
 		if ($customDate != '')
 		{
-			$date = JHTML::date($studydate, $customDate);
+			$date = JHTML::date($studydate, $customDate, $offset);
 		}
 
 		return $date;
 	}
-    /**
-     * Check whether date is valid YYYY-MM-DD format
-     *
-     * @param   string $datein  Study Date
-     *
-     * @return boolean
-     */
-    function MyCheckDate( $datein ) {
-        if (preg_match ("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein))
-        {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    /**
+
+	/**
+	 * Check whether date is valid YYYY-MM-DD format
+	 *
+	 * @param   string $datein  Study Date
+	 *
+	 * @return boolean
+	 */
+	function MyCheckDate($datein)
+	{
+		if (preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $datein))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
 	 * Function to get File Size
 	 *
 	 * @param   string $file_size  Size in bytes
