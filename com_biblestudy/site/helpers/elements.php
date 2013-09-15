@@ -1011,7 +1011,7 @@ class JBSMElements
 	 * @param   object $media     Media
 	 * @param   int    $width     Width
 	 * @param   int    $height    Height
-	 * @param   string $src       Sorce of Image
+	 * @param   string $src       Source of Image
 	 * @param   string $duration  Duration
 	 * @param   int    $filesize  File Size of Doc
 	 *
@@ -1140,6 +1140,7 @@ class JBSMElements
 		{
 			if ($cd->mid > 0)
 			{
+				$src = JURI::base() . $cd->media_image_path;
 
 				if ($imagew)
 				{
@@ -1165,6 +1166,7 @@ class JBSMElements
 
 			if ($dvd->mid > 0)
 			{
+				$src = JURI::base() . $dvd->media_image_path;
 
 				if ($imagew)
 				{
@@ -1228,12 +1230,7 @@ class JBSMElements
 				$filepathresults->spath = JUri::base();
 			}
 			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
-
-			// Check url for "http://" prefix, and add it if it doesn't exist
-			if (!preg_match('@^(?:http://)?([^/]+)@i', $filepath))
-			{
-				$filepath = 'http://' . $filepath;
-			}
+			$filepath = JBSMRoute::addScheme($filepath);
 		}
 		elseif (isset($filepathresults->docMan_id))
 		{

@@ -29,9 +29,7 @@ class JBSMTeacher extends JBSMListing
 	 */
 	public function getTeacher($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$teacher    = null;
@@ -47,7 +45,6 @@ class JBSMTeacher extends JBSMListing
 
 		if ($viewtype == 'sermons')
 		{
-			$teacherid  = $params->get('listteachers');
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
 		if ($viewtype == 'sermon' && $id != 0)
