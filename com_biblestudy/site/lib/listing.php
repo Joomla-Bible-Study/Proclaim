@@ -805,7 +805,7 @@ class JBSMListing extends JBSMElements
 	/**
 	 * Get Cell
 	 *
-	 * @param   int       $elementid     Element ID
+	 * @param   string    $elementid     Element ID in string
 	 * @param   string    $element       Element
 	 * @param   int       $rowcolid      Row Column ID
 	 * @param   string    $colspan       Column Span
@@ -844,7 +844,6 @@ class JBSMListing extends JBSMElements
 		$row,
 		$template)
 	{
-
 		$cell = '<td class="' . $rowcolid . ' ' . $elementid;
 
 		if ($lastcol == 1)
@@ -859,44 +858,47 @@ class JBSMListing extends JBSMElements
 		}
 		$cell .= '>';
 
-		if ($islink > 0)
+		if ($islink > 0 && $elementid != 'jbsmedia')
 		{
 			$cell .= self::getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
 		}
 		$cell .= $element;
 
-		switch ($islink)
+		if ($elementid != 'jbsmedia')
 		{
-			case 0:
-				break;
+			switch ($islink)
+			{
+				case 0:
+					break;
 
-			case 1:
-				$cell .= '</a>';
-				break;
+				case 1:
+					$cell .= '</a>';
+					break;
 
-			case 3:
-				$cell .= '</a>';
-				break;
+				case 3:
+					$cell .= '</a>';
+					break;
 
-			case 4:
-				$cell .= '</a></span>';
-				break;
+				case 4:
+					$cell .= '</a></span>';
+					break;
 
-			case 5:
-				$cell .= '</a></span>';
-				break;
+				case 5:
+					$cell .= '</a></span>';
+					break;
 
-			case 6:
-				$cell .= '</a>';
-				break;
+				case 6:
+					$cell .= '</a>';
+					break;
 
-			case 7:
-				$cell .= '</a>';
-				break;
+				case 7:
+					$cell .= '</a>';
+					break;
 
-			case 8:
-				$cell .= '</a>';
-				break;
+				case 8:
+					$cell .= '</a>';
+					break;
+			}
 		}
 		$cell .= '</td>';
 
@@ -2080,7 +2082,7 @@ class JBSMListing extends JBSMElements
 	 * Get Header Cell
 	 *
 	 * @param   int       $rowid         Table Row ID
-	 * @param   object    $row           Item info
+	 * @param   JTable    $row           Item info
 	 * @param   JRegistry $params        Item Params
 	 * @param   int       $lastcol       Last Column
 	 * @param   int       $colspan       Column Span

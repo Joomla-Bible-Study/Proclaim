@@ -116,7 +116,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Order
 --
-ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Podcast
 --
@@ -129,7 +129,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Search
 --
-ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Series
 --
@@ -214,4 +214,4 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Drop `#__bsms_version`
 --
-DROP TABLE IF EXISTS #__bsms_version;
+DROP TABLE IF EXISTS `#__bsms_version`;

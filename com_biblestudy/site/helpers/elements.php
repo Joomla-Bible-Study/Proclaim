@@ -587,6 +587,19 @@ class JBSMElements
 	public function getDuration($params, $row)
 	{
 
+		if (!isset($row->media_hours))
+		{
+			$row->media_hours = '00';
+		}
+		if (!isset($row->media_minutes))
+		{
+			$row->media_minutes = '45';
+		}
+		if (!isset($row->media_seconds))
+		{
+			$row->media_seconds = '00';
+		}
+
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
 
 		if (!$duration)
@@ -909,147 +922,17 @@ class JBSMElements
 			$registry = new JRegistry;
 			$registry->loadString($media->params);
 			$itemparams = $registry;
-			$input      = new JInput;
-			$Itemid     = $input->get('Itemid', '1', 'int');
-			$template   = $input->get('t', '1', 'int');
 			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
+			$player     = $getMedia->getPlayerAttributes($admin_params, $params, $itemparams, $media);
 
 			$mediatable .= '<td>';
 
 			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
 			$filesize = $this->getFilesize($media->size);
 
-			// This one IS needed
-			$duration = $this->getDuration($params, $row);
-			$mimetype = $media->mimetext;
-			$src      = JURI::base() . $image->path;
-			$height   = $image->height;
-			$width    = $image->width;
-			$path1    = $media->spath . $media->fpath . $media->filename;
-
-			if (!preg_match("@^'http?://@i", $path1))
-			{
-				$path1 = 'http://' . $path1;
-			}
-			$playerwidth  = $params->get('player_width');
-			$playerheight = $params->get('player_height');
-
-			if ($itemparams->get('playerheight'))
-			{
-				$playerheight = $itemparams->get('playerheight');
-			}
-			if ($itemparams->get('playerwidth'))
-			{
-				$playerwidth = $itemparams->get('playerwidth');
-			}
-			$playerwidth  = $playerwidth + 20;
-			$playerheight = $playerheight + $params->get('popupmargin', '50');
-
-			/* Players - from Template:
-			   media_player = internal player for all files
-			   useravr = use avr for all files
-			   useav = use All Videos plugin for all files
-			   popuptype = whether AVR should be window or lightbox (handled in avr code)
-			   media_player = use internal player for all files
-			   internal_popup = whether direct or internal player should be popup or inline
-			   From media file:
-			   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
-			   internal_popup 0 = inline 1 = popup, 2 = global settings */
-
-			$playertype = 0;
-
-			if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
-			{
-				$playertype = 1;
-			}
-
-			if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
-			{
-				$playertype = 2;
-			}
-
-			if ($params->get('useav') == 1 || $itemparams->get('player') == 3)
-			{
-				$playertype = 3;
-			}
-			// $item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
-			$item           = $itemparams->get('internal_popup');
-			$internal_popup = $params->get('internal_popup', 0);
-
-			if ($item < 3)
-			{
-				$type = $internal_popup;
-			}
-			else
-			{
-				$type = $item;
-			}
-			$media1_link = null;
-
-			switch ($playertype)
-			{
-				case 0:
-
-					if ($params->get('direct_internal', 0) == 1)
-					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "', 'newwindow','width="
-							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='"
-							. $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='"
-							. $media->malttext . "' /></a>";
-
-
-					}
-					else
-					{
-						$media1_link = '<a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $media->special . '"><img src="' . $src
-							. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-							. '" height="' . $height . '" border="0" /></a>';
-					}
-
-					$media1_link .= '<a href="' . $path1 . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid='
-						. $media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="'
-						. $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' ' . $filesize . '" target="' . $media->special . '"><img src="'
-						. $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-						. '" height="' . $height . '" border="0" /></a>';
-
-					break;
-
-				case 1:
-					if ($type == 1)
-					{
-						$media1_link = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;Itemid="
-							. $Itemid . "&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width="
-							. $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='"
-							. $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
-					}
-
-
-					break;
-
-
-				case 3:
-					echo '<div>' . JHTML::_('content.prepare', $media->mediacode) . '</div>';
-					break;
-			}
-
-			if ($media->docMan_id > 0)
-			{
-				$media1_link = $this->getDocman($media, $width, $height, $src, $duration, $filesize);
-			}
-			if ($media->article_id > 0)
-			{
-				$media1_link = $this->getArticle($media, $width, $height, $src);
-			}
-			if ($media->virtueMart_id > 0)
-			{
-				$media1_link = $this->getVirtuemart($media, $width, $height, $src, $params);
-			}
-
-			// Here is where we begin to build the mediatable variable
-			// Here we test to see if docMan or article is used
+			// To pass to Player Code
+			$media1_link = $getMedia->getPlayerCode($params, $itemparams, $player, $image, $media);
 
 			$link_type = $media->link_type;
 
@@ -1228,9 +1111,6 @@ class JBSMElements
 	 */
 	private function getStore($params, $row)
 	{
-
-		$mainframe = JFactory::getApplication();
-
 		// Placing for starter of var
 		$imagew = null;
 		$imageh = null;
@@ -1260,7 +1140,6 @@ class JBSMElements
 		{
 			if ($cd->mid > 0)
 			{
-				$src = JURI::base() . $cd->media_image_path;
 
 				if ($imagew)
 				{
@@ -1286,7 +1165,6 @@ class JBSMElements
 
 			if ($dvd->mid > 0)
 			{
-				$src = JURI::base() . $dvd->media_image_path;
 
 				if ($imagew)
 				{
@@ -1330,8 +1208,6 @@ class JBSMElements
 	 */
 	public function getFilepath($id3, $idfield, $mime)
 	{
-		$mainframe = JFactory::getApplication();
-
 		$database = JFactory::getDBO();
 		$query    = $database->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
@@ -1347,6 +1223,10 @@ class JBSMElements
 
 		if ($filepathresults)
 		{
+			if ($filepathresults->spath == 'localhost')
+			{
+				$filepathresults->spath = JUri::base();
+			}
 			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
 
 			// Check url for "http://" prefix, and add it if it doesn't exist

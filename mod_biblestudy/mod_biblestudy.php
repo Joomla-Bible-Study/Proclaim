@@ -15,8 +15,6 @@ require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
 $document = JFactory::getDocument();
-$document->addScript('media/com_biblestudy/js/tooltip.js');
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 /** @var $params JRegistry */
 $templatemenuid = $params->get('t');

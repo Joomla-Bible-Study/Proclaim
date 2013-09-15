@@ -192,6 +192,7 @@
                    label="JBS_TPL_MEDIA_INTERNAL_POPUP" description="JBS_TPL_MEDIA_INTERNAL_POPUP_DESC">
                 <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
                 <option value="2">JBS_CMN_INLINE</option>
+                <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
             <field name="autostart" type="list" default="1"
                    label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
