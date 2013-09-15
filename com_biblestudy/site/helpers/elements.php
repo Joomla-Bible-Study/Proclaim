@@ -921,34 +921,7 @@ class JBSMElements
 			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
 			$filesize = $this->getFilesize($media->size);
 
-			// $item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
-			$item           = $itemparams->get('internal_popup');
-			$internal_popup = $params->get('internal_popup', 0);
-
-			if ($item < 3)
-			{
-				$type = $internal_popup;
-			}
-			else
-			{
-				$type = $item;
-			}
-
-			if ($media->docMan_id > 0)
-			{
-				$type = 4;
-			}
-			if ($media->article_id > 0)
-			{
-				$type = 5;
-			}
-			if ($media->virtueMart_id > 0)
-			{
-				$type = 6;
-			}
-
 			// To pass to Player Code
-			$player->type = $type;
 			$media1_link = $getMedia->getPlayerCode($params, $itemparams, $player, $image, $media);
 
 			$link_type = $media->link_type;
@@ -1240,6 +1213,10 @@ class JBSMElements
 
 		if ($filepathresults)
 		{
+			if ($filepathresults->spath == 'localhost')
+			{
+				$filepathresults->spath = JUri::base();
+			}
 			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
 
 			// Check url for "http://" prefix, and add it if it doesn't exist
