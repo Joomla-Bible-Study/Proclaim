@@ -293,5 +293,3 @@ class BiblestudyViewPopup extends JViewLegacy
 	}
 
 }
-
-// End of class
