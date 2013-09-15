@@ -101,6 +101,8 @@
                    key_field="filename" value_field="filename">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
+            <field name="offset" type="text" size="10" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"/>
         </fieldset>
         <fieldset name="FILTERS">
 
