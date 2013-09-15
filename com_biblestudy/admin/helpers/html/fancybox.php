@@ -43,6 +43,7 @@ abstract class JHtmlFancybox
 		}
 
 		JHtml::_('jquery.framework');
+		JHtml::_('jwplayer.framework');
 		JHtml::script('media/com_biblestudy/fancybox/jquery.fancybox.pack.js');
 		JHtml::script('media/com_biblestudy/js/fancybox.js');
 

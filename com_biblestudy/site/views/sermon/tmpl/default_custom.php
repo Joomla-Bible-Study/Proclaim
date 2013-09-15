@@ -34,7 +34,6 @@ JHTML::_('behavior.tooltip');
 $params = $this->item->params;
 $admin_params = $this->item->admin_params;
 $document = JFactory::getDocument();
-$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
 $row = $this->studydetails;
 ?>
