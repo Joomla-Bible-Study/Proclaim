@@ -593,12 +593,13 @@ class JBSMElements
 		}
 		if (!isset($row->media_minutes))
 		{
-			$row->media_minutes = '00';
+			$row->media_minutes = '45';
 		}
 		if (!isset($row->media_seconds))
 		{
 			$row->media_seconds = '00';
 		}
+
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
 
 		if (!$duration)
@@ -659,41 +660,51 @@ class JBSMElements
 
 			return $date;
 		}
+		$offset = $params->get('offset', 'false');
+
+		if ($offset == 'false')
+		{
+			$offset = false;
+		}
+		elseif ($offset == 'true')
+		{
+			$offset = true;
+		}
 
 		switch ($params->get('date_format'))
 		{
 			case 0:
-				$date = JHTML::date($studydate, "M j, Y");
+				$date = JHTML::date($studydate, "M j, Y", $offset);
 				break;
 			case 1:
-				$date = JHTML::date($studydate, "M J");
+				$date = JHTML::date($studydate, "M J", $offset);
 				break;
 			case 2:
-				$date = JHTML::date($studydate, "n/j/Y");
+				$date = JHTML::date($studydate, "n/j/Y", $offset);
 				break;
 			case 3:
-				$date = JHTML::date($studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j", $offset);
 				break;
 			case 4:
-				$date = JHTML::date($studydate, "l, F j, Y");
+				$date = JHTML::date($studydate, "l, F j, Y", $offset);
 				break;
 			case 5:
-				$date = JHTML::date($studydate, "F j, Y");
+				$date = JHTML::date($studydate, "F j, Y", $offset);
 				break;
 			case 6:
-				$date = JHTML::date($studydate, "j F Y");
+				$date = JHTML::date($studydate, "j F Y", $offset);
 				break;
 			case 7:
-				$date = JHTML::date($studydate, "j/n/Y");
+				$date = JHTML::date($studydate, "j/n/Y", $offset);
 				break;
 			case 8:
-				$date = JHTML::date($studydate, JText::_('DATE_FORMAT_LC'));
+				$date = JHTML::date($studydate, JText::_('DATE_FORMAT_LC'), $offset);
 				break;
 			case 9:
-				$date = JHTML::date($studydate, "Y/M/D");
+				$date = JHTML::date($studydate, "Y/M/D", $offset);
 				break;
 			default:
-				$date = JHTML::date($studydate, "n/j");
+				$date = JHTML::date($studydate, "n/j", $offset);
 				break;
 		}
 
@@ -701,7 +712,7 @@ class JBSMElements
 
 		if ($customDate != '')
 		{
-			$date = JHTML::date($studydate, $customDate);
+			$date = JHTML::date($studydate, $customDate, $offset);
 		}
 
 		return $date;
@@ -851,6 +862,7 @@ class JBSMElements
 	{
 		// @todo not sure if we should be loading parameter. ?bcc to Tom
 		jimport('joomla.html.parameter');
+		$getMedia = new JBSMMedia;
 		jimport('joomla.application.component.helper');
 
 		if (!isset($row->id))
@@ -910,101 +922,17 @@ class JBSMElements
 			$registry = new JRegistry;
 			$registry->loadString($media->params);
 			$itemparams = $registry;
-			$input      = new JInput;
-			$Itemid     = $input->get('Itemid', '1', 'int');
-			$template   = $input->get('t', '1', 'int');
 			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
+			$player     = $getMedia->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+
 			$mediatable .= '<td>';
 
 			// @todo - not sure how much of this is needed and how much id redundant of Media.class file. TOM
 			$filesize = $this->getFilesize($media->size);
 
-			// This one IS needed
-			$duration = $this->getDuration($params, $row);
-			$mimetype = $media->mimetext;
-			$src      = JURI::base() . $image->path;
-			$height   = $image->height;
-			$width    = $image->width;
-
-			$playerwidth  = $params->get('player_width');
-			$playerheight = $params->get('player_height');
-
-			if ($itemparams->get('playerheight'))
-			{
-				$playerheight = $itemparams->get('playerheight');
-			}
-			if ($itemparams->get('playerwidth'))
-			{
-				$playerwidth = $itemparams->get('playerwidth');
-			}
-			$playerwidth  = $playerwidth + 20;
-			$playerheight = $playerheight + $params->get('popupmargin', '50');
-
-			/* Players - from Template:
-			   media_player = internal player for all files
-			   useravr = use avr for all files
-			   useav = use All Videos plugin for all files
-			   popuptype = whether AVR should be window or lightbox (handled in avr code)
-			   media_player = use internal player for all files
-			   internal_popup = whether direct or internal player should be popup or inline
-			   From media file:
-			   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
-			   internal_popup 0 = inline 1 = popup, 2 = global settings */
-
-			$playertype = 0;
-
-			if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
-			{
-				$playertype = 1;
-			}
-
-			if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
-			{
-				$playertype = 2;
-			}
-
-			if ($params->get('useav') == 1 || $itemparams->get('player') == 3)
-			{
-				$playertype = 3;
-			}
-			// $item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
-			$item           = $itemparams->get('internal_popup');
-			$internal_popup = $params->get('internal_popup', 0);
-
-			if ($item < 3)
-			{
-				$type = $internal_popup;
-			}
-			else
-			{
-				$type = $item;
-			}
-			$media1_link          = null;
-			$jbsmedia             = new JBSMMedia;
-			$player               = new stdClass;
-			$player->type         = $media->link_type;
-			$player->playerheight = $playerheight;
-			$player->playerwidth  = $playerwidth;
-			$player->player       = $playertype;
-			$media1_link          = $jbsmedia->getPlayerCode($params, $itemparams, $player, $image, $media);
-
-
-			if ($media->docMan_id > 0)
-			{
-				$media1_link = $this->getDocman($media, $width, $height, $src, $duration, $filesize);
-			}
-			if ($media->article_id > 0)
-			{
-				$media1_link = $this->getArticle($media, $width, $height, $src);
-			}
-			if ($media->virtueMart_id > 0)
-			{
-				$media1_link = $this->getVirtuemart($media, $width, $height, $src, $params);
-			}
-
-			// Here is where we begin to build the mediatable variable
-			// Here we test to see if docMan or article is used
+			// To pass to Player Code
+			$media1_link = $getMedia->getPlayerCode($params, $itemparams, $player, $image, $media);
 
 			$link_type = $media->link_type;
 
@@ -1088,8 +1016,6 @@ class JBSMElements
 	 * @param   int    $filesize  File Size of Doc
 	 *
 	 * @return string
-	 *
-	 * @todo Duplicate of media.php line 716
 	 */
 	public function getDocman($media, $width, $height, $src, $duration, $filesize)
 	{
@@ -1110,8 +1036,6 @@ class JBSMElements
 	 * @param   string $src     URL of image
 	 *
 	 * @return string
-	 *
-	 * @todo Duplicate of media.php line 739
 	 */
 	public function getArticle($media, $width, $height, $src)
 	{
@@ -1132,8 +1056,6 @@ class JBSMElements
 	 * @param   object $params  Item Params
 	 *
 	 * @return string
-	 *
-	 * @todo Duplicate of media.php line 761 need to combine bcc
 	 */
 	public function getVirtuemart($media, $width, $height, $src, $params)
 	{
@@ -1153,29 +1075,29 @@ class JBSMElements
 	 *
 	 * @return object
 	 */
-//	public function getMediaRows($study_id)
-//	{
-//		$database = JFactory::getDBO();
-//		$query    = $database->getQuery(true);
-//		$query->select('SELECT #_bsms_mediafiles.*,'
-//		. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
-//		. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
-//		. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
-//		. ' #_bsms_media.media_alttext AS malttext,'
-//		. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
-//			->from('#_bsms_mediafiles')
-//			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
-//			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
-//			->leftJoin('#_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)')
-//			->leftJoin('#_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)')
-//			->where('#_bsms_mediafiles.study_id = ' . $study_id)
-//			->where('#_bsms_mediafiles.published = ' . 1)
-//			->order('ordering asc, #_bsms_mediafiles.mime_type asc');
-//		$database->setQuery($query);
-//		$mediaRows = $database->loadObjectList();
-//
-//		return $mediaRows;
-//	}
+	public function getMediaRows($study_id)
+	{
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('SELECT #_bsms_mediafiles.*,'
+		. ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
+		. ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
+		. ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
+		. ' #_bsms_media.media_alttext AS malttext,'
+		. ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext')
+			->from('#_bsms_mediafiles')
+			->leftJoin('#_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)')
+			->leftJoin('#_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)')
+			->leftJoin('#_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)')
+			->leftJoin('#_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)')
+			->where('#_bsms_mediafiles.study_id = ' . $study_id)
+			->where('#_bsms_mediafiles.published = ' . 1)
+			->order('ordering asc, #_bsms_mediafiles.mime_type asc');
+		$database->setQuery($query);
+		$mediaRows = $database->loadObjectList();
+
+		return $mediaRows;
+	}
 
 	/**
 	 * Get Store
@@ -1244,6 +1166,8 @@ class JBSMElements
 
 			if ($dvd->mid > 0)
 			{
+				$src = JURI::base() . $dvd->media_image_path;
+
 				if ($imagew)
 				{
 					$width = $imagew;
@@ -1301,6 +1225,10 @@ class JBSMElements
 
 		if ($filepathresults)
 		{
+			if ($filepathresults->spath == 'localhost')
+			{
+				$filepathresults->spath = JUri::base();
+			}
 			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
 			$filepath = JBSMRoute::addScheme($filepath);
 		}

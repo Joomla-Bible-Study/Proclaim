@@ -17,7 +17,9 @@ $ismodule = 1;
 $JBSMListing = new JBSMListing;
 ?>
 <div id="biblestudy" class="noRefTagger">
-	<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
+	<?php if($params->get('pageheader') != '<div>&nbsp;</div>') : ?>
+		<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
+	<?php endif; ?>
 	<!-- This div is the container for the whole page -->
 	<table id="bsmsmoduletable">
 		<?php

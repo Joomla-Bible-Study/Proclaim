@@ -290,7 +290,7 @@ class PlgSystemjbsbackup extends JPlugin
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';
-		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
+		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2 = '';
 
 		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';

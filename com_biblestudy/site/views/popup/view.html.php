@@ -111,7 +111,6 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$document = JFactory::getDocument();
 
-		// @todo need to make work with ssl confections.
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
@@ -156,17 +155,18 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
+
 		if ($this->media->spath == 'localhost')
 		{
-			$this->path1 = JURI::base() . $this->media->fpath . $this->media->filename;
+			$this->media->spath = JUri::base() . '/';
 		}
-		else
+		$this->path1            = $this->media->spath . $this->media->fpath . $this->media->filename;
+
+		if (!substr_count($this->path1, '://'))
 		{
-			$this->path1 = $this->media->spath . $this->media->fpath . $this->media->filename;
+			$protocol = $this->params->get('protocol', 'http://');
+			$this->path1     = $protocol . $this->path1;
 		}
-
-		$this->path1 = JBSMRoute::addScheme($this->path1);
-
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');
 

@@ -72,7 +72,6 @@ class JBSMMedia
 
 	/**
 	 * Get Media File
-	 * for files out side of the Video/Audio system.
 	 *
 	 * @param   object    $media         Media info
 	 * @param   JRegistry $params        Item Params
@@ -492,7 +491,7 @@ class JBSMMedia
 		switch ($item_playertype)
 		{
 			case 3:
-				$player->type = $param_playertype;
+				$player->type = (int) $param_playertype;
 				break;
 
 			case 2:
@@ -578,7 +577,9 @@ class JBSMMedia
 	 *
 	 * @param   object $params      System Params
 	 * @param   object $itemparams  Item Params //@todo need to merge with $params
-	 * @param   object $player      Player code
+	 * @param   object $player      Player code:
+	 *                              player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+	 *                              internal_popup 0 = inline 1 = popup, 2 = global settings
 	 * @param   object $image       Image info
 	 * @param   object $media       Media
 	 *
@@ -597,47 +598,68 @@ class JBSMMedia
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
 
+		// To allow for helpers.
+		JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+
+		if ($media->spath == 'localhost')
+		{
+			$media->spath = JUri::base();
+		}
+
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
-		/**
-		 * @todo There is no $row referenced to this function so this will fail
-		 */
 
 		// This one IS needed
 		$duration = $JBSMElements->getDuration($params, $media);
 
 		$mimetype = $media->mimetext;
-
-		if ($media->spath == 'localhost')
-		{
-			$path = JURI::base() . $media->fpath . $media->filename;
-		}
-		else
-		{
-			$path = $media->spath . $media->fpath . $media->filename;
-		}
+		$path     = $media->spath . $media->fpath . $media->filename;
 
 		if (!isset($media->malttext))
 		{
 			$media->malttext = '';
 		}
-		$path = JBSMRoute::addScheme($path, $params->get('protocol', 'http://'));
+		if (!substr_count($path, '://'))
+		{
+			$protocol = $params->get('protocol', 'http://');
+			$path     = $protocol . $path;
+		}
+
+		/* Players - from Template:
+		   media_player = internal player for all files
+		   useravr = use avr for all files
+		   useav = use All Videos plugin for all files
+		   popuptype = whether AVR should be window or lightbox (handled in avr code)
+		   media_player = use internal player for all files
+		   internal_popup = whether direct or internal player should be popup or inline
+		   From media file:
+		   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+		   internal_popup 0 = inline 1 = popup, 2 = global settings */
 
 		switch ($player->player)
 		{
-
 			case 0: // Direct
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = "<a title='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' class='fancybox fancybox.iframe fancybox.gallery' href='" . $path . "' \">
+						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
+
+						return $playercode;
+						break;
 
 					case 2: // New window
-
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' .
 							$media->special . '"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
 							' ' . $filesize . '" width="' . $width . '" height="' . $height . '" border="0" /></a>';
+
+						return $playercode;
 						break;
 
 					case 1: // Popup window
@@ -645,36 +667,47 @@ class JBSMMedia
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 1: // Internal
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" rel="width="' .
+							$player->playerwidth . '" height="' . $player->playerheight .
+							'"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							' ' . $filesize . '" width= "' . $width . '" height="' . $height . '" border="0" /></a>';
+
+						return $playercode;
+						break;
+
 					case 2: // Inline
+						JHtml::_('jwplayer.framework');
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
-    jwplayer('placeholder').setup({
-	    'file' : '<?php echo $path; ?>',
-	    'height' : '<?php echo $height; ?>',
-	    'width' : '<?php echo $width; ?>',
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
-        'backcolor':'<?php echo $backcolor; ?>',
-        'frontcolor':'<?php echo $frontcolor; ?>',
-        'lightcolor':'<?php echo $lightcolor; ?>',
-        'screencolor':'<?php echo $screencolor; ?>',
-    });
-</script>";
+								    jwplayer('placeholder').setup({
+									    'file' : '" . $path . "',
+									    'height' : '" . $player->playerheight . "',
+									    'width' : '" . $player->playerwidth . "',
+								        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+								        'flashplayer':'media/com_biblestudy/player/jwplayer.flash.swf',
+								        'backcolor':'" . $backcolor . "',
+								        'frontcolor':'" . $frontcolor . "',
+								        'lightcolor':'" . $lightcolor . "',
+								        'screencolor':'" . $screencolor . "',
+								    });
+								</script>";
+
+						return $playercode;
 						break;
 
 					case 1: // Popup
-
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
@@ -683,12 +716,10 @@ class JBSMMedia
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 2: // All Videos Reloaded
@@ -701,17 +732,18 @@ class JBSMMedia
 							. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
 							"' alt='" . $media->malttext . "' /></a>";
+
+						return $playercode;
 						break;
 
 					case 2: // This plays the video inline
 						$mediacode  = $this->getAVmediacode($media->mediacode, $media);
 						$playercode = JHTML::_('content.prepare', $mediacode);
+
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 4: // Docman
@@ -763,14 +795,27 @@ class JBSMMedia
 				break;
 
 			case 8: // Embed code
+				switch ($player->type)
+				{
+					case 3:
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = "<a class='fancybox fancybox-media' href='" . $media->mediacode . "' rel='width='" .
+							$player->playerwidth . "' height='" . $player->playerheight .
+							"'><img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
+							. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
 
-				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
-					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-					. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
-					. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+						return $playercode;
+						break;
+					case 2:
+					case 1:
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
+							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
+							. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
+							. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
 
-				return $playercode;
-				break;
+						return $playercode;
+						break;
+				}
 		}
 
 		return false;
