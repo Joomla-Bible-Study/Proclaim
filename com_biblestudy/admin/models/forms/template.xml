@@ -322,7 +322,7 @@
                 <option value="0">JBS_TPL_HIDE_LINK</option>
                 <option value="1">JBS_TPL_SHOW_LINK</option>
             </field>
-            <field name="showpodcastsubscribelist" type="list" default="1"
+            <field name="showpodcastsubscribelist" type="list" default="0"
                    label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>

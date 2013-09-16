@@ -29,14 +29,18 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
 class JBSMListing extends JBSMElements
 {
     /**
-     * Get Fluid Listing
-     *
+     * @param $items
+     * @param $params
+     * @param $admin_params
+     * @param $template
+     * @return string
      */
     public function getFluidListing($items, $params, $admin_params, $template)
     {
-        //$row = new stdClass;
-        $list = null;
-        $header = $this->getFluidHeader($items[0]);
+        $list = '';
+        $row = array();
+        $this->params = $params;
+
         foreach ($items as $item)
         {
             $mediatemp = array();
@@ -73,7 +77,62 @@ class JBSMListing extends JBSMElements
         $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
         $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
-        // next we go through and attach the media files as an array to their study
+        //create an array from each param variable set
+        $listparams = array();
+        if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
+        if ($params->get('scripture2row') > 0){$listparams[]= $this->getListParamsArray('scripture2');}
+        if ($params->get('secondaryrow') > 0){$listparams[]= $this->getListParamsArray('secondary');}
+        if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
+        if ($params->get('titlerow') > 0){$listparams[]= $this->getListParamsArray('title');}
+        if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
+        if ($params->get('teacherrow') > 0){$listparams[]= $this->getListParamsArray('teacher');}
+        if ($params->get('teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('teacher-title');}
+        if ($params->get('durationrow') > 0){$listparams[]= $this->getListParamsArray('duration');}
+        if ($params->get('studyintrorow') > 0){$listparams[]= $this->getListParamsArray('studyintro');}
+        if ($params->get('seriesrow') > 0){$listparams[]= $this->getListParamsArray('series');}
+        if ($params->get('seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('seriesdescription');}
+        if ($params->get('seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('seriesthumbnail');}
+        if ($params->get('submittedrow') > 0){$listparams[]= $this->getListParamsArray('submitted');}
+        if ($params->get('hitsrow') > 0){$listparams[]= $this->getListParamsArray('hits');}
+        if ($params->get('downloadsrow') > 0){$listparams[]= $this->getListParamsArray('downloads');}
+        if ($params->get('studynumberrow') > 0){$listparams[]= $this->getListParamsArray('studynumber');}
+        if ($params->get('topicrow') > 0){$listparams[]= $this->getListParamsArray('topic');}
+        if ($params->get('locationsrow') > 0){$listparams[]= $this->getListParamsArray('locations');}
+        if ($params->get('jbsmediarow') > 0){$listparams[]= $this->getListParamsArray('jbsmedia');}
+        if ($params->get('messagetyperow') > 0){$listparams[]= $this->getListParamsArray('messagetype');}
+        if ($params->get('thumbnailrow') > 0){$listparams[]= $this->getListParamsArray('thumbnail');}
+
+        $row1 = array();
+        $row2 = array();
+        $row3 = array();
+        $row4 = array();
+        $row5 = array();
+        $row6 = array();
+        $row1sorted = array();
+        $row2sorted = array();
+        $row3sorted = array();
+        $row4sorted = array();
+        $row5sorted = array();
+        $row6sorted = array();
+        //Create an array sorted by row and then by column
+        foreach ($listparams as $listing)
+        {
+            if ($listing->row == 1){$row1[] = $listing;}
+            if ($listing->row == 2){$row2[] = $listing;}
+            if ($listing->row == 3){$row3[] = $listing;}
+            if ($listing->row == 4){$row4[] = $listing;}
+            if ($listing->row == 5){$row5[] = $listing;}
+            if ($listing->row == 6){$row6[] = $listing;}
+        }
+        if (count($row1)){$row1sorted = $this->sortArrayofObjectByProperty($row1,'col',$order="ASC");}
+        if (count($row2)){$row2sorted = $this->sortArrayofObjectByProperty($row2,'col',$order="ASC");}
+        if (count($row3)){$row3sorted = $this->sortArrayofObjectByProperty($row3,'col',$order="ASC");}
+        if (count($row4)){$row4sorted = $this->sortArrayofObjectByProperty($row4,'col',$order="ASC");}
+        if (count($row5)){$row5sorted = $this->sortArrayofObjectByProperty($row5,'col',$order="ASC");}
+        if (count($row6)){$row6sorted = $this->sortArrayofObjectByProperty($row6,'col',$order="ASC");}
+        $listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
+
+        // Go through and attach the media files as an array to their study
         foreach ($items as $item)
         {
             $studymedia = array();
@@ -87,17 +146,39 @@ class JBSMListing extends JBSMElements
             if (isset($studymedia))
             {
                 $item->mediafiles = $studymedia;
-                $row[]= $this->getFluidRow($item, $params, $admin_params, $template);
             }
+            $row[]= $this->getFluidRow($item, $params, $admin_params, $template, $listrows);
         }
-
+        if ($params->get('use_headers_list') > 0){$list .= $this->getFluidHeader($items[0], $listrows);}
+        foreach ($row as $key=>$value)
+        {
+            $list .= $value;
+        }
         return $list;
     }
 
+
+    /**
+     * @param $paramtext
+     * @return stdClass
+     */
+    public function getListParamsArray($paramtext)
+    {
+        $l = new stdClass();
+        $l->row = $this->params->get($paramtext.'row');
+        $l->col = $this->params->get($paramtext.'col');
+        $l->colspan = $this->params->get($paramtext.'colspan');
+        $l->rowspan = $this->params->get($paramtext.'rowspan');
+        $l->element = $this->params->get($paramtext.'element');
+        $l->custom = $this->params->get($paramtext.'custom');
+        $l->linktype = $this->params->get($paramtext.'linktype');
+        $l->name = $paramtext;
+        return $l;
+    }
     /**
      * Get Header
      */
-    public function getFluidHeader($item)
+    public function getFluidHeader($item, $listrows)
     {
         $header = null;
         return $header;
@@ -106,10 +187,75 @@ class JBSMListing extends JBSMElements
     /**
      * Get Fluid Row
      */
-    public function getFluidRow($item, $params, $admin_params, $template)
+    public function getFluidRow($item, $params, $admin_params, $template, $listrows)
     {
-        $row = null;
+        $row = '<div class="row-fluid">';
+        foreach ($listrows as $row)
+        {
+            //match the data in $item to a row/col in $row->name
+        }
+        $row = '</div>';
         return $row;
+    }
+
+    /**
+     * @param $array
+     * @param $property
+     * @param string $order
+     * @return array
+     */
+    function sortArrayofObjectByProperty($array,$property,$order="ASC")
+    {
+        $cur = 1;
+        $stack[1]['l'] = 0;
+        $stack[1]['r'] = count($array)-1;
+
+        do
+        {
+            $l = $stack[$cur]['l'];
+            $r = $stack[$cur]['r'];
+            $cur--;
+
+            do
+            {
+                $i = $l;
+                $j = $r;
+                $tmp = $array[(int)( ($l+$r)/2 )];
+
+                // split the array in to parts
+                // first: objects with "smaller" property $property
+                // second: objects with "bigger" property $property
+                do
+                {
+                    while( $array[$i]->{$property} < $tmp->{$property} ) $i++;
+                    while( $tmp->{$property} < $array[$j]->{$property} ) $j--;
+
+                    // Swap elements of two parts if necesary
+                    if( $i <= $j)
+                    {
+                        $w = $array[$i];
+                        $array[$i] = $array[$j];
+                        $array[$j] = $w;
+
+                        $i++;
+                        $j--;
+                    }
+
+                } while ( $i <= $j );
+
+                if( $i < $r ) {
+                    $cur++;
+                    $stack[$cur]['l'] = $i;
+                    $stack[$cur]['r'] = $r;
+                }
+                $r = $j;
+
+            } while ( $l < $r );
+
+        } while ( $cur != 0 );
+        // Added ordering.
+        if($order == "DESC"){ $array = array_reverse($array); }
+        return $array;
     }
     /**
 	 * Get listing
