@@ -153,5 +153,3 @@ function ReverseDisplay2(d) {
         document.getElementById(d).style.display = "none";
     }
 }
-
-

@@ -132,11 +132,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$this->admin_params = $registry;
 		$document           = JFactory::getDocument();
 		$uri                = new JUri;
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		JHtml::_('jquery.framework');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
 		// Import Stylesheets
 		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
