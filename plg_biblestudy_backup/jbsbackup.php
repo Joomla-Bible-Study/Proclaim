@@ -85,7 +85,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   JRegistry $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -116,7 +116,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   JRegistry $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -260,8 +260,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   JRegistry  $params    Component Paramas
-	 * @param   string     $dobackup  File of Backup
+	 * @param   JRegistry $params    Component Paramas
+	 * @param   string    $dobackup  File of Backup
 	 *
 	 * @return void
 	 */
@@ -292,24 +292,24 @@ class PlgSystemjbsbackup extends JPlugin
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
+		$sender = array(
+			$mailfrom,
+			$fromname);
+		$mail->setSender($sender);
 		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . $date . '<br />';
+		$Body .= JText::_('Process run at: ') . JHtml::date($input = 'now', 'm/d/Y h:i:s a', false) . '<br />';
 		$Body .= '';
 		$Body .= $msg;
 		$Subject = $params->def('subject', JText::_('PLG_JBSBACKUP_REPORT'));
 
-		$recipients = explode(",", $params->get('recipients'));
+		$recipients = explode(',', $params->get('recipients'));
 
-		if (count($recipients) < 1)
+		if ($recipients[0] != ' ')
 		{
-			$recipients    = array();
-			$recipients[0] = $mailfrom;
+			$recipients = array(
+				$config->get('config.mailfrom'));
 		}
-
-		foreach ($recipients AS $recipient)
-		{
-			$mail->addRecipient($recipient);
-		}
+		$mail->addRecipient($recipients);
 
 		$mail->setSubject($Subject . ' ' . $livesite);
 		$mail->setBody($Body);
@@ -327,7 +327,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Update files
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   JRegistry $params  ?
 	 *
 	 * @return void
 	 */
