@@ -304,7 +304,7 @@ class PlgSystemjbsbackup extends JPlugin
 
 		$recipients = explode(',', $params->get('recipients'));
 
-		if ($recipients[0] != ' ')
+		if ($recipients == false)
 		{
 			$recipients = array(
 				$config->get('config.mailfrom'));
