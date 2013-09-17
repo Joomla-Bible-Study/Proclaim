@@ -44,6 +44,12 @@ class JFormFieldSpanOptions extends JFormFieldList
         $options[] = JHtml::_('select.option', '4', 4);
         $options[] = JHtml::_('select.option', '5', 5);
         $options[] = JHtml::_('select.option', '6', 6);
+        $options[] = JHtml::_('select.option', '6', 7);
+        $options[] = JHtml::_('select.option', '6', 8);
+        $options[] = JHtml::_('select.option', '6', 9);
+        $options[] = JHtml::_('select.option', '6', 10);
+        $options[] = JHtml::_('select.option', '6', 11);
+        $options[] = JHtml::_('select.option', '6', 12);
         $options   = array_merge(parent::getOptions(), $options);
 
         return $options;
