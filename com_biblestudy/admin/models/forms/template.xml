@@ -679,11 +679,11 @@
             <field name="topiclinktype" type="linkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field name="locationsrow" type="rowoptions" size="1" default="1" label="JBS_TPL_LOCATIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="locationscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
-            <field name="locationrowspan" type="spanoptions" default="0" label="JBS_TPL_ROWSPAN" description="JBS_TPL_ROWSPAN_DESC" />
-            <field name="locationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
-            <field name="locationelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
-            <field name="locationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMERCLASS_DESC" />
-            <field name="locationlinktype" type="linkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="locationsrowspan" type="spanoptions" default="0" label="JBS_TPL_ROWSPAN" description="JBS_TPL_ROWSPAN_DESC" />
+            <field name="locationscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="locationselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMERCLASS_DESC" />
+            <field name="locationslinktype" type="linkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS6" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="jbsmediarow" type="rowoptions" size="1" default="1" label="JBS_TPL_JBSMEDIAROW" description="JBS_TPL_ROW_DESC" />

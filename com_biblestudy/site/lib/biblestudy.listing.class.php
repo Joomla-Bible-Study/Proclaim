@@ -189,12 +189,122 @@ class JBSMListing extends JBSMElements
      */
     public function getFluidRow($item, $params, $admin_params, $template, $listrows)
     {
+        $element = new JBSMElements();
         $row = '<div class="row-fluid">';
         foreach ($listrows as $row)
         {
             //match the data in $item to a row/col in $row->name
+            switch ($item->name)
+            {
+                case 'scripture1':
+                    $esv = 0;
+                    $scripturerow          = 1;
+                    $data = $element->getScripture($params, $row, $esv, $scripturerow);
+                    break;
+                case 'scripture2':
+                    $esv = 0;
+                    $scripturerow          = 2;
+                    $data = $element->getScripture($params, $row, $esv, $scripturerow);
+                    break;
+                case 'secondary':
+                    $data = $item->secondary;
+                    break;
+                case 'title':
+                    $data = $item->studytitle;
+                    break;
+                case 'date':
+                    $data = $element->getstudyDate($params, $row->studydate);
+                    break;
+                case 'teacher':
+                    if (isset($item->teachername)){$data = $item->teachername;}
+                    break;
+                case 'teacher-title':
+                    if (isset($item->teachertitle) && isset($item->teachername))
+                    {
+                        $data = $item->teachertitle . ' ' . $item->teachername;
+                    }
+                    break;
+                case 'duration':
+                    $data = $element->getDuration($params, $item);
+                    break;
+                case 'studyintro':
+                    $data = $item->studyintro;
+                    break;
+                case 'series':
+                    $data = $item->series_text;
+                    break;
+                case 'seriesthumbnail':
+                    $data = '<img src="'.$item->series_thumbnail.'">';
+                    break;
+                case 'seriesdescription':
+                    $data = $item->sdescription;
+                    break;
+                case 'submitted':
+                    $data = $item->submitted;
+                    break;
+                case 'hits':
+                    $data = $item->hits;
+                    break;
+                case 'downloads':
+                    $data = $item->downloads;
+                    break;
+                case 'studynumber':
+                    $data = $item->studynumber;
+                    break;
+                case 'topic':
+                    if (substr_count($row->topics_text, ','))
+                    {
+                        $topics = explode(',', $item->topics_text);
+
+                        foreach ($topics as $key => $value)
+                        {
+                            $topics[$key] = JText::_($value);
+                        }
+                        $data = implode(', ', $topics);
+                    }
+                    else
+                    {
+                        $data = JText::_($item->topics_text);
+                    }
+                    break;
+                case 'locations':
+                    $data = $item->location_text;
+                    break;
+                case 'jbsmedia':
+                    //Not ready for this yet
+                    $data = '';
+                    break;
+                case 'messagetype':
+                    $data = $item->message_type;
+                    break;
+                case 'thumbnail':
+                    $data = '<img src="'.$item->thumbnailm.'">';
+                    break;
+            }
+            switch ($row->element)
+            {
+                case 1:
+                    $classelement = 'p';
+                    break;
+                case 2:
+                    $classelement = 'h1';
+                    break;
+                case 3:
+                    $classelement = 'h2';
+                    break;
+                case 4:
+                    $classelement = 'h3';
+                    break;
+                case 5:
+                    $classelement = 'h4';
+                    break;
+                case 6:
+                    $classelement = 'h5';
+                    break;
+            }
+            $row .= '<div class="'.$row->colspan.'"><div class=""><'.$classelement.'>'.$data.'</'.$classelement.'></div></div>';
         }
-        $row = '</div>';
+        $row .= '</div>';
         return $row;
     }
 
