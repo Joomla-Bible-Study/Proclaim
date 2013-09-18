@@ -310,7 +310,7 @@ class JBSMListing extends JBSMElements
                     break;
             }
             //See whether the element is a link to something and get the link from the function
-            $link = '';
+            $link = 0;
             if ($row->linktype > 0)
             {
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
