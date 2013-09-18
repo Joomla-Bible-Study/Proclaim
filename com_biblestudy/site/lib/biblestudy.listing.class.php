@@ -315,7 +315,7 @@ class JBSMListing extends JBSMElements
             {
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
-            $frow .= '<div class="'.$row->colspan.'"><div class=""><'.$classelement.'>';
+            $frow .= '<div class="span'.$row->colspan.'"><div class=""><'.$classelement.'>';
             if ($link)
             {
                 $frow .= $link;
