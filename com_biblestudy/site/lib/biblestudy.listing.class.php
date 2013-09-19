@@ -82,7 +82,6 @@ class JBSMListing extends JBSMElements
         if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
         if ($params->get('scripture2row') > 0){$listparams[]= $this->getListParamsArray('scripture2');}
         if ($params->get('secondaryrow') > 0){$listparams[]= $this->getListParamsArray('secondary');}
-        if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
         if ($params->get('titlerow') > 0){$listparams[]= $this->getListParamsArray('title');}
         if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
         if ($params->get('teacherrow') > 0){$listparams[]= $this->getListParamsArray('teacher');}
@@ -315,7 +314,16 @@ class JBSMListing extends JBSMElements
             {
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
-            $frow .= '<div class="span'.$row->colspan.'"><div class=""><'.$classelement.'>';
+            $rowspanitem = $params->get('rowspanitem');
+            $style = '';
+            $customclass = '';
+            if (isset($row->custom))
+            {
+                if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
+                else {$customclass = $row->custom;}
+            }
+
+            $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class=""><'.$classelement.' '.$style.'>';
             if ($link)
             {
                 $frow .= $link;
@@ -454,39 +462,16 @@ class JBSMListing extends JBSMElements
             return $scripture;
         }
         $show_verses = $params->get('show_verses');
-        $db          = JFactory::getDBO();
-        $query       = $db->getQuery(true);
-        $query->select('#__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid')
-            ->from('#__bsms_studies')
-            ->leftJoin('#__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)')
-            ->where('#__bsms_studies.id = ' . $row->id);
-        $db->setQuery($query);
-        $bookresults  = $db->loadObject();
-        $affectedrows = count($bookresults);
 
-        if ($affectedrows < 1)
-        {
-            return null;
-        }
-        $query = $db->getQuery(true);
-        $query->select('bookname, booknumber')->from('#__bsms_books')->where('booknumber = ' . $booknumber);
-        $db->setQuery($query);
-        $booknameresults = $db->loadObject();
-
-        if (!isset($booknameresults))
+        if (!isset($row->bookname))
         {
             $scripture = '';
 
             return $scripture;
         }
-        if ($booknameresults->bookname)
-        {
-            $book = JText::_($booknameresults->bookname);
-        }
-        else
-        {
-            $book = '';
-        }
+
+        $book = JText::_($row->bookname);
+
         $b1  = ' ';
         $b2  = ':';
         $b2a = ':';
