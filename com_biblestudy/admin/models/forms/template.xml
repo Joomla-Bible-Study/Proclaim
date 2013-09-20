@@ -548,6 +548,8 @@
                 <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
                 <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
             </field>
+            <field name="listcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC" />
+            <field name="listcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS1" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">

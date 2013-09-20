@@ -131,9 +131,17 @@ class JBSMListing extends JBSMElements
         if (count($row6)){$row6sorted = $this->sortArrayofObjectByProperty($row6,'col',$order="ASC");}
         $listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
 
+        if ($params->get('use_headers_list') > 0)
+        {
+            $list .= $this->getFluidHeader($items[0], $listrows);
+        }
+        $class1 = $params->get('listcolor1', '');
+        $class2 = $params->get('listcolor2', '');
+        $oddeven = $class1;
         // Go through and attach the media files as an array to their study
         foreach ($items as $item)
         {
+            $oddeven = ($oddeven == $class1) ? $class2 : $class1;
             $studymedia = array();
             foreach ($mediafiles as $mediafile)
             {
@@ -146,13 +154,14 @@ class JBSMListing extends JBSMElements
             {
                 $item->mediafiles = $studymedia;
             }
-            $row[]= $this->getFluidRow($item, $params, $admin_params, $template, $listrows);
+            $row[]= $this->getFluidRow($item, $params, $admin_params, $template, $listrows, $oddeven);
         }
-        if ($params->get('use_headers_list') > 0){$list .= $this->getFluidHeader($items[0], $listrows);}
+
         foreach ($row as $key=>$value)
         {
             $list .= $value;
         }
+
         return $list;
     }
 
@@ -185,14 +194,14 @@ class JBSMListing extends JBSMElements
     /**
      * Get Fluid Row
      */
-    public function getFluidRow($item, $params, $admin_params, $template, $listrows)
+    public function getFluidRow($item, $params, $admin_params, $template, $listrows, $oddeven)
     {
         $rowspanitem = $params->get('rowspanitem');
         $id3          = $item->id;
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
         $tid          = $item->teacher_id;
-        $frow = '<div class="row-fluid">';
+        $frow = '<div class="row-fluid " style="background-color:'.$oddeven.';">';
         foreach ($listrows as $row)
         {
             //match the data in $item to a row/col in $row->name
@@ -212,7 +221,7 @@ class JBSMListing extends JBSMElements
                     (isset($item->secondary) ? $item->secondary : '');
                     break;
                 case 'title':
-                    (isset($item->studytitle) ? $data = $item->studytitle : $data = '');
+                    (isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
                     break;
                 case 'date':
                     (isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
@@ -231,16 +240,16 @@ class JBSMListing extends JBSMElements
                     (isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');
                     break;
                 case 'studyintro':
-                    (isset($item->studyintro) ? $data = $item->studyintro : $data = '');
+                    (isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');
                     break;
                 case 'series':
-                    (isset($item->series_text) ? $data = $item->series_text : $data = '');
+                    (isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');
                     break;
                 case 'seriesthumbnail':
                     (isset($item->series_thumbnail) ? $data = '<img src="'.$item->series_thumbnail.'">' : $data = '');
                     break;
                 case 'seriesdescription':
-                    (isset($item->sdescription) ? $data = $item->sdescription : $data = '');
+                    (isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');
                     break;
                 case 'submitted':
                     (isset($item->submitted) ? $data = $item->submitted : $data = '');

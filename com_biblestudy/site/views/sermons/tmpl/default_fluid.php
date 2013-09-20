@@ -56,9 +56,11 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 
 </div><!-- .hero-unit -->
 <?php }?>
+
 <div class="container-fluid">
 
         <?php echo $this->page->dropdowns;?>
+        <hr />
         <?php $listing = new JBSMListing;
         $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
         echo $list;
