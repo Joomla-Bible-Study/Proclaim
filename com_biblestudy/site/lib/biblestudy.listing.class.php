@@ -100,6 +100,7 @@ class JBSMListing extends JBSMElements
         if ($params->get('jbsmediarow') > 0){$listparams[]= $this->getListParamsArray('jbsmedia');}
         if ($params->get('messagetyperow') > 0){$listparams[]= $this->getListParamsArray('messagetype');}
         if ($params->get('thumbnailrow') > 0){$listparams[]= $this->getListParamsArray('thumbnail');}
+        if ($params->get('teacherimagerrow') >0){$listparams[] = $this->getListParamsArray('teacherimage');}
 
         $row1 = array();
         $row2 = array();
@@ -196,12 +197,39 @@ class JBSMListing extends JBSMElements
      */
     public function getFluidRow($item, $params, $admin_params, $template, $listrows, $oddeven)
     {
+        $span = '';
         $rowspanitem = $params->get('rowspanitem');
-        $id3          = $item->id;
+        if ($rowspanitem)
+        {
+            switch ($rowspanitem)
+            {
+                case 1:
+                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    break;
+                case 2:
+                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    break;
+                case 3:
+                    (isset($item->studyintro) ? $span = $item->studyintro : $span = '');
+                    break;
+                case 4:
+                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+            }
+        }
+
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
-        $tid          = $item->teacher_id;
-        $frow = '<div class="row-fluid " style="background-color:'.$oddeven.';">';
+
+        $rowspanitemspan = $params->get('rowspanitemspan');
+        $rowspanbalance = 12 - $rowspanitemspan;
+        $frow = '';
+        if ($span)
+        {
+            $frow = '<div class="row-fluid" >';
+            $frow .= '<div class="span'.$rowspanitemspan.'"><div class="">'.$span.'</div></div>';
+            $frow .= '<div class="span'.$rowspanbalance.'">';
+        }
+        $frow .= '<div class="row-fluid " style="background-color:'.$oddeven.';">';
         foreach ($listrows as $row)
         {
             //match the data in $item to a row/col in $row->name
@@ -246,7 +274,7 @@ class JBSMListing extends JBSMElements
                     (isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');
                     break;
                 case 'seriesthumbnail':
-                    (isset($item->series_thumbnail) ? $data = '<img src="'.$item->series_thumbnail.'">' : $data = '');
+                    (isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');
                     break;
                 case 'seriesdescription':
                     (isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');
@@ -293,7 +321,10 @@ class JBSMListing extends JBSMElements
                     (isset($item->messaget_type) ? $data = $item->message_type : $data = '');
                     break;
                 case 'thumbnail':
-                    (isset($item->thumbnailm) ? $data = '<img src="'.$item->thumbnailm.'">' : $data = '');
+                    (isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');
+                    break;
+                case 'teacherimage':
+                    (isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');
                     break;
             }
             switch ($row->element)
@@ -323,7 +354,7 @@ class JBSMListing extends JBSMElements
             {
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
-            $rowspanitem = $params->get('rowspanitem');
+
             $style = '';
             $customclass = '';
             if (isset($row->custom))
@@ -345,6 +376,7 @@ class JBSMListing extends JBSMElements
             $frow .= '</'.$classelement.'></div></div>';
         }
         $frow .= '</div>';
+        if ($span){$frow .= '</div></div>';}
         return $frow;
     }
 

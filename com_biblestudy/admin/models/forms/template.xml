@@ -559,6 +559,11 @@
                 <option value="3">JBS_TPL_DESCRIPTION</option>
                 <option value="4">JBS_TPL_SERIESIMAGE</option>
             </field>
+            <field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_ROWSPANITEMSPAN" description="JBS_TPL_ROWSPANITEM_DESC" />
+            <field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
+                <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
+                <option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
+            </field>
             <field name="scripture1row" type="rowoptions" default="1" label="JBS_TPL_SCRIPTURE1ROW" description="JBS_TPL_ROW_DESC" />
             <field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="scripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
@@ -596,6 +601,12 @@
             <field name="teachercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="teacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMERCLASS_DESC" />
+            <field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="teacherimagerrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="teacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="teacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="teacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMERCLASS_DESC" />
             <field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field name="teacher-titlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHER-TITLEROW" description="JBS_TPL_ROW_DESC" />
             <field name="teacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
