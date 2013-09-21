@@ -556,13 +556,17 @@
                 <option value="0">JBS_TPL_NO_ITEM</option>
                 <option value="1">JBS_TPL_TEACHERAIMGE</option>
                 <option value="2">JBS_TPL_STUDYIMAGE</option>
-                <option value="3">JBS_TPL_DESCRIPTION</option>
-                <option value="4">JBS_TPL_SERIESIMAGE</option>
+                <option value="3">JBS_TPL_SERIESIMAGE</option>
             </field>
             <field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_ROWSPANITEMSPAN" description="JBS_TPL_ROWSPANITEM_DESC" />
             <field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
+                <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
                 <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
                 <option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
+            </field>
+            <field name="rowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL" description="JBS_TPL_ROWSPANITEMPULL_DESC">
+                <option value="pull-left">JBS_TPL_PULLLEFT</option>
+                <option value="pull-right">JBS_TPL_PULLRIGHT</option>
             </field>
             <field name="scripture1row" type="rowoptions" default="1" label="JBS_TPL_SCRIPTURE1ROW" description="JBS_TPL_ROW_DESC" />
             <field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />

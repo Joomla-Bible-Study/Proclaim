@@ -20,6 +20,14 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 ?>
 
 <div class="container-fluid">
+    <div id="bsheader">
+        <?php
+        if ($this->params->get('showpodcastsubscribelist') == 1)
+        {
+            echo $this->subscribe;
+        }
+        ?>
+    </div>
 <?php if ($this->params->get('intro_show') > 0)
 { ?>
 <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
@@ -65,54 +73,19 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
         $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
         echo $list;
         ?>
-
-</div>
-<div class="container-fluid">
-
-    <div class="row-fluid">
-        <div class="span4">
-            <h2>Box Number 1</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn" href="#">Click meeee &raquo;</a></p>
-        </div><!-- .span4 -->
-
-        <div class="span4">
-            <h2>Box Number 2</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn" href="#">Click meeee &raquo;</a></p>
-        </div><!-- .span4 -->
-
-        <div class="span4">
-            <h2>Box Number 3</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn" href="#">Click meeee &raquo;</a></p>
-        </div><!-- .span4 -->
-
-    </div><!-- .row -->
-
-    <div class="row-fluid ">
-        <div class="span4"><div class=""><img src="<?php echo JURI::base();?>/tom.jpg"></div></div>
-        <div class="span8">
-            <div class="row-fluid ">
-                <div class="span6"><div class="">2</div></div>
-                <div class="span6"><div class="">3</div></div>
-            </div>
-            <div class="row-fluid ">
-                <div class="span6"><div class="">4</div></div>
-                <div class="span6"><div class="">5</div></div>
-            </div>
-        </div>
+    <div class="listingfooter pagination">
+        <?php
+        if ($this->params->get('show_pagination') == 2)
+        {
+            echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+        }
+        echo $this->pagination->getPageslinks();
+        ?>
     </div>
-    <div class="row-fluid ">
-        <div class="span4">
-            <div class="">6</div>
-        </div>
-        <div class="span4">
-            <div class="">6</div>
-        </div>
-        <div class="span4">
-            <div class="">6</div>
-        </div>
-    </div>
-</div><!-- .container -->
+    <?php
+    if ($this->params->get('showpodcastsubscribelist') == 2)
+    {
+        echo $this->subscribe;
+    }
+    ?>
 </div>

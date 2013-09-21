@@ -134,7 +134,7 @@ class JBSMListing extends JBSMElements
 
         if ($params->get('use_headers_list') > 0)
         {
-            $list .= $this->getFluidHeader($items[0], $listrows);
+            $list .= $this->getFluidHeader($items[0], $params, $admin_params, $template, $listrows);
         }
         $class1 = $params->get('listcolor1', '');
         $class2 = $params->get('listcolor2', '');
@@ -186,10 +186,130 @@ class JBSMListing extends JBSMElements
     /**
      * Get Header
      */
-    public function getFluidHeader($item, $listrows)
+    public function getFluidHeader($item, $params, $admin_params, $template, $listrows)
     {
         $header = null;
-        return $header;
+        $span = '';
+        $rowspanitem = $params->get('rowspanitem');
+        if ($rowspanitem)
+        {
+            switch ($rowspanitem)
+            {
+                case 1:
+                    $span = JText::_('JBS_CMN_TEACHER_IMAGE');
+                    break;
+                case 2:
+                    $span = JText::_('JBS_CMN_THUMBNAIL');
+                    break;
+                case 3:
+                    $span = JText::_('JBS_CMN_THUMBNAIL');
+                    break;
+            }
+        }
+
+        $smenu        = $params->get('detailsitemid');
+        $tmenu        = $params->get('teacheritemid');
+
+        $rowspanitemspan = $params->get('rowspanitemspan');
+        $rowspanbalance = 12 - $rowspanitemspan;
+        $frow = '';
+        if ($span)
+        {
+            $frow = '<div class="row-fluid" style="background-color:#EEEEEE; padding:10px; border-width:1px; border-style:solid;" >';
+            $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class=""><p style="font-weight:bold;">'.$span.'</p></div></div>';
+            $frow .= '<div class="span'.$rowspanbalance.'">';
+        }
+        $frow .= '<div class="row-fluid ">';
+       foreach ($listrows as $row)
+       {
+        switch ($row->name)
+        {
+            case 'scripture1':
+                $data = JText::_('JBS_CMN_SCRIPTURE');
+                break;
+            case 'scripture2':
+                $data = JText::_('JBS_CMN_SCRIPTURE');
+                break;
+            case 'secondary':
+                $data = JText::_('JBS_CMN_SECONDARY_REFERENCES');
+                break;
+            case 'title':
+                $data = JText::_('JBS_CMN_TITLE');
+                break;
+            case 'date':
+                $data = JText::_('JBS_CMN_STUDY_DATE');
+                break;
+            case 'teacher':
+                $data = JText::_('JBS_CMN_TEACHER');
+                break;
+            case 'teacher-title':
+                $data = JText::_('JBS_CMN_TEACHER');
+                break;
+            case 'duration':
+                $data = JText::_('JBS_CMN_DURATION');
+                break;
+            case 'studyintro':
+                $data = JText::_('JBS_CMN_INTRODUCTION');
+                break;
+            case 'series':
+                $data = JText::_('JBS_CMN_SERIES');
+                break;
+            case 'seriesthumbnail':
+                $data = JText::_('JBS_CMN_THUMBNAIL');
+                break;
+            case 'seriesdescription':
+                $data = JText::_('JBS_CMN_DESCRIPTION');
+                break;
+            case 'submitted':
+                $data = JText::_('JBS_CMN_SUBMITTED_BY');
+                break;
+            case 'hits':
+               $data = JText::_('JBS_CMN_VIEWS');
+                break;
+            case 'downloads':
+                $data = JText::_('JBS_CMN_DOWNLOADS');
+                break;
+            case 'studynumber':
+                $data = JText::_('JBS_CMN_STUDYNUMBER');
+                break;
+            case 'topic':
+                $data = JText::_('JBS_CMN_TOPIC');
+                break;
+            case 'locations':
+                $data = JText::_('JBS_CMN_LOCATION');
+                break;
+            case 'jbsmedia':
+                $data = JText::_('JBS_CMN_MEDIA');
+                break;
+            case 'messagetype':
+                $data = JText::_('JBS_CMN_MESSAGE_TYPE');
+                break;
+            case 'thumbnail':
+                $data = JText::_('JBS_CMN_THUMBNAIL');
+                break;
+            case 'teacherimage':
+                $data = JText::_('JBS_CMN_TEACHER_IMAGE');
+                break;
+        }
+
+           $style = '';
+           $customclass = '';
+           if (isset($row->custom))
+           {
+               if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
+               else {$customclass = $row->custom;}
+           }
+
+           $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class=""><p style="font-weight:bold;">';
+
+           $frow .= $data;
+
+           $frow .= '</p></div></div>';
+       }
+        $frow .= '</div>';
+        if ($span){$frow .= '</div></div>';}
+
+        return $frow;
     }
 
     /**
@@ -210,10 +330,8 @@ class JBSMListing extends JBSMElements
                     (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
                     break;
                 case 3:
-                    (isset($item->studyintro) ? $span = $item->studyintro : $span = '');
-                    break;
-                case 4:
                     (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    break;
             }
         }
 
@@ -226,7 +344,7 @@ class JBSMListing extends JBSMElements
         if ($span)
         {
             $frow = '<div class="row-fluid" >';
-            $frow .= '<div class="span'.$rowspanitemspan.'"><div class="">'.$span.'</div></div>';
+            $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class="">'.$span.'</div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
         $frow .= '<div class="row-fluid " style="background-color:'.$oddeven.';">';
