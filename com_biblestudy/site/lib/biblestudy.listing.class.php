@@ -432,8 +432,7 @@ class JBSMListing extends JBSMElements
                     (isset($item->location_text) ? $data = $item->location_text : $data = '');
                     break;
                 case 'jbsmedia':
-                    //Not ready for this yet
-                    $data = '';
+                    $data = $this->getFluidMediaFiles($item, $params, $admin_params);
                     break;
                 case 'messagetype':
                     (isset($item->messaget_type) ? $data = $item->message_type : $data = '');
@@ -498,6 +497,24 @@ class JBSMListing extends JBSMElements
         return $frow;
     }
 
+    public function getFluidMediaFiles($item, $params, $admin_params)
+    {
+        $med = new jbsMedia();
+
+        foreach ($item->mediafiles as $media)
+        {
+            dump($media);
+            $registry = new JRegistry;
+            $registry->loadString($media->params);
+            $itemparams = $registry;
+            (isset($media->path2) ? $image = JURI::base().'media/com_biblestudy/images/'.$media->path2 : $image = JURI::base().$media->impath);
+            $player     = $med->getPlayerAttributes($admin_params, $params, $itemparams, $media->id);
+            $playercode = $med->getPlayerCode($params, $itemparams, $player, $image, $media);
+
+            //need custom function for filesize and download link
+
+        }
+    }
     /**
      * @param $array
      * @param $property
