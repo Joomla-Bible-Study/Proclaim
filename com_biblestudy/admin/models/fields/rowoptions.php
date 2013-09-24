@@ -38,12 +38,12 @@ class JFormFieldRowOptions extends JFormFieldList
     protected function getOptions()
     {
         $options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_HIDE'));
-        $options[] = JHtml::_('select.option', '1', 1);
-        $options[] = JHtml::_('select.option', '2', 2);
-        $options[] = JHtml::_('select.option', '3', 3);
-        $options[] = JHtml::_('select.option', '4', 4);
-        $options[] = JHtml::_('select.option', '5', 5);
-        $options[] = JHtml::_('select.option', '6', 6);
+        $options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_ROW1'));
+        $options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_ROW2'));
+        $options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_ROW3'));
+        $options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_ROW4'));
+        $options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_ROW5'));
+        $options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_ROW6'));
         $options   = array_merge(parent::getOptions(), $options);
 
         return $options;
