@@ -37,6 +37,7 @@ class JFormFieldElementOptions extends JFormFieldList
      */
     protected function getOptions()
     {
+        $options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_NONE'));
         $options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_PARAGRAPH'));
         $options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_HEADER1'));
         $options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_HEADER2'));

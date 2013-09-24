@@ -48,7 +48,7 @@ class jbsMedia
 
         if ($params->get('show_filesize') > 0 && isset($media))
         {
-            $mediafile .= self::getFluidFilesize($media, $params);
+            $mediafile = '<div style="display:inline;float: left;">'.$mediafile.'<div style="font-size: 0.6em;display:inline;float:right;position:relative;margin-bottom:15px;padding-right:2px;">'.self::getFluidFilesize($media, $params).'</div></div>';
         }
     return $mediafile;
     }
@@ -168,10 +168,12 @@ class jbsMedia
                         {
                             $filesize = $media->comment;
                         }
+                        else {($filesize = $file_size);}
                         break;
                 }
 
                 $table .= '<span class="bsfilesize">' . $filesize . '</span>';
+                $table = $file_size;
 
     return $table;
     }

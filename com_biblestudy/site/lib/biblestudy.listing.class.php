@@ -444,34 +444,6 @@ class JBSMListing extends JBSMElements
                     (isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');
                     break;
             }
-            switch ($row->element)
-            {
-                case 1:
-                    $classelement = 'p';
-                    break;
-                case 2:
-                    $classelement = 'h1';
-                    break;
-                case 3:
-                    $classelement = 'h2';
-                    break;
-                case 4:
-                    $classelement = 'h3';
-                    break;
-                case 5:
-                    $classelement = 'h4';
-                    break;
-                case 6:
-                    $classelement = 'h5';
-                    break;
-            }
-            //See whether the element is a link to something and get the link from the function
-            $link = 0;
-            if ($row->linktype > 0)
-            {
-                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
-            }
-
             $style = '';
             $customclass = '';
             if (isset($row->custom))
@@ -479,8 +451,42 @@ class JBSMListing extends JBSMElements
                 if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
                 else {$customclass = $row->custom;}
             }
+            switch ($row->element)
+            {
+                case 0:
+                    $classelement = '';
+                    break;
+                case 1:
+                    $classelement = '<p>';
+                    break;
+                case 2:
+                    $classelement = '<h1>';
+                    break;
+                case 3:
+                    $classelement = '<h2>';
+                    break;
+                case 4:
+                    $classelement = '<h3>';
+                    break;
+                case 5:
+                    $classelement = '<h4>';
+                    break;
+                case 6:
+                    $classelement = '<h5>';
+                    break;
+            }
+            if (!$classelement){$classopen = $classelement.' '.$style; $classclose = '</'.$classelement.'>';}
+            else {$classopen = ''; $classclose='';}
+            //See whether the element is a link to something and get the link from the function
+            $link = 0;
+            if ($row->linktype > 0)
+            {
+                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
+            }
 
-            $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class=""><'.$classelement.' '.$style.'>';
+
+
+            $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
             if ($link)
             {
                 $frow .= $link;
@@ -490,24 +496,25 @@ class JBSMListing extends JBSMElements
             {
                 $frow .= '</a>';
             }
-            $frow .= '</'.$classelement.'></div></div>';
+            $frow .= $classclose.'</div></div>';
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
+        $frow .= '<div class="span12"></div>';
         return $frow;
     }
 
     public function getFluidMediaFiles($item, $params, $admin_params, $template)
     {
         $med = new jbsMedia();
-        $mediarow = '';
+        $mediarow = '<div style="display:inline;">';
         foreach ($item->mediafiles as $media)
         {
             //dump($media);
             $mediarow  .= $med->getFluidMedia($media, $params, $admin_params, $template);
 
         }
-
+        $mediarow .= '</div>';
         return $mediarow;
     }
     /**
