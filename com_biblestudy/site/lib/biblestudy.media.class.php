@@ -26,7 +26,156 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_ADMIN_HELPERS . '/elements.php
 class jbsMedia
 {
 
-	/**
+    /**
+     * Return Fluid Media row
+     */
+    public function getFluidMedia($media, $params, $admin_params, $template)
+    {
+        $mediafile = '';
+        $images       = new JBSMImages;
+        $registry = new JRegistry;
+        $registry->loadString($media->params);
+        $itemparams = $registry;
+        $registry = new JRegistry;
+        $registry->loadString($admin_params);
+        $admin_params = $registry;
+        $image = $images->getMediaImage($media->impath, $media->path2);
+        //(isset($media->path2) ? $image = JURI::base().'media/com_biblestudy/images/'.$media->path2 : $image = JURI::base().$media->impath);
+        $player     = self::getPlayerAttributes($admin_params, $params, $itemparams, $media);
+
+        $playercode = self::getPlayerCode($params, $itemparams, $player, $image, $media);
+        $mediafile = self::getFluidDownloadLink($media,$params,$admin_params,$template,$playercode);
+
+        if ($params->get('show_filesize') > 0 && isset($media))
+        {
+            $mediafile .= self::getFluidFilesize($media, $params);
+        }
+    return $mediafile;
+    }
+
+    /**
+     * Return download link
+     */
+    public function getFluidDownloadLink($media, $params, $admin_params, $template, $playercode)
+    {
+        $table = '';
+        $images       = new JBSMImages;
+        if ($admin_params->get('default_download_image'))
+        {
+            $admin_d_image = $admin_params->get('default_download_image');
+        }
+        else
+        {
+            $admin_d_image = null;
+        }
+        $d_image = ($admin_d_image ? $admin_d_image : 'download.png');
+
+        $download_image = $images->getMediaImage($d_image, $media2 = null);
+
+        if ($media->link_type > 0)
+        {
+
+            $width  = $download_image->width;
+            $height = $download_image->height;
+
+            $compat_mode = $admin_params->get('compat_mode');
+
+            if ($compat_mode == 0)
+            {
+                $downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
+                    $media->id . '&amp;view=sermons&amp;task=download">';
+            }
+            else
+            {
+                $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+                    $media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
+            }
+
+            // Check to see if they want to use a popup
+            if ($params->get('useterms') > 0)
+            {
+
+                $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
+                    . $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+            }
+            $downloadlink .= '<img src="' . $download_image->path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
+                $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+        }
+        switch ($media->link_type)
+        {
+            case 0:
+                $table .= $playercode;
+                break;
+
+            case 1:
+                $table .= $playercode . $downloadlink;
+                break;
+
+            case 2:
+                $table .= $downloadlink;
+                break;
+        }
+        return $table;
+    }
+
+    /**
+     * return $table
+     */
+    public function getFluidFilesize($media, $params)
+    {
+
+        $table = '';
+        if (!$media->size)
+        {
+            $table = null;
+
+            return $table;
+        }
+        switch ($media->size)
+        {
+            case $media->size < 1024 :
+                $file_size = $media->size . ' ' . 'Bytes';
+                break;
+            case $media->size < 1048576 :
+                $file_size = $media->size / 1024;
+                $file_size = number_format($file_size, 0);
+                $file_size = $file_size . ' ' . 'KB';
+                break;
+            case $media->size < 1073741824 :
+                $file_size = $media->size / 1024;
+                $file_size = $file_size / 1024;
+                $file_size = number_format($file_size, 1);
+                $file_size = $file_size . ' ' . 'MB';
+                break;
+            case $media->size > 1073741824 :
+                $file_size = $media->size / 1024;
+                $file_size = $file_size / 1024;
+                $file_size = $file_size / 1024;
+                $file_size = number_format($file_size, 1);
+                $file_size = $file_size . ' ' . 'GB';
+                break;
+        }
+        switch ($params->get('show_filesize'))
+                {
+                    case 1:
+                        $filesize = $file_size;
+                        break;
+                    case 2:
+                        $filesize = $media->comment;
+                        break;
+                    case 3:
+                        if ($media->comment)
+                        {
+                            $filesize = $media->comment;
+                        }
+                        break;
+                }
+
+                $table .= '<span class="bsfilesize">' . $filesize . '</span>';
+
+    return $table;
+    }
+    /**
 	 * Return Media Table
 	 *
 	 * @param   object $row           Table info
@@ -480,7 +629,47 @@ class jbsMedia
 		return $vm;
 	}
 
-	/**
+    /**
+     * Get duration
+     *
+     *
+     */
+    public function getFluidDuration($row, $params)
+    {
+        $duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
+        if (!$duration) {
+            $duration = null;
+            return $duration;
+        }
+        $duration_type = $params->get('duration_type', 2);
+        $hours = $row->media_hours;
+        $minutes = $row->media_minutes;
+        $seconds = $row->media_seconds;
+
+        switch ($duration_type) {
+            case 1:
+                if (!$hours) {
+                    $duration = $minutes . ' mins ' . $seconds . ' secs';
+                } else {
+                    $duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
+                }
+                break;
+            case 2:
+                if (!$hours) {
+                    $duration = $minutes . ':' . $seconds;
+                } else {
+                    $duration = $hours . ':' . $minutes . ':' . $seconds;
+                }
+                break;
+            default:
+                $duration = $hours . ':' . $minutes . ':' . $seconds;
+                break;
+        } // end switch
+
+        return $duration;
+    }
+
+    /**
 	 * Setup Player Code.
 	 *
 	 * @param   object $params      System Params
@@ -493,25 +682,29 @@ class jbsMedia
 	 */
 	public function getPlayerCode($params, $itemparams, $player, $image, $media)
 	{
-		$input        = new JInput;
+
+
+        $input        = new JInput;
 		$src          = JURI::base() . $image->path;
 		$height       = $image->height;
 		$width        = $image->width;
+        $height = 24; $width = 24;
 		$backcolor    = $params->get('backcolor', '0x287585');
 		$frontcolor   = $params->get('frontcolor', '0xFFFFFF');
 		$lightcolor   = $params->get('lightcolor', '0x000000');
 		$screencolor  = $params->get('screencolor', '0xFFFFFF');
 		$template     = $input->get('t', '1', 'int');
-		$JBSMElements = new JBSMElements;
+		//$JBSMElements = new JBSMElements;
 
 		// Here we get more information about the particular media file
-		$filesize = $JBSMElements->getFilesize($media->size);
+		$filesize = self::getFluidFilesize($media,$params);
 		/**
 		 * @todo There is no $row referenced to this function so this will fail
 		 */
 
 		// This one IS needed
-		$duration = $JBSMElements->getDuration($params, $media);
+        $duration = self::getFluidDuration($media, $params);
+		//$duration = $JBSMElements->getDuration($params, $media);
 
 		$mimetype = $media->mimetext;
 		$path     = $media->spath . $media->fpath . $media->filename;
@@ -583,7 +776,7 @@ class jbsMedia
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-
+$playercode = '';
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
@@ -669,7 +862,7 @@ class jbsMedia
 				break;
 
 			case 8: // Embed code
-
+$playercode = '';
 				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"

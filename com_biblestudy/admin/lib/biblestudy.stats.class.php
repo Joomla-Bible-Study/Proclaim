@@ -596,7 +596,7 @@ class JbStats
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
-
+            if (!$hits){return false;}
 			if (!$hits->studytitle)
 			{
 				$name = $hits->id;
