@@ -215,7 +215,7 @@ class JBSMListing extends JBSMElements
         $frow = '';
         if ($span)
         {
-            $frow = '<div class="row-fluid" style="background-color:#EEEEEE; padding:10px; border-width:1px; border-style:solid;" >';
+            $frow = '<div class="row-fluid" style="background-color:#C0C0C0; padding:10px; border-width:1px; border-style:solid;">';
             $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class=""><p style="font-weight:bold;">'.$span.'</p></div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
@@ -341,13 +341,14 @@ class JBSMListing extends JBSMElements
         $rowspanitemspan = $params->get('rowspanitemspan');
         $rowspanbalance = 12 - $rowspanitemspan;
         $frow = '';
+        $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:10px;">';
         if ($span)
         {
             $frow = '<div class="row-fluid" >';
             $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class="">'.$span.'</div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
-        $frow .= '<div class="row-fluid " style="background-color:'.$oddeven.';">';
+        $frow .= '<div class="row-fluid " >';
         foreach ($listrows as $row)
         {
             //match the data in $item to a row/col in $row->name
@@ -500,7 +501,7 @@ class JBSMListing extends JBSMElements
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
-        $frow .= '<div class="span12"></div>';
+        $frow .= '<div class="span12"></div></div>';
         return $frow;
     }
 

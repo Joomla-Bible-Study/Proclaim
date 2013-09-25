@@ -374,8 +374,6 @@ class BiblestudyViewSermons extends JViewLegacy
         $this->page          = new stdClass;
         //Build drop down menus for search filters
 
-
-
 		// Get the Popular stats
 		$stats               = new jbStats;
 		$this->page->popular = $stats->top_score_site();
@@ -509,7 +507,11 @@ class BiblestudyViewSermons extends JViewLegacy
         {
             $dropdowns[] = array('order'=>$params->get('ddorder'),'item'=>$this->page->order);
         }
-
+        if ($params->get('show_pagination') == 1)
+        {
+            $this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+            $dropdowns[] = array('order'=>'0', 'item'=>$this->page->limits);
+        }
         foreach ($dropdowns as $key=>$value)
         {
            $dropdownmenus[] = $value;
