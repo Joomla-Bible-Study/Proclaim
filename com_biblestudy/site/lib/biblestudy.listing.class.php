@@ -484,9 +484,6 @@ class JBSMListing extends JBSMElements
             {
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
-
-
-
             $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
             if ($link)
             {
@@ -497,7 +494,9 @@ class JBSMListing extends JBSMElements
             {
                 $frow .= '</a>';
             }
-            $frow .= $classclose.'</div></div>';
+            $frow .= $classclose.'</div>';
+
+            $frow .= '</div>';
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
