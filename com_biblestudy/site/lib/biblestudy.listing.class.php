@@ -351,152 +351,7 @@ class JBSMListing extends JBSMElements
         $frow .= '<div class="row-fluid " >';
         foreach ($listrows as $row)
         {
-            //match the data in $item to a row/col in $row->name
-            switch ($row->name)
-            {
-                case 'scripture1':
-                    $esv = 0;
-                    $scripturerow          = 1;
-                    (isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
-                    break;
-                case 'scripture2':
-                    $esv = 0;
-                    $scripturerow          = 2;
-                    (isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
-                    break;
-                case 'secondary':
-                    (isset($item->secondary) ? $item->secondary : '');
-                    break;
-                case 'title':
-                    (isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
-                    break;
-                case 'date':
-                    (isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
-                    break;
-                case 'teacher':
-                    (isset($item->teachername)? $data = $item->teachername : $data = '');
-                    break;
-                case 'teacher-title':
-                    if (isset($item->teachertitle) && isset($item->teachername))
-                    {
-                        $data = $item->teachertitle . ' ' . $item->teachername;
-                    }
-                    else {$data = $item->teachername;}
-                    break;
-                case 'duration':
-                    (isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');
-                    break;
-                case 'studyintro':
-                    (isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');
-                    break;
-                case 'series':
-                    (isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');
-                    break;
-                case 'seriesthumbnail':
-                    (isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');
-                    break;
-                case 'seriesdescription':
-                    (isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');
-                    break;
-                case 'submitted':
-                    (isset($item->submitted) ? $data = $item->submitted : $data = '');
-                    break;
-                case 'hits':
-                    (isset($item->hits) ? $data = $item->hits : $data = '');
-                    break;
-                case 'downloads':
-                    (isset($item->downloads) ? $data = $item->downloads : $data = '');
-                    break;
-                case 'studynumber':
-                    (isset($item->studynumber) ? $data = $item->studynumber : $data = '');
-                    break;
-                case 'topic':
-                    if (isset($item->topics_text))
-                    {
-                        if (substr_count($item->topics_text, ','))
-                        {
-                            $topics = explode(',', $item->topics_text);
-
-                            foreach ($topics as $key => $value)
-                            {
-                                $topics[$key] = JText::_($value);
-                            }
-                            $data = implode(', ', $topics);
-                        }
-                        else
-                        {
-                            (isset($item->topics_text) ? $data = JText::_($item->topics_text) : $data = '');
-                        }
-                    }
-                    break;
-                case 'locations':
-                    (isset($item->location_text) ? $data = $item->location_text : $data = '');
-                    break;
-                case 'jbsmedia':
-                    $data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);
-                    break;
-                case 'messagetype':
-                    (isset($item->messaget_type) ? $data = $item->message_type : $data = '');
-                    break;
-                case 'thumbnail':
-                    (isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');
-                    break;
-                case 'teacherimage':
-                    (isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');
-                    break;
-            }
-            $style = '';
-            $customclass = '';
-            if (isset($row->custom))
-            {
-                if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
-                else {$customclass = $row->custom;}
-            }
-            switch ($row->element)
-            {
-                case 0:
-                    $classelement = '';
-                    break;
-                case 1:
-                    $classelement = '<p>';
-                    break;
-                case 2:
-                    $classelement = '<h1>';
-                    break;
-                case 3:
-                    $classelement = '<h2>';
-                    break;
-                case 4:
-                    $classelement = '<h3>';
-                    break;
-                case 5:
-                    $classelement = '<h4>';
-                    break;
-                case 6:
-                    $classelement = '<h5>';
-                    break;
-            }
-            if (!$classelement){$classopen = $classelement.' '.$style; $classclose = '</'.$classelement.'>';}
-            else {$classopen = ''; $classclose='';}
-            //See whether the element is a link to something and get the link from the function
-            $link = 0;
-            if ($row->linktype > 0)
-            {
-                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
-            }
-            $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
-            if ($link)
-            {
-                $frow .= $link;
-            }
-            $frow .= $data;
-            if ($link)
-            {
-                $frow .= '</a>';
-            }
-            $frow .= $classclose.'</div>';
-
-            $frow .= '</div>';
+            $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
@@ -504,6 +359,158 @@ class JBSMListing extends JBSMElements
         return $frow;
     }
 
+    public function getFluidData($item, $row, $params, $admin_params, $template)
+    {
+        $smenu        = $params->get('detailsitemid');
+        $tmenu        = $params->get('teacheritemid');
+        //match the data in $item to a row/col in $row->name
+        switch ($row->name)
+        {
+            case 'scripture1':
+                $esv = 0;
+                $scripturerow          = 1;
+                (isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+                break;
+            case 'scripture2':
+                $esv = 0;
+                $scripturerow          = 2;
+                (isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+                break;
+            case 'secondary':
+                (isset($item->secondary) ? $item->secondary : '');
+                break;
+            case 'title':
+                (isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
+                break;
+            case 'date':
+                (isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
+                break;
+            case 'teacher':
+                (isset($item->teachername)? $data = $item->teachername : $data = '');
+                break;
+            case 'teacher-title':
+                if (isset($item->teachertitle) && isset($item->teachername))
+                {
+                    $data = $item->teachertitle . ' ' . $item->teachername;
+                }
+                else {$data = $item->teachername;}
+                break;
+            case 'duration':
+                (isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');
+                break;
+            case 'studyintro':
+                (isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');
+                break;
+            case 'series':
+                (isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');
+                break;
+            case 'seriesthumbnail':
+                (isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');
+                break;
+            case 'seriesdescription':
+                (isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');
+                break;
+            case 'submitted':
+                (isset($item->submitted) ? $data = $item->submitted : $data = '');
+                break;
+            case 'hits':
+                (isset($item->hits) ? $data = $item->hits : $data = '');
+                break;
+            case 'downloads':
+                (isset($item->downloads) ? $data = $item->downloads : $data = '');
+                break;
+            case 'studynumber':
+                (isset($item->studynumber) ? $data = $item->studynumber : $data = '');
+                break;
+            case 'topic':
+                if (isset($item->topics_text))
+                {
+                    if (substr_count($item->topics_text, ','))
+                    {
+                        $topics = explode(',', $item->topics_text);
+
+                        foreach ($topics as $key => $value)
+                        {
+                            $topics[$key] = JText::_($value);
+                        }
+                        $data = implode(', ', $topics);
+                    }
+                    else
+                    {
+                        (isset($item->topics_text) ? $data = JText::_($item->topics_text) : $data = '');
+                    }
+                }
+                break;
+            case 'locations':
+                (isset($item->location_text) ? $data = $item->location_text : $data = '');
+                break;
+            case 'jbsmedia':
+                $data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);
+                break;
+            case 'messagetype':
+                (isset($item->messaget_type) ? $data = $item->message_type : $data = '');
+                break;
+            case 'thumbnail':
+                (isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');
+                break;
+            case 'teacherimage':
+                (isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');
+                break;
+        }
+        $style = '';
+        $customclass = '';
+        if (isset($row->custom))
+        {
+            if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
+            else {$customclass = $row->custom;}
+        }
+        switch ($row->element)
+        {
+            case 0:
+                $classelement = '';
+                break;
+            case 1:
+                $classelement = '<p>';
+                break;
+            case 2:
+                $classelement = '<h1>';
+                break;
+            case 3:
+                $classelement = '<h2>';
+                break;
+            case 4:
+                $classelement = '<h3>';
+                break;
+            case 5:
+                $classelement = '<h4>';
+                break;
+            case 6:
+                $classelement = '<h5>';
+                break;
+        }
+        if (!$classelement){$classopen = $classelement.' '.$style; $classclose = '</'.$classelement.'>';}
+        else {$classopen = ''; $classclose='';}
+        //See whether the element is a link to something and get the link from the function
+        $link = 0;
+        if ($row->linktype > 0)
+        {
+            $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
+        }
+        $frow = '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
+        if ($link)
+        {
+            $frow .= $link;
+        }
+        $frow .= $data;
+        if ($link)
+        {
+            $frow .= '</a>';
+        }
+        $frow .= $classclose.'</div>';
+
+        $frow .= '</div>';
+    return $frow;
+    }
     public function getFluidMediaFiles($item, $params, $admin_params, $template)
     {
         $med = new jbsMedia();
