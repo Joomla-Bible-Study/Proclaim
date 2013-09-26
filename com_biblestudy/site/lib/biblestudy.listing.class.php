@@ -41,42 +41,49 @@ class JBSMListing extends JBSMElements
         $row = array();
         $this->params = $params;
 
+
         foreach ($items as $item)
         {
-            $mediatemp = array();
-            $mediatemp = explode(',',$item->mids);
-            foreach ($mediatemp as $mtemp)
-            {$medias[] = $mtemp;}
+            if (isset($item->mids))
+            {
+                $mediatemp = array();
+                $mediatemp = explode(',',$item->mids);
+                foreach ($mediatemp as $mtemp)
+                {$medias[] = $mtemp;}
+            }
         }
         //get the media files in one query
-        $db    = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-        . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-        . ' #__bsms_media.media_image_name AS imname,'
-        . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-        . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-        . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
-        $query->from('#__bsms_mediafiles');
-        $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-        $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-        $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-        $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
-        $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-        $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-        $where2   = array();
-        $subquery = '(';
-        foreach ($medias as $media)
+        if (isset($item->mids))
         {
-            $where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
+            $db    = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
+            . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+            . ' #__bsms_media.media_image_name AS imname,'
+            . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+            . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+            . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+            $query->from('#__bsms_mediafiles');
+            $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
+            $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
+            $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
+            $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+            $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
+            $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+            $where2   = array();
+            $subquery = '(';
+            foreach ($medias as $media)
+            {
+                $where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
+            }
+            $subquery .= implode(' OR ', $where2);
+            $subquery .= ')';
+            $query->where($subquery);
+            $query->where('#__bsms_mediafiles.published = 1');
+            $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
+            $db->setQuery($query);
+            $mediafiles = $db->loadObjectList();
         }
-        $subquery .= implode(' OR ', $where2);
-        $subquery .= ')';
-        $query->where($subquery);
-        $query->where('#__bsms_mediafiles.published = 1');
-        $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
-        $db->setQuery($query);
-        $mediafiles = $db->loadObjectList();
         //create an array from each param variable set
         $listparams = array();
         if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
@@ -134,7 +141,7 @@ class JBSMListing extends JBSMElements
 
         if ($params->get('use_headers_list') > 0)
         {
-            $list .= $this->getFluidHeader($items[0], $params, $admin_params, $template, $listrows);
+            $list .= $this->getFluidHeader($params, $listrows);
         }
         $class1 = $params->get('listcolor1', '');
         $class2 = $params->get('listcolor2', '');
@@ -144,18 +151,21 @@ class JBSMListing extends JBSMElements
         {
             $oddeven = ($oddeven == $class1) ? $class2 : $class1;
             $studymedia = array();
-            foreach ($mediafiles as $mediafile)
+            if (isset($mediafiles))
             {
-                if ($mediafile->study_id == $item->id)
-                {
-                    $studymedia[] = $mediafile;
-                }
+                foreach ($mediafiles as $mediafile)
+                    {
+                        if ($mediafile->study_id == $item->id)
+                        {
+                            $studymedia[] = $mediafile;
+                        }
+                    }
             }
             if (isset($studymedia))
             {
                 $item->mediafiles = $studymedia;
             }
-            $row[]= $this->getFluidRow($item, $params, $admin_params, $template, $listrows, $oddeven);
+            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven);
         }
 
         foreach ($row as $key=>$value)
@@ -186,7 +196,7 @@ class JBSMListing extends JBSMElements
     /**
      * Get Header
      */
-    public function getFluidHeader($item, $params, $admin_params, $template, $listrows)
+    public function getFluidHeader($params, $listrows)
     {
         $header = null;
         $span = '';
@@ -315,7 +325,7 @@ class JBSMListing extends JBSMElements
     /**
      * Get Fluid Row
      */
-    public function getFluidRow($item, $params, $admin_params, $template, $listrows, $oddeven)
+    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven)
     {
         $span = '';
         $rowspanitem = $params->get('rowspanitem');
@@ -348,14 +358,74 @@ class JBSMListing extends JBSMElements
             $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class="">'.$span.'</div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
-        $frow .= '<div class="row-fluid " >';
+        //$frow .= '<div class="row-fluid " >';
+        $row1count = count($row1sorted);
+        $row1count2 = count($row1sorted);
+        $row2count = count($row2sorted);
+        $row2count2 = count($row2sorted);
+        $row3count = count($row3sorted);
+        $row3count2 = count($row3sorted);
+        $row4count = count($row4sorted);
+        $row4count2 = count($row4sorted);
+        $row5count = count($row5sorted);
+        $row5count2 = count($row5sorted);
+        $row6count = count($row6sorted);
+        $row6count2 = count($row6sorted);
         foreach ($listrows as $row)
         {
-            $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+            if ($row->row == 1)
+            {
+
+                if ($row1count == $row1count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row1count = $row1count - 1;
+                if ($row1count == 0){$frow .= '</div>';}
+            }
+            if ($row->row == 2)
+            {
+
+                if ($row2count == $row2count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row2count = $row2count - 1;
+                if ($row2count == 0){$frow .= '</div>';}
+            }
+            if ($row->row == 3)
+            {
+
+                if ($row3count == $row3count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row3count = $row3count - 1;
+                if ($row3count == 0){$frow .= '</div>';}
+            }
+            if ($row->row == 4)
+            {
+
+                if ($row4count == $row4count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row4count = $row4count - 1;
+                if ($row4count == 0){$frow .= '</div>';}
+            }
+            if ($row->row == 5)
+            {
+
+                if ($row5count == $row5count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row5count = $row5count - 1;
+                if ($row5count == 0){$frow .= '</div>';}
+            }
+            if ($row->row == 6)
+            {
+
+                if ($row6count == $row6count2){$frow .= '<div class="row-fluid">';}
+                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                $row6count = $row6count - 1;
+                if ($row6count == 0){$frow .= '</div>';}
+            }
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
-        $frow .= '<div class="span12"></div></div>';
+        $frow .= '<div class="span12"></div>';
+        //$frow .= '</div>';
         return $frow;
     }
 
@@ -511,6 +581,7 @@ class JBSMListing extends JBSMElements
         $frow .= '</div>';
     return $frow;
     }
+
     public function getFluidMediaFiles($item, $params, $admin_params, $template)
     {
         $med = new jbsMedia();
