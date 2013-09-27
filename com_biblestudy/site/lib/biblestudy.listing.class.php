@@ -139,9 +139,12 @@ class JBSMListing extends JBSMElements
         if (count($row6)){$row6sorted = $this->sortArrayofObjectByProperty($row6,'col',$order="ASC");}
         $listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
 
+        $class1 = $params->get('listcolor1', '');
+        $class2 = $params->get('listcolor2', '');
+        $oddeven = $class1;
         if ($params->get('use_headers_list') > 0)
         {
-            $list .= $this->getFluidHeader($params, $listrows);
+            $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
         }
         $class1 = $params->get('listcolor1', '');
         $class2 = $params->get('listcolor2', '');
@@ -165,7 +168,7 @@ class JBSMListing extends JBSMElements
             {
                 $item->mediafiles = $studymedia;
             }
-            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven);
+            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
         }
 
         foreach ($row as $key=>$value)
@@ -193,139 +196,11 @@ class JBSMListing extends JBSMElements
         $l->name = $paramtext;
         return $l;
     }
-    /**
-     * Get Header
-     */
-    public function getFluidHeader($params, $listrows)
-    {
-        $header = null;
-        $span = '';
-        $rowspanitem = $params->get('rowspanitem');
-        if ($rowspanitem)
-        {
-            switch ($rowspanitem)
-            {
-                case 1:
-                    $span = JText::_('JBS_CMN_TEACHER_IMAGE');
-                    break;
-                case 2:
-                    $span = JText::_('JBS_CMN_THUMBNAIL');
-                    break;
-                case 3:
-                    $span = JText::_('JBS_CMN_THUMBNAIL');
-                    break;
-            }
-        }
-
-        $smenu        = $params->get('detailsitemid');
-        $tmenu        = $params->get('teacheritemid');
-
-        $rowspanitemspan = $params->get('rowspanitemspan');
-        $rowspanbalance = 12 - $rowspanitemspan;
-        $frow = '';
-        if ($span)
-        {
-            $frow = '<div class="row-fluid" style="background-color:#C0C0C0; padding:10px; border-width:1px; border-style:solid;">';
-            $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class=""><p style="font-weight:bold;">'.$span.'</p></div></div>';
-            $frow .= '<div class="span'.$rowspanbalance.'">';
-        }
-        $frow .= '<div class="row-fluid ">';
-       foreach ($listrows as $row)
-       {
-        switch ($row->name)
-        {
-            case 'scripture1':
-                $data = JText::_('JBS_CMN_SCRIPTURE');
-                break;
-            case 'scripture2':
-                $data = JText::_('JBS_CMN_SCRIPTURE');
-                break;
-            case 'secondary':
-                $data = JText::_('JBS_CMN_SECONDARY_REFERENCES');
-                break;
-            case 'title':
-                $data = JText::_('JBS_CMN_TITLE');
-                break;
-            case 'date':
-                $data = JText::_('JBS_CMN_STUDY_DATE');
-                break;
-            case 'teacher':
-                $data = JText::_('JBS_CMN_TEACHER');
-                break;
-            case 'teacher-title':
-                $data = JText::_('JBS_CMN_TEACHER');
-                break;
-            case 'duration':
-                $data = JText::_('JBS_CMN_DURATION');
-                break;
-            case 'studyintro':
-                $data = JText::_('JBS_CMN_INTRODUCTION');
-                break;
-            case 'series':
-                $data = JText::_('JBS_CMN_SERIES');
-                break;
-            case 'seriesthumbnail':
-                $data = JText::_('JBS_CMN_THUMBNAIL');
-                break;
-            case 'seriesdescription':
-                $data = JText::_('JBS_CMN_DESCRIPTION');
-                break;
-            case 'submitted':
-                $data = JText::_('JBS_CMN_SUBMITTED_BY');
-                break;
-            case 'hits':
-               $data = JText::_('JBS_CMN_VIEWS');
-                break;
-            case 'downloads':
-                $data = JText::_('JBS_CMN_DOWNLOADS');
-                break;
-            case 'studynumber':
-                $data = JText::_('JBS_CMN_STUDYNUMBER');
-                break;
-            case 'topic':
-                $data = JText::_('JBS_CMN_TOPIC');
-                break;
-            case 'locations':
-                $data = JText::_('JBS_CMN_LOCATION');
-                break;
-            case 'jbsmedia':
-                $data = JText::_('JBS_CMN_MEDIA');
-                break;
-            case 'messagetype':
-                $data = JText::_('JBS_CMN_MESSAGE_TYPE');
-                break;
-            case 'thumbnail':
-                $data = JText::_('JBS_CMN_THUMBNAIL');
-                break;
-            case 'teacherimage':
-                $data = JText::_('JBS_CMN_TEACHER_IMAGE');
-                break;
-        }
-
-           $style = '';
-           $customclass = '';
-           if (isset($row->custom))
-           {
-               if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
-               else {$customclass = $row->custom;}
-           }
-
-           $frow .= '<div class="span'.$row->colspan.' '.$customclass.'"><div class=""><p style="font-weight:bold;">';
-
-           $frow .= $data;
-
-           $frow .= '</p></div></div>';
-       }
-        $frow .= '</div>';
-        if ($span){$frow .= '</div></div>';}
-
-        return $frow;
-    }
 
     /**
      * Get Fluid Row
      */
-    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven)
+    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header)
     {
         $span = '';
         $rowspanitem = $params->get('rowspanitem');
@@ -358,7 +233,7 @@ class JBSMListing extends JBSMElements
             $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class="">'.$span.'</div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
-        //$frow .= '<div class="row-fluid " >';
+
         $row1count = count($row1sorted);
         $row1count2 = count($row1sorted);
         $row2count = count($row2sorted);
@@ -377,7 +252,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row1count == $row1count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row1count = $row1count - 1;
                 if ($row1count == 0){$frow .= '</div>';}
             }
@@ -385,7 +261,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row2count == $row2count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row2count = $row2count - 1;
                 if ($row2count == 0){$frow .= '</div>';}
             }
@@ -393,7 +270,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row3count == $row3count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row3count = $row3count - 1;
                 if ($row3count == 0){$frow .= '</div>';}
             }
@@ -401,7 +279,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row4count == $row4count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row4count = $row4count - 1;
                 if ($row4count == 0){$frow .= '</div>';}
             }
@@ -409,7 +288,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row5count == $row5count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row5count = $row5count - 1;
                 if ($row5count == 0){$frow .= '</div>';}
             }
@@ -417,19 +297,20 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row6count == $row6count2){$frow .= '<div class="row-fluid">';}
-                $frow .= $this->getFluidData($item, $row, $params, $admin_params, $template);
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
                 $row6count = $row6count - 1;
                 if ($row6count == 0){$frow .= '</div>';}
             }
         }
         $frow .= '</div>';
         if ($span){$frow .= '</div></div>';}
-        $frow .= '<div class="span12"></div>';
-        //$frow .= '</div>';
+
+
         return $frow;
     }
 
-    public function getFluidData($item, $row, $params, $admin_params, $template)
+    public function getFluidData($item, $row, $params, $admin_params, $template, $header)
     {
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
@@ -439,61 +320,78 @@ class JBSMListing extends JBSMElements
             case 'scripture1':
                 $esv = 0;
                 $scripturerow          = 1;
-                (isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
+                else {(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
                 break;
             case 'scripture2':
                 $esv = 0;
                 $scripturerow          = 2;
-                (isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
+                else {(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
                 break;
             case 'secondary':
-                (isset($item->secondary) ? $item->secondary : '');
+                if ($header == 1){$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');}
+                else {(isset($item->secondary) ? $item->secondary : '');}
                 break;
             case 'title':
-                (isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_TITLE');}
+                else {(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');}
                 break;
             case 'date':
-                (isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_STUDY_DATE');}
+                else {(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');}
                 break;
             case 'teacher':
-                (isset($item->teachername)? $data = $item->teachername : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
+                else {(isset($item->teachername)? $data = $item->teachername : $data = '');}
                 break;
             case 'teacher-title':
-                if (isset($item->teachertitle) && isset($item->teachername))
+                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
+                elseif (isset($item->teachertitle) && isset($item->teachername))
                 {
                     $data = $item->teachertitle . ' ' . $item->teachername;
                 }
                 else {$data = $item->teachername;}
                 break;
             case 'duration':
-                (isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_DURATION');}
+                else {(isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');}
                 break;
             case 'studyintro':
-                (isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_INTRODUCTION');}
+                else {(isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');}
                 break;
             case 'series':
-                (isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');
+                if ($header == 1){ $data = JText::_('JBS_CMN_SERIES');}
+                else {(isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');}
                 break;
             case 'seriesthumbnail':
-                (isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');
+                if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
+                else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');}
                 break;
             case 'seriesdescription':
-                (isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
+                else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
                 break;
             case 'submitted':
-                (isset($item->submitted) ? $data = $item->submitted : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_SUBMITTED_BY');}
+                else {(isset($item->submitted) ? $data = $item->submitted : $data = '');}
                 break;
             case 'hits':
-                (isset($item->hits) ? $data = $item->hits : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_VIEWS');}
+                else {(isset($item->hits) ? $data = $item->hits : $data = '');}
                 break;
             case 'downloads':
-                (isset($item->downloads) ? $data = $item->downloads : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_DOWNLOADS');}
+                else {(isset($item->downloads) ? $data = $item->downloads : $data = '');}
                 break;
             case 'studynumber':
-                (isset($item->studynumber) ? $data = $item->studynumber : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_STUDYNUMBER');}
+                else {(isset($item->studynumber) ? $data = $item->studynumber : $data = '');}
                 break;
             case 'topic':
-                if (isset($item->topics_text))
+                if ($header == 1){$data = JText::_('JBS_CMN_TOPIC');}
+                elseif (isset($item->topics_text))
                 {
                     if (substr_count($item->topics_text, ','))
                     {
@@ -512,19 +410,24 @@ class JBSMListing extends JBSMElements
                 }
                 break;
             case 'locations':
-                (isset($item->location_text) ? $data = $item->location_text : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_LOCATION');}
+                else {(isset($item->location_text) ? $data = $item->location_text : $data = '');}
                 break;
             case 'jbsmedia':
-                $data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);
+                if ($header == 1){$data = JText::_('JBS_CMN_MEDIA');}
+                else {$data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);}
                 break;
             case 'messagetype':
-                (isset($item->messaget_type) ? $data = $item->message_type : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_MESSAGE_TYPE');}
+                else {(isset($item->messaget_type) ? $data = $item->message_type : $data = '');}
                 break;
             case 'thumbnail':
-                (isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_THUMBNAIL');}
+                else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');}
                 break;
             case 'teacherimage':
-                (isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');
+                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
+               else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');}
                 break;
         }
         $style = '';
@@ -562,7 +465,7 @@ class JBSMListing extends JBSMElements
         else {$classopen = ''; $classclose='';}
         //See whether the element is a link to something and get the link from the function
         $link = 0;
-        if ($row->linktype > 0)
+        if ($row->linktype > 0 && $header == 0)
         {
             $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
         }
