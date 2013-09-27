@@ -209,13 +209,13 @@ class JBSMListing extends JBSMElements
             switch ($rowspanitem)
             {
                 case 1:
-                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
                     break;
                 case 2:
-                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');
                     break;
                 case 3:
-                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'">' : $span = '');
+                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');
                     break;
             }
         }
@@ -367,7 +367,7 @@ class JBSMListing extends JBSMElements
                 break;
             case 'seriesthumbnail':
                 if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
-                else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'">' : $data = '');}
+                else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
             case 'seriesdescription':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
@@ -423,11 +423,11 @@ class JBSMListing extends JBSMElements
                 break;
             case 'thumbnail':
                 if ($header == 1){$data = JText::_('JBS_CMN_THUMBNAIL');}
-                else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'">' : $data = '');}
+                else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
             case 'teacherimage':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
-               else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'">' : $data = '');}
+               else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
         }
         $style = '';
