@@ -209,13 +209,17 @@ class JBSMListing extends JBSMElements
             switch ($rowspanitem)
             {
                 case 1:
-                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
+                    if ($header == 1){$span = '';}
+                    else{
+                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');}
                     break;
                 case 2:
-                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');
+                    if ($header == 1){$span = '';}
+                    else {(isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');}
                     break;
                 case 3:
-                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');
+                    if ($header == 1){$span = '';}
+                    else {(isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');}
                     break;
             }
         }
