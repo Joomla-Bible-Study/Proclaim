@@ -44,6 +44,7 @@ class JFormFieldElementOptions extends JFormFieldList
         $options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_HEADER3'));
         $options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_HEADER4'));
         $options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_HEADER5'));
+        $options[] = JHtml::_('select.option', '7', JText::_('JBS_TPL_BLOCKQUOTE'));
         $options   = array_merge(parent::getOptions(), $options);
 
         return $options;

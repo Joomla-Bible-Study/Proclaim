@@ -80,6 +80,14 @@ $row         = $this->item;
 		<?php
 	} // End Social Networking
 	?>
+    <!-- Begin Fluid layout -->
+    <div class="container-fluid">
+        <?php $listing = new JBSMListing;
+        $list = $listing->getFluidListing($this->item, $this->item->params, $this->item->admin_params, $this->template);
+        echo $list;
+        ?>
+    </div>
+    <!-- End Fluid Layout -->
 	<?php
 	if ($this->item->params->get('show_teacher_view') > 0)
 	{

@@ -21,7 +21,7 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_ADMIN_HELPERS . '/elements.php
  * @package  BibleStudy.Site
  * @since    7.0.0
  *
- * @todo     this mey not be needed if elements has this all. If not we need to refactor it. tom
+ *
  */
 class jbsMedia
 {

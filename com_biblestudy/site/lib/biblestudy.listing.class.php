@@ -37,23 +37,30 @@ class JBSMListing extends JBSMElements
      */
     public function getFluidListing($items, $params, $admin_params, $template)
     {
+        //Find out what view we are in
+        $input = new JInput();
+        $view = $input->getString('view');
         $list = '';
         $row = array();
         $this->params = $params;
 
-
-        foreach ($items as $item)
+        if ($view == 'sermons')
         {
-            if (isset($item->mids))
+            foreach ($items as $item)
             {
-                $mediatemp = array();
-                $mediatemp = explode(',',$item->mids);
-                foreach ($mediatemp as $mtemp)
-                {$medias[] = $mtemp;}
+                if (isset($item->mids))
+                {
+                    $medias[] = $this->getFluidMediaids($item);
+                }
             }
         }
+        if ($view == 'sermon')
+        {
+            $medias = $this->getFluidMediaids($items);
+            $item = $items;
+        }
         //get the media files in one query
-        if (isset($item->mids))
+        if (isset($medias))
         {
             $db    = JFactory::getDBO();
             $query = $db->getQuery(true);
@@ -74,7 +81,15 @@ class JBSMListing extends JBSMElements
             $subquery = '(';
             foreach ($medias as $media)
             {
-                $where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
+                if (is_array($media))
+                {
+                    foreach ($media as $m)
+                    {
+                        $where2[] = '#__bsms_mediafiles.id = ' . (int) $m;
+                    }
+                }
+                else
+                {$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;}
             }
             $subquery .= implode(' OR ', $where2);
             $subquery .= ')';
@@ -85,29 +100,63 @@ class JBSMListing extends JBSMElements
             $mediafiles = $db->loadObjectList();
         }
         //create an array from each param variable set
-        $listparams = array();
-        if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
-        if ($params->get('scripture2row') > 0){$listparams[]= $this->getListParamsArray('scripture2');}
-        if ($params->get('secondaryrow') > 0){$listparams[]= $this->getListParamsArray('secondary');}
-        if ($params->get('titlerow') > 0){$listparams[]= $this->getListParamsArray('title');}
-        if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
-        if ($params->get('teacherrow') > 0){$listparams[]= $this->getListParamsArray('teacher');}
-        if ($params->get('teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('teacher-title');}
-        if ($params->get('durationrow') > 0){$listparams[]= $this->getListParamsArray('duration');}
-        if ($params->get('studyintrorow') > 0){$listparams[]= $this->getListParamsArray('studyintro');}
-        if ($params->get('seriesrow') > 0){$listparams[]= $this->getListParamsArray('series');}
-        if ($params->get('seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('seriesdescription');}
-        if ($params->get('seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('seriesthumbnail');}
-        if ($params->get('submittedrow') > 0){$listparams[]= $this->getListParamsArray('submitted');}
-        if ($params->get('hitsrow') > 0){$listparams[]= $this->getListParamsArray('hits');}
-        if ($params->get('downloadsrow') > 0){$listparams[]= $this->getListParamsArray('downloads');}
-        if ($params->get('studynumberrow') > 0){$listparams[]= $this->getListParamsArray('studynumber');}
-        if ($params->get('topicrow') > 0){$listparams[]= $this->getListParamsArray('topic');}
-        if ($params->get('locationsrow') > 0){$listparams[]= $this->getListParamsArray('locations');}
-        if ($params->get('jbsmediarow') > 0){$listparams[]= $this->getListParamsArray('jbsmedia');}
-        if ($params->get('messagetyperow') > 0){$listparams[]= $this->getListParamsArray('messagetype');}
-        if ($params->get('thumbnailrow') > 0){$listparams[]= $this->getListParamsArray('thumbnail');}
-        if ($params->get('teacherimagerrow') >0){$listparams[] = $this->getListParamsArray('teacherimage');}
+        //Find out what view we are in
+        $input = new JInput();
+        $view = $input->getString('view');
+        switch ($view)
+        {
+            case 'sermons':
+                $listparams = array();
+                if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
+                if ($params->get('scripture2row') > 0){$listparams[]= $this->getListParamsArray('scripture2');}
+                if ($params->get('secondaryrow') > 0){$listparams[]= $this->getListParamsArray('secondary');}
+                if ($params->get('titlerow') > 0){$listparams[]= $this->getListParamsArray('title');}
+                if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
+                if ($params->get('teacherrow') > 0){$listparams[]= $this->getListParamsArray('teacher');}
+                if ($params->get('teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('teacher-title');}
+                if ($params->get('durationrow') > 0){$listparams[]= $this->getListParamsArray('duration');}
+                if ($params->get('studyintrorow') > 0){$listparams[]= $this->getListParamsArray('studyintro');}
+                if ($params->get('seriesrow') > 0){$listparams[]= $this->getListParamsArray('series');}
+                if ($params->get('seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('seriesdescription');}
+                if ($params->get('seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('seriesthumbnail');}
+                if ($params->get('submittedrow') > 0){$listparams[]= $this->getListParamsArray('submitted');}
+                if ($params->get('hitsrow') > 0){$listparams[]= $this->getListParamsArray('hits');}
+                if ($params->get('downloadsrow') > 0){$listparams[]= $this->getListParamsArray('downloads');}
+                if ($params->get('studynumberrow') > 0){$listparams[]= $this->getListParamsArray('studynumber');}
+                if ($params->get('topicrow') > 0){$listparams[]= $this->getListParamsArray('topic');}
+                if ($params->get('locationsrow') > 0){$listparams[]= $this->getListParamsArray('locations');}
+                if ($params->get('jbsmediarow') > 0){$listparams[]= $this->getListParamsArray('jbsmedia');}
+                if ($params->get('messagetyperow') > 0){$listparams[]= $this->getListParamsArray('messagetype');}
+                if ($params->get('thumbnailrow') > 0){$listparams[]= $this->getListParamsArray('thumbnail');}
+                if ($params->get('teacherimagerrow') >0){$listparams[] = $this->getListParamsArray('teacherimage');}
+                break;
+            case 'sermon':
+                $listparams = array();
+                if ($params->get('dscripture1row') > 0){$listparams[]= $this->getListParamsArray('dscripture1');}
+                if ($params->get('dscripture2row') > 0){$listparams[]= $this->getListParamsArray('dscripture2');}
+                if ($params->get('dsecondaryrow') > 0){$listparams[]= $this->getListParamsArray('dsecondary');}
+                if ($params->get('dtitlerow') > 0){$listparams[]= $this->getListParamsArray('dtitle');}
+                if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
+                if ($params->get('dteacherrow') > 0){$listparams[]= $this->getListParamsArray('dteacher');}
+                if ($params->get('dteacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('dteacher-title');}
+                if ($params->get('ddurationrow') > 0){$listparams[]= $this->getListParamsArray('dduration');}
+                if ($params->get('dstudyintrorow') > 0){$listparams[]= $this->getListParamsArray('dstudyintro');}
+                if ($params->get('dseriesrow') > 0){$listparams[]= $this->getListParamsArray('dseries');}
+                if ($params->get('dseriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('dseriesdescription');}
+                if ($params->get('dseriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('dseriesthumbnail');}
+                if ($params->get('dsubmittedrow') > 0){$listparams[]= $this->getListParamsArray('dsubmitted');}
+                if ($params->get('dhitsrow') > 0){$listparams[]= $this->getListParamsArray('dhits');}
+                if ($params->get('ddownloadsrow') > 0){$listparams[]= $this->getListParamsArray('ddownloads');}
+                if ($params->get('dstudynumberrow') > 0){$listparams[]= $this->getListParamsArray('dstudynumber');}
+                if ($params->get('dtopicrow') > 0){$listparams[]= $this->getListParamsArray('dtopic');}
+                if ($params->get('dlocationsrow') > 0){$listparams[]= $this->getListParamsArray('dlocations');}
+                if ($params->get('djbsmediarow') > 0){$listparams[]= $this->getListParamsArray('djbsmedia');}
+                if ($params->get('dmessagetyperow') > 0){$listparams[]= $this->getListParamsArray('dmessagetype');}
+                if ($params->get('dthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('dthumbnail');}
+                if ($params->get('dteacherimagerrow') >0){$listparams[] = $this->getListParamsArray('dteacherimage');}
+                break;
+        }
+
 
         $row1 = array();
         $row2 = array();
@@ -142,27 +191,57 @@ class JBSMListing extends JBSMElements
         $class1 = $params->get('listcolor1', '');
         $class2 = $params->get('listcolor2', '');
         $oddeven = $class1;
-        if ($params->get('use_headers_list') > 0)
+        if ($view == 'sermons')
         {
-            $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+            if ($params->get('use_headers_list') > 0)
+            {
+                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+            }
         }
-        $class1 = $params->get('listcolor1', '');
-        $class2 = $params->get('listcolor2', '');
-        $oddeven = $class1;
+        if ($view == 'sermon')
+        {
+            if ($params->get('use_headers_view') > 0)
+            {
+                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+            }
+        }
         // Go through and attach the media files as an array to their study
-        foreach ($items as $item)
+        if ($view == 'sermons')
+        {
+            foreach ($items as $item)
+            {
+                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
+                $studymedia = array();
+                if (isset($mediafiles))
+                {
+                    foreach ($mediafiles as $mediafile)
+                        {
+                            if ($mediafile->study_id == $item->id)
+                            {
+                                $studymedia[] = $mediafile;
+                            }
+                        }
+                }
+                if (isset($studymedia))
+                {
+                    $item->mediafiles = $studymedia;
+                }
+                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
+            }
+        }
+        if ($view == 'sermon')
         {
             $oddeven = ($oddeven == $class1) ? $class2 : $class1;
             $studymedia = array();
             if (isset($mediafiles))
             {
                 foreach ($mediafiles as $mediafile)
+                {
+                    if ($mediafile->study_id == $item->id)
                     {
-                        if ($mediafile->study_id == $item->id)
-                        {
-                            $studymedia[] = $mediafile;
-                        }
+                        $studymedia[] = $mediafile;
                     }
+                }
             }
             if (isset($studymedia))
             {
@@ -170,7 +249,6 @@ class JBSMListing extends JBSMElements
             }
             $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
         }
-
         foreach ($row as $key=>$value)
         {
             $list .= $value;
@@ -178,6 +256,15 @@ class JBSMListing extends JBSMElements
 
         return $list;
     }
+
+     public function getFluidMediaids($item)
+     {
+         $mediatemp = array();
+         $mediatemp = explode(',',$item->mids);
+         foreach ($mediatemp as $mtemp)
+         {$medias[] = $mtemp;}
+         return $medias;
+     }
 
 
     /**
@@ -203,38 +290,40 @@ class JBSMListing extends JBSMElements
     public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header)
     {
         $span = '';
+        $headerstyle = '';
+        if ($header == 1){$headerstyle = "style=visibility:hidden;";}
         $rowspanitem = $params->get('rowspanitem');
         if ($rowspanitem)
         {
             switch ($rowspanitem)
             {
                 case 1:
-                    if ($header == 1){$span = '';}
-                    else{
-                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');}
+                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
                     break;
                 case 2:
-                    if ($header == 1){$span = '';}
-                    else {(isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');}
+                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');
                     break;
                 case 3:
-                    if ($header == 1){$span = '';}
-                    else {(isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');}
+                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');
                     break;
             }
         }
 
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
-
+        $input = new JInput();
+        $view = $input->getString('view');
         $rowspanitemspan = $params->get('rowspanitemspan');
         $rowspanbalance = 12 - $rowspanitemspan;
         $frow = '';
-        $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:10px;">';
+        $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:5px;">';
+        $pull = '';
+        if ($view == 'sermons'){$pull = $params->get('rowspanitempull');}
+        if ($view == 'sermon'){$pull = $params->get('drowspanitempull');}
         if ($span)
         {
-            $frow = '<div class="row-fluid" >';
-            $frow .= '<div class="span'.$rowspanitemspan.' '.$params->get('rowspanitempull').'"><div class="">'.$span.'</div></div>';
+            $frow .= '<div class="row-fluid" >';
+            $frow .= '<div class="span'.$rowspanitemspan.' '.$pull.'"><div '.$headerstyle.' class="">'.$span.'</div></div>';
             $frow .= '<div class="span'.$rowspanbalance.'">';
         }
 
@@ -318,38 +407,46 @@ class JBSMListing extends JBSMElements
     {
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
+        $data = '';
         //match the data in $item to a row/col in $row->name
+        $input = new JInput();
+        $view = $input->getString('view');
+        $extra = '';
+        if ($view == 'sermon')
+        {
+            $extra = 'd';
+        }
         switch ($row->name)
         {
-            case 'scripture1':
+            case $extra.'scripture1':
                 $esv = 0;
                 $scripturerow          = 1;
                 if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
                 else {(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
                 break;
-            case 'scripture2':
+            case $extra.'scripture2':
                 $esv = 0;
                 $scripturerow          = 2;
                 if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
                 else {(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
                 break;
-            case 'secondary':
+            case $extra.'secondary':
                 if ($header == 1){$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');}
                 else {(isset($item->secondary) ? $item->secondary : '');}
                 break;
-            case 'title':
+            case $extra.'title':
                 if ($header == 1){$data = JText::_('JBS_CMN_TITLE');}
                 else {(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');}
                 break;
-            case 'date':
+            case $extra.'date':
                 if ($header == 1){$data = JText::_('JBS_CMN_STUDY_DATE');}
                 else {(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');}
                 break;
-            case 'teacher':
+            case $extra.'teacher':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
                 else {(isset($item->teachername)? $data = $item->teachername : $data = '');}
                 break;
-            case 'teacher-title':
+            case $extra.'teacher-title':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
                 elseif (isset($item->teachertitle) && isset($item->teachername))
                 {
@@ -357,43 +454,43 @@ class JBSMListing extends JBSMElements
                 }
                 else {$data = $item->teachername;}
                 break;
-            case 'duration':
+            case $extra.'duration':
                 if ($header == 1){$data = JText::_('JBS_CMN_DURATION');}
                 else {(isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');}
                 break;
-            case 'studyintro':
+            case $extra.'studyintro':
                 if ($header == 1){$data = JText::_('JBS_CMN_INTRODUCTION');}
                 else {(isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');}
                 break;
-            case 'series':
+            case $extra.'series':
                 if ($header == 1){ $data = JText::_('JBS_CMN_SERIES');}
                 else {(isset($item->series_text) ? $data = stripslashes($item->series_text) : $data = '');}
                 break;
-            case 'seriesthumbnail':
+            case $extra.'seriesthumbnail':
                 if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
                 else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
-            case 'seriesdescription':
+            case $extra.'seriesdescription':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
                 else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
                 break;
-            case 'submitted':
+            case $extra.'submitted':
                 if ($header == 1){$data = JText::_('JBS_CMN_SUBMITTED_BY');}
                 else {(isset($item->submitted) ? $data = $item->submitted : $data = '');}
                 break;
-            case 'hits':
+            case $extra.'hits':
                 if ($header == 1){$data = JText::_('JBS_CMN_VIEWS');}
                 else {(isset($item->hits) ? $data = $item->hits : $data = '');}
                 break;
-            case 'downloads':
+            case $extra.'downloads':
                 if ($header == 1){$data = JText::_('JBS_CMN_DOWNLOADS');}
                 else {(isset($item->downloads) ? $data = $item->downloads : $data = '');}
                 break;
-            case 'studynumber':
+            case $extra.'studynumber':
                 if ($header == 1){$data = JText::_('JBS_CMN_STUDYNUMBER');}
                 else {(isset($item->studynumber) ? $data = $item->studynumber : $data = '');}
                 break;
-            case 'topic':
+            case $extra.'topic':
                 if ($header == 1){$data = JText::_('JBS_CMN_TOPIC');}
                 elseif (isset($item->topics_text))
                 {
@@ -413,27 +510,28 @@ class JBSMListing extends JBSMElements
                     }
                 }
                 break;
-            case 'locations':
+            case $extra.'locations':
                 if ($header == 1){$data = JText::_('JBS_CMN_LOCATION');}
                 else {(isset($item->location_text) ? $data = $item->location_text : $data = '');}
                 break;
-            case 'jbsmedia':
+            case $extra.'jbsmedia':
                 if ($header == 1){$data = JText::_('JBS_CMN_MEDIA');}
                 else {$data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);}
                 break;
-            case 'messagetype':
+            case $extra.'messagetype':
                 if ($header == 1){$data = JText::_('JBS_CMN_MESSAGE_TYPE');}
                 else {(isset($item->messaget_type) ? $data = $item->message_type : $data = '');}
                 break;
-            case 'thumbnail':
+            case $extra.'thumbnail':
                 if ($header == 1){$data = JText::_('JBS_CMN_THUMBNAIL');}
                 else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
-            case 'teacherimage':
+            case $extra.'teacherimage':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
                else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
         }
+
         $style = '';
         $customclass = '';
         if (isset($row->custom))
@@ -464,25 +562,32 @@ class JBSMListing extends JBSMElements
             case 6:
                 $classelement = '<h5>';
                 break;
+            case 7:
+                $classelement = '<blockquote>';
         }
         if (!$classelement){$classopen = $classelement.' '.$style; $classclose = '</'.$classelement.'>';}
         else {$classopen = ''; $classclose='';}
         //See whether the element is a link to something and get the link from the function
         $link = 0;
-        if ($row->linktype > 0 && $header == 0)
+        if ($view == 'sermons')
         {
-            $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
+            if ($row->linktype > 0 && $header == 0)
+            {
+                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
+            }
         }
         $frow = '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
         if ($link)
         {
             $frow .= $link;
         }
-        $frow .= $data;
+        if ($data){$frow .= $data;}
+
         if ($link)
         {
             $frow .= '</a>';
         }
+
         $frow .= $classclose.'</div>';
 
         $frow .= '</div>';
@@ -1533,571 +1638,6 @@ class JBSMListing extends JBSMElements
 		return $title;
 	}
 
-	/**
-	 * Get Header
-	 *
-	 * @param   object    $row           JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template ID
-	 * @param   int       $showheader    Show Hide item
-	 * @param   int       $ismodule      ?
-	 *
-	 * @return string
-	 */
-	public function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule)
-	{
-		if (!$row)
-		{
-			return null;
-		}
-		// $nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
-		$nh = false;
-
-		if ($showheader < 1)
-		{
-			$nh = true;
-		}
-
-		/* Here we test to see if this is a sermon or list view. If details, we reset the params to the details.
-		 this keeps us from having to rewrite all this code. */
-		$input = new JInput;
-		$view  = $input->get('view');
-
-		if ($view == 'sermon' && $ismodule < 1)
-		{
-
-			$params->set('row1col1', $params->get('drow1col1'));
-			$params->set('r1c1custom', $params->get('dr1c1custom'));
-			$params->set('r1c1customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r1c1span', $params->get('dr1c1span'));
-			$params->set('linkr1c1', $params->get('dlinkr1c1'));
-
-			$params->set('row1col2', $params->get('drow1col2'));
-			$params->set('r1c2custom', $params->get('dr1c2custom'));
-			$params->set('r1c2customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r1c2span', $params->get('dr1c2span'));
-			$params->set('linkr1c2', $params->get('dlinkr1c2'));
-
-			$params->set('row1col3', $params->get('drow1col3'));
-			$params->set('r1c3custom', $params->get('dr1c3custom'));
-			$params->set('r1c3customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r1c3span', $params->get('dr1c3span'));
-			$params->set('linkr1c3', $params->get('dlinkr1c3'));
-
-			$params->set('row1col4', $params->get('drow1col4'));
-			$params->set('r1c4custom', $params->get('dr1c4custom'));
-			$params->set('r1c4customlabel', $params->get('dr1c1customlabel'));
-			$params->set('linkr1c4', $params->get('dlinkr1c4'));
-
-			$params->set('row2col1', $params->get('drow2col1'));
-			$params->set('r2c1custom', $params->get('dr2c1custom'));
-			$params->set('r2c1customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r2c1span', $params->get('dr2c1span'));
-			$params->set('linkr2c1', $params->get('dlinkr2c1'));
-
-			$params->set('row2col2', $params->get('drow2col2'));
-			$params->set('r2c2custom', $params->get('dr2c2custom'));
-			$params->set('r2c2customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r2c2span', $params->get('dr2c2span'));
-			$params->set('linkr2c2', $params->get('dlinkr2c2'));
-
-			$params->set('row2col3', $params->get('drow2col3'));
-			$params->set('r2c3custom', $params->get('dr2c3custom'));
-			$params->set('r2c3customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r2c3span', $params->get('dr2c3span'));
-			$params->set('linkr2c3', $params->get('dlinkr2c3'));
-
-			$params->set('row2col4', $params->get('drow2col4'));
-			$params->set('r2c4custom', $params->get('dr2c4custom'));
-			$params->set('r2c4customlabel', $params->get('dr1c1customlabel'));
-			$params->set('linkr2c4', $params->get('dlinkr2c4'));
-
-			$params->set('row3col1', $params->get('drow3col1'));
-			$params->set('r3c1custom', $params->get('dr3c1custom'));
-			$params->set('r3c1customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r3c1span', $params->get('dr3c1span'));
-			$params->set('linkr3c1', $params->get('dlinkr3c1'));
-
-			$params->set('row3col2', $params->get('drow3col2'));
-			$params->set('r3c2custom', $params->get('dr3c2custom'));
-			$params->set('r3c2customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r3c2span', $params->get('dr3c2span'));
-			$params->set('linkr3c2', $params->get('dlinkr3c2'));
-
-			$params->set('row3col3', $params->get('drow3col3'));
-			$params->set('r3c3custom', $params->get('dr3c3custom'));
-			$params->set('r3c3customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r3c3span', $params->get('dr3c3span'));
-			$params->set('linkr3c3', $params->get('dlinkr3c3'));
-
-			$params->set('row3col4', $params->get('drow3col4'));
-			$params->set('r3c4custom', $params->get('dr3c4custom'));
-			$params->set('r3c4customlabel', $params->get('dr1c1customlabel'));
-			$params->set('linkr3c4', $params->get('dlinkr3c4'));
-
-			$params->set('row4col1', $params->get('drow4col1'));
-			$params->set('r4c1custom', $params->get('dr4c1custom'));
-			$params->set('r4c1customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r4c1span', $params->get('dr4c1span'));
-			$params->set('linkr4c1', $params->get('dlinkr4c1'));
-
-			$params->set('row4col2', $params->get('drow4col2'));
-			$params->set('r4c2custom', $params->get('dr4c2custom'));
-			$params->set('r4c2customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r4c2span', $params->get('dr4c2span'));
-			$params->set('linkr4c2', $params->get('dlinkr4c2'));
-
-			$params->set('row4col3', $params->get('drow4col3'));
-			$params->set('r4c3custom', $params->get('dr4c3custom'));
-			$params->set('r4c3customlabel', $params->get('dr1c1customlabel'));
-			$params->set('r4c3span', $params->get('dr4c3span'));
-			$params->set('linkr4c3', $params->get('dlinkr4c3'));
-
-			$params->set('row4col4', $params->get('drow4col4'));
-			$params->set('r4c4custom', $params->get('dr4c4custom'));
-			$params->set('r4c4customlabel', $params->get('dr1c1customlabel'));
-			$params->set('linkr4c4', $params->get('dlinkr4c4'));
-		}
-
-		$columns = 1;
-
-		if ($params->get('row1col2') > 0 || $params->get('row2col2') > 0 || $params->get('row3col2') > 0 || $params->get('row4col2') > 0)
-		{
-			$columns = 2;
-		}
-		if ($params->get('row1col3') > 0 || $params->get('row2col3') > 0 || $params->get('row3col3') > 0 || $params->get('row4col3') > 0)
-		{
-			$columns = 3;
-		}
-		if ($params->get('row1col4') > 0 || $params->get('row2col4') > 0 || $params->get('row3col4') > 0 || $params->get('row4col4') > 0)
-		{
-			$columns = 4;
-		}
-		$rows = 1;
-
-		if ($params->get('row2col1') > 0 || $params->get('row2col2') > 0 || $params->get('row2col3') > 0 || $params->get('row2col4') > 0)
-		{
-			$rows = 2;
-		}
-		if ($params->get('row3col1') > 0 || $params->get('row3col2') > 0 || $params->get('row3col3') > 0 || $params->get('row3col4') > 0)
-		{
-			$rows = 3;
-		}
-		if ($params->get('row4col1') > 0 || $params->get('row4col2') > 0 || $params->get('row4col3') > 0 || $params->get('row4col4') > 0)
-		{
-			$rows = 4;
-		}
-
-		if ($nh)
-		{
-			$listing = '<tr>';
-
-			while ($columns > 0)
-			{
-				$listing .= '<th class="firstrow"></th>';
-				$columns--;
-			}
-			$listing .= '</tr>';
-		}
-		else
-		{
-			// Here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
-
-			$listing = '<tr';
-
-			if ($rows == 1)
-			{
-				$listing .= ' class = "lastrow"';
-			}
-			$listing .= '>';
-
-			// Beginning of first column
-			$colspan  = $params->get('r1c1span');
-			$rowspan  = $params->get('rowspanr1c1');
-			$rowcolid = 'row1col1';
-			$lastcol  = 0;
-
-			if ($columns == 1 || $colspan > 3)
-			{
-				$lastcol = 1;
-			}
-			if ($params->get('row1col1') < 1)
-			{
-				$params->set('row1col1', 100);
-			}
-			$listing .= $this->getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-
-
-			if ($columns > 1 && $params->get('r1c1span') < 2)
-			{
-				$colspan  = $params->get('r1c2span');
-				$rowspan  = $params->get('rowspanr1c2');
-				$rowcolid = 'row1col2';
-				$lastcol  = 0;
-
-				if ($columns == 2 || $colspan > 2)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row1col2') < 1)
-				{
-					$params->set('row1col2', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 2 && ($params->get('r1c1span') < 3 && $params->get('r1c2span') < 2))
-			{
-				$colspan  = $params->get('r1c3span');
-				$rowspan  = $params->get('rowspanr1c3');
-				$rowcolid = 'row1col3';
-				$lastcol  = 0;
-
-				if ($columns == 3 || $colspan > 1)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row1col3') < 1)
-				{
-					$params->set('row1col3', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 3 && ($params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
-			{
-				$colspan  = $params->get('r1c4span');
-				$rowspan  = $params->get('rowspanr1c4');
-				$rowcolid = 'row1col4';
-				$lastcol  = 0;
-
-				if ($columns == 4)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row1col4') < 1)
-				{
-					$params->set('row1col4', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			$listing .= '</tr>';
-
-			$lastrow = 0;
-
-			if ($rows == 2)
-			{
-				$lastrow = 1;
-			}
-			// This begins the row of the display data
-			$listing .= '<tr';
-
-			if ($lastrow == 1)
-			{
-				$listing .= ' class="lastrow"';
-			}
-			$listing .= '>';
-			$colspan  = $params->get('r2c1span');
-			$rowspan  = $params->get('rowspanr2c1');
-			$rowcolid = 'row2col1';
-			$lastcol  = 0;
-
-			if ($columns == 1 || $colspan > 3)
-			{
-				$lastcol = 1;
-			}
-			if ($params->get('row2col1') < 1)
-			{
-				$params->set('row2col1', 100);
-			}
-			$listing .= $this->getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-
-			if ($columns > 1 && $params->get('r2c1span') < 2)
-			{
-				$colspan  = $params->get('r2c2span');
-				$rowspan  = $params->get('rowspanr2c2');
-				$rowcolid = 'row2col2';
-				$lastcol  = 0;
-
-				if ($columns == 2 || $colspan > 2)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row1col2') < 1)
-				{
-					$params->set('row1col2', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 2 && ($params->get('r2c1span') < 3 && $params->get('r2c2span') < 2))
-			{
-				$colspan  = $params->get('r2c3span');
-				$rowspan  = $params->get('rowspanr2c3');
-				$rowcolid = 'row2col3';
-				$lastcol  = 0;
-
-				if ($columns == 3 || $colspan > 1)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row2col3') < 1)
-				{
-					$params->set('row2col3', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 3 && ($params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
-			{
-				$colspan  = $params->get('r2c4span');
-				$rowspan  = $params->get('rowspanr2c4');
-				$rowcolid = 'row2col4';
-				$lastcol  = 0;
-
-				if ($columns == 4)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row2col4') < 1)
-				{
-					$params->set('row2col4', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			$listing .= '</tr>';
-
-			// Test to see if Lastrow is not (int) 0
-			if ($lastrow == 0)
-			{
-				$lastrow = 0;
-			}
-
-			// This begins the row of the display data
-			$listing .= '<tr';
-
-			if ($rows == 3)
-			{
-				$listing .= ' class= "lastrow"';
-			}
-
-			$listing .= '>';
-			$colspan  = $params->get('r3c1span');
-			$rowspan  = $params->get('rowspanr3c1');
-			$rowcolid = 'row3col1';
-			$lastcol  = 0;
-
-			if ($columns == 1 || $colspan > 3)
-			{
-				$lastcol = 1;
-			}
-			if ($params->get('row3col1') < 1)
-			{
-				$params->set('row3col1', 100);
-			}
-			$listing .= $this->getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-
-			if ($columns > 1 && $params->get('r3c1span') < 2)
-			{
-				$colspan  = $params->get('r3c2span');
-				$rowspan  = $params->get('rowspanr3c2');
-				$rowcolid = 'row3col2';
-				$lastcol  = 0;
-
-				if ($columns == 2 || $colspan > 2)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row3col3') < 1)
-				{
-					$params->set('row3col2', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 2 && ($params->get('r3c1span') < 3 && $params->get('r3c2span') < 2))
-			{
-				$colspan  = $params->get('r3c3span');
-				$rowspan  = $params->get('rowspanr3c3');
-				$rowcolid = 'row3col3';
-				$lastcol  = 0;
-
-				if ($columns == 3 || $colspan > 1)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row3col3') < 1)
-				{
-					$params->set('row3col3', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 3 && ($params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
-			{
-				$colspan  = $params->get('r3c4span');
-				$rowspan  = $params->get('rowspanr3c4');
-				$rowcolid = 'row3col4';
-				$lastcol  = 0;
-
-				if ($columns == 4)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row3col4') < 1)
-				{
-					$params->set('row3col4', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			$listing .= '</tr>';
-
-			// This begins the row of the display data
-			$listing .= '<tr';
-			$lastrow = 0;
-
-			if ($rows == 4)
-			{
-				$listing .= ' class="lastrow"';
-			}
-
-			$listing .= '>';
-			$colspan  = $params->get('r4c1span');
-			$rowspan  = $params->get('rowspanr4c1');
-			$rowcolid = 'row4col1';
-			$lastcol  = 0;
-
-			if ($columns == 1 || $colspan > 3)
-			{
-				$lastcol = 1;
-			}
-			if ($params->get('row4col1') < 1)
-			{
-				$params->set('row4col1', 100);
-			}
-			$listing .= $this->getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-
-			if ($columns > 1 && $params->get('r4c1span') < 2)
-			{
-				$colspan  = $params->get('r4c2span');
-				$rowspan  = $params->get('rowspanr4c2');
-				$rowcolid = 'row4col2';
-				$lastcol  = 0;
-
-				if ($columns == 2 || $colspan > 2)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row4col2') < 1)
-				{
-					$params->set('row4col2', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 2 && ($params->get('r4c1span') < 3 && $params->get('r4c2span') < 2))
-			{
-				$colspan  = $params->get('r4c3span');
-				$rowspan  = $params->get('rowspanr4c3');
-				$rowcolid = 'row4col3';
-				$lastcol  = 0;
-
-				if ($columns == 3 || $colspan > 1)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row4col3') < 1)
-				{
-					$params->set('row4col3', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			if ($columns > 3 && ($params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
-			{
-				$colspan  = $params->get('r4c4span');
-				$rowspan  = $params->get('rowspanr4c4');
-				$rowcolid = 'row4col4';
-				$lastcol  = 0;
-
-				if ($columns == 4)
-				{
-					$lastcol = 1;
-				}
-				if ($params->get('row4col4') < 1)
-				{
-					$params->set('row4col4', 100);
-				}
-				$listing .= $this->getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
-			}
-			$listing .= '</tr>';
-		}
-
-		// End of if else for $nh
-		return $listing;
-	}
-
-	/**
-	 * Get Header Cell
-	 *
-	 * @param   int       $rowid         Table Row ID
-	 * @param   object    $row           Item info
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $lastcol       Last Column
-	 * @param   int       $colspan       Column Span
-	 * @param   int       $rowspan       Row Span
-	 * @param   int       $rowcolid      RowCol Id
-	 * @param   string    $nh            ?
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template ID
-	 *
-	 * @return string
-	 */
-	private function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
-	{
-		$headercell = '<th ';
-		$elementid  = new stdClass;
-
-		if ($rowid == '20')
-		{
-			$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-			$elementid->id         = 'jbsmedia';
-		}
-		else
-		{
-			$elementid = JBSMElements::getElementid($rowid, $row, $params, $admin_params, $template);
-		}
-
-		if (!isset($elementid->id))
-		{
-			$headercell .= 'customhead';
-		}
-		else
-		{
-			$headercell .= 'class="' . $rowcolid . ' ' . $elementid->id . 'head ';
-		}
-
-		if ($lastcol == 1)
-		{
-			$headercell .= ' lastcol';
-		}
-		$headercell .= '"';
-
-		if ($colspan > 1)
-		{
-			$headercell .= 'colspan="' . $colspan . '" ';
-		}
-		if ($rowspan > 1)
-		{
-			$headercell .= 'rowspan="' . $rowspan . '"';
-		}
-		$headercell .= '>';
-
-		if (isset($elementid->headertext))
-		{
-			$headercell .= $elementid->headertext;
-		}
-		else
-		{
-			$headercell .= $this->getCustomhead($rowcolid, $params);
-		}
-		$headercell .= '</th>';
-
-		return $headercell;
-	}
 
 	/**
 	 * Get CustomHead
@@ -2115,878 +1655,5 @@ class JBSMListing extends JBSMElements
 
 		return $customhead;
 	}
-
-    public function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
-    {
-        /* Here we test to see if this is a sermon or list view. If details, we reset the params to the details.
-           this keeps us from having to rewrite all this code. */
-        $input = new JInput;
-        $view  = $input->get('view');
-
-        $custom = new JBSMCustom;
-
-        if ($view == 'sermon' && $ismodule < 1)
-        {
-
-            $params->set('row1col1', $params->get('drow1col1'));
-            $params->set('r1c1custom', $params->get('dr1c1custom'));
-            $params->set('r1c1customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r1c1span', $params->get('dr1c1span'));
-            $params->set('linkr1c1', $params->get('dlinkr1c1'));
-
-            $params->set('row1col2', $params->get('drow1col2'));
-            $params->set('r1c2custom', $params->get('dr1c2custom'));
-            $params->set('r1c2customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r1c2span', $params->get('dr1c2span'));
-            $params->set('linkr1c2', $params->get('dlinkr1c2'));
-
-            $params->set('row1col3', $params->get('drow1col3'));
-            $params->set('r1c3custom', $params->get('dr1c3custom'));
-            $params->set('r1c3customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r1c3span', $params->get('dr1c3span'));
-            $params->set('linkr1c3', $params->get('dlinkr1c3'));
-
-            $params->set('row1col4', $params->get('drow1col4'));
-            $params->set('r1c4custom', $params->get('dr1c4custom'));
-            $params->set('r1c4customlabel', $params->get('dr1c1customlabel'));
-            $params->set('linkr1c4', $params->get('dlinkr1c4'));
-
-            $params->set('row2col1', $params->get('drow2col1'));
-            $params->set('r2c1custom', $params->get('dr2c1custom'));
-            $params->set('r2c1customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r2c1span', $params->get('dr2c1span'));
-            $params->set('linkr2c1', $params->get('dlinkr2c1'));
-
-            $params->set('row2col2', $params->get('drow2col2'));
-            $params->set('r2c2custom', $params->get('dr2c2custom'));
-            $params->set('r2c2customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r2c2span', $params->get('dr2c2span'));
-            $params->set('linkr2c2', $params->get('dlinkr2c2'));
-
-            $params->set('row2col3', $params->get('drow2col3'));
-            $params->set('r2c3custom', $params->get('dr2c3custom'));
-            $params->set('r2c3customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r2c3span', $params->get('dr2c3span'));
-            $params->set('linkr2c3', $params->get('dlinkr2c3'));
-
-            $params->set('row2col4', $params->get('drow2col4'));
-            $params->set('r2c4custom', $params->get('dr2c4custom'));
-            $params->set('r2c4customlabel', $params->get('dr1c1customlabel'));
-            $params->set('linkr2c4', $params->get('dlinkr2c4'));
-
-            $params->set('row3col1', $params->get('drow3col1'));
-            $params->set('r3c1custom', $params->get('dr3c1custom'));
-            $params->set('r3c1customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r3c1span', $params->get('dr3c1span'));
-            $params->set('linkr3c1', $params->get('dlinkr3c1'));
-
-            $params->set('row3col2', $params->get('drow3col2'));
-            $params->set('r3c2custom', $params->get('dr3c2custom'));
-            $params->set('r3c2customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r3c2span', $params->get('dr3c2span'));
-            $params->set('linkr3c2', $params->get('dlinkr3c2'));
-
-            $params->set('row3col3', $params->get('drow3col3'));
-            $params->set('r3c3custom', $params->get('dr3c3custom'));
-            $params->set('r3c3customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r3c3span', $params->get('dr3c3span'));
-            $params->set('linkr3c3', $params->get('dlinkr3c3'));
-
-            $params->set('row3col4', $params->get('drow3col4'));
-            $params->set('r3c4custom', $params->get('dr3c4custom'));
-            $params->set('r3c4customlabel', $params->get('dr1c1customlabel'));
-            $params->set('linkr3c4', $params->get('dlinkr3c4'));
-
-            $params->set('row4col1', $params->get('drow4col1'));
-            $params->set('r4c1custom', $params->get('dr4c1custom'));
-            $params->set('r4c1customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r4c1span', $params->get('dr4c1span'));
-            $params->set('linkr4c1', $params->get('dlinkr4c1'));
-
-            $params->set('row4col2', $params->get('drow4col2'));
-            $params->set('r4c2custom', $params->get('dr4c2custom'));
-            $params->set('r4c2customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r4c2span', $params->get('dr4c2span'));
-            $params->set('linkr4c2', $params->get('dlinkr4c2'));
-
-            $params->set('row4col3', $params->get('drow4col3'));
-            $params->set('r4c3custom', $params->get('dr4c3custom'));
-            $params->set('r4c3customlabel', $params->get('dr1c1customlabel'));
-            $params->set('r4c3span', $params->get('dr4c3span'));
-            $params->set('linkr4c3', $params->get('dlinkr4c3'));
-
-            $params->set('row4col4', $params->get('drow4col4'));
-            $params->set('r4c4custom', $params->get('dr4c4custom'));
-            $params->set('r4c4customlabel', $params->get('dr1c1customlabel'));
-            $params->set('linkr4c4', $params->get('dlinkr4c4'));
-        }
-
-        // Need to know if last column and last row
-        $columns = 1;
-
-        if ($params->get('row1col2') > 0 || $params->get('row2col2') > 0 || $params->get('row3col2') > 0 || $params->get('row4col2') > 0)
-        {
-            $columns = 2;
-        }
-        if ($params->get('row1col3') > 0 || $params->get('row2col3') > 0 || $params->get('row3col3') > 0 || $params->get('row4col3') > 0)
-        {
-            $columns = 3;
-        }
-        if ($params->get('row1col4') > 0 || $params->get('row2col4') > 0 || $params->get('row3col4') > 0 || $params->get('row4col4') > 0)
-        {
-            $columns = 4;
-        }
-        $rows = 1;
-
-        if ($params->get('row2col1') > 0 || $params->get('row2col2') > 0 || $params->get('row2col3') > 0 || $params->get('row2col4') > 0)
-        {
-            $rows = 2;
-        }
-        if ($params->get('row3col1') > 0 || $params->get('row3col2') > 0 || $params->get('row3col3') > 0 || $params->get('row3col4') > 0)
-        {
-            $rows = 3;
-        }
-        if ($params->get('row4col1') > 0 || $params->get('row4col2') > 0 || $params->get('row4col3') > 0 || $params->get('row4col4') > 0)
-        {
-            $rows = 4;
-        }
-
-        $id3          = $row->id;
-        $smenu        = $params->get('detailsitemid');
-        $tmenu        = $params->get('teacheritemid');
-        $tid          = $row->teacher_id;
-        $entry_access = $admin_params->get('entry_access');
-        $allow_entry  = $admin_params->get('allow_entry_study');
-
-        // This is the beginning of row 1
-        $lastrow = 0;
-
-        if ($rows == 1)
-        {
-            $lastrow = 1;
-        }
-
-        // This begins the row of the display data
-        $listing = '<tr class="' . $oddeven;
-
-        if ($lastrow == 1)
-        {
-            $listing .= ' lastrow';
-        }
-        $listing .= '">';
-
-        $rowcolid = 'row1col1';
-
-        if ($params->get('row1col1') < 1)
-        {
-            $params->set('row1col1', 100);
-        }
-        if ($params->get('row1col1') == 24)
-        {
-            $elementid             = $custom->getCustom($params->get('row1col1'), $params->get('r1c1custom'), $row, $params, $admin_params, $template);
-            $elementid->headertext = $params->get('r1c1customlabel');
-        }
-        else
-        {
-            $elementid = JBSMElements::getElementid($params->get('row1col1'), $row, $params, $admin_params, $template);
-        }
-        $colspan = $params->get('r1c1span');
-        $rowspan = $params->get('rowspanr1c1');
-        $lastcol = 0;
-
-        if ($columns == 1 || $colspan > 3)
-        {
-            $lastcol = 1;
-        }
-
-        if (isset($elementid))
-        {
-            $listing .= self::getCell(
-                $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),
-                $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-            );
-        }
-
-        if ($columns > 1 && $params->get('r1c1span') < 2)
-        {
-            $rowcolid = 'row1col2';
-
-            if ($params->get('row1col2') < 1)
-            {
-                $params->set('row1col2', 100);
-            }
-
-            if ($params->get('row1col2') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row1col2'), $params->get('r1c2custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r1c2customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row1col2'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r1c2span');
-            $rowspan = $params->get('rowspanr1c2');
-            $lastcol = 0;
-
-            if ($columns == 2 || $colspan > 2)
-            {
-                $lastcol = 1;
-            }
-
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
-                    $params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 2 && ($params->get('r1c1span') < 3 && $params->get('r1c2span') < 2))
-        {
-            $rowcolid = 'row1col3';
-
-            if ($params->get('row1col3') < 1)
-            {
-                $params->set('row1col3', 100);
-            }
-            if ($params->get('row1col3') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row1col3'), $params->get('r1c3custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r1c3customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row1col3'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r1c3span');
-            $rowspan = $params->get('rowspanr1c3');
-            $lastcol = 0;
-
-            if ($columns == 3 || $colspan > 1)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 3 && ($params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
-        {
-            $rowcolid = 'row1col4';
-
-            if ($params->get('row1col4') < 1)
-            {
-                $params->set('row1col4', 100);
-            }
-            if ($params->get('row1col4') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row1col4'), $params->get('r1c4custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r1c4customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row1col4'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r1c4span');
-            $rowspan = $params->get('rowspanr1c4');
-            $lastcol = 0;
-
-            if ($columns == 4)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
-                    $params->get('linkr1c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-        $listing .= '</tr>';
-
-        // This ends the row of the data to be displayed
-
-        // This is the end of row 1
-
-        // This is the beginning of row 2
-
-        $lastrow = 0;
-
-        if ($rows == 2)
-        {
-            $lastrow = 1;
-        }
-        $listing .= '<tr class="' . $oddeven;
-
-        // This begins the row of the display data
-
-        if ($lastrow == 1)
-        {
-            $listing .= ' lastrow';
-        }
-
-        $listing .= '">';
-
-        $rowcolid = 'row2col1';
-
-        if ($params->get('row2col1') < 1)
-        {
-            $params->set('row2col1', 100);
-        }
-        if ($params->get('row2col1') == 24)
-        {
-            $elementid             = $custom->getCustom($params->get('row2col1'), $params->get('r2c1custom'), $row, $params, $admin_params, $template);
-            $elementid->headertext = $params->get('r2c1customlabel');
-        }
-        else
-        {
-            $elementid = JBSMElements::getElementid($params->get('row2col1'), $row, $params, $admin_params, $template);
-        }
-        $colspan = $params->get('r2c1span');
-        $rowspan = $params->get('rowspanr2c1');
-
-        $lastcol = 0;
-
-        if ($columns == 1 || $colspan > 3)
-        {
-            $lastcol = 1;
-        }
-        if (isset($elementid))
-        {
-            $listing .= self::getCell(
-                $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'),
-                $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-            );
-        }
-        if ($columns > 1 && $params->get('r2c1span') < 2)
-        {
-            $rowcolid = 'row2col2';
-
-            if ($params->get('row2col2') < 1)
-            {
-                $params->set('row2col2', 100);
-            }
-            if ($params->get('row2col2') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row2col2'), $params->get('r2c2custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r2c2customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row2col2'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r2c2span');
-            $rowspan = $params->get('rowspanr2c2');
-            $lastcol = 0;
-
-            if ($columns == 2 || $colspan > 2)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 2 && ($params->get('r2c1span') < 3 && $params->get('r2c2span') < 2))
-        {
-            $rowcolid = 'row2col3';
-
-            if ($params->get('row2col3') < 1)
-            {
-                $params->set('row2col3', 100);
-            }
-            if ($params->get('row2col3') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row2col3'), $params->get('r2c3custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r2c3customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r2c3span');
-            $rowspan = $params->get('rowspanr2c3');
-            $lastcol = 0;
-
-            if ($columns == 3 || $colspan > 1)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 3 && ($params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
-        {
-            $rowcolid = 'row2col4';
-
-            if ($params->get('row2col4') < 1)
-            {
-                $params->set('row2col4', 100);
-            }
-            if ($params->get('row2col4') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row2col4'), $params->get('r2c4custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r2c4customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row2col4'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r2c4span');
-            $rowspan = $params->get('rowspanr2c4');
-            $lastcol = 0;
-
-            if ($columns == 4)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c4'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-        $listing .= '</tr>';
-
-        // This ends the row of the data to be displayed
-
-        // End of row 2
-
-        // Beginning of row 3
-
-        $lastrow = 0;
-
-        if ($rows == 3)
-        {
-            $lastrow = 1;
-        }
-
-        // This begins the row of the display data
-        $listing .= '<tr class="' . $oddeven;
-
-        if ($lastrow == 1)
-        {
-            $listing .= ' lastrow';
-        }
-
-        $listing .= '">';
-
-        $rowcolid = 'row3col1';
-
-        if ($params->get('row3col1') < 1)
-        {
-            $params->set('row3col1', 100);
-        }
-        if ($params->get('row3col1') == 24)
-        {
-            $elementid             = $custom->getCustom($params->get('row3col1'), $params->get('r3c1custom'), $row, $params, $admin_params, $template);
-            $elementid->headertext = $params->get('r3c1customlabel');
-        }
-        else
-        {
-            $elementid = JBSMElements::getElementid($params->get('row3col1'), $row, $params, $admin_params, $template);
-        }
-        $colspan = $params->get('r3c1span');
-        $rowspan = $params->get('rowspanr3c1');
-
-        $lastcol = 0;
-
-        if ($columns == 1 || $colspan > 3)
-        {
-            $lastcol = 1;
-        }
-        if (isset($elementid))
-        {
-            $listing .= self::getCell(
-                $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3,
-                $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-            );
-        }
-        if ($columns > 1 && $params->get('r3c1span') < 2)
-        {
-            $rowcolid = 'row3col2';
-
-            if ($params->get('row3col2') < 1)
-            {
-                $params->set('row3col2', 100);
-            }
-            if ($params->get('row3col2') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row3col2'), $params->get('r3c2custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r3c2customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row3col2'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r3c2span');
-            $rowspan = $params->get('rowspanr3c2');
-            $lastcol = 0;
-
-            if ($columns == 2 || $colspan > 2)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 2 && ($params->get('r3c1span') < 3 && $params->get('r3c2span') < 2))
-        {
-            $rowcolid = 'row3col3';
-
-            if ($params->get('row3col3') < 1)
-            {
-                $params->set('row3col3', 100);
-            }
-            if ($params->get('row3col3') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row3col3'), $params->get('r3c3custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r3c3customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row3col3'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r3c3span');
-            $rowspan = $params->get('rowspanr3c3');
-            $lastcol = 0;
-
-            if ($columns == 3 || $colspan > 1)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 3 && ($params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
-        {
-            $rowcolid = 'row3col4';
-
-            if ($params->get('row3col4') < 1)
-            {
-                $params->set('row3col4', 100);
-            }
-            if ($params->get('row3col4') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row3col4'), $params->get('r3c4custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r3c4customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row3col4'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r3c4span');
-            $rowspan = $params->get('rowspanr3c4');
-            $lastcol = 0;
-
-            if ($columns == 4)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c4'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        // This ends the row of the data to be displayed
-        $listing .= '</tr>';
-
-        // End of row 3
-        // Beginning of row 4
-        $lastrow = 0;
-
-        if ($rows == 4)
-        {
-            $lastrow = 1;
-        }
-
-        // This begins the row of the display data
-        $listing .= '<tr class="' . $oddeven;
-
-        if ($lastrow == 1)
-        {
-            $listing .= ' lastrow';
-        }
-
-        $listing .= '">';
-
-        $rowcolid = 'row4col1';
-
-        if ($params->get('row4col1') < 1)
-        {
-            $params->set('row4col1', 100);
-        }
-        if ($params->get('row4col1') == 24)
-        {
-            $elementid             = $custom->getCustom($params->get('row4col1'), $params->get('r4c1custom'), $row, $params, $admin_params, $template);
-            $elementid->headertext = $params->get('r4c1customlabel');
-        }
-        else
-        {
-            $elementid = JBSMElements::getElementid($params->get('row4col1'), $row, $params, $admin_params, $template);
-        }
-        $colspan = $params->get('r4c1span');
-        $rowspan = $params->get('rowspanr4c1');
-
-        $lastcol = 0;
-
-        if ($columns == 1 || $colspan > 3)
-        {
-            $lastcol = 1;
-        }
-        if (isset($elementid))
-        {
-            $listing .= self::getCell(
-                $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3,
-                $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-            );
-        }
-
-        if ($columns > 1 && $params->get('r4c1span') < 2)
-        {
-            $rowcolid = 'row4col2';
-
-            if ($params->get('row4col2') < 1)
-            {
-                $params->set('row4col2', 100);
-            }
-            if ($params->get('row4col2') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row4col2'), $params->get('r4c2custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r4c2customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row4col2'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r4c2span');
-            $rowspan = $params->get('rowspanr4c2');
-            $lastcol = 0;
-
-            if ($columns == 2 || $colspan > 2)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 2 && ($params->get('r4c1span') < 3 && $params->get('r4c2span') < 2))
-        {
-            $rowcolid = 'row4col3';
-
-            if ($params->get('row4col3') < 1)
-            {
-                $params->set('row4col3', 100);
-            }
-            if ($params->get('row4col3') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row4col3'), $params->get('r4c3custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r4c3customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row4col3'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r4c3span');
-            $rowspan = $params->get('rowspanr4c3');
-            $lastcol = 0;
-
-            if ($columns == 3 || $colspan > 1)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol,
-                    $params->get('linkr4c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template
-                );
-            }
-        }
-
-        if ($columns > 3 && ($params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
-        {
-            $rowcolid = 'row4col4';
-
-            if ($params->get('row4col4') < 1)
-            {
-                $params->set('row4col4', 100);
-            }
-            if ($params->get('row4col4') == 24)
-            {
-                $elementid             = $custom->getCustom($params->get('row4col4'), $params->get('r4c4custom'), $row, $params, $admin_params, $template);
-                $elementid->headertext = $params->get('r4c4customlabel');
-            }
-            else
-            {
-                $elementid = JBSMElements::getElementid($params->get('row4col4'), $row, $params, $admin_params, $template);
-            }
-            $colspan = $params->get('r4c4span');
-            $rowspan = $params->get('rowspanr4c4');
-            $lastcol = 0;
-
-            if ($columns == 4)
-            {
-                $lastcol = 1;
-            }
-            if (isset($elementid))
-            {
-                $listing .= self::getCell(
-                    $elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c4'),
-                    $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $row, $template
-                );
-            }
-        }
-
-        // This ends the row of the data to be displayed
-        $listing .= '</tr>';
-
-        return $listing;
-    }
-
-    /**
-     * Get Cell
-     *
-     * @param   int       $elementid     Element ID
-     * @param   string    $element       Element
-     * @param   int       $rowcolid      Row Column ID
-     * @param   string    $colspan       Column Span
-     * @param   string    $rowspan       Row Span
-     * @param   string    $lastcol       Last Column
-     * @param   string    $islink        is a Link
-     * @param   string    $id3           ID3
-     * @param   int       $tid           Template ID
-     * @param   string    $smenu         Sermon Menu
-     * @param   string    $tmenu         Template Menu
-     * @param   string    $entry_access  Access Entry
-     * @param   string    $allow_entry   Allow Entry
-     * @param   JRegistry $params        Itom Params
-     * @param   JRegistry $admin_params  Admin Params
-     * @param   object    $row           Row info
-     * @param   int       $template      Template ID
-     *
-     * @return string
-     */
-    private function getCell(
-        $elementid,
-        $element,
-        $rowcolid,
-        $colspan,
-        $rowspan,
-        $lastcol,
-        $islink,
-        $id3,
-        $tid,
-        $smenu,
-        $tmenu,
-        $entry_access,
-        $allow_entry,
-        $params,
-        $admin_params,
-        $row,
-        $template)
-    {
-
-        $cell = '<td class="' . $rowcolid . ' ' . $elementid;
-
-        if ($lastcol == 1)
-        {
-            $cell .= ' lastcol';
-        }
-        $cell .= '" ';
-
-        if ($colspan > 1)
-        {
-            $cell .= 'colspan="' . $colspan . '" ';
-        }
-        $cell .= '>';
-
-        if ($islink > 0)
-        {
-            $cell .= self::getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);
-        }
-        $cell .= $element;
-
-        switch ($islink)
-        {
-            case 0:
-                break;
-
-            case 1:
-                $cell .= '</a>';
-                break;
-
-            case 3:
-                $cell .= '</a>';
-                break;
-
-            case 4:
-                $cell .= '</a></span>';
-                break;
-
-            case 5:
-                $cell .= '</a></span>';
-                break;
-
-            case 6:
-                $cell .= '</a>';
-                break;
-
-            case 7:
-                $cell .= '</a>';
-                break;
-
-            case 8:
-                $cell .= '</a>';
-                break;
-        }
-        $cell .= '</td>';
-
-        return $cell;
-    }
 
 }
