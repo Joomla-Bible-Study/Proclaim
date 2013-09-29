@@ -255,8 +255,6 @@ class JBSMLanding
 		$mainframe   = JFactory::getApplication();
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
 		$langlink = JLanguageMultilang::isEnabled();
 
 		$teacher   = null;
@@ -500,8 +498,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
 		$series   = null;
 		$seriesid = null;
 		$numRows  = null;
@@ -529,14 +525,6 @@ class JBSMLanding
 		{
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
 		}
 		if ($menu_order)
 		{
@@ -774,14 +762,6 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
-		}
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -940,14 +920,6 @@ class JBSMLanding
 		{
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
 		}
 		if ($menu_order)
 		{

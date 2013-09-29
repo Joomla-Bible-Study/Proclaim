@@ -24,36 +24,14 @@ class JBSMMedia
 	 * @param   int $id  ID
 	 *
 	 * @return object
+	 *
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getMedia($id)
 	{
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-			. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-			. ' #__bsms_media.media_alttext AS malttext,'
-			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-		);
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getMedia as of 8.1.0', 'error');
 
-		$query->from('#__bsms_mediafiles');
-
-		$query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-
-		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-
-		$query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-
-		$query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
-
-		$query->where('#__bsms_mediafiles.study_id = ' . (int) $id);
-		$query->where('#__bsms_mediafiles.published = 1');
-		$query->order('ordering ASC, #__bsms_mediafiles.mime_type ASC');
-		$database->setQuery($query);
-		$media = $database->loadObjectList('id');
-
-		return $media;
+		return null;
 	}
 
 	/**
@@ -64,44 +42,14 @@ class JBSMMedia
 	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getInternalPlayer($media, $params, $admin_params)
 	{
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getInternalPlyer as of 8.1.0', 'error');
 
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($media->params);
-		$itemparams = $registry;
-
-		$Itemid      = $params->get('detailstemplateid', 1);
-		$images      = new JBSMImages;
-		$JBSMListing = new JBSMListing;
-		$image       = $images->getMediaImage($media->path2, $media->impath);
-
-
-		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = $JBSMListing->getFilesize($media->size);
-		$duration = $JBSMListing->getDuration($params, $media);
-		$mimetype = $media->mimetext;
-		$src      = JURI::base() . $image->path;
-		$height   = $image->height;
-		$width    = $image->width;
-		$ispath   = 0;
-		$mime     = '';
-		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
-
-		$player_width = $params->get('player_width', 290);
-		$media1_link  = '<script language="javascript" type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.js"></script>
-		    <object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.flash.swf" id="audioplayer'
-			. $media->id . '" height="24" width="' . $params->get('player_width', 290) . '">
-		    <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/player/jwplayer.flash.swf" />
-		    <param name="FlashVars" value="playerID=audioplayer' . $media->id . '&soundFile=' . $path1 . '" />
-		    <param name="quality" value="high" />
-		    <param name="menu" value="false" />
-		    <param name="wmode" value="transparent" />
-		    </object> ';
-
-		return $media1_link;
+		return null;
 	}
 
 	/**
@@ -113,71 +61,11 @@ class JBSMMedia
 	 *
 	 * @return string|boolean
 	 *
-	 * FIXME need to fix up the problems. TOM
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getDownloadLink($media, $params, $admin_params)
 	{
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($media->params);
-		$itemparams  = $registry;
-		$Itemid      = $params->get('detailstemplateid', 1);
-		$images      = new JBSMImages;
-		$JBSMListing = new JBSMListing;
-		$image       = $images->getMediaImage($media->path2, $media->impath);
-
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-		$database->setQuery($query);
-		$admin = $database->loadObjectList();
-
-
-		$d_image      = ($admin[0]->params->default_download_image);
-		$images       = new JBSMImages;
-		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media);
-
-		$download_image = $download_tmp->path;
-
-		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = $JBSMListing->getFilesize($media->size);
-		$duration = $JBSMListing->getDuration($params, $media);
-		$mimetype = $media->mimetext;
-		$src      = JURI::base() . $image->path;
-		$height   = $image->height;
-		$width    = $image->width;
-		$ispath   = 0;
-		$mime     = '';
-		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
-
-		$link_type = $media->link_type;
-
-		if ($link_type > 0)
-		{
-			$width  = $download_tmp->width;
-			$height = $download_tmp->height;
-
-			$out = '';
-
-			// @todo need ot find where this variable needs to come from. TOM
-			$compat_mode = '1';
-			$d_path      = null;
-
-			if ($compat_mode == 0)
-			{
-				$out .= '<a href="index.php?option=com_biblestudy&amp;id=' . $media->id . '&amp;view=sermons&amp;controller=sermons&amp;task=download">';
-			}
-			else
-			{
-				$out .= '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename .
-					'&amp;size=' . $media->size . '">';
-			}
-
-			$out .= '<img src="' . $d_path . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' . $height . '" width="' . $width
-				. '" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
-
-			return $out;
-		}
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getDownloadLink as of 8.1.0', 'error');
 
 		return false;
 	}
@@ -190,54 +78,14 @@ class JBSMMedia
 	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getMediaFile($media, $params, $admin_params)
 	{
-		$images      = new JBSMImages;
-		$JBSMListing = new JBSMListing;
-		$image       = $images->getMediaImage($media->path2, $media->impath);
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getMediaFile as of 8.1.0', 'error');
 
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($media->params);
-		$itemparams = $registry;
-		$Itemid     = $params->get('detailstemplateid', 1);
-
-
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-		$database->setQuery($query);
-		$admin = $database->loadObjectList();
-
-
-		$d_image = ($admin[0]->params->default_download_image);
-
-		$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media);
-
-		$download_image = $download_tmp->path;
-
-		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = $JBSMListing->getFilesize($media->size);
-		$duration = $JBSMListing->getDuration($params, $media);
-		$mimetype = $media->mimetext;
-		$src      = JURI::base() . $image->path;
-		$height   = $image->height;
-		$width    = $image->width;
-		$ispath   = 0;
-		$mime     = '';
-
-		// @todo need ot find where this variable needs to come from. TOM
-		$d_path = null;
-
-		$path1 = $JBSMListing->getFilepath($media->id, $idfield, $mime);
-
-		$media_link = '<div class="bsms_mediafile"><a href="' . $path1 . '" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-			. $filesize . '" target="' . $media->special . '"><img src="' . $d_path
-			. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-			. '" height="' . $height . '" border="0" /></a></div>';
-
-		return $media_link;
+		return false;
 	}
 
 	/**
@@ -248,35 +96,14 @@ class JBSMMedia
 	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getTypeIcon($media, $params, $admin_params)
 	{
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($media->params);
-		$itemparams = $registry;
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getTypeIcon as of 8.1.0', 'error');
 
-		$Itemid      = $params->get('detailstemplateid', 1);
-		$images      = new JBSMImages;
-		$JBSMListing = new JBSMListing;
-		$image       = $images->getMediaImage($media->path2, $media->impath);
-
-		$idfield  = '#__bsms_mediafiles.id';
-		$filesize = $JBSMListing->getFilesize($media->size);
-		$duration = $JBSMListing->getDuration($params, $media);
-		$mimetype = $media->mimetext;
-		$src      = JURI::base() . $image->path;
-		$height   = $image->height;
-		$width    = $image->width;
-		$ispath   = 0;
-		$mime     = '';
-		$path1    = $JBSMListing->getFilepath($media->id, $idfield, $mime);
-
-		$media_link = '<img src="' . $src
-			. '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration . ' ' . $filesize . '" width="' . $width
-			. '" height="' . $height . '" border="0" />';
-
-		return $media_link;
+		return false;
 	}
 
 	/**
@@ -287,35 +114,14 @@ class JBSMMedia
 	 * @param   JRegistry $admin_params  Admin Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated  since version 8.1.0  Not used in 2.5.x or 3.0.x.  This is do to Joomla dropping PDF support nativity.
 	 */
 	public function getPDF($row, $params, $admin_params)
 	{
-		// PDF View
-		$url                = 'index.php?option=com_biblestudy&amp;view=sermon&amp;id=' . $row->id . '&amp;format=pdf';
-		$status             = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-		$text               = JHTML::_('image.site', 'pdf24.png', '/media/com_biblestudy/images/', null, null, JText::_('JBS_MED_PDF'), 'border=0');
-		$attribs['title']   = JText::_('JBS_MED_PDF');
-		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
-		$attribs['rel']     = 'nofollow';
-		$link               = JHTML::_('link', JRoute::_($url), $text, $attribs);
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getPDF as of 8.1.0', 'error');
 
-		return $link;
-	}
-
-	/**
-	 * Get Media For List
-	 *
-	 * @param   object    $row           Media Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 *
-	 * @return void
-	 *
-	 * @deprecated since version 7.0.4
-	 */
-	public function getMediaForList($row, $params, $admin_params)
-	{
-		die('function getMediaForList() deprecated since version 7.0.4');
+		return false;
 	}
 
 	/**
@@ -483,21 +289,17 @@ class JBSMMedia
 	/**
 	 * Get Media ID
 	 *
-	 * @param   int $id  ID of media
+	 * @param   int $id  ID of Study
 	 *
-	 * @return object
+	 * @return object  List of Media Associated with a Study
+	 *
+	 * @deprecated Since version 8.1.0
 	 */
 	public function getMediaid($id)
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('m.id as mid, m.study_id, s.id as sid')
-			->from('#__bsms_mediafiles AS m')
-			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . (int) $db->q($id));
-		$db->setQuery($query);
-		$mediaids = $db->loadObjectList();
+		JFactory::getApplication()->enqueueMessage('Deprocated fuction getPDF as of 8.1.0', 'error');
 
-		return $mediaids;
+		return false;
 	}
 
 	/**
@@ -689,7 +491,7 @@ class JBSMMedia
 		switch ($item_playertype)
 		{
 			case 3:
-				$player->type = $param_playertype;
+				$player->type = (int) $param_playertype;
 				break;
 
 			case 2:
@@ -775,7 +577,9 @@ class JBSMMedia
 	 *
 	 * @param   object $params      System Params
 	 * @param   object $itemparams  Item Params //@todo need to merge with $params
-	 * @param   object $player      Player code
+	 * @param   object $player      Player code:
+	 *                              player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+	 *                              internal_popup 0 = inline 1 = popup, 2 = global settings
 	 * @param   object $image       Image info
 	 * @param   object $media       Media
 	 *
@@ -794,11 +598,16 @@ class JBSMMedia
 		$template     = $input->get('t', '1', 'int');
 		$JBSMElements = new JBSMElements;
 
+		// To allow for helpers.
+		JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+
+		if ($media->spath == 'localhost')
+		{
+			$media->spath = JUri::base();
+		}
+
 		// Here we get more information about the particular media file
 		$filesize = $JBSMElements->getFilesize($media->size);
-		/**
-		 * @todo There is no $row referenced to this function so this will fail
-		 */
 
 		// This one IS needed
 		$duration = $JBSMElements->getDuration($params, $media);
@@ -815,15 +624,34 @@ class JBSMMedia
 			$protocol = $params->get('protocol', 'http://');
 			$path     = $protocol . $path;
 		}
+
+		/* Players - from Template:
+		   media_player = internal player for all files
+		   useravr = use avr for all files
+		   useav = use All Videos plugin for all files
+		   popuptype = whether AVR should be window or lightbox (handled in avr code)
+		   media_player = use internal player for all files
+		   internal_popup = whether direct or internal player should be popup or inline
+		   From media file:
+		   player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+		   internal_popup 0 = inline 1 = popup, 2 = global settings */
+
 		switch ($player->player)
 		{
-
 			case 0: // Direct
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = "<a title='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' class='fancybox fancybox.iframe fancybox.gallery' href='" . $path . "' \">
+						<img src='" . $src . "' alt='" . $media->malttext . " - " . $media->comment . " - " . $duration .
+							" " . $filesize . "' width='" . $width . "' height='" . $height . "' border='0' /></a>";
+
+						return $playercode;
+						break;
 
 					case 2: // New window
-
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
                                         return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
@@ -839,36 +667,47 @@ class JBSMMedia
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "' /></a>";
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 1: // Internal
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" rel="width="' .
+							$player->playerwidth . '" height="' . $player->playerheight .
+							'"><img src="' . $src . '" alt="' . $media->malttext . ' - ' . $media->comment . ' - ' . $duration .
+							' ' . $filesize . '" width= "' . $width . '" height="' . $height . '" border="0" /></a>';
+
+						return $playercode;
+						break;
+
 					case 2: // Inline
+						JHtml::_('jwplayer.framework');
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
-    jwplayer('placeholder').setup({
-	    'file' : '<?php echo $path; ?>',
-	    'height' : '<?php echo $height; ?>',
-	    'width' : '<?php echo $width; ?>',
-        'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
-        'backcolor':'<?php echo $backcolor; ?>',
-        'frontcolor':'<?php echo $frontcolor; ?>',
-        'lightcolor':'<?php echo $lightcolor; ?>',
-        'screencolor':'<?php echo $screencolor; ?>',
-    });
-</script>";
+								    jwplayer('placeholder').setup({
+									    'file' : '" . $path . "',
+									    'height' : '" . $player->playerheight . "',
+									    'width' : '" . $player->playerwidth . "',
+								        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+								        'flashplayer':'media/com_biblestudy/player/jwplayer.flash.swf',
+								        'backcolor':'" . $backcolor . "',
+								        'frontcolor':'" . $frontcolor . "',
+								        'lightcolor':'" . $lightcolor . "',
+								        'screencolor':'" . $screencolor . "',
+								    });
+								</script>";
+
+						return $playercode;
 						break;
 
 					case 1: // Popup
-
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
@@ -877,12 +716,10 @@ class JBSMMedia
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
 							"' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 2: // All Videos Reloaded
@@ -895,17 +732,18 @@ class JBSMMedia
 							. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='"
 							. $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
 							"' alt='" . $media->malttext . "' /></a>";
+
+						return $playercode;
 						break;
 
 					case 2: // This plays the video inline
 						$mediacode  = $this->getAVmediacode($media->mediacode, $media);
 						$playercode = JHTML::_('content.prepare', $mediacode);
+
+
+						return $playercode;
 						break;
 				}
-
-				/** @var $playercode string */
-
-				return $playercode;
 				break;
 
 			case 4: // Docman
@@ -957,14 +795,27 @@ class JBSMMedia
 				break;
 
 			case 8: // Embed code
+				switch ($player->type)
+				{
+					case 3:
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = "<a class='fancybox fancybox-media' href='" . $media->mediacode . "' rel='width='" .
+							$player->playerwidth . "' height='" . $player->playerheight .
+							"'><img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
+							. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
 
-				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
-					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-					. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
-					. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+						return $playercode;
+						break;
+					case 2:
+					case 1:
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
+							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
+							. $player->playerheight . "'); return false\"> <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='"
+							. $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
 
-				return $playercode;
-				break;
+						return $playercode;
+						break;
+				}
 		}
 
 		return false;

@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 JHTML::_('behavior.tooltip');
 $document = JFactory::getDocument();
-$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
 // Create shortcuts to some parameters.
 $params = $this->item->params;

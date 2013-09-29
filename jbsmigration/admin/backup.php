@@ -122,8 +122,9 @@ class JBSExport
 		$export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
 
 		// Get the table rows and create insert statements from them
-		$query = $db->getQuery(true);
-		$query->select('*')->from($table);
+		//$query = $db->getQuery(true);
+		//$query->select('*')->from($table);
+        $query = 'SELECT * FROM '.$table;
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -142,7 +143,7 @@ class JBSExport
 					}
 					else
 					{
-						$data[] = "`" . $key . "`='" . $db->escape($value) . "'";
+						$data[] = "`" . $key . "`='" . $db->quote($value) . "'";
 					}
 				}
 				$export .= implode(',', $data);

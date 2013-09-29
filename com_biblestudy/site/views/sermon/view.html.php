@@ -88,7 +88,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->comments = $this->get('comments');
 
         //Get related items. Moved here because the params were getting messed up lower in the script
-        $relatedstudies = new RelatedStudies;
+        $relatedstudies = new JBSMRelatedStudies;
         $this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		// Check for errors.

@@ -88,10 +88,6 @@ abstract class JBSMRoute
 	 */
 	public static function getTeacherRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
 
@@ -107,10 +103,6 @@ abstract class JBSMRoute
 	 */
 	public static function getSeriesRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
 
@@ -182,6 +174,22 @@ abstract class JBSMRoute
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param    string $url     URL of website
+	 * @param    string $scheme  Scheme that need to lead with.
+	 *
+	 * @return string  The fixed URL
+	 */
+	public static function addScheme($url, $scheme = 'http://')
+	{
+		if (parse_url($url, PHP_URL_SCHEME) === null)
+		{
+			return $scheme . $url;
+		}
+
+		return $url;
 	}
 
 }

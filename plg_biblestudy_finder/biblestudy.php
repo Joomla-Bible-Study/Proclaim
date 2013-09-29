@@ -276,6 +276,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		 * Add the meta-data processing instructions based on the newsfeeds
 		 * configuration parameters.
 		 */
+		// Add the meta-author.
+
 		// Handle the link to the meta-data.
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
