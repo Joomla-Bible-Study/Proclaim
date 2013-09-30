@@ -170,7 +170,7 @@ class plgSearchBiblestudysearch extends JPlugin
 								" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 								" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid," .
 								" #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
-								" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href," .
+								" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href," .
 								" '2' AS browsernav"
 						);
 					}
@@ -180,7 +180,7 @@ class plgSearchBiblestudysearch extends JPlugin
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
 							" #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text," .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, 'Bible Studies' AS section," .
-							" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+							" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					break;
 				case 1 :
@@ -191,7 +191,7 @@ class plgSearchBiblestudysearch extends JPlugin
 							" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 							" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid," .
 							" #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id," .
-							" 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id," .
+							" 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id," .
 							" '&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					else
@@ -200,7 +200,7 @@ class plgSearchBiblestudysearch extends JPlugin
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
 							"  #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text," .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
-							" CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+							" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					break;
 			}
