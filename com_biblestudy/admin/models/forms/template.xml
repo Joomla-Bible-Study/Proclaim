@@ -734,54 +734,6 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="show_teacher_view" type="list" default="0"
-                   label="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
-            </field>
-
-            <field name="use_headers_view" type="list" default="1"
-                   label="JBS_TPL_DETAILS_USE_HEADERS_VIEW" description="JBS_TPL_DETAILS_USE_HEADERS_VIEW_DESC">
-                <option value="0">JBS_TPL_NO_HEADER_ROW</option>
-                <option value="1">JBS_TPL_USE_HEADER_ROW</option>
-            </field>
-            <field name="list_items_view" type="list" default="0"
-                   label="JBS_TPL_DETAILS_LIST_ITEMS_VIEW" description="JBS_TPL_DETAILS_LIST_ITEMS_VIEW_DESC">
-                <option value="0">JBS_TPL_SHOW_LIST_ITEMS</option>
-                <option value="1">JBS_TPL_SHOW_MEDIA</option>
-                <option value="2">JBS_TPL_SHOW_NOTHING</option>
-            </field>
-            <field name="title_line_1" type="list" default="1"
-                   label="JBS_TPL_DETAILS_TITLE_LINE_1" description="JBS_TPL_DETAILS_TITLE_LINE_1_DESC">
-                <option value="0">JBS_TPL_DONT_SHOW</option>
-                <option value="1">JBS_TPL_TITLE_BRACE</option>
-                <option value="2">JBS_TPL_TEACHER_BRACE</option>
-                <option value="3">JBS_TPL_TITLE_TEACHER_BRACE</option>
-                <option value="4">JBS_TPL_SCRIPTURE1_BRACE</option>
-                <option value="5">JBS_TPL_SERIES_BRACE</option>
-                <option value="6">JBS_TPL_TOPIC_BRACE</option>
-                <option value="7">JBS_CMN_CUSTOM</option>
-            </field>
-            <field name="customtitle1" type="text" default="" size="75"
-                   label="JBS_TPL_DETAILS_CUSTOMTITLE1" description="JBS_TPL_DETAILS_CUSTOMTITLE_DESC"/>
-            <field name="title_line_2" type="list" default="4"
-                   label="JBS_TPL_DETAILS_TITLE_LINE_2" description="JBS_TPL_DETAILS_TITLE_LINE_2_DESC">
-                <option value="0">JBS_TPL_DONT_SHOW</option>
-                <option value="1">JBS_TPL_TITLE_BRACE</option>
-                <option value="2">JBS_TPL_TEACHER_BRACE</option>
-                <option value="3">JBS_TPL_TITLE_TEACHER_BRACE</option>
-                <option value="4">JBS_TPL_SCRIPTURE1_BRACE</option>
-                <option value="5">JBS_TPL_SERIES_BRACE</option>
-                <option value="6">JBS_TPL_TOPIC_BRACE</option>
-                <option value="7">JBS_CMN_CUSTOM</option>
-            </field>
-            <field name="customtitle2" type="text" default="" size="75"
-                   label="JBS_TPL_DETAILS_CUSTOMTITLE2" description="JBS_TPL_DETAILS_CUSTOMTITLE_DESC"/>
-            <field name="view_link" type="list" default="1"
-                   label="JBS_TPL_DETAILS_VIEW_LINK" description="JBS_TPL_DETAILS_VIEW_LINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
-            </field>
             <field name="link_text" type="text" size="75"
                    default="Return to Studies List" label="JBS_TPL_DETAILS_LINK_TEXT"
                    description="JBS_TPL_DETAILS_LINK_TEXT_DESC"/>
@@ -899,6 +851,20 @@
                 <option value="73">Worldwide English (NT)</option>
                 <option value="53">Wycliffe New Testament (NT)</option>
                 <option value="15">Young's Literal Translation</option>
+            </field>
+            <field name="socialnetworking"
+                   type="radio"
+                   class="btn-group"
+                   default="1"
+                   label="JBS_ADM_SOCIALNETWORKING"
+                   description="JBS_ADM_SOCIALNETWORKING_DESC" labelclass="control-label">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_CMN_SHOW</option>
+            </field>
+            <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_DESC"
+                   labelclass="control-label">
+                <option value="0">JBS_ADM_INTERNAL_SHARE</option>
+                <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
             </field>
             <field name="comments_type" type="list" default="0"
                    label="JBS_TPL_COMMENT_TYPE" description="JBS_TPL_COMMENT_TYPE_DESC">

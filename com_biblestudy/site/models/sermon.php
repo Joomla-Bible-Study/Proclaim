@@ -142,7 +142,7 @@ class BiblestudyModelSermon extends JModelItem
 			$query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
 
 			// Join over books
-			$query->select('b.bookname as bname');
+			$query->select('b.bookname as bookname');
 			$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
 
 			// Join over locations
@@ -176,7 +176,7 @@ class BiblestudyModelSermon extends JModelItem
 			$topic_text       = JBSMTranslated::getTopicItemTranslated($data);
 			$data->id         = $pk;
 			$data->topic_text = $topic_text;
-			$data->bname      = JText::_($data->bname);
+			$data->bookname      = JText::_($data->bookname);
 
 
 			$template     = JBSMParams::getTemplateparams();

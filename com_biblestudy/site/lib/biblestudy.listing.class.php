@@ -565,6 +565,7 @@ class JBSMListing extends JBSMElements
             case 7:
                 $classelement = '<blockquote>';
         }
+        if ($header == 1){$classelement = ''; $style='style="font-weight:bold;"';}
         if ($classelement){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
         else {$classopen = ''; $classclose='';}
         //See whether the element is a link to something and get the link from the function
@@ -600,9 +601,7 @@ class JBSMListing extends JBSMElements
         $mediarow = '<div style="display:inline;">';
         foreach ($item->mediafiles as $media)
         {
-            //dump($media);
             $mediarow  .= $med->getFluidMedia($media, $params, $admin_params, $template);
-
         }
         $mediarow .= '</div>';
         return $mediarow;
@@ -666,18 +665,7 @@ class JBSMListing extends JBSMElements
         if($order == "DESC"){ $array = array_reverse($array); }
         return $array;
     }
-    /**
-	 * Get listing
-	 *
-	 * @param   object    $row           Item Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   string    $oddeven       ?Number patten?
-	 * @param   object    $admin_params  Admin info
-	 * @param   int       $template      Template ID
-	 * @param   string    $ismodule      If coming form a Module
-	 *
-	 * @return string
-	 */
+
 
     /**
      * Get Scripture
@@ -695,7 +683,7 @@ class JBSMListing extends JBSMElements
 
         if (!isset($row->id))
         {
-            return null;
+           // return null;
         }
 
         if (!isset($row->booknumber))
@@ -727,7 +715,7 @@ class JBSMListing extends JBSMElements
 
         if (!isset($booknumber))
         {
-            return $scripture;
+           // return $scripture;
         }
         $show_verses = $params->get('show_verses');
 
@@ -735,7 +723,7 @@ class JBSMListing extends JBSMElements
         {
             $scripture = '';
 
-            return $scripture;
+          //  return $scripture;
         }
 
         $book = JText::_($row->bookname);
@@ -1212,21 +1200,20 @@ class JBSMListing extends JBSMElements
 		// Finde a better way to do this.
 		$template = (int) '1';
 
-		$sharetype = $admin_params->get('sharetype', 1);
+		$sharetype = $params->get('sharetype', 1);
 
 		if ($sharetype == 1)
 		{
-			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
-						<tr class="bsmssharetitlerow">
-						<th id="bsmssharetitle" </th></tr></thead>
-						<tbody><tr class="bsmsshareiconrow">';
-			$shareit .= '<td id="bsmsshareicons"><!-- AddThis Button BEGIN -->
+			$shareit = '<div class="container-fluid"><div class="row-fluid"
+						<div class="span3 pull-right">
+						';
+			$shareit .= '<!-- AddThis Button BEGIN -->
 						<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=tomfuller2">
 						<img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/>
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
 						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username="></script>
-						<!-- AddThis Button END --></td>';
+						<!-- AddThis Button END --></div></div></div>';
 		}
 		else
 		{
@@ -1249,8 +1236,8 @@ class JBSMListing extends JBSMElements
 			}
 
 			// Begin to form the table
-			$shareit = '<div id="bsms_share"><table class="table" id="bsmsshare"><thead>
-						<tr class="bsmssharetitlerow">
+			$shareit = '<div class="container-fluid"><div class="row-fluid">
+						<div class="span3 pull-right">
 						<th id="bsmssharetitle" colspan=' . $sharerows . '>' . $sharetitle . '</th></tr></thead>
 						<tbody><tr class="bsmsshareiconrow">';
 

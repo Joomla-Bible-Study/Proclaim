@@ -73,7 +73,6 @@ $row         = $this->item;
 		?>
         <div id="bsms_share">
 			<?php
-			$social = $JBSMTeacher->getShare($this->detailslink, $row, $this->item->params, $this->item->admin_params);
 			echo $this->page->social;
 			?>
         </div>
@@ -91,8 +90,8 @@ $row         = $this->item;
 	<?php
 	if ($this->item->params->get('show_teacher_view') > 0)
 	{
-		$teacher = $JBSMTeacher->getTeacher($this->item->params, $row->teacher_id, $this->item->admin_params);
-		echo $teacher;
+		//$teacher = $JBSMTeacher->getTeacher($this->item->params, $row->teacher_id, $this->item->admin_params);
+		//echo $teacher;
 		?>
         </td>
     <td>
@@ -100,8 +99,8 @@ $row         = $this->item;
 	}
 	if ($this->item->params->get('title_line_1') + $this->item->params->get('title_line_2') > 0)
 	{
-		$title = $JBSMTeacher->getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
-		echo $title;
+		//$title = $JBSMTeacher->getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
+		//echo $title;
 	}
 	?>
 </div><!-- header -->
@@ -111,12 +110,12 @@ $row         = $this->item;
 		<?php
 		if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1)
 		{
-			$JViewLegacy->loadHelper('header');
+			/*$JViewLegacy->loadHelper('header');
 			$header = $JBSMTeacher->getHeader(
 				$row, $this->item->params, $this->item->admin_params, $this->template,
 				$showheader = $this->item->params->get('use_headers_view'), $ismodule = 0
 			);
-			echo $header;
+			echo $header;*/
 		}
 		?>
         </thead>
@@ -126,9 +125,9 @@ $row         = $this->item;
 		{
 			?> <!-- Media table listing view -->
 			<?php
-			$media   = new jbsMedia;
-			$listing = $media->getMediaTable($row, $this->item->params, $this->item->admin_params);
-			echo $listing;
+		//	$media   = new jbsMedia;
+		//	$listing = $media->getMediaTable($row, $this->item->params, $this->item->admin_params);
+		//	echo $listing;
 			?>
 			<?php
 		}
@@ -136,9 +135,9 @@ $row         = $this->item;
 		{
 			?><!-- List items view -->
 			<?php
-			$oddeven = 'bsodd';
-			$listing = $JBSMTeacher->getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
-			echo $listing;
+		//	$oddeven = 'bsodd';
+		//	$listing = $JBSMTeacher->getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
+		//	echo $listing;
 		}
 		?>
         </tbody>

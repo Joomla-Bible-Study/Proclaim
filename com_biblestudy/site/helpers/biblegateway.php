@@ -33,7 +33,7 @@ class ShowScripture
 	 */
 	public function buildPassage($row, $params)
 	{
-		if (!$row->bname)
+		if (!$row->bookname)
 		{
 			return false;
 		}
@@ -149,7 +149,7 @@ class ShowScripture
 	 */
 	public function formReference($row)
 	{
-		$book      = JText::_($row->bname);
+		$book      = JText::_($row->bookname);
 		$book      = str_replace(' ', '+', $book);
 		$book      = $book . '+';
 		$reference = $book . $row->chapter_begin;
