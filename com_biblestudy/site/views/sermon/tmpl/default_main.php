@@ -31,16 +31,20 @@ $JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 $row         = $this->item;
 ?>
-<div id="bsmHeader">
+
 	<?php
 	if ($this->item->params->get('showpodcastsubscribedetails') == 1)
 	{
-		echo $this->subscribe;
-	}
+		?><div class="row-fluid"><div class="span12">
+        <?php echo $this->subscribe;?>
+        </div></div>
+	<?php }
 	if ($this->item->params->get('showrelated') == 1)
 	{
-		echo $this->related;
-	}
+		?> <div class="row-fluid"><div class="span12">
+        <?php echo $this->related;?>
+     </div></div>
+    <?php }
 	?>
 	<?php if (!$this->print) : ?>
 	<?php if ($canEdit || $params->get('show_print_view') || $params->get('show_email_icon')) : ?>
@@ -71,77 +75,19 @@ $row         = $this->item;
 	if ($this->item->admin_params->get('socialnetworking') > 0)
 	{
 		?>
-        <div id="bsms_share">
 			<?php
 			echo $this->page->social;
-			?>
-        </div>
-		<?php
 	} // End Social Networking
 	?>
     <!-- Begin Fluid layout -->
-    <div class="container-fluid">
+
         <?php $listing = new JBSMListing;
         $list = $listing->getFluidListing($this->item, $this->item->params, $this->item->admin_params, $this->template);
         echo $list;
         ?>
-    </div>
+
     <!-- End Fluid Layout -->
-	<?php
-	if ($this->item->params->get('show_teacher_view') > 0)
-	{
-		//$teacher = $JBSMTeacher->getTeacher($this->item->params, $row->teacher_id, $this->item->admin_params);
-		//echo $teacher;
-		?>
-        </td>
-    <td>
-        <?php
-	}
-	if ($this->item->params->get('title_line_1') + $this->item->params->get('title_line_2') > 0)
-	{
-		//$title = $JBSMTeacher->getTitle($this->item->params, $row, $this->item->admin_params, $this->template);
-		//echo $title;
-	}
-	?>
-</div><!-- header -->
-<div>
-    <table class="table table-striped" id="bsmsdetailstable">
-        <thead>
-		<?php
-		if ($this->item->params->get('use_headers_view') > 0 || $this->item->params->get('list_items_view') < 1)
-		{
-			/*$JViewLegacy->loadHelper('header');
-			$header = $JBSMTeacher->getHeader(
-				$row, $this->item->params, $this->item->admin_params, $this->template,
-				$showheader = $this->item->params->get('use_headers_view'), $ismodule = 0
-			);
-			echo $header;*/
-		}
-		?>
-        </thead>
-        <tbody>
-		<?php
-		if ($this->item->params->get('list_items_view') == 1)
-		{
-			?> <!-- Media table listing view -->
-			<?php
-		//	$media   = new jbsMedia;
-		//	$listing = $media->getMediaTable($row, $this->item->params, $this->item->admin_params);
-		//	echo $listing;
-			?>
-			<?php
-		}
-		if ($this->item->params->get('list_items_view') == 0)
-		{
-			?><!-- List items view -->
-			<?php
-		//	$oddeven = 'bsodd';
-		//	$listing = $JBSMTeacher->getListing($row, $this->item->params, $oddeven, $this->item->admin_params, $this->template, $ismodule = 0);
-		//	echo $listing;
-		}
-		?>
-        </tbody>
-    </table>
+
 	<?php
 	echo $this->passage;
 
@@ -160,4 +106,4 @@ $row         = $this->item;
 		echo $this->subscribe;
 	}
 	?>
-</div>
+

@@ -683,7 +683,7 @@ class JBSMListing extends JBSMElements
 
         if (!isset($row->id))
         {
-           // return null;
+            return null;
         }
 
         if (!isset($row->booknumber))
@@ -715,7 +715,7 @@ class JBSMListing extends JBSMElements
 
         if (!isset($booknumber))
         {
-           // return $scripture;
+            return $scripture;
         }
         $show_verses = $params->get('show_verses');
 
@@ -723,7 +723,7 @@ class JBSMListing extends JBSMElements
         {
             $scripture = '';
 
-          //  return $scripture;
+            return $scripture;
         }
 
         $book = JText::_($row->bookname);
@@ -1204,8 +1204,8 @@ class JBSMListing extends JBSMElements
 
 		if ($sharetype == 1)
 		{
-			$shareit = '<div class="container-fluid"><div class="row-fluid"
-						<div class="span3 pull-right">
+			$shareit = '<div class="row-fluid">
+						<div class="span2 pull-right">
 						';
 			$shareit .= '<!-- AddThis Button BEGIN -->
 						<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=tomfuller2">
@@ -1213,7 +1213,7 @@ class JBSMListing extends JBSMElements
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
 						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username="></script>
-						<!-- AddThis Button END --></div></div></div>';
+						<!-- AddThis Button END --></div>';
 		}
 		else
 		{
