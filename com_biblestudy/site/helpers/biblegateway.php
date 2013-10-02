@@ -88,7 +88,7 @@ class ShowScripture
 	{
 		$elements = new JBSMElements;
 		$contents = $elements->body_only(file_get_contents($this->link));
-		$passage  = '<div class = passage>';
+		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
 		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$passage .= '<div id="scripture" style="display: none;">';
 		$passage .= $contents;
