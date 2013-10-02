@@ -127,23 +127,23 @@ if (in_array($comment_access, $groups))
 if ($allow > 9)
 {
 	?>
+<div class="container-fluid">
 <form action="index.php" method="post">
-    <table class="table table-striped" id="commentssubmittable" border="0">
+
+    <div class="row-fluid">
 		<?php
 		if ($allow < 10)
 		{
 			?>
-            <tr>
-                <td>
-                    <strong><?php echo JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></strong>
-                </td>
-            </tr>
+
+                    <strong><div class="span12"><?php echo JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></div></strong>
+
 			<?php
 		}
 		if ($allow >= 10)
 		{
 			?>
-            <tr>
+            <div class="span12">
                 <td>
 					<?php
 					if ($user->name)
@@ -165,40 +165,37 @@ if ($allow > 9)
 					?><strong>
 					<?php echo JText::_('JBS_CMT_POST_COMMENT') ?>
                 </strong>
-                </td>
-            </tr>
-            <tr>
-                <td>
+                </div>
+            <div class="row-fluid">
+                <div class="span2">
 					<?php echo JText::_('JBS_CMT_FULL_NAME') ?>
-                </td>
-                <td>
+                </div>
+                <div class="span7">
                     <input class="text_area" size="50" type="text" name="full_name" id="full_name"
                            value="<?php echo $full_name ?>"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span2">
 					<?php echo JText::_('JBS_CMT_EMAIL') ?>
-                </td>
-                <td>
-                    <input class="text_area" type="text" size="50" name="user_email" id="user_email"
+                </div>
+                <div class="span7">
+                    <input class="text_area" type="text"  name="user_email" id="user_email"
                            value="<?php echo $user->email ?>"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span2">
 					<?php echo JText::_('JBS_CMN_COMMENT') ?>:
-                </td>
-                <td>
-                    <textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text"
+                </div>
+                <div class="span7">
+                    <textarea class="text_area" cols="20" rows="4" name="comment_text"
                               id="comment_text">
                     </textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                </td>
-                <td>
+                </div>
+            </div>
+            <div class="row-fluid">
+               <div class="span12">
 					<?php
 					if ($this->item->params->get('use_captcha') > 0)
 					{
@@ -225,32 +222,33 @@ if ($allow > 9)
 						}
 					}
 					?>
-                </td>
-            </tr>
-                        <tr>
-                            <td>
+                </div>
+            </div>
+            <div class="row-fluid">
+            <div class="span12">
+<?php $input = new JInput(); $t = $input->getString('t'); ?>
+                <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
+                <input type="hidden" name="t" value="<?php echo $t;?>">
+                <input type="hidden" name="task" value="comment"/>
+                <input type="hidden" name="option" value="com_biblestudy"/>
+                <input type="hidden" name="published" id="published"
+                       value="<?php echo $this->item->params->get('comment_publish') ?>"/>
+                <input type="hidden" name="view" value="sermon"/>
 
-                                <input type="hidden" name="study_id" id="study_id"
-                                       value="<?php echo $this->item->id ?>"/>
-            <input type="hidden" name="task" value="comment"/>
-            <input type="hidden" name="option" value="com_biblestudy"/>
-            <input type="hidden" name="published" id="published"
-                   value="<?php echo $this->item->params->get('comment_publish') ?>"/>
-            <input type="hidden" name="view" value="sermon"/>
+                <input type="hidden" name="comment_date" id="comment_date"
+                       value="<?php echo date('Y-m-d H:i:s') ?>"/>
+                <input type="hidden" name="study_detail_id" id="study_detail_id"
+                       value="<?php echo $this->item->id ?>"/>
 
-            <input type="hidden" name="comment_date" id="comment_date"
-                   value="<?php echo date('Y-m-d H:i:s') ?>"/>
-            <input type="hidden" name="study_detail_id" id="study_detail_id"
-                   value="<?php echo $this->item->id ?>"/>
-
-            <input type="submit" class="button" id="button" value="Submit"/>
-			<?php
-		} // End of if $allow > 10
-		?>
-    </td>
-    </tr>
-    </table>
+                <input type="submit" class="button" id="button" value="Submit"/>
+                <?php
+            } // End of if $allow > 10
+            ?>
+            </div>
+        </div>
+    </div>
 </form>
+</div>
 	<?php
 } // End if $allow > 9
 ?>
