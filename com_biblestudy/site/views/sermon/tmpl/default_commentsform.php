@@ -46,14 +46,14 @@ switch ($this->item->params->get('link_comments', 0))
 }
 ?>
 <div id="commentstable">
-<table class="table table-striped bslisttable" border="0">
-    <thead>
-    <tr class="lastrow">
-        <th id="commentshead" class="row1col1">
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div class="span12">
 			<?php echo JText::_('JBS_CMN_COMMENTS'); ?>
-        </th>
-    </tr>
-    </thead>
+        </div>
+    </div>
+
 <?php
 $input = new JInput;
 
@@ -71,10 +71,10 @@ $comments = $this->comments;
 if (!count($comments))
 {
 	?>
-    <tr>
-        <td><?php echo JText::_('JBS_STY_NO_COMMENT') ?></td>
-    </tr>
-		</table>
+    <div class="row-fluid">
+        <div class="span12"><?php echo JText::_('JBS_STY_NO_COMMENT') ?></div>
+    </div>
+		</div>
 			<?php
 }
 else
@@ -83,27 +83,27 @@ else
 	{
 
 		$comment_date_display = JHTML::_('date', $comment->comment_date, JText::_('DATE_FORMAT_LC3'));
-		?><tbody>
-                    <tr>
-                        <td><strong><?php echo $comment->full_name ?></strong> <i>
+		?>
+                    <div class="row-fluid">
+                        <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>
                             - <?php echo $comment_date_display ?></i>
-                        </td>
-                    </tr>
-    <tr>
-        <td><?php echo JText::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></td>
-    </tr>
-    <tr>
-        <td>
-            <hr/>
-        </td>
-    </tr>
+                        </div>
+                    </div>
+    <div class="row-fluid">
+        <div class="span12"><?php echo JText::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <hr />
+        </div>
+    </div>
 		<?php
 	} // End of foreach
 	?>
-</td>
-</tr>
-		</tbody>
-			</table>
+</div>
+</div>
+
+</div>
 	<?php
 }
 ?>
