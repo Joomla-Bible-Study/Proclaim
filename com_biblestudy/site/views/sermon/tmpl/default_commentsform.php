@@ -61,14 +61,9 @@ if (!$this->item->id)
 {
 	$this->item->id = $input->get('id', '', 'int');
 }
-// ToDo look like this should not be in this file. need to move this out to the model, TOM BCC
-$db    = JFactory::getDBO();
-$query = $db->getQuery(true);
-$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $this->item->id)->order('c.comment_date asc');
-$db->setQuery($query);
-$comments = $this->comments;
 
-if (!count($comments))
+
+if (!count($this->comments))
 {
 	?>
     <div class="row-fluid">
@@ -79,7 +74,7 @@ if (!count($comments))
 }
 else
 {
-	foreach ($comments as $comment)
+	foreach ($this->comments as $comment)
 	{
 
 		$comment_date_display = JHTML::_('date', $comment->comment_date, JText::_('DATE_FORMAT_LC3'));

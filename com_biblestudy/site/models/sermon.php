@@ -281,5 +281,6 @@ class BiblestudyModelSermon extends JModelItem
 		return true;
 	}
 
+
 // End class
 }
