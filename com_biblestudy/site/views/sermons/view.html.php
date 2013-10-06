@@ -247,74 +247,79 @@ class BiblestudyViewSermons extends JViewLegacy
 		$params = $this->state->params;
 
 		$this->admin_params = $this->admin->params;
-		$page_builder       = new JBSPagebuilder;
+        $images           = new JBSMImages;
+        $this->main       = $images->mainStudyImage();
+        //Only load pagebuilder if the default template is NOT being used
+        if ($params->get('useexpert_list') > 0 && !$params->get('sermonstemplate'))
+        {
+            $page_builder       = new JBSPagebuilder;
 
-		for ($i = 0, $n = count($items); $i < $n; $i++)
-		{
+            for ($i = 0, $n = count($items); $i < $n; $i++)
+            {
 
-			$item = & $items[$i];
+                $item = & $items[$i];
 
-			if ($item->access > 1 && !in_array($item->access, $groups))
-			{
-				unset($item);
-			}
-			else
-			{
-				$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
+                if ($item->access > 1 && !in_array($item->access, $groups))
+                {
+                    unset($item);
+                }
+                else
+                {
+                    $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-				$pelements        = $page_builder->buildPage($item, $params, $this->admin_params);
-				$item->scripture1 = $pelements->scripture1;
-				$item->scripture2 = $pelements->scripture2;
-				$item->media      = $pelements->media;
-				$item->duration   = $pelements->duration;
-				$item->studydate  = $pelements->studydate;
-				$item->topics     = $pelements->topics;
+                    $pelements        = $page_builder->buildPage($item, $params, $this->admin_params);
+                    $item->scripture1 = $pelements->scripture1;
+                    $item->scripture2 = $pelements->scripture2;
+                    $item->media      = $pelements->media;
+                    $item->duration   = $pelements->duration;
+                    $item->studydate  = $pelements->studydate;
+                    $item->topics     = $pelements->topics;
 
-				if (isset($pelements->study_thumbnail))
-				{
-					$item->study_thumbnail = $pelements->study_thumbnail;
-				}
-				else
-				{
-					$item->study_thumbnail = null;
-				}
+                    if (isset($pelements->study_thumbnail))
+                    {
+                        $item->study_thumbnail = $pelements->study_thumbnail;
+                    }
+                    else
+                    {
+                        $item->study_thumbnail = null;
+                    }
 
-				if (isset($pelements->series_thumbnail))
-				{
+                    if (isset($pelements->series_thumbnail))
+                    {
 
-					$item->series_thumbnail = $pelements->series_thumbnail;
-				}
-				else
-				{
-					$item->series_thumbnail = null;
-				}
-				$item->detailslink = $pelements->detailslink;
+                        $item->series_thumbnail = $pelements->series_thumbnail;
+                    }
+                    else
+                    {
+                        $item->series_thumbnail = null;
+                    }
+                    $item->detailslink = $pelements->detailslink;
 
-				if (!isset($item->studyintro))
-				{
-					$item->studyintro = '';
-				}
+                    if (!isset($item->studyintro))
+                    {
+                        $item->studyintro = '';
+                    }
 
-				if (isset($pelements->secondary_reference))
-				{
-					$item->secondary_reference = $pelements->secondary_reference;
-				}
-				else
-				{
-					$item->secondary_reference = '';
-				}
-				if (isset($pelements->sdescription))
-				{
-					$item->sdescription = $pelements->sdescription;
-				}
-				else
-				{
-					$item->sdescription = '';
-				}
-			}
+                    if (isset($pelements->secondary_reference))
+                    {
+                        $item->secondary_reference = $pelements->secondary_reference;
+                    }
+                    else
+                    {
+                        $item->secondary_reference = '';
+                    }
+                    if (isset($pelements->sdescription))
+                    {
+                        $item->sdescription = $pelements->sdescription;
+                    }
+                    else
+                    {
+                        $item->sdescription = '';
+                    }
+                }
 
-		}
-
+            }
+        }
 		// Get the podcast subscription
 		$podcast         = new PodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
