@@ -79,7 +79,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$app    = JFactory::getApplication();
 		$user   = JFactory::getUser();
 		$userId = $user->get('id');
-
+        $JBSMListing        = new JBSMListing;
 		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
@@ -199,7 +199,11 @@ class BiblestudyViewSermon extends JViewLegacy
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
-
+        //Get Scripture references from listing class in case we don't use the pagebuilder class
+        $this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
+        $this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
+        //@todo check to see if this works
+        $this->item->topics = $this->item->topic_text;
 		$relatedstudies = new RelatedStudies;
 
 		$template      = $this->get('template');
@@ -222,57 +226,60 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
+        //Only load pagebuilder if the default template is NOT being used
+        if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
+        {
+            $pagebuilder            = new JBSPagebuilder;
+            $pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+            $this->item->scripture1 = $pelements->scripture1;
+            $this->item->scripture2 = $pelements->scripture2;
+            $this->item->media      = $pelements->media;
+            $this->item->duration   = $pelements->duration;
+            $this->item->studydate  = $pelements->studydate;
 
-		$pagebuilder            = new JBSPagebuilder;
-		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
-		$this->item->scripture1 = $pelements->scripture1;
-		$this->item->scripture2 = $pelements->scripture2;
-		$this->item->media      = $pelements->media;
-		$this->item->duration   = $pelements->duration;
-		$this->item->studydate  = $pelements->studydate;
+            if (isset($pelements->secondary_reference))
+            {
+                $this->item->secondary_reference = $pelements->secondary_reference;
+            }
+            else
+            {
+                $this->item->secondary_reference = '';
+            }
+            if (isset($pelements->topics))
+            {
+                $this->item->topics = $pelements->topics;
+            }
+            else
+            {
+                $this->item->topics = '';
+            }
+            if (isset($pelements->study_thumbnail))
+            {
+                $this->item->study_thumbnail = $pelements->study_thumbnail;
+            }
+            else
+            {
+                $this->item->study_thumbnail = null;
+            }
+            if (isset($pelements->series_thumbnail))
+            {
+                $this->item->series_thumbnail = $pelements->series_thumbnail;
+            }
+            else
+            {
+                $this->item->series_thumbnail = null;
+            }
+            $this->item->detailslink = $pelements->detailslink;
 
-		if (isset($pelements->secondary_reference))
-		{
-			$this->item->secondary_reference = $pelements->secondary_reference;
-		}
-		else
-		{
-			$this->item->secondary_reference = '';
-		}
-		if (isset($pelements->topics))
-		{
-			$this->item->topics = $pelements->topics;
-		}
-		else
-		{
-			$this->item->topics = '';
-		}
-		if (isset($pelements->study_thumbnail))
-		{
-			$this->item->study_thumbnail = $pelements->study_thumbnail;
-		}
-		else
-		{
-			$this->item->study_thumbnail = null;
-		}
-		if (isset($pelements->series_thumbnail))
-		{
-			$this->item->series_thumbnail = $pelements->series_thumbnail;
-		}
-		else
-		{
-			$this->item->series_thumbnail = null;
-		}
-		$this->item->detailslink = $pelements->detailslink;
-
-		if (isset($pelements->teacherimage))
-		{
-			$this->item->teacherimage = $pelements->teacherimage;
-		}
-		else
-		{
-			$this->item->teacherimage = null;
-		}
+            if (isset($pelements->teacherimage))
+            {
+                $this->item->teacherimage = $pelements->teacherimage;
+            }
+            else
+            {
+                $this->item->teacherimage = null;
+            }
+        }
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
 		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
@@ -359,7 +366,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
 
-		$JBSMListing        = new JBSMListing;
+
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');

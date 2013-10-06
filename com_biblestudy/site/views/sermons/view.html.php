@@ -353,8 +353,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->pagination = $pagination;
 		$this->order      = $this->orders;
 		$this->topic      = $this->topics;
-		$images           = new JBSMImages;
-		$this->main       = $images->mainStudyImage();
+
 
         //Get the template options for showing the dropdowns
         $teacher_menu1 = $params->get('teacher_id');

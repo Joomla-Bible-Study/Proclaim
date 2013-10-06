@@ -106,58 +106,36 @@ class JBSMListing extends JBSMElements
         switch ($view)
         {
             case 'sermons':
-                $listparams = array();
-                if ($params->get('scripture1row') > 0){$listparams[]= $this->getListParamsArray('scripture1');}
-                if ($params->get('scripture2row') > 0){$listparams[]= $this->getListParamsArray('scripture2');}
-                if ($params->get('secondaryrow') > 0){$listparams[]= $this->getListParamsArray('secondary');}
-                if ($params->get('titlerow') > 0){$listparams[]= $this->getListParamsArray('title');}
-                if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
-                if ($params->get('teacherrow') > 0){$listparams[]= $this->getListParamsArray('teacher');}
-                if ($params->get('teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('teacher-title');}
-                if ($params->get('durationrow') > 0){$listparams[]= $this->getListParamsArray('duration');}
-                if ($params->get('studyintrorow') > 0){$listparams[]= $this->getListParamsArray('studyintro');}
-                if ($params->get('seriesrow') > 0){$listparams[]= $this->getListParamsArray('series');}
-                if ($params->get('seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('seriesdescription');}
-                if ($params->get('seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('seriesthumbnail');}
-                if ($params->get('submittedrow') > 0){$listparams[]= $this->getListParamsArray('submitted');}
-                if ($params->get('hitsrow') > 0){$listparams[]= $this->getListParamsArray('hits');}
-                if ($params->get('downloadsrow') > 0){$listparams[]= $this->getListParamsArray('downloads');}
-                if ($params->get('studynumberrow') > 0){$listparams[]= $this->getListParamsArray('studynumber');}
-                if ($params->get('topicrow') > 0){$listparams[]= $this->getListParamsArray('topic');}
-                if ($params->get('locationsrow') > 0){$listparams[]= $this->getListParamsArray('locations');}
-                if ($params->get('jbsmediarow') > 0){$listparams[]= $this->getListParamsArray('jbsmedia');}
-                if ($params->get('messagetyperow') > 0){$listparams[]= $this->getListParamsArray('messagetype');}
-                if ($params->get('thumbnailrow') > 0){$listparams[]= $this->getListParamsArray('thumbnail');}
-                if ($params->get('teacherimagerrow') >0){$listparams[] = $this->getListParamsArray('teacherimage');}
+                $extra = '';
                 break;
             case 'sermon':
-                $listparams = array();
-                if ($params->get('dscripture1row') > 0){$listparams[]= $this->getListParamsArray('dscripture1');}
-                if ($params->get('dscripture2row') > 0){$listparams[]= $this->getListParamsArray('dscripture2');}
-                if ($params->get('dsecondaryrow') > 0){$listparams[]= $this->getListParamsArray('dsecondary');}
-                if ($params->get('dtitlerow') > 0){$listparams[]= $this->getListParamsArray('dtitle');}
-                if ($params->get('daterow') > 0){$listparams[]= $this->getListParamsArray('date');}
-                if ($params->get('dteacherrow') > 0){$listparams[]= $this->getListParamsArray('dteacher');}
-                if ($params->get('dteacher-titlerow') > 0){$listparams[]= $this->getListParamsArray('dteacher-title');}
-                if ($params->get('ddurationrow') > 0){$listparams[]= $this->getListParamsArray('dduration');}
-                if ($params->get('dstudyintrorow') > 0){$listparams[]= $this->getListParamsArray('dstudyintro');}
-                if ($params->get('dseriesrow') > 0){$listparams[]= $this->getListParamsArray('dseries');}
-                if ($params->get('dseriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray('dseriesdescription');}
-                if ($params->get('dseriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('dseriesthumbnail');}
-                if ($params->get('dsubmittedrow') > 0){$listparams[]= $this->getListParamsArray('dsubmitted');}
-                if ($params->get('dhitsrow') > 0){$listparams[]= $this->getListParamsArray('dhits');}
-                if ($params->get('ddownloadsrow') > 0){$listparams[]= $this->getListParamsArray('ddownloads');}
-                if ($params->get('dstudynumberrow') > 0){$listparams[]= $this->getListParamsArray('dstudynumber');}
-                if ($params->get('dtopicrow') > 0){$listparams[]= $this->getListParamsArray('dtopic');}
-                if ($params->get('dlocationsrow') > 0){$listparams[]= $this->getListParamsArray('dlocations');}
-                if ($params->get('djbsmediarow') > 0){$listparams[]= $this->getListParamsArray('djbsmedia');}
-                if ($params->get('dmessagetyperow') > 0){$listparams[]= $this->getListParamsArray('dmessagetype');}
-                if ($params->get('dthumbnailrow') > 0){$listparams[]= $this->getListParamsArray('dthumbnail');}
-                if ($params->get('dteacherimagerrow') >0){$listparams[] = $this->getListParamsArray('dteacherimage');}
+                $extra = 'd';
                 break;
         }
 
-
+        $listparams = array();
+        if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
+        if ($params->get($extra.'scripture2row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture2');}
+        if ($params->get($extra.'secondaryrow') > 0){$listparams[]= $this->getListParamsArray($extra.'secondary');}
+        if ($params->get($extra.'titlerow') > 0){$listparams[]= $this->getListParamsArray($extra.'title');}
+        if ($params->get($extra.'daterow') > 0){$listparams[]= $this->getListParamsArray($extra.'date');}
+        if ($params->get($extra.'teacherrow') > 0){$listparams[]= $this->getListParamsArray($extra.'teacher');}
+        if ($params->get($extra.'teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray($extra.'teacher-title');}
+        if ($params->get($extra.'durationrow') > 0){$listparams[]= $this->getListParamsArray($extra.'duration');}
+        if ($params->get($extra.'studyintrorow') > 0){$listparams[]= $this->getListParamsArray($extra.'studyintro');}
+        if ($params->get($extra.'seriesrow') > 0){$listparams[]= $this->getListParamsArray($extra.'series');}
+        if ($params->get($extra.'seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray($extra.'seriesdescription');}
+        if ($params->get($extra.'seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'seriesthumbnail');}
+        if ($params->get($extra.'submittedrow') > 0){$listparams[]= $this->getListParamsArray($extra.'submitted');}
+        if ($params->get($extra.'hitsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'hits');}
+        if ($params->get($extra.'downloadsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'downloads');}
+        if ($params->get($extra.'studynumberrow') > 0){$listparams[]= $this->getListParamsArray($extra.'studynumber');}
+        if ($params->get($extra.'topicrow') > 0){$listparams[]= $this->getListParamsArray($extra.'topic');}
+        if ($params->get($extra.'locationsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'locations');}
+        if ($params->get($extra.'jbsmediarow') > 0){$listparams[]= $this->getListParamsArray($extra.'jbsmedia');}
+        if ($params->get($extra.'messagetyperow') > 0){$listparams[]= $this->getListParamsArray($extra.'messagetype');}
+        if ($params->get($extra.'thumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'thumbnail');}
+        if ($params->get($extra.'teacherimagerrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherimage');}
         $row1 = array();
         $row2 = array();
         $row3 = array();
@@ -292,7 +270,12 @@ class JBSMListing extends JBSMElements
         $span = '';
         $headerstyle = '';
         if ($header == 1){$headerstyle = "style=visibility:hidden;";}
-        $rowspanitem = $params->get('rowspanitem');
+        $extra = '';
+        $input = new JInput();
+        $view = $input->getString('view');
+        if ($view =='sermon'){$extra = 'd';}
+
+        $rowspanitem = $params->get($extra.'rowspanitem');
         if ($rowspanitem)
         {
             switch ($rowspanitem)

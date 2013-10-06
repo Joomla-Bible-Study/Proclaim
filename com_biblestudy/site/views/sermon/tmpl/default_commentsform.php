@@ -50,7 +50,7 @@ switch ($this->item->params->get('link_comments', 0))
 
     <div class="row-fluid">
         <div class="span12">
-			<?php echo JText::_('JBS_CMN_COMMENTS'); ?>
+			<h2><?php echo JText::_('JBS_CMN_COMMENTS'); ?></h2>
         </div>
     </div>
 
