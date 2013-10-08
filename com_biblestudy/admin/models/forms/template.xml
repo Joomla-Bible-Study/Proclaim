@@ -576,14 +576,14 @@
             <field name="scripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="scripture1linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer" hr="true" />
-            <field name="scripture2row" type="rowoptions" size="1" default="1" label="JBS_TPL_SCRIPTURE2ROW" description="JBS_TPL_ROW_DESC" />
+            <field name="scripture2row" type="rowoptions" size="1" default="0" label="JBS_TPL_SCRIPTURE2ROW" description="JBS_TPL_ROW_DESC" />
             <field name="scripture2col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="scripture2colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="scripture2element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="scripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="scripture2linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer2" hr="true" />
-            <field name="secondaryrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SECONDARYROW" description="JBS_TPL_ROW_DESC" />
+            <field name="secondaryrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SECONDARYROW" description="JBS_TPL_ROW_DESC" />
             <field name="secondarycol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="secondarycolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="secondaryelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -592,7 +592,7 @@
             <field type="spacer" name="myspacer3" hr="true" />
             <field name="jbsmediarow" type="rowoptions" size="1" default="1" label="JBS_TPL_JBSMEDIAROW" description="JBS_TPL_ROW_DESC" />
             <field name="jbsmediacol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
-            <field name="jbsmediacolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="jbsmediacolspan" type="spanoptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="jbsmediaelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="jbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
@@ -600,33 +600,33 @@
         <fieldset name="DISPLAYELEMENTS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="titlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TITLEROW" description="JBS_TPL_ROW_DESC" />
             <field name="titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
-            <field name="titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="titlecolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer4" hr="true" />
             <field name="daterow" type="rowoptions" size="1" default="1" label="JBS_TPL_DATEROW" description="JBS_TPL_ROW_DESC" />
             <field name="datecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
-            <field name="datecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="datecolspan" type="spanoptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dateelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="datecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="datelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer5" hr="true" />
-            <field name="teacherrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="teacherrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
             <field name="teachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="teachercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="teacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer6" hr="true" />
-            <field name="teacherimagerrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="teacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
             <field name="teacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="teacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="teacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer7" hr="true" />
-            <field name="teacher-titlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="teacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
             <field name="teacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="teacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="teacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -634,35 +634,35 @@
             <field name="teacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="durationrow" type="rowoptions" size="1" default="1" label="JBS_TPL_DURATIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="durationrow" type="rowoptions" size="1" default="0" label="JBS_TPL_DURATIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="durationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="durationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="durationelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="durationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="durationlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer8" hr="true" />
-            <field name="studyintrorow" type="rowoptions" size="1" default="3" label="JBS_TPL_STUDYINTROROW" description="JBS_TPL_ROW_DESC" />
+            <field name="studyintrorow" type="rowoptions" size="1" default="2" label="JBS_TPL_STUDYINTROROW" description="JBS_TPL_ROW_DESC" />
             <field name="studyintrocol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="studyintrocolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="studyintroelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="studyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="studyintrolinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer9" hr="true" />
-            <field name="seriesrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESROW" description="JBS_TPL_ROW_DESC" />
+            <field name="seriesrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESROW" description="JBS_TPL_ROW_DESC" />
             <field name="seriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="seriescolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="serieselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="seriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="serieslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer10" hr="true" />
-            <field name="seriesthumbnailrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESTHUMBNAILROW" description="JBS_TPL_ROW_DESC" />
+            <field name="seriesthumbnailrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESTHUMBNAILROW" description="JBS_TPL_ROW_DESC" />
             <field name="seriesthumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="seriesthumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="seriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="seriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="seriesthumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer11" hr="true" />
-            <field name="seriesdescriptionrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESDESCRIPTIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="seriesdescriptionrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESDESCRIPTIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="seriesdescriptioncol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="seriesdescriptioncolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="seriesdescriptionelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -670,21 +670,21 @@
             <field name="seriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="submittedrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SUBMITTEDROW" description="JBS_TPL_ROW_DESC" />
+            <field name="submittedrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SUBMITTEDROW" description="JBS_TPL_ROW_DESC" />
             <field name="submittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="submittedcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="submittedelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="submittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="submittedlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer12" hr="true" />
-            <field name="hitsrow" type="rowoptions" size="1" default="3" label="JBS_TPL_HITSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="hitsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_HITSROW" description="JBS_TPL_ROW_DESC" />
             <field name="hitscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="hitscolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="hitselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="hitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="hitslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer13" hr="true" />
-            <field name="downloadsrow" type="rowoptions" size="1" default="1" label="JBS_TPL_DOWNLOADSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="downloadsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_DOWNLOADSROW" description="JBS_TPL_ROW_DESC" />
             <field name="downloadscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="downloadscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="downloadselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -692,21 +692,21 @@
             <field name="downloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS5" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="studynumberrow" type="rowoptions" size="1" default="1" label="JBS_TPL_STUDYNUMBERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="studynumberrow" type="rowoptions" size="1" default="0" label="JBS_TPL_STUDYNUMBERROW" description="JBS_TPL_ROW_DESC" />
             <field name="studynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="studynumbercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="studynumberelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="studynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="studynumberlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer14" hr="true" />
-            <field name="topicrow" type="rowoptions" size="1" default="3" label="JBS_TPL_TOPICSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="topicrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TOPICSROW" description="JBS_TPL_ROW_DESC" />
             <field name="topiccol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="topiccolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="topicelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="topiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="topiclinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer15" hr="true" />
-            <field name="locationsrow" type="rowoptions" size="1" default="1" label="JBS_TPL_LOCATIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="locationsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_LOCATIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="locationscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="locationscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="locationselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -714,14 +714,14 @@
             <field name="locationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DISPLAYELEMENTS6" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="messagetyperow" type="rowoptions" size="1" default="3" label="JBS_TPL_MESSAGETYPEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="messagetyperow" type="rowoptions" size="1" default="0" label="JBS_TPL_MESSAGETYPEROW" description="JBS_TPL_ROW_DESC" />
             <field name="messagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="messagetypecolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="messagetypeelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="messagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="messagetypelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer16" hr="true" />
-            <field name="thumbnailrow" type="rowoptions" size="1" default="1" label="JBS_TPL_THUMBNAILROW" description="JBS_TPL_ROW_DESC" />
+            <field name="thumbnailrow" type="rowoptions" size="1" default="0" label="JBS_TPL_THUMBNAILROW" description="JBS_TPL_ROW_DESC" />
             <field name="thumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="thumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="thumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1331,20 +1331,20 @@
             </field>
             <field type="spacer" name="myspacera" hr="true" />
             <field name="dscripture1row" type="rowoptions" default="1" label="JBS_TPL_SCRIPTURE1ROW" description="JBS_TPL_ROW_DESC" />
-            <field name="dscripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="dscripture1col" type="spanoptions" default="0" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dscripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dscripture1element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dscripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dscripture1linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer" hr="true" />
-            <field name="dscripture2row" type="rowoptions" size="1" default="1" label="JBS_TPL_SCRIPTURE2ROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dscripture2row" type="rowoptions" size="1" default="0" label="JBS_TPL_SCRIPTURE2ROW" description="JBS_TPL_ROW_DESC" />
             <field name="dscripture2col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dscripture2colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dscripture2element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dscripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dscripture2linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer2" hr="true" />
-            <field name="dsecondaryrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SECONDARYROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dsecondaryrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SECONDARYROW" description="JBS_TPL_ROW_DESC" />
             <field name="dsecondarycol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dsecondarycolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dsecondaryelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1352,7 +1352,7 @@
             <field name="dsecondarylinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer3" hr="true" />
             <field name="djbsmediarow" type="rowoptions" size="1" default="1" label="JBS_TPL_JBSMEDIAROW" description="JBS_TPL_ROW_DESC" />
-            <field name="djbsmediacol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="djbsmediacol" type="spanoptions" default="3" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="djbsmediacolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="djbsmediaelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="djbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
@@ -1360,34 +1360,34 @@
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="dtitlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TITLEROW" description="JBS_TPL_ROW_DESC" />
-            <field name="dtitlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
-            <field name="dtitlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="dtitlecol" type="spanoptions" default="2" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="dtitlecolspan" type="spanoptions" default="3" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dtitleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dtitlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dtitlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer4" hr="true" />
-            <field name="ddaterow" type="rowoptions" size="1" default="1" label="JBS_TPL_DATEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="ddaterow" type="rowoptions" size="1" default="0" label="JBS_TPL_DATEROW" description="JBS_TPL_ROW_DESC" />
             <field name="ddatecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="ddatecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="ddateelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="ddatecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="ddatelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer5" hr="true" />
-            <field name="dteacherrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dteacherrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
             <field name="dteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dteachercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dteacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dteacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer6" hr="true" />
-            <field name="dteacherimagerrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
             <field name="dteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dteacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer7" hr="true" />
-            <field name="dteacher-titlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dteacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
             <field name="dteacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dteacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dteacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1395,35 +1395,35 @@
             <field name="dteacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="ddurationrow" type="rowoptions" size="1" default="1" label="JBS_TPL_DURATIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="ddurationrow" type="rowoptions" size="1" default="0" label="JBS_TPL_DURATIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="ddurationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="ddurationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="ddurationelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="ddurationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="ddurationlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer8" hr="true" />
-            <field name="dstudyintrorow" type="rowoptions" size="1" default="3" label="JBS_TPL_STUDYINTROROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dstudyintrorow" type="rowoptions" size="1" default="0" label="JBS_TPL_STUDYINTROROW" description="JBS_TPL_ROW_DESC" />
             <field name="dstudyintrocol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dstudyintrocolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dstudyintroelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dstudyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dstudyintrolinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer9" hr="true" />
-            <field name="dseriesrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dseriesrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESROW" description="JBS_TPL_ROW_DESC" />
             <field name="dseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dseriescolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dserieselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dserieslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer10" hr="true" />
-            <field name="dseriesthumbnailrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESTHUMBNAILROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dseriesthumbnailrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESTHUMBNAILROW" description="JBS_TPL_ROW_DESC" />
             <field name="dseriesthumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dseriesthumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dseriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dseriesthumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer11" hr="true" />
-            <field name="dseriesdescriptionrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SERIESDESCRIPTIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dseriesdescriptionrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESDESCRIPTIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="dseriesdescriptioncol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dseriesdescriptioncolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dseriesdescriptionelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1431,21 +1431,21 @@
             <field name="dseriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="dsubmittedrow" type="rowoptions" size="1" default="1" label="JBS_TPL_SUBMITTEDROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dsubmittedrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SUBMITTEDROW" description="JBS_TPL_ROW_DESC" />
             <field name="dsubmittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dsubmittedcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dsubmittedelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dsubmittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dsubmittedlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer12" hr="true" />
-            <field name="dhitsrow" type="rowoptions" size="1" default="3" label="JBS_TPL_HITSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dhitsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_HITSROW" description="JBS_TPL_ROW_DESC" />
             <field name="dhitscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dhitscolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dhitselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dhitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dhitslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer13" hr="true" />
-            <field name="ddownloadsrow" type="rowoptions" size="1" default="1" label="JBS_TPL_DOWNLOADSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="ddownloadsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_DOWNLOADSROW" description="JBS_TPL_ROW_DESC" />
             <field name="ddownloadscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="ddownloadscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="ddownloadselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1453,21 +1453,21 @@
             <field name="ddownloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS5" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="dstudynumberrow" type="rowoptions" size="1" default="1" label="JBS_TPL_STUDYNUMBERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dstudynumberrow" type="rowoptions" size="1" default="0" label="JBS_TPL_STUDYNUMBERROW" description="JBS_TPL_ROW_DESC" />
             <field name="dstudynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dstudynumbercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dstudynumberelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dstudynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dstudynumberlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer14" hr="true" />
-            <field name="dtopicrow" type="rowoptions" size="1" default="3" label="JBS_TPL_TOPICSROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dtopicrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TOPICSROW" description="JBS_TPL_ROW_DESC" />
             <field name="dtopiccol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dtopiccolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dtopicelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dtopiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dtopiclinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer15" hr="true" />
-            <field name="dlocationsrow" type="rowoptions" size="1" default="1" label="JBS_TPL_LOCATIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dlocationsrow" type="rowoptions" size="1" default="0" label="JBS_TPL_LOCATIONROW" description="JBS_TPL_ROW_DESC" />
             <field name="dlocationscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dlocationscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dlocationselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
@@ -1475,14 +1475,14 @@
             <field name="dlocationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS6" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-            <field name="dmessagetyperow" type="rowoptions" size="1" default="3" label="JBS_TPL_MESSAGETYPEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dmessagetyperow" type="rowoptions" size="1" default="0" label="JBS_TPL_MESSAGETYPEROW" description="JBS_TPL_ROW_DESC" />
             <field name="dmessagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dmessagetypecolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dmessagetypeelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="dmessagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="dmessagetypelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer16" hr="true" />
-            <field name="dthumbnailrow" type="rowoptions" size="1" default="1" label="JBS_TPL_THUMBNAILROW" description="JBS_TPL_ROW_DESC" />
+            <field name="dthumbnailrow" type="rowoptions" size="1" default="0" label="JBS_TPL_THUMBNAILROW" description="JBS_TPL_ROW_DESC" />
             <field name="dthumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="dthumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="dthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
