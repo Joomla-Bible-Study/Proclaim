@@ -9,7 +9,10 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+if (BIBLESTUDY_CHECKREL)
+{
+    JHtml::_('bootstrap.framework');
+}
 $mainframe   = JFactory::getApplication();
 $input       = new JInput;
 $option      = $input->get('option', '', 'cmd');
@@ -27,14 +30,16 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 ?>
+<div class="container-fluid">
+
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
-    <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-        <div id="bsmHeader">
+    <div class="hero-unit"> <!-- This div is the header container -->
+
             <h1 class="componentheading">
 				<?php
-				if ($this->params->get('show_page_image_series') > 0)
+				if ($this->params->get('show_page_image_series'))
 				{
-					echo $this->page->main;
+					echo '<img src="'.JURI::base().$this->params->get('show_page_image_series').'" alt="'.$this->params->get('show_series_title').'" />';
 
 					// End of column for logo
 				}
@@ -46,7 +51,8 @@ if ($url)
 				}
 				?>
             </h1>
-            <!--header-->
+    </div> <!--header-->
+
             <div id="bsdropdownmenu">
 
 				<?php
@@ -85,7 +91,7 @@ if ($url)
             <div class="listingfooter">
             </div>
             <!--end of bsfooter div-->
-        </div>
+
         <!--end of bspagecontainer div-->
         <input name="option" value="com_biblestudy" type="hidden">
         <input name="task" value="" type="hidden">
@@ -93,3 +99,4 @@ if ($url)
         <input name="controller" value="seriesdisplays" type="hidden">
     </div>
 </form>
+</div> <!-- end of container-fluid div -->
