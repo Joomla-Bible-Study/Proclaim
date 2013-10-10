@@ -62,6 +62,11 @@ if ($url)
 				}
 				?>
             </div>
+
+    <?php $listing = new JBSMListing;
+    $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
+    echo $list;
+    ?>
             <!--dropdownmenu-->
             <table class="table table-striped" id="seriestable">
                 <tbody>
@@ -82,8 +87,8 @@ if ($url)
 						$oddeven = $class1;
 					}
 
-					$listing = $JBSMSerieslist->getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
-					echo $listing;
+					//$listing = $JBSMSerieslist->getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
+					//echo $listing;
 				}
 				?>
                 </tbody>

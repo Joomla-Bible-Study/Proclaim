@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
 JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * View class for SeriesDisplays
