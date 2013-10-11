@@ -130,7 +130,7 @@ class JBSMListing extends JBSMElements
         if ($params->get($extra.'durationrow') > 0){$listparams[]= $this->getListParamsArray($extra.'duration');}
         if ($params->get($extra.'studyintrorow') > 0){$listparams[]= $this->getListParamsArray($extra.'studyintro');}
         if ($params->get($extra.'seriesrow') > 0){$listparams[]= $this->getListParamsArray($extra.'series');}
-        if ($params->get($extra.'seriesdescriptionrow') > 0){$listparams[]= $this->getListParamsArray($extra.'seriesdescription');}
+        if ($params->get($extra.'descriptionrow') > 0){$listparams[]= $this->getListParamsArray($extra.'description');}
         if ($params->get($extra.'seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'seriesthumbnail');}
         if ($params->get($extra.'submittedrow') > 0){$listparams[]= $this->getListParamsArray($extra.'submitted');}
         if ($params->get($extra.'hitsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'hits');}
@@ -142,7 +142,7 @@ class JBSMListing extends JBSMElements
         if ($params->get($extra.'messagetyperow') > 0){$listparams[]= $this->getListParamsArray($extra.'messagetype');}
         if ($params->get($extra.'thumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'thumbnail');}
         if ($params->get($extra.'teacherimagerrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherimage');}
-        if ($params->get($extra.'seriestitlerow') >0){$listparams[] = $this->getListParamsArray($extra.'seriestitle');}
+        if ($params->get($extra.'seriesdescriptionrow') >0){$listparams[] = $this->getListParamsArray($extra.'description');}
         $row1 = array();
         $row2 = array();
         $row3 = array();
@@ -245,6 +245,7 @@ class JBSMListing extends JBSMElements
         {
             foreach ($items as $item)
             {
+                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
                 $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
             }
         }
@@ -294,16 +295,22 @@ class JBSMListing extends JBSMElements
         $input = new JInput();
         $view = $input->getString('view');
         $extra = '';
+        $pull = '';
         switch ($view )
         {
             case 'sermon':
                 $extra = 'd';
+                $pull = $params->get('drowspanitempull');
                 break;
             case 'seriesdisplays':
                 $extra = 's';
+                $pull = $params->get('srowspanitempull');
                 break;
             case 'seriesdisplay':
                 $extra = 'ds';
+                break;
+            case 'sermons':
+                $pull = $params->get('rowspanitempull');
                 break;
         }
 
@@ -332,9 +339,8 @@ class JBSMListing extends JBSMElements
         $rowspanbalance = 12 - $rowspanitemspan;
         $frow = '';
         $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:5px;">';
-        $pull = '';
-        if ($view == 'sermons'){$pull = $params->get('rowspanitempull');}
-        if ($view == 'sermon'){$pull = $params->get('drowspanitempull');}
+
+
         if ($span)
         {
             $frow .= '<div class="row-fluid" >';
@@ -436,6 +442,7 @@ class JBSMListing extends JBSMElements
                 $extra = 's';
                 break;
         }
+
         switch ($row->name)
         {
             case $extra.'scripture1':
@@ -458,10 +465,6 @@ class JBSMListing extends JBSMElements
                 if ($header == 1){$data = JText::_('JBS_CMN_TITLE');}
                 else {(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');}
                 break;
-            case $extra.'seriestitle':
-                if ($header ==1){$data = JText::_('JBS_CMN_TITLE');}
-                else {(isset($item->series_text) ? $data = $item->series_text : $data = '');}
-                break;
             case $extra.'date':
                 if ($header == 1){$data = JText::_('JBS_CMN_STUDY_DATE');}
                 else {(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');}
@@ -469,6 +472,7 @@ class JBSMListing extends JBSMElements
             case $extra.'teacher':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
                 else {(isset($item->teachername)? $data = $item->teachername : $data = '');}
+
                 break;
             case $extra.'teacher-title':
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
@@ -494,8 +498,9 @@ class JBSMListing extends JBSMElements
                 if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
                 else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
-            case $extra.'seriesdescription':
+            case $extra.'description':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
+                if ($view == 'seriesdisplays'){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
                 else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
                 if ($view == 'seriesdisplays' && !$header)
                 {
@@ -555,7 +560,12 @@ class JBSMListing extends JBSMElements
                 else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
             case $extra.'teacherimage':
+
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
+                if ($view == 'seriesdisplays')
+                {
+                    (isset($item->teacher_thumbnail)? $data = 'img src="'.JURI::base().$item->teacher_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');
+                }
                else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
         }
