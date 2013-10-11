@@ -82,7 +82,7 @@ $row         = $this->item;
     <!-- Begin Fluid layout -->
 
         <?php $listing = new JBSMListing;
-        $list = $listing->getFluidListing($this->item, $this->item->params, $this->item->admin_params, $this->template);
+        $list = $listing->getFluidListing($this->item, $this->item->params, $this->item->admin_params, $this->template, $type='sermon');
         echo $list;
         ?>
 

@@ -70,7 +70,7 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
     <?php echo $this->page->dropdowns;?>
     <hr />
     <?php $listing = new JBSMListing;
-    $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
+    $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template, $type='sermons');
     echo $list;
     ?>
     <div class="listingfooter pagination">

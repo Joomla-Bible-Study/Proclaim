@@ -13,6 +13,7 @@ JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * View class for SeriesDisplay
@@ -120,7 +121,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
 		$t                   = $input->get('t', '1', 'int');
-
+        $this->t = $t;
 		$params = $this->state->get('params');
 
 		// Convert parameter fields to objects.
@@ -269,6 +270,15 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
 
+        // Let's get the studies from this series from the sermons model
+        //JLoader::import('joomla.application.component.modellist');
+
+
+//require_once(JPATH_SITE.'/components/com_biblestudy/models/sermons.php');
+        $studies_model = JModelList::getInstance( 'Sermons', 'BiblestudyModel' );
+        $studies_model->setState( 'filter.series_id', $items->id );
+        $studies = $studies_model->get('Items');
+        dump($studies);
 		parent::display($tpl);
 	}
 

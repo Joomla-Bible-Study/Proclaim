@@ -64,7 +64,7 @@ if ($url)
             </div>
 
     <?php $listing = new JBSMListing;
-    $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template);
+    $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template, $type='seriesdisplays');
     echo $list;
     ?>
             <!--dropdownmenu-->

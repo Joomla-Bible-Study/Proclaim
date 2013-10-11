@@ -558,7 +558,7 @@
                 <option value="2">JBS_TPL_STUDYIMAGE</option>
                 <option value="3">JBS_TPL_SERIESIMAGE</option>
             </field>
-            <field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_ROWSPANITEMSPAN" description="JBS_TPL_ROWSPANITEMSPAN_DESC" />
+            <field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
                 <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
                 <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
@@ -1042,7 +1042,7 @@
                 <option value="1">JBS_TPL_TEACHERAIMGE</option>
                 <option value="3">JBS_TPL_SERIESIMAGE</option>
             </field>
-            <field name="srowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_ROWSPANITEMSPAN" description="JBS_TPL_ROWSPANITEMSPAN_DESC" />
+            <field name="srowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="srowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
                 <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
                 <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
@@ -1121,52 +1121,69 @@
                 <option value="0">JBS_TPL_HIDE_LINK</option>
                 <option value="1">JBS_TPL_SHOW_LINK</option>
             </field>
-            <field name="series_detail_listtype" type="list" default="0"
-                   label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LISTTYPE"
-                   description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LISTTYPE_DESC">
-                <option value="0">JBS_TPL_SERIESDETAIL_SERIESLIST_STYLE</option>
-                <option value="1">JBS_TPL_SERIESDETAIL_STUDIESLIST</option>
-                <option value="2">JBS_TPL_SERIESDETAIL_CUSTOM_SERIES_LIST</option>
+            <field name="sdrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
+                <option value="0">JBS_TPL_NO_ITEM</option>
+                <option value="1">JBS_TPL_TEACHERAIMGE</option>
+                <option value="3">JBS_TPL_SERIESIMAGE</option>
             </field>
-            <field name="series_detail_1" type="seriesoptions" default="5"
-                   label="JBS_TPL_CHOOSE_ITEM_COL1" description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC"/>
-            <field name="series_detail_islink1" type="list" default="1"
-                   label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-                   description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
+            <field name="sdrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
+                <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
+                <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
+                <option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
             </field>
-            <field name="series_detail_2" type="seriesoptions" default="7"
-                   label="JBS_TPL_CHOOSE_ITEM_COL2" description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC"/>
-            <field name="series_detail_islink2" type="list" default="0"
-                   label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-                   description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
+            <field name="sdrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL" description="JBS_TPL_ROWSPANITEMPULL_DESC">
+                <option value="pull-left">JBS_TPL_PULLLEFT</option>
+                <option value="pull-right">JBS_TPL_PULLRIGHT</option>
             </field>
-            <field name="series_detail_3" type="seriesoptions" default="10"
-                   label="JBS_TPL_CHOOSE_ITEM_COL3" description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC"/>
-            <field name="series_detail_islink3" type="list" default="0"
-                   label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-                   description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
+           <field name="seriesdisplay_color" type="text" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR" />
+            <field name="use_header_seriesdisplay" type="list" label="JBS_TPL_SERIESDISPLAY_USE_HEADER" description="JBS_TPL_SERIESDISPLAY_USE_HEADER_DESC">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="series_detail_4" type="seriesoptions" default="20"
-                   label="JBS_TPL_CHOOSE_ITEM_COL4" description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC"/>
-            <field name="series_detail_islink4" type="list" default="0"
-                   label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-                   description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
-            </field>
-            <field name="useexpert_seriesdetail" type="list" label="JBS_TPL_CUSTOM_VIEW"
-                   description="JBS_TPL_CUSTOM_VIEW_DESC">
-                <option value="0">JBS_CMN_DONT_USE</option>
-                <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
-            </field>
-            <field name="series_detailcode" type="textarea" rows="10" cols="100"
-                   label="JBS_TPL_SERIESDETAIL_TEMPLATECODE" description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_DESC"/>
+            <field type="spacer" name="myspacer24" hr="true" />
+            <field name="sdseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE" description="JBS_TPL_ROW_DESC" />
+            <field name="sdseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdseriescolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdserieselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdserieslinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer25" hr="true" />
+            <field name="sdseriesthumbnailrow" type="rowoptions" default="1" label="JBS_SERIES_LIST_THUMBNAIL" description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
+            <field name="sdseriesthumbnailcol" type="spanoptions" default="2" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdseriesthumbnailcolspan" type="spanoptions" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdseriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdseriesthumbnaillinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer26" hr="true" />
+            <field name="sdteacherrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="sdteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdteachercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdteacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdteacherlinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer27" hr="true" />
+            <field name="sdteacherimagerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="sdteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdteacherlinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer28" hr="true" />
+            <field name="sdteacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="sdteacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdteacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdteacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdteacher-titlelinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer29" hr="true" />
+            <field name="sddescriptionrow" type="rowoptions" size="1" default="0" label="JBS_TPL_SERIESDESCRIPTIONROW" description="JBS_TPL_ROW_DESC" />
+            <field name="sddescriptioncol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sddescriptioncolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sddescriptionelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sddescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sddescriptionlinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer30" hr="true" />
         </fieldset>
         <fieldset name="TOOLTIP">
             <field name="tip_title" type="text" default="Sermon Information"

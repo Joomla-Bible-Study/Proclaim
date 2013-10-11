@@ -35,11 +35,13 @@ class JBSMListing extends JBSMElements
      * @param $template
      * @return string
      */
-    public function getFluidListing($items, $params, $admin_params, $template)
+    public function getFluidListing($items, $params, $admin_params, $template, $type)
     {
+
         //Find out what view we are in
         $input = new JInput();
         $view = $input->getString('view');
+        if ($type == 'sermons'){$view = 'sermons';}
         $list = '';
         $row = array();
         $this->params = $params;
@@ -115,9 +117,10 @@ class JBSMListing extends JBSMElements
                 $extra = 's';
                 break;
             case 'seriesdisplay':
-                $extra = 'ds';
+                $extra = 'sd';
                 break;
         }
+        if ($type == 'sermons'){$view = 'sermons';}
 
         $listparams = array();
         if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
@@ -180,22 +183,31 @@ class JBSMListing extends JBSMElements
         {
             if ($params->get('use_headers_list') > 0)
             {
-                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
         }
         if ($view == 'sermon')
         {
             if ($params->get('use_headers_view') > 0)
             {
-                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
         }
         if ($view == 'seriesdisplays')
         {
             if ($params->get('use_headers_series') > 0)
             {
-                $list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1);
+                    $list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
+        }
+        if ($view == 'seriesdisplay')
+        {
+            if ($params->get('use_header_seriesdisplay') > 0)
+            {
+                $oddeven = $params->get('seriesdisplay_color');
+                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
+            }
+            $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
         // Go through and attach the media files as an array to their study
         if ($view == 'sermons')
@@ -218,7 +230,7 @@ class JBSMListing extends JBSMElements
                 {
                     $item->mediafiles = $studymedia;
                 }
-                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
+                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
             }
         }
         if ($view == 'sermon')
@@ -239,14 +251,14 @@ class JBSMListing extends JBSMElements
             {
                 $item->mediafiles = $studymedia;
             }
-            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
+            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
         if ($view == 'seriesdisplays')
         {
             foreach ($items as $item)
             {
                 $oddeven = ($oddeven == $class1) ? $class2 : $class1;
-                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0);
+                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
             }
         }
         foreach ($row as $key=>$value)
@@ -287,7 +299,7 @@ class JBSMListing extends JBSMElements
     /**
      * Get Fluid Row
      */
-    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header)
+    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header, $type)
     {
         $span = '';
         $headerstyle = '';
@@ -300,20 +312,22 @@ class JBSMListing extends JBSMElements
         {
             case 'sermon':
                 $extra = 'd';
-                $pull = $params->get('drowspanitempull');
+
                 break;
             case 'seriesdisplays':
                 $extra = 's';
-                $pull = $params->get('srowspanitempull');
+
                 break;
             case 'seriesdisplay':
-                $extra = 'ds';
+                $extra = 'sd';
+
                 break;
             case 'sermons':
-                $pull = $params->get('rowspanitempull');
+
                 break;
         }
-
+        if ($type == 'sermons'){$view = 'sermons';}
+        $pull = $params->get($extra.'rowspanitempull');
         $rowspanitem = $params->get($extra.'rowspanitem');
         if ($rowspanitem)
         {
@@ -335,7 +349,7 @@ class JBSMListing extends JBSMElements
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
 
-        $rowspanitemspan = $params->get('rowspanitemspan');
+        $rowspanitemspan = $params->get($extra.'rowspanitemspan');
         $rowspanbalance = 12 - $rowspanitemspan;
         $frow = '';
         $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:5px;">';
@@ -366,8 +380,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row1count == $row1count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row1count = $row1count - 1;
                 if ($row1count == 0){$frow .= '</div>';}
             }
@@ -375,8 +389,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row2count == $row2count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row2count = $row2count - 1;
                 if ($row2count == 0){$frow .= '</div>';}
             }
@@ -384,8 +398,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row3count == $row3count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row3count = $row3count - 1;
                 if ($row3count == 0){$frow .= '</div>';}
             }
@@ -393,8 +407,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row4count == $row4count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row4count = $row4count - 1;
                 if ($row4count == 0){$frow .= '</div>';}
             }
@@ -402,8 +416,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row5count == $row5count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row5count = $row5count - 1;
                 if ($row5count == 0){$frow .= '</div>';}
             }
@@ -411,8 +425,8 @@ class JBSMListing extends JBSMElements
             {
 
                 if ($row6count == $row6count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0);}
+                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
+                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
                 $row6count = $row6count - 1;
                 if ($row6count == 0){$frow .= '</div>';}
             }
@@ -424,7 +438,7 @@ class JBSMListing extends JBSMElements
         return $frow;
     }
 
-    public function getFluidData($item, $row, $params, $admin_params, $template, $header)
+    public function getFluidData($item, $row, $params, $admin_params, $template, $header, $type)
     {
         $smenu        = $params->get('detailsitemid');
         $tmenu        = $params->get('teacheritemid');
@@ -441,8 +455,11 @@ class JBSMListing extends JBSMElements
             case 'seriesdisplays':
                 $extra = 's';
                 break;
+            case 'seriesdisplay':
+                $extra = 'sd';
+                break;
         }
-
+        if ($type == 'sermons'){$view = 'sermons';}
         switch ($row->name)
         {
             case $extra.'scripture1':
@@ -500,7 +517,7 @@ class JBSMListing extends JBSMElements
                 break;
             case $extra.'description':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
-                if ($view == 'seriesdisplays'){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
+                if ($view == 'seriesdisplays' || $view == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
                 else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
                 if ($view == 'seriesdisplays' && !$header)
                 {
@@ -562,7 +579,7 @@ class JBSMListing extends JBSMElements
             case $extra.'teacherimage':
 
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
-                if ($view == 'seriesdisplays')
+                if ($view == 'seriesdisplays' || $view == 'seriesdisplay')
                 {
                     (isset($item->teacher_thumbnail)? $data = 'img src="'.JURI::base().$item->teacher_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');
                 }
