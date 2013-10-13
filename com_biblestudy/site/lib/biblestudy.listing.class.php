@@ -38,15 +38,11 @@ class JBSMListing extends JBSMElements
     public function getFluidListing($items, $params, $admin_params, $template, $type)
     {
 
-        //Find out what view we are in
-        $input = new JInput();
-        $view = $input->getString('view');
-        if ($type == 'sermons'){$view = 'sermons';}
         $list = '';
         $row = array();
         $this->params = $params;
 
-        if ($view == 'sermons')
+        if ($type == 'sermons')
         {
             foreach ($items as $item)
             {
@@ -56,7 +52,7 @@ class JBSMListing extends JBSMElements
                 }
             }
         }
-        if ($view == 'sermon')
+        if ($type == 'sermon')
         {
             $medias = $this->getFluidMediaids($items);
             $item = $items;
@@ -103,9 +99,8 @@ class JBSMListing extends JBSMElements
         }
         //create an array from each param variable set
         //Find out what view we are in
-        $input = new JInput();
-        $view = $input->getString('view');
-        switch ($view)
+
+        switch ($type)
         {
             case 'sermons':
                 $extra = '';
@@ -120,8 +115,6 @@ class JBSMListing extends JBSMElements
                 $extra = 'sd';
                 break;
         }
-        if ($type == 'sermons'){$view = 'sermons';}
-
         $listparams = array();
         if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
         if ($params->get($extra.'scripture2row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture2');}
@@ -179,28 +172,28 @@ class JBSMListing extends JBSMElements
         $class1 = $params->get($extra.'listcolor1', '');
         $class2 = $params->get($extra.'listcolor2', '');
         $oddeven = $class1;
-        if ($view == 'sermons')
+        if ($type == 'sermons')
         {
             if ($params->get('use_headers_list') > 0)
             {
                 $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
         }
-        if ($view == 'sermon')
+        if ($type == 'sermon')
         {
             if ($params->get('use_headers_view') > 0)
             {
                 $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
         }
-        if ($view == 'seriesdisplays')
+        if ($type == 'seriesdisplays')
         {
             if ($params->get('use_headers_series') > 0)
             {
                     $list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
         }
-        if ($view == 'seriesdisplay')
+        if ($type == 'seriesdisplay')
         {
             if ($params->get('use_header_seriesdisplay') > 0)
             {
@@ -210,7 +203,7 @@ class JBSMListing extends JBSMElements
             $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
         // Go through and attach the media files as an array to their study
-        if ($view == 'sermons')
+        if ($type == 'sermons')
         {
             foreach ($items as $item)
             {
@@ -233,7 +226,7 @@ class JBSMListing extends JBSMElements
                 $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
             }
         }
-        if ($view == 'sermon')
+        if ($type == 'sermon')
         {
             $oddeven = ($oddeven == $class1) ? $class2 : $class1;
             $studymedia = array();
@@ -253,7 +246,7 @@ class JBSMListing extends JBSMElements
             }
             $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
-        if ($view == 'seriesdisplays')
+        if ($type == 'seriesdisplays')
         {
             foreach ($items as $item)
             {
@@ -304,11 +297,9 @@ class JBSMListing extends JBSMElements
         $span = '';
         $headerstyle = '';
         if ($header == 1){$headerstyle = "style=visibility:hidden;";}
-        $input = new JInput();
-        $view = $input->getString('view');
         $extra = '';
         $pull = '';
-        switch ($view )
+        switch ($type )
         {
             case 'sermon':
                 $extra = 'd';
@@ -326,7 +317,7 @@ class JBSMListing extends JBSMElements
 
                 break;
         }
-        if ($type == 'sermons'){$view = 'sermons';}
+
         $pull = $params->get($extra.'rowspanitempull');
         $rowspanitem = $params->get($extra.'rowspanitem');
         if ($rowspanitem)
@@ -444,10 +435,9 @@ class JBSMListing extends JBSMElements
         $tmenu        = $params->get('teacheritemid');
         $data = '';
         //match the data in $item to a row/col in $row->name
-        $input = new JInput();
-        $view = $input->getString('view');
+
         $extra = '';
-        switch ($view )
+        switch ($type )
         {
             case 'sermon':
                 $extra = 'd';
@@ -459,7 +449,7 @@ class JBSMListing extends JBSMElements
                 $extra = 'sd';
                 break;
         }
-        if ($type == 'sermons'){$view = 'sermons';}
+
         switch ($row->name)
         {
             case $extra.'scripture1':
@@ -517,9 +507,9 @@ class JBSMListing extends JBSMElements
                 break;
             case $extra.'description':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
-                if ($view == 'seriesdisplays' || $view == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
+                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
                 else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
-                if ($view == 'seriesdisplays' && !$header)
+                if ($type == 'seriesdisplays' && !$header)
                 {
                     (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
                 }
@@ -579,7 +569,7 @@ class JBSMListing extends JBSMElements
             case $extra.'teacherimage':
 
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
-                if ($view == 'seriesdisplays' || $view == 'seriesdisplay')
+                if ($type == 'seriesdisplays' || $type == 'seriesdisplay')
                 {
                     (isset($item->teacher_thumbnail)? $data = 'img src="'.JURI::base().$item->teacher_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');
                 }
@@ -625,11 +615,11 @@ class JBSMListing extends JBSMElements
         else {$classopen = ''; $classclose='';}
         //See whether the element is a link to something and get the link from the function
         $link = 0;
-        if ($view == 'sermons' || $view == 'seriesdisplays')
+        if ($type == 'sermons' || $type == 'seriesdisplays')
         {
             if ($row->linktype > 0 && $header == 0)
             {
-                if ($view == 'seriesdisplays'){$item->teacher_id = $item->teacher;}
+                if ($type == 'seriesdisplays'){$item->teacher_id = $item->teacher;}
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
         }
