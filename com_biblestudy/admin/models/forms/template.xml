@@ -338,19 +338,8 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddbooks" type="list" default="1" label="JBS_TPL_ORDER_BOOK" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddbooks" type="spanoptions" default="1" label="JBS_TPL_ORDER_BOOK" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="booklist" type="list" default="0"
                    label="JBS_TPL_LISTITEMS_BOOKLIST" description="JBS_TPL_LISTITEMS_BOOKLIST_DESC">
                 <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
@@ -361,19 +350,8 @@
                 <option value="0">JBS_CMN_DONT_USE</option>
                 <option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
             </field>
-            <field name="ddgobutton" type="list" default="2" label="JBS_TPL_ORDER_GO" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddgobutton" type="spanoptions" default="2" label="JBS_TPL_ORDER_GO" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_teacher_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
                    description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_DESC">
@@ -381,112 +359,46 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddteachers" type="list" default="3" label="JBS_TPL_ORDER_TEACHER" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddteachers" type="spanoptions" default="3" label="JBS_TPL_ORDER_TEACHER" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_series_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddseries" type="list" default="4" label="JBS_TPL_ORDER_SERIES" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddseries" type="spanoptions" default="4" label="JBS_TPL_ORDER_SERIES" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_type_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddmessagetype" type="list" default="5" label="JBS_TPL_ORDER_MESSAGETYPE" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddmessagetype" type="spanoptions" default="5" label="JBS_TPL_ORDER_MESSAGETYPE" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_year_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="ddyears" type="list" default="6" label="JBS_TPL_ORDER_YEARS" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddyears" type="spanoptions" default="6" label="JBS_TPL_ORDER_YEARS" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_order_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="ddorder" type="list" default="7" label="JBS_TPL_ORDER_ORDER" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddorder" type="spanoptions" default="7" label="JBS_TPL_ORDER_ORDER" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_topic_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddtopics" type="list" default="8" label="JBS_TPL_ORDER_TOPICS" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddtopics" type="spanoptions" default="8" label="JBS_TPL_ORDER_TOPICS" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_locations_search" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
                    description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_DESC">
@@ -494,55 +406,22 @@
                 <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
                 <option value="2">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="ddlocations" type="list" default="9" label="JBS_TPL_ORDER_LOCATIONS" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddlocations" type="spanoptions" default="9" label="JBS_TPL_ORDER_LOCATIONS" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_popular" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_POPULAR" description="JBS_TPL_LISTITEMS_SHOW_POPULAR_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="ddpopular" type="list" default="10" label="JBS_TPL_ORDER_POPULAR" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddpopular" type="spanoptions" default="10" label="JBS_TPL_ORDER_POPULAR" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST"
                    description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-            <field name="ddlanguage" type="list" default="11" label="JBS_TPL_ORDER_LANGUAGE" description="JBS_TPL_ORDER_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </field>
+            <field name="ddlanguage" type="spanoptions" default="11" label="JBS_TPL_ORDER_LANGUAGE" description="JBS_TPL_ORDER_DESC"/>
+
             <field name="show_pagination" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
                 <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
@@ -919,13 +798,12 @@
                    cols="100" label="JBS_TPL_DETAILS_STUDY_DETAILTEMPLATE"
                    description="JBS_TPL_DETAILS_TEMPLATECODE_DESC" filter="raw"/>
         </fieldset>
-        <fieldset name="TEACHER">
+        <fieldset name="TEACHER" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="teacher_title" type="text" default="Our Teachers"
                    label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
             <field name="show_teacher_studies" type="list" default="1"
                    label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES" description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
                 <option value="0">JBS_TPL_HIDE_STUDY</option>
-                <option value="1">JBS_TPL_SHOW_STUDIES_TEACHER_LIST</option>
                 <option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
                 <option value="3">JBS_TPL_SHOW_STUDIES_CUSTOM</option>
             </field>
@@ -943,6 +821,91 @@
                 <option value="0">JBS_CMN_DONT_USE</option>
                 <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
             </field>
+            <field name="tsrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
+                <option value="0">JBS_TPL_NO_ITEM</option>
+                <option value="1">JBS_TPL_TEACHERAIMGE</option>
+            </field>
+            <field name="tsrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
+                <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
+                <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
+                <option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
+            </field>
+            <field name="tsrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL" description="JBS_TPL_ROWSPANITEMPULL_DESC">
+                <option value="pull-left">JBS_TPL_PULLLEFT</option>
+                <option value="pull-right">JBS_TPL_PULLRIGHT</option>
+            </field>
+            <field name="use_headers_teacher_list" type="list" default="1"
+                   label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
+                <option value="0">JBS_TPL_NO_HEADER_ROW</option>
+                <option value="1">JBS_TPL_USE_HEADER_ROW</option>
+            </field>
+            <field name="tslistcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC" />
+            <field name="tslistcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC" />
+            <field type="spacer" name="myspacer30" hr="true" />
+            <field name="tsteacherrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteachercolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tsteacherlinktype" type="teacherlinkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer31" hr="true" />
+            <field name="tsteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="stteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tsteacherlinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer32" hr="true" />
+            <field name="tsteacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tsteacher-titlelinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer33" hr="true" />
+            <field name="tsteacheremailrow" type="rowoptions" size="1" default="0" label="JBS_TCH_EMAIL" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacheremailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacheremailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacheremailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacheremailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer34" hr="true" />
+            <field name="tsteacherwebrow" type="rowoptions" size="1" default="0" label="JBS_TCH_WEBSITE" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacherwebcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherwebcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherwebelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field type="spacer" name="myspacer35" hr="true" />
+            <field name="tsteacherphonerow" type="rowoptions" size="1" default="0" label="JBS_TCH_PHONE" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacherphonecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherphonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherphoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacherphonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer36" hr="true" />
+            <field name="tsteacherfbrow" type="rowoptions" size="1" default="0" label="JBS_TCH_FACEBOOK" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacherfbcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherfbcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherfbelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacherfbcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer37" hr="true" />
+            <field name="tsteachertwrow" type="rowoptions" size="1" default="0" label="JBS_TCH_TWITTER" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteachertwcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteachertwcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteachertwelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteachertwcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer38" hr="true" />
+            <field name="tsteacherblogrow" type="rowoptions" size="1" default="0" label="JBS_TCH_BLOG" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteacherblogcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherblogcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherblogelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacherblogcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer39" hr="true" />
+            <field name="tsteachershortrow" type="rowoptions" size="1" default="0" label="JBS_TCH_SHORT_LIST" description="JBS_TPL_ROW_DESC" />
+            <field name="tsteachershortcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteachershortcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteachershortelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tsteachershortlinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+
             <field name="teacher_headercode" type="textarea" rows="10"
                    cols="100" label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC"/>
             <field name="teacher_templatecode" type="textarea" rows="10"
@@ -991,7 +954,7 @@
                    label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"
                    filter="raw"/>
         </fieldset>
-        <fieldset name="SERIES">
+        <fieldset name="SERIES" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="slistcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC" />
             <field name="slistcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC" />
 

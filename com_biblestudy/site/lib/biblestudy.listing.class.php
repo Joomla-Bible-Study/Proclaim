@@ -20,6 +20,7 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
 JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
 
+
 /**
  * BibleStudy listing class
  *
@@ -114,6 +115,12 @@ class JBSMListing extends JBSMElements
             case 'seriesdisplay':
                 $extra = 'sd';
                 break;
+            case 'teachers':
+                $extra = 'ts';
+                break;
+            case 'teacher':
+                $extra = 'td';
+                break;
         }
         $listparams = array();
         if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
@@ -139,6 +146,13 @@ class JBSMListing extends JBSMElements
         if ($params->get($extra.'thumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'thumbnail');}
         if ($params->get($extra.'teacherimagerrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherimage');}
         if ($params->get($extra.'seriesdescriptionrow') >0){$listparams[] = $this->getListParamsArray($extra.'description');}
+        if ($params->get($extra.'teacheremailrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacheremail');}
+        if ($params->get($extra.'teacherwebrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherweb');}
+        if ($params->get($extra.'teacherphonerow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherphone');}
+        if ($params->get($extra.'teacherfbrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherfb');}
+        if ($params->get($extra.'teachertwrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachertw');}
+        if ($params->get($extra.'teacherblogrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherblog');}
+        if ($params->get($extra.'teachershortrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachershort');}
         $row1 = array();
         $row2 = array();
         $row3 = array();
@@ -202,6 +216,15 @@ class JBSMListing extends JBSMElements
             }
             $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
+        if ($type == 'teachers')
+        {
+            if ($params->get('use_headers_teacher_list') > 0)
+            {
+                //$oddeven = $params->get('tslistcolor');
+                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
+            }
+
+        }
         // Go through and attach the media files as an array to their study
         if ($type == 'sermons')
         {
@@ -247,6 +270,14 @@ class JBSMListing extends JBSMElements
             $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
         }
         if ($type == 'seriesdisplays')
+        {
+            foreach ($items as $item)
+            {
+                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
+                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
+            }
+        }
+        if ($type == 'teachers')
         {
             foreach ($items as $item)
             {
@@ -315,6 +346,12 @@ class JBSMListing extends JBSMElements
                 break;
             case 'sermons':
 
+                break;
+            case 'teachers':
+                $extra = 'ts';
+                break;
+            case 'teacher':
+                $extra = 'td';
                 break;
         }
 
@@ -448,10 +485,99 @@ class JBSMListing extends JBSMElements
             case 'seriesdisplay':
                 $extra = 'sd';
                 break;
+            case 'teachers':
+                $extra = 'ts';
+                break;
+            case 'teacher':
+                $extra = 'td';
+                break;
         }
 
         switch ($row->name)
         {
+            case $extra.'teacheremail':
+                if ($header == 1){$data = JText::_('JBS_TCH_EMAIL');}
+                else {($item->email ? $data = '<a href="mailto:'.$item->email.'"><img height="24" width="24" alt="'.JText::_('JBS_TCH_EMAIL').'"  src="'.JURI::base().'media/com_biblestudy/images/email.png"></a>' : $data = '');}
+
+                break;
+
+            case $extra.'teacherweb':
+                if ($header == 1){$data = JText::_('JBS_TCH_WEBSITE');}
+                else {
+                    if($item->website)
+                    {
+                        if(substr_count($item->website,'http://',0))
+                        {
+                            $data = '<a href="'.$item->website.'" target="_blank"><img height="24" width="24" alt="'.$item->website.'"  src="'.JURI::base().'media/com_biblestudy/images/web.png"></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->website.'" target="_blank"><img height="24" width="24" alt="'.$item->website.'" src="'.JURI::base().'media/com_biblestudy/images/web.png"></a>';
+                        }
+                    }
+                }
+
+                break;
+
+            case $extra.'teacherphone':
+                if ($header == 1){$data = JText::_('JBS_TCH_PHONE');}
+                else {(isset($item->phone) ? $data = $item->phone : $data = '');}
+                break;
+
+            case $extra.'teacherfb':
+                if ($header == 1){$data = JText::_('JBS_TCH_FACEBOOK');}
+                else {
+                    if($item->facebooklink)
+                    {
+                        if(substr_count($item->facebooklink,'http://',0))
+                        {
+                            $data = '<a href="'.$item->facebooklink.'" target="_blank"><img height="24" width="24" alt="'.$item->facebooklink.'"  src="'.JURI::base().'media/com_biblestudy/images/facebook.png"></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->facebooklink.'" target="_blank"><img height="24" width="24" alt="'.$item->facebooklink.'" src="'.JURI::base().'media/com_biblestudy/images/facebook.png"></a>';
+                        }
+                    }
+                }
+                break;
+
+            case $extra.'teachertw':
+                if ($header == 1){$data = JText::_('JBS_TCH_TWITTER');}
+                else {
+                    if($item->twitterlink)
+                    {
+                        if(substr_count($item->twitterlink,'http://',0))
+                        {
+                            $data = '<a href="'.$item->twitterlink.'" target="_blank"><img height="24" width="24" alt="'.$item->twitterlink.'" src="'.JURI::base().'media/com_biblestudy/images/twitter.png"></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->twitterlink.'" target="_blank"><img height="24" width="24" alt="'.$item->twitterlink.'"  src="'.JURI::base().'media/com_biblestudy/images/twitter.png"></a>';
+                        }
+                    }
+                }
+
+                break;
+
+            case $extra.'teacherblog':
+                if ($header == 1){$data = JText::_('JBS_TCH_BLOG');}
+                else {
+                        if($item->bloglink)
+                        {
+                            if(substr_count($item->bloglink,'http://',0,7))
+                            {
+                                $data = '<a href="'.$item->bloglink.'" target="_blank"><img height="24" width="24" alt="'.$item->bloglink.'" target="_blank" src="'.JURI::base().'media/com_biblestudy/images/blog.png"></a>';
+                            }
+                            else {
+                                $data = '<a href="http://'.$item->bloglink.'" target="_blank"><img height="24" width="24" alt="'.$item->bloglink.'" target="_blank" src="'.JURI::base().'media/com_biblestudy/images/blog.png"></a>';
+                            }
+                        }
+                     }
+
+                break;
+
+            case $extra.'teachershort':
+                if ($header == 1){$data = JText::_('JBS_TCH_SHORT_LIST');}
+                else {(isset($item->short) ? $data = JHtml::_('content.prepare',$item->short,'','com_biblestudy.'.$type) : $data = '');}
+                break;
+
             case $extra.'scripture1':
                 $esv = 0;
                 $scripturerow          = 1;
@@ -495,7 +621,7 @@ class JBSMListing extends JBSMElements
                 break;
             case $extra.'studyintro':
                 if ($header == 1){$data = JText::_('JBS_CMN_INTRODUCTION');}
-                else {(isset($item->studyintro) ? stripslashes($data = $item->studyintro) : $data = '');}
+                else {(isset($item->studyintro) ? $data = JHtml::_('content.prepare',$item->studyintro,'','com_biblestudy.'.$type) : $data = '');}
                 break;
             case $extra.'series':
                 if ($header == 1){ $data = JText::_('JBS_CMN_SERIES');}
@@ -507,8 +633,8 @@ class JBSMListing extends JBSMElements
                 break;
             case $extra.'description':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
-                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = stripslashes($item->description) : $data = ''); }
-                else {(isset($item->sdescription) ? $data = stripslashes($item->sdescription) : $data = '');}
+                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = JHtml::_('content.prepare',$item->description,'','com_biblestudy.'.$type) : $data = ''); }
+                else {(isset($item->sdescription) ? $data = JHtml::_('content.prepare',$item->sdescription,'', 'com_biblestudy.'.$type) : $data = '');}
                 if ($type == 'seriesdisplays' && !$header)
                 {
                     (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
@@ -569,7 +695,7 @@ class JBSMListing extends JBSMElements
             case $extra.'teacherimage':
 
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
-                if ($type == 'seriesdisplays' || $type == 'seriesdisplay')
+                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
                 {
                     (isset($item->teacher_thumbnail)? $data = 'img src="'.JURI::base().$item->teacher_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');
                 }
@@ -608,10 +734,10 @@ class JBSMListing extends JBSMElements
                 $classelement = '<h5';
                 break;
             case 7:
-                $classelement = '<blockquote>';
+                $classelement = '<blockquote';
         }
         if ($header == 1){$classelement = ''; $style='style="font-weight:bold;"';}
-        if ($classelement){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
+        if ($classelement > 0){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
         else {$classopen = ''; $classclose='';}
         //See whether the element is a link to something and get the link from the function
         $link = 0;
@@ -1230,6 +1356,66 @@ class JBSMListing extends JBSMElements
 		return $label;
 	}
 
+    /**
+     * @todo this doesn't work yet. TF
+     * @param $item
+     * @param $params
+     * @param $type
+     * @return bool|string
+     */
+    public function runContentPlugins($item, $params, $type)
+    {
+        if (!$item){return false;}
+        // We don't need offset but it is a required argument for the plugin dispatcher
+        $offset = '';
+        JPluginHelper::importPlugin('content');
+
+        // Run content plugins
+        if (version_compare(JVERSION, '3.0', 'ge'))
+        {
+            $dispatcher = JEventDispatcher::getInstance();
+        }
+        else
+        {
+            $dispatcher = JDispatcher::getInstance();
+        }
+        $dispatcher->trigger('onContentPrepare', array(
+                'com_biblestudy.'.$type,
+                & $item,
+                & $params,
+                $offset
+            )
+        );
+
+        $event = new stdClass;
+
+        $results                        = $dispatcher->trigger('onContentAfterTitle', array(
+            'com_biblestudy.'.$type,
+            &$item,
+            &$params,
+            $offset
+        ));
+        $event->text->afterDisplayTitle = trim(implode("\n", $results));
+
+        $results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+            'com_biblestudy.'.$type,
+            &$item,
+            &$params,
+            $offset
+        ));
+        $event->text->beforeDisplayContent = trim(implode("\n", $results));
+
+        $results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+            'com_biblestudy.'.$type,
+            &$item,
+            &$params,
+            $offset
+        ));
+        $event->text->afterDisplayContent = trim(implode("\n", $results));
+        $result = implode('',$event->text);
+dump($result);
+        return $result;
+    }
 	/**
 	 * Share Helper file
 	 *

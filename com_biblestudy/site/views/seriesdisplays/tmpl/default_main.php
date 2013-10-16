@@ -67,32 +67,7 @@ if ($url)
     $list = $listing->getFluidListing($this->items, $this->params, $this->admin_params, $this->template, $type='seriesdisplays');
     echo $list;
     ?>
-            <!--dropdownmenu-->
-            <table class="table table-striped" id="seriestable">
-                <tbody>
-				<?php
-				// This sets the alternativing colors for the background of the table cells
-				$class1  = 'bsodd';
-				$class2  = 'bseven';
-				$oddeven = $class1;
 
-				foreach ($this->items as $row)
-				{ // Run through each row of the data result from the model
-					if ($oddeven == $class1)
-					{ // Alternate the color background
-						$oddeven = $class2;
-					}
-					else
-					{
-						$oddeven = $class1;
-					}
-
-					//$listing = $JBSMSerieslist->getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
-					//echo $listing;
-				}
-				?>
-                </tbody>
-            </table>
             <div class="listingfooter">
             </div>
             <!--end of bsfooter div-->
