@@ -737,15 +737,17 @@ class JBSMListing extends JBSMElements
                 $classelement = '<blockquote';
         }
         if ($header == 1){$classelement = ''; $style='style="font-weight:bold;"';}
-        if ($classelement > 0){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
+        if ($classelement){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
         else {$classopen = ''; $classclose='';}
+
         //See whether the element is a link to something and get the link from the function
         $link = 0;
-        if ($type == 'sermons' || $type == 'seriesdisplays')
+        if ($type == 'sermons' || $type == 'seriesdisplays' || $type == 'teachers')
         {
             if ($row->linktype > 0 && $header == 0)
             {
                 if ($type == 'seriesdisplays'){$item->teacher_id = $item->teacher;}
+                if ($type == 'teachers'){$item->teacher_id = $item->id;}
                 $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
             }
         }

@@ -906,8 +906,10 @@
             <field name="tsteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="tsteachershortlinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
 
-            <field name="teacher_headercode" type="textarea" rows="10"
-                   cols="100" label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC"/>
+            <field name="teacher_headercode" type="editor" height="300" width="500"
+                   label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" filter="raw"
+                   buttons="true"/>
+
             <field name="teacher_templatecode" type="textarea" rows="10"
                    cols="100"
                    default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;

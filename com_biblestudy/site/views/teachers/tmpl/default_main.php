@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 	<div class="row-fluid">
 
 		<div class="span12">
-			<h3><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></h3>
+			<h2><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></h2>
 		</div>
 	</div>
     <div class="row-fluid">
