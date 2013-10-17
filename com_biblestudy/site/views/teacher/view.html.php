@@ -14,6 +14,7 @@ JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuild
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * View class for Teacher
@@ -79,6 +80,13 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$css = $params->get('css');
 
+        $input        = new JInput;
+        $t            = $params->get('teachertemplateid');
+        if (!$t)
+        {
+            $t = $input->get('t', 1, 'int');
+        }
+        $this->t = $t;
 		if ($css <= "-1")
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');

@@ -801,21 +801,7 @@
         <fieldset name="TEACHER" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="teacher_title" type="text" default="Our Teachers"
                    label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
-            <field name="show_teacher_studies" type="list" default="1"
-                   label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES" description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
-                <option value="0">JBS_TPL_HIDE_STUDY</option>
-                <option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
-                <option value="3">JBS_TPL_SHOW_STUDIES_CUSTOM</option>
-            </field>
-            <field name="studies" type="text" default=""
-                   label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
-            <field name="label_teacher" type="text" default="Latest Messages"
-                   label="JBS_TPL_TEACHER_LABEL_TEACHER" description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC"/>
-            <field name="teacherlink" type="list" default="1"
-                   label="JBS_TPL_TEACHER_TEACHERLINK" description="JBS_TPL_TEACHER_TEACHERLINK_DESC">
-                <option value="0">JBS_TPL_HIDE_LINK</option>
-                <option value="1">JBS_TPL_SHOW_LINK</option>
-            </field>
+
             <field name="useexpert_teacherlist" type="list" default="0"
                    label="JBS_TPL_CUSTOM_VIEW_TEACHERLIST" description="JBS_TPL_CUSTOM_VIEW_DESC">
                 <option value="0">JBS_CMN_DONT_USE</option>
@@ -854,7 +840,7 @@
             <field name="tsteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
             <field name="tsteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="tsteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
-            <field name="stteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tsteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="tsteacherlinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer32" hr="true" />
             <field name="tsteacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
@@ -933,6 +919,145 @@
                 <option value="T">JBS_TPL_TABLE</option>
                 <option value="D">JBS_TPL_DIV</option>
             </field>
+
+        </fieldset>
+        <fieldset name="TEACHERDETAILS" addfilepath="/administrator/components/com_biblestudy/models/fields">
+
+            <field name="show_teacher_studies" type="list" default="1"
+                   label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES" description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
+                <option value="0">JBS_TPL_HIDE_STUDY</option>
+                <option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
+
+            </field>
+            <field name="studies" type="text" default=""
+                   label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
+            <field name="label_teacher" type="text" default="Latest Messages"
+                   label="JBS_TPL_TEACHER_LABEL_TEACHER" description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC"/>
+            <field name="teacherlinkstudies" type="list" default="1"
+                   label="JBS_TPL_TEACHER_TEACHERLINK" description="JBS_TPL_TEACHER_TEACHERLINK_DESC">
+                <option value="0">JBS_TPL_HIDE_LINK</option>
+                <option value="1">JBS_TPL_SHOW_LINK</option>
+            </field>
+            <field name="tdrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
+                <option value="0">JBS_TPL_NO_ITEM</option>
+                <option value="1">JBS_TPL_TEACHERAIMGE</option>
+                <option value="4">JBS_TCH_TEACHER_IMAGE_LARGE</option>
+            </field>
+            <field name="tdrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
+                <option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
+                <option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
+                <option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
+            </field>
+            <field name="tdrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL" description="JBS_TPL_ROWSPANITEMPULL_DESC">
+                <option value="pull-left">JBS_TPL_PULLLEFT</option>
+                <option value="pull-right">JBS_TPL_PULLRIGHT</option>
+            </field>
+            <field name="use_headers_teacher_details" type="list" default="1"
+                   label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
+                <option value="0">JBS_TPL_NO_HEADER_ROW</option>
+                <option value="1">JBS_TPL_USE_HEADER_ROW</option>
+            </field>
+            <field name="teacherdisplay_color" type="text" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR" />
+            <field type="spacer" name="myspacer40" hr="true" />
+            <field name="tdteacherrow" type="rowoptions" size="1" default="1" label="JBS_TPL_TEACHERROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteachercolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+
+            <field type="spacer" name="myspacer41" hr="true" />
+            <field name="tdteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHERIMAGEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+
+            <field type="spacer" name="myspacer42" hr="true" />
+            <field name="tdteacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_TPL_TEACHER_TITLEROW" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+
+            <field type="spacer" name="myspacer43" hr="true" />
+            <field name="tdteacheremailrow" type="rowoptions" size="1" default="0" label="JBS_TCH_EMAIL" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacheremailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacheremailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacheremailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacheremailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer44" hr="true" />
+            <field name="tdteacherwebrow" type="rowoptions" size="1" default="0" label="JBS_TCH_WEBSITE" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherwebcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherwebcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherwebelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field type="spacer" name="myspacer45" hr="true" />
+            <field name="tdteacherphonerow" type="rowoptions" size="1" default="0" label="JBS_TCH_PHONE" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherphonecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherphonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherphoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherphonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer46" hr="true" />
+            <field name="tdteacherfbrow" type="rowoptions" size="1" default="0" label="JBS_TCH_FACEBOOK" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherfbcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherfbcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherfbelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherfbcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer47" hr="true" />
+            <field name="tdteachertwrow" type="rowoptions" size="1" default="0" label="JBS_TCH_TWITTER" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteachertwcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteachertwcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteachertwelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteachertwcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer48" hr="true" />
+            <field name="tdteacherblogrow" type="rowoptions" size="1" default="0" label="JBS_TCH_BLOG" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherblogcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherblogcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherblogelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherblogcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer49" hr="true" />
+            <field name="tdteachershortrow" type="rowoptions" size="1" default="0" label="JBS_TCH_SHORT_LIST" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteachershortcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteachershortcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteachershortelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer50" hr="true" />
+            <field name="tdteacherlongrow" type="rowoptions" size="1" default="0" label="JBS_TCH_INFORMATION" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherlongcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherlongcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherlongelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherlongcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer51" hr="true" />
+            <field name="tdteacheraddressrow" type="rowoptions" size="1" default="0" label="JBS_TCH_ADDRESS" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacheraddresscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacheraddresscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacheraddresselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacheraddresscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer52" hr="true" />
+            <field name="tdteacherlink1row" type="rowoptions" size="1" default="0" label="JBS_TCH_LINK1" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherlink1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherlink1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherlink1element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherlink1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer53" hr="true" />
+            <field name="tdteacherlink2row" type="rowoptions" size="1" default="0" label="JBS_TCH_LINK2" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherlink2col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherlink2colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherlink2element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherlink2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer54" hr="true" />
+            <field name="tdteacherlink3row" type="rowoptions" size="1" default="0" label="JBS_TCH_LINK3" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherlink3col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherlink3colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherlink3element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherlink3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer55" hr="true" />
+            <field name="tdteacherlargeimagerow" type="rowoptions" size="1" default="0" label="JBS_TCH_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC" />
+            <field name="tdteacherlargeimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherlargeimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherlargeimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherlargeimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+
             <field name="useexpert_teacherdetail" type="list" default="0"
                    label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL" description="JBS_TPL_CUSTOM_VIEW_DESC">
                 <option value="0">JBS_CMN_DONT_USE</option>

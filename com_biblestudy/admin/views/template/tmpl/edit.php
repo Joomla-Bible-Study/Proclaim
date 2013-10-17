@@ -46,6 +46,7 @@ $input = $app->input;
 	<li><a href="#list" data-toggle="tab"><?php echo JText::_('JBS_TPL_STUDY_LIST_VIEW'); ?></a></li>
 	<li><a href="#details" data-toggle="tab"><?php echo JText::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?></a></li>
 	<li><a href="#teacher" data-toggle="tab"><?php echo JText::_('JBS_TPL_TEACHER_VIEW'); ?></a></li>
+    <li><a href="#teacherdetails" data-toggle="tab"><?php echo JText::_('JBS_TPL_TEACHER_DETAILS'); ?></a></li>
 	<li><a href="#series" data-toggle="tab"><?php echo JText::_('JBS_CMN_SERIES'); ?></a></li>
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
@@ -454,6 +455,18 @@ $input = $app->input;
 			</div>
 		</div>
 	<?php endforeach; ?>
+</div>
+<div class="tab-pane" id="teacherdetails">
+    <?php foreach ($this->form->getFieldset('TEACHERDETAILS') as $field): ?>
+        <div class="control-group">
+            <div class="control-label">
+                <?php echo $field->label;?>
+            </div>
+            <div class="controls">
+                <?php echo $field->input; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 <div class="tab-pane" id="series">
 	<div id="details-sliders" class="tabbable tabs-left">

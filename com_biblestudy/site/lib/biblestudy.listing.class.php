@@ -153,6 +153,12 @@ class JBSMListing extends JBSMElements
         if ($params->get($extra.'teachertwrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachertw');}
         if ($params->get($extra.'teacherblogrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherblog');}
         if ($params->get($extra.'teachershortrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachershort');}
+        if ($params->get($extra.'teacherlongrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlong');}
+        if ($params->get($extra.'teacheraddressrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacheraddress');}
+        if ($params->get($extra.'teacherlink1row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink1');}
+        if ($params->get($extra.'teacherlink2row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink2');}
+        if ($params->get($extra.'teacherlink3row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink3');}
+        if ($params->get($extra.'teacherlargeimagerow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlargeimage');}
         $row1 = array();
         $row2 = array();
         $row3 = array();
@@ -212,6 +218,15 @@ class JBSMListing extends JBSMElements
             if ($params->get('use_header_seriesdisplay') > 0)
             {
                 $oddeven = $params->get('seriesdisplay_color');
+                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
+            }
+            $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
+        }
+        if ($type == 'teacher')
+        {
+            if ($params->get('use_header_teacher_details') > 0)
+            {
+                $oddeven = $params->get('teacherdisplay_color', 'white');
                 $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
             $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
@@ -371,6 +386,9 @@ class JBSMListing extends JBSMElements
                 case 3:
                     (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');
                     break;
+                case 4:
+                    (isset($item->teacher_image) ? $span = '<img src="'.JURI::base().$item->teacher_image.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
+                    break;
             }
         }
 
@@ -495,10 +513,66 @@ class JBSMListing extends JBSMElements
 
         switch ($row->name)
         {
+            case $extra.'teacherlong':
+                if ($header == 1){$data = JText::_('JBS_TCH_INFORMATION');}
+                else {($item->long ? $data = JHtml::_('content.prepare',$item->long,'','com_biblestudy.'.$type) : $data = '');}
+                break;
+
+            case $extra.'teacheraddress':
+                if ($header == 1){$data = JText::_('JBS_TCH_ADDRESS');}
+                else {($item->address ? $data = $item->address : $data = '');}
+                break;
+
+            case $extra.'teacherlink1':
+                if ($header == 1){$data = JText::_('JBS_TCH_LINK1');}
+                else {
+                    if($item->link2)
+                    {
+                        if(substr_count($item->link1,'http://',0))
+                        {
+                            $data = '<a href="'.$item->link1.'" target="_blank">'.$item->link1label.'></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->link1.'" target="_blank">'.$item->link1label.'</a>';
+                        }
+                    }
+                }
+                break;
+
+            case $extra.'teacherlink2':
+                if ($header == 1){$data = JText::_('JBS_TCH_LINK2');}
+                else {
+                    if($item->link2)
+                    {
+                        if(substr_count($item->link2,'http://',0))
+                        {
+                            $data = '<a href="'.$item->link2.'" target="_blank">'.$item->link2label.'></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->link2.'" target="_blank">'.$item->link2label.'</a>';
+                        }
+                    }
+                }
+                break;
+
+            case $extra.'teacherlink3':
+                if ($header == 1){$data = JText::_('JBS_TCH_LINK3');}
+                else {
+                    if($item->link3)
+                    {
+                        if(substr_count($item->link3,'http://',0))
+                        {
+                            $data = '<a href="'.$item->link3.'" target="_blank">'.$item->link3label.'></a>';
+                        }
+                        else {
+                            $data = '<a href="http://'.$item->link3.'" target="_blank">'.$item->link3label.'</a>';
+                        }
+                    }
+                }
+                break;
             case $extra.'teacheremail':
                 if ($header == 1){$data = JText::_('JBS_TCH_EMAIL');}
                 else {($item->email ? $data = '<a href="mailto:'.$item->email.'"><img height="24" width="24" alt="'.JText::_('JBS_TCH_EMAIL').'"  src="'.JURI::base().'media/com_biblestudy/images/email.png"></a>' : $data = '');}
-
                 break;
 
             case $extra.'teacherweb':
@@ -630,6 +704,10 @@ class JBSMListing extends JBSMElements
             case $extra.'seriesthumbnail':
                 if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
                 else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
+                break;
+            case $extra.'teacherlargeimage':
+                if ($header == 1){ $data = JText::_('JBS_TCH_TEACHER_IMAGE');}
+                else {(isset($item->teacher_image) ? $data = '<img src="'.JURI::base().$item->teacher_image.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
                 break;
             case $extra.'description':
                 if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}

@@ -49,7 +49,7 @@
                 />
         <field name="title" type="text" class="inputbox" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE"/>
+        <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE_LARGE"/>
         <field name="teacher_thumbnail" type="media" label="JBS_TCH_TEACHER_THUMBNAIL"/>
         <field name="image" type="text" class="inputbox" size="60"
                label="JBS_TCH_LARGE_IMAGE_URL" description="JBS_TCH_IMAGE_URL_DESC"/>
