@@ -21,8 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
 <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
 </ul>
@@ -35,18 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">3</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">18</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -67,29 +61,30 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_checkout" title="checkout :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
-<li class="method public "><a href="#method_fix" title="fix :: Fixes database problems"><span class="description">Fixes database problems</span><pre>fix()</pre></a></li>
-<li class="method public "><a href="#method_fixDefaultTextFilters" title="fixDefaultTextFilters :: Check if com_biblestudy parameters are blank."><span class="description">Check if com_biblestudy parameters are blank.</span><pre>fixDefaultTextFilters()</pre></a></li>
-<li class="method public "><a href="#method_fixSchemaVersion" title="fixSchemaVersion :: Fix schema version if wrong"><span class="description">Fix schema version if wrong</span><pre>fixSchemaVersion()</pre></a></li>
-<li class="method public "><a href="#method_fixUpdateVersion" title="fixUpdateVersion :: Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)"><span class="description">Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</span><pre>fixUpdateVersion()</pre></a></li>
-<li class="method public "><a href="#method_getCompVersion" title="getCompVersion :: To retrieve component version"><span class="description">To retrieve component version</span><pre>getCompVersion()</pre></a></li>
-<li class="method public "><a href="#method_getDefaultTextFilters" title="getDefaultTextFilters :: Check if com_biblestudy parameters are blank."><span class="description">Check if com_biblestudy parameters are blank.</span><pre>getDefaultTextFilters()</pre></a></li>
-<li class="method public "><a href="#method_getExtentionId" title="getExtentionId :: To retrieve component extension_id"><span class="description">To retrieve component extension_id</span><pre>getExtentionId()</pre></a></li>
-<li class="method public "><a href="#method_getForm" title="getForm :: Gets the form from the XML file."><span class="description">Gets the form from the XML file.</span><pre>getForm()</pre></a></li>
-<li class="method public "><a href="#method_getItems" title="getItems :: Gets the changeset object"><span class="description">Gets the changeset object</span><pre>getItems()</pre></a></li>
-<li class="method public "><a href="#method_getPagination" title="getPagination :: Get Pagination state but is harde coded to be true right now."><span class="description">Get Pagination state but is harde coded to be true right now.</span><pre>getPagination()</pre></a></li>
-<li class="method public "><a href="#method_getSchemaVersion" title="getSchemaVersion :: Get version from #__schemas table"><span class="description">Get version from #__schemas table</span><pre>getSchemaVersion()</pre></a></li>
-<li class="method public "><a href="#method_getTable" title="getTable :: Returns a reference to the a Table object, always creating it."><span class="description">Returns a reference to the a Table object, always creating it.</span><pre>getTable()</pre></a></li>
-<li class="method public "><a href="#method_getUpdateVersion" title="getUpdateVersion :: Get current version from #__extensions table"><span class="description">Get current version from #__extensions table</span><pre>getUpdateVersion()</pre></a></li>
-<li class="method public "><a href="#method_save" title="save :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#method_checkout" title="checkout() :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
+<li class="method public "><a href="#method_fix" title="fix() :: Fixes database problems"><span class="description">Fixes database problems</span><pre>fix()</pre></a></li>
+<li class="method public "><a href="#method_fixDefaultTextFilters" title="fixDefaultTextFilters() :: Check if com_biblestudy parameters are blank. If so, populate with com_content text filters."><span class="description">Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</span><pre>fixDefaultTextFilters()</pre></a></li>
+<li class="method public "><a href="#method_fixSchemaVersion" title="fixSchemaVersion() :: Fix schema version if wrong"><span class="description">Fix schema version if wrong</span><pre>fixSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_fixUpdateVersion" title="fixUpdateVersion() :: Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)"><span class="description">Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</span><pre>fixUpdateVersion()</pre></a></li>
+<li class="method public "><a href="#method_getCompVersion" title="getCompVersion() :: To retrieve component version"><span class="description">To retrieve component version</span><pre>getCompVersion()</pre></a></li>
+<li class="method public "><a href="#method_getDefaultTextFilters" title="getDefaultTextFilters() :: Check if com_biblestudy parameters are blank."><span class="description">Check if com_biblestudy parameters are blank.</span><pre>getDefaultTextFilters()</pre></a></li>
+<li class="method public "><a href="#method_getExtentionId" title="getExtentionId() :: To retrieve component extension_id"><span class="description">To retrieve component extension_id</span><pre>getExtentionId()</pre></a></li>
+<li class="method public "><a href="#method_getForm" title="getForm() :: Gets the form from the XML file."><span class="description">Gets the form from the XML file.</span><pre>getForm()</pre></a></li>
+<li class="method public "><a href="#method_getItems" title="getItems() :: Gets the changeset object"><span class="description">Gets the changeset object</span><pre>getItems()</pre></a></li>
+<li class="method public "><a href="#method_getPagination" title="getPagination() :: Get Pagination state but is harde coded to be true right now."><span class="description">Get Pagination state but is harde coded to be true right now.</span><pre>getPagination()</pre></a></li>
+<li class="method public "><a href="#method_getSSorPI" title="getSSorPI() :: Check for SermonSpeaker and PreachIt"><span class="description">Check for SermonSpeaker and PreachIt</span><pre>getSSorPI()</pre></a></li>
+<li class="method public "><a href="#method_getSchemaVersion" title="getSchemaVersion() :: Get version from #__schemas table"><span class="description">Get version from #__schemas table</span><pre>getSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_getTable" title="getTable() :: Returns a reference to the a Table object, always creating it."><span class="description">Returns a reference to the a Table object, always creating it.</span><pre>getTable()</pre></a></li>
+<li class="method public "><a href="#method_getUpdateVersion" title="getUpdateVersion() :: Get current version from #__extensions table"><span class="description">Get current version from #__extensions table</span><pre>getUpdateVersion()</pre></a></li>
+<li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="method protected "><a href="#method_cleanCache" title="cleanCache :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
-<li class="method protected "><a href="#method_loadFormData" title="loadFormData :: Load Form Date"><span class="description">Load Form Date</span><pre>loadFormData()</pre></a></li>
-<li class="method protected "><a href="#method_populateState" title="populateState :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
-<li class="method protected "><a href="#method_prepareTable" title="prepareTable :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
+<li class="method protected "><a href="#method_cleanCache" title="cleanCache() :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
+<li class="method protected "><a href="#method_loadFormData" title="loadFormData() :: Load Form Date"><span class="description">Load Form Date</span><pre>loadFormData()</pre></a></li>
+<li class="method protected "><a href="#method_populateState" title="populateState() :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
+<li class="method protected "><a href="#method_prepareTable" title="prepareTable() :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -98,8 +93,8 @@
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="property protected "><a href="#property__context" title="$_context :: Context"><span class="description"></span><pre>$_context</pre></a></li>
-<li class="property protected "><a href="#property_text_prefix" title="$text_prefix :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
+<li class="property protected "><a href="#property__context" title="$_context() :: Context"><span class="description"></span><pre>$_context</pre></a></li>
+<li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -109,7 +104,6 @@
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/BiblestudyModelAdmin.html">BiblestudyModelAdmin</a>
 </li>
@@ -125,7 +119,7 @@
 </tr>
 <tr>
 <th>since</th>
-<td>7.0.0</td>
+<td></td>
 </tr>
 </table>
 <h3>
@@ -138,7 +132,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>11.1</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -160,11 +154,11 @@
 </div></div>
 </div>
 <a id="method_fixDefaultTextFilters"></a><div class="element clickable method public method_fixDefaultTextFilters" data-toggle="collapse" data-target=".method_fixDefaultTextFilters .collapse">
-<h2>Check if com_biblestudy parameters are blank.</h2>
+<h2>Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</h2>
 <pre>fixDefaultTextFilters() : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>If so, populate with com_content text filters.</p></div>
+<div class="long_description"></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>boolean true if params are updated, null otherwise</div>
@@ -200,7 +194,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.7.3</td>
+<td></td>
 </tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
@@ -226,11 +220,11 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>7.1.0</td>
+<td></td>
 </tr></table>
 <h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
-<th><code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code></th>
+<th><code>\Exception</code></th>
 <td></td>
 </tr></table>
 <h3>Returns</h3>
@@ -278,6 +272,16 @@
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
+<a id="method_getSSorPI"></a><div class="element clickable method public method_getSSorPI" data-toggle="collapse" data-target=".method_getSSorPI .collapse">
+<h2>Check for SermonSpeaker and PreachIt</h2>
+<pre>getSSorPI() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
 <a id="method_getSchemaVersion"></a><div class="element clickable method public method_getSchemaVersion" data-toggle="collapse" data-target=".method_getSchemaVersion .collapse">
 <h2>Get version from #__schemas table</h2>
 <pre>getSchemaVersion() : mixed</pre>
@@ -286,7 +290,7 @@
 <div class="long_description"></div>
 <h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
-<th><code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code></th>
+<th><code>\Exception</code></th>
 <td></td>
 </tr></table>
 <h3>Returns</h3>
@@ -302,7 +306,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -338,7 +342,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -357,7 +361,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -383,10 +387,10 @@
 <pre>populateState(string $ordering, string $direction) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Note. Calling getState in this method will result in recursion.</p></div>
+<div class="long_description">Note. Calling getState in this method will result in recursion.</div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.7.2</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -407,7 +411,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td></td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -418,7 +422,7 @@
 <h3>
 <i class="icon-custom icon-property"></i> Properties</h3>
 <a id="property__context"> </a><div class="element clickable property protected property__context" data-toggle="collapse" data-target=".property__context .collapse">
-<h2></h2>
+<h2>Context</h2>
 <pre>$_context : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -431,7 +435,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td></td>
 </tr></table>
 </div></div>
 </div>
@@ -441,8 +445,9 @@
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:35-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:27-05:00.<br></footer></div>
 </div>
 </body>
 </html>
