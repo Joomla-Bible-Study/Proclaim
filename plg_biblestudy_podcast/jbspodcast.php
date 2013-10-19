@@ -48,7 +48,7 @@ class PlgSystemJbspodcast extends JPlugin
 	public function onAfterInitialise()
 	{
 
-		$plugin = JPluginHelper::getPlugin('system', 'jbspodcast');
+		JPluginHelper::getPlugin('system', 'jbspodcast');
 		$params = $this->params;
 
 		// First check to see what method of updating the podcast we are using
@@ -66,14 +66,23 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			// Perform the podcast and email and update time
 			$dopodcast = $this->doPodcast();
-			//update the database to show a new time
+
+			// Update the database to show a new time
 			$this->updatetime();
+
 			// Last we check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
 				if ($params->get('email') > 1)
 				{
-					$iserror = substr_count($dopodcast, 'not');
+					if (substr_count($dopodcast, 'not') || $dopodcast == false)
+					{
+						$iserror = 1;
+					}
+					else
+					{
+						$iserror = 0;
+					}
 
 					if ($iserror)
 					{
