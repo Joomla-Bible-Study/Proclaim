@@ -43,7 +43,7 @@ class JBSMCustom extends JBSMElements
 			$braceend   = strpos($custom, '}');
 			$subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 
-			if (!$rowid)
+			if (!$rowid || $rowid == 24)
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
