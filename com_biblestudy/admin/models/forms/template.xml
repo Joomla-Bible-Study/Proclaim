@@ -606,6 +606,14 @@
             <field name="thumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="thumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="thumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer17" hr="true" />
+            <field name="customrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_ROW_DESC" />
+            <field name="customcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="customcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="customelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="customcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="customtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
+
         </fieldset>
         <fieldset name="DETAILS">
             <field name="show_print_view" type="list" default="1"
@@ -891,6 +899,13 @@
             <field name="tsteachershortelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="tsteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="tsteachershortlinktype" type="teacherlinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer39a" hr="true" />
+            <field name="tscustomrow" type="rowptions" size="1" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+            <field name="tscustomcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tscustomcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tscustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tscustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tscustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
 
             <field name="teacher_headercode" type="editor" height="300" width="500"
                    label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" filter="raw"
@@ -1057,6 +1072,13 @@
             <field name="tdteacherlargeimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
             <field name="tdteacherlargeimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="tdteacherlargeimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field type="spacer" name="myspacer15a" hr="true" />
+            <field name="tdcustomrow" type="rowptions" size="1" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+            <field name="tdcustomcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdcustomcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdcustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="tdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
 
             <field name="useexpert_teacherdetail" type="list" default="0"
                    label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL" description="JBS_TPL_CUSTOM_VIEW_DESC">
@@ -1185,7 +1207,14 @@
             <field name="sdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="sdescriptionlinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer22" hr="true" />
-               </fieldset>
+            <field name="sdcustomrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+            <field name="sdcustomcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdcustomcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdcustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
+
+        </fieldset>
         <fieldset name="SERIESDETAIL"
                   addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="series_detail_sort" default="1" type="list"
@@ -1274,6 +1303,14 @@
             <field name="sddescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="sddescriptionlinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
             <field type="spacer" name="myspacer30" hr="true" />
+
+            <field name="sdcustomrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+            <field name="sdcustomcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="sdcustomcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="sdcustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="sdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="sdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
+
         </fieldset>
         <fieldset name="TOOLTIP">
             <field name="tip_title" type="text" default="Sermon Information"
@@ -1444,6 +1481,15 @@
             <field name="djbsmediaelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="djbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="djbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field type="spacer" name="myspacer3a" hr="true" />
+            <field name="dcustomrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+            <field name="dcustomcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="dcustomcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="dcustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="dcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
+            <field name="dcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM" description="JBS_TPL_ROW_DESC" />
+
+
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="dtitlerow" type="rowoptions" size="1" default="1" label="JBS_TPL_TITLEROW" description="JBS_TPL_ROW_DESC" />

@@ -61,42 +61,7 @@ class JBSMListing extends JBSMElements
         //get the media files in one query
         if (isset($medias))
         {
-            $db    = JFactory::getDBO();
-            $query = $db->getQuery(true);
-            $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-            . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-            . ' #__bsms_media.media_image_name AS imname,'
-            . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-            . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-            . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
-            $query->from('#__bsms_mediafiles');
-            $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-            $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-            $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-            $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
-            $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-            $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-            $where2   = array();
-            $subquery = '(';
-            foreach ($medias as $media)
-            {
-                if (is_array($media))
-                {
-                    foreach ($media as $m)
-                    {
-                        $where2[] = '#__bsms_mediafiles.id = ' . (int) $m;
-                    }
-                }
-                else
-                {$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;}
-            }
-            $subquery .= implode(' OR ', $where2);
-            $subquery .= ')';
-            $query->where($subquery);
-            $query->where('#__bsms_mediafiles.published = 1');
-            $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
-            $db->setQuery($query);
-            $mediafiles = $db->loadObjectList();
+            $mediafiles = $this->getMediaFiles($medias);
         }
         //create an array from each param variable set
         //Find out what view we are in
@@ -159,6 +124,7 @@ class JBSMListing extends JBSMElements
         if ($params->get($extra.'teacherlink2row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink2');}
         if ($params->get($extra.'teacherlink3row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink3');}
         if ($params->get($extra.'teacherlargeimagerow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlargeimage');}
+        if ($params->get($extra.'customrow') ){$listparams[] = $this->getListParamsArray($extra.'custom');}
         $row1 = array();
         $row2 = array();
         $row3 = array();
@@ -317,7 +283,46 @@ class JBSMListing extends JBSMElements
          return $medias;
      }
 
-
+public function getMediaFiles($medias)
+{
+    $db    = JFactory::getDBO();
+    $query = $db->getQuery(true);
+    $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
+    . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+    . ' #__bsms_media.media_image_name AS imname,'
+    . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+    . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+    . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+    $query->from('#__bsms_mediafiles');
+    $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
+    $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
+    $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
+    $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+    $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
+    $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+    $where2   = array();
+    $subquery = '(';
+    foreach ($medias as $media)
+    {
+        if (is_array($media))
+        {
+            foreach ($media as $m)
+            {
+                $where2[] = '#__bsms_mediafiles.id = ' . (int) $m;
+            }
+        }
+        else
+        {$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;}
+    }
+    $subquery .= implode(' OR ', $where2);
+    $subquery .= ')';
+    $query->where($subquery);
+    $query->where('#__bsms_mediafiles.published = 1');
+    $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
+    $db->setQuery($query);
+    $mediafiles = $db->loadObjectList();
+    return $mediafiles;
+}
     /**
      * @param $paramtext
      * @return stdClass
@@ -332,6 +337,8 @@ class JBSMListing extends JBSMElements
         $l->custom = $this->params->get($paramtext.'custom');
         $l->linktype = $this->params->get($paramtext.'linktype');
         $l->name = $paramtext;
+        $l->customtext = $this->params->get($paramtext.'text');
+
         return $l;
     }
 
@@ -513,6 +520,11 @@ class JBSMListing extends JBSMElements
 
         switch ($row->name)
         {
+            case $extra.'custom':
+
+                if ($header == 1){$data = JTEXT::_('JBS_CMN_CUSTOM');}
+                else {$data = $this->getFluidCustom($row->customtext, $item, $params, $admin_params, $template, $type);}
+                break;
             case $extra.'teacherlong':
                 if ($header == 1){$data = JText::_('JBS_TCH_INFORMATION');}
                 else {($item->long ? $data = JHtml::_('content.prepare',$item->long,'','com_biblestudy.'.$type) : $data = '');}
@@ -858,6 +870,272 @@ class JBSMListing extends JBSMElements
         $mediarow .= '</div>';
         return $mediarow;
     }
+
+    public function getFluidCustom($custom, $item, $params, $admin_params, $template, $type)
+    {
+        $countbraces = substr_count($custom, '{');
+
+        while ($countbraces > 0)
+        {
+            $bracebegin = strpos($custom, '{');
+            $braceend   = strpos($custom, '}');
+            $subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
+
+            $element = $this->getElement($subcustom, $item, $params, $admin_params, $template, $type);
+            $custom    = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
+            $countbraces--;
+        }
+        return $custom;
+    }
+
+    public function getElement($custom, $row, $params, $admin_params, $template, $type)
+    {
+        switch($custom)
+        {
+            case 'scripture1':
+                $esv                   = 0;
+                $scripturerow          = 1;
+                $element    = self::getScripture($params, $row, $esv, $scripturerow);
+                break;
+
+            case 'scripture2':
+                $esv                   = 0;
+                $scripturerow          = 2;
+                $element    = self::getScripture($params, $row, $esv, $scripturerow);
+                break;
+
+            case 'secondary':
+                $element    = $row->secondary_reference;
+                break;
+
+            case 'duration':
+                $element    = self::getDuration($params, $row);
+                break;
+
+            case 'title':
+
+                if (isset($row->studytitle))
+                {
+                    $element = $row->studytitle;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'studyintro':
+
+                if (isset($row->studyintro))
+                {
+                    $element = JHtml::_('content.prepare',$row->studyintro,'','com_biblestudy.'.$type);
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'teacher':
+
+                if (isset($row->teachername))
+                {
+                    $element = $row->teachername;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'studynumber':
+                if (isset($row->studynumber))
+                {
+                    $element = $row->studynumber;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'series_text':
+                //series title
+                if (isset($row->series_text))
+                {
+                    $element = $row->series_text;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'series_thumbnail':
+                if ($row->series_thumbnail)
+                {
+                    $element = '<img src="' . JURI::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '">';
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'submitted':
+                if (isset($row->submitted))
+                {
+                    $element = $row->submitted;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'teacherimage':
+                if (isset($row->teacher_thumbnail))
+                    {$element = '<img src="'.JURI::base() . $row->teacher_thumbnail .'" alt="' . $row->teachername.'">';}
+                else ($element = '');
+                break;
+
+            case 'teachername':
+                if (isset($row->teachername))
+                {
+                    $element = $row->teachername;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'teacher':
+                //teacher name and title
+
+                if (isset($row->teachertitle) && isset($row->teachername))
+                {
+                    $element = $row->teachertitle . ' ' . $row->teachername;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+            case 'jbsmedia':
+                if (isset($row->mids))
+                {
+                    $medias = $this->getFluidMediaids($row);
+                    $mediafiles = $this->getMediaFiles($medias);
+                    $row->mediafiles = $mediafiles;
+                    $element = $this->getFluidMediaFiles($row, $params, $admin_params, $template);
+
+                }
+                else {$element = '';}
+                break;
+
+            case 'thumbnail':
+                //assume study thumbnail
+                $element = '<img src="' . JURI::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '">';
+                break;
+
+            case 'studytitle':
+                (isset($row->studytitle) ? $element = $row->studytitle : $element = '');
+                break;
+
+            case 'teacher-title-name':
+                if (isset($row->teachertitle) && isset($row->teachername))
+                {
+                    $element = $row->teachertitle . ' ' . $row->teachername;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+                break;
+
+            case 'topics':
+                if (isset($row->topics_text))
+                {
+                    if (substr_count($row->topics_text, ','))
+                    {
+                        $topics = explode(',', $row->topics_text);
+
+                        foreach ($topics as $key => $value)
+                        {
+                            $topics[$key] = JText::_($value);
+                        }
+                        $element = implode(', ', $topics);
+                    }
+                    else
+                    {
+                        (isset($row->topics_text) ? $element = JText::_($row->topics_text) : $element = '');
+                    }
+                }
+                break;
+
+
+
+            case 'message_type':
+                if (isset($row->message_type))
+                {
+                    $element = $row->message_type;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'location_text':
+                if (isset($row->location_text))
+                {
+                    $element = $row->location_text;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+            case 'date':
+                if (isset($row->studydate))
+                {
+                    $element = self::getstudyDate($params, $row->studydate);
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+            case 'series_description':
+
+				if (isset($row->sdescription))
+				{
+                    if ($type == 'seriesdisplays' || $type == 'seriesdisplay')
+                    {$element = JHtml::_('content.prepare',$row->description,'','com_biblestudy.'.$type);}
+                    else {$element = JHtml::_('content.prepare',$row->sdescription,'','com_biblestudy.'.$type);}
+				}
+				else
+				{
+					$element = '';
+				}
+                break;
+            case 'hits':
+                if (isset($row->hits))
+                {
+                    $element = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
+                }
+                else
+                {
+                    $element = '';
+                }
+                break;
+
+        }
+        return $element;
+    }
     /**
      * @param $array
      * @param $property
@@ -917,6 +1195,7 @@ class JBSMListing extends JBSMElements
         if($order == "DESC"){ $array = array_reverse($array); }
         return $array;
     }
+
 
 
     /**
