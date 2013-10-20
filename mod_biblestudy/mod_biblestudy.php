@@ -110,7 +110,7 @@ if (!$templatemenuid)
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
-$link     = '<a href="' . $linkurl . '">' . $link_text . '</a>';
+$link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
 $document = JFactory::getDocument();
 $css      = $params->get('css', 'biblestudy.css');
 
@@ -136,11 +136,22 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
-$this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-$this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-$this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-$this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
-$this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
+$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
-
-require JModuleHelper::getLayoutPath('mod_biblestudy', 'default');
+if ($params->get('useexpert_module') > 0)
+{
+    $template = 'default_custom';
+}
+elseif ($params->get('moduletemplate'))
+{
+    $template = 'default_'.$params->get('moduletemplate');
+}
+else
+{
+    $template = 'default_main';
+}
+require JModuleHelper::getLayoutPath('mod_biblestudy', $template);

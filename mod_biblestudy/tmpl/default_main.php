@@ -18,39 +18,19 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 $JBSMListing = new JBSMListing;
 ?>
-<div id="biblestudy" class="noRefTagger">
-    <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
-    <!-- This div is the container for the whole page -->
-    <table id="bsmsmoduletable">
-		<?php
-		$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
-		echo $header;
-		?>
-        <tbody>
-		<?php
-		$class1  = 'bsodd';
-		$class2  = 'bseven';
-		$oddeven = $class1;
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
 
-		foreach ($list as $study)
-		{
-			if ($oddeven == $class1)
-			{
-				// Alternate the color background
-				$oddeven = $class2;
-			}
-			else
-			{
-				$oddeven = $class1;
-			}
-			$listing = $JBSMListing->getListing($study, $params, $oddeven, $admin_params, $template, $ismodule);
-			echo $listing;
-		}
+
+		<?php
+		$list = $JBSMListing->getFluidListing($items, $params, $admin_params, $template, $type="sermons");
+		echo $list;
 		?>
-        </tbody>
-    </table>
-</div>
-<div style="clear: both;"></div>
+
+        </div>
+    </div>
+
 <div class="modulelistingfooter">
     <br/>
 	<?php
@@ -59,5 +39,5 @@ $JBSMListing = new JBSMListing;
 		echo $link;
 	}
 	?>
-</div>
-<!--end of footer div-->
+</div><!--end of footer div-->
+</div> <!--end container -->

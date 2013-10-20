@@ -42,7 +42,9 @@ class JBSMListing extends JBSMElements
         $list = '';
         $row = array();
         $this->params = $params;
-
+    $input = new JInput();
+        $view = $input->getString('view');
+        dump ($view);
         if ($type == 'sermons')
         {
             foreach ($items as $item)
