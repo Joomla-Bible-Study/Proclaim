@@ -16,6 +16,8 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.de
 JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
 require_once __DIR__ . '/helper.php';
 
+
+
 // Need for inline player
 $document = JFactory::getDocument();
 $document->addScript('media/com_biblestudy/js/tooltip.js');

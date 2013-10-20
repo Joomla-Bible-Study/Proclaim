@@ -42,9 +42,7 @@ class JBSMListing extends JBSMElements
         $list = '';
         $row = array();
         $this->params = $params;
-    $input = new JInput();
-        $view = $input->getString('view');
-        dump ($view);
+
         if ($type == 'sermons')
         {
             foreach ($items as $item)
@@ -166,7 +164,7 @@ class JBSMListing extends JBSMElements
         $oddeven = $class1;
         if ($type == 'sermons')
         {
-            if ($params->get('use_headers_list') > 0)
+            if ($params->get('use_headers_list') > 0 )
             {
                 $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
             }
@@ -528,7 +526,7 @@ public function getMediaFiles($medias)
         {
             case $extra.'custom':
 
-                if ($header == 1){$data = JTEXT::_('JBS_CMN_CUSTOM');}
+                if ($header == 1){$data = '';}
                 else {$data = $this->getFluidCustom($row->customtext, $item, $params, $admin_params, $template, $type);}
                 break;
             case $extra.'teacherlong':
