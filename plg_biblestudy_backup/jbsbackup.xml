@@ -5,8 +5,8 @@
     <copyright>This plugin is released under the GNU/GPL License</copyright>
     <authorEmail>tomfuller2@gmail.com</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>8.0.0</version>
-    <creationDate>June 12, 2013</creationDate>
+    <version>8.0.1</version>
+    <creationDate>Oct 19, 2013</creationDate>
     <description>JBS_PLG_BACKUP_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
