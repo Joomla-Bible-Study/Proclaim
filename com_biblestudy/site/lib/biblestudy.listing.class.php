@@ -86,7 +86,11 @@ class JBSMListing extends JBSMElements
             case 'teacher':
                 $extra = 'td';
                 break;
+            case 'module':
+                $extra = 'm';
+                break;
         }
+
         $listparams = array();
         if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
         if ($params->get($extra.'scripture2row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture2');}

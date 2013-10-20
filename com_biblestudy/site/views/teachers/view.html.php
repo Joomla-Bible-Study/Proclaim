@@ -159,7 +159,13 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
-		$images = new JBSMImages;
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
+
+        $images = new JBSMImages;
         if ($params->get('useexpert_teacherdetail') > 0 && !$params->get('teacherstemplate'))
         {
             $pagebuilder = new JBSPagebuilder;

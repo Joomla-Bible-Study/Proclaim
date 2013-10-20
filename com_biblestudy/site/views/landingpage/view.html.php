@@ -128,6 +128,11 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		{
 			$document->addStyleSheet($url);
 		}
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
 		$uri                = new JUri;
 		$filter_topic       = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');

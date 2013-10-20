@@ -103,6 +103,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$pathway       = $mainframe->getPathWay();
 		$contentConfig = JFactory::getApplication('site')->getParams();
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
 
 		// Get the menu item object
