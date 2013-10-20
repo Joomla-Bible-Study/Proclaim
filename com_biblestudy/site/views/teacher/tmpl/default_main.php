@@ -25,6 +25,14 @@ echo $list;
 
     <div class="row-fluid">
         <div class="span12">
+            <?php $teacherstudies = $listing->getFluidListing($this->studies, $this->params, $this->admin_params, $this->template, $type='sermons');
+            echo $teacherstudies; ?>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row-fluid">
+        <div class="span12">
             <a href="index.php?option=com_biblestudy&amp;view=teachers&amp;t=<?php echo $this->t; ?>">
 				<button class="btn"><?php echo '&lt;-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
             </a>

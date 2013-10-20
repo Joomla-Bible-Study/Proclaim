@@ -190,7 +190,7 @@ class JBSMListing extends JBSMElements
         }
         if ($type == 'teacher')
         {
-            if ($params->get('use_header_teacher_details') > 0)
+            if ($params->get('use_headers_teacher_details') > 0)
             {
                 $oddeven = $params->get('teacherdisplay_color', 'white');
                 $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);

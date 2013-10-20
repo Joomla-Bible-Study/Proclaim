@@ -68,6 +68,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        $this->studies = $this->get('studies');
 		$images = new JBSMImages;
 
 		$this->admin        = JBSMParams::getAdmin();
