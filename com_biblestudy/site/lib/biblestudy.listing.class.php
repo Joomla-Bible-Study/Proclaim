@@ -278,7 +278,11 @@ class JBSMListing extends JBSMElements
         return $list;
     }
 
-     public function getFluidMediaids($item)
+    /**
+     * @param $item
+     * @return array
+     */
+    public function getFluidMediaids($item)
      {
          $mediatemp = array();
          $mediatemp = explode(',',$item->mids);
@@ -287,6 +291,10 @@ class JBSMListing extends JBSMElements
          return $medias;
      }
 
+    /**
+     * @param $medias
+     * @return mixed
+     */
 public function getMediaFiles($medias)
 {
     $db    = JFactory::getDBO();
@@ -347,7 +355,21 @@ public function getMediaFiles($medias)
     }
 
     /**
-     * Get Fluid Row
+     * @param $listrows
+     * @param $item
+     * @param $params
+     * @param $admin_params
+     * @param $template
+     * @param $row1sorted
+     * @param $row2sorted
+     * @param $row3sorted
+     * @param $row4sorted
+     * @param $row5sorted
+     * @param $row6sorted
+     * @param $oddeven
+     * @param $header
+     * @param $type
+     * @return string
      */
     public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header, $type)
     {
@@ -495,6 +517,16 @@ public function getMediaFiles($medias)
         return $frow;
     }
 
+    /**
+     * @param $item
+     * @param $row
+     * @param $params
+     * @param $admin_params
+     * @param $template
+     * @param $header
+     * @param $type
+     * @return string
+     */
     public function getFluidData($item, $row, $params, $admin_params, $template, $header, $type)
     {
         $smenu        = $params->get('detailsitemid');
@@ -863,6 +895,13 @@ public function getMediaFiles($medias)
     return $frow;
     }
 
+    /**
+     * @param $item
+     * @param $params
+     * @param $admin_params
+     * @param $template
+     * @return string
+     */
     public function getFluidMediaFiles($item, $params, $admin_params, $template)
     {
         $med = new jbsMedia();
@@ -892,6 +931,15 @@ public function getMediaFiles($medias)
         return $custom;
     }
 
+    /**
+     * @param $custom
+     * @param $row
+     * @param $params
+     * @param $admin_params
+     * @param $template
+     * @param $type
+     * @return mixed|null|string
+     */
     public function getElement($custom, $row, $params, $admin_params, $template, $type)
     {
         switch($custom)
@@ -1485,22 +1533,20 @@ public function getMediaFiles($medias)
         return $date;
     }
 
-	/**
-	 * Get Link
-	 *
-	 * @param   string    $islink        IS A Link
-	 * @param   string    $id3           ID3
-	 * @param   int       $tid           Template Id
-	 * @param   string    $smenu         Sermon Menu
-	 * @param   string    $tmenu         Teacher Menu
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $row           Item Info
-	 * @param   int       $template      Template
-	 *
-	 * @return string
-	 */
-	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
+
+    /**
+     * @param $islink
+     * @param $id3
+     * @param $tid
+     * @param $smenu
+     * @param $tmenu
+     * @param $params
+     * @param $admin_params
+     * @param $row
+     * @param $template
+     * @return string
+     */
+    private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 	{
 		$input    = new JInput;
 		$Itemid   = $input->get('Itemid', '', 'int');

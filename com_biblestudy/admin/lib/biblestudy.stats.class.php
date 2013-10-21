@@ -389,24 +389,25 @@ class JbStats
 			->select('study_id, sum(downloads + plays) as added ')
 			->from('#__bsms_mediafiles')
 			->where('published = ' . 1)
-			->group('study_id');
+			->group('study_id')
+            ->order('added DESC');
 		$db->setQuery($query);
-		$results = $db->loadObjectList();
-
-		foreach ($results as $result)
+		$results = $db->loadAssocList();
+        array_splice($results, 5);
+		foreach ($results as $key=>$result)
 		{
 			$query = $db->getQuery(true);
 			$query
 				->select('#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits,' .
 				'#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies')
 				->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
-				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
+				->where('#__bsms_mediafiles.study_id = ' . (int) $result['study_id']);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
 
 			if ($format < 1)
 			{
-				$total = $result->added + $hits->hits;
+				$total = $result['added'] + $hits->hits;
 			}
 			else
 			{
