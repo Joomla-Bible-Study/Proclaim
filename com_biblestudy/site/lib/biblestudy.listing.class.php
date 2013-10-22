@@ -751,7 +751,11 @@ public function getMediaFiles($medias)
                 break;
             case $extra.'seriesthumbnail':
                 if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
-                else {(isset($item->series_thumbnail) ? $data = '<img src="'.JURI::base().$item->series_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
+                else {
+                   if ($item->series_thumbnail)
+                   {$data = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));}
+                    else {$data = '';}
+                }
                 break;
             case $extra.'teacherlargeimage':
                 if ($header == 1){ $data = JText::_('JBS_TCH_TEACHER_IMAGE');}
@@ -816,16 +820,22 @@ public function getMediaFiles($medias)
                 break;
             case $extra.'thumbnail':
                 if ($header == 1){$data = JText::_('JBS_CMN_THUMBNAIL');}
-                else {(isset($item->thumbnailm) ? $data = '<img src="'.JURI::base().$item->thumbnailm.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
+                elseif($item->thumbnailm)
+                    { $data = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'));}
+                else {$data = '';}
                 break;
             case $extra.'teacherimage':
 
                 if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
                 if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
                 {
-                    (isset($item->teacher_thumbnail)? $data = 'img src="'.JURI::base().$item->teacher_thumbnail.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');
+                    if ($item->teacher_thumbnail){ $data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));}
+                    else {$data = '';}
                 }
-               else {(isset($item->thumb)? $data = 'img src="'.JURI::base().$item->thumb.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
+               else {
+                   if ($item->thumb) {$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));}
+                   else {$data = '';}
+               }
                 break;
         }
 
@@ -896,6 +906,26 @@ public function getMediaFiles($medias)
     }
 
     /**
+     * @since 8.1.0
+     * @param $path
+     * @return bool|stdClass
+     */
+    public  function useJImage($path,$alt = null)
+    {
+        $image = new JImage();
+
+        try {
+            $return = $image->getImageFileProperties($path);
+        }
+        catch (Exception $e) {
+            $return =  false;
+        }
+        $imagereturn = '<img src="'.JURI::base().$path.'" alt="'.$alt.'" '.$return->attributes.'>';
+
+      return $imagereturn;
+    }
+    /**
+     * @since 8.1.0
      * @param $item
      * @param $params
      * @param $admin_params

@@ -167,73 +167,75 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
+        //Only use Pagebuilder if using a template other than the default_main
+        if ($params->get('useexpert_teacherdetail') > 0 || $params->get('teachertemplate') > 0)
+        {
+            if ($params->get('show_teacher_studies') > 0)
+            {
+                $studies = $pagebuilder->studyBuilder(
+                    $whereitem,
+                    $wherefield,
+                    $params,
+                    $this->admin_params,
+                    $limit,
+                    $order
+                );
 
-		if ($params->get('show_teacher_studies') > 0)
-		{
-			$studies = $pagebuilder->studyBuilder(
-				$whereitem,
-				$wherefield,
-				$params,
-				$this->admin_params,
-				$limit,
-				$order
-			);
+                foreach ($studies as $i => $study)
+                {
+                    $pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+                    $studies[$i]->scripture1 = $pelements->scripture1;
+                    $studies[$i]->scripture2 = $pelements->scripture2;
+                    $studies[$i]->media      = $pelements->media;
+                    $studies[$i]->duration   = $pelements->duration;
+                    $studies[$i]->studydate  = $pelements->studydate;
+                    $studies[$i]->topics     = $pelements->topics;
 
-			foreach ($studies as $i => $study)
-			{
-				$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
-				$studies[$i]->scripture1 = $pelements->scripture1;
-				$studies[$i]->scripture2 = $pelements->scripture2;
-				$studies[$i]->media      = $pelements->media;
-				$studies[$i]->duration   = $pelements->duration;
-				$studies[$i]->studydate  = $pelements->studydate;
-				$studies[$i]->topics     = $pelements->topics;
+                    if (isset($pelements->study_thumbnail))
+                    {
+                        $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+                    }
+                    else
+                    {
+                        $studies[$i]->study_thumbnail = null;
+                    }
 
-				if (isset($pelements->study_thumbnail))
-				{
-					$studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-				}
-				else
-				{
-					$studies[$i]->study_thumbnail = null;
-				}
+                    if (isset($pelements->series_thumbnail))
+                    {
+                        $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+                    }
+                    else
+                    {
+                        $studies[$i]->series_thumbnail = null;
+                    }
+                    $studies[$i]->detailslink = $pelements->detailslink;
 
-				if (isset($pelements->series_thumbnail))
-				{
-					$studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-				}
-				else
-				{
-					$studies[$i]->series_thumbnail = null;
-				}
-				$studies[$i]->detailslink = $pelements->detailslink;
+                    if (!isset($pelements->studyintro))
+                    {
+                        $pelements->studyintro = '';
+                    }
+                    $studies[$i]->studyintro = $pelements->studyintro;
 
-				if (!isset($pelements->studyintro))
-				{
-					$pelements->studyintro = '';
-				}
-				$studies[$i]->studyintro = $pelements->studyintro;
-
-				if (isset($pelements->secondary_reference))
-				{
-					$studies[$i]->secondary_reference = $pelements->secondary_reference;
-				}
-				else
-				{
-					$studies[$i]->secondary_reference = '';
-				}
-				if (isset($pelements->sdescription))
-				{
-					$studies[$i]->sdescription = $pelements->sdescription;
-				}
-				else
-				{
-					$studies[$i]->sdescription = '';
-				}
-			}
-			$this->teacherstudies = $studies;
-		}
-
+                    if (isset($pelements->secondary_reference))
+                    {
+                        $studies[$i]->secondary_reference = $pelements->secondary_reference;
+                    }
+                    else
+                    {
+                        $studies[$i]->secondary_reference = '';
+                    }
+                    if (isset($pelements->sdescription))
+                    {
+                        $studies[$i]->sdescription = $pelements->sdescription;
+                    }
+                    else
+                    {
+                        $studies[$i]->sdescription = '';
+                    }
+                }
+                $this->teacherstudies = $studies;
+            }
+        }
 		$this->item = $item;
 		$print      = $input->get('print', '', 'bool');
 
