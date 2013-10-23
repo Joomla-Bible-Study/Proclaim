@@ -1450,4 +1450,16 @@ class MigrationUpgrade
 		return true;
 	}
 
+    public function upgrade810()
+    {
+        JLoader::register('JBS810Update', BIBLESTUDY_PATH_ADMIN . '/install/updates/8.1.0.php');
+        $migrate = new JBS810Update;
+
+        if (!$migrate->update810())
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
