@@ -6,11 +6,11 @@
         <TotalClasses>88</TotalClasses>
         <ConcreteClasses>87</ConcreteClasses>
         <AbstractClasses>1</AbstractClasses>
-        <Ca>14</Ca>
+        <Ca>15</Ca>
         <Ce>2</Ce>
         <A>0.011363636363636</A>
-        <I>0.125</I>
-        <D>0.86363636363636</D>
+        <I>0.11764705882353</I>
+        <D>0.87098930481283</D>
       </Stats>
       <ConcreteClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/liveupdate/classes/controller.php">JoomlaCompatController</Class>
@@ -32,6 +32,7 @@
         <Package>LiveUpdate</Package>
       </DependsUpon>
       <UsedBy>
+        <Package>BibleStudy</Package>
         <Package>BibleStudy.Admin</Package>
         <Package>BibleStudy.Site</Package>
         <Package>BibleStudy.Site\Form</Package>
@@ -50,14 +51,14 @@
     </Package>
     <Package name="BibleStudy.Admin">
       <Stats>
-        <TotalClasses>188</TotalClasses>
-        <ConcreteClasses>187</ConcreteClasses>
-        <AbstractClasses>1</AbstractClasses>
-        <Ca>3</Ca>
+        <TotalClasses>189</TotalClasses>
+        <ConcreteClasses>186</ConcreteClasses>
+        <AbstractClasses>3</AbstractClasses>
+        <Ca>2</Ca>
         <Ce>5</Ce>
-        <A>0.0053191489361702</A>
-        <I>0.625</I>
-        <D>0.36968085106383</D>
+        <A>0.015873015873016</A>
+        <I>0.71428571428571</I>
+        <D>0.26984126984127</D>
       </Stats>
       <ConcreteClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/controller.php">BiblestudyController</Class>
@@ -100,8 +101,8 @@
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/controllers/templates.php">BiblestudyControllerTemplates</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/controllers/topic.php">BiblestudyControllerTopic</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/controllers/topics.php">BiblestudyControllerTopics</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/alias.php">JBSMFixAlias</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/biblestudy.php">JBSMBibleStudyHelper</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/alias.php">JBSMAlias</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/biblestudyhelper.php">JBSMBibleStudyHelper</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/dbhelper.php">JBSMDbHelper</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/helper.php">JBSMHelper</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/image.php">JBSMImage</Class>
@@ -111,20 +112,20 @@
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/params.php">JBSMParams</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/server.php">JBSMServer</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/tags.php">JBSMTags</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/templates.helper.php">JBSMTemplate</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/template.php">JBSMTemplate</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/translated.php">JBSMTranslated</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/biblestudy.install.special.php">JBSMFreshInstall</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/8.0.0.php">JBS800Update</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/update701.php">JBS701Update</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/update702.php">JBS702Update</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/update710.php">JBS710Update</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.assets.php">FixJBSAssets</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.backup.php">JBSExport</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.preachitconvert.class.php">JBSPIconvert</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.restore.php">JBSRestore</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.sermonspeakerconvert.class.php">JBSConvert</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.stats.class.php">JbStats</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/biblestudy.version.php">CBiblestudyVersion</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/701update.php">JBSM701Update</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/702update.php">JBSM702Update</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/710update.php">JBSM710Update</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/install/updates/800update.php">JBSM800Update</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/assets.php">JBSMAssets</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/backup.php">JBSMBackup</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/piconvert.php">JBSMPIconvert</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/restore.php">JBSMRestore</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/ssconvert.php">JBSMSSConvert</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/stats.php">JBSMStats</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/version.php">JBSMBiblestudyVersion</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/migration/updateALL.php">MigrationUpgrade</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/models/admin.php">BiblestudyModelAdmin</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/models/comment.php">BiblestudyModelComment</Class>
@@ -242,7 +243,6 @@
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/biblestudy.script.php">Com_BiblestudyInstallerScript</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controllers/commentform.php">BiblestudyControllerCommentform</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controllers/commentlist.php">BiblestudyControllerCommentlist</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.debug.php">JBSDebug</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/models/commentform.php">BiblestudyModelCommentform</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/models/commentlist.php">BiblestudyModelCommentlist</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/views/commentform/view.html.php">BiblestudyViewCommentform</Class>
@@ -250,25 +250,26 @@
       </ConcreteClasses>
       <AbstractClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/biblestudy.php">JHtmlBiblestudy</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/bsmedia.php">JHtmlbsMedia</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/fancybox.php">JHtmlFancybox</Class>
       </AbstractClasses>
       <DependsUpon>
         <Package>+core</Package>
         <Package>+global</Package>
-        <Package>+imagick</Package>
         <Package>+spl</Package>
         <Package>BibleStudy.Site</Package>
+        <Package>BibleStudy\JBSMigration.Admin</Package>
       </DependsUpon>
       <UsedBy>
+        <Package>BibleStudy</Package>
         <Package>BibleStudy.Site</Package>
-        <Package>BibleStudy\JBSMigration.Admin</Package>
-        <Package>BibleStudy\Plugin.JBSBackup</Package>
       </UsedBy>
     </Package>
     <Package name="Joomla.Libraries\HTML">
       <Stats>
-        <TotalClasses>2</TotalClasses>
+        <TotalClasses>3</TotalClasses>
         <ConcreteClasses>0</ConcreteClasses>
-        <AbstractClasses>2</AbstractClasses>
+        <AbstractClasses>3</AbstractClasses>
         <Ca>0</Ca>
         <Ce>1</Ce>
         <A>1</A>
@@ -278,10 +279,32 @@
       <ConcreteClasses/>
       <AbstractClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/jquery.php">JHtmlJquery</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/jwplayer.php">JHtmlJwplayer</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/helpers/html/sortablelist.php">JHtmlSortablelist</Class>
       </AbstractClasses>
       <DependsUpon>
         <Package>+global</Package>
+      </DependsUpon>
+      <UsedBy/>
+    </Package>
+    <Package name="BibleStudy">
+      <Stats>
+        <TotalClasses>1</TotalClasses>
+        <ConcreteClasses>1</ConcreteClasses>
+        <AbstractClasses>0</AbstractClasses>
+        <Ca>0</Ca>
+        <Ce>2</Ce>
+        <A>0</A>
+        <I>1</I>
+        <D>0</D>
+      </Stats>
+      <ConcreteClasses>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/admin/lib/debug.php">JBSMDebug</Class>
+      </ConcreteClasses>
+      <AbstractClasses/>
+      <DependsUpon>
+        <Package>+global</Package>
+        <Package>BibleStudy.Admin</Package>
       </DependsUpon>
       <UsedBy/>
     </Package>
@@ -337,14 +360,14 @@
     </Package>
     <Package name="BibleStudy.Site">
       <Stats>
-        <TotalClasses>61</TotalClasses>
-        <ConcreteClasses>60</ConcreteClasses>
+        <TotalClasses>60</TotalClasses>
+        <ConcreteClasses>59</ConcreteClasses>
         <AbstractClasses>1</AbstractClasses>
         <Ca>3</Ca>
         <Ce>3</Ce>
-        <A>0.016393442622951</A>
+        <A>0.016666666666667</A>
         <I>0.5</I>
-        <D>0.48360655737705</D>
+        <D>0.48333333333333</D>
       </Stats>
       <ConcreteClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controller.php">BiblestudyController</Class>
@@ -357,23 +380,22 @@
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controllers/sermons.php">BiblestudyControllerSermons</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controllers/teacher.php">BiblestudyControllerTeacher</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/controllers/teachers.php">BiblestudyControllerTeachers</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/biblegateway.php">ShowScripture</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/custom.php">JBSMCustom</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/elements.php">JBSMElements</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/icon.php">JHtmlIcon</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/landing.php">JBSMLanding</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/media.php">JBSMMediaHelper</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/podcastsubscribe.php">PodcastSubscribe</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/related.php">RelatedStudies</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/media.php">JBSMMedia</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/podcastsubscribe.php">JBSMPodcastSubscribe</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/relatedstudies.php">JBSMRelatedStudies</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/serieslist.php">JBSMSerieslist</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/showscripture.php">JBSMShowScripture</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/teacher.php">JBSMTeacher</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/upload.php">JBSMUpload</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.download.class.php">Dump_File</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.images.class.php">JBSMImages</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.listing.class.php">JBSMListing</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.media.class.php">jbsMedia</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.pagebuilder.class.php">JBSPagebuilder</Class>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/biblestudy.podcast.class.php">JBSMPodcast</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/download.php">JBSMDownload</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/images.php">JBSMImages</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/listing.php">JBSMListing</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/pagebuilder.php">JBSMPageBuilder</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/lib/podcast.php">JBSMPodcast</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/models/fields/docman.php">JFormFieldDocman</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/models/fields/modal/article.php">JFormFieldModal_Article</Class>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/models/fields/modal/study.php">JFormFieldModal_Study</Class>
@@ -409,7 +431,7 @@
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/views/terms/view.html.php">BiblestudyViewTerms</Class>
       </ConcreteClasses>
       <AbstractClasses>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/route.php">JBSMHelperRoute</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/com_biblestudy/site/helpers/route.php">JBSMRoute</Class>
       </AbstractClasses>
       <DependsUpon>
         <Package>+core</Package>
@@ -448,11 +470,11 @@
         <TotalClasses>2</TotalClasses>
         <ConcreteClasses>2</ConcreteClasses>
         <AbstractClasses>0</AbstractClasses>
-        <Ca>0</Ca>
-        <Ce>2</Ce>
+        <Ca>2</Ca>
+        <Ce>1</Ce>
         <A>0</A>
-        <I>1</I>
-        <D>0</D>
+        <I>0.33333333333333</I>
+        <D>0.66666666666667</D>
       </Stats>
       <ConcreteClasses>
         <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/jbsmigration/admin/backup.php">JBSExport</Class>
@@ -461,9 +483,11 @@
       <AbstractClasses/>
       <DependsUpon>
         <Package>+global</Package>
-        <Package>BibleStudy.Admin</Package>
       </DependsUpon>
-      <UsedBy/>
+      <UsedBy>
+        <Package>BibleStudy.Admin</Package>
+        <Package>BibleStudy\Plugin.JBSBackup</Package>
+      </UsedBy>
     </Package>
     <Package name="BibleStudy\JBSMigration">
       <Stats>
@@ -552,7 +576,7 @@
         <ConcreteClasses>2</ConcreteClasses>
         <AbstractClasses>0</AbstractClasses>
         <Ca>0</Ca>
-        <Ce>3</Ce>
+        <Ce>4</Ce>
         <A>0</A>
         <I>1</I>
         <D>0</D>
@@ -564,8 +588,9 @@
       <AbstractClasses/>
       <DependsUpon>
         <Package>+core</Package>
+        <Package>+date</Package>
         <Package>+global</Package>
-        <Package>BibleStudy.Admin</Package>
+        <Package>BibleStudy\JBSMigration.Admin</Package>
       </DependsUpon>
       <UsedBy/>
     </Package>
@@ -581,7 +606,7 @@
         <D>0</D>
       </Stats>
       <ConcreteClasses>
-        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/plg_biblestudy_finder/biblestudy.php">plgFinderBiblestudy</Class>
+        <Class sourceFile="/Users/bcordis/PhpstormProjects/Joomla-Bible-Study/plg_biblestudy_finder/biblestudy.php">PlgFinderBiblestudy</Class>
       </ConcreteClasses>
       <AbstractClasses/>
       <DependsUpon>
@@ -649,6 +674,12 @@
     </Package>
     <Package Name="Joomla.Libraries\HTML">
       <Package>Joomla.Libraries\HTML</Package>
+      <Package>+global</Package>
+      <Package>LiveUpdate</Package>
+      <Package>+global</Package>
+    </Package>
+    <Package Name="BibleStudy">
+      <Package>BibleStudy</Package>
       <Package>+global</Package>
       <Package>LiveUpdate</Package>
       <Package>+global</Package>
