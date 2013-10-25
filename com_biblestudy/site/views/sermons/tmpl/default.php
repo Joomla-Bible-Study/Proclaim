@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 JHTML::_('behavior.modal');
+
 echo $this->loadTemplate('formheader');
 
 if ($this->params->get('useexpert_list') > 0)
@@ -22,6 +23,6 @@ elseif ($this->params->get('sermonstemplate'))
 }
 else
 {
-	echo $this->loadTemplate('main');
+   echo $this->loadTemplate('main');
 }
 echo $this->loadTemplate('formfooter');

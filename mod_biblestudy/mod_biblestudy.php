@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mod_Biblesutdy core file
  *
@@ -50,6 +51,8 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
+if ($params->get('useexpert_module') > 0)
+{
 $pagebuilder = new JBSMPagebuilder;
 
 foreach ($items AS $item)
@@ -98,6 +101,7 @@ foreach ($items AS $item)
 		$item->series_thumbnail = null;
 	}
 	$item->detailslink = $pelements->detailslink;
+    }
 }
 $list      = $items;
 $link_text = $params->get('pagetext');
@@ -108,7 +112,7 @@ if (!$templatemenuid)
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
-$link     = '<a href="' . $linkurl . '">' . $link_text . '</a>';
+$link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
 $document = JFactory::getDocument();
 $css      = $params->get('css', 'biblestudy.css');
 
@@ -139,11 +143,14 @@ $pageclass_sfx = $params->get('pageclass_sfx');
  */
 if ($params->get('useexpert_module') > 0)
 {
-	$layout = 'default_custom';
+    $template = 'default_custom';
+}
+elseif ($params->get('moduletemplate'))
+{
+    $template = 'default_'.$params->get('moduletemplate');
 }
 else
 {
-	$layout = 'default_main';
+    $template = 'default_main';
 }
-
-require JModuleHelper::getLayoutPath('mod_biblestudy', $layout);
+require JModuleHelper::getLayoutPath('mod_biblestudy', $template);

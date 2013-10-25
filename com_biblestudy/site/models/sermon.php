@@ -127,7 +127,7 @@ class BiblestudyModelSermon extends JModelItem
 			$query->from('#__bsms_studies AS s');
 
 			// Join over teachers
-			$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh, t.thumb, t.thumbw, t.thumbh');
+			$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh, t.teacher_thumbnail as thumb, t.thumbw, t.thumbh');
 
 			$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
 
@@ -140,7 +140,7 @@ class BiblestudyModelSermon extends JModelItem
 			$query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
 
 			// Join over books
-			$query->select('b.bookname as bname');
+			$query->select('b.bookname as bookname');
 			$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
 
 			// Join over locations
@@ -174,7 +174,7 @@ class BiblestudyModelSermon extends JModelItem
 			$topic_text       = JBSMTranslated::getTopicItemTranslated($data);
 			$data->id         = $pk;
 			$data->topic_text = $topic_text;
-			$data->bname      = JText::_($data->bname);
+			$data->bookname      = JText::_($data->bookname);
 
             $registry = new JRegistry;
             $registry->loadString($data->params);
@@ -282,6 +282,7 @@ class BiblestudyModelSermon extends JModelItem
 
 		return true;
 	}
+
 
 // End class
 }

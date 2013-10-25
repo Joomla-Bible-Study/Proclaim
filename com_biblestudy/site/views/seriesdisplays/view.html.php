@@ -10,6 +10,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
+JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+
 /**
  * View class for SeriesDisplays
  *
@@ -58,11 +63,14 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
+		JViewLegacy::loadHelper('image');
 
 		$document = JFactory::getDocument();
 
 		//  $model = $this->getModel();
 		// Load the Admin settings and params from the template
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
+		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$t = $input->get('t', 1, 'int');
@@ -104,9 +112,13 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 
+
 		// Import Scripts
-		JHtml::_('jquery.framework');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jwplayer.js');
 
 		// Import Stylesheets
 		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
@@ -117,10 +129,15 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		{
 			$document->addStyleSheet($url);
 		}
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
 		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$pagebuilder   = new JBSMPagebuilder;
+		$pagebuilder   = new JBSPagebuilder;
 		$items         = $this->get('Items');
 		$images        = new JBSMImages;
 
@@ -173,9 +190,14 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->page->counter   = $pagination->getPagesCounter();
 		$series                = $this->get('Series');
 
+		// This is the helper for scripture formatting
+		// @todo move to JLouder. tom
+		$this->loadHelper('scripture');
+
 		// End scripture helper
 		$this->template   = $template;
 		$this->pagination = $pagination;
+
 
 		// Get the main study list image
 		$mainimage        = $images->mainStudyImage();

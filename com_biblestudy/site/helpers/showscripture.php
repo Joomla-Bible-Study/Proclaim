@@ -31,7 +31,7 @@ class JBSMShowScripture
 	 */
 	public function buildPassage($row, $params)
 	{
-		if (!$row->bname)
+		if (!$row->bookname)
 		{
 			return false;
 		}
@@ -86,7 +86,7 @@ class JBSMShowScripture
 	{
 		$elements = new JBSMElements;
 		$contents = $elements->body_only(file_get_contents($this->link));
-		$passage  = '<div class = passage>';
+		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
 		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$passage .= '<div id="scripture" style="display: none;">';
 		$passage .= $contents;
@@ -147,7 +147,7 @@ class JBSMShowScripture
 	 */
 	public function formReference($row)
 	{
-		$book      = JText::_($row->bname);
+		$book      = JText::_($row->bookname);
 		$book      = str_replace(' ', '+', $book);
 		$book      = $book . '+';
 		$reference = $book . $row->chapter_begin;
