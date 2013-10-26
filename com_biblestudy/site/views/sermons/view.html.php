@@ -321,7 +321,7 @@ class BiblestudyViewSermons extends JViewLegacy
             }
         }
 		// Get the podcast subscription
-		$podcast         = new PodcastSubscribe;
+		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 		JViewLegacy::loadHelper('image');
@@ -379,7 +379,7 @@ class BiblestudyViewSermons extends JViewLegacy
         //Build drop down menus for search filters
 
 		// Get the Popular stats
-		$stats               = new jbStats;
+		$stats               = new JBSMStats;
 		$this->page->popular = $stats->top_score_site();
         if ($params->get('show_popular') > 0)
         {
