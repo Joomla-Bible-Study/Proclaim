@@ -13,9 +13,6 @@ defined('_JEXEC') or die;
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
 
-// Import library dependencies for CSS Fix
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-
 /**
  * Style Model class
  *

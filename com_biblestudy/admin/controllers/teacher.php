@@ -24,7 +24,7 @@ class BiblestudyControllerTeacher extends JControllerForm
 	/**
 	 * constructor (registers additional tasks to methods)
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -34,7 +34,7 @@ class BiblestudyControllerTeacher extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object  $model  The model.
+	 * @param   JModelLegacy $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *

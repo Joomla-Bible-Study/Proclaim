@@ -1,31 +1,31 @@
-Directories:                                        149
-Files:                                              403
+Directories:                                        148
+Files:                                              398
 
-Lines of Code (LOC):                              77966
+Lines of Code (LOC):                              78990
   Cyclomatic Complexity / Lines of Code:           0.09
-Comment Lines of Code (CLOC):                     21832
-Non-Comment Lines of Code (NCLOC):                56134
+Comment Lines of Code (CLOC):                     23176
+Non-Comment Lines of Code (NCLOC):                55814
 
 Namespaces:                                           0
 Interfaces:                                           0
 Traits:                                               0
-Classes:                                            283
-  Abstract:                                           5 (1.77%)
-  Concrete:                                         278 (98.23%)
-  Average Class Length (NCLOC):                     153
-Methods:                                           1215
+Classes:                                            289
+  Abstract:                                          11 (3.81%)
+  Concrete:                                         278 (96.19%)
+  Average Class Length (NCLOC):                     152
+Methods:                                           1219
   Scope:
-    Non-Static:                                    1061 (87.33%)
-    Static:                                         154 (12.67%)
+    Non-Static:                                    1056 (86.63%)
+    Static:                                         163 (13.37%)
   Visibility:
-    Public:                                         719 (59.18%)
-    Non-Public:                                     496 (40.82%)
-  Average Method Length (NCLOC):                     35
-  Cyclomatic Complexity / Number of Methods:       4.17
+    Public:                                         718 (58.90%)
+    Non-Public:                                     501 (41.10%)
+  Average Method Length (NCLOC):                     36
+  Cyclomatic Complexity / Number of Methods:       4.20
 
 Anonymous Functions:                                  0
-Functions:                                           30
+Functions:                                           16
 
-Constants:                                           40
-  Global constants:                                  40
+Constants:                                           41
+  Global constants:                                  41
   Class constants:                                    0

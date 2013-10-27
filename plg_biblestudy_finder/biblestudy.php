@@ -17,15 +17,13 @@ jimport('joomla.application.component.helper');
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
- *
- *
  * Finder adapter for Biblestudy.
  *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */
-class plgFinderBiblestudy extends FinderIndexerAdapter
+class PlgFinderBiblestudy extends FinderIndexerAdapter
 {
 
 	/**
@@ -79,8 +77,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An array that holds the plugin configuration
+	 * @param   object &$subject  The object to observe
+	 * @param   array  $config    An array that holds the plugin configuration
 	 *
 	 * @since   7.1.0
 	 */
@@ -95,9 +93,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * changed. This is fired when the item category is published or unpublished
 	 * from the list view.
 	 *
-	 * @param   string   $extension  The extension whose category has been updated.
-	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value      The value of the state that the content has been changed to.
+	 * @param   string  $extension  The extension whose category has been updated.
+	 * @param   array   $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer $value      The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -115,8 +113,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   string $context  The context of the action being performed.
+	 * @param   JTable $table    A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -145,9 +143,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to determine if the access level of an item changed.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content has just been created
+	 * @param   string  $context  The context of the content passed to the plugin.
+	 * @param   JTable  $row      A JTable object
+	 * @param   boolean $isNew    If the content has just been created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -179,9 +177,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content is just about to be created
+	 * @param   string  $context  The context of the content passed to the plugin.
+	 * @param   JTable  $row      A JTable object
+	 * @param   boolean $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -209,9 +207,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string   $context  The context for the content passed to the plugin.
-	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 * @param   string  $context  The context for the content passed to the plugin.
+	 * @param   array   $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer $value    The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -234,8 +232,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format
+	 * @param   FinderIndexerResult $item    The item to index as an FinderIndexerResult object.
+	 * @param   string              $format  The item format
 	 *
 	 * @return  void
 	 *
@@ -263,7 +261,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->id);
+		$item->route = JBSMRoute::getArticleRoute($item->id);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -279,16 +277,12 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		 * configuration parameters.
 		 */
 		// Add the meta-author.
-//		$item->metaauthor = $item->metadata->get('author');
+
 		// Handle the link to the meta-data.
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
-//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
-//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-//		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-//		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
-//
+
 		// Translate the state. Articles should only be published if the category is published.
 		$item->state = $this->translateState($item->state);
 
@@ -302,7 +296,14 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		$this->indexer->index($item);
+		if (version_compare(JVERSION, '3.0', 'ge'))
+		{
+			$this->indexer->index($item);
+		}
+		else
+		{
+			FinderIndexer::index($item);
+		}
 	}
 
 	/**
@@ -314,10 +315,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
-		// Load dependent classes.
-		//require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
-		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
-
 		return true;
 	}
 
@@ -344,7 +341,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $sql  A JDatabaseQuery object or null.
+	 * @param   mixed $sql  A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -353,6 +350,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	protected function getListQuery($sql = null)
 	{
 		$db = JFactory::getDbo();
+
 		// Check if we can use the supplied SQL query.
 		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
@@ -363,7 +361,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
-		$case_when_item_alias .= $sql->charLength('a.alias');
+		$case_when_item_alias .= $sql->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
 		$a_id = $sql->castAsChar('a.id');
 		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
@@ -371,7 +369,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$case_when_item_alias .= $a_id . ' END as studytitle';
 		$sql->select($case_when_item_alias);
 
-		$sql->select('u.teachername AS author');
+		$sql->select('u.teachername');
 		$sql->from('#__bsms_studies AS a');
 		$sql->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
 

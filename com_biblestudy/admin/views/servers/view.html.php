@@ -141,10 +141,7 @@ class BiblestudyViewServers extends JViewLegacy
 			JToolBarHelper::unpublishList('servers.unpublish');
 			JToolBarHelper::archiveList('servers.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::trash('servers.trash');
-		}
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
@@ -172,6 +169,10 @@ class BiblestudyViewServers extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('servers.trash');
+        }
 	}
 
 	/**

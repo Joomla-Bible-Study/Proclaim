@@ -148,14 +148,15 @@ class BiblestudyViewTopics extends JViewLegacy
 			JToolBarHelper::unpublishList('topics.unpublish');
 			JToolBarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
-		if ($this->canDo->get('core.delete'))
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
+        }
+		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('topics.trash');
 
-			if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-			{
-				JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
-			}
+
 		}
 		if (BIBLESTUDY_CHECKREL)
 		{

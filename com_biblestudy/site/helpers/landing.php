@@ -10,9 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-
 /**
  * Class for JBSMLanding
  *
@@ -38,8 +35,6 @@ class JBSMLanding
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
 		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$location  = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid', 1);
@@ -260,10 +255,6 @@ class JBSMLanding
 		$mainframe   = JFactory::getApplication();
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$langlink = JLanguageMultilang::isEnabled();
 
 		$teacher   = null;
@@ -343,7 +334,6 @@ class JBSMLanding
 				case 0:
 					foreach ($tresult as $b)
 					{
-
 
 						if ($t >= $limit)
 						{
@@ -508,10 +498,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$series   = null;
 		$seriesid = null;
 		$numRows  = null;
@@ -539,14 +525,6 @@ class JBSMLanding
 		{
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
 		}
 		if ($menu_order)
 		{
@@ -754,14 +732,11 @@ class JBSMLanding
 	 */
 	public function getYearsLandingPage($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
-		$user        = JFactory::getUser();
-		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
+		$mainframe = JFactory::getApplication();
+		$db        = JFactory::getDBO();
+		$user      = JFactory::getUser();
+		$input     = new JInput;
+		$option    = $input->get('option', '', 'cmd');
 		$year      = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -786,14 +761,6 @@ class JBSMLanding
 		{
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
 		}
 		if ($menu_order)
 		{
@@ -923,14 +890,11 @@ class JBSMLanding
 	 */
 	public function getTopicsLandingPage($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
+		$mainframe = JFactory::getApplication();
+		$user      = JFactory::getUser();
+		$db        = JFactory::getDBO();
+		$input     = new JInput;
+		$option    = $input->get('option', '', 'cmd');
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -956,14 +920,6 @@ class JBSMLanding
 		{
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
-		}
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*' && isset($item->language))
-		{
-			$langlink = '&amp;filter.languages=' . $item->language;
 		}
 		if ($menu_order)
 		{
@@ -1097,9 +1053,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$input       = new JInput;
 		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$input       = new JInput;
 		$addItemid   = $input->get('Itemid', '', 'int');
 		$messagetype = null;
@@ -1302,7 +1255,6 @@ class JBSMLanding
 		return $messagetype;
 	}
 
-
 	/**
 	 * Get Books for Landing Page.
 	 *
@@ -1315,8 +1267,6 @@ class JBSMLanding
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
 		$JViewLegacy = new JViewLegacy;
-		$JViewLegacy->loadHelper('image');
-		$JViewLegacy->loadHelper('helper');
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');
 		$limit    = $params->get('landingbookslimit');
@@ -1406,7 +1356,6 @@ class JBSMLanding
 							$book .= "\n\t\t" . '<td  class="landing_td"></td>';
 							$book .= "\n\t" . '</tr>';
 						}
-
 
 						$book .= "\n" . '</table>';
 						$book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';

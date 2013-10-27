@@ -90,7 +90,7 @@ elseif (empty($this->item->study_id))
 		var wint = (screen.height - Wheight) / 2;
 
 		var msg1 = window.open("components/com_biblestudy/convert1.htm", "Window", "scrollbars=1,width=" + Wwidth + ",height=" + Wheight + "" +
-				",top=" + wint + ",left=" + winl);
+			",top=" + wint + ",left=" + winl);
 		if (!msg1.closed) {
 			msg1.focus();
 		}
@@ -191,19 +191,19 @@ elseif (empty($this->item->study_id))
 </script>
 <div class="edit item-page biblestudy">
 <form
-		action="<?php
-		$input = new JInput;
+	action="<?php
+	$input = new JInput;
 
-		if ($input->get('layout', '', 'string') == 'modal')
-		{
-			$url = 'index.php?option=com_biblestudy&layout=mediafileform&tmpl=component&layout=modal&a_id=' . (int) $this->item->id;
-		}
-		else
-		{
-			$url = 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&a_id=' . (int) $this->item->id;
-		}
-		echo $url;
-		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+	if ($input->get('layout', '', 'string') == 'modal')
+	{
+		$url = 'index.php?option=com_biblestudy&layout=mediafileform&tmpl=component&layout=modal&a_id=' . (int) $this->item->id;
+	}
+	else
+	{
+		$url = 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&a_id=' . (int) $this->item->id;
+	}
+	echo $url;
+	?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 
 <div class="btn-toolbar">
 	<?php
@@ -505,7 +505,7 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('media_image'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('media_image'); ?>
+			<?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
 		</div>
 	</div>
 	<div class="control-group">

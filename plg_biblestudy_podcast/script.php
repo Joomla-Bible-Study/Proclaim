@@ -42,7 +42,7 @@ class PlgSystemjbspodcastInstallerScript
 	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
-		echo '<p>' . JText::_('PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
+		echo '<p>' . JText::_('JBS_PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
@@ -87,7 +87,7 @@ class PlgSystemjbspodcastInstallerScript
 			$data->backup  = 1281646339;
 			$db->insertObject('#__jbspodcast_timeset', $data);
 		}
-		echo '<p>' . JText::_('PLG_PODCAST_UPDATE_TEXT') . '</p>';
+		echo '<p>' . JText::_('JBS_PLG_PODCAST_UPDATE_TEXT') . '</p>';
 	}
 
 	/**

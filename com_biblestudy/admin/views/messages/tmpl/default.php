@@ -9,8 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 if (BIBLESTUDY_CHECKREL)
 {
 	JHtml::_('bootstrap.tooltip');
@@ -202,7 +202,7 @@ $sortFields = $this->getSortFields();
 	</thead>
 	<tbody>
 	<?php foreach ($this->items as $i => $item) :
-		$item->max_ordering = 0; //??
+		$item->max_ordering = 0;
 		$ordering           = ($listOrder == 'study.ordering');
 		$canCreate          = $user->authorise('core.create');
 		$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);

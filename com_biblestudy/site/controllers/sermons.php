@@ -11,9 +11,6 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
-JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-
 /**
  * Controller class for Sermons
  *
@@ -53,7 +50,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 
 		if ($task == 'download')
 		{
-			$downloader = new Dump_File;
+			$downloader = new JBSMDownload;
 			$downloader->download($mid);
 		}
 	}
@@ -72,7 +69,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
-			echo $mediacode;
+			//echo $mediacode;
 		}
 	}
 
@@ -83,7 +80,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		$getMedia = new jbsMedia;
+		$getMedia = new JBSMMedia;
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}

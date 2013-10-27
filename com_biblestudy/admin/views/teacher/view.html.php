@@ -72,7 +72,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'teacher');
 
 		// Load the Admin settings
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$this->setLayout("edit");

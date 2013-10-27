@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 /**
- * Class for Joomla! Bible Sutdy Image
+ * Class for Joomla! Bible Study Image
  *
  * @package  BibleStudy.Admin
  * @since    7.1.2
@@ -31,16 +31,13 @@ class JBSMImage
 	 *
 	 * @param   string $path  Path to file
 	 *
-	 * @return JObject
-	 *
-	 * @FIXME need to see if this is a JObject or stdClass. If JObject we must set all of the JObject like set('var','value')
-	 * @FIXME It's just a stdClass
+	 * @return object
 	 */
 	public static function getImage($path)
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$tmp       = new JObject;
+		$tmp       = new stdClass;
 		$tmp->path = $path;
 
 		if (!empty($path))

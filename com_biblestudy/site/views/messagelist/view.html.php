@@ -10,9 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-
 /**
  * View class for Messages
  *
@@ -22,16 +19,30 @@ JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params
 class BiblestudyViewMessagelist extends JViewLegacy
 {
 
-	/** @var array Items */
+	/**
+	 * Items
+	 *
+	 * @var array
+	 */
 	protected $items;
 
-	/** @var array Pagination */
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
 	protected $pagination;
 
-	/** @var array State */
+	/**
+	 * State
+	 *
+	 * @var array
+	 */
 	protected $state;
 
-	/** @var object Admin */
+	/**
+	 * @var object
+	 */
 	protected $admin;
 
 	/** @var  string Can Do */
@@ -76,7 +87,6 @@ class BiblestudyViewMessagelist extends JViewLegacy
 
 		// Load the Admin settings and params from the template
 		$this->admin = JBSMParams::getAdmin(true);
-		$this->loadHelper('image');
 		$template = JBSMParams::getTemplateparams();
 
 		// Convert parameter fields to objects.

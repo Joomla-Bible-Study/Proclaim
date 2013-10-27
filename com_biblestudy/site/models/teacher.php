@@ -101,7 +101,7 @@ class BiblestudyModelTeacher extends JModelItem
 
 				$this->_item[$pk] = $data;
 			}
-			catch (JException $e)
+			catch (Exception $e)
 			{
 				if ($e->getCode() == 404)
 				{

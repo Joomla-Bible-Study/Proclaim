@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
-
 if (!BIBLESTUDY_CHECKREL)
 {
 	JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
@@ -93,7 +91,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 			$this->versiondate = $registry->get('creationDate');
 		}
 
-		$this->total_messages = jbStats::get_total_messages();
+		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();
 

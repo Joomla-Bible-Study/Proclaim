@@ -19,7 +19,7 @@ jimport('joomla.application.component.helper');
  * @package  BibleStudy.Site
  * @since    7.2
  */
-abstract class JBSMHelperRoute
+abstract class JBSMRoute
 {
 
 	/**
@@ -30,10 +30,10 @@ abstract class JBSMHelperRoute
 	protected static $lookup;
 
 	/**
-	 * Get Article Route
+	 * Get Article Rout
 	 *
 	 * @param   int $id        The route of the study item
-	 * @param   int $language  The route of the study item
+	 * @param   int $language  The state of language
 	 *
 	 * @return string
 	 */
@@ -88,10 +88,6 @@ abstract class JBSMHelperRoute
 	 */
 	public static function getTeacherRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
 
@@ -107,10 +103,6 @@ abstract class JBSMHelperRoute
 	 */
 	public static function getSeriesRoute($id)
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
 
@@ -182,6 +174,22 @@ abstract class JBSMHelperRoute
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param    string $url     URL of website
+	 * @param    string $scheme  Scheme that need to lead with.
+	 *
+	 * @return string  The fixed URL
+	 */
+	public static function addScheme($url, $scheme = 'http://')
+	{
+		if (parse_url($url, PHP_URL_SCHEME) === null)
+		{
+			return $scheme . $url;
+		}
+
+		return $url;
 	}
 
 }

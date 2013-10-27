@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JbStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
+JLoader::register('JBSMStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
 JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-JLoader::register('PodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
+JLoader::register('JBSMPodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . 'teacher.php');
@@ -321,7 +321,7 @@ class BiblestudyViewSermons extends JViewLegacy
             }
         }
 		// Get the podcast subscription
-		$podcast         = new PodcastSubscribe;
+		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 		JViewLegacy::loadHelper('image');
@@ -379,7 +379,7 @@ class BiblestudyViewSermons extends JViewLegacy
         //Build drop down menus for search filters
 
 		// Get the Popular stats
-		$stats               = new jbStats;
+		$stats               = new JBSMStats;
 		$this->page->popular = $stats->top_score_site();
         if ($params->get('show_popular') > 0)
         {

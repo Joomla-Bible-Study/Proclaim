@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="2.5" method="upgrade" client="site">
-    <name>mod_biblestudy_podcast</name>
+    <name>JBS_MDL_PODCAST</name>
     <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007-2012 Joomla Bible Study</copyright>
+    <copyright>(C) 2007-2013 Joomla Bible Study</copyright>
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <version>8.0.0</version>
-    <creationDate>May 31, 2013</creationDate>
-    <description>JBS_MDL_DESCRIPTION</description>
+    <creationDate>June 12, 2013</creationDate>
+    <description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
         <folder>language</folder>
@@ -21,8 +21,8 @@
         <fields name="params">
             <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
-                <field name="t" type="sql" description="JBS_MNU_SELECT_TEMPLATE_DESC"
-                       label="JBS_MNU_SELECT_TEMPLATE" default="1"
+                <field name="t" type="sql" default="1"
+                       label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                        key_field="id" value_field="title" required="true"/>
 

@@ -14,8 +14,6 @@ if (!BIBLESTUDY_CHECKREL)
 {
 	jimport('joomla.application.component.modelitem');
 }
-include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
 
 /**
  * Model class for Sermon
@@ -178,10 +176,14 @@ class BiblestudyModelSermon extends JModelItem
 			$data->topic_text = $topic_text;
 			$data->bookname      = JText::_($data->bookname);
 
+            $registry = new JRegistry;
+            $registry->loadString($data->params);
+            $data->params = $registry;
+            $template = JBSMParams::getTemplateparams();
 
-			$template     = JBSMParams::getTemplateparams();
-			$data->params = clone $this->getState('params');
-			$data->params->merge($template->params);
+            $data->params->merge($template->params);
+            $mparams = clone $this->getState('params');
+            $data->params->merge($mparams);
 
 			$a_params           = JBSMParams::getAdmin();
 			$data->admin_params = $a_params->params;

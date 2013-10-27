@@ -100,7 +100,6 @@ $saveOrder = $listOrder == 'ordering';
 					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
 				<th width="1%" class="nowrap hidden-phone">
-					<?php //echo 'id'; ?>
 					<?php echo JHtml::_('grid.sort', 'ID', 'study.id', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" style="min-width:25px" class="nowrap center">
@@ -126,7 +125,7 @@ $saveOrder = $listOrder == 'ordering';
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$item->max_ordering = 0; //??
+				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
 				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
@@ -161,6 +160,7 @@ $saveOrder = $listOrder == 'ordering';
 							if (BIBLESTUDY_CHECKREL)
 							{
 								// Create dropdown items
+
 								if ($item->published) :
 									JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
 								else :
