@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 //require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+//JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 JHTML::_('behavior.tooltip');
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
@@ -28,7 +28,7 @@ $JViewLegacy = new JViewLegacy;
 
 $JViewLegacy->loadHelper('title');
 $JViewLegacy->loadHelper('teacher');
-$JBSMTeacher = new JBSMTeacher;
+//$JBSMTeacher = new JBSMTeacher;
 $row         = $this->item;
 ?>
 

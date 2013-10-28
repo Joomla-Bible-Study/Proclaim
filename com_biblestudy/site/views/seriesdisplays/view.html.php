@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/pagebuilder.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 
 /**
  * View class for SeriesDisplays
@@ -137,7 +137,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$pagebuilder   = new JBSPagebuilder;
+		$pagebuilder   = new JBSMPagebuilder;
 		$items         = $this->get('Items');
 		$images        = new JBSMImages;
 

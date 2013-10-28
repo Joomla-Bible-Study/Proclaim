@@ -15,7 +15,8 @@ JLoader::register('PodcastSubscribe', JPATH_COMPONENT . '/helpers/podcastsubscri
 JLoader::register('RelatedStudies', JPATH_COMPONENT . '/helpers/related.php');
 JLoader::register('ShowScripture', JPATH_COMPONENT . '/helpers/biblegateway.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/listing.php');
+JLoader::register('JBSMMedia',BIBLESTUDY_PATH_HELPERS . '/media.php');
 
 /**
  * View class for Sermon

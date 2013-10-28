@@ -13,7 +13,7 @@ JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 
 /**
  * View class for SeriesDisplay

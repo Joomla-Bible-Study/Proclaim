@@ -27,7 +27,7 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class JBSMListing extends JBSMElements
+class JBSMListing
 {
     /**
      * @param $items
@@ -1852,7 +1852,7 @@ public function getMediaFiles($medias)
         ));
         $event->text->afterDisplayContent = trim(implode("\n", $results));
         $result = implode('',$event->text);
-dump($result);
+
         return $result;
     }
 	/**

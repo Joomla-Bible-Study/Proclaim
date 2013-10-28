@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSMPagebuilder', BIBLESTUDY_PATH_LIB . '/pagebuilder.php');
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 
 /**
  * View class for Teachers

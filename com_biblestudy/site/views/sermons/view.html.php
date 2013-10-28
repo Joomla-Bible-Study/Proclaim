@@ -12,10 +12,10 @@ defined('_JEXEC') or die;
 
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('JBSMStats', JPATH_COMPONENT_ADMINISTRATOR . '/lib/biblestudy.stats.class.php');
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
+JLoader::register('JBSMPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/pagebuilder.php');
 JLoader::register('JBSMPodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 //JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . 'teacher.php');
 
 /**
