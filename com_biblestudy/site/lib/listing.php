@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 // Helper file - master list crater for study lists
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
-JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
+//JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+//JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
+//JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
+//JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
+//JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
+//JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
 
 
 /**
@@ -27,1560 +27,2085 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class JBSMListing
+class JBSMListing extends JBSMElements
 {
-    /**
-     * @param $items
-     * @param $params
-     * @param $admin_params
-     * @param $template
-     * @return string
-     */
-    public function getFluidListing($items, $params, $admin_params, $template, $type)
-    {
-
-        $list = '';
-        $row = array();
-        $this->params = $params;
-
-        if ($type == 'sermons')
-        {
-            foreach ($items as $item)
-            {
-                if (isset($item->mids))
-                {
-                    $medias[] = $this->getFluidMediaids($item);
-                }
-            }
-        }
-        if ($type == 'sermon')
-        {
-            $medias = $this->getFluidMediaids($items);
-            $item = $items;
-        }
-        //get the media files in one query
-        if (isset($medias))
-        {
-            $mediafiles = $this->getMediaFiles($medias);
-        }
-        //create an array from each param variable set
-        //Find out what view we are in
-
-        switch ($type)
-        {
-            case 'sermons':
-                $extra = '';
-                break;
-            case 'sermon':
-                $extra = 'd';
-                break;
-            case 'seriesdisplays':
-                $extra = 's';
-                break;
-            case 'seriesdisplay':
-                $extra = 'sd';
-                break;
-            case 'teachers':
-                $extra = 'ts';
-                break;
-            case 'teacher':
-                $extra = 'td';
-                break;
-            case 'module':
-                $extra = 'm';
-                break;
-        }
-
-        $listparams = array();
-        if ($params->get($extra.'scripture1row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture1');}
-        if ($params->get($extra.'scripture2row') > 0){$listparams[]= $this->getListParamsArray($extra.'scripture2');}
-        if ($params->get($extra.'secondaryrow') > 0){$listparams[]= $this->getListParamsArray($extra.'secondary');}
-        if ($params->get($extra.'titlerow') > 0){$listparams[]= $this->getListParamsArray($extra.'title');}
-        if ($params->get($extra.'daterow') > 0){$listparams[]= $this->getListParamsArray($extra.'date');}
-        if ($params->get($extra.'teacherrow') > 0){$listparams[]= $this->getListParamsArray($extra.'teacher');}
-        if ($params->get($extra.'teacher-titlerow') > 0){$listparams[]= $this->getListParamsArray($extra.'teacher-title');}
-        if ($params->get($extra.'durationrow') > 0){$listparams[]= $this->getListParamsArray($extra.'duration');}
-        if ($params->get($extra.'studyintrorow') > 0){$listparams[]= $this->getListParamsArray($extra.'studyintro');}
-        if ($params->get($extra.'seriesrow') > 0){$listparams[]= $this->getListParamsArray($extra.'series');}
-        if ($params->get($extra.'descriptionrow') > 0){$listparams[]= $this->getListParamsArray($extra.'description');}
-        if ($params->get($extra.'seriesthumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'seriesthumbnail');}
-        if ($params->get($extra.'submittedrow') > 0){$listparams[]= $this->getListParamsArray($extra.'submitted');}
-        if ($params->get($extra.'hitsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'hits');}
-        if ($params->get($extra.'downloadsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'downloads');}
-        if ($params->get($extra.'studynumberrow') > 0){$listparams[]= $this->getListParamsArray($extra.'studynumber');}
-        if ($params->get($extra.'topicrow') > 0){$listparams[]= $this->getListParamsArray($extra.'topic');}
-        if ($params->get($extra.'locationsrow') > 0){$listparams[]= $this->getListParamsArray($extra.'locations');}
-        if ($params->get($extra.'jbsmediarow') > 0){$listparams[]= $this->getListParamsArray($extra.'jbsmedia');}
-        if ($params->get($extra.'messagetyperow') > 0){$listparams[]= $this->getListParamsArray($extra.'messagetype');}
-        if ($params->get($extra.'thumbnailrow') > 0){$listparams[]= $this->getListParamsArray($extra.'thumbnail');}
-        if ($params->get($extra.'teacherimagerrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherimage');}
-        if ($params->get($extra.'seriesdescriptionrow') >0){$listparams[] = $this->getListParamsArray($extra.'description');}
-        if ($params->get($extra.'teacheremailrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacheremail');}
-        if ($params->get($extra.'teacherwebrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherweb');}
-        if ($params->get($extra.'teacherphonerow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherphone');}
-        if ($params->get($extra.'teacherfbrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherfb');}
-        if ($params->get($extra.'teachertwrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachertw');}
-        if ($params->get($extra.'teacherblogrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherblog');}
-        if ($params->get($extra.'teachershortrow') >0){$listparams[] = $this->getListParamsArray($extra.'teachershort');}
-        if ($params->get($extra.'teacherlongrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlong');}
-        if ($params->get($extra.'teacheraddressrow') >0){$listparams[] = $this->getListParamsArray($extra.'teacheraddress');}
-        if ($params->get($extra.'teacherlink1row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink1');}
-        if ($params->get($extra.'teacherlink2row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink2');}
-        if ($params->get($extra.'teacherlink3row') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlink3');}
-        if ($params->get($extra.'teacherlargeimagerow') >0){$listparams[] = $this->getListParamsArray($extra.'teacherlargeimage');}
-        if ($params->get($extra.'customrow') ){$listparams[] = $this->getListParamsArray($extra.'custom');}
-        $row1 = array();
-        $row2 = array();
-        $row3 = array();
-        $row4 = array();
-        $row5 = array();
-        $row6 = array();
-        $row1sorted = array();
-        $row2sorted = array();
-        $row3sorted = array();
-        $row4sorted = array();
-        $row5sorted = array();
-        $row6sorted = array();
-        //Create an array sorted by row and then by column
-        foreach ($listparams as $listing)
-        {
-            if ($listing->row == 1){$row1[] = $listing;}
-            if ($listing->row == 2){$row2[] = $listing;}
-            if ($listing->row == 3){$row3[] = $listing;}
-            if ($listing->row == 4){$row4[] = $listing;}
-            if ($listing->row == 5){$row5[] = $listing;}
-            if ($listing->row == 6){$row6[] = $listing;}
-        }
-        if (count($row1)){$row1sorted = $this->sortArrayofObjectByProperty($row1,'col',$order="ASC");}
-        if (count($row2)){$row2sorted = $this->sortArrayofObjectByProperty($row2,'col',$order="ASC");}
-        if (count($row3)){$row3sorted = $this->sortArrayofObjectByProperty($row3,'col',$order="ASC");}
-        if (count($row4)){$row4sorted = $this->sortArrayofObjectByProperty($row4,'col',$order="ASC");}
-        if (count($row5)){$row5sorted = $this->sortArrayofObjectByProperty($row5,'col',$order="ASC");}
-        if (count($row6)){$row6sorted = $this->sortArrayofObjectByProperty($row6,'col',$order="ASC");}
-        $listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
-
-        $class1 = $params->get($extra.'listcolor1', '');
-        $class2 = $params->get($extra.'listcolor2', '');
-        $oddeven = $class1;
-        if ($type == 'sermons')
-        {
-            if ($params->get('use_headers_list') > 0 )
-            {
-                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-        }
-        if ($type == 'sermon')
-        {
-            if ($params->get('use_headers_view') > 0)
-            {
-                $list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-        }
-        if ($type == 'seriesdisplays')
-        {
-            if ($params->get('use_headers_series') > 0)
-            {
-                    $list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-        }
-        if ($type == 'seriesdisplay')
-        {
-            if ($params->get('use_header_seriesdisplay') > 0)
-            {
-                $oddeven = $params->get('seriesdisplay_color');
-                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-            $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-        }
-        if ($type == 'teacher')
-        {
-            if ($params->get('use_headers_teacher_details') > 0)
-            {
-                $oddeven = $params->get('teacherdisplay_color', 'white');
-                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-            $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-        }
-        if ($type == 'teachers')
-        {
-            if ($params->get('use_headers_teacher_list') > 0)
-            {
-                //$oddeven = $params->get('tslistcolor');
-                $list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=1, $type);
-            }
-
-        }
-        // Go through and attach the media files as an array to their study
-        if ($type == 'sermons')
-        {
-            foreach ($items as $item)
-            {
-                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
-                $studymedia = array();
-                if (isset($mediafiles))
-                {
-                    foreach ($mediafiles as $mediafile)
-                        {
-                            if ($mediafile->study_id == $item->id)
-                            {
-                                $studymedia[] = $mediafile;
-                            }
-                        }
-                }
-                if (isset($studymedia))
-                {
-                    $item->mediafiles = $studymedia;
-                }
-                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-            }
-        }
-        if ($type == 'sermon')
-        {
-            $oddeven = ($oddeven == $class1) ? $class2 : $class1;
-            $studymedia = array();
-            if (isset($mediafiles))
-            {
-                foreach ($mediafiles as $mediafile)
-                {
-                    if ($mediafile->study_id == $item->id)
-                    {
-                        $studymedia[] = $mediafile;
-                    }
-                }
-            }
-            if (isset($studymedia))
-            {
-                $item->mediafiles = $studymedia;
-            }
-            $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-        }
-        if ($type == 'seriesdisplays')
-        {
-            foreach ($items as $item)
-            {
-                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
-                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-            }
-        }
-        if ($type == 'teachers')
-        {
-            foreach ($items as $item)
-            {
-                $oddeven = ($oddeven == $class1) ? $class2 : $class1;
-                $row[]= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header=0, $type);
-            }
-        }
-        foreach ($row as $key=>$value)
-        {
-            $list .= $value;
-        }
-
-        return $list;
-    }
-
-    /**
-     * @param $item
-     * @return array
-     */
-    public function getFluidMediaids($item)
-     {
-         $mediatemp = array();
-         $mediatemp = explode(',',$item->mids);
-         foreach ($mediatemp as $mtemp)
-         {$medias[] = $mtemp;}
-         return $medias;
-     }
-
-    /**
-     * @param $medias
-     * @return mixed
-     */
-public function getMediaFiles($medias)
-{
-    $db    = JFactory::getDBO();
-    $query = $db->getQuery(true);
-    $query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-    . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-    . ' #__bsms_media.media_image_name AS imname,'
-    . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-    . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-    . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
-    $query->from('#__bsms_mediafiles');
-    $query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-    $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-    $query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-    $query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
-    $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-    $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-    $where2   = array();
-    $subquery = '(';
-    foreach ($medias as $media)
-    {
-        if (is_array($media))
-        {
-            foreach ($media as $m)
-            {
-                $where2[] = '#__bsms_mediafiles.id = ' . (int) $m;
-            }
-        }
-        else
-        {$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;}
-    }
-    $subquery .= implode(' OR ', $where2);
-    $subquery .= ')';
-    $query->where($subquery);
-    $query->where('#__bsms_mediafiles.published = 1');
-    $query->order('ordering ASC, #__bsms_media.media_image_name ASC');
-    $db->setQuery($query);
-    $mediafiles = $db->loadObjectList();
-    return $mediafiles;
-}
-    /**
-     * @param $paramtext
-     * @return stdClass
-     */
-    public function getListParamsArray($paramtext)
-    {
-        $l = new stdClass();
-        $l->row = $this->params->get($paramtext.'row');
-        $l->col = $this->params->get($paramtext.'col');
-        $l->colspan = $this->params->get($paramtext.'colspan');
-        $l->element = $this->params->get($paramtext.'element');
-        $l->custom = $this->params->get($paramtext.'custom');
-        $l->linktype = $this->params->get($paramtext.'linktype');
-        $l->name = $paramtext;
-        $l->customtext = $this->params->get($paramtext.'text');
-
-        return $l;
-    }
-
-    /**
-     * @param $listrows
-     * @param $item
-     * @param $params
-     * @param $admin_params
-     * @param $template
-     * @param $row1sorted
-     * @param $row2sorted
-     * @param $row3sorted
-     * @param $row4sorted
-     * @param $row5sorted
-     * @param $row6sorted
-     * @param $oddeven
-     * @param $header
-     * @param $type
-     * @return string
-     */
-    public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header, $type)
-    {
-        $span = '';
-        $headerstyle = '';
-        if ($header == 1){$headerstyle = "style=visibility:hidden;";}
-        $extra = '';
-        $pull = '';
-        switch ($type )
-        {
-            case 'sermon':
-                $extra = 'd';
-
-                break;
-            case 'seriesdisplays':
-                $extra = 's';
-
-                break;
-            case 'seriesdisplay':
-                $extra = 'sd';
-
-                break;
-            case 'sermons':
-
-                break;
-            case 'teachers':
-                $extra = 'ts';
-                break;
-            case 'teacher':
-                $extra = 'td';
-                break;
-        }
-
-        $pull = $params->get($extra.'rowspanitempull');
-        $rowspanitem = $params->get($extra.'rowspanitem');
-        if ($rowspanitem)
-        {
-            switch ($rowspanitem)
-            {
-                case 1:
-                    (isset($item->thumb) ? $span = '<img src="'.JURI::base().$item->thumb.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
-                    (isset($item->teacher_thumbnail) ? $span = '<img src="'.JURI::base().$item->teacher_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
-                    break;
-                case 2:
-                    (isset($item->thumbm) ? $span = '<img src="'.JURI::base().$item->thumbm.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $span = '');
-                    break;
-                case 3:
-                    (isset($item->series_thumbnail) ? $span = '<img src="'.JURI::base().$item->series_thumbnail.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_SERIES').'">' : $span = '');
-                    break;
-                case 4:
-                    (isset($item->teacher_image) ? $span = '<img src="'.JURI::base().$item->teacher_image.'" class="'.$params->get('rowspanitemimage').'" alt="'.JText::_('JBS_CMN_TEACHER').'">' : $span = '');
-                    break;
-            }
-        }
-
-        $smenu        = $params->get('detailsitemid');
-        $tmenu        = $params->get('teacheritemid');
-
-        $rowspanitemspan = $params->get($extra.'rowspanitemspan');
-        $rowspanbalance = 12 - $rowspanitemspan;
-        $frow = '';
-        $frow = '<div class="row-fluid" style="background-color:'.$oddeven.'; padding:5px;">';
-
-
-        if ($span)
-        {
-            $frow .= '<div class="row-fluid" >';
-            $frow .= '<div class="span'.$rowspanitemspan.' '.$pull.'"><div '.$headerstyle.' class="">'.$span.'</div></div>';
-            $frow .= '<div class="span'.$rowspanbalance.'">';
-        }
-
-        $row1count = count($row1sorted);
-        $row1count2 = count($row1sorted);
-        $row2count = count($row2sorted);
-        $row2count2 = count($row2sorted);
-        $row3count = count($row3sorted);
-        $row3count2 = count($row3sorted);
-        $row4count = count($row4sorted);
-        $row4count2 = count($row4sorted);
-        $row5count = count($row5sorted);
-        $row5count2 = count($row5sorted);
-        $row6count = count($row6sorted);
-        $row6count2 = count($row6sorted);
-        foreach ($listrows as $row)
-        {
-            if ($row->row == 1)
-            {
-
-                if ($row1count == $row1count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row1count = $row1count - 1;
-                if ($row1count == 0){$frow .= '</div>';}
-            }
-            if ($row->row == 2)
-            {
-
-                if ($row2count == $row2count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row2count = $row2count - 1;
-                if ($row2count == 0){$frow .= '</div>';}
-            }
-            if ($row->row == 3)
-            {
-
-                if ($row3count == $row3count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row3count = $row3count - 1;
-                if ($row3count == 0){$frow .= '</div>';}
-            }
-            if ($row->row == 4)
-            {
-
-                if ($row4count == $row4count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row4count = $row4count - 1;
-                if ($row4count == 0){$frow .= '</div>';}
-            }
-            if ($row->row == 5)
-            {
-
-                if ($row5count == $row5count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){'<b>'.$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row5count = $row5count - 1;
-                if ($row5count == 0){$frow .= '</div>';}
-            }
-            if ($row->row == 6)
-            {
-
-                if ($row6count == $row6count2){$frow .= '<div class="row-fluid">';}
-                if ($header == 1){$frow .= '<b>'.$this->getFluidData($item, $row, $params, $admin_params, $template, $header=1, $type).'</b>';}
-                else {$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header=0, $type);}
-                $row6count = $row6count - 1;
-                if ($row6count == 0){$frow .= '</div>';}
-            }
-        }
-        $frow .= '</div>';
-        if ($span){$frow .= '</div></div>';}
-
-
-        return $frow;
-    }
-
-    /**
-     * @param $item
-     * @param $row
-     * @param $params
-     * @param $admin_params
-     * @param $template
-     * @param $header
-     * @param $type
-     * @return string
-     */
-    public function getFluidData($item, $row, $params, $admin_params, $template, $header, $type)
-    {
-        $smenu        = $params->get('detailsitemid');
-        $tmenu        = $params->get('teacheritemid');
-        $data = '';
-        //match the data in $item to a row/col in $row->name
-
-        $extra = '';
-        switch ($type )
-        {
-            case 'sermon':
-                $extra = 'd';
-                break;
-            case 'seriesdisplays':
-                $extra = 's';
-                break;
-            case 'seriesdisplay':
-                $extra = 'sd';
-                break;
-            case 'teachers':
-                $extra = 'ts';
-                break;
-            case 'teacher':
-                $extra = 'td';
-                break;
-        }
-
-        switch ($row->name)
-        {
-            case $extra.'custom':
-
-                if ($header == 1){$data = '';}
-                else {$data = $this->getFluidCustom($row->customtext, $item, $params, $admin_params, $template, $type);}
-                break;
-            case $extra.'teacherlong':
-                if ($header == 1){$data = JText::_('JBS_TCH_INFORMATION');}
-                else {($item->long ? $data = JHtml::_('content.prepare',$item->long,'','com_biblestudy.'.$type) : $data = '');}
-                break;
-
-            case $extra.'teacheraddress':
-                if ($header == 1){$data = JText::_('JBS_TCH_ADDRESS');}
-                else {($item->address ? $data = $item->address : $data = '');}
-                break;
-
-            case $extra.'teacherlink1':
-                if ($header == 1){$data = JText::_('JBS_TCH_LINK1');}
-                else {
-                    if($item->link2)
-                    {
-                        if(substr_count($item->link1,'http://',0))
-                        {
-                            $data = '<a href="'.$item->link1.'" target="_blank">'.$item->link1label.'></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->link1.'" target="_blank">'.$item->link1label.'</a>';
-                        }
-                    }
-                }
-                break;
-
-            case $extra.'teacherlink2':
-                if ($header == 1){$data = JText::_('JBS_TCH_LINK2');}
-                else {
-                    if($item->link2)
-                    {
-                        if(substr_count($item->link2,'http://',0))
-                        {
-                            $data = '<a href="'.$item->link2.'" target="_blank">'.$item->link2label.'></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->link2.'" target="_blank">'.$item->link2label.'</a>';
-                        }
-                    }
-                }
-                break;
-
-            case $extra.'teacherlink3':
-                if ($header == 1){$data = JText::_('JBS_TCH_LINK3');}
-                else {
-                    if($item->link3)
-                    {
-                        if(substr_count($item->link3,'http://',0))
-                        {
-                            $data = '<a href="'.$item->link3.'" target="_blank">'.$item->link3label.'></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->link3.'" target="_blank">'.$item->link3label.'</a>';
-                        }
-                    }
-                }
-                break;
-            case $extra.'teacheremail':
-                if ($header == 1){$data = JText::_('JBS_TCH_EMAIL');}
-                else {($item->email ? $data = '<a href="mailto:'.$item->email.'"><img height="24" width="24" alt="'.JText::_('JBS_TCH_EMAIL').'"  src="'.JURI::base().'media/com_biblestudy/images/email.png"></a>' : $data = '');}
-                break;
-
-            case $extra.'teacherweb':
-                if ($header == 1){$data = JText::_('JBS_TCH_WEBSITE');}
-                else {
-                    if($item->website)
-                    {
-                        if(substr_count($item->website,'http://',0))
-                        {
-                            $data = '<a href="'.$item->website.'" target="_blank"><img height="24" width="24" alt="'.$item->website.'"  src="'.JURI::base().'media/com_biblestudy/images/web.png"></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->website.'" target="_blank"><img height="24" width="24" alt="'.$item->website.'" src="'.JURI::base().'media/com_biblestudy/images/web.png"></a>';
-                        }
-                    }
-                }
-
-                break;
-
-            case $extra.'teacherphone':
-                if ($header == 1){$data = JText::_('JBS_TCH_PHONE');}
-                else {(isset($item->phone) ? $data = $item->phone : $data = '');}
-                break;
-
-            case $extra.'teacherfb':
-                if ($header == 1){$data = JText::_('JBS_TCH_FACEBOOK');}
-                else {
-                    if($item->facebooklink)
-                    {
-                        if(substr_count($item->facebooklink,'http://',0))
-                        {
-                            $data = '<a href="'.$item->facebooklink.'" target="_blank"><img height="24" width="24" alt="'.$item->facebooklink.'"  src="'.JURI::base().'media/com_biblestudy/images/facebook.png"></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->facebooklink.'" target="_blank"><img height="24" width="24" alt="'.$item->facebooklink.'" src="'.JURI::base().'media/com_biblestudy/images/facebook.png"></a>';
-                        }
-                    }
-                }
-                break;
-
-            case $extra.'teachertw':
-                if ($header == 1){$data = JText::_('JBS_TCH_TWITTER');}
-                else {
-                    if($item->twitterlink)
-                    {
-                        if(substr_count($item->twitterlink,'http://',0))
-                        {
-                            $data = '<a href="'.$item->twitterlink.'" target="_blank"><img height="24" width="24" alt="'.$item->twitterlink.'" src="'.JURI::base().'media/com_biblestudy/images/twitter.png"></a>';
-                        }
-                        else {
-                            $data = '<a href="http://'.$item->twitterlink.'" target="_blank"><img height="24" width="24" alt="'.$item->twitterlink.'"  src="'.JURI::base().'media/com_biblestudy/images/twitter.png"></a>';
-                        }
-                    }
-                }
-
-                break;
-
-            case $extra.'teacherblog':
-                if ($header == 1){$data = JText::_('JBS_TCH_BLOG');}
-                else {
-                        if($item->bloglink)
-                        {
-                            if(substr_count($item->bloglink,'http://',0,7))
-                            {
-                                $data = '<a href="'.$item->bloglink.'" target="_blank"><img height="24" width="24" alt="'.$item->bloglink.'" target="_blank" src="'.JURI::base().'media/com_biblestudy/images/blog.png"></a>';
-                            }
-                            else {
-                                $data = '<a href="http://'.$item->bloglink.'" target="_blank"><img height="24" width="24" alt="'.$item->bloglink.'" target="_blank" src="'.JURI::base().'media/com_biblestudy/images/blog.png"></a>';
-                            }
-                        }
-                     }
-
-                break;
-
-            case $extra.'teachershort':
-                if ($header == 1){$data = JText::_('JBS_TCH_SHORT_LIST');}
-                else {(isset($item->short) ? $data = JHtml::_('content.prepare',$item->short,'','com_biblestudy.'.$type) : $data = '');}
-                break;
-
-            case $extra.'scripture1':
-                $esv = 0;
-                $scripturerow          = 1;
-                if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
-                else {(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
-                break;
-            case $extra.'scripture2':
-                $esv = 0;
-                $scripturerow          = 2;
-                if ($header == 1){$data = JText::_('JBS_CMN_SCRIPTURE');}
-                else {(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');}
-                break;
-            case $extra.'secondary':
-                if ($header == 1){$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');}
-                else {(isset($item->secondary) ? $item->secondary : '');}
-                break;
-            case $extra.'title':
-                if ($header == 1){$data = JText::_('JBS_CMN_TITLE');}
-                else {(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');}
-                break;
-            case $extra.'date':
-                if ($header == 1){$data = JText::_('JBS_CMN_STUDY_DATE');}
-                else {(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');}
-                break;
-            case $extra.'teacher':
-                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
-                else {(isset($item->teachername)? $data = $item->teachername : $data = '');}
-
-                break;
-            case $extra.'teacher-title':
-                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER');}
-                elseif (isset($item->teachertitle) && isset($item->teachername))
-                {
-                    $data = $item->teachertitle . ' ' . $item->teachername;
-                }
-                else {$data = $item->teachername;}
-                break;
-            case $extra.'duration':
-                if ($header == 1){$data = JText::_('JBS_CMN_DURATION');}
-                else {(isset($item->media_minutes) ? $data = $this->getDuration($params, $item): $data = '');}
-                break;
-            case $extra.'studyintro':
-                if ($header == 1){$data = JText::_('JBS_CMN_INTRODUCTION');}
-                else {(isset($item->studyintro) ? $data = JHtml::_('content.prepare',$item->studyintro,'','com_biblestudy.'.$type) : $data = '');}
-                break;
-            case $extra.'series':
-                if ($header == 1){ $data = JText::_('JBS_CMN_SERIES');}
-                else {(isset($item->series_text) ? $data = $item->series_text : $data = '');}
-                break;
-            case $extra.'seriesthumbnail':
-                if ($header == 1){ $data = JText::_('JBS_CMN_THUMBNAIL');}
-                else {
-                   if ($item->series_thumbnail)
-                   {$data = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));}
-                    else {$data = '';}
-                }
-                break;
-            case $extra.'teacherlargeimage':
-                if ($header == 1){ $data = JText::_('JBS_TCH_TEACHER_IMAGE');}
-                else {(isset($item->teacher_image) ? $data = '<img src="'.JURI::base().$item->teacher_image.'" alt="'.JText::_('JBS_CMN_THUMBNAIL').'">' : $data = '');}
-                break;
-            case $extra.'description':
-                if ($header == 1){$data = JText::_('JBS_CMN_DESCRIPTION');}
-                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1){(isset($item->description) ? $data = JHtml::_('content.prepare',$item->description,'','com_biblestudy.'.$type) : $data = ''); }
-                else {(isset($item->sdescription) ? $data = JHtml::_('content.prepare',$item->sdescription,'', 'com_biblestudy.'.$type) : $data = '');}
-                if ($type == 'seriesdisplays' && !$header)
-                {
-                    (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
-                }
-                break;
-            case $extra.'submitted':
-                if ($header == 1){$data = JText::_('JBS_CMN_SUBMITTED_BY');}
-                else {(isset($item->submitted) ? $data = $item->submitted : $data = '');}
-                break;
-            case $extra.'hits':
-                if ($header == 1){$data = JText::_('JBS_CMN_VIEWS');}
-                else {(isset($item->hits) ? $data = $item->hits : $data = '');}
-                break;
-            case $extra.'downloads':
-                if ($header == 1){$data = JText::_('JBS_CMN_DOWNLOADS');}
-                else {(isset($item->downloads) ? $data = $item->downloads : $data = '');}
-                break;
-            case $extra.'studynumber':
-                if ($header == 1){$data = JText::_('JBS_CMN_STUDYNUMBER');}
-                else {(isset($item->studynumber) ? $data = $item->studynumber : $data = '');}
-                break;
-            case $extra.'topic':
-                if ($header == 1){$data = JText::_('JBS_CMN_TOPIC');}
-                elseif (isset($item->topics_text))
-                {
-                    if (substr_count($item->topics_text, ','))
-                    {
-                        $topics = explode(',', $item->topics_text);
-
-                        foreach ($topics as $key => $value)
-                        {
-                            $topics[$key] = JText::_($value);
-                        }
-                        $data = implode(', ', $topics);
-                    }
-                    else
-                    {
-                        (isset($item->topics_text) ? $data = JText::_($item->topics_text) : $data = '');
-                    }
-                }
-                break;
-            case $extra.'locations':
-                if ($header == 1){$data = JText::_('JBS_CMN_LOCATION');}
-                else {(isset($item->location_text) ? $data = $item->location_text : $data = '');}
-                break;
-            case $extra.'jbsmedia':
-                if ($header == 1){$data = JText::_('JBS_CMN_MEDIA');}
-                else {$data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);}
-                break;
-            case $extra.'messagetype':
-                if ($header == 1){$data = JText::_('JBS_CMN_MESSAGE_TYPE');}
-                else {(isset($item->messaget_type) ? $data = $item->message_type : $data = '');}
-                break;
-            case $extra.'thumbnail':
-                if ($header == 1){$data = JText::_('JBS_CMN_THUMBNAIL');}
-                elseif($item->thumbnailm)
-                    { $data = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'));}
-                else {$data = '';}
-                break;
-            case $extra.'teacherimage':
-
-                if ($header == 1){$data = JText::_('JBS_CMN_TEACHER_IMAGE');}
-                if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
-                {
-                    if ($item->teacher_thumbnail){ $data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));}
-                    else {$data = '';}
-                }
-               else {
-                   if ($item->thumb) {$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));}
-                   else {$data = '';}
-               }
-                break;
-        }
-
-        $style = '';
-        $customclass = '';
-        if (isset($row->custom))
-        {
-            if (strpos($row->custom,'style=') !==false){$style = $row->custom;}
-            else {$customclass = $row->custom;}
-        }
-        switch ($row->element)
-        {
-            case 0:
-                $classelement = '';
-                break;
-            case 1:
-                $classelement = '<p';
-                break;
-            case 2:
-                $classelement = '<h1';
-                break;
-            case 3:
-                $classelement = '<h2';
-                break;
-            case 4:
-                $classelement = '<h3';
-                break;
-            case 5:
-                $classelement = '<h4';
-                break;
-            case 6:
-                $classelement = '<h5';
-                break;
-            case 7:
-                $classelement = '<blockquote';
-        }
-        if ($header == 1){$classelement = ''; $style='style="font-weight:bold;"';}
-        if ($classelement){$classopen = $classelement.' '.$style.'>'; $classclose = '</'.$classelement.'>';}
-        else {$classopen = ''; $classclose='';}
-
-        //See whether the element is a link to something and get the link from the function
-        $link = 0;
-        if ($type == 'sermons' || $type == 'seriesdisplays' || $type == 'teachers')
-        {
-            if ($row->linktype > 0 && $header == 0)
-            {
-                if ($type == 'seriesdisplays'){$item->teacher_id = $item->teacher;}
-                if ($type == 'teachers'){$item->teacher_id = $item->id;}
-                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
-            }
-        }
-        $frow = '<div class="span'.$row->colspan.' '.$customclass.'"><div class="">'.$classopen;
-        if ($link)
-        {
-            $frow .= $link;
-        }
-        if ($data){$frow .= $data;}
-
-        if ($link)
-        {
-            $frow .= '</a>';
-        }
-
-        $frow .= $classclose.'</div>';
-
-        $frow .= '</div>';
-    return $frow;
-    }
-
-    /**
-     * @since 8.1.0
-     * @param $path
-     * @return bool|stdClass
-     */
-    public  function useJImage($path,$alt = null)
-    {
-        $image = new JImage();
-
-        try {
-            $return = $image->getImageFileProperties($path);
-        }
-        catch (Exception $e) {
-            $return =  false;
-        }
-        $imagereturn = '<img src="'.JURI::base().$path.'" alt="'.$alt.'" '.$return->attributes.'>';
-
-      return $imagereturn;
-    }
-    /**
-     * @since 8.1.0
-     * @param $item
-     * @param $params
-     * @param $admin_params
-     * @param $template
-     * @return string
-     */
-    public function getFluidMediaFiles($item, $params, $admin_params, $template)
-    {
-        $med = new JBSMMedia();
-        $mediarow = '<div style="display:inline;">';
-        foreach ($item->mediafiles as $media)
-        {
-            $mediarow  .= $med->getFluidMedia($media, $params, $admin_params, $template);
-        }
-        $mediarow .= '</div>';
-        return $mediarow;
-    }
-
-    public function getFluidCustom($custom, $item, $params, $admin_params, $template, $type)
-    {
-        $countbraces = substr_count($custom, '{');
-
-        while ($countbraces > 0)
-        {
-            $bracebegin = strpos($custom, '{');
-            $braceend   = strpos($custom, '}');
-            $subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
-
-            $element = $this->getElement($subcustom, $item, $params, $admin_params, $template, $type);
-            $custom    = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
-            $countbraces--;
-        }
-        return $custom;
-    }
-
-    /**
-     * @param $custom
-     * @param $row
-     * @param $params
-     * @param $admin_params
-     * @param $template
-     * @param $type
-     * @return mixed|null|string
-     */
-    public function getElement($custom, $row, $params, $admin_params, $template, $type)
-    {
-        switch($custom)
-        {
-            case 'scripture1':
-                $esv                   = 0;
-                $scripturerow          = 1;
-                $element    = self::getScripture($params, $row, $esv, $scripturerow);
-                break;
-
-            case 'scripture2':
-                $esv                   = 0;
-                $scripturerow          = 2;
-                $element    = self::getScripture($params, $row, $esv, $scripturerow);
-                break;
-
-            case 'secondary':
-                $element    = $row->secondary_reference;
-                break;
-
-            case 'duration':
-                $element    = self::getDuration($params, $row);
-                break;
-
-            case 'title':
-
-                if (isset($row->studytitle))
-                {
-                    $element = $row->studytitle;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'studyintro':
-
-                if (isset($row->studyintro))
-                {
-                    $element = JHtml::_('content.prepare',$row->studyintro,'','com_biblestudy.'.$type);
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'teacher':
-
-                if (isset($row->teachername))
-                {
-                    $element = $row->teachername;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'studynumber':
-                if (isset($row->studynumber))
-                {
-                    $element = $row->studynumber;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'series_text':
-                //series title
-                if (isset($row->series_text))
-                {
-                    $element = $row->series_text;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'series_thumbnail':
-                if ($row->series_thumbnail)
-                {
-                    $element = '<img src="' . JURI::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '">';
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'submitted':
-                if (isset($row->submitted))
-                {
-                    $element = $row->submitted;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'teacherimage':
-                if (isset($row->teacher_thumbnail))
-                    {$element = '<img src="'.JURI::base() . $row->teacher_thumbnail .'" alt="' . $row->teachername.'">';}
-                else ($element = '');
-                break;
-
-            case 'teachername':
-                if (isset($row->teachername))
-                {
-                    $element = $row->teachername;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'teacher':
-                //teacher name and title
-
-                if (isset($row->teachertitle) && isset($row->teachername))
-                {
-                    $element = $row->teachertitle . ' ' . $row->teachername;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-            case 'jbsmedia':
-                if (isset($row->mids))
-                {
-                    $medias = $this->getFluidMediaids($row);
-                    $mediafiles = $this->getMediaFiles($medias);
-                    $row->mediafiles = $mediafiles;
-                    $element = $this->getFluidMediaFiles($row, $params, $admin_params, $template);
-
-                }
-                else {$element = '';}
-                break;
-
-            case 'thumbnail':
-                //assume study thumbnail
-                $element = '<img src="' . JURI::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '">';
-                break;
-
-            case 'studytitle':
-                (isset($row->studytitle) ? $element = $row->studytitle : $element = '');
-                break;
-
-            case 'teacher-title-name':
-                if (isset($row->teachertitle) && isset($row->teachername))
-                {
-                    $element = $row->teachertitle . ' ' . $row->teachername;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-                break;
-
-            case 'topics':
-                if (isset($row->topics_text))
-                {
-                    if (substr_count($row->topics_text, ','))
-                    {
-                        $topics = explode(',', $row->topics_text);
-
-                        foreach ($topics as $key => $value)
-                        {
-                            $topics[$key] = JText::_($value);
-                        }
-                        $element = implode(', ', $topics);
-                    }
-                    else
-                    {
-                        (isset($row->topics_text) ? $element = JText::_($row->topics_text) : $element = '');
-                    }
-                }
-                break;
-
-
-
-            case 'message_type':
-                if (isset($row->message_type))
-                {
-                    $element = $row->message_type;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'location_text':
-                if (isset($row->location_text))
-                {
-                    $element = $row->location_text;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-
-            case 'date':
-                if (isset($row->studydate))
-                {
-                    $element = self::getstudyDate($params, $row->studydate);
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
-            case 'series_description':
-
-				if (isset($row->sdescription))
+	/** @var  JRegistry */
+	public $params;
+
+	/**
+	 * @param Object    $items
+	 * @param JRegistry $params
+	 * @param JRegistry $admin_params
+	 * @param String    $template
+	 * @param string    $type Type of Listing
+	 *
+	 * @return string
+	 */
+	public function getFluidListing($items, $params, $admin_params, $template, $type)
+	{
+
+		$list         = '';
+		$row          = array();
+		$this->params = $params;
+		$item         = '';
+
+		if ($type == 'sermons')
+		{
+			foreach ($items as $item)
+			{
+				if (isset($item->mids))
 				{
-                    if ($type == 'seriesdisplays' || $type == 'seriesdisplay')
-                    {$element = JHtml::_('content.prepare',$row->description,'','com_biblestudy.'.$type);}
-                    else {$element = JHtml::_('content.prepare',$row->sdescription,'','com_biblestudy.'.$type);}
+					$medias[] = $this->getFluidMediaids($item);
+				}
+			}
+		}
+		if ($type == 'sermon')
+		{
+			$medias = $this->getFluidMediaids($items);
+			$item   = $items;
+		}
+		//get the media files in one query
+		if (isset($medias))
+		{
+			$mediafiles = $this->getMediaFiles($medias);
+		}
+		//create an array from each param variable set
+		//Find out what view we are in
+		$extra = '';
+
+		switch ($type)
+		{
+			case 'sermons':
+				$extra = '';
+				break;
+			case 'sermon':
+				$extra = 'd';
+				break;
+			case 'seriesdisplays':
+				$extra = 's';
+				break;
+			case 'seriesdisplay':
+				$extra = 'sd';
+				break;
+			case 'teachers':
+				$extra = 'ts';
+				break;
+			case 'teacher':
+				$extra = 'td';
+				break;
+			case 'module':
+				$extra = 'm';
+				break;
+		}
+
+		$listparams = array();
+		if ($params->get($extra . 'scripture1row') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'scripture1');
+		}
+		if ($params->get($extra . 'scripture2row') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'scripture2');
+		}
+		if ($params->get($extra . 'secondaryrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'secondary');
+		}
+		if ($params->get($extra . 'titlerow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'title');
+		}
+		if ($params->get($extra . 'daterow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'date');
+		}
+		if ($params->get($extra . 'teacherrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacher');
+		}
+		if ($params->get($extra . 'teacher-titlerow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacher-title');
+		}
+		if ($params->get($extra . 'durationrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'duration');
+		}
+		if ($params->get($extra . 'studyintrorow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'studyintro');
+		}
+		if ($params->get($extra . 'seriesrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'series');
+		}
+		if ($params->get($extra . 'descriptionrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'description');
+		}
+		if ($params->get($extra . 'seriesthumbnailrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'seriesthumbnail');
+		}
+		if ($params->get($extra . 'submittedrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'submitted');
+		}
+		if ($params->get($extra . 'hitsrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'hits');
+		}
+		if ($params->get($extra . 'downloadsrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'downloads');
+		}
+		if ($params->get($extra . 'studynumberrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'studynumber');
+		}
+		if ($params->get($extra . 'topicrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'topic');
+		}
+		if ($params->get($extra . 'locationsrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'locations');
+		}
+		if ($params->get($extra . 'jbsmediarow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'jbsmedia');
+		}
+		if ($params->get($extra . 'messagetyperow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'messagetype');
+		}
+		if ($params->get($extra . 'thumbnailrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'thumbnail');
+		}
+		if ($params->get($extra . 'teacherimagerrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherimage');
+		}
+		if ($params->get($extra . 'seriesdescriptionrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'description');
+		}
+		if ($params->get($extra . 'teacheremailrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacheremail');
+		}
+		if ($params->get($extra . 'teacherwebrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherweb');
+		}
+		if ($params->get($extra . 'teacherphonerow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherphone');
+		}
+		if ($params->get($extra . 'teacherfbrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherfb');
+		}
+		if ($params->get($extra . 'teachertwrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teachertw');
+		}
+		if ($params->get($extra . 'teacherblogrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherblog');
+		}
+		if ($params->get($extra . 'teachershortrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teachershort');
+		}
+		if ($params->get($extra . 'teacherlongrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherlong');
+		}
+		if ($params->get($extra . 'teacheraddressrow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacheraddress');
+		}
+		if ($params->get($extra . 'teacherlink1row') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherlink1');
+		}
+		if ($params->get($extra . 'teacherlink2row') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherlink2');
+		}
+		if ($params->get($extra . 'teacherlink3row') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherlink3');
+		}
+		if ($params->get($extra . 'teacherlargeimagerow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
+		}
+		if ($params->get($extra . 'customrow'))
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'custom');
+		}
+		$row1       = array();
+		$row2       = array();
+		$row3       = array();
+		$row4       = array();
+		$row5       = array();
+		$row6       = array();
+		$row1sorted = array();
+		$row2sorted = array();
+		$row3sorted = array();
+		$row4sorted = array();
+		$row5sorted = array();
+		$row6sorted = array();
+		//Create an array sorted by row and then by column
+		foreach ($listparams as $listing)
+		{
+			if ($listing->row == 1)
+			{
+				$row1[] = $listing;
+			}
+			if ($listing->row == 2)
+			{
+				$row2[] = $listing;
+			}
+			if ($listing->row == 3)
+			{
+				$row3[] = $listing;
+			}
+			if ($listing->row == 4)
+			{
+				$row4[] = $listing;
+			}
+			if ($listing->row == 5)
+			{
+				$row5[] = $listing;
+			}
+			if ($listing->row == 6)
+			{
+				$row6[] = $listing;
+			}
+		}
+		if (count($row1))
+		{
+			$row1sorted = $this->sortArrayofObjectByProperty($row1, 'col', $order = "ASC");
+		}
+		if (count($row2))
+		{
+			$row2sorted = $this->sortArrayofObjectByProperty($row2, 'col', $order = "ASC");
+		}
+		if (count($row3))
+		{
+			$row3sorted = $this->sortArrayofObjectByProperty($row3, 'col', $order = "ASC");
+		}
+		if (count($row4))
+		{
+			$row4sorted = $this->sortArrayofObjectByProperty($row4, 'col', $order = "ASC");
+		}
+		if (count($row5))
+		{
+			$row5sorted = $this->sortArrayofObjectByProperty($row5, 'col', $order = "ASC");
+		}
+		if (count($row6))
+		{
+			$row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
+		}
+		$listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
+
+		$class1  = $params->get($extra . 'listcolor1', '');
+		$class2  = $params->get($extra . 'listcolor2', '');
+		$oddeven = $class1;
+		if ($type == 'sermons')
+		{
+			if ($params->get('use_headers_list') > 0)
+			{
+				$list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+		}
+		if ($type == 'sermon')
+		{
+			if ($params->get('use_headers_view') > 0)
+			{
+				$list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+		}
+		if ($type == 'seriesdisplays')
+		{
+			if ($params->get('use_headers_series') > 0)
+			{
+				$list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+		}
+		if ($type == 'seriesdisplay')
+		{
+			if ($params->get('use_header_seriesdisplay') > 0)
+			{
+				$oddeven = $params->get('seriesdisplay_color');
+				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+			$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+		}
+		if ($type == 'teacher')
+		{
+			if ($params->get('use_headers_teacher_details') > 0)
+			{
+				$oddeven = $params->get('teacherdisplay_color', 'white');
+				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+			$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+		}
+		if ($type == 'teachers')
+		{
+			if ($params->get('use_headers_teacher_list') > 0)
+			{
+				//$oddeven = $params->get('tslistcolor');
+				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+			}
+
+		}
+		// Go through and attach the media files as an array to their study
+		if ($type == 'sermons')
+		{
+			foreach ($items as $item)
+			{
+				$oddeven    = ($oddeven == $class1) ? $class2 : $class1;
+				$studymedia = array();
+				if (isset($mediafiles))
+				{
+					foreach ($mediafiles as $mediafile)
+					{
+						if ($mediafile->study_id == $item->id)
+						{
+							$studymedia[] = $mediafile;
+						}
+					}
+				}
+				if (isset($studymedia))
+				{
+					$item->mediafiles = $studymedia;
+				}
+				$row[] = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			}
+		}
+		if ($type == 'sermon')
+		{
+			$oddeven    = ($oddeven == $class1) ? $class2 : $class1;
+			$studymedia = array();
+			if (isset($mediafiles))
+			{
+				foreach ($mediafiles as $mediafile)
+				{
+					if ($mediafile->study_id == $item->id)
+					{
+						$studymedia[] = $mediafile;
+					}
+				}
+			}
+			if (isset($studymedia))
+			{
+				$item->mediafiles = $studymedia;
+			}
+			$row[] = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+		}
+		if ($type == 'seriesdisplays')
+		{
+			foreach ($items as $item)
+			{
+				$oddeven = ($oddeven == $class1) ? $class2 : $class1;
+				$row[]   = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			}
+		}
+		if ($type == 'teachers')
+		{
+			foreach ($items as $item)
+			{
+				$oddeven = ($oddeven == $class1) ? $class2 : $class1;
+				$row[]   = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			}
+		}
+		foreach ($row as $key => $value)
+		{
+			$list .= $value;
+		}
+
+		return $list;
+	}
+
+	/**
+	 * @param $item
+	 *
+	 * @return array
+	 */
+	public function getFluidMediaids($item)
+	{
+		$medias    = array();
+		$mediatemp = explode(',', $item->mids);
+		foreach ($mediatemp as $mtemp)
+		{
+			$medias[] = $mtemp;
+		}
+
+		return $medias;
+	}
+
+	/**
+	 * @param $medias
+	 *
+	 * @return mixed
+	 */
+	public function getMediaFiles($medias)
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
+			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+			. ' #__bsms_media.media_image_name AS imname,'
+			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+		$query->from('#__bsms_mediafiles');
+		$query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
+		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
+		$query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
+		$query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+		$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
+		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+		$where2   = array();
+		$subquery = '(';
+		foreach ($medias as $media)
+		{
+			if (is_array($media))
+			{
+				foreach ($media as $m)
+				{
+					$where2[] = '#__bsms_mediafiles.id = ' . (int) $m;
+				}
+			}
+			else
+			{
+				$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
+			}
+		}
+		$subquery .= implode(' OR ', $where2);
+		$subquery .= ')';
+		$query->where($subquery);
+		$query->where('#__bsms_mediafiles.published = 1');
+		$query->order('ordering ASC, #__bsms_media.media_image_name ASC');
+		$db->setQuery($query);
+		$mediafiles = $db->loadObjectList();
+
+		return $mediafiles;
+	}
+
+	/**
+	 * @param $paramtext
+	 *
+	 * @return stdClass
+	 */
+	public function getListParamsArray($paramtext)
+	{
+		$l             = new stdClass();
+		$l->row        = $this->params->get($paramtext . 'row');
+		$l->col        = $this->params->get($paramtext . 'col');
+		$l->colspan    = $this->params->get($paramtext . 'colspan');
+		$l->element    = $this->params->get($paramtext . 'element');
+		$l->custom     = $this->params->get($paramtext . 'custom');
+		$l->linktype   = $this->params->get($paramtext . 'linktype');
+		$l->name       = $paramtext;
+		$l->customtext = $this->params->get($paramtext . 'text');
+
+		return $l;
+	}
+
+	/**
+	 * @param $listrows
+	 * @param $item
+	 * @param JRegistry $params
+	 * @param $admin_params
+	 * @param $template
+	 * @param $row1sorted
+	 * @param $row2sorted
+	 * @param $row3sorted
+	 * @param $row4sorted
+	 * @param $row5sorted
+	 * @param $row6sorted
+	 * @param $oddeven
+	 * @param $header
+	 * @param $type
+	 *
+	 * @return string
+	 */
+	public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header, $type)
+	{
+		$span        = '';
+		$headerstyle = '';
+		if ($header == 1)
+		{
+			$headerstyle = "style=visibility:hidden;";
+		}
+		$extra = '';
+		$pull  = '';
+		switch ($type)
+		{
+			case 'sermon':
+				$extra = 'd';
+
+				break;
+			case 'seriesdisplays':
+				$extra = 's';
+
+				break;
+			case 'seriesdisplay':
+				$extra = 'sd';
+
+				break;
+			case 'sermons':
+
+				break;
+			case 'teachers':
+				$extra = 'ts';
+				break;
+			case 'teacher':
+				$extra = 'td';
+				break;
+		}
+
+		$pull        = $params->get($extra . 'rowspanitempull');
+		$rowspanitem = $params->get($extra . 'rowspanitem');
+		if ($rowspanitem)
+		{
+			switch ($rowspanitem)
+			{
+				case 1:
+					(isset($item->thumb) ? $span = '<img src="' . JURI::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JURI::base() . $item->teacher_thumbnail . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					break;
+				case 2:
+					(isset($item->thumbm) ? $span = '<img src="' . JURI::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
+					break;
+				case 3:
+					(isset($item->series_thumbnail) ? $span = '<img src="' . JURI::base() . $item->series_thumbnail . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
+					break;
+				case 4:
+					(isset($item->teacher_image) ? $span = '<img src="' . JURI::base() . $item->teacher_image . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					break;
+			}
+		}
+
+		$smenu = $params->get('detailsitemid');
+		$tmenu = $params->get('teacheritemid');
+
+		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
+		$rowspanbalance  = 12 - $rowspanitemspan;
+		$frow            = '<div class="row-fluid" style="background-color:' . $oddeven . '; padding:5px;">';
+
+
+		if ($span)
+		{
+			$frow .= '<div class="row-fluid" >';
+			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '"><div ' . $headerstyle . ' class="">' . $span . '</div></div>';
+			$frow .= '<div class="span' . $rowspanbalance . '">';
+		}
+
+		$row1count  = count($row1sorted);
+		$row1count2 = count($row1sorted);
+		$row2count  = count($row2sorted);
+		$row2count2 = count($row2sorted);
+		$row3count  = count($row3sorted);
+		$row3count2 = count($row3sorted);
+		$row4count  = count($row4sorted);
+		$row4count2 = count($row4sorted);
+		$row5count  = count($row5sorted);
+		$row5count2 = count($row5sorted);
+		$row6count  = count($row6sorted);
+		$row6count2 = count($row6sorted);
+		foreach ($listrows as $row)
+		{
+			if ($row->row == 1)
+			{
+
+				if ($row1count == $row1count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row1count = $row1count - 1;
+				if ($row1count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+			if ($row->row == 2)
+			{
+
+				if ($row2count == $row2count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row2count = $row2count - 1;
+				if ($row2count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+			if ($row->row == 3)
+			{
+
+				if ($row3count == $row3count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row3count = $row3count - 1;
+				if ($row3count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+			if ($row->row == 4)
+			{
+
+				if ($row4count == $row4count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row4count = $row4count - 1;
+				if ($row4count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+			if ($row->row == 5)
+			{
+
+				if ($row5count == $row5count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row5count = $row5count - 1;
+				if ($row5count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+			if ($row->row == 6)
+			{
+
+				if ($row6count == $row6count2)
+				{
+					$frow .= '<div class="row-fluid">';
+				}
+				if ($header == 1)
+				{
+					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 1, $type) . '</b>';
+				}
+				else
+				{
+					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
+				}
+				$row6count = $row6count - 1;
+				if ($row6count == 0)
+				{
+					$frow .= '</div>';
+				}
+			}
+		}
+		$frow .= '</div>';
+		if ($span)
+		{
+			$frow .= '</div></div>';
+		}
+
+
+		return $frow;
+	}
+
+	/**
+	 * @param           $item
+	 * @param           $row
+	 * @param JRegistry $params
+	 * @param           $admin_params
+	 * @param           $template
+	 * @param           $header
+	 * @param string    $type
+	 *
+	 * @return string
+	 */
+	public function getFluidData($item, $row, $params, $admin_params, $template, $header, $type)
+	{
+		$smenu = $params->get('detailsitemid');
+		$tmenu = $params->get('teacheritemid');
+		$data  = '';
+		//match the data in $item to a row/col in $row->name
+
+		$extra = '';
+		switch ($type)
+		{
+			case 'sermon':
+				$extra = 'd';
+				break;
+			case 'seriesdisplays':
+				$extra = 's';
+				break;
+			case 'seriesdisplay':
+				$extra = 'sd';
+				break;
+			case 'teachers':
+				$extra = 'ts';
+				break;
+			case 'teacher':
+				$extra = 'td';
+				break;
+		}
+
+		switch ($row->name)
+		{
+			case $extra . 'custom':
+
+				if ($header == 1)
+				{
+					$data = '';
+				}
+				else
+				{
+					$data = $this->getFluidCustom($row->customtext, $item, $params, $admin_params, $template, $type);
+				}
+				break;
+			case $extra . 'teacherlong':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_INFORMATION');
+				}
+				else
+				{
+					($item->long ? $data = JHtml::_('content.prepare', $item->long, '', 'com_biblestudy.' . $type) : $data = '');
+				}
+				break;
+
+			case $extra . 'teacheraddress':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_ADDRESS');
+				}
+				else
+				{
+					($item->address ? $data = $item->address : $data = '');
+				}
+				break;
+
+			case $extra . 'teacherlink1':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_LINK1');
+				}
+				else
+				{
+					if ($item->link2)
+					{
+						if (substr_count($item->link1, 'http://', 0))
+						{
+							$data = '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+						}
+					}
+				}
+				break;
+
+			case $extra . 'teacherlink2':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_LINK2');
+				}
+				else
+				{
+					if ($item->link2)
+					{
+						if (substr_count($item->link2, 'http://', 0))
+						{
+							$data = '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+						}
+					}
+				}
+				break;
+
+			case $extra . 'teacherlink3':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_LINK3');
+				}
+				else
+				{
+					if ($item->link3)
+					{
+						if (substr_count($item->link3, 'http://', 0))
+						{
+							$data = '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+						}
+					}
+				}
+				break;
+			case $extra . 'teacheremail':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_EMAIL');
+				}
+				else
+				{
+					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' . JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
+				}
+				break;
+
+			case $extra . 'teacherweb':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_WEBSITE');
+				}
+				else
+				{
+					if ($item->website)
+					{
+						if (substr_count($item->website, 'http://', 0))
+						{
+							$data = '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+						}
+					}
+				}
+
+				break;
+
+			case $extra . 'teacherphone':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_PHONE');
+				}
+				else
+				{
+					(isset($item->phone) ? $data = $item->phone : $data = '');
+				}
+				break;
+
+			case $extra . 'teacherfb':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_FACEBOOK');
+				}
+				else
+				{
+					if ($item->facebooklink)
+					{
+						if (substr_count($item->facebooklink, 'http://', 0))
+						{
+							$data = '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+						}
+					}
+				}
+				break;
+
+			case $extra . 'teachertw':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_TWITTER');
+				}
+				else
+				{
+					if ($item->twitterlink)
+					{
+						if (substr_count($item->twitterlink, 'http://', 0))
+						{
+							$data = '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+						}
+					}
+				}
+
+				break;
+
+			case $extra . 'teacherblog':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_BLOG');
+				}
+				else
+				{
+					if ($item->bloglink)
+					{
+						if (substr_count($item->bloglink, 'http://', 0, 7))
+						{
+							$data = '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+						}
+						else
+						{
+							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+						}
+					}
+				}
+
+				break;
+
+			case $extra . 'teachershort':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_SHORT_LIST');
+				}
+				else
+				{
+					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_biblestudy.' . $type) : $data = '');
+				}
+				break;
+
+			case $extra . 'scripture1':
+				$esv          = 0;
+				$scripturerow = 1;
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_SCRIPTURE');
+				}
+				else
+				{
+					(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+				}
+				break;
+			case $extra . 'scripture2':
+				$esv          = 0;
+				$scripturerow = 2;
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_SCRIPTURE');
+				}
+				else
+				{
+					(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+				}
+				break;
+			case $extra . 'secondary':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');
+				}
+				else
+				{
+					(isset($item->secondary) ? $item->secondary : '');
+				}
+				break;
+			case $extra . 'title':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_TITLE');
+				}
+				else
+				{
+					(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
+				}
+				break;
+			case $extra . 'date':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_STUDY_DATE');
+				}
+				else
+				{
+					(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
+				}
+				break;
+			case $extra . 'teacher':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_TEACHER');
+				}
+				else
+				{
+					(isset($item->teachername) ? $data = $item->teachername : $data = '');
+				}
+
+				break;
+			case $extra . 'teacher-title':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_TEACHER');
+				}
+				elseif (isset($item->teachertitle) && isset($item->teachername))
+				{
+					$data = $item->teachertitle . ' ' . $item->teachername;
+				}
+				else
+				{
+					$data = $item->teachername;
+				}
+				break;
+			case $extra . 'duration':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_DURATION');
+				}
+				else
+				{
+					(isset($item->media_minutes) ? $data = $this->getDuration($params, $item) : $data = '');
+				}
+				break;
+			case $extra . 'studyintro':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_INTRODUCTION');
+				}
+				else
+				{
+					(isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_biblestudy.' . $type) : $data = '');
+				}
+				break;
+			case $extra . 'series':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_SERIES');
+				}
+				else
+				{
+					(isset($item->series_text) ? $data = $item->series_text : $data = '');
+				}
+				break;
+			case $extra . 'seriesthumbnail':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_THUMBNAIL');
+				}
+				else
+				{
+					if ($item->series_thumbnail)
+					{
+						$data = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
+					}
+					else
+					{
+						$data = '';
+					}
+				}
+				break;
+			case $extra . 'teacherlargeimage':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
+				}
+				else
+				{
+					(isset($item->teacher_image) ? $data = '<img src="' . JURI::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $data = '');
+				}
+				break;
+			case $extra . 'description':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_DESCRIPTION');
+				}
+				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1)
+				{
+					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_biblestudy.' . $type) : $data = '');
+				}
+				else
+				{
+					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_biblestudy.' . $type) : $data = '');
+				}
+				if ($type == 'seriesdisplays' && !$header)
+				{
+					(isset($item->description) ? $data = stripslashes($item->description) : $data = '');
+				}
+				break;
+			case $extra . 'submitted':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_SUBMITTED_BY');
+				}
+				else
+				{
+					(isset($item->submitted) ? $data = $item->submitted : $data = '');
+				}
+				break;
+			case $extra . 'hits':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_VIEWS');
+				}
+				else
+				{
+					(isset($item->hits) ? $data = $item->hits : $data = '');
+				}
+				break;
+			case $extra . 'downloads':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_DOWNLOADS');
+				}
+				else
+				{
+					(isset($item->downloads) ? $data = $item->downloads : $data = '');
+				}
+				break;
+			case $extra . 'studynumber':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_STUDYNUMBER');
+				}
+				else
+				{
+					(isset($item->studynumber) ? $data = $item->studynumber : $data = '');
+				}
+				break;
+			case $extra . 'topic':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_TOPIC');
+				}
+				elseif (isset($item->topics_text))
+				{
+					if (substr_count($item->topics_text, ','))
+					{
+						$topics = explode(',', $item->topics_text);
+
+						foreach ($topics as $key => $value)
+						{
+							$topics[$key] = JText::_($value);
+						}
+						$data = implode(', ', $topics);
+					}
+					else
+					{
+						(isset($item->topics_text) ? $data = JText::_($item->topics_text) : $data = '');
+					}
+				}
+				break;
+			case $extra . 'locations':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_LOCATION');
+				}
+				else
+				{
+					(isset($item->location_text) ? $data = $item->location_text : $data = '');
+				}
+				break;
+			case $extra . 'jbsmedia':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_MEDIA');
+				}
+				else
+				{
+					$data = $this->getFluidMediaFiles($item, $params, $admin_params, $template);
+				}
+				break;
+			case $extra . 'messagetype':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_MESSAGE_TYPE');
+				}
+				else
+				{
+					(isset($item->messaget_type) ? $data = $item->message_type : $data = '');
+				}
+				break;
+			case $extra . 'thumbnail':
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_THUMBNAIL');
+				}
+				elseif ($item->thumbnailm)
+				{
+					$data = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'));
+				}
+				else
+				{
+					$data = '';
+				}
+				break;
+			case $extra . 'teacherimage':
+
+				if ($header == 1)
+				{
+					$data = JText::_('JBS_CMN_TEACHER_IMAGE');
+				}
+				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
+				{
+					if ($item->teacher_thumbnail)
+					{
+						$data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
+					}
+					else
+					{
+						$data = '';
+					}
+				}
+				else
+				{
+					if ($item->thumb)
+					{
+						$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));
+					}
+					else
+					{
+						$data = '';
+					}
+				}
+				break;
+		}
+
+		$style       = '';
+		$customclass = '';
+		$classelement = '';
+		if (isset($row->custom))
+		{
+			if (strpos($row->custom, 'style=') !== false)
+			{
+				$style = $row->custom;
+			}
+			else
+			{
+				$customclass = $row->custom;
+			}
+		}
+		switch ($row->element)
+		{
+			case 0:
+				$classelement = '';
+				break;
+			case 1:
+				$classelement = '<p';
+				break;
+			case 2:
+				$classelement = '<h1';
+				break;
+			case 3:
+				$classelement = '<h2';
+				break;
+			case 4:
+				$classelement = '<h3';
+				break;
+			case 5:
+				$classelement = '<h4';
+				break;
+			case 6:
+				$classelement = '<h5';
+				break;
+			case 7:
+				$classelement = '<blockquote';
+		}
+		if ($header == 1)
+		{
+			$classelement = '';
+			$style        = 'style="font-weight:bold;"';
+		}
+		if ($classelement)
+		{
+			$classopen  = $classelement . ' ' . $style . '>';
+			$classclose = '</' . $classelement . '>';
+		}
+		else
+		{
+			$classopen  = '';
+			$classclose = '';
+		}
+
+		//See whether the element is a link to something and get the link from the function
+		$link = 0;
+
+		if ($type == 'sermons' || $type == 'seriesdisplays' || $type == 'teachers')
+		{
+			if ($row->linktype > 0 && $header == 0)
+			{
+				if ($type == 'seriesdisplays')
+				{
+					$item->teacher_id = $item->teacher;
+				}
+				if ($type == 'teachers')
+				{
+					$item->teacher_id = $item->id;
+				}
+				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $admin_params, $item, $template);
+			}
+		}
+		$frow = '<div class="span' . $row->colspan . ' ' . $customclass . '"><div class="">' . $classopen;
+		if ($link)
+		{
+			$frow .= $link;
+		}
+		if ($data)
+		{
+			$frow .= $data;
+		}
+
+		if ($link)
+		{
+			$frow .= '</a>';
+		}
+
+		$frow .= $classclose . '</div>';
+
+		$frow .= '</div>';
+
+		return $frow;
+	}
+
+	/**
+	 * @since 8.1.0
+	 *
+	 * @param $path
+	 * @param $alt
+	 *
+	 * @return bool|stdClass
+	 */
+	public function useJImage($path, $alt = null)
+	{
+		$image = new JImage();
+
+		try
+		{
+			$return = $image->getImageFileProperties($path);
+		}
+		catch (Exception $e)
+		{
+			$return = false;
+		}
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . '>';
+
+		return $imagereturn;
+	}
+
+	/**
+	 * @since 8.1.0
+	 *
+	 * @param $item
+	 * @param $params
+	 * @param $admin_params
+	 * @param $template
+	 *
+	 * @return string
+	 */
+	public function getFluidMediaFiles($item, $params, $admin_params, $template)
+	{
+		$med      = new JBSMMedia();
+		$mediarow = '<div style="display:inline;">';
+		foreach ($item->mediafiles as $media)
+		{
+			$mediarow .= $med->getFluidMedia($media, $params, $admin_params, $template);
+		}
+		$mediarow .= '</div>';
+
+		return $mediarow;
+	}
+
+	/**
+	 * @param $custom
+	 * @param $item
+	 * @param $params
+	 * @param $admin_params
+	 * @param $template
+	 * @param $type
+	 *
+	 * @return mixed
+	 */
+	public function getFluidCustom($custom, $item, $params, $admin_params, $template, $type)
+	{
+		$countbraces = substr_count($custom, '{');
+
+		while ($countbraces > 0)
+		{
+			$bracebegin = strpos($custom, '{');
+			$braceend   = strpos($custom, '}');
+			$subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
+
+			$element = $this->getElement($subcustom, $item, $params, $admin_params, $template, $type);
+			$custom  = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$countbraces--;
+		}
+
+		return $custom;
+	}
+
+	/**
+	 * @param $custom
+	 * @param $row
+	 * @param $params
+	 * @param $admin_params
+	 * @param $template
+	 * @param $type
+	 *
+	 * @return mixed|null|string
+	 */
+	public function getElement($custom, $row, $params, $admin_params, $template, $type)
+	{
+		$element = null;
+		switch ($custom)
+		{
+			case 'scripture1':
+				$esv          = 0;
+				$scripturerow = 1;
+				$element      = self::getScripture($params, $row, $esv, $scripturerow);
+				break;
+
+			case 'scripture2':
+				$esv          = 0;
+				$scripturerow = 2;
+				$element      = self::getScripture($params, $row, $esv, $scripturerow);
+				break;
+
+			case 'secondary':
+				$element = $row->secondary_reference;
+				break;
+
+			case 'duration':
+				$element = self::getDuration($params, $row);
+				break;
+
+			case 'title':
+
+				if (isset($row->studytitle))
+				{
+					$element = $row->studytitle;
 				}
 				else
 				{
 					$element = '';
 				}
-                break;
-            case 'hits':
-                if (isset($row->hits))
-                {
-                    $element = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
-                }
-                else
-                {
-                    $element = '';
-                }
-                break;
+				break;
 
-        }
-        return $element;
-    }
-    /**
-     * @param $array
-     * @param $property
-     * @param string $order
-     * @return array
-     */
-    function sortArrayofObjectByProperty($array,$property,$order="ASC")
-    {
-        $cur = 1;
-        $stack[1]['l'] = 0;
-        $stack[1]['r'] = count($array)-1;
+			case 'studyintro':
 
-        do
-        {
-            $l = $stack[$cur]['l'];
-            $r = $stack[$cur]['r'];
-            $cur--;
+				if (isset($row->studyintro))
+				{
+					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_biblestudy.' . $type);
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-            do
-            {
-                $i = $l;
-                $j = $r;
-                $tmp = $array[(int)( ($l+$r)/2 )];
+			case 'teacher':
+				//teacher name and title
 
-                // split the array in to parts
-                // first: objects with "smaller" property $property
-                // second: objects with "bigger" property $property
-                do
-                {
-                    while( $array[$i]->{$property} < $tmp->{$property} ) $i++;
-                    while( $tmp->{$property} < $array[$j]->{$property} ) $j--;
+				if (isset($row->teachertitle) && isset($row->teachername))
+				{
+					$element = $row->teachertitle . ' ' . $row->teachername;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-                    // Swap elements of two parts if necesary
-                    if( $i <= $j)
-                    {
-                        $w = $array[$i];
-                        $array[$i] = $array[$j];
-                        $array[$j] = $w;
+			case 'studynumber':
+				if (isset($row->studynumber))
+				{
+					$element = $row->studynumber;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-                        $i++;
-                        $j--;
-                    }
+			case 'series_text':
+				//series title
+				if (isset($row->series_text))
+				{
+					$element = $row->series_text;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-                } while ( $i <= $j );
+			case 'series_thumbnail':
+				if ($row->series_thumbnail)
+				{
+					$element = '<img src="' . JURI::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '">';
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-                if( $i < $r ) {
-                    $cur++;
-                    $stack[$cur]['l'] = $i;
-                    $stack[$cur]['r'] = $r;
-                }
-                $r = $j;
+			case 'submitted':
+				if (isset($row->submitted))
+				{
+					$element = $row->submitted;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-            } while ( $l < $r );
+			case 'teacherimage':
+				if (isset($row->teacher_thumbnail))
+				{
+					$element = '<img src="' . JURI::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '">';
+				}
+				else ($element = '');
+				break;
 
-        } while ( $cur != 0 );
-        // Added ordering.
-        if($order == "DESC"){ $array = array_reverse($array); }
-        return $array;
-    }
+			case 'teachername':
+				if (isset($row->teachername))
+				{
+					$element = $row->teachername;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
+			case 'jbsmedia':
+				if (isset($row->mids))
+				{
+					$medias          = $this->getFluidMediaids($row);
+					$mediafiles      = $this->getMediaFiles($medias);
+					$row->mediafiles = $mediafiles;
+					$element         = $this->getFluidMediaFiles($row, $params, $admin_params, $template);
 
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
 
-    /**
-     * Get Scripture
-     *
-     * @param   object $params        Item Params
-     * @param   object $row           Row Info
-     * @param   string $esv           ESV String
-     * @param   string $scripturerow  Scripture Row
-     *
-     * @return string
-     */
-    public function getScripture($params, $row, $esv, $scripturerow)
-    {
-        $scripture = '';
+			case 'thumbnail':
+				//assume study thumbnail
+				$element = '<img src="' . JURI::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '">';
+				break;
 
-        if (!isset($row->id))
-        {
-            return null;
-        }
+			case 'studytitle':
+				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
+				break;
 
-        if (!isset($row->booknumber))
-        {
-            $row->booknumber = 0;
-        }
+			case 'teacher-title-name':
+				if (isset($row->teachertitle) && isset($row->teachername))
+				{
+					$element = $row->teachertitle . ' ' . $row->teachername;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+				break;
 
-        if (!isset($row->booknumber2))
-        {
-            $row->booknumber2 = 0;
-        }
+			case 'topics':
+				if (isset($row->topics_text))
+				{
+					if (substr_count($row->topics_text, ','))
+					{
+						$topics = explode(',', $row->topics_text);
 
-        if ($scripturerow == 2 && $row->booknumber2 >= 1)
-        {
-            $booknumber = $row->booknumber2;
-            $ch_b       = $row->chapter_begin2;
-            $ch_e       = $row->chapter_end2;
-            $v_b        = $row->verse_begin2;
-            $v_e        = $row->verse_end2;
-        }
-        elseif ($scripturerow == 1 && isset($row->booknumber) >= 1)
-        {
-            $booknumber = $row->booknumber;
-            $ch_b       = $row->chapter_begin;
-            $ch_e       = $row->chapter_end;
-            $v_b        = $row->verse_begin;
-            $v_e        = $row->verse_end;
-        }
-
-        if (!isset($booknumber))
-        {
-            return $scripture;
-        }
-        $show_verses = $params->get('show_verses');
-
-        if (!isset($row->bookname))
-        {
-            $scripture = '';
-
-            return $scripture;
-        }
-
-        $book = JText::_($row->bookname);
-
-        $b1  = ' ';
-        $b2  = ':';
-        $b2a = ':';
-        $b3  = '-';
-
-        if ($show_verses == 1)
-        {
-            /** @var $ch_b string */
-            /** @var $v_b string */
-            /** @var $ch_e string */
-            /** @var $v_e string */
-            if ($ch_e == $ch_b)
-            {
-                $ch_e = '';
-                $b2a  = '';
-            }
-            if ($ch_e == $ch_b && $v_b == $v_e)
-            {
-                $b3   = '';
-                $ch_e = '';
-                $b2a  = '';
-                $v_e  = '';
-            }
-            if ($v_b == 0)
-            {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
-            if ($v_e == 0)
-            {
-                $v_e = '';
-                $b2a = '';
-            }
-            if ($ch_e == 0)
-            {
-                $b2a  = '';
-                $ch_e = '';
-
-                if ($v_e == 0)
-                {
-                    $b3 = '';
-                }
-            }
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
-        }
-        // Else
-        if ($show_verses == 0)
-        {
-            /** @var $ch_e string */
-            /** @var $ch_b string */
-            if ($ch_e > $ch_b)
-            {
-                $scripture = $book . $b1 . $ch_b . $b3 . $ch_e;
-            }
-            else
-            {
-                $scripture = $book . $b1 . $ch_b;
-            }
-        }
-        if ($esv == 1)
-        {
-            /** @var $ch_b string */
-            /** @var $v_b string */
-            /** @var $ch_e string */
-            /** @var $v_e string */
-            if ($ch_e == $ch_b)
-            {
-                $ch_e = '';
-                $b2a  = '';
-            }
-            if ($v_b == 0)
-            {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
-            if ($v_e == 0)
-            {
-                $v_e = '';
-                $b2a = '';
-            }
-            if ($ch_e == 0)
-            {
-                $b2a  = '';
-                $ch_e = '';
-
-                if ($v_e == 0)
-                {
-                    $b3 = '';
-                }
-            }
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
-        }
-
-        if ($row->booknumber > 166)
-        {
-            $scripture = $book;
-        }
-
-        if ($show_verses == 2)
-        {
-            $scripture = $book;
-        }
-
-        return $scripture;
-    }
-
-    /**
-     * Get Duration
-     *
-     * @param   object $params  Item Params
-     * @param   object $row     Row info
-     *
-     * @return  null|string
-     */
-    public function getDuration($params, $row)
-    {
-
-        $duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
-
-        if (!$duration)
-        {
-            $duration = null;
-
-            return $duration;
-        }
-        $duration_type = $params->get('duration_type', 2);
-        $hours         = $row->media_hours;
-        $minutes       = $row->media_minutes;
-        $seconds       = $row->media_seconds;
-
-        switch ($duration_type)
-        {
-            case 1:
-                if (!$hours)
-                {
-                    $duration = $minutes . ' mins ' . $seconds . ' secs';
-                }
-                else
-                {
-                    $duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
-                }
-                break;
-            case 2:
-                if (!$hours)
-                {
-                    $duration = $minutes . ':' . $seconds;
-                }
-                else
-                {
-                    $duration = $hours . ':' . $minutes . ':' . $seconds;
-                }
-                break;
-            default:
-                $duration = $hours . ':' . $minutes . ':' . $seconds;
-                break;
-
-        } // End switch
-
-        return $duration;
-    }
-
-    /**
-     * Get StudyDate
-     *
-     * @param   object $params     Item Params
-     * @param   string $studydate  Study Date
-     *
-     * @return string
-     */
-    public function getstudyDate($params, $studydate)
-    {
-        switch ($params->get('date_format'))
-        {
-            case 0:
-                $date = JHTML::_('date', $studydate, "M j, Y");
-                break;
-            case 1:
-                $date = JHTML::_('date', $studydate, "M J");
-                break;
-            case 2:
-                $date = JHTML::_('date', $studydate, "n/j/Y");
-                break;
-            case 3:
-                $date = JHTML::_('date', $studydate, "n/j");
-                break;
-            case 4:
-                $date = JHTML::_('date', $studydate, "l, F j, Y");
-                break;
-            case 5:
-                $date = JHTML::_('date', $studydate, "F j, Y");
-                break;
-            case 6:
-                $date = JHTML::_('date', $studydate, "j F Y");
-                break;
-            case 7:
-                $date = JHTML::_('date', $studydate, "j/n/Y");
-                break;
-            case 8:
-                $date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
-                break;
-            case 9:
-                $date = JHTML::_('date', $studydate, "Y/M/D");
-                break;
-            default:
-                $date = JHTML::_('date', $studydate, "n/j");
-                break;
-        }
-
-        $customDate = $params->get('custom_date_format');
-
-        if ($customDate != '')
-        {
-            $date = JHTML::_('date', $studydate, $customDate);
-        }
-
-        return $date;
-    }
+						foreach ($topics as $key => $value)
+						{
+							$topics[$key] = JText::_($value);
+						}
+						$element = implode(', ', $topics);
+					}
+					else
+					{
+						(isset($row->topics_text) ? $element = JText::_($row->topics_text) : $element = '');
+					}
+				}
+				break;
 
 
-    /**
-     * @param $islink
-     * @param $id3
-     * @param $tid
-     * @param $smenu
-     * @param $tmenu
-     * @param $params
-     * @param $admin_params
-     * @param $row
-     * @param $template
-     * @return string
-     */
-    private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
+			case 'message_type':
+				if (isset($row->message_type))
+				{
+					$element = $row->message_type;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+
+			case 'location_text':
+				if (isset($row->location_text))
+				{
+					$element = $row->location_text;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+
+			case 'date':
+				if (isset($row->studydate))
+				{
+					$element = self::getstudyDate($params, $row->studydate);
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+			case 'series_description':
+
+				if (isset($row->sdescription))
+				{
+					if ($type == 'seriesdisplays' || $type == 'seriesdisplay')
+					{
+						$element = JHtml::_('content.prepare', $row->description, '', 'com_biblestudy.' . $type);
+					}
+					else
+					{
+						$element = JHtml::_('content.prepare', $row->sdescription, '', 'com_biblestudy.' . $type);
+					}
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+			case 'hits':
+				if (isset($row->hits))
+				{
+					$element = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
+				}
+				else
+				{
+					$element = '';
+				}
+				break;
+
+		}
+
+		return $element;
+	}
+
+	/**
+	 * @param        $array
+	 * @param        $property
+	 * @param string $order
+	 *
+	 * @return array
+	 */
+	function sortArrayofObjectByProperty($array, $property, $order = "ASC")
+	{
+		$cur           = 1;
+		$stack[1]['l'] = 0;
+		$stack[1]['r'] = count($array) - 1;
+
+		do
+		{
+			$l = $stack[$cur]['l'];
+			$r = $stack[$cur]['r'];
+			$cur--;
+
+			do
+			{
+				$i   = $l;
+				$j   = $r;
+				$tmp = $array[(int) (($l + $r) / 2)];
+
+				// split the array in to parts
+				// first: objects with "smaller" property $property
+				// second: objects with "bigger" property $property
+				do
+				{
+					while ($array[$i]->{$property} < $tmp->{$property}) $i++;
+					while ($tmp->{$property} < $array[$j]->{$property}) $j--;
+
+					// Swap elements of two parts if necesary
+					if ($i <= $j)
+					{
+						$w         = $array[$i];
+						$array[$i] = $array[$j];
+						$array[$j] = $w;
+
+						$i++;
+						$j--;
+					}
+
+				} while ($i <= $j);
+
+				if ($i < $r)
+				{
+					$cur++;
+					$stack[$cur]['l'] = $i;
+					$stack[$cur]['r'] = $r;
+				}
+				$r = $j;
+
+			} while ($l < $r);
+
+		} while ($cur != 0);
+		// Added ordering.
+		if ($order == "DESC")
+		{
+			$array = array_reverse($array);
+		}
+
+		return $array;
+	}
+
+
+	/**
+	 * Get Scripture
+	 *
+	 * @param   object $params       Item Params
+	 * @param   object $row          Row Info
+	 * @param   string $esv          ESV String
+	 * @param   string $scripturerow Scripture Row
+	 *
+	 * @return string
+	 */
+	public function getScripture($params, $row, $esv, $scripturerow)
+	{
+		$scripture = '';
+
+		if (!isset($row->id))
+		{
+			return null;
+		}
+
+		if (!isset($row->booknumber))
+		{
+			$row->booknumber = 0;
+		}
+
+		if (!isset($row->booknumber2))
+		{
+			$row->booknumber2 = 0;
+		}
+
+		if ($scripturerow == 2 && $row->booknumber2 >= 1)
+		{
+			$booknumber = $row->booknumber2;
+			$ch_b       = $row->chapter_begin2;
+			$ch_e       = $row->chapter_end2;
+			$v_b        = $row->verse_begin2;
+			$v_e        = $row->verse_end2;
+		}
+		elseif ($scripturerow == 1 && isset($row->booknumber) >= 1)
+		{
+			$booknumber = $row->booknumber;
+			$ch_b       = $row->chapter_begin;
+			$ch_e       = $row->chapter_end;
+			$v_b        = $row->verse_begin;
+			$v_e        = $row->verse_end;
+		}
+
+		if (!isset($booknumber))
+		{
+			return $scripture;
+		}
+		$show_verses = $params->get('show_verses');
+
+		if (!isset($row->bookname))
+		{
+			$scripture = '';
+
+			return $scripture;
+		}
+
+		$book = JText::_($row->bookname);
+
+		$b1  = ' ';
+		$b2  = ':';
+		$b2a = ':';
+		$b3  = '-';
+
+		if ($show_verses == 1)
+		{
+			/** @var $ch_b string */
+			/** @var $v_b string */
+			/** @var $ch_e string */
+			/** @var $v_e string */
+			if ($ch_e == $ch_b)
+			{
+				$ch_e = '';
+				$b2a  = '';
+			}
+			if ($ch_e == $ch_b && $v_b == $v_e)
+			{
+				$b3   = '';
+				$ch_e = '';
+				$b2a  = '';
+				$v_e  = '';
+			}
+			if ($v_b == 0)
+			{
+				$v_b = '';
+				$v_e = '';
+				$b2a = '';
+				$b2  = '';
+			}
+			if ($v_e == 0)
+			{
+				$v_e = '';
+				$b2a = '';
+			}
+			if ($ch_e == 0)
+			{
+				$b2a  = '';
+				$ch_e = '';
+
+				if ($v_e == 0)
+				{
+					$b3 = '';
+				}
+			}
+			$scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+		}
+		// Else
+		if ($show_verses == 0)
+		{
+			/** @var $ch_e string */
+			/** @var $ch_b string */
+			if ($ch_e > $ch_b)
+			{
+				$scripture = $book . $b1 . $ch_b . $b3 . $ch_e;
+			}
+			else
+			{
+				$scripture = $book . $b1 . $ch_b;
+			}
+		}
+		if ($esv == 1)
+		{
+			/** @var $ch_b string */
+			/** @var $v_b string */
+			/** @var $ch_e string */
+			/** @var $v_e string */
+			if ($ch_e == $ch_b)
+			{
+				$ch_e = '';
+				$b2a  = '';
+			}
+			if ($v_b == 0)
+			{
+				$v_b = '';
+				$v_e = '';
+				$b2a = '';
+				$b2  = '';
+			}
+			if ($v_e == 0)
+			{
+				$v_e = '';
+				$b2a = '';
+			}
+			if ($ch_e == 0)
+			{
+				$b2a  = '';
+				$ch_e = '';
+
+				if ($v_e == 0)
+				{
+					$b3 = '';
+				}
+			}
+			$scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+		}
+
+		if ($row->booknumber > 166)
+		{
+			$scripture = $book;
+		}
+
+		if ($show_verses == 2)
+		{
+			$scripture = $book;
+		}
+
+		return $scripture;
+	}
+
+	/**
+	 * Get Duration
+	 *
+	 * @param   object $params Item Params
+	 * @param   object $row    Row info
+	 *
+	 * @return  null|string
+	 */
+	public function getDuration($params, $row)
+	{
+
+		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
+
+		if (!$duration)
+		{
+			$duration = null;
+
+			return $duration;
+		}
+		$duration_type = $params->get('duration_type', 2);
+		$hours         = $row->media_hours;
+		$minutes       = $row->media_minutes;
+		$seconds       = $row->media_seconds;
+
+		switch ($duration_type)
+		{
+			case 1:
+				if (!$hours)
+				{
+					$duration = $minutes . ' mins ' . $seconds . ' secs';
+				}
+				else
+				{
+					$duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
+				}
+				break;
+			case 2:
+				if (!$hours)
+				{
+					$duration = $minutes . ':' . $seconds;
+				}
+				else
+				{
+					$duration = $hours . ':' . $minutes . ':' . $seconds;
+				}
+				break;
+			default:
+				$duration = $hours . ':' . $minutes . ':' . $seconds;
+				break;
+
+		} // End switch
+
+		return $duration;
+	}
+
+	/**
+	 * Get StudyDate
+	 *
+	 * @param   object $params    Item Params
+	 * @param   string $studydate Study Date
+	 *
+	 * @return string
+	 */
+	public function getstudyDate($params, $studydate)
+	{
+		switch ($params->get('date_format'))
+		{
+			case 0:
+				$date = JHTML::_('date', $studydate, "M j, Y");
+				break;
+			case 1:
+				$date = JHTML::_('date', $studydate, "M J");
+				break;
+			case 2:
+				$date = JHTML::_('date', $studydate, "n/j/Y");
+				break;
+			case 3:
+				$date = JHTML::_('date', $studydate, "n/j");
+				break;
+			case 4:
+				$date = JHTML::_('date', $studydate, "l, F j, Y");
+				break;
+			case 5:
+				$date = JHTML::_('date', $studydate, "F j, Y");
+				break;
+			case 6:
+				$date = JHTML::_('date', $studydate, "j F Y");
+				break;
+			case 7:
+				$date = JHTML::_('date', $studydate, "j/n/Y");
+				break;
+			case 8:
+				$date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
+				break;
+			case 9:
+				$date = JHTML::_('date', $studydate, "Y/M/D");
+				break;
+			default:
+				$date = JHTML::_('date', $studydate, "n/j");
+				break;
+		}
+
+		$customDate = $params->get('custom_date_format');
+
+		if ($customDate != '')
+		{
+			$date = JHTML::_('date', $studydate, $customDate);
+		}
+
+		return $date;
+	}
+
+
+	/**
+	 * @param           $islink
+	 * @param           $id3
+	 * @param           $tid
+	 * @param           $smenu
+	 * @param           $tmenu
+	 * @param JRegistry $params
+	 * @param           $admin_params
+	 * @param           $row
+	 * @param           $template
+	 *
+	 * @return string
+	 */
+	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 	{
 		$input    = new JInput;
 		$Itemid   = $input->get('Itemid', '', 'int');
-        $view = $input->getString('view');
+		$view     = $input->getString('view');
 		$column   = '';
 		$mime     = ' AND #__bsms_mediafiles.mime_type = 1';
 		$itemlink = $params->get('itemidlinktype');
@@ -1594,12 +2119,20 @@ public function getMediaFiles($medias)
 				if (!$Itemid)
 				{
 					$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
-				    if ($view == 'seriesdisplays'){$link = JRoute::_('index.php?option=com_biblestudy&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));}
-                }
+
+					if ($view == 'seriesdisplays')
+					{
+						$link = JRoute::_('index.php?option=com_biblestudy&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
+					}
+				}
 				else
 				{
 					$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
-                    if ($view == 'seriesdisplays') {$link = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));}
+
+					if ($view == 'seriesdisplays')
+					{
+						$link = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					}
 				}
 				$column = '<a href="' . $link . '">';
 				break;
@@ -1624,11 +2157,11 @@ public function getMediaFiles($medias)
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
 				$column .= '<a href="' . $link . '">';
@@ -1671,10 +2204,10 @@ public function getMediaFiles($medias)
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object    $row           Item Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $template      Template
+	 * @param   object    $row          Item Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
+	 * @param   object    $template     Template
 	 *
 	 * @return object
 	 */
@@ -1716,17 +2249,16 @@ public function getMediaFiles($medias)
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object    $row           Item Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $template      Template
+	 * @param   object    $row          Item Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
+	 * @param   object    $template     Template
 	 *
 	 * @return object
 	 */
 	public function getStudyExp($row, $params, $admin_params, $template)
 	{
 		$Media = new jbsMedia;
-
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');
@@ -1795,73 +2327,79 @@ public function getMediaFiles($medias)
 		return $label;
 	}
 
-    /**
-     * @todo this doesn't work yet. TF
-     * @param $item
-     * @param $params
-     * @param $type
-     * @return bool|string
-     */
-    public function runContentPlugins($item, $params, $type)
-    {
-        if (!$item){return false;}
-        // We don't need offset but it is a required argument for the plugin dispatcher
-        $offset = '';
-        JPluginHelper::importPlugin('content');
+	/**
+	 * @todo this doesn't work yet. TF
+	 *
+	 * @param $item
+	 * @param $params
+	 * @param $type
+	 *
+	 * @return bool|string
+	 */
+	public function runContentPlugins($item, $params, $type)
+	{
+		if (!$item)
+		{
+			return false;
+		}
+		// We don't need offset but it is a required argument for the plugin dispatcher
+		$offset = '';
+		JPluginHelper::importPlugin('content');
 
-        // Run content plugins
-        if (version_compare(JVERSION, '3.0', 'ge'))
-        {
-            $dispatcher = JEventDispatcher::getInstance();
-        }
-        else
-        {
-            $dispatcher = JDispatcher::getInstance();
-        }
-        $dispatcher->trigger('onContentPrepare', array(
-                'com_biblestudy.'.$type,
-                & $item,
-                & $params,
-                $offset
-            )
-        );
+		// Run content plugins
+		if (version_compare(JVERSION, '3.0', 'ge'))
+		{
+			$dispatcher = JEventDispatcher::getInstance();
+		}
+		else
+		{
+			$dispatcher = JDispatcher::getInstance();
+		}
+		$dispatcher->trigger('onContentPrepare', array(
+				'com_biblestudy.' . $type,
+				& $item,
+				& $params,
+				$offset
+			)
+		);
 
-        $event = new stdClass;
+		$event = new stdClass;
 
-        $results                        = $dispatcher->trigger('onContentAfterTitle', array(
-            'com_biblestudy.'.$type,
-            &$item,
-            &$params,
-            $offset
-        ));
-        $event->text->afterDisplayTitle = trim(implode("\n", $results));
+		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
+			'com_biblestudy.' . $type,
+			&$item,
+			&$params,
+			$offset
+		));
+		$event->text->afterDisplayTitle = trim(implode("\n", $results));
 
-        $results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
-            'com_biblestudy.'.$type,
-            &$item,
-            &$params,
-            $offset
-        ));
-        $event->text->beforeDisplayContent = trim(implode("\n", $results));
+		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+			'com_biblestudy.' . $type,
+			&$item,
+			&$params,
+			$offset
+		));
+		$event->text->beforeDisplayContent = trim(implode("\n", $results));
 
-        $results                          = $dispatcher->trigger('onContentAfterDisplay', array(
-            'com_biblestudy.'.$type,
-            &$item,
-            &$params,
-            $offset
-        ));
-        $event->text->afterDisplayContent = trim(implode("\n", $results));
-        $result = implode('',$event->text);
+		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+			'com_biblestudy.' . $type,
+			&$item,
+			&$params,
+			$offset
+		));
+		$event->text->afterDisplayContent = trim(implode("\n", $results));
+		$result                           = implode('', $event->text);
 
-        return $result;
-    }
+		return $result;
+	}
+
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string    $link          Link
-	 * @param   object    $row           Item Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   string    $link         Link
+	 * @param   object    $row          Item Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return null|string
 	 *
@@ -1965,7 +2503,7 @@ public function getMediaFiles($medias)
 					}
 					else
 					{
-						$element1 = JBSMElements::getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
+						$element1 = self::getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item2'))
@@ -1983,7 +2521,7 @@ public function getMediaFiles($medias)
 					}
 					else
 					{
-						$element2 = JBSMElements::getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
+						$element2 = self::getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item3'))
@@ -2002,7 +2540,7 @@ public function getMediaFiles($medias)
 					}
 					else
 					{
-						$element3 = JBSMElements::getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
+						$element3 = self::getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
 					}
 				}
 				if ($share_params->get('item4'))
@@ -2020,7 +2558,7 @@ public function getMediaFiles($medias)
 					}
 					else
 					{
-						$element4 = JBSMElements::getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
+						$element4 = self::getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
 					}
 				}
 
@@ -2063,11 +2601,11 @@ public function getMediaFiles($medias)
 	/**
 	 * make a URL small
 	 *
-	 * @param   string $url      Url
-	 * @param   string $login    Login
-	 * @param   string $appkey   AppKey
-	 * @param   string $format   Format
-	 * @param   string $version  Version
+	 * @param   string $url     Url
+	 * @param   string $login   Login
+	 * @param   string $appkey  AppKey
+	 * @param   string $format  Format
+	 * @param   string $version Version
 	 *
 	 * @return string
 	 */
@@ -2100,8 +2638,8 @@ public function getMediaFiles($medias)
 	/**
 	 * Get Passage
 	 *
-	 * @param   object $params  Item Params
-	 * @param   object $row     Item Info
+	 * @param   object $params Item Params
+	 * @param   object $row    Item Info
 	 *
 	 * @return string
 	 */
@@ -2149,9 +2687,9 @@ public function getMediaFiles($medias)
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int    $id3     Study ID ID
-	 * @param   string $islink  Is a Link
-	 * @param   object $params  Item Params
+	 * @param   int    $id3    Study ID ID
+	 * @param   string $islink Is a Link
+	 * @param   object $params Item Params
 	 *
 	 * @return string
 	 */
@@ -2203,14 +2741,15 @@ public function getMediaFiles($medias)
 
 		return $link;
 	}
-/* @todo I believe all of the functions below can be removed TF */
+
+	/* @todo I believe all of the functions below can be removed TF */
 	/**
 	 * Get Title
 	 *
-	 * @param   JRegistry $params        System Params
-	 * @param   object    $row           Item info
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template
+	 * @param   JRegistry $params       System Params
+	 * @param   object    $row          Item info
+	 * @param   JRegistry $admin_params Admin Params
+	 * @param   int       $template     Template
 	 *
 	 * @return string
 	 */
@@ -2303,8 +2842,8 @@ public function getMediaFiles($medias)
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int       $rowcolid  Row ID Column
-	 * @param   JRegistry $params    Item Params
+	 * @param   int       $rowcolid Row ID Column
+	 * @param   JRegistry $params   Item Params
 	 *
 	 * @return string
 	 */
