@@ -74,7 +74,7 @@ $input = $app->input;
 	<?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $field->label;?>
+				<?php echo $field->label; ?>
 			</div>
 			<div class="controls">
 				<?php echo $field->input; ?>
@@ -84,7 +84,7 @@ $input = $app->input;
 	<?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $field->label;?>
+				<?php echo $field->label; ?>
 			</div>
 			<div class="controls">
 				<?php echo $field->input; ?>
@@ -96,7 +96,7 @@ $input = $app->input;
 	<?php foreach ($this->form->getFieldset('MEDIA') as $field): ?>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $field->label;?>
+				<?php echo $field->label; ?>
 			</div>
 			<div class="controls">
 				<?php echo $field->input; ?>
@@ -108,7 +108,7 @@ $input = $app->input;
 	<?php foreach ($this->form->getFieldset('LANDINGPAGE') as $field): ?>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $field->label;?>
+				<?php echo $field->label; ?>
 			</div>
 			<div class="controls">
 				<?php echo $field->input; ?>
@@ -179,7 +179,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('VERSES') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -198,7 +198,7 @@ $input = $app->input;
 					?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -210,7 +210,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('FILTERS') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -222,7 +222,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('TOOLTIP') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -306,7 +306,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('STUDIESVIEW') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -361,7 +361,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('DETAILS') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -373,7 +373,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -385,7 +385,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -397,7 +397,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -409,7 +409,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -448,7 +448,7 @@ $input = $app->input;
 	<?php foreach ($this->form->getFieldset('TEACHER') as $field): ?>
 		<div class="control-group">
 			<div class="control-label">
-				<?php echo $field->label;?>
+				<?php echo $field->label; ?>
 			</div>
 			<div class="controls">
 				<?php echo $field->input; ?>
@@ -487,7 +487,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -499,7 +499,7 @@ $input = $app->input;
 				<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $field->label;?>
+							<?php echo $field->label; ?>
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
@@ -523,7 +523,7 @@ $input = $app->input;
 <!-- End Content -->
 <!-- Begin Sidebar -->
 <div class="span2 form-vertical">
-	<h4><?php echo JText::_('JDETAILS');?></h4>
+	<h4><?php echo JText::_('JDETAILS'); ?></h4>
 	<hr/>
 	<div class="control-group">
 		<div class="controls">

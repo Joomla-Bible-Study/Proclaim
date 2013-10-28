@@ -11,17 +11,11 @@
  * */
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-//require_once BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php';
-JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.pagebuilder.class.php');
-require_once __DIR__ . '/helper.php';
-
-
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
 $document = JFactory::getDocument();
-$document->addScript('media/com_biblestudy/js/tooltip.js');
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 /** @var $params JRegistry */
 $templatemenuid = $params->get('t');
@@ -34,7 +28,7 @@ $items        = ModJBSMHelper::getLatest($params);
 // Attempt to change mysql for error in large select
 $db = JFactory::getDBO();
 $db->setQuery('SET SQL_BIG_SELECTS=1');
-$db->query();
+$db->execute();
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
@@ -52,61 +46,67 @@ for ($i = 0; $i < $count; $i++)
 		}
 	}
 }
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+
 if ($params->get('useexpert_module') > 0)
 {
-    $pagebuilder = new JBSPagebuilder;
+$pagebuilder = new JBSMPagebuilder;
 
-    foreach ($items AS $item)
-    {
-        $item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-            . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-        $pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
-        $item->scripture1 = $pelements->scripture1;
-        $item->scripture2 = $pelements->scripture2;
-        $item->media      = $pelements->media;
+foreach ($items AS $item)
+{
+	$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+		. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+	$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
+	$item->scripture1 = $pelements->scripture1;
+	$item->scripture2 = $pelements->scripture2;
+	$item->media      = $pelements->media;
 
-        if (isset($pelements->duration))
-        {
-            $item->duration = $pelements->duration;
-        }
-        else
-        {
-            $item->duration = null;
-        }
+	if (isset($pelements->duration))
+	{
+		$item->duration = $pelements->duration;
+	}
+	else
+	{
+		$item->duration = null;
+	}
 
-        if (isset($pelements->studydate))
-        {
-            $item->studydate = $pelements->studydate;
-        }
-        else
-        {
-            $item->studydate = null;
-        }
-        $item->topics = $pelements->topics;
+	if (isset($pelements->studydate))
+	{
+		$item->studydate = $pelements->studydate;
+	}
+	else
+	{
+		$item->studydate = null;
+	}
+	$item->topics = $pelements->topics;
 
-        if (isset($pelements->study_thumbnail))
-        {
-            $item->study_thumbnail = $pelements->study_thumbnail;
-        }
-        else
-        {
-            $item->study_thumbnail = null;
-        }
+	if (isset($pelements->study_thumbnail))
+	{
+		$item->study_thumbnail = $pelements->study_thumbnail;
+	}
+	else
+	{
+		$item->study_thumbnail = null;
+	}
 
-        if (isset($pelements->series_thumbnail))
-        {
-            $item->series_thumbnail = $pelements->series_thumbnail;
-        }
-        else
-        {
-            $item->series_thumbnail = null;
-        }
-        $item->detailslink = $pelements->detailslink;
+	if (isset($pelements->series_thumbnail))
+	{
+		$item->series_thumbnail = $pelements->series_thumbnail;
+	}
+	else
+	{
+		$item->series_thumbnail = null;
+	}
+	$item->detailslink = $pelements->detailslink;
     }
 }
 $list      = $items;
-$link_text = $params->get('pagetext', 'More Bible Studies');
+$link_text = $params->get('pagetext');
 $jinput    = new JInput;
+
 if (!$templatemenuid)
 {
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
@@ -138,12 +138,9 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
-$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
-$document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
-
+/**
+ * @todo fork the layout based on params to other custom template files, Tom can you see if this to do is still needed. TOM
+ */
 if ($params->get('useexpert_module') > 0)
 {
     $template = 'default_custom';

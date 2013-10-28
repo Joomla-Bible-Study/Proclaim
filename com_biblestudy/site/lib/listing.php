@@ -10,9 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
-// Helper file - master list creater for study lists
+// Helper file - master list crater for study lists
 JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
 JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
@@ -934,7 +934,7 @@ public function getMediaFiles($medias)
      */
     public function getFluidMediaFiles($item, $params, $admin_params, $template)
     {
-        $med = new jbsMedia();
+        $med = new JBSMMedia();
         $mediarow = '<div style="display:inline;">';
         foreach ($item->mediafiles as $media)
         {

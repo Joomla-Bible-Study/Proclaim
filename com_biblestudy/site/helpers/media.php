@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -21,7 +21,7 @@ class JBSMMedia
 	/**
 	 * Get Media
 	 *
-	 * @param   int $id  ID
+	 * @param   int $id ID
 	 *
 	 * @return object
 	 *
@@ -37,9 +37,9 @@ class JBSMMedia
 	/**
 	 * Get Internal Player
 	 *
-	 * @param   object    $media         Media Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $media        Media Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return string
 	 *
@@ -55,9 +55,9 @@ class JBSMMedia
 	/**
 	 * Get Download Link
 	 *
-	 * @param   object    $media         Media Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Prams
+	 * @param   object    $media        Media Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Prams
 	 *
 	 * @return string|boolean
 	 *
@@ -73,9 +73,9 @@ class JBSMMedia
 	/**
 	 * Get Media File
 	 *
-	 * @param   object    $media         Media info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $media        Media info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return string
 	 *
@@ -91,9 +91,9 @@ class JBSMMedia
 	/**
 	 * Get Type Icon
 	 *
-	 * @param   object    $media         JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $media        JTable
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return string
 	 *
@@ -109,9 +109,9 @@ class JBSMMedia
 	/**
 	 * Get PDF
 	 *
-	 * @param   object    $row           Media Info
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $row          Media Info
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return string
 	 *
@@ -127,9 +127,9 @@ class JBSMMedia
 	/**
 	 * Return Media Table
 	 *
-	 * @param   object $row           Table info
-	 * @param   object $params        Item Params
-	 * @param   object $admin_params  Admin Params
+	 * @param   object $row          Table info
+	 * @param   object $params       Item Params
+	 * @param   object $admin_params Admin Params
 	 *
 	 * @return null|string
 	 */
@@ -289,7 +289,7 @@ class JBSMMedia
 	/**
 	 * Get Media ID
 	 *
-	 * @param   int $id  ID of Study
+	 * @param   int $id ID of Study
 	 *
 	 * @return object  List of Media Associated with a Study
 	 *
@@ -305,7 +305,7 @@ class JBSMMedia
 	/**
 	 * Get Media info Row1
 	 *
-	 * @param   int $id  ID of media Row
+	 * @param   int $id ID of media Row
 	 *
 	 * @return object|boolean
 	 */
@@ -318,11 +318,11 @@ class JBSMMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-		. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-		. ' #__bsms_media.media_image_name AS imname,'
-		. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-		. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-		. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
+			. ' #__bsms_media.media_image_name AS imname,'
+			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
 
 		$query->from('#__bsms_mediafiles');
 
@@ -357,7 +357,7 @@ class JBSMMedia
 	/**
 	 * Get Media info Row2
 	 *
-	 * @param   int $id  ID of Row
+	 * @param   int $id ID of Row
 	 *
 	 * @return object|boolean
 	 */
@@ -367,13 +367,13 @@ class JBSMMedia
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-		. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
-		. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
-		. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-		. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-		. ' #__bsms_media.media_alttext AS malttext,'
-		. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
-		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype')
+			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
+			. ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
+			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
+			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
+			. ' #__bsms_media.media_alttext AS malttext,'
+			. ' se.id as seriesid, se.series_text, se.series_thumbnail,'
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
@@ -400,10 +400,10 @@ class JBSMMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   object $admin_params  Admin params
-	 * @param   object $params        System params
-	 * @param   object $itemparams    Itam Params //@todo Thinking this could be munged into the $params
-	 * @param   object $media         Media info
+	 * @param   object $admin_params Admin params
+	 * @param   object $params       System params
+	 * @param   object $itemparams   Itam Params //@todo Thinking this could be munged into the $params
+	 * @param   object $media        Media info
 	 *
 	 * @return object
 	 */
@@ -509,8 +509,8 @@ class JBSMMedia
 	/**
 	 * Return Docman Media
 	 *
-	 * @param   object $media  Media
-	 * @param   object $image  Image
+	 * @param   object $media Media
+	 * @param   object $image Image
 	 *
 	 * @return string
 	 * FIXME ASAP getDuration is not working.
@@ -533,8 +533,8 @@ class JBSMMedia
 	/**
 	 * Return Articles.
 	 *
-	 * @param   object $media  Media
-	 * @param   object $image  Image
+	 * @param   object $media Media
+	 * @param   object $image Image
 	 *
 	 * @return string
 	 */
@@ -554,9 +554,9 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object $media   Media
-	 * @param   object $params  Item Params
-	 * @param   object $image   Image
+	 * @param   object $media  Media
+	 * @param   object $params Item Params
+	 * @param   object $image  Image
 	 *
 	 * @return string
 	 */
@@ -587,7 +587,7 @@ class JBSMMedia
 	 */
 	public function getPlayerCode($params, $itemparams, $player, $image, $media)
 	{
-		$input        = new JInput;
+		$input = new JInput;
 		$src          = JURI::base() . $image->path;
 		$height       = $image->height;
 		$width        = $image->width;
@@ -824,8 +824,8 @@ class JBSMMedia
 	/**
 	 * Return AVMedia Code.
 	 *
-	 * @param   string $mediacode  Media stirng
-	 * @param   object $media      Media info
+	 * @param   string $mediacode Media string
+	 * @param   object $media     Media info
 	 *
 	 * @return string
 	 */
@@ -849,9 +849,9 @@ class JBSMMedia
 	}
 
 	/**
-	 * Update Hit count for playes.
+	 * Update Hit count for plays.
 	 *
-	 * @param   int $id  ID to apply the hit to.
+	 * @param   int $id ID to apply the hit to.
 	 *
 	 * @return boolean
 	 */
@@ -871,5 +871,247 @@ class JBSMMedia
 
 		return false;
 	}
+
+	/**
+	 * Return Fluid Media row
+	 */
+	public function getFluidMedia($media, $params, $admin_params, $template)
+	{
+
+		$registry = new JRegistry;
+		$registry->loadString($media->params);
+		$itemparams = $registry;
+		$registry   = new JRegistry;
+		$registry->loadString($admin_params);
+		$admin_params = $registry;
+		if ($media->impath)
+		{
+			$mediaimage = $media->impath;
+		}
+		elseif ($media->path2)
+		{
+			$mediaimage = 'media/com_biblestudy/images/' . $media->path2;
+		}
+		if (!$media->path2 && !$media->impath)
+		{
+			$mediaimage = 'media/com_biblestudy/images/speaker24.png';
+		}
+		$image      = $this->useJImage($mediaimage, $media->malttext);
+		$player     = self::getPlayerAttributes($admin_params, $params, $itemparams, $media);
+		$playercode = self::getPlayerCode($params, $itemparams, $player, $image, $media);
+		$mediafile  = self::getFluidDownloadLink($media, $params, $admin_params, $template, $playercode);
+
+		if ($params->get('show_filesize') > 0 && isset($media))
+		{
+			$mediafile = '<div style="display:inline;">' . $mediafile . '<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' . self::getFluidFilesize($media, $params) . '</div></div>';
+		}
+
+		return $mediafile;
+	}
+
+	/**
+	 * JImage extension
+	 *
+	 * @param $path
+	 * @param $alt
+	 *
+	 * @return bool|stdClass
+	 *
+	 * @since 8.1.0
+	 */
+	public function useJImage($path, $alt = null)
+	{
+		if (!$path)
+		{
+			return false;
+		}
+		$image = new JImage();
+
+		try
+		{
+			$return = $image->getImageFileProperties($path);
+		}
+		catch (Exception $e)
+		{
+			$return = false;
+		}
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . '>';
+
+		return $imagereturn;
+	}
+
+	/**
+	 * Return download link
+	 */
+	public function getFluidDownloadLink($media, $params, $admin_params, $template, $playercode)
+	{
+		$table = '';
+		//$images       = new JBSMImages;
+		if ($admin_params->get('default_download_image'))
+		{
+			$admin_d_image = $admin_params->get('default_download_image');
+		}
+		else
+		{
+			$admin_d_image = null;
+		}
+		$d_image = ($admin_d_image ? $admin_d_image : 'media/com_biblestudy/images/download.png');
+
+		$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+
+		if ($media->link_type > 0)
+		{
+			$compat_mode = $admin_params->get('compat_mode');
+
+			if ($compat_mode == 0)
+			{
+				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
+					$media->id . '&amp;view=sermons&amp;task=download">';
+			}
+			else
+			{
+				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+					$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
+			}
+
+			// Check to see if they want to use a popup
+			if ($params->get('useterms') > 0)
+			{
+
+				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
+					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+			}
+			$downloadlink .= $download_image . '</a>';
+		}
+		switch ($media->link_type)
+		{
+			case 0:
+				$table .= $playercode;
+				break;
+
+			case 1:
+				$table .= $playercode . $downloadlink;
+				break;
+
+			case 2:
+				$table .= $downloadlink;
+				break;
+		}
+
+		return $table;
+	}
+
+	/**
+	 * return $table
+	 */
+	public function getFluidFilesize($media, $params)
+	{
+
+		$table = '';
+		if (!$media->size)
+		{
+			$table = null;
+
+			return $table;
+		}
+		switch ($media->size)
+		{
+			case $media->size < 1024 :
+				$file_size = $media->size . ' ' . 'Bytes';
+				break;
+			case $media->size < 1048576 :
+				$file_size = $media->size / 1024;
+				$file_size = number_format($file_size, 0);
+				$file_size = $file_size . ' ' . 'KB';
+				break;
+			case $media->size < 1073741824 :
+				$file_size = $media->size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = number_format($file_size, 1);
+				$file_size = $file_size . ' ' . 'MB';
+				break;
+			case $media->size > 1073741824 :
+				$file_size = $media->size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = number_format($file_size, 1);
+				$file_size = $file_size . ' ' . 'GB';
+				break;
+		}
+		switch ($params->get('show_filesize'))
+		{
+			case 1:
+				$filesize = $file_size;
+				break;
+			case 2:
+				$filesize = $media->comment;
+				break;
+			case 3:
+				if ($media->comment)
+				{
+					$filesize = $media->comment;
+				}
+				else
+				{
+					($filesize = $file_size);
+				}
+				break;
+		}
+
+		$table .= '<span class="bsfilesize">' . $filesize . '</span>';
+		$table = $file_size;
+
+		return $table;
+	}
+
+	/**
+	 * Get duration
+	 *
+	 *
+	 */
+	public function getFluidDuration($row, $params)
+	{
+		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
+		if (!$duration)
+		{
+			$duration = null;
+
+			return $duration;
+		}
+		$duration_type = $params->get('duration_type', 2);
+		$hours         = $row->media_hours;
+		$minutes       = $row->media_minutes;
+		$seconds       = $row->media_seconds;
+
+		switch ($duration_type)
+		{
+			case 1:
+				if (!$hours)
+				{
+					$duration = $minutes . ' mins ' . $seconds . ' secs';
+				}
+				else
+				{
+					$duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
+				}
+				break;
+			case 2:
+				if (!$hours)
+				{
+					$duration = $minutes . ':' . $seconds;
+				}
+				else
+				{
+					$duration = $hours . ':' . $minutes . ':' . $seconds;
+				}
+				break;
+			default:
+				$duration = $hours . ':' . $minutes . ':' . $seconds;
+				break;
+		} // end switch
+
+		return $duration;
+	}
+
 
 }
