@@ -16,7 +16,7 @@ JLoader::register('JBSPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib
 JLoader::register('JBSMPodcastSubscribe', JPATH_SITE . '/components/com_biblestudy/helpers/podcastsubscribe.php');
 JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
-JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . 'teacher.php');
+//JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . 'teacher.php');
 
 /**
  * View for Sermons class

@@ -13,10 +13,8 @@ if (BIBLESTUDY_CHECKREL)
 {
     JHtml::_('bootstrap.framework');
 }
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('teacher');
-$JBSMTeacher = new JBSMTeacher;
-$teachers = $JBSMTeacher->getTeachersFluid($this->params);
+
+$JBSMListing = new JBSMListing();
 ?>
 
 <div class="container-fluid">
