@@ -312,6 +312,13 @@ class JBSMListing extends JBSMElements
 			$row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
 		}
 		$listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
+        $listsorts = array();
+        $listsorts[] = $row1sorted;
+        $listsorts[] = $row2sorted;
+        $listsorts[] = $row3sorted;
+        $listsorts[] = $row4sorted;
+        $listsorts[] = $row5sorted;
+        $listsorts[] = $row6sorted;
 
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
@@ -320,21 +327,21 @@ class JBSMListing extends JBSMElements
 		{
 			if ($params->get('use_headers_list') > 0)
 			{
-				$list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
 		}
 		if ($type == 'sermon')
 		{
 			if ($params->get('use_headers_view') > 0)
 			{
-				$list .= $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
 		}
 		if ($type == 'seriesdisplays')
 		{
 			if ($params->get('use_headers_series') > 0)
 			{
-				$list .= $this->getFluidRow($listrows, $items[0], $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
 		}
 		if ($type == 'seriesdisplay')
@@ -342,25 +349,25 @@ class JBSMListing extends JBSMElements
 			if ($params->get('use_header_seriesdisplay') > 0)
 			{
 				$oddeven = $params->get('seriesdisplay_color');
-				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
-			$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 		}
 		if ($type == 'teacher')
 		{
 			if ($params->get('use_headers_teacher_details') > 0)
 			{
 				$oddeven = $params->get('teacherdisplay_color', 'white');
-				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
-			$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 		}
 		if ($type == 'teachers')
 		{
 			if ($params->get('use_headers_teacher_list') > 0)
 			{
 				//$oddeven = $params->get('tslistcolor');
-				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
+				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
 
 		}
@@ -385,7 +392,7 @@ class JBSMListing extends JBSMElements
 				{
 					$item->mediafiles = $studymedia;
 				}
-				$row[] = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 			}
 		}
 		if ($type == 'sermon')
@@ -406,14 +413,14 @@ class JBSMListing extends JBSMElements
 			{
 				$item->mediafiles = $studymedia;
 			}
-			$row[] = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+			$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 		}
 		if ($type == 'seriesdisplays')
 		{
 			foreach ($items as $item)
 			{
 				$oddeven = ($oddeven == $class1) ? $class2 : $class1;
-				$row[]   = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 			}
 		}
 		if ($type == 'teachers')
@@ -421,7 +428,7 @@ class JBSMListing extends JBSMElements
 			foreach ($items as $item)
 			{
 				$oddeven = ($oddeven == $class1) ? $class2 : $class1;
-				$row[]   = $this->getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 0, $type);
+				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 			}
 		}
 		foreach ($row as $key => $value)
@@ -536,7 +543,7 @@ class JBSMListing extends JBSMElements
 	 *
 	 * @return string
 	 */
-	public function getFluidRow($listrows, $item, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header, $type)
+	public function getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header, $type)
 	{
 		$span        = '';
 		$headerstyle = '';
@@ -600,26 +607,41 @@ class JBSMListing extends JBSMElements
 		$rowspanbalance  = 12 - $rowspanitemspan;
 		$frow            = '<div class="row-fluid" style="background-color:' . $oddeven . '; padding:5px;">';
 
-
+        $row1count = 0;
+        $row2count = 0;
+        $row3count = 0;
+        $row4count = 0;
+        $row5count = 0;
+        $row6count = 0;
+        $row1count2 = 0;
+        $row2count2 = 0;
+        $row3count2 = 0;
+        $row4count2 = 0;
+        $row5count2 = 0;
+        $row6count2 = 0;
 		if ($span)
 		{
 			$frow .= '<div class="row-fluid" >';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '"><div ' . $headerstyle . ' class="">' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '">';
 		}
+        foreach ($listsorts as $sort)
+        {
+            if (count($sort))
+            {
+                foreach ($sort as $s)
+                {
+                    if ($s->row == 1){$row1count ++; $row1count2 ++;}
+                    if ($s->row == 2){$row2count ++; $row2count2 ++;}
+                    if ($s->row == 3){$row3count ++; $row3count2 ++;}
+                    if ($s->row == 4){$row4count ++; $row4count2 ++;}
+                    if ($s->row == 5){$row5count ++; $row5count2 ++;}
+                    if ($s->row == 6){$row6count ++; $row6count2 ++;}
+                }
+            }
 
-		$row1count  = count($row1sorted);
-		$row1count2 = count($row1sorted);
-		$row2count  = count($row2sorted);
-		$row2count2 = count($row2sorted);
-		$row3count  = count($row3sorted);
-		$row3count2 = count($row3sorted);
-		$row4count  = count($row4sorted);
-		$row4count2 = count($row4sorted);
-		$row5count  = count($row5sorted);
-		$row5count2 = count($row5sorted);
-		$row6count  = count($row6sorted);
-		$row6count2 = count($row6sorted);
+        }
+
 		foreach ($listrows as $row)
 		{
 			if ($row->row == 1)
