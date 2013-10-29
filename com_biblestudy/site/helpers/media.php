@@ -22,7 +22,14 @@ class JBSMMedia
 {
 
 	/**
-	 * Return Fluid Media row
+	 * Get Fluid Media
+	 *
+	 * @param   object     $media         Media info
+	 * @param   JRegistry  $params        Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template ID
+	 *
+	 * @return string
 	 */
 	public function getFluidMedia($media, $params, $admin_params, $template)
 	{
@@ -54,19 +61,23 @@ class JBSMMedia
 
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
-			$mediafile = '<div style="display:inline;">' . $mediafile . '<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' . self::getFluidFilesize($media, $params) . '</div></div>';
+			$mediafile = '<div style="display:inline;">' . $mediafile
+				. '<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">'
+				. self::getFluidFilesize($media, $params) . '</div></div>';
 		}
 
 		return $mediafile;
 	}
 
 	/**
+	 * Use JImage to create image
+	 *
+	 * @param   string  $path  Path of File
+	 * @param   string  $alt   Accessibility Languages
+	 *
+	 * @return bool|string
+	 *
 	 * @since 8.1.0
-	 *
-	 * @param $path
-	 * @param $alt
-	 *
-	 * @return bool|stdClass
 	 */
 	public function useJImage($path, $alt = null)
 	{
@@ -74,7 +85,7 @@ class JBSMMedia
 		{
 			return false;
 		}
-		$image = new JImage();
+		$image = new JImage;
 
 		try
 		{
@@ -91,11 +102,20 @@ class JBSMMedia
 
 	/**
 	 * Return download link
+	 *
+	 * @param   object     $media         Media info
+	 * @param   JRegistry  $params        Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template ID
+	 * @param   string     $playercode    Player Code
+	 *
+	 * @return string
 	 */
 	public function getFluidDownloadLink($media, $params, $admin_params, $template, $playercode)
 	{
 		$table = '';
-		//$images = new JBSMImages;
+		$downloadlink = '';
+
 		if ($admin_params->get('default_download_image'))
 		{
 			$admin_d_image = $admin_params->get('default_download_image');
@@ -152,16 +172,20 @@ class JBSMMedia
 
 	/**
 	 * return $table
+	 *
+	 * @param   object     $media   Media
+	 * @param   JRegistry  $params  Params
+	 *
+	 * @return null|string
 	 */
 	public function getFluidFilesize($media, $params)
 	{
+		$file_size = null;
+		$filesize = null;
 
-		$table = '';
 		if (!$media->size)
 		{
-			$table = null;
-
-			return $table;
+			return null;
 		}
 		switch ($media->size)
 		{
@@ -207,17 +231,14 @@ class JBSMMedia
 				break;
 		}
 
-		$table .= '<span class="bsfilesize">' . $filesize . '</span>';
-		$table = $file_size;
-
-		return $table;
+		return $filesize;
 	}
 
 	/**
 	 * Set up Player Attributes
 	 *
 	 * @param   JRegistry  $params      System params
-	 * @param   JRegistry  $itemparams  Itam Params // @todo Thinking this could be munged into the $params
+	 * @param   JRegistry  $itemparams  Item Params // @todo Thinking this could be munged into the $params
 	 * @param   object     $media       Media info
 	 *
 	 * @return object
@@ -252,7 +273,6 @@ class JBSMMedia
 		 * In 6.2.3 we changed inline = 2
 		 */
 		$player->player     = 0;
-		$params_mediaplayer = $params->get('media_player');
 		$item_mediaplayer   = $media->player;
 
 		// Check to see if the item player is set to 100 - that means use global settings which comes from $params
@@ -325,23 +345,15 @@ class JBSMMedia
 	 * Return Docman Media
 	 *
 	 * @param   object  $media  Media
-	 * @param   object  $image  Image
+	 * @param   string  $image  Image
 	 *
 	 * @return string
 	 * FIXME ASAP getDuration is not working.
 	 */
 	public function getDocman($media, $image)
 	{
-		$src          = JURI::base() . $image->path;
-		$height       = $image->height;
-		$width        = $image->width;
-		$JBSMElements = new JBSMElements;
-		$filesize     = $JBSMElements->getFilesize($media->size);
 		$docman       = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
-                 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
-			. '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
-			. '" height="' . $height . '" border="0" /></a>';
-
+                 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
 
 		return $docman;
 	}
@@ -350,19 +362,14 @@ class JBSMMedia
 	 * Return Articles.
 	 *
 	 * @param   object  $media  Media
-	 * @param   object  $image  Image
+	 * @param   string  $image  Image
 	 *
 	 * @return string
 	 */
 	public function getArticle($media, $image)
 	{
-
-		$src     = JURI::base() . $image->path;
-		$height  = $image->height;
-		$width   = $image->width;
 		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
-                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-			. '" height="' . $height . '" border="0" /></a>';
+                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
 
 		return $article;
 	}
@@ -372,18 +379,14 @@ class JBSMMedia
 	 *
 	 * @param   object     $media   Media
 	 * @param   JRegistry  $params  Item Params
-	 * @param   object     $image   Image
+	 * @param   string     $image   Image
 	 *
 	 * @return string
 	 */
 	public function getVirtuemart($media, $params, $image)
 	{
-		$src    = JURI::base() . $image->path;
-		$height = $image->height;
-		$width  = $image->width;
 		$vm     = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
-                alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-			. '" height="' . $height . '" border="0" /></a>';
+                alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
 
 		return $vm;
 	}
@@ -391,7 +394,10 @@ class JBSMMedia
 	/**
 	 * Get duration
 	 *
+	 * @param   object     $row     Table Row info
+	 * @param   JRegistry  $params  Params
 	 *
+	 * @return null|string
 	 */
 	public function getFluidDuration($row, $params)
 	{
@@ -432,7 +438,8 @@ class JBSMMedia
 			default:
 				$duration = $hours . ':' . $minutes . ':' . $seconds;
 				break;
-		} // end switch
+
+		} // End switch
 
 		return $duration;
 	}
@@ -440,11 +447,11 @@ class JBSMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param object $params     System Params
-	 * @param object $itemparams Item Params //@todo need to merge with $params
-	 * @param object $player     Player code
-	 * @param object $image      Image info
-	 * @param object $media      Media
+	 * @param   JRegistry  $params      System Params
+	 * @param   JRegistry  $itemparams  Item Params //@todo need to merge with $params
+	 * @param   object     $player      Player code
+	 * @param   string     $image       Image info
+	 * @param   object     $media       Media
 	 *
 	 * @return string
 	 */
@@ -458,17 +465,13 @@ class JBSMMedia
 		$lightcolor  = $params->get('lightcolor', '0x000000');
 		$screencolor = $params->get('screencolor', '0xFFFFFF');
 		$template    = $input->get('t', '1', 'int');
-		//$JBSMElements = new JBSMElements;
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
 
-
 		// This one IS needed
 		$duration = self::getFluidDuration($media, $params);
-		//$duration = $JBSMElements->getDuration($params, $media);
 
-		$mimetype = $media->mimetext;
 		$path     = $media->spath . $media->fpath . $media->filename;
 
 		if (!isset($media->malttext))
@@ -490,8 +493,8 @@ class JBSMMedia
 					case 2: // New window
 
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
-							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
-return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');'
+							. ' return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' .
 							$media->special . '">' . $image . '</a>';
 
@@ -517,29 +520,26 @@ return true;" title="' . $media->malttext . ' - ' . $media->comment . ' ' . $dur
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
                                                                         <script language=\"javascript\" type=\"text/javascript\">
-jwplayer('placeholder').setup({
-         'file' : '<?php echo $path; ?>',
-         'height' : '<?php echo $height; ?>',
-         'width' : '<?php echo $width; ?>',
-'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
-'backcolor':'<?php echo $backcolor; ?>',
-'frontcolor':'<?php echo $frontcolor; ?>',
-'lightcolor':'<?php echo $lightcolor; ?>',
-'screencolor':'<?php echo $screencolor; ?>',
-});
-</script>";
+								jwplayer('placeholder').setup({
+								         'file' : '<?php echo $path; ?>',
+								         'height' : '<?php echo $height; ?>',
+								         'width' : '<?php echo $width; ?>',
+								'flashplayer':'<?php echo JURI::base() ?>media/com_biblestudy/player/jwplayer.flash.swf'
+								'backcolor':'<?php echo $backcolor; ?>',
+								'frontcolor':'<?php echo $frontcolor; ?>',
+								'lightcolor':'<?php echo $lightcolor; ?>',
+								'screencolor':'<?php echo $screencolor; ?>',
+								});
+								</script>";
 						break;
 
 					case 1: // Popup
-
-
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode           = '';
 						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
-							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
-							$player->playerheight . "'); return false\">$image</a>";
+												. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
+												$player->playerheight . "'); return false\">$image</a>";
 						break;
 				}
 
@@ -606,7 +606,6 @@ jwplayer('placeholder').setup({
 						return $playercode;
 						break;
 
-
 					case 1:
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=7&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight
@@ -618,7 +617,6 @@ jwplayer('placeholder').setup({
 				break;
 
 			case 8: // Embed code
-				$playercode = '';
 				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">$image</a>";
@@ -633,8 +631,8 @@ jwplayer('placeholder').setup({
 	/**
 	 * Return AVMedia Code.
 	 *
-	 * @param string $mediacode Media stirng
-	 * @param object $media     Media info
+	 * @param   string  $mediacode  Media string
+	 * @param   object  $media      Media info
 	 *
 	 * @return string
 	 */
@@ -658,9 +656,9 @@ jwplayer('placeholder').setup({
 	}
 
 	/**
-	 * Update Hit count for playes.
+	 * Update Hit count for plays.
 	 *
-	 * @param int $id ID to apply the hit to.
+	 * @param   int  $id  ID to apply the hit to.
 	 *
 	 * @return boolean
 	 */
@@ -684,9 +682,9 @@ jwplayer('placeholder').setup({
 	/**
 	 * Return Media Table
 	 *
-	 * @param object $row          Table info
-	 * @param object $params       Item Params
-	 * @param object $admin_params Admin Params
+	 * @param   object     $row           Table info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return null|string
 	 */
@@ -755,7 +753,6 @@ jwplayer('placeholder').setup({
 
 			// Now we build the column for each media file
 			$table .= '<td>';
-
 
 			// Check to see if a download link is needed
 
@@ -842,7 +839,7 @@ jwplayer('placeholder').setup({
 	/**
 	 * Get Media ID
 	 *
-	 * @param int $id ID of media
+	 * @param   int  $id  ID of media
 	 *
 	 * @return object
 	 */
@@ -862,7 +859,7 @@ jwplayer('placeholder').setup({
 	/**
 	 * Get Media info Row1
 	 *
-	 * @param int $id ID of media Row
+	 * @param   int  $id  ID of media Row
 	 *
 	 * @return object|boolean
 	 */
@@ -914,7 +911,7 @@ jwplayer('placeholder').setup({
 	/**
 	 * Get Media info Row2
 	 *
-	 * @param int $id ID of Row
+	 * @param   int  $id  ID of Row
 	 *
 	 * @return object|boolean
 	 */
@@ -953,6 +950,5 @@ jwplayer('placeholder').setup({
 			return false;
 		}
 	}
-
 
 }
