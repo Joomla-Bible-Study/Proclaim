@@ -10,17 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-
-// Helper file - master list crater for study lists
-//JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-//JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-//JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php');
-//JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-//JLoader::register('JBSMCustom', BIBLESTUDY_PATH_HELPERS . '/custom.php');
-//JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/helper.php');
-
-
 /**
  * BibleStudy listing class
  *
@@ -33,11 +22,13 @@ class JBSMListing extends JBSMElements
 	public $params;
 
 	/**
-	 * @param Object    $items
-	 * @param JRegistry $params
-	 * @param JRegistry $admin_params
-	 * @param String    $template
-	 * @param string    $type Type of Listing
+	 * Get Fluid Listing
+	 *
+	 * @param   Object     $items         Items
+	 * @param   JRegistry  $params        Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      Template id
+	 * @param   String     $type          Type of Listing
 	 *
 	 * @return string
 	 */
@@ -64,13 +55,14 @@ class JBSMListing extends JBSMElements
 			$medias = $this->getFluidMediaids($items);
 			$item   = $items;
 		}
-		//get the media files in one query
+
+		// Get the media files in one query
 		if (isset($medias))
 		{
 			$mediafiles = $this->getMediaFiles($medias);
 		}
-		//create an array from each param variable set
-		//Find out what view we are in
+		// Create an array from each param variable set
+		// Find out what view we are in
 		$extra = '';
 
 		switch ($type)
@@ -259,7 +251,8 @@ class JBSMListing extends JBSMElements
 		$row4sorted = array();
 		$row5sorted = array();
 		$row6sorted = array();
-		//Create an array sorted by row and then by column
+
+		// Create an array sorted by row and then by column
 		foreach ($listparams as $listing)
 		{
 			if ($listing->row == 1)
@@ -359,7 +352,7 @@ class JBSMListing extends JBSMElements
 		{
 			if ($params->get('use_headers_teacher_list') > 0)
 			{
-				//$oddeven = $params->get('tslistcolor');
+				// $oddeven = $params->get('tslistcolor');
 				$list .= $this->getFluidRow($listrows, $items, $params, $admin_params, $template, $row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted, $oddeven, $header = 1, $type);
 			}
 
@@ -433,7 +426,9 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $item
+	 *  Get Fluid Media Ids
+	 *
+	 * @param   Object  $item  Item info
 	 *
 	 * @return array
 	 */
@@ -450,7 +445,9 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $medias
+	 * Get Media Files
+	 *
+	 * @param   Object  $medias  Media to be prossesed
 	 *
 	 * @return mixed
 	 */
@@ -499,13 +496,15 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $paramtext
+	 * Get List of Params in Array
+	 *
+	 * @param   string  $paramtext  Param String text
 	 *
 	 * @return stdClass
 	 */
 	public function getListParamsArray($paramtext)
 	{
-		$l             = new stdClass();
+		$l             = new stdClass;
 		$l->row        = $this->params->get($paramtext . 'row');
 		$l->col        = $this->params->get($paramtext . 'col');
 		$l->colspan    = $this->params->get($paramtext . 'colspan');
@@ -519,20 +518,20 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $listrows
-	 * @param $item
+	 * @param           $listrows
+	 * @param           $item
 	 * @param JRegistry $params
-	 * @param $admin_params
-	 * @param $template
-	 * @param $row1sorted
-	 * @param $row2sorted
-	 * @param $row3sorted
-	 * @param $row4sorted
-	 * @param $row5sorted
-	 * @param $row6sorted
-	 * @param $oddeven
-	 * @param $header
-	 * @param $type
+	 * @param           $admin_params
+	 * @param           $template
+	 * @param           $row1sorted
+	 * @param           $row2sorted
+	 * @param           $row3sorted
+	 * @param           $row4sorted
+	 * @param           $row5sorted
+	 * @param           $row6sorted
+	 * @param           $oddeven
+	 * @param           $header
+	 * @param           $type
 	 *
 	 * @return string
 	 */
@@ -760,6 +759,8 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
+	 * Get Fluid Data
+	 *
 	 * @param           $item
 	 * @param           $row
 	 * @param JRegistry $params
@@ -1306,8 +1307,8 @@ class JBSMListing extends JBSMElements
 				break;
 		}
 
-		$style       = '';
-		$customclass = '';
+		$style        = '';
+		$customclass  = '';
 		$classelement = '';
 		if (isset($row->custom))
 		{
@@ -2089,15 +2090,17 @@ class JBSMListing extends JBSMElements
 
 
 	/**
-	 * @param           $islink
-	 * @param           $id3
-	 * @param           $tid
-	 * @param           $smenu
-	 * @param           $tmenu
-	 * @param JRegistry $params
-	 * @param           $admin_params
-	 * @param           $row
-	 * @param           $template
+	 * Get Link
+	 *
+	 * @param   bool      $islink
+	 * @param   int       $id3
+	 * @param   int       $tid
+	 * @param   object    $smenu
+	 * @param   object    $tmenu
+	 * @param   JRegistry  $params
+	 * @param   JRegistry $admin_params
+	 * @param   object     $row
+	 * @param   int        $template
 	 *
 	 * @return string
 	 */
@@ -2258,7 +2261,7 @@ class JBSMListing extends JBSMElements
 	 */
 	public function getStudyExp($row, $params, $admin_params, $template)
 	{
-		$Media = new jbsMedia;
+		$Media  = new jbsMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');
