@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `link_type`        CHAR(1) DEFAULT NULL,
   `hits`             INT(10) DEFAULT NULL,
   `published`        TINYINT(3)              NOT NULL DEFAULT '1',
-  `docMan_id`        INT(11) DEFAULT NULL,
+  `docMan_id`        VARCHAR(250) DEFAULT NULL,
   `article_id`       INT(11) DEFAULT NULL,
   `comment`          TEXT,
   `virtueMart_id`    INT(11) DEFAULT NULL,
