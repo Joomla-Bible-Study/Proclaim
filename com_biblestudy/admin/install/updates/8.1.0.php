@@ -20,7 +20,7 @@ class JBS810Update
     public function update810()
     {
         self::updatetemplates();
-
+        self::updateDocMan();
         return true;
     }
 
@@ -49,5 +49,14 @@ class JBS810Update
 
             $table->store();
         }
+    }
+    public function updateDocMan()
+    {
+        $db = JFactory::getDBO();
+        $query = 'UPDATE #__bsms_mediafiles SET `docMan_id` = varchar(250) NULL';
+        $db->setQuery($query);
+        $result = $db->query();
+        if (!$result){return false;}
+        else {return true;}
     }
 }
