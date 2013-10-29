@@ -31,7 +31,8 @@ class JBSMMedia
 	 */
 	public function getFluidMedia($media, $params, $admin_params, $template)
 	{
-		$registry = new JRegistry;
+
+        $registry = new JRegistry;
 		$registry->loadString($media->params);
 		$itemparams = $registry;
 		$registry   = new JRegistry;
@@ -293,7 +294,7 @@ class JBSMMedia
 			$player->player = 2;
 		}
 
-		if ($media->docMan_id > 0)
+		if (isset($media->docMan_id))
 		{
 			$player->player = 4;
 		}
@@ -347,12 +348,16 @@ class JBSMMedia
 	 * @param   string  $image  Image
 	 *
 	 * @return string
-	 * FIXME ASAP getDuration is not working.
+	 *
 	 */
 	public function getDocman($media, $image)
 	{
+        $url = 'com_docman';
+        $menu = JSite::getMenu();
+        $menuItem = $menu->getItems( 'component', $url, true );
+        $Itemid = $menuItem->id;
 		$docman = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
-			$media->docMan_id . '&amp;alt=' . $media->docMan_id . '">' . $image . '</a>';
+			$media->docMan_id . '&amp;Itemid='.$Itemid.'">' . $image . '</a>';
 
 		return $docman;
 	}
@@ -468,7 +473,7 @@ class JBSMMedia
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
 
-		// This one IS needed
+
 		$duration = self::getFluidDuration($media, $params);
 		$path     = $media->spath . $media->fpath . $media->filename;
 
