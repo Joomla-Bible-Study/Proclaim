@@ -197,7 +197,7 @@ class JBSMMedia
      *
      * @param object $admin_params Admin params
      * @param object $params System params
-     * @param object $itemparams Itam Params //@todo Thinking this could be munged into the $params
+     * @param object $itemparams Itam Params //@todo Thinking this could be merged into the $params
      * @param object $media Media info
      *
      * @return object
@@ -312,17 +312,7 @@ class JBSMMedia
      */
     public function getDocman($media, $image)
     {
-        $src = JURI::base() . $image->path;
-        $height = $image->height;
-        $width = $image->width;
-        $JBSMElements = new JBSMElements;
-        $filesize = $JBSMElements->getFilesize($media->size);
-        $docman = '<a href="index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $media->docMan_id . '"
-                 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
-            . '" alt="' . $media->malttext . ' ' . $filesize . '" width="' . $width
-            . '" height="' . $height . '" border="0" /></a>';
-
-
+        $docman = '<a href="index.php?option=com_docman&amp;view=document&amp;slug='.$media->docMan_id.'&amp;alt='.$media->docMan_id.'">'.$image.'</a>';
         return $docman;
     }
 
@@ -341,8 +331,7 @@ class JBSMMedia
         $height = $image->height;
         $width = $image->width;
         $article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
-                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
-            . '" height="' . $height . '" border="0" /></a>';
+                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">$image</a>';
 
         return $article;
     }
@@ -454,6 +443,7 @@ class JBSMMedia
         {
 
             case 0: // Direct
+
                 switch ($player->type)
                 {
 
