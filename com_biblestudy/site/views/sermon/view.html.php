@@ -2,21 +2,13 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSPagebuilder', JPATH_COMPONENT . '/lib/biblestudy.pagebuilder.class.php');
-JLoader::register('PodcastSubscribe', JPATH_COMPONENT . '/helpers/podcastsubscribe.php');
-JLoader::register('RelatedStudies', JPATH_COMPONENT . '/helpers/related.php');
-JLoader::register('ShowScripture', JPATH_COMPONENT . '/helpers/biblegateway.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMlisting', BIBLESTUDY_PATH_LIB . '/listing.php');
-JLoader::register('JBSMMedia',BIBLESTUDY_PATH_HELPERS . '/media.php');
 
 /**
  * View class for Sermon
@@ -71,16 +63,16 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-		$app    = JFactory::getApplication();
-		$user   = JFactory::getUser();
-		$userId = $user->get('id');
-        $JBSMListing        = new JBSMListing;
+		$app         = JFactory::getApplication();
+		$user        = JFactory::getUser();
+		$userId      = $user->get('id');
+		$JBSMListing = new JBSMListing;
 		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
@@ -200,12 +192,12 @@ class BiblestudyViewSermon extends JViewLegacy
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
-        //Get Scripture references from listing class in case we don't use the pagebuilder class
-        $this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
-        $this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
-        //@todo check to see if this works
-        $this->item->topics = $this->item->topic_text;
-		$relatedstudies = new JBSMRelatedStudies;
+		//Get Scripture references from listing class in case we don't use the pagebuilder class
+		$this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
+		$this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
+		//@todo check to see if this works
+		$this->item->topics = $this->item->topic_text;
+		$relatedstudies     = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
@@ -227,66 +219,66 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
-        //Only load pagebuilder if the default template is NOT being used
-        if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
-        {
-            $pagebuilder            = new JBSPagebuilder;
-            $pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
-            $this->item->scripture1 = $pelements->scripture1;
-            $this->item->scripture2 = $pelements->scripture2;
-            $this->item->media      = $pelements->media;
-            $this->item->duration   = $pelements->duration;
-            $this->item->studydate  = $pelements->studydate;
+		//Only load pagebuilder if the default template is NOT being used
+		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
+		{
+			$pagebuilder            = new JBSMPagebuilder;
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+			$this->item->scripture1 = $pelements->scripture1;
+			$this->item->scripture2 = $pelements->scripture2;
+			$this->item->media      = $pelements->media;
+			$this->item->duration   = $pelements->duration;
+			$this->item->studydate  = $pelements->studydate;
 
-            if (isset($pelements->secondary_reference))
-            {
-                $this->item->secondary_reference = $pelements->secondary_reference;
-            }
-            else
-            {
-                $this->item->secondary_reference = '';
-            }
-            if (isset($pelements->topics))
-            {
-                $this->item->topics = $pelements->topics;
-            }
-            else
-            {
-                $this->item->topics = '';
-            }
-            if (isset($pelements->study_thumbnail))
-            {
-                $this->item->study_thumbnail = $pelements->study_thumbnail;
-            }
-            else
-            {
-                $this->item->study_thumbnail = null;
-            }
-            if (isset($pelements->series_thumbnail))
-            {
-                $this->item->series_thumbnail = $pelements->series_thumbnail;
-            }
-            else
-            {
-                $this->item->series_thumbnail = null;
-            }
-            $this->item->detailslink = $pelements->detailslink;
+			if (isset($pelements->secondary_reference))
+			{
+				$this->item->secondary_reference = $pelements->secondary_reference;
+			}
+			else
+			{
+				$this->item->secondary_reference = '';
+			}
+			if (isset($pelements->topics))
+			{
+				$this->item->topics = $pelements->topics;
+			}
+			else
+			{
+				$this->item->topics = '';
+			}
+			if (isset($pelements->study_thumbnail))
+			{
+				$this->item->study_thumbnail = $pelements->study_thumbnail;
+			}
+			else
+			{
+				$this->item->study_thumbnail = null;
+			}
+			if (isset($pelements->series_thumbnail))
+			{
+				$this->item->series_thumbnail = $pelements->series_thumbnail;
+			}
+			else
+			{
+				$this->item->series_thumbnail = null;
+			}
+			$this->item->detailslink = $pelements->detailslink;
 
-            if (isset($pelements->teacherimage))
-            {
-                $this->item->teacherimage = $pelements->teacherimage;
-            }
-            else
-            {
-                $this->item->teacherimage = null;
-            }
-        }
+			if (isset($pelements->teacherimage))
+			{
+				$this->item->teacherimage = $pelements->teacherimage;
+			}
+			else
+			{
+				$this->item->teacherimage = null;
+			}
+		}
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
 		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
@@ -520,7 +512,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string $tpl  ?
+	 * @param   string $tpl ?
 	 *
 	 * @return void
 	 */
