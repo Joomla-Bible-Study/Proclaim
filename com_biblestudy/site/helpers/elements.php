@@ -852,9 +852,9 @@ class JBSMElements
 	/**
 	 * Get MediaTable
 	 *
-	 * @param   object $params        Item Params
-	 * @param   object $row           JTable
-	 * @param   object $admin_params  Admin Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $admin_params  Admin Info
 	 *
 	 * @return boolean|null|string
 	 */
@@ -924,7 +924,7 @@ class JBSMElements
 			$itemparams = $registry;
 			$images     = new JBSMImages;
 			$image      = $images->getMediaImage($media->path2, $media->impath);
-			$player     = $getMedia->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+			$player     = $getMedia->getPlayerAttributes($params, $itemparams, $media);
 
 			$mediatable .= '<td>';
 

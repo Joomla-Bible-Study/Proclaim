@@ -28,15 +28,14 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object $item          Item info
-	 * @param   object $params        Item Params
-	 * @param   object $admin_params  Admin Params
+	 * @param   object  $item          Item info
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return object
 	 */
 	public function buildPage($item, $params, $admin_params)
 	{
-
 		$item->tp_id = '1';
 		$images      = new JBSMImages;
 
@@ -212,9 +211,9 @@ class JBSMPageBuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array  $mediaids      ID of Media
-	 * @param   object $params        Item Params
-	 * @param   object $admin_params  Admin Params
+	 * @param   array   $mediaids      ID of Media
+	 * @param   object  $params        Item Params
+	 * @param   object  $admin_params  Admin Params
 	 *
 	 * @return string
 	 */
@@ -251,12 +250,20 @@ class JBSMPageBuilder
 			$registry->loadString($media->params);
 			$itemparams     = $registry;
 			$mediaid        = $media->id;
-			//$image          = $images->getMediaImage($media->impath, $media->path2);
-            if ($media->impath){$mediaimage = $media->impath;}
-            elseif ($media->path2){$mediaimage = 'media/com_biblestudy/images/'.$media->path2;}
-            if (!$media->path2 && !$media->impath){$mediaimage = 'media/com_biblestudy/images/speaker24.png';}
-            $image = $mediaelements->useJImage($mediaimage, $media->mimetext);
-			$player         = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+			if ($media->impath)
+			{
+				$mediaimage = $media->impath;
+			}
+			elseif ($media->path2)
+			{
+				$mediaimage = 'media/com_biblestudy/images/' . $media->path2;
+			}
+			if (!$media->path2 && !$media->impath)
+			{
+				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
+			}
+			$image = $mediaelements->useJImage($mediaimage, $media->mimetext);
+			$player         = $mediaelements->getPlayerAttributes($params, $itemparams, $media);
 			$playercode     = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
 			$d_image        = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png');
 			$download_tmp   = $images->getMediaImage($d_image, null);
@@ -305,12 +312,12 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string $whereitem     ?
-	 * @param   string $wherefield    ?
-	 * @param   object $params        Item params
-	 * @param   object $admin_params  Admin params
-	 * @param   int    $limit         Limit of Records
-	 * @param   string $order         DESC or ASC
+	 * @param   string  $whereitem     ?
+	 * @param   string  $wherefield    ?
+	 * @param   object  $params        Item params
+	 * @param   object  $admin_params  Admin params
+	 * @param   int     $limit         Limit of Records
+	 * @param   string  $order         DESC or ASC
 	 *
 	 * @return object
 	 */
@@ -413,8 +420,8 @@ class JBSMPageBuilder
 	/**
 	 * Run Content Plugins
 	 *
-	 * @param   object $item    Item info
-	 * @param   object $params  Item params
+	 * @param   object  $item    Item info
+	 * @param   object  $params  Item params
 	 *
 	 * @return object
 	 */
