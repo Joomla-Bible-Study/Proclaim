@@ -256,7 +256,7 @@ class JBSMPageBuilder
             elseif ($media->path2){$mediaimage = 'media/com_biblestudy/images/'.$media->path2;}
             if (!$media->path2 && !$media->impath){$mediaimage = 'media/com_biblestudy/images/speaker24.png';}
             $image = $mediaelements->useJImage($mediaimage, $media->mimetext);
-			$player         = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+			$player         = $mediaelements->getPlayerAttributes($params, $itemparams, $media);
 			$playercode     = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
 			$d_image        = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png');
 			$download_tmp   = $images->getMediaImage($d_image, null);
