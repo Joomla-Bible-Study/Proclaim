@@ -181,37 +181,26 @@ echo JRoute::_($url);
 <!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
 <ul class="nav nav-tabs">
-	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+    <li class="active"><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
+    </li>
+
+	<li><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 	</li>
-	<li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
-	</li>
-	<li><a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
-	</li>
-	<li><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
-	</li>
-	<li><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
-	</li>
-	<li><a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
-	</li>
+
 	<li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
 	</li>
+    <li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
+    </li>
+    <li><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
+    </li>
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
 </ul>
 <div class="tab-content">
-<div class="tab-pane active" id="general">
+<div class="tab-pane " id="general">
 
-	<?php if ($input->get('layout', '', 'string') == 'modal')
-	{
-		?>
-		<div class="control-group  form-inline">
-			<button type="button" onclick="submitbutton('mediafile.save');  ">
-				<?php echo JText::_('JSAVE'); ?></button>
-			<button type="button" onclick="window.parent.SqueezeBox.close();  ">
-				<?php echo JText::_('JCANCEL'); ?></button>
-		</div>
-	<?php } ?>
+
 
 	<div class="control-group">
 		<div class="control-label">
@@ -283,33 +272,8 @@ echo JRoute::_($url);
 		</div>
 	</div>
 </div>
-<div class="tab-pane" id="player">
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('player'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('player'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('popup'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('popup'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('mediacode'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('mediacode'); ?>
-		</div>
-	</div>
-</div>
-<div class="tab-pane" id="file">
+
+<div class="tab-pane active" id="file">
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('server'); ?>
@@ -350,7 +314,46 @@ echo JRoute::_($url);
 			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
 		</div>
 	</div>
-
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('media_image'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('mime_type'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('player'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('player'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('popup'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('popup'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('mediacode'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('mediacode'); ?>
+        </div>
+    </div>
 </div>
 <div class="tab-pane" id="upload">
 	<div class="control-group">
@@ -383,26 +386,7 @@ echo JRoute::_($url);
 		</div>
 	</div>
 </div>
-<div class="tab-pane" id="mediatype">
 
-
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('media_image'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('mime_type'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
-		</div>
-	</div>
-</div>
 <div class="tab-pane" id="parameters">
 	<?php foreach ($params as $name => $fieldset):
 		foreach ($this->form->getFieldset($name) as $field) : ?>
@@ -432,7 +416,17 @@ echo JRoute::_($url);
 <!-- Begin Sidebar -->
 <div class="span2 form-vertical">
 	<h4><?php echo JText::_('JDETAILS'); ?></h4>
-	<hr/>
+
+    <?php if ($input->get('layout', '', 'string') == 'modal')
+    {
+        ?>
+        <div class="control-group  form-inline">
+            <button type="button" onclick="submitbutton('mediafile.save');  ">
+                <?php echo JText::_('JSAVE'); ?></button>
+            <button type="button" onclick="window.parent.SqueezeBox.close();  ">
+                <?php echo JText::_('JCANCEL'); ?></button>
+        </div>
+    <?php } ?>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('id'); ?>

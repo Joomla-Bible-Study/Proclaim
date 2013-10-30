@@ -101,14 +101,17 @@ $input = $app->input;
 		<div class="control-label">
 			<?php echo $this->form->getLabel('studyintro'); ?>
 		</div>
+        <div class="clr"></div>
 		<div class="controls">
 			<?php echo $this->form->getInput('studyintro'); ?>
 		</div>
 	</div>
+
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('studytext'); ?>
 		</div>
+        <div class="clr"></div>
 		<div class="controls">
 			<?php echo $this->form->getInput('studytext'); ?>
 		</div>

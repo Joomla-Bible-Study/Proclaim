@@ -286,8 +286,9 @@ class BiblestudyModelMessage extends JModelAdmin
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('mediafile.id, mediafile.filename, mediafile.createdate');
+		$query->select('mediafile.id, mediafile.filename, mediafile.createdate, media.media_image_name');
 		$query->from('#__bsms_mediafiles AS mediafile');
+        $query->join('LEFT','#__bsms_media as media ON media.id = mediafile.media_image');
 		$query->where('mediafile.study_id = ' . (int) $this->getItem()->id);
 		$query->order('mediafile.createdate DESC');
 
