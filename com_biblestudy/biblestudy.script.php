@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -56,8 +56,8 @@ class Com_BiblestudyInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string          $type    Type of install
-	 * @param   JInstallerFile  $parent  Where it is coming from
+	 * @param   string         $type   Type of install
+	 * @param   JInstallerFile $parent Where it is coming from
 	 *
 	 * @return boolean
 	 */
@@ -130,7 +130,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Install
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return  void
 	 */
@@ -170,7 +170,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return   void
 	 */
@@ -251,7 +251,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return   void
 	 */
@@ -269,8 +269,8 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string          $type    Type of install
-	 * @param   JInstallerFile  $parent  Where it is coming from
+	 * @param   string         $type   Type of install
+	 * @param   JInstallerFile $parent Where it is coming from
 	 *
 	 * @return   void
 	 */
@@ -328,7 +328,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Get a variable from the manifest file (actually, from the manifest cache).
 	 *
-	 * @param   string  $name  Name of param
+	 * @param   string $name Name of param
 	 *
 	 * @return string
 	 */
@@ -348,7 +348,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * sets parameter values in the component's row of the extension table
 	 *
-	 * @param   array  $param_array  Array of params to set.
+	 * @param   array $param_array Array of params to set.
 	 *
 	 * @return   void
 	 */
@@ -863,6 +863,19 @@ class Com_BiblestudyInstallerScript
 			$db->setQuery($query);
 			$db->execute();
 		}
+	}
+
+	public function rmoldurl()
+	{
+
+		$urls = array("http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml /extension.xml",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml /extension.xml ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml /extension.xml");
+
+		return $urls;
 	}
 
 }
