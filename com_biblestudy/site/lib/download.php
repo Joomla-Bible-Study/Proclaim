@@ -199,7 +199,7 @@ class JBSMDownload
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')->set($db->qn('downloads') . ' = ' . $db->q('downloads') . ' + 1 ')->where('id = ' . (int) $db->q($mid));
+		$query->update('#__bsms_mediafiles')->set('downloads = downloads + 1 ')->where('id = ' . $mid);
 		$db->setQuery($query);
 		$db->execute();
 
