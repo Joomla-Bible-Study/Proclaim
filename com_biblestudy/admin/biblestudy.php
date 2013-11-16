@@ -92,6 +92,6 @@ function addJS()
 		JHTML::script('media/com_biblestudy/jui/js/plugins/bootstrap.min.js');
 		JHTML::script('media/com_biblestudy/jui/js/plugins/chosen.jquery.min.js');
 		JHTML::script('media/com_biblestudy/jui/js/plugins/jquery.ui.core.min.js');
-		JHTML::script('media/com_biblestudy/jui/js/plugins/jquery.ui.sortable.min.js');		
+		JHTML::script('media/com_biblestudy/jui/js/plugins/jquery.ui.sortable.min.js');
 	}
 }
