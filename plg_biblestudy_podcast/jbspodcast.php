@@ -1,7 +1,5 @@
 <?php
 /**
- * Joomla BibleStudy Podcast Plugin
- *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved

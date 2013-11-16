@@ -5,8 +5,8 @@
  *
  * @package     SefExt
  * @subpackage  Pugin.BibleStudy
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @author      $Author: Nick Fossen $
+ * @author      Nick Fossen
+ * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -16,9 +16,9 @@ defined('_JEXEC') or die;
 /**
  * SefExt for BibleStudy class
  *
- * @package    SefExt
- * @subpackage Pugin.BibleStudy
- * @6.2.2
+ * @package     SefExt
+ * @subpackage  Pugin.BibleStudy
+ * @since       6.2.2
  */
 class SefExt_com_biblestudy extends SefExt
 {

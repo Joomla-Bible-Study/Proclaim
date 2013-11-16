@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Tom
- * Date: 10/23/13
- * Time: 7:46 AM
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 defined('_JEXEC') or die;
 
@@ -15,48 +15,76 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @package  BibleStudy.Admin
  * @since    8.1.0
  */
-class JBS810Update
+class JBSM810Update
 {
-    public function update810()
-    {
-        self::updatetemplates();
-        self::updateDocMan();
-        return true;
-    }
+	/**
+	 * Call Script for Updates of 8.1.0
+	 *
+	 * @return bool
+	 */
+	public function update810()
+	{
+		self::updatetemplates();
+		self::updateDocMan();
 
-    public function updatetemplates()
-    {
-        $db = JFactory::getDBO();
-        $query = 'SELECT id, title, params from #__bsms_templates';
-        $db->setQuery($query);
-        $data = $db->loadObjectList();
-        foreach ($data as $d)
-        {
-            // Load Table Data.
-            JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-            $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+		return true;
+	}
 
-            try
-            {
-                $table->load($d->id);
-            }
-            catch (Exception $e)
-            {
-                echo 'Caught exception: ', $e->getMessage(), "\n";
-            }
+	/**
+	 * Update Templates to work with 8.1.0 that cannot be don doing normal sql file.
+	 *
+	 * @return void
+	 */
+	public function updatetemplates()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('id, title, prarams')
+			->from('#__bsms_templates');
+		$db->setQuery($query);
+		$data = $db->loadObjectList();
+		foreach ($data as $d)
+		{
+			// Load Table Data.
+			JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+			$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
 
-            //store the table to invoke defaults of new params
+			try
+			{
+				$table->load($d->id);
+			}
+			catch (Exception $e)
+			{
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
 
-            $table->store();
-        }
-    }
-    public function updateDocMan()
-    {
-        $db = JFactory::getDBO();
-        $query = 'UPDATE #__bsms_mediafiles SET `docMan_id` = varchar(250) NULL';
-        $db->setQuery($query);
-        $result = $db->query();
-        if (!$result){return false;}
-        else {return true;}
-    }
+			// Store the table to invoke defaults of new params
+
+			$table->store();
+		}
+	}
+
+	/**
+	 * Update DocMan table
+	 *
+	 * @return bool
+	 *
+	 * @todo need to move to SQL file not needed in here. Tom
+	 */
+	public function updateDocMan()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('docMan_id = varchar(250) NULL');
+		$db->setQuery($query);
+		if (!$db->execute())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 }

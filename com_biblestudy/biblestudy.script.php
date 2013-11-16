@@ -1,11 +1,9 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
- *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -25,7 +23,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.0.2';
+	private $_release = '8.1.0';
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -261,8 +259,8 @@ class Com_BiblestudyInstallerScript
 		$this->fixImagePaths();
 		$this->fixemptyaccess();
 		$this->fixemptylanguage();
-		JLoader::register('JBS800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
-		$update800 = new JBS800Update;
+		JLoader::register('JBSM800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
+		$update800 = new JBSM800Update;
 		$update800->update800();
 	}
 

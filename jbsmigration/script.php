@@ -1,26 +1,21 @@
 <?php
-
 /**
- * Install Script for JBSMigration
- *
- * @package             BibleStudy
- * @subpackage          JBSMigration
- * @copyright           (C) 2007 - 2011 Joomla Bible Study Team All rights reserved.
- * @license             GNU General Public License version 2 or later; see LICENSE.txt
+ * @package     BibleStudy
+ * @subpackage  JBSMigration
+ * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // No direct access to this file
 defined('_JEXEC') or die;
 
-//the name of the class must be the name of your component + InstallerScript
-//for example: com_contentInstallerScript for com_content.
 /**
  * JBSMigration class
  *
- * @package    BibleStudy
- * @subpackage JBSMigration
- * @since      7.0.2
+ * @package     BibleStudy
+ * @subpackage  JBSMigration
+ * @since       7.0.2
  */
-class com_jbsmigrationInstallerScript
+class Com_JbsmigrationInstallerScript
 {
 
 	/**
@@ -48,9 +43,9 @@ class com_jbsmigrationInstallerScript
 	 *
 	 * @return boolean
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, $parent)
 	{
-		// this component does not work with Joomla releases prior to 1.6
+		// This component does not work with Joomla releases prior to 1.6
 		// abort if the current Joomla release is older
 		$jversion = new JVersion();
 
@@ -76,7 +71,7 @@ class com_jbsmigrationInstallerScript
 	 *
 	 * @return boolean
 	 */
-	function install($parent)
+	public function install($parent)
 	{
 
 	}
@@ -91,7 +86,7 @@ class com_jbsmigrationInstallerScript
 	 *
 	 * @return boolean
 	 */
-	function update($parent)
+	public function update($parent)
 	{
 
 	}
@@ -106,7 +101,7 @@ class com_jbsmigrationInstallerScript
 	 *
 	 * @return boolean
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
 
 	}
@@ -120,7 +115,7 @@ class com_jbsmigrationInstallerScript
 	 *
 	 * @return boolean
 	 */
-	function uninstall($type, $parent)
+	public function uninstall($type, $parent)
 	{
 
 	}

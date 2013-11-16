@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Finder adapter for Biblestudy.
- *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved

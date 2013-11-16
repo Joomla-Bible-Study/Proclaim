@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Mod_Biblesutdy core file
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -53,55 +52,55 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
 if ($params->get('useexpert_module') > 0)
 {
-$pagebuilder = new JBSMPagebuilder;
+	$pagebuilder = new JBSMPagebuilder;
 
-foreach ($items AS $item)
-{
-	$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-		. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-	$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
-	$item->scripture1 = $pelements->scripture1;
-	$item->scripture2 = $pelements->scripture2;
-	$item->media      = $pelements->media;
+	foreach ($items AS $item)
+	{
+		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+		$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
+		$item->scripture1 = $pelements->scripture1;
+		$item->scripture2 = $pelements->scripture2;
+		$item->media      = $pelements->media;
 
-	if (isset($pelements->duration))
-	{
-		$item->duration = $pelements->duration;
-	}
-	else
-	{
-		$item->duration = null;
-	}
+		if (isset($pelements->duration))
+		{
+			$item->duration = $pelements->duration;
+		}
+		else
+		{
+			$item->duration = null;
+		}
 
-	if (isset($pelements->studydate))
-	{
-		$item->studydate = $pelements->studydate;
-	}
-	else
-	{
-		$item->studydate = null;
-	}
-	$item->topics = $pelements->topics;
+		if (isset($pelements->studydate))
+		{
+			$item->studydate = $pelements->studydate;
+		}
+		else
+		{
+			$item->studydate = null;
+		}
+		$item->topics = $pelements->topics;
 
-	if (isset($pelements->study_thumbnail))
-	{
-		$item->study_thumbnail = $pelements->study_thumbnail;
-	}
-	else
-	{
-		$item->study_thumbnail = null;
-	}
+		if (isset($pelements->study_thumbnail))
+		{
+			$item->study_thumbnail = $pelements->study_thumbnail;
+		}
+		else
+		{
+			$item->study_thumbnail = null;
+		}
 
-	if (isset($pelements->series_thumbnail))
-	{
-		$item->series_thumbnail = $pelements->series_thumbnail;
+		if (isset($pelements->series_thumbnail))
+		{
+			$item->series_thumbnail = $pelements->series_thumbnail;
+		}
+		else
+		{
+			$item->series_thumbnail = null;
+		}
+		$item->detailslink = $pelements->detailslink;
 	}
-	else
-	{
-		$item->series_thumbnail = null;
-	}
-	$item->detailslink = $pelements->detailslink;
-    }
 }
 $list      = $items;
 $link_text = $params->get('pagetext');
@@ -143,14 +142,14 @@ $pageclass_sfx = $params->get('pageclass_sfx');
  */
 if ($params->get('useexpert_module') > 0)
 {
-    $template = 'default_custom';
+	$template = 'default_custom';
 }
 elseif ($params->get('moduletemplate'))
 {
-    $template = 'default_'.$params->get('moduletemplate');
+	$template = 'default_' . $params->get('moduletemplate');
 }
 else
 {
-    $template = 'default_main';
+	$template = 'default_main';
 }
 require JModuleHelper::getLayoutPath('mod_biblestudy', $template);

@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Joomla BibleStudy Backup Plugin
- *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
  * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
@@ -16,7 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 /**
- * JBSBackup jplugin class
+ * JBSBackup jPlugin class
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
