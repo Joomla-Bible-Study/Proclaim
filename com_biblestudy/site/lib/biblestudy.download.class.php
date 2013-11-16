@@ -2,10 +2,10 @@
 /**
  * BibleStudy Download Class
  *
- * @package    BibleStudy.Site
+ * @package        BibleStudy.Site
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ class Dump_File
 	/**
 	 * Method to send file to browser
 	 *
-	 * @param   int $mid  ID of media
+	 * @param   int $mid ID of media
 	 *
 	 * @since 6.1.2
 	 * @return null
@@ -34,7 +34,7 @@ class Dump_File
 		// Clears file status cache
 		clearstatcache();
 
-		$this->hitDownloads($mid);
+		$this->hitDownloads((int) $mid);
 		$input    = new JInput;
 		$template = $input->get('t', '1', 'int');
 		$db       = JFactory::getDBO();
@@ -53,9 +53,9 @@ class Dump_File
 		$protocol = $params->get('protocol', 'http://');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+			. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
 			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
@@ -64,7 +64,7 @@ class Dump_File
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		JResponse::clearHeaders();
+		JFactory::getApplication()->clearHeaders();
 		$server        = $media->spath;
 		$path          = $media->fpath;
 		$filename      = $media->filename;
@@ -190,7 +190,7 @@ class Dump_File
 	/**
 	 * Method tho track Downloads
 	 *
-	 * @param   int $mid  Media ID
+	 * @param   int $mid Media ID
 	 *
 	 * @return  boolean
 	 *
@@ -200,7 +200,7 @@ class Dump_File
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')->set($db->qn('downloads') . ' = ' . $db->q('downloads') . ' + 1 ')->where('id = ' . (int) $db->q($mid));
+		$query->update('#__bsms_mediafiles')->set('downloads = downloads + 1')->where('id = ' . $mid);
 		$db->setQuery($query);
 		$db->execute();
 
@@ -210,7 +210,7 @@ class Dump_File
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object $url  URL
+	 * @param   object $url URL
 	 *
 	 * @return  boolean
 	 */
