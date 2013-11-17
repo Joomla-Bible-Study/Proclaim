@@ -25,7 +25,6 @@ class JBSM810Update
 	public function update810()
 	{
 		self::updatetemplates();
-		self::updateDocMan();
 
 		return true;
 	}
@@ -64,27 +63,5 @@ class JBSM810Update
 		}
 	}
 
-	/**
-	 * Update DocMan table
-	 *
-	 * @return bool
-	 *
-	 * @todo need to move to SQL file not needed in here. Tom
-	 */
-	public function updateDocMan()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')
-			->set('docMan_id = varchar(250) NULL');
-		$db->setQuery($query);
-		if (!$db->execute())
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
+
 }
