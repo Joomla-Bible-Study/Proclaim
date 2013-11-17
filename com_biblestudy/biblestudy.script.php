@@ -830,7 +830,6 @@ class Com_BiblestudyInstallerScript
 			array('table' => '#__bsms_mediafiles'),
 			array('table' => '#__bsms_message_type'),
 			array('table' => '#__bsms_mimetype'),
-			array('table' => '#__bsms_order'),
 			array('table' => '#__bsms_podcast'),
 			array('table' => '#__bsms_series'),
 			array('table' => '#__bsms_servers'),

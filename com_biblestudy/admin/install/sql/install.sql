@@ -259,27 +259,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
   ENGINE =InnoDB
   DEFAULT CHARSET =utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `#__bsms_order`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_order` (
-  `id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `value`    VARCHAR(15) DEFAULT '',
-  `text`     VARCHAR(50) DEFAULT '',
-  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`   INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_access` (`access`)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `#__bsms_podcast`
 --

@@ -9,7 +9,6 @@ ALTER TABLE `#__bsms_servers` ENGINE = INNODB;
 ALTER TABLE `#__bsms_series` ENGINE = INNODB;
 ALTER TABLE `#__bsms_message_type` ENGINE = INNODB;
 ALTER TABLE `#__bsms_folders` ENGINE = INNODB;
-ALTER TABLE `#__bsms_order` ENGINE = INNODB;
 ALTER TABLE `#__bsms_media` ENGINE = INNODB;
 ALTER TABLE `#__bsms_books` ENGINE = INNODB;
 ALTER TABLE `#__bsms_podcast` ENGINE = INNODB;

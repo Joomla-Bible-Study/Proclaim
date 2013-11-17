@@ -153,14 +153,6 @@ INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`, `asse
 (15, 'video/x-flv', ' Flash Video FLV', 1, 0, 1, 15);
 
 --
--- Dumping data for table `#__bsms_order`
---
-
-INSERT INTO `#__bsms_order` (`id`, `value`, `text`) VALUES
-(1, 'ASC', 'JBS_CMN_ASCENDING'),
-(2, 'DESC', 'JBS_CMN_DESCENDING');
-
---
 -- Dumping data for table `#__bsms_podcast`
 --
 

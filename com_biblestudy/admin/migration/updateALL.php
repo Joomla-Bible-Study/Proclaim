@@ -73,11 +73,6 @@ class MigrationUpgrade
 				'table'   => '#__bsms_mediafiles', 'field' => 'id', 'type' => 'MODIFY',
 				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
 			), array(
-				'table'   => '#__bsms_order', 'field' => 'id', 'type' => 'MODIFY',
-				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
-			), array(
-				'table' => '#__bsms_order', 'field' => 'text', 'type' => 'MODIFY', 'command' => "varchar(50) DEFAULT ''"
-			), array(
 				'table'   => '#__bsms_search', 'field' => 'id', 'type' => 'MODIFY',
 				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
 			), array(
@@ -369,7 +364,7 @@ class MigrationUpgrade
 			return false;
 		}
 
-		// Was not in 7.0.2 will be added in sql 7.1.0.sql under allupdate.php (#__bsms_order)
+
 
 		$table = '#__bsms_podcast';
 
@@ -557,19 +552,7 @@ class MigrationUpgrade
 			}
 		}
 
-		$query = "UPDATE `#__bsms_order` SET `text` = 'JBS_CMN_ASCENDING' WHERE `id` = '1'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
-		{
-			return false;
-		}
-
-		$query = "UPDATE `#__bsms_order` SET `text` = 'JBS_CMN_DESCENDING' WHERE `id` = '2'";
-
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
-		{
-			return false;
-		}
 
 		$query = 'DROP TABLE IF EXISTS `#__bsms_books`';
 
