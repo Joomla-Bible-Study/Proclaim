@@ -29,11 +29,12 @@ else
 // Create shortcut to parameters.
 JHtml::script('media/com_biblestudy/js/noconflict.js');
 JHtml::script('media/com_biblestudy/js/biblestudy.js');
+JHtml::_('behavior.formvalidation');
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+			Joomla.submitform(task, document.getElementById('adminForm'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
