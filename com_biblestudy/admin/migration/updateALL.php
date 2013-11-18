@@ -73,9 +73,6 @@ class MigrationUpgrade
 				'table'   => '#__bsms_mediafiles', 'field' => 'id', 'type' => 'MODIFY',
 				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
 			), array(
-				'table'   => '#__bsms_search', 'field' => 'id', 'type' => 'MODIFY',
-				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
-			), array(
 				'table'   => '#__bsms_series', 'field' => 'id', 'type' => 'MODIFY',
 				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
 			), array(
@@ -152,12 +149,6 @@ class MigrationUpgrade
 			array(
 				'table'   => '#__bsms_podcast', 'field' => 'published', 'type' => 'MODIFY',
 				'command' => "tinyint(3) NOT NULL DEFAULT '1'"
-			), array(
-				'table'   => '#__bsms_search', 'field' => 'value', 'type' => 'MODIFY',
-				'command' => "varchar(15) DEFAULT ''"
-			), array(
-				'table'   => '#__bsms_search', 'field' => 'text', 'type' => 'MODIFY',
-				'command' => "varchar(15) DEFAULT ''"
 			), array(
 				'table'   => '#__bsms_series', 'field' => 'published', 'type' => 'MODIFY',
 				'command' => "tinyint(3) NOT NULL DEFAULT '1'"
