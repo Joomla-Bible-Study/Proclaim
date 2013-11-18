@@ -115,8 +115,8 @@ MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Order
---
-ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+-- removed this as it causes an error when the user tries to use the admin tab of jbs
+-- ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Podcast
 --
