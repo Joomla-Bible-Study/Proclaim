@@ -102,6 +102,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$idsel      = "'SWFUpload_0'";
 
 		// @todo need to fix this not sure what to do to fix it now error, TOM (not seeing the error)
+        //@todo So what do we need to fix here? I can't see where this is even referenced? BCC
 		$ref1           = JHTML::_('select.genericList', $serverlist, 'upload_server',
 			'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
 		$ref1com        = 'upload_server';

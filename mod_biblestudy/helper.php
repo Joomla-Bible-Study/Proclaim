@@ -359,19 +359,6 @@ class ModJBSMHelper
 		return $admin;
 	}
 
-	/**
-	 * Render Study
-	 *
-	 * @param   string  $study   Study ?
-	 * @param   JObject $params  Params
-	 *
-	 * @return void
-	 *
-	 * @todo make this change according to the parameter settings for new template. TOM ????
-	 */
-	public function renderStudy($study = '_study', $params = null)
-	{
-		JModuleHelper::getLayoutPath('mod_biblestudy', $study);
-	}
+
 
 }

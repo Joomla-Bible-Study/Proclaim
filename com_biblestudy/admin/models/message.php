@@ -177,7 +177,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @return boolean
 	 *
-	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, TOM (I didn't write this one)
+	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, (I didn't write this one)
+     * I don't know where this came from. Tom didn't write it either
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{

@@ -34,7 +34,7 @@ class JBSMElements
 	 * @param   JRegistry $admin_params  Admin Settings
 	 * @param   int       $template      Template ID
 	 *
-	 * @todo Redo to MVC Standers under a class
+	 * @todo I do not believe this file is needed anymore at all.
 	 * @return object
 	 */
 	public function getElementid($rowid, $row, $params, $admin_params, $template)

@@ -263,32 +263,14 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		return $result;
 	}
 
-	/**
-	 * Link to Docman Category Items
-	 *
-	 * @return object
-	 *
-	 * @todo This is brocken and not sure if needed. TOM (this function can be removed. I think it is hanlded by admin/fields/docman)
-	 */
-	public function docmanCategoryItems()
-	{
-		// Hide errors and warnings
-		error_reporting(0);
-		$input = new JInput;
-		$catId = $input->get('catId', '', 'int');
 
-		$model = $this->getModel('mediafile');
-		$items = $model->getdocManCategoryItems($catId);
-
-		return $items;
-	}
 
 	/**
 	 * Link to Sections May need to be Removed.
 	 *
 	 * @todo This is brocken and not sure if needed. TOM
 	 * @return object
-	 */
+
 	public function articlesSectionCategories()
 	{
 		error_reporting(0);
@@ -300,13 +282,13 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		return $items;
 	}
-
+*/
 	/**
 	 * Link to Articles Category Items
 	 *
 	 * @todo This is bracken and not sure if needed. TOM
 	 * @return object
-	 */
+
 	public function articlesCategoryItems()
 	{
 		$input = new JInput;
@@ -318,13 +300,13 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		return $items;
 	}
-
+*/
 	/**
 	 * Link to VertueMart Items
 	 *
 	 * @todo This is brocken and not sure if needed. TOM
 	 * @return object
-	 */
+
 	public function virtueMartItems()
 	{
 		$input = new JInput;
@@ -336,5 +318,5 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		return $items;
 	}
-
+*/
 }
