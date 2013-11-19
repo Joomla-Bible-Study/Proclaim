@@ -10,6 +10,5 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 // Do not remove
-// @todo looks like this file is not needed. TOM
+// this is here to make sure that security of the site is maintained. It should be placed in every template file

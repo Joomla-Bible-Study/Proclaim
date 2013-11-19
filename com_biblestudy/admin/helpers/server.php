@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    8.0.0
  *
- * @todo     Looks like this could go into the dbhelper.php file. TOM - what is this even for. I don't think I wrote this.
+ * This function provides a server and folder id to part of the upload function in the admin controller
  */
 class JBSMServer
 {
