@@ -105,28 +105,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
 		}
-		$orderparam = $params->get('default_order');
-
-		if (empty($orderparam))
-		{
-			$orderparam = $t_params->get('default_order', '1');
-		}
-		if ($orderparam == 2)
-		{
-			$order = "ASC";
-		}
-		else
-		{
-			$order = "DESC";
-		}
-		$orderstate = $this->getState('filter.order');
-
-		if (!empty($orderstate))
-		{
-			$order = $orderstate;
-		}
-
-		$query->order('series_text ' . $order);
+		$orderDir = $t_params->get('series_list_order','DESC');
+        $orderCol = $t_params->get('series_order_field', 'series_text');
+		$query->order($orderCol .' '. $orderDir);
 
 		return $query;
 	}
