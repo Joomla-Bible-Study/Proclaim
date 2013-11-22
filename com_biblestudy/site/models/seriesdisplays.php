@@ -75,6 +75,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		}
 		$input = new JInput;
 		$this->setState('layout', $input->get('layout', '', 'cmd'));
+        parent::populateState('se.id', 'ASC');
+        $value = $input->get('start', '', 'int');
+        $this->setState('list.start', $value);
 	}
 
 	/**

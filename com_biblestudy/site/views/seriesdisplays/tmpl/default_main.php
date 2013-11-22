@@ -56,7 +56,11 @@ if ($url)
             <div id="bsdropdownmenu">
 
 				<?php
-                if ($this->params->get('series_list_show_pagination') == 1){echo $this->page->limits;}
+
+                if ($this->params->get('series_list_show_pagination') == 1)
+                {
+                    echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+                }
 				if ($this->params->get('search_series') == 1){echo $this->page->series;}
                 if ($this->params->get('series_list_teachers') == 1){echo $this->page->teachers;}
                 if ($this->params->get('series_list_years') == 1){echo $this->page->years;}
@@ -69,8 +73,14 @@ if ($url)
     echo $list;
     ?>
 
-            <div class="listingfooter">
-                <?php if ($this->params->get('series_list_show_pagination') == 2){echo $this->page->pagination;} ?>
+            <div class="listingfooter pagination">
+                <?php
+                if ($this->params->get('series_list_show_pagination') == 2)
+                {
+                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+                }
+                echo $this->pagination->getPageslinks();
+                ?>
             </div>
             <!--end of bsfooter div-->
 
