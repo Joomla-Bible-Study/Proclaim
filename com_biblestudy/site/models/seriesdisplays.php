@@ -52,9 +52,17 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+
+        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
-		$this->setState('filter.language', JLanguageHelper::getLanguages());
+
+        $this->setState('filter.language', JLanguageHelper::getLanguages());
+
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
+        $this->setState('filter.teacher', $teacher);
+
+        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
+        $this->setState('filter.year', $year);
 
 		// Process show_noauth parameter
 		if (!$params->get('show_noauth'))
@@ -95,6 +103,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$query->from('#__bsms_series as se');
 		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
 		$query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
+        $query->select('s.id as sid, s.series_id, s.studydate');
+        $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
+        $query->group('se.id');
 		$where = $this->_buildContentWhere();
 		$query->where($where);
 
@@ -124,6 +135,8 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$option        = $input->get('option', '', 'cmd');
 		$params        = JComponentHelper::getParams($option);
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
+        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
+        $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
 		$where         = array();
 		$where[]       = ' se.published = 1';
 
@@ -131,7 +144,14 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$where[] = ' se.id = ' . (int) $filter_series;
 		}
-
+        if ($filter_teacher > 0)
+        {
+            $where[] = ' se.teacher = ' . (int) $filter_teacher;
+        }
+        if ($filter_year > 0)
+        {
+            $where[] = ' YEAR(s.studydate) = ' . (int) $filter_year;
+        }
 		$where = (count($where) ? implode(' AND ', $where) : '');
 
 		$where2   = array();
@@ -177,6 +197,45 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		return $where;
 	}
 
+    /**
+     * Get a list of teachers associated with series
+     * @since 8.1.0
+     * @return mixed
+     */
+    public function getTeachers()
+    {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->select('t.id AS value, t.teachername AS text');
+        $query->from('#__bsms_teachers AS t');
+        $query->select('series.access');
+        $query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
+        $query->group('t.id');
+        $query->order('t.teachername ASC');
+
+        $db->setQuery($query->__toString());
+        $items = $db->loadObjectList();
+        return $items;
+    }
+    /**
+     * Get a list of teachers associated with series
+     * @since 8.1.0
+     * @return mixed
+     */
+    public function getYears()
+    {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
+        $query->from('#__bsms_studies as s');
+        $query->select('series.access');
+        $query->join('INNER','#__bsms_series as series on s.series_id = series.id');
+        $query->order('value');
+
+        $db->setQuery($query->__toString());
+        $items = $db->loadObjectList();
+        return $items;
+    }
 	/**
 	 * Get a list of all used series
 	 *

@@ -56,10 +56,11 @@ if ($url)
             <div id="bsdropdownmenu">
 
 				<?php
-				if ($this->params->get('search_series') > 0)
-				{
-					echo $this->page->series;
-				}
+                if ($this->params->get('series_list_show_pagination') == 1){echo $this->page->limits;}
+				if ($this->params->get('search_series') == 1){echo $this->page->series;}
+                if ($this->params->get('series_list_teachers') == 1){echo $this->page->teachers;}
+                if ($this->params->get('series_list_years') == 1){echo $this->page->years;}
+                if ($this->go > 0){echo $this->page->gobutton;}
 				?>
             </div>
 
@@ -69,6 +70,7 @@ if ($url)
     ?>
 
             <div class="listingfooter">
+                <?php if ($this->params->get('series_list_show_pagination') == 2){echo $this->page->pagination;} ?>
             </div>
             <!--end of bsfooter div-->
 
