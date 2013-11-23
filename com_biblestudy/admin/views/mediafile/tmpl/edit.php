@@ -177,6 +177,15 @@ else
 }
 echo JRoute::_($url);
 ?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
+
+<?php
+$link = JURI::base().'components/com_biblestudy/models/fields/modal/upload.php';
+$passage = '<a href="' . $link . '" ';
+$passage .= "onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,";
+$passage .= "resizable=yes,width=800,height=500');";
+$passage .= "return false;";
+echo $passage.'">'; ?>Upload</a>
+
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
