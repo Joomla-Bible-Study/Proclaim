@@ -16,7 +16,6 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
-JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
 
 if (JFactory::getApplication()->input->getCmd('view', '') == 'liveupdate')
 {

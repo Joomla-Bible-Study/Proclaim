@@ -13,7 +13,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
     /**
      *
      * File upload hanlder
-     *
+     * Controller adapted from COM_MEDIAMU
      * @return string JSON response
      */
     public function upload()
@@ -27,7 +27,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
             error_reporting(0);
         }
         $input = new JInput();
-        $params     = JComponentHelper::getParams('com_mediamu');
+        $params     = JComponentHelper::getParams('com_biblestudy');
         $session    = JFactory::getSession();
         $user       = JFactory::getUser();
 
@@ -35,9 +35,9 @@ class BiblestudyControllerUpload extends JControllerLegacy
         $maxFileAge = 5 * 3600; // Temp file age in seconds
 
         //directory for file upload
-        $targetDirBase64  = $session->get('current_dir', null, 'com_mediamu');
+        $targetDirBase64  = $session->get('current_dir', null, 'com_biblestudy');
         $targetDirDecoded  = base64_decode($targetDirBase64);
-        $targetDirWithSep  = $targetDirDecoded . DS;
+        $targetDirWithSep  = $targetDirDecoded . DIRECTORY_SEPARATOR;
         //check for snooping
         $targetDirCleaned  = JPath::check($targetDirWithSep);
         //finally
@@ -69,21 +69,21 @@ class BiblestudyControllerUpload extends JControllerLegacy
         }
 
         //check user perms
-        if(!$user->authorise('core.create', 'com_mediamu'))
+        if(!$user->authorise('core.create', 'com_biblestudy'))
         {
-            $this->_setResponse(400, JText::_('COM_MEDIAMU_ERROR_PERM_DENIDED'));
+            $this->_setResponse(400, JText::_('JBS_ERROR_PERM_DENIDED'));
         }
 
         //directory check
         if(!file_exists($targetDir) && !is_dir($targetDir) && strpos(COM_MEDIAMU_BASE_ROOT, $targetDir) !== false)
         {
-            $this->_setResponse(100, JText::_('COM_MEDIAMU_ERROR_UPLOAD_INVALID_PATH'));
+            $this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
         }
 
         //file type check
         if(!in_array(JFile::getExt($fileName), $exts_arr))
         {
-            $this->_setResponse(100, JText::_('COM_MEDIAMU_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
+            $this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
         }
 
         // Make sure the fileName is unique but only if chunking is disabled
