@@ -207,7 +207,7 @@ class UploadScript
         $("#uploader").pluploadQueue({
         // General settings
         runtimes : '<?php echo $this->runtime ?>',
-        url : 'index.php?option=com_mediamu&no_html=1&task=file.upload&<?php echo JSession::getFormToken()  ?>=1',
+        url : 'index.php?option=com_biblestudy&no_html=1&task=upload.upload&<?php echo JSession::getFormToken()  ?>=1',
         max_file_size : '<?php echo $this->_maxFileSize  ?>mb',
         <?php echo $l_chunk ?>
         rename : <?php echo $this->_rename ?>,
@@ -384,7 +384,7 @@ class UploadScript
         var cnfTxt = '<?php echo JText::_('JBS_DIR_BROSWER_CONFIRM_DELETE_MULTIPLE'); ?>';
         if(confirm(cnfTxt)) {
         var data = $('#dirbroswer').contents().find('form#delete_form').serialize();
-        var action = 'index.php?option=com_mediamu&no_html=1&task=path.delete';
+        var action = 'index.php?option=com_biblestudy&no_html=1&task=path.delete';
         ajaxReq(data, action);
         } else {
         return false;

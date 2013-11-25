@@ -26,8 +26,6 @@ class BiblestudyViewUpload extends JViewLegacy
         $runtimeScript  = $UploadScript->runtimeScript;
         $runtime        = $UploadScript->runtime;
 
-        //add default mediamu css
-        $document->addStyleSheet($mediaDir . 'css/com_mediamu.css');
 
         //add plupload styles and scripts
         $document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
@@ -38,6 +36,7 @@ class BiblestudyViewUpload extends JViewLegacy
         $document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
         $document->addScriptDeclaration( $UploadScript->getScript() );
 
+//print_r($UploadScript->getScript());
         //set variables for the template
         //$this->enableLog = $params->get('enable_uploader_log', 0);
         $this->runtime = $runtime;

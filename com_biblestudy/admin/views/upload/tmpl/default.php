@@ -10,6 +10,7 @@ defined('_JEXEC') or die('Restricted Access');
         <p><?php JText::printf('JBS_ERROR_RUNTIME_NOT_SUPORTED', $this->runtime) ?></p>
 
     </div>
-    <input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
+    <?php echo JHtml::_('form.token'); ?>
+
 
 </form>

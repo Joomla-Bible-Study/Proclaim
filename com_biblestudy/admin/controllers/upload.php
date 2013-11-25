@@ -21,11 +21,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
         // 5 minutes execution time
         @set_time_limit(5 * 60);
 
-        //enable valid json response when debugging is disabled
-        if(!COM_MEDIAMU_DEBUG)
-        {
-            error_reporting(0);
-        }
+
         $input = new JInput();
         $params     = JComponentHelper::getParams('com_biblestudy');
         $session    = JFactory::getSession();
@@ -35,13 +31,14 @@ class BiblestudyControllerUpload extends JControllerLegacy
         $maxFileAge = 5 * 3600; // Temp file age in seconds
 
         //directory for file upload
-        $targetDirBase64  = $session->get('current_dir', null, 'com_biblestudy');
-        $targetDirDecoded  = base64_decode($targetDirBase64);
-        $targetDirWithSep  = $targetDirDecoded . DIRECTORY_SEPARATOR;
+        //$targetDirBase64  = $session->get('current_dir', null, 'com_biblestudy');
+        //$targetDirDecoded  = base64_decode($targetDirBase64);
+        //$targetDirWithSep  = $targetDirDecoded . DIRECTORY_SEPARATOR;
         //check for snooping
-        $targetDirCleaned  = JPath::check($targetDirWithSep);
+        //$targetDirCleaned  = JPath::check($targetDirWithSep);
         //finally
-        $targetDir = $targetDirCleaned;
+        //$targetDir = $targetDirCleaned;
+        $targetDir = JURI::base();
 
         // Get parameters
         $chunk = $input->getInt('chunk', 0);
@@ -75,7 +72,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
         }
 
         //directory check
-        if(!file_exists($targetDir) && !is_dir($targetDir) && strpos(COM_MEDIAMU_BASE_ROOT, $targetDir) !== false)
+        if(!file_exists($targetDir) && !is_dir($targetDir) && strpos(JURI::base(), $targetDir) !== false)
         {
             $this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
         }
@@ -87,14 +84,14 @@ class BiblestudyControllerUpload extends JControllerLegacy
         }
 
         // Make sure the fileName is unique but only if chunking is disabled
-        if ($chunks < 2 && file_exists($targetDir . DS . $fileName))
+        if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATORS . $fileName))
         {
             $ext = strrpos($fileName, '.');
             $fileName_a = substr($fileName, 0, $ext);
             $fileName_b = substr($fileName, $ext);
 
             $count = 1;
-            while (file_exists($targetDir . DS . $fileName_a . '_' . $count . $fileName_b))
+            while (file_exists($targetDir . DIRECTORY_SEPARATORS . $fileName_a . '_' . $count . $fileName_b))
             {
                 $count++;
             }
@@ -102,14 +99,14 @@ class BiblestudyControllerUpload extends JControllerLegacy
             $fileName = $fileName_a . '_' . $count . $fileName_b;
         }
 
-        $filePath = $targetDir . DS . $fileName;
+        $filePath = $targetDir . DIRECTORY_SEPARATORS . $fileName;
 
         // Remove old temp files
         if ($cleanupTargetDir && ($dir = opendir($targetDir)))
         {
             while (($file = readdir($dir)) !== false)
             {
-                $tmpfilePath = $targetDir . DS . $file;
+                $tmpfilePath = $targetDir . DIRECTORY_SEPARATORS . $file;
 
                 // Remove temp file if it is older than the max age and is not the current file
                 if (preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time() - $maxFileAge) && ($tmpfilePath != "{$filePath}.part"))
