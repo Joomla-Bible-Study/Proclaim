@@ -25,23 +25,24 @@ class BiblestudyViewUpload extends JViewLegacy
         $UploadScript   = new UploadScript($params, $mediaDir);
         $runtimeScript  = $UploadScript->runtimeScript;
         $runtime        = $UploadScript->runtime;
-
+//echo $runtime;
 
         //add plupload styles and scripts
         $document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
         $document->addScript($mediaDir . 'js/jquery.min.js');
         $document->addScript($mediaDir . 'js/browserplus-min.js');
         $document->addScript($mediaDir . 'js/plupload.js');
-        $document->addScript($mediaDir . 'js/plupload.' . $runtimeScript . '.js');
+        $document->addScript($mediaDir . 'js/plupload.'.$runtimeScript.'.js');
         $document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
 
         $document->addScriptDeclaration( $UploadScript->getScript() );
+       // $document->addScriptDeclaration( $UploadScript->newScript() );
 
-//print_r($UploadScript->getScript());
+//print_r($UploadScript->newScript());
         //set variables for the template
         $this->enableLog = 1;
         $this->runtime = $runtime;
-        $this->currentDir = '/';
+        $this->currentDir = '/media';
 
 
         // Display the template
