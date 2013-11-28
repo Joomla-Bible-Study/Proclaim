@@ -19,6 +19,8 @@ class BiblestudyViewUpload extends JViewLegacy
 
     function display($tpl = null)
     {
+        //JHtml::_('jquery.framework', 'false');
+        //JHtml::_('bootstrap.framework');
         $mediaDir		= JURI::root() . "media/com_biblestudy/plupload/";
         $document 		= JFactory::getDocument();
         $params 		= JComponentHelper::getParams('com_biblestudy');
@@ -28,6 +30,8 @@ class BiblestudyViewUpload extends JViewLegacy
 //echo $runtime;
 
         //add plupload styles and scripts
+        $document = JFactory::getDocument();
+        //$document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js');
         $document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
         $document->addScript($mediaDir . 'js/jquery.min.js');
         $document->addScript($mediaDir . 'js/browserplus-min.js');

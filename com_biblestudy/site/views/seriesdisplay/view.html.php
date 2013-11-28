@@ -96,6 +96,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		// @todo Need ot move all this into a JS/CSS Loaders so we don't call this twice.
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$pathway       = $mainframe->getPathWay();

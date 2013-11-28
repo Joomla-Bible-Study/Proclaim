@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 ?>
 
+
 <form action="" method="post">
 
     <div id="uploader">
