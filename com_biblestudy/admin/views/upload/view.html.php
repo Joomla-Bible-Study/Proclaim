@@ -31,6 +31,9 @@ class BiblestudyViewUpload extends JViewLegacy
 
         //add plupload styles and scripts
         $document = JFactory::getDocument();
+        //JHtml::_('jquery.framework');
+        //JHtml::_('behavior.tooltip');
+        //$document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js');
         //$document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js');
         $document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
         $document->addScript($mediaDir . 'js/jquery.min.js');

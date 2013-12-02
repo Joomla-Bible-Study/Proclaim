@@ -2,8 +2,12 @@
 defined('_JEXEC') or die('Restricted Access');
 
 ?>
-
-
+<script>
+    jQuery(document).ready(function(){
+        jQuery("body").html("<b>Hello World</b>");
+    });
+</script>
+<body>
 <form action="" method="post">
 
     <div id="uploader">
@@ -12,7 +16,9 @@ defined('_JEXEC') or die('Restricted Access');
 
     </div>
     <?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
 
 
 </form>
 
+</body>
