@@ -426,10 +426,12 @@ class UploadScript
 
     public function newScript()
     {
+
         ob_start();
         ?>
-$(function() {
-$("#uploader").plupload({
+        $.noConflict();
+jQuery(function() {
+jQuery("#uploader").plupload({
 // General settings
 runtimes : 'gears,flash,silverlight,browserplus,html5',
 url : 'index.php?option=com_biblestudy&task=upload.upload',
@@ -448,22 +450,22 @@ filters : [
 ],
 
 // Flash settings
-flash_swf_url : '<?php echo $this->mediaRoot;?>/plupload/js/plupload.flash.swf',
+flash_swf_url : '<?php echo $this->mediaRoot;?>plupload/js/Movie.swf',
 
 // Silverlight settings
-silverlight_xap_url : '<?php echo $this->mediaRoot;?>/plupload/js/plupload.silverlight.xap'
+silverlight_xap_url : '<?php echo $this->mediaRoot;?>plupload/js/plupload.silverlight.xap'
 });
 
 // Client side form validation
-$('form').submit(function(e) {
-var uploader = $('#uploader').plupload('getUploader');
+jQuery('form').submit(function(e) {
+var uploader = jQuery('#uploader').plupload('getUploader');
 
 // Files in queue upload them first
 if (uploader.files.length > 0) {
 // When all files are uploaded submit form
 uploader.bind('StateChanged', function() {
 if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
-$('form')[0].submit();
+jQuery('form')[0].submit();
 }
 });
 
@@ -478,6 +480,46 @@ return false;
         $script = ob_get_contents();
         ob_clean();
         return $script;
+    }
+
+    public function UIScript()
+    {
+        ob_start();
+        ?>
+jQuery(function() {
+
+// Setup html5 version
+jQuery("#uploader").pluploadQueue({
+// General settings
+runtimes : 'html5,flash,silverlight,html4',
+url : 'index.php?option=com_biblestudy&no_html=1&task=upload.upload&<?php echo JSession::getFormToken()  ?>=1',
+chunk_size: '1mb',
+rename : true,
+dragdrop: true,
+
+filters : {
+// Maximum file size
+max_file_size : '1000mb',
+// Specify what files to browse for
+mime_types: [
+{title : "Image files", extensions : "*,gif,png"},
+{title : "Zip files", extensions : "zip"}
+]
+},
+
+// Resize images on clientside if we can
+resize : {width : 320, height : 240, quality : 90},
+
+flash_swf_url : '<?php echo $this->mediaRoot;?>js/Moxie.swf',
+silverlight_xap_url : '<?php echo $this->mediaRoot;?>js/Moxie.xap'
+});
+
+});
+        <?php
+        $script = ob_get_contents();
+        ob_clean();
+        return $script;
+
     }
 }
 
