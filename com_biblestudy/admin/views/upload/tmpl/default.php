@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die();
 
 ?>
 <div id="mediamu_wrapper">

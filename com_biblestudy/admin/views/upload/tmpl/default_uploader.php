@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die();
 
 ?>
 <form action="" method="post">
@@ -24,6 +24,6 @@ defined('_JEXEC') or die('Restricted Access');
 
 </form>
 <?php if($this->enableLog) : ?>
-	<button id="log_btn"><?php echo JText::_('COM_MEDIAMU_UPLOADER_LOG_BTN'); ?></button>
+	<button id="log_btn"><?php echo JText::_('JBS_UPLOADER_LOG_BTN'); ?></button>
 	<div id="log"></div>
 <?php endif; ?>

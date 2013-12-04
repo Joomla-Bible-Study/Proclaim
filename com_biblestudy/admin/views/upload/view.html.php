@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
 // Include dependencies
 JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/uploadscript.php');
@@ -33,6 +33,7 @@ class BiblestudyViewUpload extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
 		JHtml::_('behavior.tooltip');
 		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
