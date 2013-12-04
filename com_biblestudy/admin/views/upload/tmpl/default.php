@@ -1,26 +1,23 @@
 <?php
-
+/**
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
 // No direct access
 defined('_JEXEC') or die('Restricted Access');
 
 ?>
-<script>
-    jQuery(document).ready(function(){
-        jQuery("body").html("<b>Hello World</b>");
-    });
-</script>
-<body>
-<form action="" method="post">
+<div id="mediamu_wrapper">
+	<div id="uploader_content">
+		<?php echo $this->loadTemplate('uploader'); ?>
+	</div>
 
-    <div id="uploader">
+	<div id="filebroswer_content">
+		<?php //echo $this->loadTemplate('navigator'); ?>
+	</div>
+</div>
 
-        <p><?php JText::printf('JBS_ERROR_RUNTIME_NOT_SUPORTED', $this->runtime) ?></p>
-
-    </div>
-    <?php echo JHtml::_('form.token'); ?>
-    <input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
-
-
-</form>
-
-</body>

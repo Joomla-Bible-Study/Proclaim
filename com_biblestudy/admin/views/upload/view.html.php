@@ -34,7 +34,6 @@ class BiblestudyViewUpload extends JViewLegacy
 	public function display($tpl = null)
 	{
 		JHtml::_('jquery.framework', 'false');
-		JHtml::_('bootstrap.framework');
 		JHtml::_('behavior.tooltip');
 		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
 		$document      = JFactory::getDocument();
