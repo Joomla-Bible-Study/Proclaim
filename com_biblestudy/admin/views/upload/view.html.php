@@ -1,61 +1,69 @@
 <?php
-
-// no direct access
+/**
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
+// No direct access
 defined('_JEXEC') or die('Restricted access');
+
 // Include dependencies
 JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/uploadscript.php');
-// import Joomla view library
+
+// Import Joomla view library
 jimport('joomla.application.component.view');
 
 /**
  * Mediamu View
+ *
+ * @package  BibleStudy.Admin
+ * @since    8.1.0
  */
 class BiblestudyViewUpload extends JViewLegacy
 {
-    /**
-     * view display method
-     * @return void
-     */
+	/**
+	 * View display method
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
+		JHtml::_('jquery.framework', 'false');
+		JHtml::_('bootstrap.framework');
+		JHtml::_('behavior.tooltip');
+		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
+		$document      = JFactory::getDocument();
+		$params        = JComponentHelper::getParams('com_biblestudy');
+		$UploadScript  = new UploadScript($params, $mediaDir);
+		$runtimeScript = $UploadScript->runtimeScript;
+		$runtime       = $UploadScript->runtime;
 
-    function display($tpl = null)
-    {
-        //JHtml::_('jquery.framework', 'false');
-        //JHtml::_('bootstrap.framework');
-        $mediaDir		= JURI::root() . "media/com_biblestudy/plupload/";
-        $document 		= JFactory::getDocument();
-        $params 		= JComponentHelper::getParams('com_biblestudy');
-        $UploadScript   = new UploadScript($params, $mediaDir);
-        $runtimeScript  = $UploadScript->runtimeScript;
-        $runtime        = $UploadScript->runtime;
-//echo $runtime;
+		// Add plupload styles and scripts
+		$document->addScript($mediaDir . 'js/plupload.js');
+		$document->addScript($mediaDir . 'js/plupload.browserplus.js');
+		$document->addScript($mediaDir . 'js/plupload.full.js');
+		$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
+		$document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		$document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
 
-        //add plupload styles and scripts
-        $document = JFactory::getDocument();
-        //JHtml::_('jquery.framework');
-        //JHtml::_('behavior.tooltip');
-        $document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js');
-        $document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
-        $document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
-        $document->addScript($mediaDir . 'js/plupload.full.min.js');
-        //$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
-        //$document->addScript($mediaDir . 'js/plupload.js');
-        //$document->addScript($mediaDir . 'js/plupload.'.$runtimeScript.'.js');
-        //$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
+		//$document->addScriptDeclaration( $UploadScript->getScript() );
+		//$document->addScriptDeclaration( $UploadScript->newScript() );
+		$document->addScriptDeclaration($UploadScript->UIScript());
 
-        //$document->addScriptDeclaration( $UploadScript->getScript() );
-        //$document->addScriptDeclaration( $UploadScript->newScript() );
-        $document->addScriptDeclaration( $UploadScript->UIScript() );
-
-//print_r($UploadScript->newScript());
-        //set variables for the template
-        $this->enableLog = 1;
-        $this->runtime = $runtime;
-        $this->currentDir = '/media';
+		//print_r($UploadScript->newScript());
+		// Set variables for the template
+		$this->enableLog  = 1;
+		$this->runtime    = $runtime;
+		$this->currentDir = '/media';
 
 
-        // Display the template
-        parent::display($tpl);
-    }
-
+		// Display the template
+		parent::display($tpl);
+	}
 
 }

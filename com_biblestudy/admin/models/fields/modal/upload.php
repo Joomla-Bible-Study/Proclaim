@@ -11,7 +11,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
     <!-- production -->
-    <script type="text/javascript" src="../../../../../../media/com_biblestudy/plupload/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../../../../../../media/com_biblestudy/plupload/js/plupload.full.js"></script>
     <script type="text/javascript" src="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
 
     <!-- debug
