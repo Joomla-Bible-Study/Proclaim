@@ -24,7 +24,14 @@ jimport('joomla.application.component.view');
  */
 class BiblestudyViewUpload extends JViewLegacy
 {
-	/**
+    /**
+     * Form
+     *
+     * @var object
+     */
+    protected $form;
+
+    /**
 	 * View display method
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -33,7 +40,8 @@ class BiblestudyViewUpload extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
+        $this->form  = $this->get("Form");
+        JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
 		JHtml::_('behavior.tooltip');
 		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
@@ -66,4 +74,17 @@ class BiblestudyViewUpload extends JViewLegacy
 		parent::display($tpl);
 	}
 
+    /**
+     * Add the page title to browser.
+     *
+     * @return void
+     *
+     * @since    7.1.0
+     */
+    protected function setDocument()
+    {
+        $isNew    = ($this->item->id < 1);
+        $document = JFactory::getDocument();
+        $document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
+    }
 }
