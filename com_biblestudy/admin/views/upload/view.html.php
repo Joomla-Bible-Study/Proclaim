@@ -69,7 +69,10 @@ class BiblestudyViewUpload extends JViewLegacy
 		$this->runtime    = $runtime;
 		$this->currentDir = '/media';
 
-
+        // Set the document
+        $this->setDocument();
+        // Set the toolbar
+        $this->addToolbar();
 		// Display the template
 		parent::display($tpl);
 	}
@@ -83,8 +86,11 @@ class BiblestudyViewUpload extends JViewLegacy
      */
     protected function setDocument()
     {
-        $isNew    = ($this->item->id < 1);
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
+    }
+    protected function addToolbar()
+    {
+        JToolBarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
     }
 }

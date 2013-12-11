@@ -112,8 +112,8 @@ class UploadScript
 	{
 		$l_resize          = ""; /* Script resize line */
 		$l_chunk           = ""; /* Script chuk_size line */
-		$l_flash_swf_url   = "flash_swf_url : '" . $this->mediaRoot . "js/plupload.flash.swf',"; /* Script flash swf url line */
-		$l_silverlight_xap = "silverlight_xap_url: '" . $this->mediaRoot . "js/plupload.silverlight.xap',"; /* Script silverlight xap line */
+		//$l_flash_swf_url   = "flash_swf_url : '" . $this->mediaRoot . "js/plupload.flash.swf',"; /* Script flash swf url line */
+		//$l_silverlight_xap = "silverlight_xap_url: '" . $this->mediaRoot . "js/plupload.silverlight.xap',"; /* Script silverlight xap line */
 
 		if ($this->_resize)
 		{
@@ -253,16 +253,18 @@ class UploadScript
 		$("#uploader").pluploadQueue({
 		// General settings
 		runtimes : '<?php echo $this->runtime ?>',
-		url : 'index.php?option=com_biblestudy&no_html=1&task=upload.upload&<?php echo JSession::getFormToken() ?>=1',
+		url : 'index.php?option=com_biblestudy&view=upload&no_html=1&task=upload.upload&<?php echo JSession::getFormToken() ?>=1',
 		max_file_size : '<?php echo $this->_maxFileSize ?>mb',
 		<?php echo $l_chunk ?>
 		rename : <?php echo $this->_rename ?>,
 		unique_names : <?php echo $this->_uniqueNames ?>,
 		<?php echo $l_resize ?>
 		// Flash settings
-		<?php echo $l_flash_swf_url ?>
+		<?php //echo $l_flash_swf_url ?>
 		// Silverlight settings
-		<?php echo $l_silverlight_xap ?>
+		<?php //echo $l_silverlight_xap ?>
+        flash_swf_url : '<?php echo $this->mediaRoot; ?>js/Moxie.swf',
+        silverlight_xap_url : '<?php echo $this->mediaRoot; ?>js/Moxie.xap'
 		filters : [
 		{title : "Image files", extensions : "<?php echo $this->_imageFilter ?>"},
 		{title : "Other files", extensions : "<?php echo $this->_otherFilesFilter ?>"}
@@ -428,7 +430,7 @@ class UploadScript
 		var cnfTxt = '<?php echo JText::_('JBS_DIR_BROSWER_CONFIRM_DELETE_MULTIPLE'); ?>';
 		if(confirm(cnfTxt)) {
 		var data = $('#dirbroswer').contents().find('form#delete_form').serialize();
-		var action = 'index.php?option=com_biblestudy&no_html=1&task=path.delete';
+		var action = 'index.php?option=com_biblestudy&view=upload&no_html=1&task=path.delete';
 		ajaxReq(data, action);
 		} else {
 		return false;
@@ -468,64 +470,7 @@ class UploadScript
 		return trim($string);
 	}
 
-	public function newScript()
-	{
 
-		ob_start();
-		?>
-		$.noConflict();
-		jQuery(function() {
-		jQuery("#uploader").plupload({
-		// General settings
-		runtimes : 'gears,flash,silverlight,browserplus,html5',
-		url : 'index.php?option=com_biblestudy&task=upload.upload',
-		max_file_size : '100mb',
-		chunk_size : '1mb',
-		unique_names : true,
-
-		// Resize images on clientside if we can
-		resize : {width : 320, height : 240, quality : 90},
-
-		// Specify what files to browse for
-		filters : [
-		{title : "Image files", extensions : "jpg,gif,png"},
-		{title : "Zip files", extensions : "zip"},
-		{title : "Others", extensions : "*"}
-		],
-
-		// Flash settings
-		flash_swf_url : '<?php echo $this->mediaRoot; ?>plupload/js/Movie.swf',
-
-		// Silverlight settings
-		silverlight_xap_url : '<?php echo $this->mediaRoot; ?>plupload/js/plupload.silverlight.xap'
-		});
-
-		// Client side form validation
-		jQuery('form').submit(function(e) {
-		var uploader = jQuery('#uploader').plupload('getUploader');
-
-		// Files in queue upload them first
-		if (uploader.files.length > 0) {
-		// When all files are uploaded submit form
-		uploader.bind('StateChanged', function() {
-		if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
-		jQuery('form')[0].submit();
-		}
-		});
-
-		uploader.start();
-		} else
-		alert('You must at least upload one file.');
-
-		return false;
-		});
-		});
-		<?php
-		$script = ob_get_contents();
-		ob_clean();
-
-		return $script;
-	}
 
 	public function UIScript()
 	{
@@ -533,11 +478,12 @@ class UploadScript
 		?>
 		jQuery(function() {
 
+
 		// Setup html5 version
 		jQuery("#uploader").pluploadQueue({
 		// General settings
 		runtimes : 'html5,flash,silverlight,html4',
-		url : 'index.php?option=com_biblestudy&no_html=1&task=upload.upload&<?php echo JSession::getFormToken() ?>=1',
+		url : 'index.php?option=com_biblestudy&view=upload&no_html=1&task=upload.upload&<?php echo JSession::getFormToken() ?>=1',
 		chunk_size: '1mb',
 		rename : true,
 		dragdrop: true,

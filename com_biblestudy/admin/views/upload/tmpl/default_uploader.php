@@ -11,7 +11,63 @@
 defined('_JEXEC') or die();
 
 ?>
-<form action="" method="post">
+<script type="javascript">
+    function submitbutton(task) {
+        if (task == '') {
+            return false;
+        }
+        else if (task == 'upload') {
+            if (document.adminForm.upload_folder.value == '') {
+                alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER'); ?>");
+            }
+            else if (document.adminForm.upload_server.value == '') {
+                alert("<?php echo JText::_('JBS_MED_ENTER_SERVER'); ?>");
+            }
+            else {
+                submitform(task);
+                window.location.setTimeout('window.location.reload(true)', 1000);
+                return true;
+            }
+        }
+</script>
+<script type="javascript">
+    $(document).ready(function(){
+        $("a").click(function(event){
+            alert("Thanks for visiting!");
+        });
+    });
+</script>
+<form action="
+<?php
+$input = new JInput;
+if ($input->get('layout', '', 'string') == 'modal')
+{
+    $url = 'index.php?option=com_biblestudy&view=upload&tmpl=component&layout=modal';
+}
+else
+{
+    $url = 'index.php?option=com_biblestudy&view=upload&layout=default';
+}
+echo JRoute::_($url);
+?>" method="post" name="adminForm" id="item-form" class=" form-horizontal">
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('server'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('server'); ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('path'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('path'); ?>
+        </div>
+    </div>
+
+
 
     <div id="uploader">
 

@@ -11,8 +11,9 @@
 defined('_JEXEC') or die();
 
 ?>
+
 <div id="uploader_path">
-    <?php echo $this->loadTemplate('path');?>
+    <?php //echo $this->loadTemplate('path');?>
 </div>
 <div id="mediamu_wrapper">
 	<div id="uploader_content">
