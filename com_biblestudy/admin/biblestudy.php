@@ -40,6 +40,9 @@ else
 	define('BIBLESTUDY_CHECKREL', false);
 }
 
+// Component debugging
+define("COM_BIBLESTUDY_DEBUG", false);
+
 JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
