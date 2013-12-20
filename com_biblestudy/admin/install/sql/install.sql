@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 
 CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0'
   `foldername` VARCHAR(250)     NOT NULL DEFAULT '',
   `folderpath` VARCHAR(250)     NOT NULL DEFAULT '',
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
