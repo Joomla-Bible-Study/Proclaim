@@ -373,6 +373,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `ftpport`      VARCHAR(10)      NOT NULL,
   `aws_key`      VARCHAR(100)     NOT NULL,
   `aws_secret`   VARCHAR(100)     NOT NULL,
+  `params`       TEXT             NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

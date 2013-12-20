@@ -99,9 +99,6 @@ abstract class JBSServer {
         return self::$instances[$signature];
     }
 
-    public function test() {
-    	return "hello";
-    }
     abstract protected function upload($target, $overwrite = true);
 
 }
