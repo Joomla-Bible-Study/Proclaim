@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `server_name`  VARCHAR(250)     NOT NULL DEFAULT '',
   `server_path`  VARCHAR(250)     NOT NULL DEFAULT '',
   `published`    TINYINT(3)       NOT NULL DEFAULT '1',
-  `server_type`  CHAR(5)          NOT NULL DEFAULT 'local',
+  `server_type`  CHAR(255)          NOT NULL DEFAULT 'local',
   `ftp_username` CHAR(255)        NOT NULL,
   `ftp_password` CHAR(255)        NOT NULL,
   `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0'
