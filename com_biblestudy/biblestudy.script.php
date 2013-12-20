@@ -1,9 +1,7 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
- *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -25,7 +23,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.0.2';
+	private $_release = '8.1.0';
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -56,8 +54,8 @@ class Com_BiblestudyInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string          $type    Type of install
-	 * @param   JInstallerFile  $parent  Where it is coming from
+	 * @param   string         $type   Type of install
+	 * @param   JInstallerFile $parent Where it is coming from
 	 *
 	 * @return boolean
 	 */
@@ -130,7 +128,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Install
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return  void
 	 */
@@ -170,7 +168,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return   void
 	 */
@@ -251,7 +249,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile $parent Where call is coming from
 	 *
 	 * @return   void
 	 */
@@ -261,16 +259,16 @@ class Com_BiblestudyInstallerScript
 		$this->fixImagePaths();
 		$this->fixemptyaccess();
 		$this->fixemptylanguage();
-		JLoader::register('JBS800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
-		$update800 = new JBS800Update;
+		JLoader::register('JBSM800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
+		$update800 = new JBSM800Update;
 		$update800->update800();
 	}
 
 	/**
 	 * Post Flight
 	 *
-	 * @param   string          $type    Type of install
-	 * @param   JInstallerFile  $parent  Where it is coming from
+	 * @param   string         $type   Type of install
+	 * @param   JInstallerFile $parent Where it is coming from
 	 *
 	 * @return   void
 	 */
@@ -328,7 +326,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Get a variable from the manifest file (actually, from the manifest cache).
 	 *
-	 * @param   string  $name  Name of param
+	 * @param   string $name Name of param
 	 *
 	 * @return string
 	 */
@@ -348,7 +346,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * sets parameter values in the component's row of the extension table
 	 *
-	 * @param   array  $param_array  Array of params to set.
+	 * @param   array $param_array Array of params to set.
 	 *
 	 * @return   void
 	 */
@@ -832,7 +830,6 @@ class Com_BiblestudyInstallerScript
 			array('table' => '#__bsms_mediafiles'),
 			array('table' => '#__bsms_message_type'),
 			array('table' => '#__bsms_mimetype'),
-			array('table' => '#__bsms_order'),
 			array('table' => '#__bsms_podcast'),
 			array('table' => '#__bsms_series'),
 			array('table' => '#__bsms_servers'),
@@ -863,6 +860,19 @@ class Com_BiblestudyInstallerScript
 			$db->setQuery($query);
 			$db->execute();
 		}
+	}
+
+	public function rmoldurl()
+	{
+
+		$urls = array("http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml /extension.xml",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml /extension.xml, ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml /extension.xml ",
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml /extension.xml");
+
+		return $urls;
 	}
 
 }

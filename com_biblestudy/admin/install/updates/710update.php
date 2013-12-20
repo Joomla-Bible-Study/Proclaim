@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    7.1.0
- * @todo     need to update to new SQL and Joomla @BCC
+ * @todo     need to update JError as it has been deprecated, but is still used in Joomla 3.2
  */
 class JBSM710Update
 {
@@ -44,15 +44,15 @@ class JBSM710Update
 
 		if (JFile::exists($src))
 		{
-			$oldcss = JFile::read($src);
+			$oldcss = file_get_contents($src);
 		}
 		elseif (JFile::exists($backup))
 		{
-			$oldcss = JFile::read($backup);
+			$oldcss = file_get_contents($backup);
 		}
 		else
 		{
-			$newCSS = JFile::read($default);
+			$newCSS = file_get_contents($default);
 		}
 		if ($oldcss)
 		{
@@ -90,130 +90,6 @@ class JBSM710Update
 			}
 			// Add CSS to the file
 			$new710css = '
-/* New Teacher Codes */
-#bsm_teachertable_list .bsm_teachername
-{
-    font-weight: bold;
-    font-size: 14px;
-    color: #000000;
-}
-#bsm_teachertable_list
-{
-    margin: 0;
-    border-collapse:separate;
-}
-#bsm_teachertable_list td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#bsm_teachertable_list .titlerow
-{
-    border-bottom: thick;
-}
-#bsm_teachertable_list .title
-{
-    font-size:18px;
-    font-weight:bold;
-    border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
-}
-#bsm_teachertable_list .bsm_separator
-{
-    border-bottom: 1px solid #999999;
-}
-
-.bsm_teacherthumbnail_list
-{
-
-}
-#bsm_teachertable_list .bsm_teacheremail
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_teacherwebsite
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_teacherphone
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_short
-{
-    padding: 8px 4px 4px;
-    font-weight:normal;
-}
-#bsm_teachertable .bsm_studiestitlerow {
-    background-color: #666;
-}
-#bsm_teachertable_list .bsm_titletitle
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable_list .bsm_titlescripture
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable_list .bsm_titledate
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable_list .bsm_teacherlong
-{
-    padding: 8px 4px 4px;
-    border-bottom: 1px solid #999999;
-}
-#bsm_teachertable_list tr.bsodd {
-    background-color:#FFFFFF;
-    border-bottom: 1px solid #999999;
-}
-#bsm_teachertable_list tr.bseven {
-    background-color:#FFFFF0;
-    border-bottom: 1px solid #999999;
-}
-
-#bsm_teachertable_list .lastrow td {
-    border-bottom:1px solid grey;
-    padding-bottom:7px;
-    padding-top:7px;
-}
-#bsm_teachertable_list .bsm_teacherfooter
-{
-    border-top: 1px solid #999999;
-    padding: 4px 1px 1px 4px;
-}
-/* New Teacher Details Codes */
-
-#bsm_teachertable .teacheraddress{
-    text-align:left;
-}
-
-#bsm_teachertable .teacherwebsite{
-    text-align:left;}
-
-#bsm_teachertable .teacherfacebook{
-    text-align:left;
-}
-
-#bsm_teachertable .bsm_teachertwitter{
-    text-align:left;
-}
-
-#bsm_teachertable .bsm_teacherblog{
-    text-align:left;
-}
-
-#bsm_teachertable .bsm_teacherlink1{
-    text-align:left;
-}
-
 
 /* New Landing Page CSS */
 
@@ -336,7 +212,7 @@ div.listingfooter ul li {
 
 				if (!$db->execute())
 				{
-					JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
 					return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
 				}
@@ -394,7 +270,7 @@ div.listingfooter ul li {
 			}
 			catch (Exception $e)
 			{
-				JError::raiseWarning(1, 'Caught exception: ' . $e->getMessage());
+                JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'jerror');
 			}
 		}
 	}

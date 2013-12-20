@@ -114,9 +114,7 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- Order
 --
-ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Podcast
 --
@@ -127,9 +125,6 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- Search
---
-ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Series
 --
@@ -214,4 +209,4 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Drop `#__bsms_version`
 --
-DROP TABLE IF EXISTS #__bsms_version;
+DROP TABLE IF EXISTS `#__bsms_version`;

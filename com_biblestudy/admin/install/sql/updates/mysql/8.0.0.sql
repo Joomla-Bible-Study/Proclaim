@@ -9,7 +9,6 @@ ALTER TABLE `#__bsms_servers` ENGINE = INNODB;
 ALTER TABLE `#__bsms_series` ENGINE = INNODB;
 ALTER TABLE `#__bsms_message_type` ENGINE = INNODB;
 ALTER TABLE `#__bsms_folders` ENGINE = INNODB;
-ALTER TABLE `#__bsms_order` ENGINE = INNODB;
 ALTER TABLE `#__bsms_media` ENGINE = INNODB;
 ALTER TABLE `#__bsms_books` ENGINE = INNODB;
 ALTER TABLE `#__bsms_podcast` ENGINE = INNODB;
@@ -35,5 +34,3 @@ ALTER TABLE `#__bsms_studies` DROP `topics_id` ;
 
 ALTER TABLE `#__bsms_studies` ADD COLUMN `download_id` INT(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile';
 
--- Remove old table
-DROP TABLE IF EXISTS `#__bsms_search`;

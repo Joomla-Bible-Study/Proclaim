@@ -1,8 +1,5 @@
 <?php
-
 /**
- * Finder adapter for Biblestudy.
- *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -276,6 +273,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		 * Add the meta-data processing instructions based on the newsfeeds
 		 * configuration parameters.
 		 */
+		// Add the meta-author.
+
 		// Handle the link to the meta-data.
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
@@ -294,7 +293,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		if (BIBLESTUDY_CHECKREL)
+		if (version_compare(JVERSION, '3.0', 'ge'))
 		{
 			$this->indexer->index($item);
 		}
@@ -359,7 +358,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
-		$case_when_item_alias .= $sql->charLength('a.alias');
+		$case_when_item_alias .= $sql->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
 		$a_id = $sql->castAsChar('a.id');
 		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
@@ -367,7 +366,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		$case_when_item_alias .= $a_id . ' END as studytitle';
 		$sql->select($case_when_item_alias);
 
-		$sql->select('u.teachername AS author');
+		$sql->select('u.teachername');
 		$sql->from('#__bsms_studies AS a');
 		$sql->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
 

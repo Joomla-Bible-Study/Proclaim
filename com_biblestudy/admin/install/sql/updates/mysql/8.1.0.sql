@@ -1,0 +1,1 @@
+ALTER TABLE `#__bsms_mediafiles` MODIFY `docMan_id` varchar(250) NULL;

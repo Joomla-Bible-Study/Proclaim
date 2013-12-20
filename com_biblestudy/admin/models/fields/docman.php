@@ -37,7 +37,9 @@ class JFormFieldDocman extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		/* @todo check for docman 2.0 way of doing this */
+		/*
+
+		*/
 		// Check to see if Docman is installed
 		jimport('joomla.filesystem.folder');
 
@@ -48,9 +50,9 @@ class JFormFieldDocman extends JFormFieldList
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('dm.id, dm.dmname');
-		$query->from('#__docman AS dm');
-		$query->order('dm.id DESC');
+		$query->select('dm.slug, dm.docman_document_id, dm.title');
+		$query->from('#__docman_documents AS dm');
+		$query->order('dm.docman_document_id DESC');
 		$db->setQuery((string) $query);
 		$docs    = $db->loadObjectList();
 		$options = array();
@@ -61,7 +63,7 @@ class JFormFieldDocman extends JFormFieldList
 
 			foreach ($docs as $doc)
 			{
-				$options[] = JHtml::_('select.option', $doc->id, $doc->dmname);
+				$options[] = JHtml::_('select.option', $doc->slug, $doc->title);
 			}
 		}
 		$options = array_merge(parent::getOptions(), $options);

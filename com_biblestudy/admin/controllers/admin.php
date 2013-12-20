@@ -450,7 +450,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$input  = new JInput;
 		$run    = $input->get('run', '', 'int');
-		$export = new JBSExport;
+		$export = new JBSMBackup;
 
 		if (!$result = $export->exportdb($run))
 		{

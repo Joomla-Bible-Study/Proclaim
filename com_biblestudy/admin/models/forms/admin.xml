@@ -38,20 +38,7 @@
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
         </field>
-        <field name="socialnetworking"
-               type="radio"
-               class="btn-group"
-               default="1"
-               label="JBS_ADM_SOCIALNETWORKING"
-               description="JBS_ADM_SOCIALNETWORKING_DESC" labelclass="control-label">
-            <option value="0">JBS_CMN_HIDE</option>
-            <option value="1">JBS_CMN_SHOW</option>
-        </field>
-        <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_DESC"
-               labelclass="control-label">
-            <option value="0">JBS_ADM_INTERNAL_SHARE</option>
-            <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
-        </field>
+
         <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE"
                description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
         <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE"

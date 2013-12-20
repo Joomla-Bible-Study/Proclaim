@@ -4,7 +4,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -15,8 +15,6 @@ require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
 $document = JFactory::getDocument();
-$document->addScript('media/com_biblestudy/js/tooltip.js');
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 /** @var $params JRegistry */
 $templatemenuid = $params->get('t');
@@ -52,54 +50,57 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
-$pagebuilder = new JBSMPagebuilder;
-
-foreach ($items AS $item)
+if ($params->get('useexpert_module') > 0)
 {
-	$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-		. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-	$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
-	$item->scripture1 = $pelements->scripture1;
-	$item->scripture2 = $pelements->scripture2;
-	$item->media      = $pelements->media;
+	$pagebuilder = new JBSMPagebuilder;
 
-	if (isset($pelements->duration))
+	foreach ($items AS $item)
 	{
-		$item->duration = $pelements->duration;
-	}
-	else
-	{
-		$item->duration = null;
-	}
+		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+		$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
+		$item->scripture1 = $pelements->scripture1;
+		$item->scripture2 = $pelements->scripture2;
+		$item->media      = $pelements->media;
 
-	if (isset($pelements->studydate))
-	{
-		$item->studydate = $pelements->studydate;
-	}
-	else
-	{
-		$item->studydate = null;
-	}
-	$item->topics = $pelements->topics;
+		if (isset($pelements->duration))
+		{
+			$item->duration = $pelements->duration;
+		}
+		else
+		{
+			$item->duration = null;
+		}
 
-	if (isset($pelements->study_thumbnail))
-	{
-		$item->study_thumbnail = $pelements->study_thumbnail;
-	}
-	else
-	{
-		$item->study_thumbnail = null;
-	}
+		if (isset($pelements->studydate))
+		{
+			$item->studydate = $pelements->studydate;
+		}
+		else
+		{
+			$item->studydate = null;
+		}
+		$item->topics = $pelements->topics;
 
-	if (isset($pelements->series_thumbnail))
-	{
-		$item->series_thumbnail = $pelements->series_thumbnail;
+		if (isset($pelements->study_thumbnail))
+		{
+			$item->study_thumbnail = $pelements->study_thumbnail;
+		}
+		else
+		{
+			$item->study_thumbnail = null;
+		}
+
+		if (isset($pelements->series_thumbnail))
+		{
+			$item->series_thumbnail = $pelements->series_thumbnail;
+		}
+		else
+		{
+			$item->series_thumbnail = null;
+		}
+		$item->detailslink = $pelements->detailslink;
 	}
-	else
-	{
-		$item->series_thumbnail = null;
-	}
-	$item->detailslink = $pelements->detailslink;
 }
 $list      = $items;
 $link_text = $params->get('pagetext');
@@ -110,7 +111,7 @@ if (!$templatemenuid)
 	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
-$link     = '<a href="' . $linkurl . '">' . $link_text . '</a>';
+$link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
 $document = JFactory::getDocument();
 $css      = $params->get('css', 'biblestudy.css');
 
@@ -141,11 +142,14 @@ $pageclass_sfx = $params->get('pageclass_sfx');
  */
 if ($params->get('useexpert_module') > 0)
 {
-	$layout = 'default_custom';
+	$template = 'default_custom';
+}
+elseif ($params->get('moduletemplate'))
+{
+	$template = 'default_' . $params->get('moduletemplate');
 }
 else
 {
-	$layout = 'default_main';
+	$template = 'default_main';
 }
-
-require JModuleHelper::getLayoutPath('mod_biblestudy', $layout);
+require JModuleHelper::getLayoutPath('mod_biblestudy', $template);

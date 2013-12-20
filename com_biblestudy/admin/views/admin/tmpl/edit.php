@@ -150,18 +150,6 @@ $input = $app->input;
 		</div>
 	</div>
 	<div class="control-group">
-		<?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
-		<div class="controls">
-			<?php echo $this->form->getInput('socialnetworking', 'params'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<?php echo $this->form->getLabel('sharetype', 'params'); ?>
-		<div class="controls">
-			<?php echo $this->form->getInput('sharetype', 'params'); ?>
-		</div>
-	</div>
-	<div class="control-group">
 		<?php echo $this->form->getLabel('debug'); ?>
 		<div class="controls">
 			<?php echo $this->form->getInput('debug'); ?>

@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -92,7 +92,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return void
 	 */
@@ -126,6 +126,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 			$input = new JInput;
 			$t     = $input->get('t', 1, 'int');
 		}
+		$this->template = $t;
+
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
 		$registry->loadString($this->admin->params);
@@ -151,37 +153,44 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
+
 		$images = new JBSMImages;
-
-		$pagebuilder = new JBSMPagebuilder;
-
-		foreach ($items as $i => $item)
+		if ($params->get('useexpert_teacherdetail') > 0 && !$params->get('teacherstemplate'))
 		{
-			if (isset($item->teacher_thumbnail))
+			$pagebuilder = new JBSMPagebuilder;
+
+			foreach ($items as $i => $item)
 			{
-				$image                  = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-				$items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
-					. '" alt="' . $item->teachername . '" />';
-				$items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-					. str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-				$items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
+				if (isset($item->teacher_thumbnail))
+				{
+					$image                  = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+					$items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
+						. '" alt="' . $item->teachername . '" />';
+					$items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+						. str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
+					$items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
 
-				if (isset($items[$i]->information))
-				{
-					$items[$i]->text        = $items[$i]->information;
-					$information            = $pagebuilder->runContentPlugins($items[$i], $params);
-					$items[$i]->information = $information->text;
+					if (isset($items[$i]->information))
+					{
+						$items[$i]->text        = $items[$i]->information;
+						$information            = $pagebuilder->runContentPlugins($items[$i], $params);
+						$items[$i]->information = $information->text;
+					}
+					if (isset($items[$i]->short))
+					{
+						$items[$i]->text  = $items[$i]->short;
+						$short            = $pagebuilder->runContentPlugins($items[$i], $params);
+						$items[$i]->short = $short->text;
+					}
 				}
-				if (isset($items[$i]->short))
-				{
-					$items[$i]->text  = $items[$i]->short;
-					$short            = $pagebuilder->runContentPlugins($items[$i], $params);
-					$items[$i]->short = $short->text;
-				}
+
 			}
-
 		}
-
 		$pagination            = $this->get('Pagination');
 		$this->page            = new stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
@@ -189,8 +198,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$this->pagination      = $pagination;
 		$stringuri             = $uri->toString();
 		$this->request_url     = $stringuri;
-		$this->params          = & $params;
-		$this->items           = & $items;
+		$this->params          = $params;
+		$this->items           = $items;
 
 		$this->_prepareDocument();
 

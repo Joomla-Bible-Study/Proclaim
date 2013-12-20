@@ -22,7 +22,10 @@ INSERT INTO `#__bsms_update` (id, version) VALUES
 (9, '7.1.2'),
 (10, '7.1.3'),
 (11, '8.0.0'),
-(12, '8.0.1');
+(12, '8.0.1'),
+(13, '8.0.2'),
+(14, '8.0.3'),
+(15, '8.1.0');
 
 -- --------------------------------------------------------
 
@@ -181,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `link_type`        CHAR(1) DEFAULT NULL,
   `hits`             INT(10) DEFAULT NULL,
   `published`        TINYINT(3)              NOT NULL DEFAULT '1',
-  `docMan_id`        INT(11) DEFAULT NULL,
+  `docMan_id`        VARCHAR(250) DEFAULT NULL,
   `article_id`       INT(11) DEFAULT NULL,
   `comment`          TEXT,
   `virtueMart_id`    INT(11) DEFAULT NULL,
@@ -255,27 +258,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
 )
   ENGINE =InnoDB
   DEFAULT CHARSET =utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `#__bsms_order`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_order` (
-  `id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `value`    VARCHAR(15) DEFAULT '',
-  `text`     VARCHAR(50) DEFAULT '',
-  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`   INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_access` (`access`)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `#__bsms_podcast`

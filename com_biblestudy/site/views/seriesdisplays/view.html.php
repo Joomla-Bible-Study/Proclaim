@@ -10,6 +10,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
+JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
+JLoader::register('JBSMPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/pagebuilder.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
+
 /**
  * View class for SeriesDisplays
  *
@@ -58,11 +63,14 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
+		JViewLegacy::loadHelper('image');
 
 		$document = JFactory::getDocument();
 
 		//  $model = $this->getModel();
 		// Load the Admin settings and params from the template
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
+		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$t = $input->get('t', 1, 'int');
@@ -104,6 +112,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
 
+
 		// Import Scripts
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
@@ -120,9 +129,16 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		{
 			$document->addStyleSheet($url);
 		}
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
+        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
 		$uri           = new JUri;
 		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
+        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
+        $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
 		$pagebuilder   = new JBSMPagebuilder;
 		$items         = $this->get('Items');
 		$images        = new JBSMImages;
@@ -153,7 +169,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 
-		// @todo need to redo this. bcc
+		// @todo need to redo this. bcc Why? TF
 		if ($count > 0)
 		{
 			for ($i = 0; $i < $count; $i++)
@@ -175,23 +191,53 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
 		$series                = $this->get('Series');
+        $teachers = $this->get('Teachers');
+        $years = $this->get('Years');
+		// This is the helper for scripture formatting
+		// @todo move to JLoader. tom
+		$this->loadHelper('scripture');
 
 		// End scripture helper
 		$this->template   = $template;
 		$this->pagination = $pagination;
 
+
 		// Get the main study list image
 		$mainimage        = $images->mainStudyImage();
 		$this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '" alt="" />';
 
+        // Build go button
+        $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '">';
 		// $this->main = $main;
 
 		// Build Series List for drop down menu
-		$types3[]           = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
-		$types3             = array_merge($types3, $series);
-		$this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"',
+		$seriesarray[]           = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
+        $seriesarray             = array_merge($seriesarray, $series);
+		$this->page->series = JHTML::_('select.genericlist', $seriesarray, 'filter_series', 'class="inputbox" size="1" ',
 			'value', 'text', "$filter_series"
 		);
+        // Build Years List for drop down menu
+        $yeararray[]           = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_YEAR'));
+        $yeararray             = array_merge($yeararray, $years);
+        $this->page->years = JHTML::_('select.genericlist', $yeararray, 'filter_year', 'class="inputbox" size="1" ',
+            'value', 'text', "$filter_year"
+        );
+        // Build Teachers List for drop down menu
+        $teacherarray[]           = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEACHER'));
+        $teacherarray             = array_merge($teacherarray, $teachers);
+        $this->page->teachers = JHTML::_('select.genericlist', $teacherarray, 'filter_teacher', 'class="inputbox" size="1" ',
+            'value', 'text', "$filter_teacher"
+        );
+        $go = 0;
+        if ($params->get('series_list_years') > 0){$go = $go+1;}
+        if ($params->get('series_list_teachers') > 0){$go = $go+1;}
+        if ($params->get('search_series') > 0){$go = $go+1;}
+        $this->go = $go;
+        if ($params->get('series_list_show_pagination') == 1)
+        {
+            $this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+            $dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
+        }
 		$uri_tostring       = $uri->toString();
 
 		// $this->lists = $lists;

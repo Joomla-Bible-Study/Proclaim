@@ -251,7 +251,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @return NULL
 	 *
-	 * @todo need to be looked at. TOM
+	 *
 	 */
 	public function comment()
 	{
@@ -319,8 +319,8 @@ class BiblestudyControllerSermon extends JControllerForm
 
 			if ($params->get('email_comments') > 0)
 			{
-				// @todo this looks like it is not needed.
-				$EmailResult = $this->commentsEmail($params);
+
+				$this->commentsEmail($params);
 			}
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
@@ -333,38 +333,6 @@ class BiblestudyControllerSermon extends JControllerForm
 
 	}
 
-	/**
-	 * Begin scripture links plugin function
-	 * FIXME this looks to be broken. TOM
-	 *
-	 * @return null
-	 */
-	public function biblegateway_link()
-	{
-		$input  = new JInput;
-		$return = false;
-		$row    = null;
-		$params = null;
-		$plugin = new stdClass;
-
-		// $row->text = $input->get('scripture1', '', 'string');
-		JPluginHelper::importPlugin('content', 'scripturelinks');
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($plugin->params);
-		$slparams = $registry;
-
-		$dispatcher = JDispatcher::getInstance();
-		JFactory::getApplication()->triggerEvent(
-			'onPrepareContent',
-			array(
-				&$row,
-				&$params,
-				1
-			)
-		);
-	}
 
 	/**
 	 * Download system

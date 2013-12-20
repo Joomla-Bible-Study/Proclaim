@@ -1,7 +1,5 @@
 <?php
 /**
- * Joomla BibleStudy Podcast Plugin
- *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
@@ -12,8 +10,6 @@ defined('_JEXEC') or die;
 
 /* Import library dependencies */
 jimport('joomla.plugin.plugin');
-
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 /**
  * Podcast plugin class
@@ -239,7 +235,7 @@ class PlgSystemJbspodcast extends JPlugin
 		$db    = JFactory::getDBO();
 		$query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' . $time;
 		$db->setQuery($query);
-		$db->query();
+		$db->execute();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -259,11 +255,6 @@ class PlgSystemJbspodcast extends JPlugin
 	 */
 	public function doPodcast()
 	{
-		JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
-		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
-		JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
-		JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
-
 		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
 

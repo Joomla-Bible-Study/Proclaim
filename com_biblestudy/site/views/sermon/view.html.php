@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  * @property mixed document
  * @package  BibleStudy.Site
  * @since    7.0.0
+ *
+ * @todo     Still need to fix all the problems.
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
@@ -61,16 +63,16 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-		$app    = JFactory::getApplication();
-		$user   = JFactory::getUser();
-		$userId = $user->get('id');
-
+		$app         = JFactory::getApplication();
+		$user        = JFactory::getUser();
+		$userId      = $user->get('id');
+		$JBSMListing = new JBSMListing;
 		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
@@ -86,10 +88,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-
-        //Get related items. Moved here because the params were getting messed up lower in the script
-        $relatedstudies = new RelatedStudies;
-        $this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -109,7 +107,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		$Biblepassage  = new JBSMShowScripture;
+		$Biblepassage  = new JBSMshowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Add router helpers.
@@ -123,7 +121,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 
-/*		// Check to see which parameters should take priority
+		// Check to see which parameters should take priority
 		if ($active)
 		{
 			$currentLink = $active->link;
@@ -173,7 +171,7 @@ class BiblestudyViewSermon extends JViewLegacy
 				$this->setLayout($layout);
 			}
 		}
-*/
+
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
@@ -194,11 +192,15 @@ class BiblestudyViewSermon extends JViewLegacy
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
-
-		$relatedstudies = new JBSMRelatedStudies;
-
+		//Get Scripture references from listing class in case we don't use the pagebuilder class
+		$this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
+		$this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
+		//@todo check to see if this works
+		$this->item->topics = $this->item->topic_text;
+		$relatedstudies     = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
+		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		$document = JFactory::getDocument();
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
@@ -217,56 +219,65 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
 
-		$pagebuilder            = new JBSMPagebuilder;
-		$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
-		$this->item->scripture1 = $pelements->scripture1;
-		$this->item->scripture2 = $pelements->scripture2;
-		$this->item->media      = $pelements->media;
-		$this->item->duration   = $pelements->duration;
-		$this->item->studydate  = $pelements->studydate;
+		//Only load pagebuilder if the default template is NOT being used
+		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
+		{
+			$pagebuilder            = new JBSMPagebuilder;
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+			$this->item->scripture1 = $pelements->scripture1;
+			$this->item->scripture2 = $pelements->scripture2;
+			$this->item->media      = $pelements->media;
+			$this->item->duration   = $pelements->duration;
+			$this->item->studydate  = $pelements->studydate;
 
-		if (isset($pelements->secondary_reference))
-		{
-			$this->item->secondary_reference = $pelements->secondary_reference;
-		}
-		else
-		{
-			$this->item->secondary_reference = '';
-		}
-		if (isset($pelements->topics))
-		{
-			$this->item->topics = $pelements->topics;
-		}
-		else
-		{
-			$this->item->topics = '';
-		}
-		if (isset($pelements->study_thumbnail))
-		{
-			$this->item->study_thumbnail = $pelements->study_thumbnail;
-		}
-		else
-		{
-			$this->item->study_thumbnail = null;
-		}
-		if (isset($pelements->series_thumbnail))
-		{
-			$this->item->series_thumbnail = $pelements->series_thumbnail;
-		}
-		else
-		{
-			$this->item->series_thumbnail = null;
-		}
-		$this->item->detailslink = $pelements->detailslink;
+			if (isset($pelements->secondary_reference))
+			{
+				$this->item->secondary_reference = $pelements->secondary_reference;
+			}
+			else
+			{
+				$this->item->secondary_reference = '';
+			}
+			if (isset($pelements->topics))
+			{
+				$this->item->topics = $pelements->topics;
+			}
+			else
+			{
+				$this->item->topics = '';
+			}
+			if (isset($pelements->study_thumbnail))
+			{
+				$this->item->study_thumbnail = $pelements->study_thumbnail;
+			}
+			else
+			{
+				$this->item->study_thumbnail = null;
+			}
+			if (isset($pelements->series_thumbnail))
+			{
+				$this->item->series_thumbnail = $pelements->series_thumbnail;
+			}
+			else
+			{
+				$this->item->series_thumbnail = null;
+			}
+			$this->item->detailslink = $pelements->detailslink;
 
-		if (isset($pelements->teacherimage))
-		{
-			$this->item->teacherimage = $pelements->teacherimage;
-		}
-		else
-		{
-			$this->item->teacherimage = null;
+			if (isset($pelements->teacherimage))
+			{
+				$this->item->teacherimage = $pelements->teacherimage;
+			}
+			else
+			{
+				$this->item->teacherimage = null;
+			}
 		}
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
@@ -281,9 +292,11 @@ class BiblestudyViewSermon extends JViewLegacy
 		$article->text          = $this->item->secondary_reference;
 		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->secondary_reference = $article->text;
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
+		$this->loadHelper('params');
 
 		// Get the podcast subscription
-		$podcast         = new JBSMPodcastSubscribe;
+		$podcast         = new JBSMpodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
 		// Passage link to BibleGateway
@@ -343,7 +356,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		} // End if $linkit
 
-		$Biblepassage  = new JBSMShowScripture;
+		$Biblepassage  = new JBSMshowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Prepares a link string for use in social networking
@@ -352,7 +365,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
 
-		$JBSMListing        = new JBSMListing;
+
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
 		JHTML::_('behavior.tooltip');
@@ -497,9 +510,9 @@ class BiblestudyViewSermon extends JViewLegacy
 	}
 
 	/**
-	 * Display PageBrake
+	 * Display PageBrack
 	 *
-	 * @param   string $tpl  ?
+	 * @param   string $tpl ?
 	 *
 	 * @return void
 	 */

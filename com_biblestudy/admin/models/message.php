@@ -177,7 +177,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @return boolean
 	 *
-	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, TOM (I didn't write this one)
+	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, (I didn't write this one)
+     * I don't know where this came from. Tom didn't write it either
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
@@ -286,8 +287,9 @@ class BiblestudyModelMessage extends JModelAdmin
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('mediafile.id, mediafile.filename, mediafile.createdate');
+		$query->select('mediafile.id, mediafile.filename, mediafile.createdate, media.media_image_name');
 		$query->from('#__bsms_mediafiles AS mediafile');
+        $query->join('LEFT','#__bsms_media as media ON media.id = mediafile.media_image');
 		$query->where('mediafile.study_id = ' . (int) $this->getItem()->id);
 		$query->order('mediafile.createdate DESC');
 

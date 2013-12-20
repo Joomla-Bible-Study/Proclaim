@@ -38,10 +38,9 @@ class JBSMRelatedStudies
 		$topicsgo    = false;
 		$registry    = new JRegistry;
 		$registry->loadString($row->params);
-		//$params   = $registry;
 		$keywords = $registry->get('metakey');
 
-		$topics     = $row->tp_id;
+		$topics = $row->tp_id;
 
 		$topicslist = $this->getTopics();
 
@@ -58,9 +57,10 @@ class JBSMRelatedStudies
 			}
 		}
 
-        if (!$topics) {
-            $topicsgo = false;
-        }
+		if (!$topics)
+		{
+			$topicsgo = false;
+		}
 		if (!$keygo && !$topicsgo)
 		{
 			return false;
@@ -76,17 +76,17 @@ class JBSMRelatedStudies
 
 			if ($compare)
 			{
-				$this->parseKeys($keywords, $compare, $study->id); //dump($this->score, '1: ');
+				$this->parseKeys($keywords, $compare, $study->id);
 			}
 
 
 			if ($study->tp_id)
 			{
-				$this->parseKeys($topicslist, $study->tp_id, $study->id); //dump($this->score, '2: ');
+				$this->parseKeys($topicslist, $study->tp_id, $study->id);
 			}
 		}
 
-//only one item in score here
+		// Only one item in score here
 		if (!$this->score)
 		{
 			return false;
@@ -201,9 +201,6 @@ class JBSMRelatedStudies
 
 	/**
 	 * Look for Related Links.
-	 *
-	 * @param   array     $scored  ?
-	 * @param   JRegistry $params  Item Params
 	 *
 	 * @return string
 	 */
