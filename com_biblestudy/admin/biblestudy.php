@@ -47,6 +47,7 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+JLoader::discover('JBS', BIBLESTUDY_PATH_ADMIN_ADDONS_SERVERS);
 
 addCSS();
 addJS();

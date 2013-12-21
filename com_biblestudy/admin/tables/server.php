@@ -81,6 +81,8 @@ class TableServer extends JTable
 	 */
 	public $assset_id = null;
 
+    public $params = null;
+
 	/**
 	 * Constructor
 	 *

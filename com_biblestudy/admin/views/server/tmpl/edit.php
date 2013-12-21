@@ -15,14 +15,18 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 // Create shortcut to parameters.
-$params = $this->state->get('params');
-$params = $params->toArray();
+
 $app = JFactory::getApplication();
 $input = $app->input;
+
+$this->config = $this->form->getFieldset('params');
 ?>
 <script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+	Joomla.submitbutton = function (task, type) {
+        if(task == 'server.setType') {
+            document.id('item-form').elements['jform[server_type]'].value = type;
+            Joomla.submitform(task, document.id('item-form'));
+        } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
@@ -38,7 +42,9 @@ $input = $app->input;
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
-				<li><a href="#ftp" data-toggle="tab"><?php echo JText::_('JBS_CMN_FTP'); ?></a></li>
+                <?php if(count($this->config) > 0): ?>
+                <li><a href="#server_config" data-toggle="tab"><?PHP echo JText::_('*SERVER CONFIGURATION*'); ?></a></li>
+                <?php endif; ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
@@ -47,86 +53,28 @@ $input = $app->input;
 			<div class="tab-content">
 				<!-- Begin Tabs -->
 				<div class="tab-pane active" id="general">
-					<div class="control-group  form-inline">
-						<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
-					</div>
-					<div class="control-group form-inline">
-						<?php echo $this->form->getLabel('server_name'); ?> <?php echo $this->form->getInput('server_name'); ?>
-					</div>
-
 					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('server_path'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('server_path'); ?>
-						</div>
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('server_name'); ?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('server_name'); ?>
+                        </div>
 					</div>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('type'); ?>
+							<?php echo $this->form->getLabel('server_type'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('type'); ?>
+							<?php echo $this->form->getInput('server_type'); ?>
 						</div>
 					</div>
 				</div>
-
-				<div class="tab-pane" id="ftp">
-					<div class="row-fluid">
-						<div class="span6">
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftphost'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftphost'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftpuser'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftpuser'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftppassword'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftppassword'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftpport'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftpport'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('aws_key'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('aws_key'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('aws_secret'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('aws_secret'); ?>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
+                <?php if(count($this->config) > 0): ?>
+                    <div class="tab-pane" id="server_config">
+                        <?php echo $this->loadTemplate('configuration'); ?>
+                    </div>
+                <?php endif; ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>

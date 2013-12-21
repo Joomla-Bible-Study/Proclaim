@@ -65,6 +65,23 @@ elseif (empty($this->item->study_id))
 	$folder = $this->admin_params->get('path');
 }
 ?>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('#uploader').pluploadQueue({
+			runtimes: 'flash,html5',
+			url: 'index.php?option=com_biblestudy&task=mediafile.upload',
+			max_file_size: '10mb',
+			chunk_size: '1mb',
+			unique_name: true,
+			multipart_params: {
+				"location" : jQuery('#jform_localFolder').find(':selected').val()
+			},
+
+			// Flash settings
+			flash_swf_url: '<?php echo JURI::root().'media/com_biblestudy/jui/js/plupload.flash.swf'; ?>'
+		});
+	});
+</script>
 <script>
 	function openConverter1() {
 		var Wheight = 125;
@@ -148,22 +165,6 @@ elseif (empty($this->item->study_id))
 		var objTB = document.getElementById("size");
 		objTB.value = remotefilesize;
 	}
-
-	function showupload() {
-		var id = 'SWFUpload_0';
-		if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '') {
-			document.getElementById(id).style.display = 'inline';
-		}
-		else {
-			document.getElementById(id).style.display = 'none';
-		}
-	}
-
-	if (window.addEventListener) {
-		window.addEventListener('load', showupload, false);
-	} else if (window.attachEvent) {
-		window.attachEvent('load', showupload);
-	}
 </script>
 <form action="<?php
 $input = new JInput;
@@ -177,39 +178,41 @@ else
 }
 echo JRoute::_($url);
 ?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
-
-<?php
-$link = JURI::base().'components/com_biblestudy/models/fields/modal/upload.php';
-$passage = '<a href="' . $link . '" ';
-$passage .= "onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,";
-$passage .= "resizable=yes,width=800,height=500');";
-$passage .= "return false;";
-echo $passage.'">'; ?>Upload</a>
-
 <div class="row-fluid">
 <!-- Begin Newsfeed -->
 <div class="span10 form-horizontal">
 <ul class="nav nav-tabs">
-    <li class="active"><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
-    </li>
-
-	<li><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 	</li>
-
+	<li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
+	</li>
+	<li><a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
+	</li>
+	<li><a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
+	</li>
+	<li><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
+	</li>
+	<li><a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
+	</li>
 	<li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
 	</li>
-    <li><a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
-    </li>
-    <li><a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
-    </li>
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
 </ul>
 <div class="tab-content">
-<div class="tab-pane " id="general">
+<div class="tab-pane active" id="general">
 
-
+	<?php if ($input->get('layout', '', 'string') == 'modal')
+	{
+		?>
+		<div class="control-group  form-inline">
+			<button type="button" onclick="submitbutton('mediafile.save');  ">
+				<?php echo JText::_('JSAVE'); ?></button>
+			<button type="button" onclick="window.parent.SqueezeBox.close();  ">
+				<?php echo JText::_('JCANCEL'); ?></button>
+		</div>
+	<?php } ?>
 
 	<div class="control-group">
 		<div class="control-label">
@@ -281,24 +284,41 @@ echo $passage.'">'; ?>Upload</a>
 		</div>
 	</div>
 </div>
-
-<div class="tab-pane active" id="file">
+<div class="tab-pane" id="player">
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('server'); ?>
+			<?php echo $this->form->getLabel('player'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
+			<?php echo $this->form->getInput('player'); ?>
 		</div>
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('path'); ?>
+			<?php echo $this->form->getLabel('popup'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
+			<?php echo $this->form->getInput('popup'); ?>
 		</div>
 	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('mediacode'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('mediacode'); ?>
+		</div>
+	</div>
+</div>
+<div class="tab-pane" id="file">
+	<div class="control-group">
+        <div class="control-label">
+            <?php echo $this->form->getLabel('serverFolders'); ?>
+        </div>
+        <div class="controls">
+            <?php echo $this->form->getInput('serverFolders', null, empty($this->item->study_id) ? $folder : null); ?>
+        </div>
+    </div>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('filename'); ?>
@@ -323,79 +343,41 @@ echo $passage.'">'; ?>Upload</a>
 			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
 		</div>
 	</div>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $this->form->getLabel('media_image'); ?>
-        </div>
-        <div class="controls">
-            <?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
-        </div>
+</div>
+<div class="tab-pane" id="upload">
+	<div id="uploader">
+		<p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
     </div>
     <div class="control-group">
         <div class="control-label">
-            <?php echo $this->form->getLabel('mime_type'); ?>
+            <?php echo $this->form->getLabel('localFolder'); ?>
         </div>
         <div class="controls">
-            <?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $this->form->getLabel('player'); ?>
-        </div>
-        <div class="controls">
-            <?php echo $this->form->getInput('player'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $this->form->getLabel('popup'); ?>
-        </div>
-        <div class="controls">
-            <?php echo $this->form->getInput('popup'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-            <?php echo $this->form->getLabel('mediacode'); ?>
-        </div>
-        <div class="controls">
-            <?php echo $this->form->getInput('mediacode'); ?>
+            <?php echo $this->form->getInput('localFolder', null, empty($this->item->study_id) ? $folder : null); ?>
+            <p class="text-warning"><strong>NOTE:</strong> Uploading is only supported locally.</p>
         </div>
     </div>
 </div>
-<div class="tab-pane" id="upload">
+<div class="tab-pane" id="mediatype">
+
+
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
+			<?php echo $this->form->getLabel('media_image'); ?>
 		</div>
 		<div class="controls">
-			<table class="adminlist">
-
-				<tbody>
-				<tr>
-					<td>
-						<?php echo $this->upload_server; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-						<?php echo $this->upload_folder; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-
-						<input type="file" name="uploadfile" value=""/>
-						<button type="button" onclick="submitbutton('upload')">
-							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
-					</td>
-					<td></td>
-				</tr>
-				</tbody>
-			</table>
+			<?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('mime_type'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
 		</div>
 	</div>
 </div>
-
 <div class="tab-pane" id="parameters">
 	<?php foreach ($params as $name => $fieldset):
 		foreach ($this->form->getFieldset($name) as $field) : ?>
@@ -425,17 +407,7 @@ echo $passage.'">'; ?>Upload</a>
 <!-- Begin Sidebar -->
 <div class="span2 form-vertical">
 	<h4><?php echo JText::_('JDETAILS'); ?></h4>
-
-    <?php if ($input->get('layout', '', 'string') == 'modal')
-    {
-        ?>
-        <div class="control-group  form-inline">
-            <button type="button" onclick="submitbutton('mediafile.save');  ">
-                <?php echo JText::_('JSAVE'); ?></button>
-            <button type="button" onclick="window.parent.SqueezeBox.close();  ">
-                <?php echo JText::_('JCANCEL'); ?></button>
-        </div>
-    <?php } ?>
+	<hr/>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('id'); ?>

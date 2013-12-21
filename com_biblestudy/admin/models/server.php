@@ -20,6 +20,12 @@ jimport('joomla.application.component.modeladmin');
  */
 class BiblestudyModelServer extends JModelAdmin
 {
+    /**
+     * @var string
+     *
+     * @since   8.1.0
+     */
+    protected $servers_path = '/com_biblestudy/addons/servers/';
 
 	/**
 	 * Method to test whether a record can be deleted.
@@ -117,15 +123,20 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Get the form.
-		$form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($data)) {
+            $item = $this->getItem();
+		}else {
+            $this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
+        }
 
-		if (empty($form))
-		{
-			return false;
-		}
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
-		return $form;
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
 	}
 
 	/**
@@ -177,4 +188,89 @@ class BiblestudyModelServer extends JModelAdmin
 		parent::cleanCache('mod_biblestudy');
 	}
 
+    /**
+     * Method to get a server item.
+     *
+     * @param null $pk  An optional id of the object to get
+     *
+     * @return mixed Server Server data object, false on failure
+     *
+     * @since 8.1.0
+     */
+    public function getItem($pk = null) {
+        $pk = (!empty($pk) ? $pk : (int) $this->getState('server.id'));
+
+        $table = $this->getTable();
+
+        $table->load($pk);
+
+        // Prime required properties
+        if($type = $this->getState('server.type')) {
+            $table->server_type = $type;
+        }
+
+        $this->setState('server.type', $table->server_type);
+
+        // Convert to the JObject before adding the params.
+        $properties = $table->getProperties(1);
+        $result = JArrayHelper::toObject($properties, 'JObject');
+
+        // Convert params field to an array
+        $registry = new JRegistry;
+        $registry->loadString($table->params);
+        $result->params = $registry->toArray();
+
+        return $result;
+    }
+
+    /**
+     * Auto-populate the model state.
+     *
+     * @return  void
+     *
+     * @since   8.1.0
+     */
+    protected function populateState() {
+        $app = JFactory::getApplication('administrator');
+        $input = $app->input;
+
+        // Load the Source state.
+        $pk = $input->get('id', null, 'INTEGER');
+        $this->setState('server.id', $pk);
+
+        $server = $app->getUserState('com_biblestudy.edit.server.type');
+        $this->setState('server.type', $server);
+    }
+
+    /**
+     * @param JForm $form
+     * @param mixed $data
+     * @param string $group
+     * @throws Exception    If there is an error in loading server config files
+     *
+     * @since   8.1.0
+     */
+    protected function preprocessForm(JForm $form, $data, $group = 'content') {
+        $formFile = false;
+        $type = $this->getState('server.type');
+        if(!$type)
+            $type = JFactory::getApplication('administrator')->getUserState('com_biblestudy.edit.server.type');
+
+        $path = JPath::clean(JPATH_ADMINISTRATOR.'/components/'.$this->servers_path.$type.'/'.$type.'.xml');
+        if(JFile::exists($path)) {
+            $formFile = $path;
+        }
+
+        if($formFile) {
+            if($form->loadFile($formFile, true, '/server') == false) {
+                throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+            }
+
+            if(!$xml = simplexml_load_file($formFile)) {
+                throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+            }
+        }
+
+        parent::preprocessForm($form, $data, $group);
+    }
 }

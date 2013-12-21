@@ -33,4 +33,44 @@ class BiblestudyControllerServer extends JControllerForm
 		parent::__construct($config);
 	}
 
+    /**
+     * Resets the User state for the server type. Needed to allow the value from the DB to be used
+     *
+     * @param   null $key
+     * @param   null $urlVar
+     * @return  bool
+     *
+     * @since   8.1.0
+     */
+    public function edit($key = null, $urlVar = null) {
+        $app = JFactory::getApplication();
+        $result = parent::edit();
+
+        if($result) {
+            $app->setUserState('com_biblestudy.edit.server.type', null);
+        }
+
+        return true;
+    }
+
+    /**
+     * Sets the type of endpoint currently being configured.
+     *
+     * @return  void
+     * @since   8.1.0
+     */
+    function setType() {
+        $app = JFactory::getApplication();
+        $input = $app->input;
+
+        $data = $input->get('jform', array(), 'post', 'array');
+        $type = json_decode(base64_decode($data['server_type']));
+
+        $recordId = isset($type->id) ? $type->id: 0;
+
+        //Save the endpoint in the session
+        $app->setUserState('com_biblestudy.edit.server.type', $type->name);
+
+        $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($recordId), false));
+    }
 }

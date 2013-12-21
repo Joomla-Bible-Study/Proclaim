@@ -40,6 +40,24 @@ class BiblestudyControllerMediafile extends JControllerForm
 		parent::__construct($config);
 	}
 
+    public function upload() {
+    	$location = array();
+    	
+    	$app = JFactory::getApplication();
+    	$input = $app->input;
+    	
+    	$location_data = explode(".", $input->get("location", null, "STRING"));
+        $location['server_id'] = $location_data[0];
+        $location['folder_id'] = $location_data[1];
+        
+        //Get Server information
+        $server = $this->getModel("Server")->getItem($location['server_id']);
+        
+    	$adapter = JBSServer::getInstance();
+    	
+    	die($server->test());
+    }
+
 	/**
 	 * Method to run batch operations.
 	 *
