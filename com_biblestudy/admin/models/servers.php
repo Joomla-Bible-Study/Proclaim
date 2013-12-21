@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
-jimport('joomla.application.folder');
+jimport('joomla.filesystem.folder');
 
 /**
  * Servers model class
