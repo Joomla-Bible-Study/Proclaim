@@ -153,6 +153,7 @@ class JBSMPIconvert
 		$query->select('*')->from('#__picomments');
 		$db->setQuery($query);
 		$this->picomments = $db->loadObjectList();
+		/** @var $piconversion string */
 		$piconversion     = null;
 
 		// Create servers and folders
@@ -207,7 +208,7 @@ class JBSMPIconvert
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_folders')->order('id desc');
 					$db->setQuery($query, 0, 1);
-					$db->query();
+					$db->execute();
 					$newid              = $db->loadResult();
 					$oldid              = $pi->id;
 					$this->foldersids[] = array('newid' => $newid, 'oldid' => $oldid);
@@ -1015,8 +1016,6 @@ class JBSMPIconvert
 	 * @param   int $newid  ?
 	 *
 	 * @return boolean
-	 *
-	 * @todo Looks like the if statement for $db->insertObject('#__bsms_comments', $comments, 'id') may not be needed, TOM
 	 */
 	private function insertComments($oldid, $newid)
 	{

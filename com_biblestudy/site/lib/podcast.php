@@ -466,7 +466,7 @@ class JBSMPodcast
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = JClientHelper::getCredentials('ftp');
 
-		// Try to make the template file writeable
+		// Try to make the template file writable
 		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755'))
 		{
 			JFactory::getApplication()->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file writable', 'notice');

@@ -41,7 +41,7 @@ Class JBSMDebug
         Condition: <br /><pre>$message</pre>";
 
 		// Now display the call stack
-		echo Debug_Call_Stack_info();
+		echo self::Debug_Call_Stack_info();
 	}
 
 	/**
@@ -56,7 +56,7 @@ Class JBSMDebug
 	{
 		$db      = JFactory::getDBO();
 		$dberror = $db->stderr(true);
-		echo Debug_Call_Stack_info($back + 1);
+		echo self::Debug_Call_Stack_info($back + 1);
 
 		$CBiblestudyVersion     = new JBSMBiblestudyVersion;
 		$biblestudyVersion      = $CBiblestudyVersion->version();
@@ -75,7 +75,7 @@ Class JBSMDebug
 		<!-- /Version Info -->
 
 		<?php
-		biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
+		self::biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
 	}
 
 	/**
@@ -92,7 +92,7 @@ Class JBSMDebug
 
 		if ($db->getErrorNum() != 0)
 		{
-			Trigger_Db_error($text, $back + 1);
+			self::Trigger_Db_error($text, $back + 1);
 		}
 	}
 
@@ -109,7 +109,7 @@ Class JBSMDebug
 
 		if ($db->getErrorNum() != 0)
 		{
-			Trigger_Db_warning($text);
+			self::Trigger_Db_warning($text);
 		}
 	}
 
@@ -123,7 +123,7 @@ Class JBSMDebug
 	public function Trigger_Db_warning($text = '')
 	{
 		$db = JFactory::getDBO();
-		biblestudy_error($text . '<br />' . $db->stderr(true), E_USER_WARNING);
+		self::biblestudy_error($text . '<br />' . $db->stderr(true), E_USER_WARNING);
 	}
 
 	/**
@@ -162,7 +162,7 @@ Class JBSMDebug
 								$objvarlist = get_object_vars($svalue);
 
 								// Recursive function call
-								debug_vars($objvarlist);
+								$this->debug_vars($objvarlist);
 							}
 							else
 							{
@@ -185,7 +185,7 @@ Class JBSMDebug
 					$objvarlist = get_object_vars($value);
 
 					// Recursive function call
-					debug_vars($objvarlist);
+					$this->debug_vars($objvarlist);
 				}
 				else
 				{
@@ -209,7 +209,7 @@ Class JBSMDebug
 	{
 		$trace = array_slice(debug_backtrace(), $back);
 
-		return debug_vars($trace);
+		return self::debug_vars($trace);
 	}
 
 	/**

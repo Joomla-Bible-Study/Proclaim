@@ -262,7 +262,7 @@ class JBSMPageBuilder
 			{
 				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 			}
-			$image = $mediaelements->useJImage($mediaimage, $media->mimetext);
+			$image          = $mediaelements->useJImage($mediaimage, $media->mimetext);
 			$player         = $mediaelements->getPlayerAttributes($params, $itemparams, $media);
 			$playercode     = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
 			$d_image        = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png');
