@@ -8,6 +8,10 @@
 .project
 .settings
 
+# Misc
+composer.lock
+*.log
+
 # Test Related Files #
 /tests/system/servers/configdef.php
 /phpunit.xml
@@ -27,3 +31,5 @@ com_biblestudy/admin/views/test/index.html
 com_biblestudy/admin/views/test/tmpl/index.html
 
 tests/unit/.joomla-cms/
+
+/vendor/
