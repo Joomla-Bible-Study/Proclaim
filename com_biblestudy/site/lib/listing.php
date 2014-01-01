@@ -235,6 +235,10 @@ class JBSMListing extends JBSMElements
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
 		}
+        if ($params->get($extra . 'teacherallinonerow') > 0)
+        {
+            $listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
+        }
 		if ($params->get($extra . 'customrow'))
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'custom');

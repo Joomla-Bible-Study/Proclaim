@@ -909,6 +909,12 @@
             <field name="tscustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="tscustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="tscustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
+            <field type="spacer" name="myspacer36a" hr="true" />
+            <field name="tsteacherallinonerow" type="rowoptions" size="1" default="0" label="JBS_TCH_ALLINONE" description="JBS_TCH_ALLINONE_DESC" />
+            <field name="tsteacherallinonecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tsteacherallinonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tsteacherallinoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tsteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
 
             <field name="teacher_headercode" type="editor" height="300" width="500"
                    label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" filter="raw"
@@ -1082,6 +1088,12 @@
             <field name="tdcustomelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="tdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
             <field name="tdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC" />
+            <field type="spacer" name="myspacer36a" hr="true" />
+            <field name="tdteacherallinonerow" type="rowoptions" size="1" default="0" label="JBS_TCH_ALLINONE" description="JBS_TCH_ALLINONE_DESC" />
+            <field name="tdteacherallinonecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC" />
+            <field name="tdteacherallinonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC" />
+            <field name="tdteacherallinoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
+            <field name="tdteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC" />
 
             <field name="useexpert_teacherdetail" type="list" default="0"
                    label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL" description="JBS_TPL_CUSTOM_VIEW_DESC">
