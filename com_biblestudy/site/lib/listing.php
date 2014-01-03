@@ -828,6 +828,88 @@ class JBSMListing extends JBSMElements
 					$data = $this->getFluidCustom($row->customtext, $item, $params, $admin_params, $template, $type);
 				}
 				break;
+
+            case $extra . 'teacherallinone':
+                ($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' . JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
+                if ($item->website)
+                {
+                    if (substr_count($item->website, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+                    }
+                }
+                if ($item->facebooklink)
+                {
+                    if (substr_count($item->facebooklink, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+                    }
+                }
+                if ($item->twitterlink)
+                {
+                    if (substr_count($item->twitterlink, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+                    }
+                }
+                if ($item->bloglink)
+                {
+                    if (substr_count($item->bloglink, 'http://', 0, 7))
+                    {
+                        $data .= '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+                    }
+                }
+                if ($item->link1)
+                {
+                    if (substr_count($item->link1, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                    }
+                }
+                if ($item->link2)
+                {
+                    if (substr_count($item->link2, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                    }
+                }
+                if ($item->link3)
+                {
+                    if (substr_count($item->link3, 'http://', 0))
+                    {
+                        $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '></a>';
+                    }
+                    else
+                    {
+                        $data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+                    }
+                }
+                break;
+
 			case $extra . 'teacherlong':
 				if ($header == 1)
 				{
@@ -857,7 +939,7 @@ class JBSMListing extends JBSMElements
 				}
 				else
 				{
-					if ($item->link2)
+					if ($item->link1)
 					{
 						if (substr_count($item->link1, 'http://', 0))
 						{
