@@ -355,8 +355,7 @@ class JBSMMedia
 	{
 		$url = 'com_docman';
 
-		// @todo JSite may not be the right function to call
-		$getmenu = new JSite;
+		$getmenu = JFactory::getApplication();
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid = $menuItem->id;
 		$docman = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
