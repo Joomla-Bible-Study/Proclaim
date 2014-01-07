@@ -296,7 +296,7 @@ class JBSMMedia
 			$player->player = 2;
 		}
 
-		if (isset($media->docMan_id))
+		if (isset($media->docMan_id) && $media->docMan_id != 0)
 		{
 			$player->player = 4;
 		}
