@@ -487,6 +487,7 @@ class JBSMMedia
 			$protocol = $params->get('protocol', 'http://');
 			$path     = $protocol . $path;
 		}
+
 		switch ($player->player)
 		{
 
