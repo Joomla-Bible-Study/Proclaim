@@ -59,7 +59,7 @@ class JBSMPodcast
 					$description       = str_replace("&", "and", $podinfo->description);
 					$description       = strip_tags($description);
 					$detailstemplateid = $podinfo->detailstemplateid;
-
+                    $podcastimage = $this->jimage($podinfo->image);
 					if (!$detailstemplateid)
 					{
 						$detailstemplateid = 1;
@@ -76,10 +76,10 @@ class JBSMPodcast
                 	<itunes:subtitle>' . $podinfo->title . '</itunes:subtitle>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>'.JURI::root() . $podinfo->image . '</url>
+                		<url>'.JURI::root() . $podinfo->image. '</url>
                 		<title>' . $podinfo->title . '</title>
-                		<height>' . $podinfo->imageh . '</height>
-                		<width>' . $podinfo->imagew . '</width>
+                		<height>' . $podcastimage[1] . '</height>
+                		<width>' . $podcastimage[0] . '</width>
                 	</image>
                 	<itunes:image href="'.JURI::root() . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
@@ -497,4 +497,16 @@ class JBSMPodcast
 		return $podcastresults;
 	}
 
+    public function jimage($path)
+    {
+        if (!$path)
+        {
+            return false;
+        }
+
+
+        $return = getimagesize(JURI::root().$path);
+
+        return $return;
+    }
 }
