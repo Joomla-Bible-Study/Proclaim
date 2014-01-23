@@ -43,7 +43,14 @@ abstract class JHtmlJwplayer
 			return;
 		}
 
+		$key = JFactory::getApplication('site')->getParams('com_biblestudy')->get('jwplayer_key');
+
 		JHtml::script('media/com_biblestudy/player/jwplayer.js');
+		$doc = JFactory::getDocument();
+		if ($key)
+		{
+			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
+		}
 
 		self::$loaded[__METHOD__] = true;
 

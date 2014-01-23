@@ -137,8 +137,6 @@
                value_field="mimetext" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
         </field>
-
-
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>
@@ -170,7 +168,6 @@
             <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
             <option value="3">JBS_CMN_USE_GLOBAL</option>
         </field>
-
 
         <!--
         Eugen:
