@@ -356,7 +356,6 @@ class MigrationUpgrade
 		}
 
 
-
 		$table = '#__bsms_podcast';
 
 		if (!$this->addAssetColumn($table))
@@ -825,7 +824,6 @@ class MigrationUpgrade
 			->select('id, params')
 			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
-		$db->query();
 		$results = $db->loadObjectList();
 
 		if ($results)
@@ -893,7 +891,6 @@ class MigrationUpgrade
 		$db    = JFactory::getDBO();
 		$query = "SELECT `id`, `params` FROM `#__bsms_mediafiles` WHERE `params` LIKE '%podcast1%'";
 		$db->setQuery($query);
-		$db->query();
 		$results = $db->loadObjectList();
 
 		if ($results)
