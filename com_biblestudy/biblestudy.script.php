@@ -9,6 +9,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
+
 /**
  * BibleStudy Install Script
  *
@@ -174,6 +175,8 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
+		// Need to load JBSMDbHelper for script
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$dbhelper    = new JBSMDbHelper;
 		$drop_result = '';
 
@@ -862,6 +865,11 @@ class Com_BiblestudyInstallerScript
 		}
 	}
 
+	/**
+	 * Old Update URL's
+	 *
+	 * @return array
+	 */
 	public function rmoldurl()
 	{
 
