@@ -2,10 +2,10 @@
 /**
  * Admin Form
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 // Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+JHtml::_('jquery.framework');
 
 if (BIBLESTUDY_CHECKREL)
 {
@@ -38,17 +39,18 @@ $input = $app->input;
 	}
 
 	Joomla.submitbutton = function (task) {
-		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-admin'))) {
+			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
+
 </script>
 
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="item-form" class="form-validate">
+	method="post" name="adminForm" id="item-admin" class="form-validate">
 <div class="row-fluid">
 <!-- Begin Content -->
 <div class="span12 form-horizontal">
@@ -56,6 +58,7 @@ $input = $app->input;
 	<li class="active"><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
 	<li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
 	<li><a href="#playersettings" data-toggle="tab"><?php echo JText::_('JBS_ADM_PLAYER_SETTINGS'); ?></a></li>
+	<li><a href="#jwplayer" data-toggle="tab"><?php echo JText::_('JBS_ADM_JWPLAYER'); ?></a></li>
 	<li><a href="#assets" data-toggle="tab"><?php echo JText::_('JBS_ADM_DB'); ?></a></li>
 	<li><a href="#backup" data-toggle="tab"><?php echo JText::_('JBS_IBM_BACKUP'); ?></a></li>
 	<?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1)
@@ -333,6 +336,9 @@ $input = $app->input;
 			<input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
 		</div>
 	</div>
+</div>
+<div class="tab-pane" id="jwplayer">
+	<?php echo $this->loadTemplate('jwplayer'); ?>
 </div>
 <div class="tab-pane" id="assets">
 	<?php echo $this->loadTemplate('assets'); ?>

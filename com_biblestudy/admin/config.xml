@@ -12,8 +12,4 @@
         <field name="filters" type="filters" label="JBS_ADM_TEXT_FILTERS_LABEL"
                class="inputbox" filter=""/>
     </fieldset>
-    <fieldset name="player" label="JBS_ADM_PLAYER_ADMIN_LABLE"
-              description="JBS_ADM_PLAYER_ADMIN_DESC">
-        <field name="key" type="text" label="JBS_KEY_LABEL" description="" size="3" />
-              </fieldset>
 </config>
