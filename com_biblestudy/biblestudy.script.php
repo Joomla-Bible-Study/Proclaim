@@ -9,6 +9,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
+
 /**
  * BibleStudy Install Script
  *
@@ -864,6 +865,11 @@ class Com_BiblestudyInstallerScript
 		}
 	}
 
+	/**
+	 * Old Update URL's
+	 *
+	 * @return array
+	 */
 	public function rmoldurl()
 	{
 
