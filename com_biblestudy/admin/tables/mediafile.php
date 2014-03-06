@@ -25,33 +25,12 @@ class TableMediafile extends JTable
 	 */
 	public $id = null;
 
-	/**
-	 * Study ID
-	 *
-	 * @var string
-	 */
-	public $study_id = null;
-
-	/**
-	 * Media Image
-	 *
-	 * @var string
-	 */
-	public $media_image = null;
-
-	/**
-	 * Server
-	 *
-	 * @var string
-	 */
-	public $server = null;
-
-	/**
-	 * Path
-	 *
-	 * @var string
-	 */
-	public $path = null;
+    /**
+     * Server id
+     *
+     * @var int
+     */
+    public $server_id = null;
 
 	/**
 	 * Published
@@ -61,46 +40,11 @@ class TableMediafile extends JTable
 	public $published = 1;
 
 	/**
-	 * Special
-	 *
-	 * @var string
-	 */
-	public $special = null;
-
-	/**
-	 * File Name
-	 *
-	 * @var string
-	 */
-	public $filename = null;
-
-	/**
-	 * File Size
-	 *
-	 * @var string
-	 */
-	public $size = null;
-
-	/**
-	 * File Mime Type
-	 *
-	 * @var string
-	 */
-	public $mime_type = null;
-
-	/**
 	 * Podcast ID
 	 *
 	 * @var string
 	 */
 	public $podcast_id = null;
-
-	/**
-	 * Internal Viewer
-	 *
-	 * @var string
-	 */
-	public $internal_viewer = null;
 
 	/**
 	 * Ordering
@@ -110,55 +54,13 @@ class TableMediafile extends JTable
 	public $ordering = null;
 
 	/**
-	 * Media Code
-	 *
-	 * @var string
-	 */
-	public $mediacode = null;
-
-	/**
 	 * Create Date
 	 *
 	 * @var string
 	 */
 	public $createdate = null;
 
-	/**
-	 * Link type
-	 *
-	 * @var string
-	 */
-	public $link_type = null;
-
-	/**
-	 * Hits
-	 *
-	 * @var string
-	 */
-	public $hits = null;
-
-	/**
-	 * DocMan ID
-	 *
-	 * @var string
-	 */
-	public $docMan_id = null;
-
-	/**
-	 * Content Article ID
-	 *
-	 * @var string
-	 */
-	public $article_id = null;
-
-	/**
-	 * VirtueMart ID
-	 *
-	 * @var string
-	 */
-	public $virtueMart_id = null;
-
-	/**
+    /**
 	 * Comment Text
 	 *
 	 * @var string
@@ -166,25 +68,12 @@ class TableMediafile extends JTable
 	public $comment = null;
 
 	/**
-	 * Params before jSon
+	 * Media configuration
 	 *
 	 * @var string
 	 */
 	public $params = null;
 
-	/**
-	 * Player state
-	 *
-	 * @var string
-	 */
-	public $player = null;
-
-	/**
-	 * Popup state
-	 *
-	 * @var string
-	 */
-	public $popup = null;
 
 	/**
 	 * Constructor
@@ -280,32 +169,4 @@ class TableMediafile extends JTable
 
 		return $asset->id;
 	}
-
-	/**
-	 * Overloaded load function
-	 *
-	 * @param   int     $pk     primary key
-	 * @param   boolean $reset  reset data
-	 *
-	 * @return      boolean
-	 *
-	 * @see JTable:load
-	 */
-	public function load($pk = null, $reset = true)
-	{
-		if (parent::load($pk, $reset))
-		{
-			// Convert the params field to a registry.
-			$params = new JRegistry;
-			$params->loadString($this->params);
-			$this->params = $params;
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 }

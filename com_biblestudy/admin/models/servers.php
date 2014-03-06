@@ -38,14 +38,19 @@ class BiblestudyModelServers extends JModelList
     protected $rlu_type = array();
 
     /**
-     * Method to get the reverse lookup of the Endpoint id to Endpoint name
+     * Method to get the reverse lookup of the server_id to server_name
      *
      * @return  array
      * @since   8.1.0
      */
-    public function getIdReverseLookup() {
+    public function getIdToNameReverseLookup() {
         if(empty($this->rlu_id)) {
-            $this->getItems();
+            $_rlu = array();
+            foreach($this->getItems() as $server) {
+                $_rlu[$server->id] = $server->server_name;
+            }
+            $this->rlu_id = $_rlu;
+
         }
         return $this->rlu_id;
     }
