@@ -91,17 +91,23 @@ class BiblestudyModelServer extends JModelAdmin
      * @since   8.1.0
      */
     public function getServerForm() {
-        $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$this->getState('server.type'));
+        // If user hasn't selected a server type yet, just return an empty form
+        $type = $this->data->type;
+        if(empty($type)) {
+            return new JForm("noop"); //TODO This may not be optimal, seems like a hack
+        }
+        $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$type);
 
         JForm::addFormPath($path);
         JForm::addFieldPath($path.'/fields');
 
         // Add language files
         $lang = JFactory::getLanguage();
-        if(!$lang->load('jbs_addon_legacy', JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers/'.$this->getState('server.type')))
+        if(!$lang->load('jbs_addon_'.$type, $path)) {
             throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
+        }
 
-        $form = $this->loadForm('com_biblestudy.server.'.$this->getState('server.type'), $this->getState('server.type'), array('control' => 'jform', 'load_data' => true), true, "/server");
+        $form = $this->loadForm('com_biblestudy.server.'.$type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
         if (empty($form)) {
             return false;
@@ -189,14 +195,14 @@ class BiblestudyModelServer extends JModelAdmin
 
         $this->data = parent::getItem($pk);
 
-        if(!empty($this->data)) {
+        if($this->data) {
             // Convert media field to array
             $registry = new JRegistry($this->data->media);
             $this->data->media = $registry->toArray();
 
-            // Save server type in state if needed
-            if(is_null($this->getState('server.type')))
-                $this->setState('server.type', $this->data->server_type);
+            // Set the type base on session if available or fall back on db value.
+            $type = $this->getState('server.type');
+            $this->data->type = empty($type) ? $this->data->type : $this->getState('server.type');
         }
 
         return $this->data;
@@ -216,7 +222,7 @@ class BiblestudyModelServer extends JModelAdmin
         $pk = $input->get('id', null, 'INTEGER');
         $this->setState('server.id', $pk);
 
-        $server = $app->getUserState('com_biblestudy.edit.server.type');
-        $this->setState('server.type', $server);
+        $type = $app->getUserState('com_biblestudy.edit.server.type');
+        $this->setState('server.type', $type);
     }
 }

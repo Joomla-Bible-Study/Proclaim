@@ -22,7 +22,7 @@ $input = $app->input;
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
         if(task == 'server.setType') {
-            document.id('item-form').elements['jform[server_type]'].value = type;
+            document.id('item-form').elements['jform[type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
         } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
@@ -47,7 +47,7 @@ $input = $app->input;
                     </a>
                 </li>
                 <?php endforeach; ?>
-                <?php if($this->server_form->getFieldsets('media') > 0): ?>
+                <?php if(count($this->server_form->getFieldsets('media')) > 0): ?>
                     <li>
                         <a href="#media_settings" data-toggle="tab">
                             <?php echo JText::_("JBS_ADDON_MEDIA_SETTINGS"); ?>
@@ -72,10 +72,10 @@ $input = $app->input;
 					</div>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('server_type'); ?>
+							<?php echo $this->form->getLabel('type'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('server_type'); ?>
+							<?php echo $this->form->getInput('type'); ?>
 						</div>
 					</div>
                     <div class="control-group">
