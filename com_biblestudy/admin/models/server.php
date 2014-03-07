@@ -94,7 +94,8 @@ class BiblestudyModelServer extends JModelAdmin
         // If user hasn't selected a server type yet, just return an empty form
         $type = $this->data->type;
         if(empty($type)) {
-            return new JForm("noop"); //TODO This may not be optimal, seems like a hack
+            //@TODO This may not be optimal, seems like a hack
+            return new JForm("noop");
         }
         $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$type);
 
@@ -149,8 +150,8 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
-	 * @since   7.0
-     * @TODO    This gets called twice, because we're loading two forms. (There is radundcancy
+	 * @since   8.1.0
+     * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
      *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
      *          figure out a way to iterate over only the relevant data)
 	 */
