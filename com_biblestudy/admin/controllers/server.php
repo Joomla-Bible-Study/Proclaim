@@ -66,9 +66,9 @@ class BiblestudyControllerServer extends JControllerForm
         $data = $input->get('jform', array(), 'post', 'array');
         $type = json_decode(base64_decode($data['server_type']));
 
-        $recordId = isset($type->id) ? $type->id: 0;
+        $recordId = isset($type->id) ? $type->id : 0;
 
-        //Save the endpoint in the session
+        // Save the endpoint in the session
         $app->setUserState('com_biblestudy.edit.server.type', $type->name);
 
         $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($recordId), false));

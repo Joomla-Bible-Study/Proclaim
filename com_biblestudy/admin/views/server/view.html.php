@@ -27,6 +27,13 @@ class BiblestudyViewServer extends JViewLegacy
 	 */
 	protected $form;
 
+    /**
+     * Server form
+     *
+     * @var
+     */
+    protected $server_form;
+
 	/**
 	 * Item
 	 *
@@ -67,7 +74,9 @@ class BiblestudyViewServer extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->form  = $this->get("Form");
+		$this->form  = $this->get("form");
+        $this->server_form = $this->get('ServerForm');
+
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'server');

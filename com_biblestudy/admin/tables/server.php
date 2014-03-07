@@ -55,20 +55,6 @@ class TableServer extends JTable
 	public $server_type = null;
 
 	/**
-	 * Ftp User Name
-	 *
-	 * @var string
-	 */
-	public $ftp_username = null;
-
-	/**
-	 * FTP Password
-	 *
-	 * @var string
-	 */
-	public $ftp_password = null;
-
-	/**
 	 * Rules
 	 *
 	 * @var string
@@ -84,12 +70,14 @@ class TableServer extends JTable
 
 	public $params = null;
 
+    public $media = null;
+
 	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tableserver(& $db)
+	public function Tableserver(&$db)
 	{
 		parent::__construct('#__bsms_servers', 'id', $db);
 	}
@@ -109,12 +97,20 @@ class TableServer extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
+        // Bind the server params
 		if (isset($array['params']) && is_array($array['params']))
 		{
 			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
+
+        // Bind the media defaults
+        if (isset($array['media']) && is_array($array['media'])) {
+            $registry = new JRegistry;
+            $registry->loadArray($array['media']);
+            $array['media'] = (string) $registry;
+        }
 
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
