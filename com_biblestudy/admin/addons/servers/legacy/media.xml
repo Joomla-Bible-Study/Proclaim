@@ -4,8 +4,7 @@
         <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
             <field name="link_type" type="list" extension="com_biblestudy"
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-                   class="inputbox" size="1" default="0">
-                <option></option>
+                   class="inputbox" size="1" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
                 <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
@@ -24,13 +23,13 @@
         </fieldset>
         <fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
             <field name="player" type="list" label="JBS_MED_PLAYER"
-                   description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="100">
+                   description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
                 <option value="">JBS_CMN_USE_GLOBAL</option>
-                <option value="0">JBS_CMN_DIRECT_LINK</option>
-                <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+                <option value="1">JBS_CMN_DIRECT_LINK</option>
+                <option value="2">JBS_CMN_USE_INTERNAL_PLAYER</option>
                 <option value="3">JBS_CMN_USE_AV</option>
-                <option value="7">JBS_CMN_USE_LEGACY_PLAYER</option>
-                <option value="8">JBS_CMN_USE_EMBED_CODE</option>
+                <option value="4">JBS_CMN_USE_LEGACY_PLAYER</option>
+                <option value="5">JBS_CMN_USE_EMBED_CODE</option>
             </field>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
@@ -75,15 +74,15 @@
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox"
                    query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-                   key_field="id" value_field="media_image_name" required="true">
-                <option value="-1">JBS_MED_SELECT_MEDIA_TYPE</option>
+                   key_field="id" value_field="media_image_name" required="true" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
             <field name="mime_type" type="sql" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIME_TYPE" description="JBS_MED_CHOOSE_MIME_TYPE_DESC"
                    class="inputbox"
                    query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-                   key_field="id" value_field="mimetext">
-                <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
+                   key_field="id" value_field="mimetext" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
@@ -98,8 +97,8 @@
             <field name="popupmargin" type="text" default="50"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
             <field name="autostart" type="list"
-                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
-                <option value="">JBS_CMN_USE_GLOBAL</option>
+                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
             </field>

@@ -41,18 +41,11 @@ class TableServer extends JTable
 	public $server_name = null;
 
 	/**
-	 * Server Path
-	 *
-	 * @var string
-	 */
-	public $server_path = null;
-
-	/**
 	 * Server Type
 	 *
 	 * @var string
 	 */
-	public $server_type = null;
+	public $type = null;
 
 	/**
 	 * Rules

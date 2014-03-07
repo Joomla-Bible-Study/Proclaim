@@ -22,7 +22,7 @@ $input = $app->input;
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
         if(task == 'server.setType') {
-            document.id('item-form').elements['jform[server_type]'].value = type;
+            document.id('item-form').elements['jform[type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
         } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
@@ -47,10 +47,10 @@ $input = $app->input;
                     </a>
                 </li>
                 <?php endforeach; ?>
-                <?php if($this->server_form->getFieldsets('media') > 0): ?>
+                <?php if(count($this->server_form->getFieldsets('media')) > 0): ?>
                     <li>
-                        <a href="#media_defaults" data-toggle="tab">
-                            <?php echo JText::_("*MEDIA_DEFAULTS*"); ?>
+                        <a href="#media_settings" data-toggle="tab">
+                            <?php echo JText::_("JBS_ADDON_MEDIA_SETTINGS"); ?>
                         </a>
                     </li>
                 <?php endif; ?>
@@ -72,10 +72,10 @@ $input = $app->input;
 					</div>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('server_type'); ?>
+							<?php echo $this->form->getLabel('type'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('server_type'); ?>
+							<?php echo $this->form->getInput('type'); ?>
 						</div>
 					</div>
                     <div class="control-group">
@@ -99,14 +99,14 @@ $input = $app->input;
                         <?php endforeach; ?>
                     </div>
                 <?php endforeach; ?>
-                <div class="tab-pane" id="media_defaults">
+                <div class="tab-pane" id="media_settings">
                     <div class="accordion" id="accordion">
                         <?php $first = true; ?>
                         <?php foreach($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
                             <div class="accordion-group">
                                 <div class="accordion-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $name; ?>">
-                                        <?php echo _($fieldset->label); ?>
+                                        <?php echo JText::_($fieldset->label); ?>
                                     </a>
                                 </div>
                                 <div id="<?php echo $name; ?>" class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">

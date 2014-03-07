@@ -21,7 +21,7 @@
         </option>
     </field>
     <field
-            name="server_type"
+            name="type"
             type="ServerType"
             label="JBS_CMN_SERVER"
             description="JBS_MED_SERVER_DESC"
