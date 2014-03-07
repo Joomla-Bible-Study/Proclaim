@@ -74,6 +74,13 @@ class TableMediafile extends JTable
 	 */
 	public $params = null;
 
+    /**
+     * Hold transitive data (i.e statistics)
+     *
+     * @var null
+     */
+    public $metadata = null;
+
 
 	/**
 	 * Constructor

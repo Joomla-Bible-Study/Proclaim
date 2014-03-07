@@ -79,7 +79,7 @@ class BiblestudyModelServer extends JModelAdmin
      */
     public function getType($pk) {
         $item = $this->getItem($pk);
-        return $item->server_type;
+        return $item->type;
     }
 
     /**
@@ -95,7 +95,7 @@ class BiblestudyModelServer extends JModelAdmin
         $type = $this->data->type;
         if(empty($type)) {
             //@TODO This may not be optimal, seems like a hack
-            return new JForm("noop");
+            return new JForm("No-op");
         }
         $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$type);
 
@@ -201,9 +201,9 @@ class BiblestudyModelServer extends JModelAdmin
             $registry = new JRegistry($this->data->media);
             $this->data->media = $registry->toArray();
 
-            // Set the type base on session if available or fall back on db value.
+            // Set the type from session if available or fall back on the db value
             $type = $this->getState('server.type');
-            $this->data->type = empty($type) ? $this->data->type : $this->getState('server.type');
+            $this->data->type = empty($type) ? $this->data->type : $type;
         }
 
         return $this->data;

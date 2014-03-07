@@ -74,7 +74,7 @@
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox"
                    query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-                   key_field="id" value_field="media_image_name" required="true" default="">
+                   key_field="id" value_field="media_image_name" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
             <field name="mime_type" type="sql" extension="com_biblestudy"
