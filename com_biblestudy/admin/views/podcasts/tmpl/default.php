@@ -113,9 +113,7 @@ $sortFields = $this->getSortFields();
 					<th align="center">
 						<?php echo JHtml::_('grid.sort', 'JBS_CMN_PODCAST', 'podcast.title', $listDirn, $listOrder); ?>
 					</th>
-					<th align="center">
-						<?php echo(JText::_('JBS_CMN_DESCRIPTION')); ?>
-					</th>
+
 					<th width="5%">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 					</th>
@@ -188,11 +186,7 @@ $sortFields = $this->getSortFields();
 								?>
 							</div>
 						</td>
-						<td>
-							<div class="pull-left">
-								<?php echo $this->escape($item->description); ?>
-							</div>
-						</td>
+
 						<td class="nowrap has-context">
 							<div class="pull-left">
 								<?php if ($item->language == '*'): ?>

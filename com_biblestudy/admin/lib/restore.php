@@ -14,7 +14,6 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    7.0.4
- * @todo     Rename Class to be better suted for restore
  */
 class JBSMRestore
 {
@@ -22,13 +21,12 @@ class JBSMRestore
 	/**
 	 * Import DB
 	 *
-	 * @param   boolean $perent  Switch to see if it is coming from migration or restore.
+	 * @param   boolean  $parent  Switch to see if it is coming from migration or restore.
 	 *
 	 * @return boolean
 	 */
-	public function importdb($perent)
+	public function importdb($parent)
 	{
-		$result = false;
 		jimport('joomla.filesystem.file');
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -65,7 +63,7 @@ class JBSMRestore
 
 		if ($result)
 		{
-			$result     = self::installdb($uploadresults, $perent);
+			$result     = self::installdb($uploadresults, $parent);
 			$inputfiles = new JInputFiles;
 			$userfile   = $inputfiles->get('importdb');
 
@@ -73,9 +71,9 @@ class JBSMRestore
 			{
 				unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
 			}
-			if (($perent !== true) && $result)
+			if (($parent !== true) && $result)
 			{
-				$fix = new fixJBSAssets;
+				$fix = new JBSMAssets;
 				$fix->fixassets();
 			}
 		}
@@ -155,8 +153,8 @@ class JBSMRestore
 	/**
 	 * Install DB
 	 *
-	 * @param   string  $tmp_src  Temp info
-	 * @param   boolean $parent   To tell if coming from migration
+	 * @param   string   $tmp_src  Temp info
+	 * @param   boolean  $parent   To tell if coming from migration
 	 *
 	 * @return boolean if db installed correctly.
 	 */
@@ -256,9 +254,9 @@ class JBSMRestore
 	}
 
 	/**
-	 * Restor DB for exesting Joomla Bible Study
+	 * Restore DB for exerting Joomla Bible Study
 	 *
-	 * @param   string $backuprestore  ?
+	 * @param   string  $backuprestore  ?
 	 *
 	 * @return boolean See if the restore worked.
 	 */
@@ -313,7 +311,7 @@ class JBSMRestore
 	}
 
 	/**
-	 * Get Packege from Folder
+	 * Get Package from Folder
 	 *
 	 * @return boolean
 	 */
@@ -326,7 +324,7 @@ class JBSMRestore
 	}
 
 	/**
-	 * Get Opjects for tables
+	 * Get Objects for tables
 	 *
 	 * @return array
 	 */

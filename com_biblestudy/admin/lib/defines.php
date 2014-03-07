@@ -2,10 +2,10 @@
 /**
  * Bible Study Defines
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -46,7 +46,7 @@ define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARA
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images');
 
 // Addons paths
-define('BIBLESTUDY_PATH_ADMIN_ADDONS_SERVERS', BIBLESTUDY_PATH_ADMIN.DIRECTORY_SEPARATOR.'addons'.DIRECTORY_SEPARATOR.'servers');
+define('BIBLESTUDY_PATH_ADMIN_ADDONS_SERVERS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . 'servers');
 
 define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'biblestudy.xml');
 

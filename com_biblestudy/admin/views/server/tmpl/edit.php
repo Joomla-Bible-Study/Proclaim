@@ -14,8 +14,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-// Create shortcut to parameters.
 
+// Create shortcut to parameters.
 $app = JFactory::getApplication();
 $input = $app->input;
 ?>

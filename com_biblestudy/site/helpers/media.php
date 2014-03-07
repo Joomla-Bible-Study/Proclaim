@@ -296,7 +296,7 @@ class JBSMMedia
 			$player->player = 2;
 		}
 
-		if (isset($media->docMan_id))
+		if (isset($media->docMan_id) && $media->docMan_id != 0)
 		{
 			$player->player = 4;
 		}
@@ -355,8 +355,7 @@ class JBSMMedia
 	{
 		$url = 'com_docman';
 
-		// @todo JSite may not be the right function to call
-		$getmenu = new JSite;
+		$getmenu = JFactory::getApplication();
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid = $menuItem->id;
 		$docman = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
@@ -488,6 +487,7 @@ class JBSMMedia
 			$protocol = $params->get('protocol', 'http://');
 			$path     = $protocol . $path;
 		}
+
 		switch ($player->player)
 		{
 
