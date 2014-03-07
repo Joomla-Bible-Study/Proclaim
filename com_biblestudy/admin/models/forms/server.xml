@@ -34,4 +34,8 @@
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="server" validate="rules"/>
     <field name="asset_id" type="hidden" filter="unset"/>
+
+    <!-- Server specific fields-->
+    <field name="params"/>
+    <field name="media"/>
 </form>

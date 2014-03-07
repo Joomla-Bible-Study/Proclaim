@@ -7,6 +7,11 @@
 .buildpath
 .project
 .settings
+.vagrant
+
+# Misc
+composer.lock
+*.log
 
 # Test Related Files #
 /tests/system/servers/configdef.php
@@ -27,3 +32,5 @@ com_biblestudy/admin/views/test/index.html
 com_biblestudy/admin/views/test/tmpl/index.html
 
 tests/unit/.joomla-cms/
+
+/vendor/

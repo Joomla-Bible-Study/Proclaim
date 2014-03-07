@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
-jimport('joomla.filesystem.folder');
 
 /**
  * Servers model class
@@ -22,55 +21,52 @@ jimport('joomla.filesystem.folder');
 class BiblestudyModelServers extends JModelList
 {
 
-	/**
-	 * A reverse lookup of the Endpoint id to Endpoint name
-	 *
-	 * @var     array
-	 * @since   8.1.0
-	 */
-	protected $rlu_id = array();
+    /**
+     * A reverse lookup of the Endpoint id to Endpoint name
+     *
+     * @var     array
+     * @since   8.1.0
+     */
+    protected $rlu_id = array();
 
-	/**
-	 * A reverse lookup of the Endpoint type to Endpoint name
-	 *
-	 * @var     array
-	 * @sine    8.1.0
-	 */
-	protected $rlu_type = array();
+    /**
+     * A reverse lookup of the Endpoint type to Endpoint name
+     *
+     * @var     array
+     * @sine    8.1.0
+     */
+    protected $rlu_type = array();
 
-	/**
-	 * Method to get the reverse lookup of the Endpoint id to Endpoint name
-	 *
-	 * @return  array
-	 *
-	 * @since   8.1.0
-	 */
-	public function getIdReverseLookup()
-	{
-		if (empty($this->rlu_id))
-		{
-			$this->getItems();
-		}
+    /**
+     * Method to get the reverse lookup of the server_id to server_name
+     *
+     * @return  array
+     * @since   8.1.0
+     */
+    public function getIdToNameReverseLookup() {
+        if(empty($this->rlu_id)) {
+            $_rlu = array();
+            foreach($this->getItems() as $server) {
+                $_rlu[$server->id] = $server->server_name;
+            }
+            $this->rlu_id = $_rlu;
 
-		return $this->rlu_id;
-	}
+        }
+        return $this->rlu_id;
+    }
 
-	/**
-	 * Method to get the reverse lookup of the Endpoint type to Endpoint name
-	 *
-	 * @return  array   Array of reverse lookup
-	 *
-	 * @since   8.1.0
-	 */
-	public function getTypeReverseLookup()
-	{
-		if (empty($this->rlu_type))
-		{
-			$this->getServerOptions();
-		}
-
-		return $this->rlu_type;
-	}
+    /**
+     * Method to get the reverse lookup of the Endpoint type to Endpoint name
+     *
+     * @return  array   Array of reverse lookup
+     * @since   8.1.0
+     */
+    public function getTypeReverseLookup() {
+        if(empty($this->rlu_type)) {
+            $this->getServerOptions();
+        }
+        return $this->rlu_type;
+    }
 
 	/**
 	 * Method to auto-populate the model state.
@@ -81,8 +77,8 @@ class BiblestudyModelServers extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering   An optional ordering field.
+	 * @param   string $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -140,56 +136,46 @@ class BiblestudyModelServers extends JModelList
 		return $query;
 	}
 
-	/**
-	 * Get a list of available endpoints
-	 *
-	 * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
-	 *
-	 * @since   8.1.0
-	 */
-	public function getServerOptions()
-	{
+    /**
+     * Get a list of available endpoints
+     *
+     * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
+     * @since   8.1.0
+     */
+    public function getServerOptions() {
 
-		$options = array();
+        $options = array();
 
-		// Path to endpoints
-		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers';
+        // Path to endpoints
+        $path = JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers';
 
-		if (JFolder::exists($path))
-		{
-			$servers = JFolder::folders($path);
-		}
-		else
-		{
-			return false;
-		}
+        if(JFolder::exists($path))
+            $servers = JFolder::folders($path);
+        else
+            return false;
 
-		foreach ($servers as $server)
-		{
-			$file = $path . '/' . $server . '/' . $server . '.xml';
+        foreach($servers as $server) {
+            $file = $path.'/'.$server.'/'.$server.'.xml';
 
-			if (is_file($file))
-			{
-				if ($xml = simplexml_load_file($file))
-				{
-					// Create the reverse lookup for Endpoint type to Endpoint name
-					$this->rlu_type[$server] = (string) $xml->name;
+            if(is_file($file)) {
+                if($xml = simplexml_load_file($file)) {
+                    //Create the reverse lookup for Endpoint type to Endpoint name
+                    $this->rlu_type[$server] = (string)$xml->name;
 
-					$o              = new JObject;
-					$o->type        = (string) $xml['type'];
-					$o->name        = (string) $server;
-					$o->image_url   = JURI::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
-					$o->title       = (string) $xml->name;
-					$o->description = (string) $xml->description;
-					$o->path        = $path . '/' . $server . '/';
+                    $o = new JObject();
+                    $o->type = (string)$xml['type'];
+                    $o->name = (string)$server;
+                    $o->image_url = JURI::base().'/components/com_biblestudy/addons/servers/'.$server.'/'.$server.'.png';
+                    $o->title = (string)$xml->name;
+                    $o->description = (string)$xml->description;
+                    $o->path = $path.'/'.$server.'/';
 
-					$options[$o->type][] = $o;
-					unset($xml);
-				}
-			}
-		}
-
-		return $options;
-	}
+                    $options[$o->type][] = $o;
+                    unset($xml);
+                }
+            }
+        }
+        return $options;
+    }
 
 }

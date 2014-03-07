@@ -80,4 +80,26 @@ class BiblestudyControllerMediafile extends JControllerForm
 		return parent::batch($model);
 	}
 
+    /**
+     * Sets the server for this media record
+     *
+     * @return  void
+     * @since   8.1.0
+     */
+    function setServer() {
+        $app = JFactory::getApplication();
+        $input = $app->input;
+
+        $data = $input->get('jform', array(), 'post', 'array');
+        $data = json_decode(base64_decode($data['server_id']));
+
+        $media_id = isset($data->media_id) ? $data->media_id : 0;
+        $server_id = isset($data->server_id) ? $data->server_id : 0;
+
+        // Save server in the session
+        $app->setUserState('com_biblestudy.media.edit.server_id', $server_id);
+
+        $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($media_id), false));
+    }
+
 }

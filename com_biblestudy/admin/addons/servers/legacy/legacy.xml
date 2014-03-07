@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server type="storage" supports="*.*">
+    <name>Legacy</name>
+    <description>Adapter for legacy JBS servers and mediafiles configurations.</description>
+    <fields name="media">
+        <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
+            <field name="link_type" type="list" extension="com_biblestudy"
+                   label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
+                   class="inputbox" size="1" default="0">
+                <option value="1">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+            </field>
+        </fieldset>
+    </fields>
+</server>

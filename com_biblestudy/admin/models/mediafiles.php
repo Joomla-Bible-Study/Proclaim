@@ -40,12 +40,8 @@ class BiblestudyModelMediafiles extends JModelList
 				'id', 'mediafile.id',
 				'published', 'mediafile.published',
 				'ordering', 'mediafile.ordering',
-				'filenam', 'mediafile.filename',
 				'studytitle', 'study.studytitle',
-				'media_text', 'mediatype.media_text',
 				'createdate', 'mediafile.createdate',
-				'plays', 'mediafile.plays',
-				'downloads', 'mediafile.downloads',
 				'language', 'mediafile.language'
 			);
 		}
@@ -199,8 +195,8 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename, mediafile.player, mediafile.popup, mediafile.player,
-                        mediafile.createdate, mediafile.plays, mediafile.link_type, mediafile.downloads, mediafile.language, mediafile.study_id ')
+				'list.select', 'mediafile.id, mediafile.published, mediafile.ordering,
+                        mediafile.createdate, mediafile.language, mediafile.study_id ')
 		);
 
 		$query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
@@ -212,10 +208,6 @@ class BiblestudyModelMediafiles extends JModelList
 		// Join over the studies
 		$query->select('study.studytitle AS studytitle');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
-
-		// Join over the mediatypes
-		$query->select('mediatype.media_text AS mediaType, mediatype.media_image_path, mediatype.path2');
-		$query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
@@ -248,37 +240,6 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('study.id LIKE "%' . $study . '%"');
 		}
 
-		// Filter by media type
-		$mediaType = $this->getState('filter.mediaType');
-
-		if (!empty($mediaType))
-		{
-			$query->where('mediafile.media_image = ' . (int) $mediaType);
-		}
-
-		// Filter by popup
-		$popup = $this->getState('filter.popup');
-
-		if (!empty($popup))
-		{
-			$query->where('mediafile.popup = ' . (int) $popup);
-		}
-		// Filter by download
-		$download = $this->getState('filter.download');
-
-		if (!empty($download))
-		{
-			$query->where('mediafile.link_type = ' . (int) $download);
-		}
-
-		// Filter by player
-		$player = $this->getState('filter.player');
-
-		if (!empty($player))
-		{
-			$query->where('mediafile.player = ' . (int) $player);
-		}
-
 		// Filter by media years
 		$mediaYears = $this->getState('filter.mediaYears');
 
@@ -286,21 +247,7 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
 		}
-		// Filter by search in filename or study title
-		$search = $this->getState('filter.search');
 
-		if (!empty($search))
-		{
-			if (stripos($search, 'id:') === 0)
-			{
-				$query->where('mediafile.id = ' . (int) substr($search, 3));
-			}
-			else
-			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
-				$query->where('(mediafile.filename LIKE ' . $search . ' OR study.studytitle LIKE ' . $search . ')');
-			}
-		}
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'ordering');
 		$orderDirn = $this->state->get('list.direction', 'desc');
@@ -309,14 +256,6 @@ class BiblestudyModelMediafiles extends JModelList
 		if ($orderCol == 'study_id')
 		{
 			$orderCol = 'mediafile.study_id';
-		}
-		if ($orderCol == 'mediaType')
-		{
-			$orderCol = 'mediafile.media_image';
-		}
-		if ($orderCol == 'filename')
-		{
-			$orderCol = 'mediafile.filename';
 		}
 		if ($orderCol == 'ordering')
 		{
