@@ -49,8 +49,8 @@ $input = $app->input;
                 <?php endforeach; ?>
                 <?php if($this->server_form->getFieldsets('media') > 0): ?>
                     <li>
-                        <a href="#media_defaults" data-toggle="tab">
-                            <?php echo JText::_("*MEDIA_DEFAULTS*"); ?>
+                        <a href="#media_settings" data-toggle="tab">
+                            <?php echo JText::_("JBS_ADDON_MEDIA_SETTINGS"); ?>
                         </a>
                     </li>
                 <?php endif; ?>
@@ -99,14 +99,14 @@ $input = $app->input;
                         <?php endforeach; ?>
                     </div>
                 <?php endforeach; ?>
-                <div class="tab-pane" id="media_defaults">
+                <div class="tab-pane" id="media_settings">
                     <div class="accordion" id="accordion">
                         <?php $first = true; ?>
                         <?php foreach($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
                             <div class="accordion-group">
                                 <div class="accordion-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $name; ?>">
-                                        <?php echo _($fieldset->label); ?>
+                                        <?php echo JText::_($fieldset->label); ?>
                                     </a>
                                 </div>
                                 <div id="<?php echo $name; ?>" class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
