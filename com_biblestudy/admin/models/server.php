@@ -70,48 +70,13 @@ class BiblestudyModelServer extends JModelAdmin
 		}
 	}
 
-	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 */
-	public function store()
-	{
-		$row   = & $this->getTable();
-		$input = new JInput;
-		$data  = $input->get('post');
-
-		// Remove starting and trailing spaces
-		$data['server_path'] = trim($data['server_path']);
-
-		// Bind the form fields to the server table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the web link table to the database
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		return true;
-	}
-
+    /**
+     * Reverse look up of id to server_type
+     *
+     * @param $pk
+     *
+     * @return String
+     */
     public function getType($pk) {
         $item = $this->getItem($pk);
         return $item->server_type;
@@ -119,7 +84,7 @@ class BiblestudyModelServer extends JModelAdmin
 
     /**
      * Get the server form
-     *
+     * @TODO Rename this to getAddonServerForm() make it clearer that this is the addon form
      * @return bool|mixed
      * @throws Exception
      *
@@ -158,11 +123,10 @@ class BiblestudyModelServer extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		if (empty($data)) {
-            $item = $this->getItem();
+            $this->getItem();
 		}else {
             $this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
         }
-
 
         // Get the forms.
         $form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
@@ -180,32 +144,18 @@ class BiblestudyModelServer extends JModelAdmin
 	 * @return  array    The default data is an empty array.
 	 *
 	 * @since   7.0
-     * @TODO    This gets called twice, because we're loading two forms. (There is redundcancy
+     * @TODO    This gets called twice, because we're loading two forms. (There is radundcancy
      *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
      *          figure out a way to iterate over only the relevant data)
 	 */
 	protected function loadFormData()
 	{
-        // If current state has data use it instead of data from db
+        // If current state has data, use it instead of data from db
 		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
 
         $data = empty($session) ? $this->data : $session;
 
 		return $data;
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
 	}
 
 	/**
@@ -268,17 +218,5 @@ class BiblestudyModelServer extends JModelAdmin
 
         $server = $app->getUserState('com_biblestudy.edit.server.type');
         $this->setState('server.type', $server);
-    }
-
-    /**
-     * @param   JForm   $form
-     * @param   mixed   $data
-     * @param   string  $group
-     * @throws  Exception   If there is an error in loading server config files
-     *
-     * @since   8.1.0
-     */
-    protected function preprocessForm(JForm $form, $data, $group = 'content') {
-        parent::preprocessForm($form, $data, $group);
     }
 }
