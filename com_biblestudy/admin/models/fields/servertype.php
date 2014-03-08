@@ -6,8 +6,6 @@ defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 
 class JFormFieldServerType extends JFormFieldList {
-    protected $type = 'Endpoint';
-
     protected function getInput() {
         // Initialize variables.
         $html = array();
