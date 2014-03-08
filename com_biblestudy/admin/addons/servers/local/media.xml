@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="params">
+        <field name="published" type="list" label="JSTATUS" description="JFIEDL_PUBLISHED_DESC" size="1" default="1" filter="integer"/>
+    </fieldset>
+</form>

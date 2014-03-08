@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -19,23 +19,24 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class JBSMListing extends JBSMElements
+class JBSMListing
 {
 	/** @var  JRegistry */
 	public $params;
 
 	/**
-	 * @param Object    $items
-	 * @param JRegistry $params
-	 * @param JRegistry $admin_params
-	 * @param String    $template
-	 * @param string    $type Type of Listing
+	 * Get Fluid Listing
+	 *
+	 * @param   Object         $items         Items
+	 * @param   JRegistry      $params        Page Params
+	 * @param   JRegistry      $admin_params  Admin Params
+	 * @param   TableTemplate  $template      Template name
+	 * @param   String         $type          Type of Listing
 	 *
 	 * @return string
 	 */
 	public function getFluidListing($items, $params, $admin_params, $template, $type)
 	{
-
 		$list         = '';
 		$row          = array();
 		$this->params = $params;
@@ -235,10 +236,10 @@ class JBSMListing extends JBSMElements
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
 		}
-        if ($params->get($extra . 'teacherallinonerow') > 0)
-        {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
-        }
+		if ($params->get($extra . 'teacherallinonerow') > 0)
+		{
+			$listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
+		}
 		if ($params->get($extra . 'customrow'))
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'custom');
@@ -255,7 +256,8 @@ class JBSMListing extends JBSMElements
 		$row4sorted = array();
 		$row5sorted = array();
 		$row6sorted = array();
-		//Create an array sorted by row and then by column
+
+		// Create an array sorted by row and then by column
 		foreach ($listparams as $listing)
 		{
 			if ($listing->row == 1)
@@ -307,14 +309,14 @@ class JBSMListing extends JBSMElements
 		{
 			$row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
 		}
-		$listrows = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
-        $listsorts = array();
-        $listsorts[] = $row1sorted;
-        $listsorts[] = $row2sorted;
-        $listsorts[] = $row3sorted;
-        $listsorts[] = $row4sorted;
-        $listsorts[] = $row5sorted;
-        $listsorts[] = $row6sorted;
+		$listrows    = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
+		$listsorts   = array();
+		$listsorts[] = $row1sorted;
+		$listsorts[] = $row2sorted;
+		$listsorts[] = $row3sorted;
+		$listsorts[] = $row4sorted;
+		$listsorts[] = $row5sorted;
+		$listsorts[] = $row6sorted;
 
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
@@ -362,7 +364,6 @@ class JBSMListing extends JBSMElements
 		{
 			if ($params->get('use_headers_teacher_list') > 0)
 			{
-				//$oddeven = $params->get('tslistcolor');
 				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $admin_params, $template, $oddeven, $header = 1, $type);
 			}
 
@@ -436,7 +437,9 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $item
+	 * Get Fluid Media Id's
+	 *
+	 * @param   Object  $item  Items info
 	 *
 	 * @return array
 	 */
@@ -453,7 +456,9 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $medias
+	 * Get Media Files
+	 *
+	 * @param   Array  $medias  Media files
 	 *
 	 * @return mixed
 	 */
@@ -502,13 +507,15 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $paramtext
+	 * Get list Params Array
+	 *
+	 * @param   string  $paramtext  Param Text
 	 *
 	 * @return stdClass
 	 */
 	public function getListParamsArray($paramtext)
 	{
-		$l             = new stdClass();
+		$l             = new stdClass;
 		$l->row        = $this->params->get($paramtext . 'row');
 		$l->col        = $this->params->get($paramtext . 'col');
 		$l->colspan    = $this->params->get($paramtext . 'colspan');
@@ -522,20 +529,17 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $listrows
-	 * @param $item
-	 * @param JRegistry $params
-	 * @param $admin_params
-	 * @param $template
-	 * @param $row1sorted
-	 * @param $row2sorted
-	 * @param $row3sorted
-	 * @param $row4sorted
-	 * @param $row5sorted
-	 * @param $row6sorted
-	 * @param $oddeven
-	 * @param $header
-	 * @param $type
+	 * Get Fluid Row
+	 *
+	 * @param   Array          $listrows      ?
+	 * @param   Array          $listsorts     ?
+	 * @param   Object         $item          ?
+	 * @param   JRegistry      $params        Item Params
+	 * @param   JRegistry      $admin_params  Admin Params
+	 * @param   TableTemplate  $template      Template info
+	 * @param   string         $oddeven       ?
+	 * @param   string         $header        ?
+	 * @param   string         $type          ?
 	 *
 	 * @return string
 	 */
@@ -581,17 +585,23 @@ class JBSMListing extends JBSMElements
 			switch ($rowspanitem)
 			{
 				case 1:
-					(isset($item->thumb) ? $span = '<img src="' . JURI::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
-					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JURI::base() . $item->teacher_thumbnail . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					(isset($item->thumb) ? $span = '<img src="' . JURI::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
+						'" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JURI::base() . $item->teacher_thumbnail . '" class="' .
+						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
 					break;
 				case 2:
-					(isset($item->thumbm) ? $span = '<img src="' . JURI::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
+					(isset($item->thumbm) ? $span = '<img src="' . JURI::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
+						'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
 					break;
 				case 3:
-					(isset($item->series_thumbnail) ? $span = '<img src="' . JURI::base() . $item->series_thumbnail . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
+					(isset($item->series_thumbnail) ? $span = '<img src="' . JURI::base() . $item->series_thumbnail . '" class="' .
+						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
 					break;
 				case 4:
-					(isset($item->teacher_image) ? $span = '<img src="' . JURI::base() . $item->teacher_image . '" class="' . $params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					(isset($item->teacher_image) ? $span = '<img src="' . JURI::base() . $item->teacher_image . '" class="' .
+						$params->get('rowspanitemimage') . '" alt="' .
+						JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
 					break;
 			}
 		}
@@ -603,40 +613,64 @@ class JBSMListing extends JBSMElements
 		$rowspanbalance  = 12 - $rowspanitemspan;
 		$frow            = '<div class="row-fluid" style="background-color:' . $oddeven . '; padding:5px;">';
 
-        $row1count = 0;
-        $row2count = 0;
-        $row3count = 0;
-        $row4count = 0;
-        $row5count = 0;
-        $row6count = 0;
-        $row1count2 = 0;
-        $row2count2 = 0;
-        $row3count2 = 0;
-        $row4count2 = 0;
-        $row5count2 = 0;
-        $row6count2 = 0;
+		$row1count  = 0;
+		$row2count  = 0;
+		$row3count  = 0;
+		$row4count  = 0;
+		$row5count  = 0;
+		$row6count  = 0;
+		$row1count2 = 0;
+		$row2count2 = 0;
+		$row3count2 = 0;
+		$row4count2 = 0;
+		$row5count2 = 0;
+		$row6count2 = 0;
 		if ($span)
 		{
 			$frow .= '<div class="row-fluid" >';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '"><div ' . $headerstyle . ' class="">' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '">';
 		}
-        foreach ($listsorts as $sort)
-        {
-            if (count($sort))
-            {
-                foreach ($sort as $s)
-                {
-                    if ($s->row == 1){$row1count ++; $row1count2 ++;}
-                    if ($s->row == 2){$row2count ++; $row2count2 ++;}
-                    if ($s->row == 3){$row3count ++; $row3count2 ++;}
-                    if ($s->row == 4){$row4count ++; $row4count2 ++;}
-                    if ($s->row == 5){$row5count ++; $row5count2 ++;}
-                    if ($s->row == 6){$row6count ++; $row6count2 ++;}
-                }
-            }
+		foreach ($listsorts as $sort)
+		{
+			if (count($sort))
+			{
+				foreach ($sort as $s)
+				{
+					if ($s->row == 1)
+					{
+						$row1count++;
+						$row1count2++;
+					}
+					if ($s->row == 2)
+					{
+						$row2count++;
+						$row2count2++;
+					}
+					if ($s->row == 3)
+					{
+						$row3count++;
+						$row3count2++;
+					}
+					if ($s->row == 4)
+					{
+						$row4count++;
+						$row4count2++;
+					}
+					if ($s->row == 5)
+					{
+						$row5count++;
+						$row5count2++;
+					}
+					if ($s->row == 6)
+					{
+						$row6count++;
+						$row6count2++;
+					}
+				}
+			}
 
-        }
+		}
 
 		foreach ($listrows as $row)
 		{
@@ -773,18 +807,19 @@ class JBSMListing extends JBSMElements
 			$frow .= '</div></div>';
 		}
 
-
 		return $frow;
 	}
 
 	/**
-	 * @param           $item
-	 * @param           $row
-	 * @param JRegistry $params
-	 * @param           $admin_params
-	 * @param           $template
-	 * @param           $header
-	 * @param string    $type
+	 * Get Fluid Date
+	 *
+	 * @param   Object         $item          ?
+	 * @param   Object         $row           ?
+	 * @param   JRegistry      $params        ?
+	 * @param   JRegistry      $admin_params  ?
+	 * @param   TableTemplate  $template      ?
+	 * @param   string         $header        ?
+	 * @param   string         $type          ?
 	 *
 	 * @return string
 	 */
@@ -793,8 +828,8 @@ class JBSMListing extends JBSMElements
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
 		$data  = '';
-		//match the data in $item to a row/col in $row->name
 
+		// Match the data in $item to a row/col in $row->name
 		$extra = '';
 		switch ($type)
 		{
@@ -829,86 +864,95 @@ class JBSMListing extends JBSMElements
 				}
 				break;
 
-            case $extra . 'teacherallinone':
-                ($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' . JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
-                if ($item->website)
-                {
-                    if (substr_count($item->website, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
-                    }
-                }
-                if ($item->facebooklink)
-                {
-                    if (substr_count($item->facebooklink, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
-                    }
-                }
-                if ($item->twitterlink)
-                {
-                    if (substr_count($item->twitterlink, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
-                    }
-                }
-                if ($item->bloglink)
-                {
-                    if (substr_count($item->bloglink, 'http://', 0, 7))
-                    {
-                        $data .= '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
-                    }
-                }
-                if ($item->link1)
-                {
-                    if (substr_count($item->link1, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-                    }
-                }
-                if ($item->link2)
-                {
-                    if (substr_count($item->link2, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-                    }
-                }
-                if ($item->link3)
-                {
-                    if (substr_count($item->link3, 'http://', 0))
-                    {
-                        $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '></a>';
-                    }
-                    else
-                    {
-                        $data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                    }
-                }
-                break;
+			case $extra . 'teacherallinone':
+				($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
+					JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
+				if ($item->website)
+				{
+					if (substr_count($item->website, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() .
+							'media/com_biblestudy/images/web.png"></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
+							JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+					}
+				}
+				if ($item->facebooklink)
+				{
+					if (substr_count($item->facebooklink, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' .
+							JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' .
+							JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+					}
+				}
+				if ($item->twitterlink)
+				{
+					if (substr_count($item->twitterlink, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
+							JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' .
+							JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+					}
+				}
+				if ($item->bloglink)
+				{
+					if (substr_count($item->bloglink, 'http://', 0, 7))
+					{
+						$data .= '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' .
+							JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
+							'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+					}
+				}
+				if ($item->link1)
+				{
+					if (substr_count($item->link1, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+					}
+				}
+				if ($item->link2)
+				{
+					if (substr_count($item->link2, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+					}
+				}
+				if ($item->link3)
+				{
+					if (substr_count($item->link3, 'http://', 0))
+					{
+						$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '></a>';
+					}
+					else
+					{
+						$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+					}
+				}
+				break;
 
 			case $extra . 'teacherlong':
 				if ($header == 1)
@@ -1001,7 +1045,8 @@ class JBSMListing extends JBSMElements
 				}
 				else
 				{
-					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' . JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
+					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
+						JURI::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
 				}
 				break;
 
@@ -1016,11 +1061,13 @@ class JBSMListing extends JBSMElements
 					{
 						if (substr_count($item->website, 'http://', 0))
 						{
-							$data = '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+							$data = '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' .
+								JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' . JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
+							$data = '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
+								JURI::base() . 'media/com_biblestudy/images/web.png"></a>';
 						}
 					}
 				}
@@ -1049,11 +1096,13 @@ class JBSMListing extends JBSMElements
 					{
 						if (substr_count($item->facebooklink, 'http://', 0))
 						{
-							$data = '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+							$data = '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
+								'"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
+							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
+								'" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png"></a>';
 						}
 					}
 				}
@@ -1070,11 +1119,13 @@ class JBSMListing extends JBSMElements
 					{
 						if (substr_count($item->twitterlink, 'http://', 0))
 						{
-							$data = '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+							$data = '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
+								JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
+							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink .
+								'"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png"></a>';
 						}
 					}
 				}
@@ -1092,11 +1143,13 @@ class JBSMListing extends JBSMElements
 					{
 						if (substr_count($item->bloglink, 'http://', 0, 7))
 						{
-							$data = '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+							$data = '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
+								'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
+							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
+								'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png"></a>';
 						}
 					}
 				}
@@ -1247,7 +1300,8 @@ class JBSMListing extends JBSMElements
 				}
 				else
 				{
-					(isset($item->teacher_image) ? $data = '<img src="' . JURI::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $data = '');
+					(isset($item->teacher_image) ? $data = '<img src="' . JURI::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') .
+						'">' : $data = '');
 				}
 				break;
 			case $extra . 'description':
@@ -1406,8 +1460,8 @@ class JBSMListing extends JBSMElements
 				break;
 		}
 
-		$style       = '';
-		$customclass = '';
+		$style        = '';
+		$customclass  = '';
 		$classelement = '';
 		if (isset($row->custom))
 		{
@@ -1462,7 +1516,7 @@ class JBSMListing extends JBSMElements
 			$classclose = '';
 		}
 
-		//See whether the element is a link to something and get the link from the function
+		// See whether the element is a link to something and get the link from the function
 		$link = 0;
 
 		if ($type == 'sermons' || $type == 'seriesdisplays' || $type == 'teachers')
@@ -1503,12 +1557,14 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @since 8.1.0
+	 * Use JImage Class
 	 *
-	 * @param $path
-	 * @param $alt
+	 * @param   String  $path  Path to File
+	 * @param   String  $alt   Alternate Text
 	 *
 	 * @return bool|stdClass
+	 *
+	 * @since 8.1.0
 	 */
 	public function useJImage($path, $alt = null)
 	{
@@ -1528,14 +1584,16 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @since 8.1.0
+	 * Get Fluid Media Files
 	 *
-	 * @param $item
-	 * @param $params
-	 * @param $admin_params
-	 * @param $template
+	 * @param   Object         $item          ?
+	 * @param   JRegistry      $params        ?
+	 * @param   JRegistry      $admin_params  ?
+	 * @param   TableTemplate  $template      ?
 	 *
 	 * @return string
+	 *
+	 * @since 8.1.0
 	 */
 	public function getFluidMediaFiles($item, $params, $admin_params, $template)
 	{
@@ -1551,12 +1609,14 @@ class JBSMListing extends JBSMElements
 	}
 
 	/**
-	 * @param $custom
-	 * @param $item
-	 * @param $params
-	 * @param $admin_params
-	 * @param $template
-	 * @param $type
+	 * Get Fluid Custom
+	 *
+	 * @param   String         $custom        ?
+	 * @param   Object         $item          ?
+	 * @param   JRegistry      $params        ?
+	 * @param   JRegistry      $admin_params  ?
+	 * @param   TableTemplate  $template      ?
+	 * @param   String         $type          ?
 	 *
 	 * @return mixed
 	 */
@@ -2358,7 +2418,7 @@ class JBSMListing extends JBSMElements
 	 */
 	public function getStudyExp($row, $params, $admin_params, $template)
 	{
-		$Media = new jbsMedia;
+		$Media  = new jbsMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');

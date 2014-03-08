@@ -18,13 +18,11 @@ JHtml::_('behavior.keepalive');
 // Create shortcut to parameters.
 $app = JFactory::getApplication();
 $input = $app->input;
-
-$this->config = $this->form->getFieldset('params');
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
         if(task == 'server.setType') {
-            document.id('item-form').elements['jform[server_type]'].value = type;
+            document.id('item-form').elements['jform[type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
         } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
 			Joomla.submitform(task, document.getElementById('item-form'));
@@ -38,12 +36,23 @@ $this->config = $this->form->getFieldset('params');
       method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Content -->
-		<div class="span10 form-horizontal">
+		<div class="span8 form-horizontal">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
-                <?php if(count($this->config) > 0): ?>
-                <li><a href="#server_config" data-toggle="tab"><?PHP echo JText::_('*SERVER CONFIGURATION*'); ?></a></li>
+                <?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
+                <li>
+                    <a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
+                        <?php echo JText::_($fieldsets->label); ?>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+                <?php if(count($this->server_form->getFieldsets('media')) > 0): ?>
+                    <li>
+                        <a href="#media_settings" data-toggle="tab">
+                            <?php echo JText::_("JBS_ADDON_MEDIA_SETTINGS"); ?>
+                        </a>
+                    </li>
                 <?php endif; ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
@@ -63,24 +72,67 @@ $this->config = $this->form->getFieldset('params');
 					</div>
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('server_type'); ?>
+							<?php echo $this->form->getLabel('type'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('server_type'); ?>
+							<?php echo $this->form->getInput('type'); ?>
 						</div>
 					</div>
-				</div>
-                <?php if(count($this->config) > 0): ?>
-                    <div class="tab-pane" id="server_config">
-                        <?php echo $this->loadTemplate('configuration'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('published'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('published'); ?>
+                        </div>
                     </div>
-                <?php endif; ?>
-				<?php if ($this->canDo->get('core.admin')): ?>
+				</div>
+                <?php foreach($this->server_form->getFieldsets('params') as $fieldset): ?>
+                    <div class="tab-pane" id="<?php echo $fieldset->name; ?>">
+                        <?php foreach($this->server_form->getFieldset($fieldset->name) as $field): ?>
+                            <div class="control-group">
+                                <div class="control-label">
+                                    <?php echo $field->label; ?>
+                                </div>
+                                <div class="controls">
+                                    <?php echo $field->input; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+                <div class="tab-pane" id="media_settings">
+                    <div class="accordion" id="accordion">
+                        <?php $first = true; ?>
+                        <?php foreach($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
+                            <div class="accordion-group">
+                                <div class="accordion-heading">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $name; ?>">
+                                        <?php echo JText::_($fieldset->label); ?>
+                                    </a>
+                                </div>
+                                <div id="<?php echo $name; ?>" class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
+                                    <div class="accordion-inner">
+                                        <?php foreach($this->server_form->getFieldset($name) as $field): ?>
+                                            <div class="control-group">
+                                                <div class="control-label">
+                                                    <?php echo $field->label; ?>
+                                                </div>
+                                                <div class="controls">
+                                                    <?php echo $field->input; ?>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php $first = false; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>
 					</div>
 				<?php endif; ?>
-
 			</div>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
@@ -88,20 +140,12 @@ $this->config = $this->form->getFieldset('params');
 		</div>
 		<!-- End Content -->
 		<!-- Begin Sidebar -->
-		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS'); ?></h4>
-			<hr/>
-			<div class="control-group">
-				<div class="controls">
-					<?php echo $this->form->getValue('server_bane'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?php echo $this->form->getLabel('published'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('published'); ?>
-				</div>
-			</div>
+		<div class="span3 form-vertical">
+            <h4>*ADDON NAME*</h4>
+			<p>
+                * Addon Description *
+			</p>
+
 		</div>
 		<!-- End Sidebar -->
 	</div>

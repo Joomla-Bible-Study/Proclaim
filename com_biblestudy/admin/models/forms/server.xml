@@ -21,7 +21,7 @@
         </option>
     </field>
     <field
-            name="server_type"
+            name="type"
             type="ServerType"
             label="JBS_CMN_SERVER"
             description="JBS_MED_SERVER_DESC"
@@ -34,4 +34,8 @@
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="server" validate="rules"/>
     <field name="asset_id" type="hidden" filter="unset"/>
+
+    <!-- Server specific fields-->
+    <field name="params"/>
+    <field name="media"/>
 </form>

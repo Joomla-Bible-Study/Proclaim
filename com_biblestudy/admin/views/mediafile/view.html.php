@@ -26,6 +26,14 @@ class BiblestudyViewMediafile extends JViewLegacy
 	 */
 	protected $form;
 
+    /**
+     * Media form
+     *
+     * @var
+     */
+    protected $media_form;
+
+
 	/**
 	 * Item
 	 *
@@ -73,8 +81,8 @@ class BiblestudyViewMediafile extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->form  = $this->get("Form");
+        $this->media_form = $this->get("MediaForm");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
@@ -181,17 +189,6 @@ class BiblestudyViewMediafile extends JViewLegacy
 				JToolBarHelper::save2copy('mediafile.save2copy');
 			}
 			JToolBarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
-
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
-			{
-				JToolBarHelper::divider();
-				JToolBarHelper::custom('resetDownloads', 'download.png', 'Reset Download Hits', 'JBS_MED_RESET_DOWNLOAD_HITS', false, false);
-				JToolBarHelper::custom('resetPlays', 'play.png', 'Reset Plays', 'JBS_MED_RESET_PLAYS', false, false);
-			}
-
-			// Add an upload button and view a popup screen width 550 and height 400
-			// JToolBarHelper::divider();
-			// JToolBarHelper::media_manager();
 		}
 
 		JToolBarHelper::divider();
@@ -215,7 +212,6 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$document->addScript(JURI::root().'media/com_biblestudy/jui/js/plupload.full.js');
 		$document->addScript(JURI::root().'media/com_biblestudy/jui/js/plugins/jquery.plupload.queue.min.js');
 		$document->addStylesheet(JURI::root().'media/com_biblestudy/jui/css/jquery.plupload.queue.css');
-		
 	}
 
 }

@@ -4,4 +4,6 @@ ALTER TABLE `#__bsms_folders` ADD `server_id` INT(10) UNSIGNED NOT NULL DEFAULT 
 
 ALTER TABLE `#__bsms_folders` MODIFY `server_type` CHAR(255) NOT NULL DEFAULT 'local';
 
-ALTER TABLE `#__bsms_folders` ADD `params` TEXT NOT NULL AFTER 'aws_secret';
+ALTER TABLE `#__bsms_folders` ADD `params` TEXT NOT NULL AFTER 'server_type';
+
+ALTER TABLE `#__bsms_servers` ADD `params` TEXT NOT NULL AFTER `aws_secret`;

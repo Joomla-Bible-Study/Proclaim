@@ -33,6 +33,16 @@ class BiblestudyControllerServer extends JControllerForm
 		parent::__construct($config);
 	}
 
+    public function add() {
+        $app = JFactory::getApplication();
+
+        if(parent::add()) {
+            $app->setUserState('com_biblestudy.edit.server.type', null);
+            return true;
+        }
+
+        return false;
+    }
     /**
      * Resets the User state for the server type. Needed to allow the value from the DB to be used
      *
@@ -64,11 +74,11 @@ class BiblestudyControllerServer extends JControllerForm
         $input = $app->input;
 
         $data = $input->get('jform', array(), 'post', 'array');
-        $type = json_decode(base64_decode($data['server_type']));
+        $type = json_decode(base64_decode($data['type']));
 
-        $recordId = isset($type->id) ? $type->id: 0;
+        $recordId = isset($type->id) ? $type->id : 0;
 
-        //Save the endpoint in the session
+        // Save the endpoint in the session
         $app->setUserState('com_biblestudy.edit.server.type', $type->name);
 
         $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($recordId), false));

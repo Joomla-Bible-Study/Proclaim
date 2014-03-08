@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server type="storage" supports="*.*">
+    <name>Legacy</name>
+    <description>Adapter for legacy JBS servers and mediafiles configurations.</description>
+    <fields name="media">
+        <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
+            <field name="link_type" type="list" extension="com_biblestudy"
+                   label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
+                   class="inputbox" size="1" default="1">
+                <option value="1">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+            </field>
+        </fieldset>
+        <fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
+            <field name="player" type="list" label="JBS_MED_PLAYER"
+                   description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="1">
+                <option value="1">JBS_CMN_DIRECT_LINK</option>
+                <option value="2">JBS_CMN_USE_INTERNAL_PLAYER</option>
+                <option value="3">JBS_CMN_USE_AV</option>
+                <option value="4">JBS_CMN_USE_LEGACY_PLAYER</option>
+                <option value="5">JBS_CMN_USE_EMBED_CODE</option>
+            </field>
+            <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+                   description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
+                   default="1">
+                <option value="1">JBS_CMN_POPUP</option>
+                <option value="2">JBS_CMN_INLINE</option>
+                <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            </field>
+            <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
+                   description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
+                   filter="raw"/>
+        </fieldset>
+        <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
+            <field name="media_image" type="sql" extension="com_biblestudy"
+                   label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+                   class="inputbox"
+                   query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
+                   key_field="id" value_field="media_image_name" required="true">
+            </field>
+            <field name="mime_type" type="sql" extension="com_biblestudy"
+                   label="JBS_MED_CHOOSE_MIME_TYPE" description="JBS_MED_CHOOSE_MIME_TYPE_DESC"
+                   class="inputbox"
+                   query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
+                   key_field="id" value_field="mimetext">
+            </field>
+        </fieldset>
+        <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
+            <field name="autostart" type="list"
+                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC" default="1">
+                <option value="1">JYES</option>
+                <option value="2">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
+</server>
