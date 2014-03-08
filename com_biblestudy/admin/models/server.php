@@ -70,48 +70,13 @@ class BiblestudyModelServer extends JModelAdmin
 		}
 	}
 
-	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 */
-	public function store()
-	{
-		$row   = & $this->getTable();
-		$input = new JInput;
-		$data  = $input->get('post');
-
-		// Remove starting and trailing spaces
-		$data['server_path'] = trim($data['server_path']);
-
-		// Bind the form fields to the server table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the web link table to the database
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		return true;
-	}
-
+    /**
+     * Reverse look up of id to server_type
+     *
+     * @param $pk
+     *
+     * @return String
+     */
     public function getType($pk) {
         $item = $this->getItem($pk);
         return $item->server_type;
@@ -119,24 +84,31 @@ class BiblestudyModelServer extends JModelAdmin
 
     /**
      * Get the server form
-     *
+     * @TODO Rename this to getAddonServerForm() make it clearer that this is the addon form
      * @return bool|mixed
      * @throws Exception
      *
      * @since   8.1.0
      */
     public function getServerForm() {
-        $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$this->getState('server.type'));
+        // If user hasn't selected a server type yet, just return an empty form
+        $type = $this->data->type;
+        if(empty($type)) {
+            //@TODO This may not be optimal, seems like a hack
+            return new JForm("noop");
+        }
+        $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$type);
 
         JForm::addFormPath($path);
         JForm::addFieldPath($path.'/fields');
 
         // Add language files
         $lang = JFactory::getLanguage();
-        if(!$lang->load('jbs_addon_legacy', JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers/'.$this->getState('server.type')))
+        if(!$lang->load('jbs_addon_'.$type, $path)) {
             throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
+        }
 
-        $form = $this->loadForm('com_biblestudy.server.'.$this->getState('server.type'), $this->getState('server.type'), array('control' => 'jform', 'load_data' => true), true, "/server");
+        $form = $this->loadForm('com_biblestudy.server.'.$type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
         if (empty($form)) {
             return false;
@@ -158,11 +130,10 @@ class BiblestudyModelServer extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		if (empty($data)) {
-            $item = $this->getItem();
+            $this->getItem();
 		}else {
             $this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
         }
-
 
         // Get the forms.
         $form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
@@ -179,33 +150,19 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
-	 * @since   7.0
-     * @TODO    This gets called twice, because we're loading two forms. (There is redundcancy
+	 * @since   8.1.0
+     * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
      *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
      *          figure out a way to iterate over only the relevant data)
 	 */
 	protected function loadFormData()
 	{
-        // If current state has data use it instead of data from db
+        // If current state has data, use it instead of data from db
 		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
 
         $data = empty($session) ? $this->data : $session;
 
 		return $data;
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
 	}
 
 	/**
@@ -239,14 +196,14 @@ class BiblestudyModelServer extends JModelAdmin
 
         $this->data = parent::getItem($pk);
 
-        if(!empty($this->data)) {
+        if($this->data) {
             // Convert media field to array
             $registry = new JRegistry($this->data->media);
             $this->data->media = $registry->toArray();
 
-            // Save server type in state if needed
-            if(is_null($this->getState('server.type')))
-                $this->setState('server.type', $this->data->server_type);
+            // Set the type base on session if available or fall back on db value.
+            $type = $this->getState('server.type');
+            $this->data->type = empty($type) ? $this->data->type : $this->getState('server.type');
         }
 
         return $this->data;
@@ -266,19 +223,7 @@ class BiblestudyModelServer extends JModelAdmin
         $pk = $input->get('id', null, 'INTEGER');
         $this->setState('server.id', $pk);
 
-        $server = $app->getUserState('com_biblestudy.edit.server.type');
-        $this->setState('server.type', $server);
-    }
-
-    /**
-     * @param   JForm   $form
-     * @param   mixed   $data
-     * @param   string  $group
-     * @throws  Exception   If there is an error in loading server config files
-     *
-     * @since   8.1.0
-     */
-    protected function preprocessForm(JForm $form, $data, $group = 'content') {
-        parent::preprocessForm($form, $data, $group);
+        $type = $app->getUserState('com_biblestudy.edit.server.type');
+        $this->setState('server.type', $type);
     }
 }

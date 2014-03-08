@@ -113,7 +113,7 @@ class BiblestudyModelServers extends JModelList
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select($this->getState('list.select', 'server.id, server.published, server.server_path, server.server_name'));
+		$query->select($this->getState('list.select', 'server.id, server.published, server.server_name'));
 		$query->from('#__bsms_servers AS server');
 
 		// Filter by published state
