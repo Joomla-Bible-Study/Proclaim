@@ -37,6 +37,9 @@ class BibleStudyModelMigration extends JModelLegacy
 	/** @var int Total numbers of Versions */
 	public $totalVersions = 0;
 
+	/** @var string Running Now */
+	public $running = null;
+
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
 
@@ -106,6 +109,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			'after'   => $this->_afterStack,
 			'total'   => $this->totalVersions,
 			'done'    => $this->doneVersions,
+			'run'     => $this->running,
 		);
 		$stack = json_encode($stack);
 
@@ -135,6 +139,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_afterStack   = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
+		$this->running       = null;
 	}
 
 	/**
@@ -154,7 +159,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			$this->_afterStack   = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
-
+			$this->running       = null;
 			return;
 		}
 
@@ -174,6 +179,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_afterStack   = $stack['after'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
+		$this->running       = $stack['run'];
 
 	}
 
@@ -202,9 +208,9 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			$this->_afterStack = array();
 		}
-		ksort($this->_filesStack);
-		ksort($this->_versionStack);
-		ksort($this->_afterStack);
+		arsort($this->_filesStack);
+		arsort($this->_versionStack);
+		arsort($this->_afterStack);
 
 		$this->saveStack();
 
@@ -250,6 +256,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
 				$version = array_pop($this->_versionStack);
+				$this->running = $version;
 				$this->doneVersions++;
 				$this->doVersionUpdate($version);
 			}
@@ -260,6 +267,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_filesStack) && $this->haveEnoughTime())
 			{
 				$files = array_pop($this->_filesStack);
+				$this->running = $files;
 				$this->doneVersions++;
 				$this->allUpdate($files);
 			}
@@ -270,6 +278,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_afterStack) && $this->haveEnoughTime())
 			{
 				$versions = array_pop($this->_afterStack);
+				$this->running = $versions;
 				$this->doneVersions++;
 				$this->doVersionUpdate($versions);
 			}
@@ -278,7 +287,9 @@ class BibleStudyModelMigration extends JModelLegacy
 		if (empty($this->_filesStack) && empty($this->_versionStack) && empty($this->_afterStack))
 		{
 			// Just finished
+			$this->doneVersions = 90;
 			$this->resetStack();
+			$this->running = 'Finishing UP';
 			$this->finish();
 
 			return false;
@@ -414,7 +425,6 @@ class BibleStudyModelMigration extends JModelLegacy
 					->from('#__bsms_version')
 					->order('build desc');
 				$db->setQuery($query);
-				$db->query();
 				$version = $db->loadObject();
 
 				$this->callstack['subversiontype2_version'] = $version->build;
@@ -560,7 +570,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			elseif ($files)
 			{
 				$this->totalVersions += count($files);
-				$files             = array_reverse($files);
 				$this->_filesStack = $files;
 			}
 			else
@@ -630,7 +639,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			if (($value->id === '3') && ($value->version !== '7.0.1.1'))
 			{
 				/* Find Last updated Version in Update table */
-				$query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
+				$query = "INSERT INTO #__bsms_update (id,version) VALUES (3,'7.0.1.1')
                             ON DUPLICATE KEY UPDATE version= '7.0.1.1';";
 				$db->setQuery($query);
 
@@ -650,6 +659,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	 * Function to do updates after 7.0.2 using the SQL Stack
 	 *
 	 * @param   string  $value  The File to run sql.
+	 * @throws  string  Error on sql file
 	 *
 	 * @return boolean
 	 *
@@ -658,7 +668,6 @@ class BibleStudyModelMigration extends JModelLegacy
 	protected function allUpdate($value)
 	{
 		$db  = JFactory::getDbo();
-		$app = JFactory::getApplication();
 
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
@@ -682,17 +691,13 @@ class BibleStudyModelMigration extends JModelLegacy
 		// Process each query in the $queries array (split out of sql file).
 		foreach ($queries as $query)
 		{
-			$query = trim($query);
-
-			if ($query != '' && $query{0} != '#')
+			if ($query = JBSMDbHelper::trimQuery($query))
 			{
 				$db->setQuery($query);
 
 				if (!$db->execute())
 				{
-					$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
-
-					return false;
+					throw new Exception(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $query));
 				}
 			}
 		}

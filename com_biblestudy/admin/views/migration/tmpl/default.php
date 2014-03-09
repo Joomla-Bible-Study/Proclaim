@@ -24,10 +24,14 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
 
-
 <div class="progress progress-striped active">
     <div class="bar" style="width: <?php echo $this->percentage ?>%"></div>
 </div>
+<?php if ($this->more): ?>
+<div class="migration-status">
+	<div class="status">Prossesing: <?php echo $this->running; ?></div>
+</div>
+<?php endif; ?>
 
 <form action="index.php" name="adminForm" id="adminForm">
     <input type="hidden" name="option" value="com_biblestudy"/>
