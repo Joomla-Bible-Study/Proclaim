@@ -25,7 +25,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.0.3';
+	private $_release = '8.0.4';
 
 	/**
 	 * Find minimum required joomla version for this extension.
