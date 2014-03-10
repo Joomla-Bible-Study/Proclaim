@@ -314,7 +314,7 @@ class MigrationUpgrade
 
 		if ($dbhelper->checkTables($table, 'drop_tables') == 'true')
 		{
-			$query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1';
+			$query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE `id` = 1';
 
 			if (!JBSMDbHelper::performdb($query, "Build 700: "))
 			{
@@ -491,7 +491,9 @@ class MigrationUpgrade
 		}
 
 		/* Perform Mediafiles players. */
-		$query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
+		$query = $db->getQuery(true);
+		$query->select('id, params')
+			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -513,8 +515,8 @@ class MigrationUpgrade
 					{
 						$player = 3;
 					}
-					$query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($player) . " WHERE `id` = " .
-						$db->quote($result->id) . " LIMIT 1";
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')->set($db->qn('player') . ' = ' . $db->q($player))->where('id = ' . (int) $db->quote($result->id));
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -523,8 +525,8 @@ class MigrationUpgrade
 				}
 				if ($popup)
 				{
-					$query = "UPDATE #__bsms_mediafiles SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
-						(int) $db->quote($result->id) . " LIMIT 1";
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')->set($db->qn('popup') . ' = ' . $db->q($popup))->where('id = ' . (int) $db->quote($result->id));
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -534,8 +536,8 @@ class MigrationUpgrade
 				if ($podcasts)
 				{
 					$podcasts = str_replace('|', ',', $podcasts);
-					$query    = "UPDATE #__bsms_mediafiles SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
-						(int) $db->quote($result->id) . " LIMIT 1";
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')->set($db->qn('podcast_id') . ' = ' . $db->q($podcasts))->where('id = ' . (int) $db->quote($result->id));
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -548,9 +550,8 @@ class MigrationUpgrade
 				$params  = $registry;
 				$params2 = $params->toObject();
 				$params2 = json_encode($params2);
-
-				$query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')->set($db->qn('params') . ' = ' . $db->q($params2))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{
@@ -559,21 +560,23 @@ class MigrationUpgrade
 			}
 		}
 
-		$query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_ASCENDING' WHERE `id` = '1'";
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_order')->set('text = ' . $db->q('JBS_CMN_DESCENDING'))->where('id = 1');
 
 		if (!JBSMDbHelper::performdb($query, "Build 700: "))
 		{
 			return false;
 		}
 
-		$query = "UPDATE #__bsms_order SET `text` = 'JBS_CMN_DESCENDING' WHERE `id` = '2'";
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_order')->set('text = ' . $db->q('JBS_CMN_DESCENDING'))->where('id = 2');
 
 		if (!JBSMDbHelper::performdb($query, "Build 700: "))
 		{
 			return false;
 		}
 
-		$query = 'DROP TABLE IF EXISTS #__bsms_books';
+		$query = 'DROP TABLE IF EXISTS `#__bsms_books`';
 
 		if (!JBSMDbHelper::performdb($query, "Build 700: "))
 		{
@@ -687,7 +690,8 @@ class MigrationUpgrade
 		}
 
 		// Fix studies params
-		$query = "SELECT `id`, `params` FROM #__bsms_studies";
+		$query = $db->getQuery(true);
+		$query->select('`id`, `params`')->from('#__bsms_studies');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -699,11 +703,10 @@ class MigrationUpgrade
 				$registry = new JRegistry;
 				$registry->loadString($result->params);
 				$params = $registry;
-
 				$params2 = $params->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_studies SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')->set($db->qn('params') . ' = ' . $db->q($params2))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{
@@ -713,7 +716,8 @@ class MigrationUpgrade
 		}
 
 		// Fix topics text
-		$query = "SELECT `id`, `topic_text` FROM #__bsms_topics";
+		$query = $db->getQuery(true);
+		$query->select('`id`, `topic_text`')->from('#__bsms_topics');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -725,8 +729,8 @@ class MigrationUpgrade
 
 				// Replace all non a-Z 0-9 by '_'
 				$topic = 'JBS_TOP_' . strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));
-				$query = "UPDATE #__bsms_topics SET `topic_text` = " . $db->quote($topic) . " WHERE `id` = " .
-					(int) $db->quote($result->id);
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_topics')->set($db->qn('topic_text') . ' = ' . $db->q($topic))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{
@@ -736,7 +740,8 @@ class MigrationUpgrade
 		}
 
 		// Fix share params
-		$query = "SELECT `id`, `params` FROM #__bsms_share";
+		$query = $db->getQuery(true);
+		$query->select('`id`, `params`')->from('#__bsms_share');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -751,8 +756,8 @@ class MigrationUpgrade
 
 				$params2 = $params->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_share SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_share')->set($db->qn('params') . ' = ' . $db->q($params2))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{
@@ -762,7 +767,8 @@ class MigrationUpgrade
 		}
 
 		// Fix template params
-		$query = "SELECT `id`, `params` FROM #__bsms_templates";
+		$query = $db->getQuery(true);
+		$query->select('`id`, `params`')->from('#__bsms_templates');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -777,8 +783,8 @@ class MigrationUpgrade
 
 				$params2 = $params->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_templates SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_templates')->set($db->qn('params') . ' = ' . $db->q($params2))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{
@@ -919,9 +925,11 @@ class MigrationUpgrade
 	public function upgrade622()
 	{
 		$db    = JFactory::getDBO();
-		$query = "SELECT `id`, `params` FROM #__bsms_mediafiles WHERE `params` LIKE '%podcast1%'";
+		$query = $db->getQuery(true);
+		$query->select('`id`, `params`')
+			->from('#__bsms_mediafiles')
+			->where($db->qn('params') . ' LIKE ' . $db->q('%podcast1%'));
 		$db->setQuery($query);
-		$db->query();
 		$results = $db->loadObjectList();
 
 		if ($results)
@@ -930,8 +938,8 @@ class MigrationUpgrade
 			{
 				$old_params = $result->params;
 				$new_params = str_replace('podcast1', 'podcasts', $old_params);
-				$query      = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($new_params) . " WHERE `id` = " .
-					(int) $db->quote($result->id);
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')->set($db->qn('params') . ' = ' . $db->q($new_params))->where('id = ' . (int) $db->quote($result->id));
 
 				if (!JBSMDbHelper::performdb($query, "Build 622: "))
 				{
@@ -939,6 +947,46 @@ class MigrationUpgrade
 				}
 			}
 		}
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_order` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `value` varchar(15) DEFAULT '',
+				  `text` varchar(15) DEFAULT '',
+				  PRIMARY KEY (`id`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
+		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		{
+			return false;
+		}
+
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_order')
+			->where($db->qn('id') . ' = ' . $db->q('1'));
+		$db->setQuery($query);
+		$results = $db->loadObject();
+		if (!$results)
+		{
+			$query = "INSERT INTO `#__bsms_order` VALUES (1, 'ASC', 'Ascending'),(2, 'DESC', 'Descending')";
+			if (!JBSMDbHelper::performdb($query, "Build 622: "))
+			{
+				return false;
+			}
+		}
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		{
+			return false;
+		}
+
 		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.2', `installdate`='2010-10-25', `build`='622', " .
 			"`versionname`='Judges', `versiondate`='2010-10-25'";
 
@@ -981,19 +1029,19 @@ class MigrationUpgrade
 		{
 			return false;
 		}
-		$query = "ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)";
+		$query = "ALTER TABLE `#__bsms_teachers` MODIFY `title` varchar(250)";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN downloads int(10) DEFAULT 0";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN downloads int(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN plays int(10) DEFAULT 0";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN plays int(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
@@ -1011,7 +1059,7 @@ class MigrationUpgrade
 		$query = $db->getQuery(true);
 		$query->select('id, params, podcast_id')->from('#__bsms_mediafiles')->where('podcast_id > ' . 0);
 		$db->setQuery($query);
-		$db->query(); // Need this do to the getNumRows dos not execute the Query
+		$db->execute(); // Need this do to the getNumRows dos not execute the Query
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
@@ -1020,12 +1068,13 @@ class MigrationUpgrade
 
 			foreach ($results as $result)
 			{
-				// Added the \n
-				$podcast = 'podcasts=' . $result->podcast_id . '\n';
+				$registry = new JRegistry;
 				$params  = $result->params;
-				$update  = $podcast . ' ' . $params;
+				$registry->loadString($params);
+				$registry->def('podcasts', $result->podcast_id);
+				$update  = $registry->toString();
 				$query   = $db->getQuery(true);
-				$query->update('#__bsms_mediafiles')->set('params = ' . $db->q($update) . 'podcast_id = ' . 0)->where('id = ' . (int) $result->id);
+				$query->update('#__bsms_mediafiles')->set('`params` = ' . $db->q($update) . ', `podcast_id` = ' . 0)->where('id = ' . (int) $result->id);
 
 				if (!JBSMDbHelper::performdb($query, "Build 614: "))
 				{
@@ -1033,15 +1082,24 @@ class MigrationUpgrade
 				}
 			}
 		}
-
-		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.0', `installdate`='2010-09-06', " .
-			"`build`='614', `versionname`='Deuteronomy', `versiondate`='2010-09-06'";
-
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
-
+		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.0', `installdate`='2010-09-06', " .
+			"`build`='614', `versionname`='Deuteronomy', `versiondate`='2010-09-06'";
+		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		{
+			return false;
+		}
 		return true;
 	}
 
@@ -1170,77 +1228,77 @@ class MigrationUpgrade
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN thumbnailm TEXT NULL AFTER studytext";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbnailm TEXT NULL AFTER studytext";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN thumbhm INT NULL AFTER thumbnailm";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbhm INT NULL AFTER thumbnailm";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN thumbwm INT NULL AFTER thumbhm";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbwm INT NULL AFTER thumbhm";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN params TEXT NULL AFTER thumbwm";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN params TEXT NULL AFTER thumbwm";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_podcast ADD COLUMN episodetitle INT NULL AFTER published";
+		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN episodetitle INT NULL AFTER published";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_podcast ADD COLUMN custom VARCHAR( 200 ) NULL AFTER episodetitle";
+		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN custom VARCHAR( 200 ) NULL AFTER episodetitle";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_podcast ADD COLUMN detailstemplateid INT NULL AFTER custom";
+		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN detailstemplateid INT NULL AFTER custom";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_series ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text";
+		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_series ADD COLUMN description TEXT NULL AFTER series_text";
+		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN description TEXT NULL AFTER series_text";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_series ADD COLUMN teacher INT(3) NULL AFTER series_text";
+		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN teacher INT(3) NULL AFTER series_text";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_media ADD COLUMN path2 VARCHAR(150) NOT NULL AFTER media_image_path";
+		$query = "ALTER TABLE `#__bsms_media` ADD COLUMN path2 VARCHAR(150) NOT NULL AFTER media_image_path";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
@@ -1263,56 +1321,56 @@ class MigrationUpgrade
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_teachers ADD COLUMN teacher_thumbnail TEXT NULL AFTER id";
+		$query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN teacher_thumbnail TEXT NULL AFTER id";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_teachers ADD COLUMN teacher_image TEXT NULL AFTER id";
+		$query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN teacher_image TEXT NULL AFTER id";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN docMan_id INT NULL AFTER published";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN docMan_id INT NULL AFTER published";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN article_id INT NULL AFTER docMan_id";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN article_id INT NULL AFTER docMan_id";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER article_id";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN comment TEXT NULL AFTER article_id";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN virtueMart_id INT NULL AFTER comment";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN virtueMart_id INT NULL AFTER comment";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN params TEXT NULL AFTER virtueMart_id";
+		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN params TEXT NULL AFTER virtueMart_id";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
 			return false;
 		}
 
-		$query = "UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
+		$query = "UPDATE `#__bsms_mediafiles` SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
 		{
@@ -1364,21 +1422,21 @@ class MigrationUpgrade
 					`id` INT NOT NULL AUTO_INCREMENT,
 					`location_text` VARCHAR(250) NULL,
 					`published` TINYINT(1) NOT NULL DEFAULT '1',
-					PRIMARY KEY (`id`) ) TYPE=InnoDB CHARACTER SET `utf8`";
+					PRIMARY KEY (`id`) ) ENGINE=InnoDB CHARACTER SET `utf8`";
 
 		if (!JBSMDbHelper::performdb($query, "Build 611: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN show_level varchar(100) NOT NULL default '0' AFTER user_name";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN show_level varchar(100) NOT NULL default '0' AFTER user_name";
 
 		if (!JBSMDbHelper::performdb($query, "Build 611: "))
 		{
 			return false;
 		}
 
-		$query = "ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level";
+		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN location_id INT(3) NULL AFTER show_level";
 
 		if (!JBSMDbHelper::performdb($query, "Build 611: "))
 		{

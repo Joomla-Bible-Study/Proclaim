@@ -29,6 +29,9 @@ class BiblestudyViewMigration extends JViewLegacy
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
 
+	/** @var string Running Now */
+	public $running = null;
+
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
@@ -64,7 +67,9 @@ class BiblestudyViewMigration extends JViewLegacy
 		{
 			if ($this->totalVersions > 0)
 			{
-				$percent = min(max(round(100 * $this->doneVersions / $this->totalVersions), 1), 100);
+				$count = ($this->doneVersions / $this->totalVersions) * 100;
+				$percent = (int) number_format($count, 0);
+				$percent = ($percent + 1) * 10;
 			}
 
 			$more = true;
@@ -103,6 +108,7 @@ class BiblestudyViewMigration extends JViewLegacy
 	{
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
+		$this->stack = & $stack;
 
 		if (empty($stack))
 		{
@@ -111,6 +117,7 @@ class BiblestudyViewMigration extends JViewLegacy
 			$this->_afterStack   = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
+			$this->running       = null;
 
 			return;
 		}
@@ -131,6 +138,7 @@ class BiblestudyViewMigration extends JViewLegacy
 		$this->_afterStack   = $stack['after'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
+		$this->running       = $stack['run'];
 
 	}
 }

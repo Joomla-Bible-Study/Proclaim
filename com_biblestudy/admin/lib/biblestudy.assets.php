@@ -9,6 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+jimport('joomla.access.rules');
 
 /**
  * Asset Fix class
@@ -50,7 +51,6 @@ class FixJBSAssets
 		// Run through each table
 		foreach ($objects as $object)
 		{
-
 			// Put the table into the return array
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
@@ -69,7 +69,7 @@ class FixJBSAssets
 					self::setasset($result, $object['assetname']);
 				}
 
-				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+				// If there is a jasset_id but no match to the parent_id then a mismatch has occurred
 				if ($parent_id != $result->parent_id && $result->asset_id)
 				{
 					self::deleteasset($result);

@@ -66,7 +66,7 @@ class JBS800Update
 				$registry->loadString($topic->params);
 				$params = $registry->toArray();
 
-				// Loop through every param language and create a new rocord
+				// Loop through every param language and create a new record
 				foreach ($params as $key => $value)
 				{
 					// Load Topic table
