@@ -84,7 +84,7 @@ class BiblestudyModelServer extends JModelAdmin
 
     /**
      * Get the server form
-     * @TODO Rename this to getAddonServerForm() make it clearer that this is the addon form
+     * @TODO Rename this to getAddonServerForm() to make it clearer that this is the addon form
      * @return bool|mixed
      * @throws Exception
      *
