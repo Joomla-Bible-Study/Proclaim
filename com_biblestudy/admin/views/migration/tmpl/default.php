@@ -29,7 +29,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 </div>
 <?php if ($this->more): ?>
 <div class="migration-status">
-	<div class="status">Prossesing: <?php echo $this->running; ?></div>
+	<div class="status"><?php echo JText::_('JBS_MIG_Processing') . ' ' . $this->running; ?></div>
 </div>
 <?php endif; ?>
 
