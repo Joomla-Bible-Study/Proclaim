@@ -64,7 +64,7 @@ class Dump_File
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		JFactory::getApplication()->clearHeaders();
+        JResponse::clearHeaders();
 		$server        = $media->spath;
 		$path          = $media->fpath;
 		$filename      = $media->filename;
