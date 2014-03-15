@@ -103,11 +103,11 @@ class BiblestudyModelServer extends JModelAdmin
         JForm::addFieldPath($path.'/fields');
 
         // Add language files
-        $lang = JFactory::getLanguage();
+       /* $lang = JFactory::getLanguage();
         if(!$lang->load('jbs_addon_'.$type, $path)) {
             throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
         }
-
+*/
         $form = $this->loadForm('com_biblestudy.server.'.$type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
         if (empty($form)) {
