@@ -217,7 +217,7 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-		// force a language
+		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
 		if (!empty($forcedLanguage))
 		{
