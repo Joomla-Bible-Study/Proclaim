@@ -64,8 +64,8 @@ class JBSMPodcast
 
 				if ($checkresult)
 				{
-					$description       = str_replace("&", "and", $podinfo->description);
-					$description       = strip_tags($description);
+					$description       = str_replace(" & ", " and ", $podinfo->description);
+					$description       = html_entity_decode($description);
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -84,12 +84,12 @@ class JBSMPodcast
                 	<itunes:subtitle>' . $podinfo->title . '</itunes:subtitle>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>'.JURI::root() . $podinfo->image . '</url>
+                		<url>' . JURI::root() . $podinfo->image . '</url>
                 		<title>' . $podinfo->title . '</title>
                 		<height>' . $podinfo->imageh . '</height>
                 		<width>' . $podinfo->imagew . '</width>
                 	</image>
-                	<itunes:image href="'.JURI::root() . $podinfo->podcastimage . '" />
+                	<itunes:image href="' . JURI::root() . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
@@ -301,16 +301,17 @@ class JBSMPodcast
 								$subtitle = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
-						$title       = str_replace('&', "and", $title);
-						$description = str_replace('&', "and", $episode->studyintro);
-						$description = strip_tags($description);
+						$title       = str_replace(' & ', " and ", $title);
+						$title       = html_entity_decode($title);
+						$description = str_replace(' & ', " and ", $episode->studyintro);
+						$description = html_entity_decode($description);
 
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
-                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
-                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $episode->teachername . '</itunes:author>
                         		<dc:creator>' . $episode->teachername . '</dc:creator>
@@ -412,8 +413,8 @@ class JBSMPodcast
 	/**
 	 * Get Episodes
 	 *
-	 * @param   int    $id     Id for Episode
-	 * @param   string $limit  Limit of records
+	 * @param   int     $id     Id for Episode
+	 * @param   string  $limit  Limit of records
 	 *
 	 * @return object
 	 */
@@ -458,8 +459,8 @@ class JBSMPodcast
 	/**
 	 * Write the File
 	 *
-	 * @param   string $file         File Name
-	 * @param   string $filecontent  File Content
+	 * @param   string  $file         File Name
+	 * @param   string  $filecontent  File Content
 	 *
 	 * @return boolean|string
 	 */

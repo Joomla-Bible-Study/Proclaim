@@ -26,12 +26,12 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
-	public function __construct(& $subject, $config)
+	public function __construct(&$subject, $config)
 	{
 
 		parent::__construct($subject, $config);
@@ -100,7 +100,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object $params  ?
+	 * @param   JRegistry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -131,7 +131,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object $params  ?
+	 * @param   JRegistry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -244,7 +244,7 @@ class PlgSystemJbspodcast extends JPlugin
 		$db    = JFactory::getDBO();
 		$query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' . $time;
 		$db->setQuery($query);
-		$db->query();
+		$db->execute();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -274,8 +274,8 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Do Email
 	 *
-	 * @param   JRegistry $params     ?
-	 * @param   object    $dopodcast  ?
+	 * @param   JRegistry  $params     ?
+	 * @param   object     $dopodcast  ?
 	 *
 	 * @return void
 	 */
@@ -284,18 +284,15 @@ class PlgSystemJbspodcast extends JPlugin
 
 		$livesite = JURI::root();
 		$config   = JFactory::getConfig();
-		$mailfrom = $config->get('config.mailfrom');
 		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$year = '(' . date('Y') . ')';
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';
 		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
-		$Body2    = '';
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
 		$Subject  = $params->get('subject');
@@ -305,6 +302,7 @@ class PlgSystemJbspodcast extends JPlugin
 
 		foreach ($recipients AS $recipient)
 		{
+			$mail->filenameToType($FromName);
 			$mail->addRecipient($recipient);
 			$mail->setSubject($Subject . ' ' . $livesite);
 			$mail->setBody($Body3);
