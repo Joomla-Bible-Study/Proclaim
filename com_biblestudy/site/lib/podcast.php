@@ -439,12 +439,19 @@ class JBSMPodcast
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-			->where('mf.podcast_id = ' . $db->q($id))->where('mf.published = ' . 1)->order('createdate desc');
+            ->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
+//go through each and remove the -1 strings and retest
+        $epis = array();
+        foreach ($episodes as $e)
+        {
+            $e->podcast_id = str_replace('-1','',$e->podcast_id);
+            if (substr_count($e->podcast_id,$id)){$epis[]= $e;}
+        }
 
-		return $episodes;
+        return $epis;
 	}
 
 	/**
