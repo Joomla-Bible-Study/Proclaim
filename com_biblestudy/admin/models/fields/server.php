@@ -33,7 +33,7 @@ class JFormFieldServer extends JFormField {
         $class		= ($v = $this->element['class']) ? ' class="'.$v.'"' : 'class="text_area"';
 
         // Get a reverse lookup of the server id to server name
-        $model = JModel::getInstance('servers', 'BibleStudyModel');
+        $model = JModelLegacy::getInstance('servers', 'BibleStudyModel');
         $rlu_type = $model->getIdToNameReverseLookup();
 
         $value = JArrayHelper::getValue($rlu_type, $this->value);
