@@ -76,7 +76,7 @@ if ($this->params->get('player') == 1 || $this->player == 1)
 	}
 	if ($this->player == 8)
 	{
-		echo $this->media->mediacode;
+		echo stripslashes($this->media->mediacode);
 	}
 	?>
 	</body>
