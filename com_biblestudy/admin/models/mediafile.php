@@ -182,8 +182,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
         // Add language files
         $lang = JFactory::getLanguage();
-      //  if(!$lang->load('jbs_addon_legacy', JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers/'.$server_type))
-      //      throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
+        if(!$lang->load('jbs_addon_legacy', JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers/'.$server_type))
+            throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
 
         $form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
 
