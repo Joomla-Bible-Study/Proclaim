@@ -100,6 +100,11 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Create a shortcut for $item.
 		$item = & $this->item;
 
+		if (!$item)
+		{
+			return false;
+		}
+
 		if ($this->getLayout() == 'pagebreak')
 		{
 			$this->_displayPagebreak($tpl);
@@ -202,13 +207,13 @@ class BiblestudyViewSermon extends JViewLegacy
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
+		JHtml::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/html/');
 		$document = JFactory::getDocument();
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+//		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+//		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+		JHtml::_('jquery.framework');
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.bootstrap');
 		$css = $this->item->params->get('css');
 
 		if ($css <= "-1")
@@ -219,11 +224,9 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
+//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
+//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
+//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.min.css');
 
 		//Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))

@@ -72,7 +72,7 @@ function addCSS()
 	if (!BIBLESTUDY_CHECKREL)
 	{
 		JHTML::stylesheet('media/com_biblestudy/jui/css/icomoon.css');
-		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
 		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	}
 	JHTML::stylesheet('media/com_biblestudy/css/general.css');
