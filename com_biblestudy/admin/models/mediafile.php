@@ -88,9 +88,14 @@ class BiblestudyModelMediafile extends JModelAdmin
         $this->data = parent::getItem($pk);
 
         if(!empty($this->data)) {
-            // Save server_id in state if needed
-            if(is_null($this->getState('mediafile.server_id')))
-                $this->setState('mediafile.server_id', $this->data->server_id);
+            // Convert metadata field to array
+            $registry = new JRegistry($this->data->metadata);
+            $this->data->metadata = $registry->toArray();
+
+            // Set the server_id from session if available or fall back on the db value
+            $server_id = $this->getState('mediafile.server_id');
+            $this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
+
         }
 
         return $this->data;
@@ -160,9 +165,15 @@ class BiblestudyModelMediafile extends JModelAdmin
      * @since   8.1.0
      */
     public function getMediaForm() {
+        // If user hasn't selected a server yet, just return an empty form
+        $server_id = $this->data->server_id;
+        if(empty($server_id)) {
+            //@TODO This may not be optimal, seems like a hack
+            return new JForm("No-op");
+        }
         // Reverse lookup server_id to server type
-        $model = JModel::getInstance('server', 'BibleStudyModel');
-        $server_type = $model->gettype($this->getState("mediafile.server_id"));
+        $model = JModelLegacy::getInstance('server', 'BibleStudyModel');
+        $server_type = $model->getType($server_id);
 
         $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$server_type);
 
@@ -207,7 +218,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			return false;
 		}
 
-        // @TODO Maybe this needs to remove this from here? (Separation of concerns)
+        // @TODO Maybe this needs to be removed from here? (Separation of concerns)
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
@@ -618,20 +629,6 @@ class BiblestudyModelMediafile extends JModelAdmin
         $data = empty($session) ? $this->data : $session;
 
 		return $data;
-	}
-
-	/**
-	 * Auto-populate the model state.
-	 *
-	 * @param   JForm  $form   A JForm object.
-	 * @param   mixed  $data   The data expected for the form.
-	 * @param   string $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-        parent::preprocessForm($form, $data, $group);
 	}
 
     /**

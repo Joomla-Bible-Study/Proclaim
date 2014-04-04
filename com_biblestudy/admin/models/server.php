@@ -79,12 +79,12 @@ class BiblestudyModelServer extends JModelAdmin
      */
     public function getType($pk) {
         $item = $this->getItem($pk);
-        return $item->server_type;
+        return $item->type;
     }
 
     /**
      * Get the server form
-     * @TODO Rename this to getAddonServerForm() make it clearer that this is the addon form
+     * @TODO Rename this to getAddonServerForm() to make it clearer that this is the addon form
      * @return bool|mixed
      * @throws Exception
      *
@@ -95,7 +95,7 @@ class BiblestudyModelServer extends JModelAdmin
         $type = $this->data->type;
         if(empty($type)) {
             //@TODO This may not be optimal, seems like a hack
-            return new JForm("noop");
+            return new JForm("No-op");
         }
         $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$type);
 
@@ -103,11 +103,11 @@ class BiblestudyModelServer extends JModelAdmin
         JForm::addFieldPath($path.'/fields');
 
         // Add language files
-        $lang = JFactory::getLanguage();
+       /* $lang = JFactory::getLanguage();
         if(!$lang->load('jbs_addon_'.$type, $path)) {
             throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
         }
-
+*/
         $form = $this->loadForm('com_biblestudy.server.'.$type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
         if (empty($form)) {
@@ -201,9 +201,9 @@ class BiblestudyModelServer extends JModelAdmin
             $registry = new JRegistry($this->data->media);
             $this->data->media = $registry->toArray();
 
-            // Set the type base on session if available or fall back on db value.
+            // Set the type from session if available or fall back on the db value
             $type = $this->getState('server.type');
-            $this->data->type = empty($type) ? $this->data->type : $this->getState('server.type');
+            $this->data->type = empty($type) ? $this->data->type : $type;
         }
 
         return $this->data;

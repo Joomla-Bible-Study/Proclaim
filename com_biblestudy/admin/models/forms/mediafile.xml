@@ -13,8 +13,8 @@
     <field name="podcast_id"  size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
            description="JBS_MED_CHOOSE_PODCAST_DESC"
            query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-           key_field="id" value_field="title" multiple="true" default="-1">
-        <option value="-1">JBS_CMN_SELECT_PODCAST</option>
+           key_field="id" value_field="title" multiple="true" default="" clas="inputbox">
+        <option value="">JBS_CMN_SELECT_PODCAST</option>
     </field>
     <field name="published"
            type="list"
