@@ -256,7 +256,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
 				$version = array_pop($this->_versionStack);
-				$this->running = $version;
+				$this->running .= ', ' . $version;
 				$this->doneVersions++;
 				$this->doVersionUpdate($version);
 			}
@@ -267,7 +267,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_filesStack) && $this->haveEnoughTime())
 			{
 				$files = array_pop($this->_filesStack);
-				$this->running = $files;
+				$this->running .= ', ' . $files;
 				$this->doneVersions++;
 				$this->allUpdate($files);
 			}
@@ -278,7 +278,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_afterStack) && $this->haveEnoughTime())
 			{
 				$versions = array_pop($this->_afterStack);
-				$this->running = $versions;
+				$this->running .= ', ' . $versions;
 				$this->doneVersions++;
 				$this->doVersionUpdate($versions);
 			}
@@ -289,7 +289,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			// Just finished
 			$this->doneVersions = 90;
 			$this->resetStack();
-			$this->running = 'Finishing UP';
+			$this->running .= ', ' . 'Finishing UP';
 			$this->finish();
 
 			return false;
@@ -603,6 +603,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	 * @param   string  $version  Version to update
 	 *
 	 * @return boolean
+	 * @throws string
 	 */
 	private function doVersionUpdate($version)
 	{

@@ -1082,6 +1082,7 @@ class MigrationUpgrade
 				}
 			}
 		}
+
 		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
 								(`id` INTEGER NOT NULL AUTO_INCREMENT,
 								`version` VARCHAR(20) NOT NULL,
@@ -1090,10 +1091,12 @@ class MigrationUpgrade
 								`build` VARCHAR(20) NOT NULL,
 								`versionname` VARCHAR(40) NULL,
 								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
 		{
 			return false;
 		}
+
 		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.0', `installdate`='2010-09-06', " .
 			"`build`='614', `versionname`='Deuteronomy', `versiondate`='2010-09-06'";
 		if (!JBSMDbHelper::performdb($query, "Build 614: "))
@@ -1377,7 +1380,22 @@ class MigrationUpgrade
 			return false;
 		}
 
-		$query = "INSERT INTO #__bsms_version SET `version` = '6.1.0', `installdate`='2009-11-30', " .
+		$query = 'DROP TABLE IF EXISTS `#__bsms_schemaVersion`';
+		$query .= "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+
+		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		{
+			return false;
+		}
+
+		$query = "INSERT INTO #__bsms_version SET `version` = '', `installdate`='2009-11-30', " .
 			"`build`='613', `versionname`='Numbers', `versiondate`='2009-11-30'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))

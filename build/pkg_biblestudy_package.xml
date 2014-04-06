@@ -2,10 +2,10 @@
 <extension type="package" version="2.5">
     <name>Package Joomla Bible Study</name>
     <packagename>biblestudy_package</packagename>
-    <version>8.0.3</version>
+    <version>8.0.5</version>
     <description>
         <![CDATA[Joomla Bible Study is one of the most popular Bible Study System available today. <a href='index.php?option=com_biblestudy'>Next to Finish install</a>]]></description>
-    <creationDate>Oct 19, 2013</creationDate>
+    <creationDate>Apr 6, 2013</creationDate>
     <copyright>(C) 2007-2013 Copyright Joomla Bible Study</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <author>Joomla Bible Study Team</author>
@@ -13,9 +13,10 @@
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <packager>Tom Fuller</packager>
     <packagerurl>http://www.joomlabiblestudy.org</packagerurl>
-    <update>
-        <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml]]>
-    </update>
+    <update>http://www.joomlabiblestudy.org/update></update>
+	<updateservers>
+        <server type="collection" priority="1" name="pkg_biblestudy_package"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml]]></server>
+    </updateservers>
     <files folder="packages">
         <file type="module" id="mod_biblestudy" client="site">mod_biblestudy.zip</file>
         <file type="module" id="mod_biblestudy_podcast" client="site">mod_biblestudy_podcast.zip</file>

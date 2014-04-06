@@ -27,11 +27,9 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
 <div class="progress progress-striped active">
     <div class="bar" style="width: <?php echo $this->percentage ?>%"></div>
 </div>
-<?php if ($this->more): ?>
 <div class="migration-status">
 	<div class="status"><?php echo JText::_('JBS_MIG_Processing') . ' ' . $this->running; ?></div>
 </div>
-<?php endif; ?>
 
 <form action="index.php" name="adminForm" id="adminForm">
     <input type="hidden" name="option" value="com_biblestudy"/>
@@ -45,7 +43,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
         <div class="pull-left">
             <div class="icon">
                 <a href="index.php?option=com_biblestudy&view=cpanel">
-                    <img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+                    <img class="image" src="../media/com_biblestudy/images/icons/icon-48-administration.png"
                          border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
 					<span>
 						<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>

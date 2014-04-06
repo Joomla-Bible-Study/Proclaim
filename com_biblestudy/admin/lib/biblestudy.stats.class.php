@@ -599,30 +599,33 @@ class JbStats
 			$db->setQuery($query);
 			$hits = $db->loadObject();
 
-			if (!$hits->studytitle)
+			if ($hits)
 			{
-				$name = $hits->id;
+				if (!$hits->studytitle)
+				{
+					$name = $hits->id;
+				}
+				else
+				{
+					$name = $hits->studytitle;
+				}
+				if ($format < 1)
+				{
+					$total = $result->added + $hits->hits;
+				}
+				else
+				{
+					$total = $result->added;
+				}
+				$selectvalue   = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
+				$selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
+				$final2        = array(
+					'score'   => $total,
+					'select'  => $selectvalue,
+					'display' => $selectdisplay
+				);
+				$final[]       = $final2;
 			}
-			else
-			{
-				$name = $hits->studytitle;
-			}
-			if ($format < 1)
-			{
-				$total = $result->added + $hits->hits;
-			}
-			else
-			{
-				$total = $result->added;
-			}
-			$selectvalue   = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
-			$selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
-			$final2        = array(
-				'score'   => $total,
-				'select'  => $selectvalue,
-				'display' => $selectdisplay
-			);
-			$final[]       = $final2;
 		}
 		rsort($final);
 		array_splice($final, $limit);
