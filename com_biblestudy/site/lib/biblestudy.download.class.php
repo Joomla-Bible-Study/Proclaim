@@ -29,6 +29,7 @@ class Dump_File
 	 *
 	 * @since 6.1.2
 	 * @return null
+	 * @throws string
 	 */
 	public function download($mid)
 	{
@@ -76,16 +77,9 @@ class Dump_File
 		/** @var $download_file object */
 		$getsize = $this->getRemoteFileSize($download_file);
 
-		if ($size === '')
+		if (!$size || ($size != $getsize && $getsize != false))
 		{
-			if ($size != $getsize)
-			{
-
-				if ($getsize != false)
-				{
-					$size = $getsize;
-				}
-			}
+				$size = $getsize;
 		}
 
 		// Clean the output buffer
@@ -195,6 +189,7 @@ class Dump_File
 	 * @param   int $mid Media ID
 	 *
 	 * @return  boolean
+	 * @throws  string
 	 *
 	 * @since   7.0.0
 	 */
