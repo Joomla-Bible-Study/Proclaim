@@ -31,8 +31,8 @@ abstract class JHtmlJquery
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   boolean $noConflict  True to load jQuery in noConflict mode [optional]
-	 * @param   mixed   $debug       Is debugging mode on? [optional]
+	 * @param   boolean  $noConflict  True to load jQuery in noConflict mode [optional]
+	 * @param   mixed    $debug       Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -53,12 +53,12 @@ abstract class JHtmlJquery
 			$debug  = (boolean) $config->get('debug');
 		}
 
-		JHtml::_('script', 'media/com_biblestudy/jui/js/jquery.min.js', false, true, false, false, $debug);
+		JHtml::_('script', 'media/com_biblestudy/jui/js/jquery.min.js', false, false, false, false, $debug);
 
 		// Check if we are loading in noConflict
 		if ($noConflict)
 		{
-			JHtml::_('script', 'media/com_biblestudy/jui/js/jquery-noconflict.js', false, true, false, false, false);
+			JHtml::_('script', 'media/com_biblestudy/jui/js/jquery-noconflict.js', false, false, false, false, $debug);
 		}
 
 		self::$loaded[__METHOD__] = true;
@@ -71,8 +71,8 @@ abstract class JHtmlJquery
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery UI is included for easier debugging.
 	 *
-	 * @param   array $components  The jQuery UI components to load [optional]
-	 * @param   mixed $debug       Is debugging mode on? [optional]
+	 * @param   array $components The jQuery UI components to load [optional]
+	 * @param   mixed $debug      Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -99,7 +99,7 @@ abstract class JHtmlJquery
 			// Only attempt to load the component if it's supported in core and hasn't already been loaded
 			if (in_array($component, $supported) && empty(self::$loaded[__METHOD__][$component]))
 			{
-				JHtml::_('script', 'jui/jquery.ui.' . $component . '.min.js', false, true, false, false, $debug);
+				JHtml::_('script', 'media/com_biblestudy/jui/jquery.ui.' . $component . '.min.js', false, false, false, false, $debug);
 				self::$loaded[__METHOD__][$component] = true;
 			}
 		}

@@ -23,4 +23,5 @@ DROP TABLE IF EXISTS `#__bsms_studies`
 , `#__bsms_timeset`
 , `#__bsms_styles`
 , `#__bsms_install`
+, `#__bsms_schemaVersion`
 , `#__bsms_update`;
