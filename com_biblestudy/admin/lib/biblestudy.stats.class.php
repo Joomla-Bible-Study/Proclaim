@@ -404,18 +404,21 @@ class JbStats
 			$db->setQuery($query);
 			$hits = $db->loadObject();
 
-			if ($format < 1)
+			if ($hits)
 			{
-				$total = $result->added + $hits->hits;
+				if ($format < 1)
+				{
+					$total = $result->added + $hits->hits;
+				}
+				else
+				{
+					$total = $result->added;
+				}
+				$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
+					$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
+				$final2  = array('total' => $total, 'link' => $link);
+				$final[] = $final2;
 			}
-			else
-			{
-				$total = $result->added;
-			}
-			$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
-				$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
-			$final2  = array('total' => $total, 'link' => $link);
-			$final[] = $final2;
 		}
 		rsort($final);
 		array_splice($final, 5);
