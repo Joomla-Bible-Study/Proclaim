@@ -452,8 +452,16 @@ class JBSMPodcast
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
+//go through each and remove the -1 strings and retest
+        $epis = array();
+        foreach ($episodes as $e)
+        {
+            $e->podcast_id = str_replace('-1','',$e->podcast_id);
+            if (substr_count($e->podcast_id,$id)){$epis[]= $e;}
+        }
 
-		return $episodes;
+        return $epis;
+		
 	}
 
 	/**
