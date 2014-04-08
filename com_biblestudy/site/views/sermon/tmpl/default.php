@@ -16,9 +16,9 @@ defined('_JEXEC') or die;
 	{
 		echo $this->loadTemplate('custom');
 	}
-	elseif ($this->params->get('sermontemplate'))
+	elseif ($this->item->params->get('sermontemplate'))
 	{
-		echo $this->loadTemplate($this->params->get('sermontemplate'));
+		echo $this->loadTemplate($this->item->params->get('sermontemplate'));
 	}
 	else
 	{
