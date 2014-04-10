@@ -67,7 +67,7 @@ class JBSMParams
 	public static function getTemplateparams()
 	{
 		$db = JFactory::getDbo();
-		$pk = JFactory::getApplication()->input->getInt('t', '1');
+		$pk = JFactory::getApplication()->input->getInt('t', 1);
 
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -82,9 +82,10 @@ class JBSMParams
 			$registry = new JRegistry;
 			$registry->loadString($template->params);
 			$template->params = $registry;
+			return $template;
 		}
 
-		return $template;
+		return false;
 	}
 
 }
