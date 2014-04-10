@@ -139,6 +139,10 @@ if ($params->get('useexpert_module') > 0)
 {
 	$layout = 'default_custom';
 }
+elseif ($params->get('moduletemplate'))
+{
+	$layout = 'default_'.$params->get('moduletemplate');
+}
 else
 {
 	$layout = 'default_main';
