@@ -781,6 +781,10 @@ class JBSMElements
 			$t        = $input->get('t', 1, 'int');
 			$template = JBSMParams::getTemplateparams();
 		}
+		else
+		{
+			$t = (int) $template->id;
+		}
 
 		if (!$template->text || !substr_count($template->text, '/'))
 		{
@@ -804,7 +808,7 @@ class JBSMElements
 			$height    = $textimage->height;
 			$width     = $textimage->width;
 		}
-		$t        = $input->get('t', 1, 'int');
+
 		$link         = JRoute::_('index.php?option=com_biblestudy&view=sermon' . '&id=' . $row->id . '&t=' . $t) . JHTML::_('behavior.tooltip');
 		$details_text = $params->get('details_text');
 

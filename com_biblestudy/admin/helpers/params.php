@@ -62,7 +62,7 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return object Return active template info
+	 * @return TableTemplate Return active template info
 	 */
 	public static function getTemplateparams()
 	{
