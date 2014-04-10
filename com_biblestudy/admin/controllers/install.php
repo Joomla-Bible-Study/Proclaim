@@ -45,7 +45,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		$fix_assets = $asset->fixAssets();
 		/** @var BibleStudyModelInstall $modale */
 		$modale     = $this->getModel('Install', 'BibleStudyModel');
-		$modale->cleanCache();
+		$modale->subcleanCache();
 		$input      = new JInput;
 		$input->set('messages', $fix_assets);
 

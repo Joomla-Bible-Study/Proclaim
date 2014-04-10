@@ -28,6 +28,16 @@ class BibleStudyModelInstall extends JModelLegacy
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
+	 *  Clean Cache from Controller
+	 *
+	 * @return void
+	 */
+	public function subcleanCache()
+	{
+		$this->cleanCache();
+	}
+
+	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
