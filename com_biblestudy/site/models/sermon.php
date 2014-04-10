@@ -99,6 +99,8 @@ class BiblestudyModelSermon extends JModelItem
 			$this->setState('filter.published', 1);
 			$this->setState('filter.archived', 2);
 		}
+
+		parent::populateState();
 	}
 
 	/**
@@ -181,13 +183,14 @@ class BiblestudyModelSermon extends JModelItem
 			$registry = new JRegistry;
 			$registry->loadString($data->params);
 			$data->params = $registry;
-			$template     = JBSMParams::getTemplateparams();
 
-			$data->params->merge($template->params);
-			$mparams = clone $this->getState('params');
-			$mj = new JRegistry;
-			$mj->loadString($mparams);
-            		$data->params->merge($mj);
+			$template     = clone JBSMParams::getTemplateparams();
+			$template->params->merge($data->params);
+			$data->params = $template->params;
+
+			$params = clone $this->getState('params');
+			$params->merge($data->params);
+			$data->params = $params;
 
 			$a_params           = JBSMParams::getAdmin();
 			$data->admin_params = $a_params->params;
