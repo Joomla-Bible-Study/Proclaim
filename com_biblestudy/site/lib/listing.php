@@ -2591,7 +2591,7 @@ class JBSMListing
 		else
 		{
 			// This will come from $admin_params
-			$sharetitle = 'Share This';
+			$sharetitle = $params->get('sharelabel');
 
 			// Get the information from the database on what social networking sites to use
 			$db    = JFactory::getDBO();
@@ -2609,10 +2609,9 @@ class JBSMListing
 			}
 
 			// Begin to form the table
-			$shareit = '<div class="container-fluid"><div class="row-fluid">
-						<div class="span3 pull-right">
-						<th id="bsmssharetitle" colspan=' . $sharerows . '>' . $sharetitle . '</th></tr></thead>
-						<tbody><tr class="bsmsshareiconrow">';
+			$shareit = '
+						<div class="row-fluid bsmsshareiconrow">'
+						 . $sharetitle;
 
 			foreach ($rows as $sharerow)
 			{
@@ -2745,16 +2744,16 @@ class JBSMListing
 						$sharelink          = $sharelink . ' ' . $linkextract;
 					}
 				}
-				$shareit .= '<td id="bsmsshareicons">
+				$shareit .= '
 							<a href="' . $mainlink . $share_params->get('item1prefix') . $sharelink . '" target="_blank">
 							<img src="' . JURI::base() . $image . '" alt="' . $share_params->get('alttext') . '" title="'
 					. $share_params->get('alttext') . '" width="' . $width . '" height="' . $height . '" border="0">
-							</a></td>';
+							</a>';
 
 			} // End of foreach
 
 		} // End of else $sharetype
-		$shareit .= '</tr></tbody></table></div>';
+		$shareit .= '</div>';
 
 		return $shareit;
 	}
