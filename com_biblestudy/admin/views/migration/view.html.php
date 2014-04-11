@@ -69,7 +69,7 @@ class BiblestudyViewMigration extends JViewLegacy
 			{
 				$count = ($this->doneVersions / $this->totalVersions) * 100;
 				$percent = (int) number_format($count, 0);
-				$percent = ($percent + 1) * 10;
+				$percent = ($percent + 1) * 5;
 			}
 
 			$more = true;

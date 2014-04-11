@@ -1380,8 +1380,14 @@ class MigrationUpgrade
 			return false;
 		}
 
-		$query = 'DROP TABLE IF EXISTS `#__bsms_schemaVersion`';
-		$query .= "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+		$query = 'DROP TABLE IF EXISTS `#__bsms_schemaVersion`;';
+
+		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		{
+			return false;
+		}
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
 								(`id` INTEGER NOT NULL AUTO_INCREMENT,
 								`version` VARCHAR(20) NOT NULL,
 								`versiondate` DATE NOT NULL,

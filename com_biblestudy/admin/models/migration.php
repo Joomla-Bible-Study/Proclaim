@@ -289,7 +289,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			// Just finished
 			$this->doneVersions = 90;
 			$this->resetStack();
-			$this->running .= ', ' . 'Finishing UP';
+			$this->running .= 'Finished';
 			$this->finish();
 
 			return false;
@@ -613,9 +613,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			return true;
 		}
-		JFactory::getApplication()->enqueueMessage('Version did not update ' . $version, 'error');
-
-		die($version);
+		throw new Exception('Version did not update ' . $version, 'error');
 	}
 
 	/**
