@@ -15,6 +15,8 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Site
  * @since    8.0.0
+ *
+ * @deprecated 8.0.6
  */
 class JBSMElements
 {
@@ -36,6 +38,8 @@ class JBSMElements
 	 *
 	 * @todo I do not believe this file is needed anymore at all.
 	 * @return object
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getElementid($rowid, $row, $params, $admin_params, $template)
 	{
@@ -391,6 +395,8 @@ class JBSMElements
 	 * @param   string $scripturerow  Scripture Row
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getScripture($params, $row, $esv, $scripturerow)
 	{
@@ -583,6 +589,8 @@ class JBSMElements
 	 * @param   object $row     Row info
 	 *
 	 * @return  null|string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getDuration($params, $row)
 	{
@@ -651,6 +659,8 @@ class JBSMElements
 	 * @param   string $studydate  Study Date
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getstudyDate($params, $studydate)
 	{
@@ -724,6 +734,8 @@ class JBSMElements
 	 * @param   string $datein  Study Date
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated 8.0.6
 	 */
 	function MyCheckDate($datein)
 	{
@@ -743,6 +755,8 @@ class JBSMElements
 	 * @param   string $file_size  Size in bytes
 	 *
 	 * @return null|string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getFilesize($file_size)
 	{
@@ -790,6 +804,8 @@ class JBSMElements
 	 * @param   int       $template      Template ID
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getTextlink($params, $row, $textorpdf, $admin_params, $template)
 	{
@@ -857,6 +873,8 @@ class JBSMElements
 	 * @param   JRegistry  $admin_params  Admin Info
 	 *
 	 * @return boolean|null|string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getMediatable($params, $row, $admin_params)
 	{
@@ -1016,6 +1034,8 @@ class JBSMElements
 	 * @param   int    $filesize  File Size of Doc
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getDocman($media, $width, $height, $src, $duration, $filesize)
 	{
@@ -1036,6 +1056,8 @@ class JBSMElements
 	 * @param   string $src     URL of image
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getArticle($media, $width, $height, $src)
 	{
@@ -1056,6 +1078,8 @@ class JBSMElements
 	 * @param   object $params  Item Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getVirtuemart($media, $width, $height, $src, $params)
 	{
@@ -1074,6 +1098,8 @@ class JBSMElements
 	 * @param   int $study_id  ID
 	 *
 	 * @return object
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getMediaRows($study_id)
 	{
@@ -1108,6 +1134,8 @@ class JBSMElements
 	 * @return string
 	 *
 	 *  Fixme look like this has missing info for the width and height. TOM
+	 *
+	 * @deprecated 8.0.6
 	 */
 	private function getStore($params, $row)
 	{
@@ -1207,6 +1235,8 @@ class JBSMElements
 	 * @return string
 	 *
 	 * @FIXME look like the last where is not right, TOM
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function getFilepath($id3, $idfield, $mime)
 	{
@@ -1252,6 +1282,8 @@ class JBSMElements
 	 * @return string
 	 *
 	 * @since 8.0.0
+	 *
+	 * @deprecated 8.0.6
 	 */
 	public function body_only($html)
 	{
