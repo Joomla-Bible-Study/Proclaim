@@ -82,10 +82,7 @@ div.current .panelform {
     color: #fff;
     outline: 1px solid #ddd;
     border-top: 1px solid #fff;
-    padding-top: 10px;
-    padding-bottom: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
+	padding: 10px 10px 40px 10px;
     background: #f0f0f0;
 }
 
@@ -94,10 +91,7 @@ div.current .panelform {
     width: 200px;
     outline: 1px solid #ddd;
     border-top: 1px solid #fff;
-    padding-top: 10px;
-    padding-bottom: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
+	padding: 10px 10px 40px 10px;
     background: #f0f088;
 }
 

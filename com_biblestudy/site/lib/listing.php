@@ -827,6 +827,7 @@ class JBSMListing
 	{
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
+		/** @var string $data */
 		$data  = '';
 
 		// Match the data in $item to a row/col in $row->name
@@ -2863,7 +2864,7 @@ class JBSMListing
 			->where('study_id = ' . $db->q($id3))
 			->where('#__bsms_mediafiles.published = 1');
 		$db->setQuery($query);
-		$db->query();
+		$db->execut();
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
