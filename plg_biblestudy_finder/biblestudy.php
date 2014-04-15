@@ -11,8 +11,6 @@
  * */
 defined('JPATH_BASE') or die;
 
-jimport('joomla.application.component.helper');
-
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
@@ -23,7 +21,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */
-class plgFinderBiblestudy extends FinderIndexerAdapter
+class PlgFinderBiblestudy extends FinderIndexerAdapter
 {
 
 	/**
@@ -73,6 +71,14 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * @since 7.1.0
 	 */
 	protected $state_field = 'published';
+
+	/**
+	 * Load the language file on instantiation.
+	 *
+	 * @var    boolean
+	 * @since  3.1
+	 */
+	protected $autoloadLanguage = true;
 
 	/**
 	 * Constructor
@@ -192,7 +198,6 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		if ($context == 'com_biblestudy.message')
 		{
 			// Query the database for the old access level if the item isn't new
-
 			if (!$isNew)
 			{
 				$this->checkItemAccess($row);
@@ -222,6 +227,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		{
 			$this->itemStateChange($pks, $value);
 		}
+
 		// Handle when the plugin is disabled
 		if ($context == 'com_plugins.plugin' && $value === 0)
 		{
@@ -251,9 +257,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		// Initialize the item parameters.
 		$registry = new JRegistry;
 		$registry->loadString($item->params);
-		$item->params = JComponentHelper::getParams('com_biblestudy', true);
-		$item->params->merge($registry);
-
+		$item->params = $registry;
 
 		// Trigger the onContentPrepare event.
 		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
@@ -261,7 +265,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->id);
+		$item->route = JBSMHelperRoute::getArticleRoute($item->slug);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -296,7 +300,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		if (BIBLESTUDY_CHECKREL)
+		if (version_compare(JVERSION, '3.0', 'ge'))
 		{
 			$this->indexer->index($item);
 		}
@@ -318,6 +322,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		// Load dependent classes.
 		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
 
+		// This is a hack to get around the lack of a route helper.
+		FinderIndexerHelper::getContentPath('index.php?option=com_biblestudy');
+
 		return true;
 	}
 
@@ -325,20 +332,25 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 * Method to get a SQL query to load the published and access states for
 	 * an article and category.
 	 *
-	 * @param string $sql
-	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
 	 * @since   2.5
 	 */
-	protected function getStateQuery($sql = null)
+	protected function getStateQuery()
 	{
-		$db  = JFactory::getDBO();
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
-		$sql->select('a.id, a.published AS state, a.access');
-		$sql->from('#__bsms_studies AS a');
+		$query = $this->db->getQuery(true);
 
-		return $sql;
+		// Item ID
+		$query->select('a.id');
+
+		// Item and category published state
+		$query->select('a.' . $this->state_field . ' AS state');
+
+		// Item and category access levels
+		$query->select('a.access')
+			->from($this->table . ' AS a');
+
+		return $query;
 	}
 
 	/**
@@ -364,17 +376,17 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
-		$case_when_item_alias .= $sql->charLength('a.alias');
+		$case_when_item_alias .= $sql->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
 		$a_id = $sql->castAsChar('a.id');
 		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when_item_alias .= ' ELSE ';
-		$case_when_item_alias .= $a_id . ' END as studytitle';
+		$case_when_item_alias .= $a_id . ' END as slug';
 		$sql->select($case_when_item_alias);
 
-		$sql->select('u.teachername AS author');
-		$sql->from('#__bsms_studies AS a');
-		$sql->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
+		$sql->select('u.teachername AS author')
+				->from('#__bsms_studies AS a')
+				->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
 
 		return $sql;
 	}

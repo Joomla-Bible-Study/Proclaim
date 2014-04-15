@@ -55,7 +55,7 @@ class BiblestudyController extends JControllerLegacy
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 
-		$view   = $app->input->getCmd('view', 'cpanel');
+		$view   = $app->input->getCmd('view');
 		$layout = $app->input->getCmd('layout', 'default');
 		$id     = $app->input->getInt('id');
 
@@ -66,20 +66,19 @@ class BiblestudyController extends JControllerLegacy
 
 		$jbsstate = JBSMDbHelper::getinstallstate();
 
-		if ($jbsstate)
+		if ($jbsstate && $view != 'install')
 		{
 			$jbsname = $jbsstate->get('jbsname');
 			$jbstype = $jbsstate->get('jbstype');
 			JBSMDbHelper::setinstallstate();
 			$this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
 		}
-		$type = $app->input->getWord('view');
 
-		if (!$type)
+		if ($view == 'install')
 		{
-			$app->input->set('view ', 'cpanel');
+			$cachable = false;
 		}
-		if ($type == 'admin')
+		if ($view == 'admin')
 		{
 			$tool = $app->input->get('tooltype', '', 'post');
 
@@ -100,10 +99,6 @@ class BiblestudyController extends JControllerLegacy
 			}
 		}
 
-		if ($app->input->getCmd('view') == 'study')
-		{
-			$model = $this->getModel('study');
-		}
 		$fixassets = $app->input->getWord('task ', ' ', 'get');
 
 		if ($fixassets == 'fixassetid')
@@ -120,7 +115,7 @@ class BiblestudyController extends JControllerLegacy
 			}
 		}
 
-		parent::display();
+		parent::display($cachable, $urlparams);
 
 		return $this;
 	}
