@@ -71,18 +71,18 @@ function writeXML()
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
 	<title>' . $podinfo->title . '</title>
-	<link>http://' . $podinfo->website . '</link>
+	<link>//' . $podinfo->website . '</link>
 	<description>' . $description . '</description>
 	<itunes:summary>' . $description . '</itunes:summary>
 	<itunes:subtitle>' . $podinfo->title . '</itunes:subtitle>
 	<image>
-		<link>http://' . $podinfo->website . '</link>
-		<url>http://' . $podinfo->image . '</url>
+		<link>//' . $podinfo->website . '</link>
+		<url>//' . $podinfo->image . '</url>
 		<title>' . $podinfo->title . '</title>
 		<height>' . $podinfo->imageh . '</height>
 		<width>' . $podinfo->imagew . '</width>
 	</image>
-	<itunes:image href="http://' . $podinfo->podcastimage . '" />
+	<itunes:image href="//' . $podinfo->podcastimage . '" />
 	<category>Religion &amp; Spirituality</category>
 	<itunes:category text="Religion &amp; Spirituality">
 		<itunes:category text="Christianity" />
@@ -101,7 +101,7 @@ function writeXML()
 	<itunes:author>' . $podinfo->editor_name . '</itunes:author>
 	<itunes:explicit>no</itunes:explicit>
 	<ttl>1</ttl>
-	<atom:link href="http://' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
+	<atom:link href="//' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
 
 			// Now let's get the podcast episodes
 			$limit = $podinfo->podcastlimit;
@@ -247,9 +247,9 @@ function writeXML()
 					$episodedetailtemp = '
 	<item>
 		<title>' . $title . '</title>
-		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+		<link>//' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
 						. $episode->sid . $detailstemplateid . '</link>
-		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
+		<comments>//' . $podinfo->website . '/index.php?option=com_biblestudy&view=sermon&id='
 						. $episode->sid . $detailstemplateid . '</comments>
 		<itunes:author>' . $episode->teachername . '</itunes:author>
 		<dc:creator>' . $episode->teachername . '</dc:creator>
@@ -266,26 +266,26 @@ function writeXML()
 					if ($episode->article_id > 1)
 					{
 						$episodedetailtemp .=
-							'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id='
+							'<enclosure url="//' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id='
 							. $episode->article_id . '" length="' . $episode->size . '" type="'
 							. $episode->mimetype . '" />
-			<guid>http://' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id=' . $episode->article_id . '</guid>';
+			<guid>//' . $episode->server_path . '/index.php?option=com_content&amp;view=article&amp;id=' . $episode->article_id . '</guid>';
 					}
 					if ($episode->docMan_id > 1)
 					{
 						$episodedetailtemp .=
-							'<enclosure url="http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid='
+							'<enclosure url="//' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid='
 							. $episode->docMan_id . '" length="' . $episode->size . '" type="'
 							. $episode->mimetype . '" />
-			<guid>http://' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $episode->docMan_id . '</guid>';
+			<guid>//' . $episode->server_path . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $episode->docMan_id . '</guid>';
 					}
 					else
 					{
 						$episodedetailtemp .=
-							'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename)
+							'<enclosure url="//' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename)
 							. '" length="' . $episode->size . '" type="'
 							. $episode->mimetype . '" />
-			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</guid>';
+			<guid>//' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</guid>';
 					}
 					$episodedetailtemp .= '
 		<itunes:explicit>no</itunes:explicit>

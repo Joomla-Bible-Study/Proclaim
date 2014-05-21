@@ -172,7 +172,7 @@ class JBSMMediaHelper
 			}
 			else
 			{
-				$out .= '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename .
+				$out .= '<a href="//joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename .
 					'&amp;size=' . $media->size . '">';
 			}
 

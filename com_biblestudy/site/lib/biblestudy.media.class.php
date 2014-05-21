@@ -119,7 +119,7 @@ class jbsMedia
 				}
 				else
 				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+					$downloadlink = '<a href="//joomlabiblestudy.org/router.php?file=' .
 						$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
 				}
 
@@ -522,7 +522,7 @@ class jbsMedia
 		}
 		if (!substr_count($path, '://'))
 		{
-			$protocol = $params->get('protocol', 'http://');
+			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $path;
 		}
 		switch ($player->player)
@@ -562,7 +562,7 @@ class jbsMedia
 				{
 					case 2: // Inline
 						$base = JUri::base();
-						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
+						$playercode = "<div id='placeholder'><a href='//www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
     jwplayer('placeholder').setup({
@@ -701,7 +701,7 @@ class jbsMedia
 
 		if ($isonlydash)
 		{
-			$mediacode = substr_replace($mediacode, 'http://' . $media->spath . $media->fpath . $media->filename, $dashposition, 1);
+			$mediacode = substr_replace($mediacode, '//' . $media->spath . $media->fpath . $media->filename, $dashposition, 1);
 		}
 		elseif ($dashposition)
 		{

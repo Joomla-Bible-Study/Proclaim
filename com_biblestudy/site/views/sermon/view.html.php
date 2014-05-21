@@ -209,8 +209,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		$template      = $this->get('template');
 
 		$document = JFactory::getDocument();
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript('//www.google.com/recaptcha/api/js/recaptcha_ajax.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');

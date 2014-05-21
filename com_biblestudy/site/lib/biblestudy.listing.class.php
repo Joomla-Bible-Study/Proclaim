@@ -1176,7 +1176,7 @@ class JBSMListing extends JBSMElements
 						<img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/>
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
-						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username="></script>
+						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#username="></script>
 						<!-- AddThis Button END --></td>';
 		}
 		else
@@ -1326,7 +1326,7 @@ class JBSMListing extends JBSMElements
 
 					if ($sharelength > $share_params->get('totalcharacters'))
 					{
-						$linkstartposition  = strpos($sharelink, 'http://', 0);
+						$linkstartposition  = strpos($sharelink, '//', 0);
 						$linkendposition    = strpos($sharelink, ' ', $linkstartposition);
 						$linkextract        = substr($sharelink, $linkstartposition, $linkendposition);
 						$linklength         = strlen($linkextract);
@@ -1365,7 +1365,7 @@ class JBSMListing extends JBSMElements
 	{
 		// Create the URL
 
-		$bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
+		$bitly = '//api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
 			. $login . '&apiKey=' . $appkey . '&format=' . $format;
 
 		// Get the url
@@ -1381,7 +1381,7 @@ class JBSMListing extends JBSMElements
 		else
 		{ // Xml
 			$xml   = simplexml_load_string($response);
-			$short = 'http://bit.ly/' . $xml->results->nodeKeyVal->hash;
+			$short = '//bit.ly/' . $xml->results->nodeKeyVal->hash;
 		}
 
 		return $short;
@@ -1407,7 +1407,7 @@ class JBSMListing extends JBSMElements
 			$response = "" . $scripture . " (ESV)";
 			$passage  = urlencode($scripture);
 			$options  = "include-passage-references=false";
-			$url      = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
+			$url      = "//www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
 
 			// This tests to see if the curl functions are there. It will return false if curl not installed
 			$p = (get_extension_funcs("curl"));

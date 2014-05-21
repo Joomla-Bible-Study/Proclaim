@@ -78,12 +78,12 @@ class JBSMPodcast
                  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
                 <channel>
                 	<title>' . htmlspecialchars($podinfo->title) . '</title>
-                	<link>http://' . $podinfo->website . '</link>
+                	<link>//' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
                 	<itunes:summary>' . $description . '</itunes:summary>
                 	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
                 	<image>
-                		<link>http://' . $podinfo->website . '</link>
+                		<link>//' . $podinfo->website . '</link>
                 		<url>' . JURI::root() . $podinfo->image . '</url>
                 		<title>' . htmlspecialchars($podinfo->title) . '</title>
                 		<height>' . $podinfo->imageh . '</height>
@@ -109,7 +109,7 @@ class JBSMPodcast
                 	<itunes:explicit>no</itunes:explicit>
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
-                	<atom:link href="http://' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
+                	<atom:link href="//' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
 
 					// Now let's get the podcast episodes
 					$limit = $podinfo->podcastlimit;
@@ -309,9 +309,9 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
-                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<link>//' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
-                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<comments>//' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . htmlspecialchars($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . htmlspecialchars($episode->teachername) . '</dc:creator>
@@ -330,35 +330,35 @@ class JBSMPodcast
 						if ($episode->article_id > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="//' . $episode->server_path .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->article_id . '" length="' . $episode->size . '" type="' .
 								$episode->mimetype . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>//' . $episode->server_path .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->article_id . '</guid>';
 						}
 						if ($episode->docMan_id > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="//' . $episode->server_path .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->docMan_id . '" length="' . $episode->size . '" type="' .
 								$episode->mimetype . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>//' . $episode->server_path .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->docMan_id . '</guid>';
 						}
 						else
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(
+								'<enclosure url="//' . $episode->server_path . $episode->folderpath . str_replace(
 									' ',
 									"%20",
 									$episode->filename
 								) . '" length="' . $episode->size . '" type="'
 								. $episode->mimetype . '" />
-                        			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(
+                        			<guid>//' . $episode->server_path . $episode->folderpath . str_replace(
 									' ',
 									"%20",
 									$episode->filename

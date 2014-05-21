@@ -32,7 +32,7 @@ if ($this->params->get('player') == 1 || $this->player == 1)
 
 <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $this->playerwidth + 1; ?>px;">
     <div id='placeholder'>
-        <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>
+        <a href='//www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>
     </div>
 </div>
 <script language="javascript" type="text/javascript">

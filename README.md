@@ -54,16 +54,16 @@ Please **make sure to make specific contributions** when submitting pull request
 
 
 
-###Translation 
+###Translation
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
 
 ###Testing
 For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
-[fork]: http://help.github.com/fork-a-repo/
-[branch]: http://learn.github.com/p/branching.html
-[pr]: http://help.github.com/send-pull-requests/
-[phing]: http://www.phing.info/
+[fork]: //help.github.com/fork-a-repo/
+[branch]: //learn.github.com/p/branching.html
+[pr]: //help.github.com/send-pull-requests/
+[phing]: //www.phing.info/
 
 
 Reporting Issues and requesting features

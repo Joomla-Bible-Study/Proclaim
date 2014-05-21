@@ -52,7 +52,7 @@ class Dump_File
 		$registry->loadString($template->params);
 		$params = $registry;
 
-		$protocol = $params->get('protocol', 'http://');
+		$protocol = $params->get('protocol', '//');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
 			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'

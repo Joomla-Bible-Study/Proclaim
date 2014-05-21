@@ -556,7 +556,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
-		$this->document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$this->document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 		// Errors when using local swfobject.js file.  IE 6 doesn't work
 		// Import Scripts

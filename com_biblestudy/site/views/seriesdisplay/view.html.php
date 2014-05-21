@@ -97,7 +97,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
 		$document  = JFactory::getDocument();
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 		$pathway       = $mainframe->getPathWay();

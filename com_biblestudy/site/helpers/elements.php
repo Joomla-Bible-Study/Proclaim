@@ -794,7 +794,7 @@ class JBSMElements
 			$height    = $textimage->height;
 			$width     = $textimage->width;
 		}
-		elseif (substr_count($template->text, 'http://'))
+		elseif (substr_count($template->text, '//'))
 		{
 			$src    = $template->text;
 			$height = '24';
@@ -1061,7 +1061,7 @@ class JBSMElements
 			// Check url for "http://" prefix, and add it if it doesn't exist
 			if (!preg_match('@^(?:http://)?([^/]+)@i', $filepath))
 			{
-				$filepath = 'http://' . $filepath;
+				$filepath = '//' . $filepath;
 			}
 		}
 		elseif (isset($filepathresults->docMan_id))

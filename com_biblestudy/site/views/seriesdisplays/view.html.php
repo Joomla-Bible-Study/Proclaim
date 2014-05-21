@@ -116,7 +116,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jwplayer.js');
 
 		// Import Stylesheets

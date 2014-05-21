@@ -763,7 +763,7 @@ class JBSPIconvert
 			{
 				case 4:
 					// Bliptv
-					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
+					$mediacode   = '<embed src="//blip.tv/play/' . $pi->video_link
 						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
 						. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
@@ -816,7 +816,7 @@ class JBSPIconvert
 
 				case 2:
 					// Vimeo
-					$mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
+					$mediacode   = '<iframe src="//player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -827,7 +827,7 @@ class JBSPIconvert
 
 				case 3:
 					// Youtube
-					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
+					$mediacode   = '<iframe width="500" height="500" src="//www.youtube.com/embed/' . $pi->video_link
 						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';

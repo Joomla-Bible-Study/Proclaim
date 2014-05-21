@@ -77,7 +77,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 		{
 			fputs($fp, "HEAD " . $url . " HTTP/1.1\r\n");
 			fputs($fp, "HOST: " . $host . "\r\n");
-			fputs($fp, "User-Agent: http://www.example.com/my_application\r\n");
+			fputs($fp, "User-Agent: //www.example.com/my_application\r\n");
 			fputs($fp, "Connection: close\r\n\r\n");
 			$headers = "";
 

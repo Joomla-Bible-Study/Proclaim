@@ -282,7 +282,7 @@ class JBSPagebuilder
 				}
 				else
 				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+					$downloadlink = '<a href="//joomlabiblestudy.org/router.php?file=' .
 						$media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
 				}
 				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .

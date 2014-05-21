@@ -104,7 +104,7 @@
 
 	<!-- Build distributable package -->
 	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">
-		
+
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
 		<copy todir="${basedir}/build/packages/_tmp/packages">
@@ -159,7 +159,7 @@
 	<!-- Setup config file for running the Selenium Webdriver tests -->
 	<target name="test.setup">
     	<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
-    	<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
+    	<propertyprompt propertyName="host" defaultValue="//localhost" promptText="Enter the sever host"/>
     	<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
     	<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
     	<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
@@ -229,7 +229,7 @@
         <symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>
 
 		<echo message="Linking component to Joomla!"/>
-		
+
     	<!-- Create symbolic links for component in the Joomla directory -->
         <symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
         <symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
@@ -256,7 +256,7 @@
             <!--<fileset dir="${src.test}" includes="**"/>-->
         <!--</copy>-->
 	</target>
-	
+
 	<!-- Clean up symbolic links from the development state -->
     <target name="dev.clean">
     	<echo message="Cleaning up development state"/>
@@ -297,7 +297,7 @@
                 <echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
                 <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
                 <!-- Switch to the Joomla version that we want to test on -->
-                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/> 
+                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</then>
             <else>
            		<echo message="Joomla ${joomla.version} is already staged" />
