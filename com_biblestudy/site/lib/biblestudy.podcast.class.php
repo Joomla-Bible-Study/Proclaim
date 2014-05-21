@@ -65,7 +65,7 @@ class JBSMPodcast
 				if ($checkresult)
 				{
 					$description       = str_replace(" & ", " and ", $podinfo->description);
-					$description       = html_entity_decode($description);
+					$description       = htmlspecialchars($description);
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -77,15 +77,15 @@ class JBSMPodcast
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
                 <channel>
-                	<title>' . $podinfo->title . '</title>
+                	<title>' . htmlspecialchars($podinfo->title) . '</title>
                 	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
                 	<itunes:summary>' . $description . '</itunes:summary>
-                	<itunes:subtitle>' . $podinfo->title . '</itunes:subtitle>
+                	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
                 		<url>' . JURI::root() . $podinfo->image . '</url>
-                		<title>' . $podinfo->title . '</title>
+                		<title>' . htmlspecialchars($podinfo->title) . '</title>
                 		<height>' . $podinfo->imageh . '</height>
                 		<width>' . $podinfo->imagew . '</width>
                 	</image>
@@ -99,13 +99,13 @@ class JBSMPodcast
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
                 	<generator>Joomla Bible Study</generator>
-                	<managingEditor>' . $podinfo->editor_email . ' (' . $podinfo->editor_name . ')</managingEditor>
-                	<webMaster>' . $podinfo->editor_email . ' (' . $podinfo->editor_name . ')</webMaster>
+                	<managingEditor>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</managingEditor>
+                	<webMaster>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</webMaster>
                 	<itunes:owner>
-                		<itunes:name>' . $podinfo->editor_name . '</itunes:name>
+                		<itunes:name>' . htmlspecialchars($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
-                	<itunes:author>' . $podinfo->editor_name . '</itunes:author>
+                	<itunes:author>' . htmlspecialchars($podinfo->editor_name) . '</itunes:author>
                 	<itunes:explicit>no</itunes:explicit>
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
@@ -313,12 +313,12 @@ class JBSMPodcast
 							. $episode->sid . $detailstemplateid . '</link>
                         		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
-                        		<itunes:author>' . $episode->teachername . '</itunes:author>
-                        		<dc:creator>' . $episode->teachername . '</dc:creator>
+                        		<itunes:author>' . htmlspecialchars($episode->teachername) . '</itunes:author>
+                        		<dc:creator>' . htmlspecialchars($episode->teachername) . '</dc:creator>
                         		<description>' . $description . '</description>
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
-                        		<itunes:subtitle>' . $subtitle . '</itunes:subtitle>
+                        		<itunes:subtitle>' . htmlspecialchars($subtitle) . '</itunes:subtitle>
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(
@@ -461,7 +461,7 @@ class JBSMPodcast
         }
 
         return $epis;
-		
+
 	}
 
 	/**
