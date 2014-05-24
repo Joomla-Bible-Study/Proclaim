@@ -76,7 +76,7 @@ class JBSMPodcast
 				if ($checkresult)
 				{
 					$description       = str_replace(" & ", " and ", $podinfo->description);
-					$description       = htmlspecialchars($description, 'ENT_XML1');
+					$description       = htmlspecialchars($description);
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -91,8 +91,9 @@ class JBSMPodcast
                 	<title>' . htmlspecialchars($podinfo->title) . '</title>
                 	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
-                	<itunes:summary>' . $description . '</itunes:summary>
+                	<itunes:summary>' . strip_tags($description, '<a>') . '</itunes:summary>
                 	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
+                	<itunes:author>' . htmlspecialchars($podinfo->editor_name) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
                 		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
@@ -116,7 +117,6 @@ class JBSMPodcast
                 		<itunes:name>' . htmlspecialchars($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
-                	<itunes:author>' . htmlspecialchars($podinfo->editor_name) . '</itunes:author>
                 	<itunes:explicit>no</itunes:explicit>
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
@@ -152,15 +152,11 @@ class JBSMPodcast
 						$episodedate = date("r", strtotime($episode->createdate));
 						$hours       = $episode->media_hours;
 
-						if (!$hours)
+						if (!$hours || $hours < 1)
 						{
 							$hours = '00';
 						}
-						if ($hours < 1)
-						{
-							$hours = '00';
-						}
-						// If there is no length set, we default to 35 minuts
+						// If there is no length set, we default to 35 minuets
 						if (!$episode->media_minutes && !$episode->media_seconds)
 						{
 							$episode->media_minutes = 35;
@@ -174,7 +170,7 @@ class JBSMPodcast
 
 						if (!$episode->size)
 						{
-							$episode->size = '1024';
+							$episode->size = '30000000';
 						}
 						switch ($pod_title)
 						{
@@ -313,9 +309,9 @@ class JBSMPodcast
 								break;
 						}
 						$title       = str_replace(' & ', " and ", $title);
-						$title       = html_entity_decode($title);
+						$title       = htmlspecialchars($title);
 						$description = str_replace(' & ', " and ", $episode->studyintro);
-						$description = html_entity_decode($description);
+						$description = htmlspecialchars($description);
 
 						$episodedetailtemp = '
                         	   <item>
@@ -463,7 +459,7 @@ class JBSMPodcast
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
-//go through each and remove the -1 strings and retest
+		// Go through each and remove the -1 strings and retest
         $epis = array();
         foreach ($episodes as $e)
         {
@@ -485,7 +481,6 @@ class JBSMPodcast
 	 */
 	public function writeFile($file, $filecontent)
 	{
-
 		// Set FTP credentials, if given
 		$files[]        = $file;
 		$podcastresults = '';
@@ -523,6 +518,57 @@ class JBSMPodcast
 		}
 
 		return $podcastresults;
+	}
+
+	/**
+	 * Method to get file size
+	 *
+	 * @param   string $url URL
+	 *
+	 * @return  boolean
+	 */
+	protected function getRemoteFileSize($url)
+	{
+		$parsed = parse_url($url);
+		$host   = $parsed["host"];
+		$fp     = null;
+
+		if (function_exists('fsockopen'))
+		{
+			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
+		}
+		if (!$fp)
+		{
+			return false;
+		}
+		else
+		{
+			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
+			@fputs($fp, "HOST: $host\r\n");
+			@fputs($fp, "Connection: close\r\n\r\n");
+			$headers = "";
+
+			while (!@feof($fp))
+			{
+				$headers .= @fgets($fp, 128);
+			}
+		}
+		@fclose($fp);
+		$return      = false;
+		$arr_headers = explode("\n", $headers);
+
+		foreach ($arr_headers as $header)
+		{
+			$s = "Content-Length: ";
+
+			if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
+			{
+				$return = trim(substr($header, strlen($s)));
+				break;
+			}
+		}
+
+		return $return;
 	}
 
 }
