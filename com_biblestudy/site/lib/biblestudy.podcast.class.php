@@ -38,6 +38,7 @@ class JBSMPodcast
 		$admin_params = JBSMParams::getAdmin();
 		$msg          = array();
 		$db           = JFactory::getDBO();
+
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
@@ -56,6 +57,16 @@ class JBSMPodcast
 		{
 			foreach ($podids AS $podinfo)
 			{
+				// Work Around all language
+				if ($podinfo->language == '*')
+				{
+					$language = JFactory::getConfig()->get('language');
+				}
+				else
+				{
+					$language = $podinfo->language;
+				}
+
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
 				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
@@ -65,7 +76,7 @@ class JBSMPodcast
 				if ($checkresult)
 				{
 					$description       = str_replace(" & ", " and ", $podinfo->description);
-					$description       = htmlspecialchars($description);
+					$description       = htmlspecialchars($description, 'ENT_XML1');
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -78,23 +89,23 @@ class JBSMPodcast
                  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
                 <channel>
                 	<title>' . htmlspecialchars($podinfo->title) . '</title>
-                	<link>//' . $podinfo->website . '</link>
+                	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
                 	<itunes:summary>' . $description . '</itunes:summary>
                 	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
                 	<image>
-                		<link>//' . $podinfo->website . '</link>
-                		<url>' . JURI::root() . $podinfo->image . '</url>
+                		<link>http://' . $podinfo->website . '</link>
+                		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
                 		<title>' . htmlspecialchars($podinfo->title) . '</title>
                 		<height>' . $podinfo->imageh . '</height>
                 		<width>' . $podinfo->imagew . '</width>
                 	</image>
-                	<itunes:image href="' . JURI::root() . $podinfo->podcastimage . '" />
+                	<itunes:image href="http://' . $podinfo->website  . '/' . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
-                	<language>' . $podinfo->language . '</language>
+                	<language>' . $language . '</language>
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
@@ -109,7 +120,7 @@ class JBSMPodcast
                 	<itunes:explicit>no</itunes:explicit>
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
-                	<atom:link href="//' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
+                	<atom:link href="http://' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
 
 					// Now let's get the podcast episodes
 					$limit = $podinfo->podcastlimit;
@@ -309,17 +320,17 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
-                        		<link>//' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
-                        		<comments>//' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . htmlspecialchars($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . htmlspecialchars($episode->teachername) . '</dc:creator>
-                        		<description>' . $description . '</description>
-                        		<content:encoded>' . $description . '</content:encoded>
+                        		<description>' . htmlspecialchars($description) . '</description>
+                        		<content:encoded>' . htmlspecialchars($description) . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . htmlspecialchars($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary>' . $description . '</itunes:summary>
+                        		<itunes:summary>' . strip_tags($description, '<a>') . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(
 								"%02d",
@@ -329,36 +340,36 @@ class JBSMPodcast
 						// Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
 						if ($episode->article_id > 1)
 						{
-							$episodedetailtemp .=
-								'<enclosure url="//' . $episode->server_path .
+							$episodedetailtemp .= '
+								<enclosure url="http://' . $episode->server_path .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->article_id . '" length="' . $episode->size . '" type="' .
 								$episode->mimetype . '" />
-                        			<guid>//' . $episode->server_path .
+                        			<guid>http://' . $episode->server_path .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->article_id . '</guid>';
 						}
 						if ($episode->docMan_id > 1)
 						{
-							$episodedetailtemp .=
-								'<enclosure url="//' . $episode->server_path .
+							$episodedetailtemp .= '
+							<enclosure url="http://' . $episode->server_path .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->docMan_id . '" length="' . $episode->size . '" type="' .
 								$episode->mimetype . '" />
-                        			<guid>//' . $episode->server_path .
+                        			<guid>http://' . $episode->server_path .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->docMan_id . '</guid>';
 						}
 						else
 						{
-							$episodedetailtemp .=
-								'<enclosure url="//' . $episode->server_path . $episode->folderpath . str_replace(
+							$episodedetailtemp .= '
+							<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(
 									' ',
 									"%20",
 									$episode->filename
 								) . '" length="' . $episode->size . '" type="'
 								. $episode->mimetype . '" />
-                        			<guid>//' . $episode->server_path . $episode->folderpath . str_replace(
+                        			<guid>http://' . $episode->server_path . $episode->folderpath . str_replace(
 									' ',
 									"%20",
 									$episode->filename
