@@ -39,6 +39,7 @@ $row = $this->studydetails;
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 	<?php
+	// @todo need to be converted to bootstrap.
 	$details = $JBSMListing->getStudyExp($row, $params, $admin_params, $this->template);
 	echo $details;
 

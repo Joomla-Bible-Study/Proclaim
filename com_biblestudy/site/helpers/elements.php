@@ -1225,54 +1225,7 @@ class JBSMElements
 		return $store;
 	}
 
-	/**
-	 * Get File Path
-	 *
-	 * @param   string $id3      ID
-	 * @param   string $idfield  ID Filed
-	 * @param   string $mime     MimeType info
-	 *
-	 * @return string
-	 *
-	 * @FIXME look like the last where is not right, TOM
-	 *
-	 * @deprecated 8.0.6
-	 */
-	public function getFilepath($id3, $idfield, $mime)
-	{
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('#__bsms_mediafiles.*,'
-		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath')
-			->from('#__bsms_mediafiles')
-			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
-			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
-			->where($idfield . ' = ' . $id3)
-			->where('#__bsms_mediafiles.published = 1 ' . $mime);
-		$database->setQuery($query);
-		$filepathresults = $database->loadObject();
 
-		if ($filepathresults)
-		{
-			if ($filepathresults->spath == 'localhost')
-			{
-				$filepathresults->spath = JUri::base();
-			}
-			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
-			$filepath = JBSMRoute::addScheme($filepath);
-		}
-		elseif (isset($filepathresults->docMan_id))
-		{
-			$filepath = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $filepathresults->docMan_id . '"';
-		}
-		else
-		{
-			$filepath = '';
-		}
-
-		return $filepath;
-	}
 
 	/**
 	 * Only Return the Body of a html doc.
