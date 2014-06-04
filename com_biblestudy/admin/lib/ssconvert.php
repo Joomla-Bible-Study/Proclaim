@@ -89,7 +89,7 @@ class JBSMSSConvert
 				$data->teacher          = $id;
 				$data->alias            = $single->alias;
 
-				if (!$db->insertObject('#__bsms_series', $data, 'id'))
+				if (!$db->insertObject('#__bsms_series', $data))
 				{
 					$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
 				}
@@ -136,14 +136,14 @@ class JBSMSSConvert
 			$data->short       = $db->escape($teacher->bio);
 			$data->alias       = $teacher->alias;
 
-			if (!$db->insertObject('#__bsms_teachers', $data, 'id'))
+			if (!$db->insertObject('#__bsms_teachers', $data))
 			{
 				$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_CREATING_TEACHERS') . '</td></tr>';
 			}
 			else
 			{
-				$updated = $db->getAffectedRows();
-				$add     = $add + $updated;
+				//$updated = $db->getAffectedRows();
+				$add     = $add + 1;
 			}
 
 			$query = $db->getQuery(true);
@@ -200,7 +200,7 @@ class JBSMSSConvert
 					$data->published = $sermon->state;
 					$data->alias     = $sermon->alias;
 
-					if (!$db->insertObject('#__bsms_studies', $data, 'id'))
+					if (!$db->insertObject('#__bsms_studies', $data))
 					{
 						$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_CREATING_SERMONS_SS') . '</td></tr>';
 					}
@@ -230,8 +230,8 @@ class JBSMSSConvert
 					}
 					else
 					{
-						$updated2 = $db->getAffectedRows();
-						$add2     = $add2 + $updated2;
+						//$updated2 = $db->getAffectedRows();
+						$add2     = $add2 + 1;
 					}
 					if ($sermon->videofile)
 					{
@@ -252,8 +252,8 @@ class JBSMSSConvert
 						}
 						else
 						{
-							$updated2 = $db->getAffectedRows();
-							$add2     = $add2 + $updated2;
+							//$updated2 = $db->getAffectedRows();
+							$add2     = $add2 + 1;
 						}
 
 					}
