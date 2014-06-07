@@ -180,7 +180,7 @@ VALUES
 -- Dumping data for table `#__bsms_servers`
 --
 
-INSERT INTO `j_bsms_servers` (`id`, `server_name`, `type`, `published`, `asset_id`, `access`, `params`, `media`)
+INSERT INTO `#__bsms_servers` (`id`, `server_name`, `type`, `published`, `asset_id`, `access`, `params`, `media`)
 VALUES
   (1, 'Legacy', 'legacy', 1, 54, 1, '', '{\"link_type\":\"1\",\"player\":\"1\",\"popup\":\"1\",\"mediacode\":\"\",\"media_image\":\"12\",\"mime_type\":\"15\",\"autostart\":\"1\"}');
 
