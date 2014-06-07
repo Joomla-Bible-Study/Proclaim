@@ -53,7 +53,7 @@
                 <option value="0">JOPTION_USE_DEFAULT</option>
             </field>
             <field name="filename" type="text" label="JBS_MED_FILENAME"
-                   description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26"/>
+                   description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26" required="true"/>
             <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
                    description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
             <field name="special" type="text" label="JBS_MED_TARGET"
@@ -61,13 +61,11 @@
         </fieldset>
         <fieldset name="upload" label="JBS_ADDON_LEGACY_UPLOAD">
             <field name="localFolder"
-                type="folders"
+                type="plupload"
+                handler="upload"
                 label="JBS_MED_PATH_OR_FOLDER"
-                filter="local"
                 description="JBS_MED_PATH_OR_FOLDER_DESC"
-                class="inputbox">
-                <option value="0">JOPTION_USE_DEFAULT</option>
-            </field>
+                class="inputbox"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
             <field name="media_image" type="sql" extension="com_biblestudy"
