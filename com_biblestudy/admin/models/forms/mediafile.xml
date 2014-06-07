@@ -6,25 +6,25 @@
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
     <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
            description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
-    <field name="comment" type="text" size="50" label="JBS_CMN_COMMENT"
+    <field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
            description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
     <field name="server_id" type="server" label="JBS_CMN_SERVER"
-           description="JBS_MED_SERVER_DESC" class="inputbox" required="true"/>
+           description="JBS_MED_SERVER_DESC" required="true"/>
     <field name="podcast_id"  size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
            description="JBS_MED_CHOOSE_PODCAST_DESC"
            query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-           key_field="id" value_field="title" multiple="true" default="" clas="inputbox">
-        <option value="">JBS_CMN_SELECT_PODCAST</option>
+           key_field="id" value_field="title" multiple="true" default="-1">
+        <option value="-1">JBS_CMN_SELECT_PODCAST</option>
     </field>
     <field name="published"
            type="list"
-           class="span12 small"
            id="published"
            label="JSTATUS"
            description="JFIELD_PUBLISHED_DESC"
+           class="chzn-color-state"
            size="1"
            default="1"
-           filter="integer">
+           filter="intval">
         <option value="1">
             JPUBLISHED
         </option>
@@ -35,8 +35,11 @@
             JTRASHED
         </option>
     </field>
-    <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12 small">
+    <field name="language"
+           type="contentlanguage"
+           label="JFIELD_LANGUAGE_LABEL"
+           description="COM_CONTACT_FIELD_LANGUAGE_DESC"
+           class="chzn-color-state">
         <option value="*">JALL</option>
     </field>
     <field name="asset_id" type="hidden" filter="unset"/>
