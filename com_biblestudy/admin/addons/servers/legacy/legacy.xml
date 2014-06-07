@@ -2,6 +2,9 @@
 <server type="storage" supports="*.*">
     <name>Legacy</name>
     <description>Adapter for legacy JBS servers and mediafiles configurations.</description>
+    <config>
+        <media_resource>filename</media_resource>
+    </config>
     <fields name="media">
         <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
             <field name="link_type" type="list" extension="com_biblestudy"
