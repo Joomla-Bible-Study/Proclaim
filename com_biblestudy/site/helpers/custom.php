@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    8.0.0
  * */
-class JBSMCustom extends JBSMElements
+class JBSMCustom
 {
 	/**
 	 * Get Custom page

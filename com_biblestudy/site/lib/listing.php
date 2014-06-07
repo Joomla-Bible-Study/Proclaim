@@ -827,6 +827,7 @@ class JBSMListing
 	{
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
+		/** @var string $data */
 		$data  = '';
 
 		// Match the data in $item to a row/col in $row->name
@@ -1898,9 +1899,9 @@ class JBSMListing
 	}
 
 	/**
-	 * @param        $array
-	 * @param        $property
-	 * @param string $order
+	 * @param   array   $array
+	 * @param   object  $property
+	 * @param   string  $order
 	 *
 	 * @return array
 	 */
@@ -1967,10 +1968,10 @@ class JBSMListing
 	/**
 	 * Get Scripture
 	 *
-	 * @param   object $params       Item Params
-	 * @param   object $row          Row Info
-	 * @param   string $esv          ESV String
-	 * @param   string $scripturerow Scripture Row
+	 * @param   object  $params       Item Params
+	 * @param   object  $row          Row Info
+	 * @param   string  $esv          ESV String
+	 * @param   string  $scripturerow Scripture Row
 	 *
 	 * @return string
 	 */
@@ -2138,8 +2139,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   object $params Item Params
-	 * @param   object $row    Row info
+	 * @param   JRegistry  $params Item Params
+	 * @param   Object     $row    Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2193,12 +2194,12 @@ class JBSMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   object $params    Item Params
-	 * @param   string $studydate Study Date
+	 * @param   JRegistry  $params    Item Params
+	 * @param   string     $studydate Study Date
 	 *
 	 * @return string
 	 */
-	public function getstudyDate($params, $studydate)
+	public function getStudyDate($params, $studydate)
 	{
 		switch ($params->get('date_format'))
 		{
@@ -2364,16 +2365,18 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object    $row          Item Info
-	 * @param   JRegistry $params       Item Params
-	 * @param   JRegistry $admin_params Admin Params
-	 * @param   object    $template     Template
+	 * @param   object         $row          Item Info
+	 * @param   JRegistry      $params       Item Params
+	 * @param   JRegistry      $admin_params Admin Params
+	 * @param   TableTemplate  $template     Template
 	 *
 	 * @return object
+	 *
+	 * @todo need to fix this as it relise on old code.
 	 */
 	public function getListingExp($row, $params, $admin_params, $template)
 	{
-		$Media  = new jbsMedia;
+		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('templatecode');
@@ -2397,6 +2400,7 @@ class JBSMListing
 		$label  = str_replace('{{plays}}', $row->totalplays, $label);
 		$label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
+		// @todo need to replace this with a new fuction.
 		// For now we need to use the existing mediatable function to get all the media
 		$mediaTable = $Media->getMediaTable($row, $params, $admin_params);
 		$label      = str_replace('{{media}}', $mediaTable, $label);
@@ -2415,10 +2419,12 @@ class JBSMListing
 	 * @param   object    $template     Template
 	 *
 	 * @return object
+	 *
+	 * @deprecated 8.1.0
 	 */
 	public function getStudyExp($row, $params, $admin_params, $template)
 	{
-		$Media  = new jbsMedia;
+		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('study_detailtemplate');
@@ -2590,7 +2596,7 @@ class JBSMListing
 		else
 		{
 			// This will come from $admin_params
-			$sharetitle = 'Share This';
+			$sharetitle = $params->get('sharelabel');
 
 			// Get the information from the database on what social networking sites to use
 			$db    = JFactory::getDBO();
@@ -2608,10 +2614,9 @@ class JBSMListing
 			}
 
 			// Begin to form the table
-			$shareit = '<div class="container-fluid"><div class="row-fluid">
-						<div class="span3 pull-right">
-						<th id="bsmssharetitle" colspan=' . $sharerows . '>' . $sharetitle . '</th></tr></thead>
-						<tbody><tr class="bsmsshareiconrow">';
+			$shareit = '
+						<div class="row-fluid bsmsshareiconrow">'
+						 . $sharetitle;
 
 			foreach ($rows as $sharerow)
 			{
@@ -2744,16 +2749,16 @@ class JBSMListing
 						$sharelink          = $sharelink . ' ' . $linkextract;
 					}
 				}
-				$shareit .= '<td id="bsmsshareicons">
+				$shareit .= '
 							<a href="' . $mainlink . $share_params->get('item1prefix') . $sharelink . '" target="_blank">
 							<img src="' . JURI::base() . $image . '" alt="' . $share_params->get('alttext') . '" title="'
 					. $share_params->get('alttext') . '" width="' . $width . '" height="' . $height . '" border="0">
-							</a></td>';
+							</a>';
 
 			} // End of foreach
 
 		} // End of else $sharetype
-		$shareit .= '</tr></tbody></table></div>';
+		$shareit .= '</div>';
 
 		return $shareit;
 	}
@@ -2798,8 +2803,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   object $params Item Params
-	 * @param   object $row    Item Info
+	 * @param   JRegistry  $params Item Params
+	 * @param   object     $row    Item Info
 	 *
 	 * @return string
 	 */
@@ -2863,7 +2868,7 @@ class JBSMListing
 			->where('study_id = ' . $db->q($id3))
 			->where('#__bsms_mediafiles.published = 1');
 		$db->setQuery($query);
-		$db->query();
+		$db->execut();
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
@@ -2912,6 +2917,8 @@ class JBSMListing
 	 * @param   int       $template     Template
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.1.0
 	 */
 	public function getTitle($params, $row, $admin_params, $template)
 	{
@@ -3006,6 +3013,8 @@ class JBSMListing
 	 * @param   JRegistry $params   Item Params
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.1.0
 	 */
 	private function getCustomhead($rowcolid, $params)
 	{
@@ -3014,6 +3023,55 @@ class JBSMListing
 		$customhead = $params->get('r' . $row . 'c' . $col . 'customlabel');
 
 		return $customhead;
+	}
+
+	/**
+	 * Get File Path
+	 *
+	 * @param   string $id3      ID
+	 * @param   string $idfield  ID Filed
+	 * @param   string $mime     MimeType ID
+	 *
+	 * @return string
+	 */
+	public function getFilepath($id3, $idfield, $mime = null)
+	{
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('#__bsms_mediafiles.*,'
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+			. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
+			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
+			->where($database->qn($idfield) . ' = ' . $database->q($id3))
+			->where('#__bsms_mediafiles.published = 1 ');
+		if ($mime)
+		{
+			$query->where('#__bsms_mediafiles.mime_type = ' . $database->q($mime));
+		}
+		$database->setQuery($query);
+		$filepathresults = $database->loadObject();
+
+		if ($filepathresults)
+		{
+			if ($filepathresults->spath == 'localhost')
+			{
+				$filepathresults->spath = JUri::base();
+			}
+			$filepath = $filepathresults->spath . $filepathresults->fpath . $filepathresults->filename;
+			$filepath = JBSMRoute::addScheme($filepath);
+		}
+		elseif (isset($filepathresults->docMan_id))
+		{
+			$filepath = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $filepathresults->docMan_id . '"';
+		}
+		else
+		{
+			$filepath = '';
+		}
+
+		return $filepath;
 	}
 
 }

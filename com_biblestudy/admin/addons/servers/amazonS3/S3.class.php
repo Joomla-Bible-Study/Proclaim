@@ -56,7 +56,7 @@ class S3
 	 * @static
 	 */
 	private static $__accessKey = null;
-	
+
 	/**
 	 * AWS Secret Key
 	 *
@@ -65,7 +65,7 @@ class S3
 	 * @static
 	 */
 	private static $__secretKey = null;
-	
+
 	/**
 	 * SSL Client key
 	 *
@@ -74,7 +74,7 @@ class S3
 	 * @static
 	 */
 	private static $__sslKey = null;
-	
+
 	/**
 	 * AWS URI
 	 *
@@ -83,7 +83,7 @@ class S3
 	 * @static
 	 */
 	public static $endpoint = 's3.amazonaws.com';
-	
+
 	/**
 	 * Proxy information
 	 *
@@ -92,7 +92,7 @@ class S3
 	 * @static
 	 */
 	public static $proxy = null;
-	
+
 	/**
 	 * Connect using SSL?
 	 *
@@ -101,7 +101,7 @@ class S3
 	 * @static
 	 */
 	public static $useSSL = false;
-	
+
 	/**
 	 * Use SSL validation?
 	 *
@@ -110,7 +110,7 @@ class S3
 	 * @static
 	 */
 	public static $useSSLValidation = true;
-	
+
 	/**
 	 * Use PHP exceptions?
 	 *
@@ -121,7 +121,7 @@ class S3
 	public static $useExceptions = false;
 
 	// SSL CURL SSL options - only needed if you are experiencing problems with your OpenSSL configuration
-	
+
 	/**
 	 * SSL client key
 	 *
@@ -130,7 +130,7 @@ class S3
 	 * @static
 	 */
 	public static $sslKey = null;
-	
+
 	/**
 	 * SSL client certfificate
 	 *
@@ -139,7 +139,7 @@ class S3
 	 * @static
 	 */
 	public static $sslCert = null;
-	
+
 	/**
 	 * SSL CA cert (only required if you are having problems with your system CA cert)
 	 *
@@ -148,7 +148,7 @@ class S3
 	 * @static
 	 */
 	public static $sslCACert = null;
-	
+
 	/**
 	 * AWS Key Pair ID
 	 *
@@ -157,13 +157,13 @@ class S3
 	 * @static
 	 */
 	private static $__signingKeyPairId = null;
-	
+
 	/**
 	 * Key resource, freeSigningKey() must be called to clear it from memory
 	 *
 	 * @var bool
 	 * @access private
-	 * @static 
+	 * @static
 	 */
 	private static $__signingKeyResource = false;
 
@@ -1789,7 +1789,7 @@ class S3
 			'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif',
 			'png' => 'image/png', 'ico' => 'image/x-icon', 'pdf' => 'application/pdf',
 			'tif' => 'image/tiff', 'tiff' => 'image/tiff', 'svg' => 'image/svg+xml',
-			'svgz' => 'image/svg+xml', 'swf' => 'application/x-shockwave-flash', 
+			'svgz' => 'image/svg+xml', 'swf' => 'application/x-shockwave-flash',
 			'zip' => 'application/zip', 'gz' => 'application/x-gzip',
 			'tar' => 'application/x-tar', 'bz' => 'application/x-bzip',
 			'bz2' => 'application/x-bzip2',  'rar' => 'application/x-rar-compressed',
@@ -1844,7 +1844,7 @@ class S3
 }
 
 /**
- * S3 Request class 
+ * S3 Request class
  *
  * @link http://undesigned.org.za/2007/10/22/amazon-s3-php-class
  * @version 0.5.0-dev
@@ -1858,7 +1858,7 @@ final class S3Request
 	 * @access pricate
 	 */
 	private $endpoint;
-	
+
 	/**
 	 * Verb
 	 *
@@ -1866,7 +1866,7 @@ final class S3Request
 	 * @access private
 	 */
 	private $verb;
-	
+
 	/**
 	 * S3 bucket name
 	 *
@@ -1874,7 +1874,7 @@ final class S3Request
 	 * @access private
 	 */
 	private $bucket;
-	
+
 	/**
 	 * Object URI
 	 *
@@ -1882,7 +1882,7 @@ final class S3Request
 	 * @access private
 	 */
 	private $uri;
-	
+
 	/**
 	 * Final object URI
 	 *
@@ -1890,7 +1890,7 @@ final class S3Request
 	 * @access private
 	 */
 	private $resource = '';
-	
+
 	/**
 	 * Additional request parameters
 	 *
@@ -1898,7 +1898,7 @@ final class S3Request
 	 * @access private
 	 */
 	private $parameters = array();
-	
+
 	/**
 	 * Amazon specific request headers
 	 *
@@ -1961,7 +1961,7 @@ final class S3Request
 	*/
 	function __construct($verb, $bucket = '', $uri = '', $endpoint = 's3.amazonaws.com')
 	{
-		
+
 		$this->endpoint = $endpoint;
 		$this->verb = $verb;
 		$this->bucket = $bucket;
@@ -1982,7 +1982,6 @@ final class S3Request
 			else
 			{
 				$this->headers['Host'] = $this->endpoint;
-				$this->uri = $this->uri;
 				if ($this->bucket !== '') $this->uri = '/'.$this->bucket.$this->uri;
 				$this->bucket = '';
 				$this->resource = $this->uri;

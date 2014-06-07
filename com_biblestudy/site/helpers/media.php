@@ -22,10 +22,10 @@ class JBSMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object     $media         Media info
-	 * @param   JRegistry  $params        Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template Id
+	 * @param   Object         $media         Media info
+	 * @param   JRegistry      $params        Params
+	 * @param   JRegistry      $admin_params  Admin Params
+	 * @param   TableTemplate  $template      Template Table
 	 *
 	 * @return string
 	 */
@@ -103,11 +103,11 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object     $media         Media
-	 * @param   JRegistry  $params        Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      Template ID
-	 * @param   string     $playercode    Player Code
+	 * @param   Object         $media         Media
+	 * @param   JRegistry      $params        Params
+	 * @param   JRegistry      $admin_params  Admin Params
+	 * @param   TableTemplate  $template      Template ID
+	 * @param   string         $playercode    Player Code
 	 *
 	 * @return string
 	 */
@@ -148,7 +148,7 @@ class JBSMMedia
 			{
 
 				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
 			$downloadlink .= $download_image . '</a>';
 		}

@@ -82,7 +82,7 @@ table#files th.file_icon span.loading {
     margin-right: 5px;
 }
 .podcastheader h3{
-    display:table-header;
+    display:table-header-group;
     text-align:center;
 }
 

@@ -26,7 +26,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Data
 	 *
-	 * @var string
+	 * @var Object
 	 */
 	private $_data;
 

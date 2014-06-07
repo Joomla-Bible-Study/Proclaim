@@ -25,7 +25,7 @@ class JBSM810Update
 	public function update810()
 	{
 		self::updatetemplates();
-
+        self::css810();
 		return true;
 	}
 
@@ -63,5 +63,36 @@ class JBSM810Update
 		}
 	}
 
+    /**
+     * Update CSS for 8.1.0
+     *
+     * @return boolean
+     */
+    public function css810()
+    {
+        $csscheck = 'display:table-header';
+
+        $dest      = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/biblestudy.css';
+        $cssexists = JFile::exists($dest);
+
+        if ($cssexists)
+        {
+            $cssread = file_get_contents($dest);
+
+            $csstest = substr_count($cssread, $csscheck);
+
+            if (!$csstest)
+            {
+                $cssread = str_replace('display:table-header','display:table-header-group',$cssread);
+            }
+
+            if (!JFile::write($dest, $cssread))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }

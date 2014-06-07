@@ -53,12 +53,12 @@ abstract class JHtmlJquery
 			$debug  = (boolean) $config->get('debug');
 		}
 
-		JHtml::_('script', 'media/com_biblestudy/jui/js/jquery.min.js', false, true, false, false, $debug);
+		JHtml::_('script', 'media/com_biblestudy/jui/js/jquery.min.js', false, false, false, false, $debug);
 
 		// Check if we are loading in noConflict
 		if ($noConflict)
 		{
-			JHtml::_('script', 'media/com_biblestudy/jui/js/jquery-noconflict.js', false, true, false, false, false);
+			JHtml::_('script', 'media/com_biblestudy/jui/js/jquery-noconflict.js', false, false, false, false, false);
 		}
 
 		self::$loaded[__METHOD__] = true;

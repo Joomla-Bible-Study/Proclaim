@@ -64,7 +64,9 @@ class JBSMDownload
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		JResponse::clearHeaders();
+		$jweb  = new JApplicationWeb();
+		$jweb->clearHeaders();
+
 		$server        = $media->spath;
 		$path          = $media->fpath;
 		$filename      = $media->filename;

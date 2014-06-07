@@ -36,7 +36,6 @@ if (!$t)
 		?>
 		<table class="table table-striped bslisttable"> <?php
 			$studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
-			echo $listing;
 			echo $studies;
 			?></table>
 		<?php
