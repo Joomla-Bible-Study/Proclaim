@@ -126,8 +126,10 @@ VALUES
 
 INSERT INTO `j_bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
 VALUES
-  (1, 1, 1, '1', '{\"link_type\":\"\",\"docMan_id\":\"0\",\"article_id\":\"-1\",\"virtueMart_id\":\"0\",\"player\":\"\",\"popup\":\"\",\"mediacode\":\"\",\"serverFolders\":\"0\",\"filename\":\"\",\"size\":\"\",\"special\":\"\",\"localFolder\":\"0\",\"media_image\":\"\",\"mime_type\":\"\",\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\",\"autostart\":\"\"}', '{statistics: {plays: 0, downloads: 0}}', 0, '2009-09-13 00:10:00', 1, 'Sample Media file', 55, 1, '*', 1, 'admin', '0000-00-00 00:00:00', 1);
-
+  (1, 1, 1, '1',
+   '{\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\"}',
+   '{statistics: {plays: 0, downloads: 0}}', 0, '2009-09-13 00:10:00', 1, 'Sample Media file', 0, 1, '', 1, 'admin',
+   '0000-00-00 00:00:00', 1);
 
 
 --
@@ -182,7 +184,7 @@ VALUES
 
 INSERT INTO `#__bsms_servers` (`id`, `server_name`, `type`, `published`, `asset_id`, `access`, `params`, `media`)
 VALUES
-  (1, 'Legacy', 'legacy', 1, 54, 1, '', '{\"link_type\":\"1\",\"player\":\"1\",\"popup\":\"1\",\"mediacode\":\"\",\"media_image\":\"12\",\"mime_type\":\"15\",\"autostart\":\"1\"}');
+  (1, 'Legacy', 'legacy', 1, 0, 1, '{params here}', NULL);
 
 
 --
