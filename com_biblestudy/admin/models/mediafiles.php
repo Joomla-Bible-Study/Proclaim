@@ -49,6 +49,33 @@ class BiblestudyModelMediafiles extends JModelList
 		parent::__construct($config);
 	}
 
+    /**
+     * Manually joins items and returns and nested object array
+     *
+     * @return mixed Array Media files array
+     * @since 8.1.0
+     */
+    public function getItems() {
+        $serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');
+
+        $registry = new JRegistry;
+
+        $items = parent::getItems();
+
+        foreach($items as $item) {
+            $item->serverConfig   = $serverModel->getConfig($item->serverType);
+
+            // Convert all JSON strings to Arrays
+            $registry->loadString($item->params);
+            $item->params = $registry->toArray();
+
+            $registry->loadString($item->metadata);
+            $item->metadata = $registry->toArray();
+        }
+
+        return $items;
+    }
+
 	/**
 	 * Get Deletes
 	 *
@@ -155,7 +182,7 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$db->setQuery($query->__toString());
 
-		return $db->loadObjectList();
+		//return $db->loadObjectList();
 	}
 
 	/**
@@ -195,8 +222,7 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', 'mediafile.id, mediafile.published, mediafile.ordering,
-                        mediafile.createdate, mediafile.language, mediafile.study_id ')
+				'list.select', 'mediafile.* ')
 		);
 
 		$query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
@@ -208,6 +234,10 @@ class BiblestudyModelMediafiles extends JModelList
 		// Join over the studies
 		$query->select('study.studytitle AS studytitle');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
+
+        // Join over servers
+        $query->select('server.type as serverType');
+        $query->join('LEFT', '#__bsms_servers as server ON server.id = mediafile.server_id');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
@@ -237,7 +267,7 @@ class BiblestudyModelMediafiles extends JModelList
 
 		if (!empty($study))
 		{
-			$query->where('study.id LIKE "%' . $study . '%"');
+			$query->where('mediafile.study_id LIKE "%' . $study . '%"');
 		}
 
 		// Filter by media years

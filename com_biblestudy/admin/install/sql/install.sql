@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 
 CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0'
+  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0',
   `foldername` VARCHAR(250)     NOT NULL DEFAULT '',
   `folderpath` VARCHAR(250)     NOT NULL DEFAULT '',
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 -- Table structure for table `#__bsms_servers`
 --
 
-CREATE TABLE IF NOT EXISTS `#_bsms_servers` (
+CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `id`           INT(10) unsigned NOT NULL AUTO_INCREMENT,
   `server_name`  VARCHAR(250) NOT NULL DEFAULT '',
   `type`         CHAR(255) NOT NULL,

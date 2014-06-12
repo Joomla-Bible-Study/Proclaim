@@ -1,25 +1,25 @@
 <?php
 defined('_JEXEC') or die;
 
-class JBSServerAmazonS3 extends JBSServer {
-    public $name = 'amazonS3';
+class JBSMAddonLegacy extends JBSMAddon
+{
+    protected $config;
 
-    protected function __construct($options) {
-        $options['key'] = (isset($options['key'])) ?  $options['key'] : '';
-        $options['secret'] = (isset($options['secret'])) ?  $options['secret'] : '';
-
-        // Include the S3 class
-        JLoader::register('S3', dirname(__FILE__).'/S3.class.php');
-
-        $this->connection = new S3($options['key'], $options['secret']);
-    }
-
-    protected function upload($target, $overwrite = true)
+    public function __construct($config = array())
     {
-        // TODO: Implement upload() method.
+        parent::__construct($config);
     }
-    
-    public function test() {
-    	return "hello from amazon";
+
+    public function upload($data)
+    {
+        $path = $data->get('path', null, 'PATH');
+        $fileName = $_FILES["file"]["name"];
+        if (!move_uploaded_file($_FILES["file"]["tmp_name"], JPATH_ROOT . '/' . $path . '/' . $fileName))
+            die('false');
+
+        return array(
+            'filename' => $_FILES['file']['name'],
+            'size' => $_FILES['file']['size']
+        );
     }
 }
