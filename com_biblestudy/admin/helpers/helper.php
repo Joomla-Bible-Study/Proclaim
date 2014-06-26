@@ -28,11 +28,11 @@ class JBSMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   int       $rowid         ID
-	 * @param   object    $row           JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      ID
+	 * @param   int        $rowid         ID
+	 * @param   object     $row           JTable
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   int        $template      ID
 	 *
 	 * @return string
 	 */

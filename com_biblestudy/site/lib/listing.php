@@ -428,7 +428,7 @@ class JBSMListing
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $admin_params, $template, $oddeven, $header = 0, $type);
 			}
 		}
-		foreach ($row as $key => $value)
+		foreach ($row as $value)
 		{
 			$list .= $value;
 		}
@@ -552,7 +552,6 @@ class JBSMListing
 			$headerstyle = "style=visibility:hidden;";
 		}
 		$extra = '';
-		$pull  = '';
 		switch ($type)
 		{
 			case 'sermon':
@@ -605,9 +604,6 @@ class JBSMListing
 					break;
 			}
 		}
-
-		$smenu = $params->get('detailsitemid');
-		$tmenu = $params->get('teacheritemid');
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
 		$rowspanbalance  = 12 - $rowspanitemspan;
@@ -689,7 +685,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row1count = $row1count - 1;
+				$row1count--;
 				if ($row1count == 0)
 				{
 					$frow .= '</div>';
@@ -710,7 +706,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row2count = $row2count - 1;
+				$row2count--;
 				if ($row2count == 0)
 				{
 					$frow .= '</div>';
@@ -731,7 +727,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row3count = $row3count - 1;
+				$row3count--;
 				if ($row3count == 0)
 				{
 					$frow .= '</div>';
@@ -752,7 +748,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row4count = $row4count - 1;
+				$row4count--;
 				if ($row4count == 0)
 				{
 					$frow .= '</div>';
@@ -773,7 +769,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row5count = $row5count - 1;
+				$row5count--;
 				if ($row5count == 0)
 				{
 					$frow .= '</div>';
@@ -794,7 +790,7 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $admin_params, $template, $header = 0, $type);
 				}
-				$row6count = $row6count - 1;
+				$row6count--;
 				if ($row6count == 0)
 				{
 					$frow .= '</div>';
@@ -1569,7 +1565,7 @@ class JBSMListing
 	 */
 	public function useJImage($path, $alt = null)
 	{
-		$image = new JImage();
+		$image = new JImage;
 
 		try
 		{
@@ -1598,7 +1594,7 @@ class JBSMListing
 	 */
 	public function getFluidMediaFiles($item, $params, $admin_params, $template)
 	{
-		$med      = new JBSMMedia();
+		$med      = new JBSMMedia;
 		$mediarow = '<div style="display:inline;">';
 		foreach ($item->mediafiles as $media)
 		{
@@ -1640,12 +1636,14 @@ class JBSMListing
 	}
 
 	/**
-	 * @param $custom
-	 * @param $row
-	 * @param $params
-	 * @param $admin_params
-	 * @param $template
-	 * @param $type
+	 * Get Element
+	 *
+	 * @param   String         $custom        ?
+	 * @param   Object         $row           ?
+	 * @param   JRegistry      $params        ?
+	 * @param   JRegistry      $admin_params  ?
+	 * @param   TableTemplate  $template      ?
+	 * @param   String         $type          ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -1659,13 +1657,11 @@ class JBSMListing
 				$scripturerow = 1;
 				$element      = self::getScripture($params, $row, $esv, $scripturerow);
 				break;
-
 			case 'scripture2':
 				$esv          = 0;
 				$scripturerow = 2;
 				$element      = self::getScripture($params, $row, $esv, $scripturerow);
 				break;
-
 			case 'secondary':
 				$element = $row->secondary_reference;
 				break;
@@ -1673,9 +1669,7 @@ class JBSMListing
 			case 'duration':
 				$element = self::getDuration($params, $row);
 				break;
-
 			case 'title':
-
 				if (isset($row->studytitle))
 				{
 					$element = $row->studytitle;
@@ -1685,9 +1679,7 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'studyintro':
-
 				if (isset($row->studyintro))
 				{
 					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_biblestudy.' . $type);
@@ -1697,10 +1689,8 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'teacher':
-				//teacher name and title
-
+				// Teacher name and title
 				if (isset($row->teachertitle) && isset($row->teachername))
 				{
 					$element = $row->teachertitle . ' ' . $row->teachername;
@@ -1710,7 +1700,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'studynumber':
 				if (isset($row->studynumber))
 				{
@@ -1721,9 +1710,8 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'series_text':
-				//series title
+				// Series title
 				if (isset($row->series_text))
 				{
 					$element = $row->series_text;
@@ -1733,7 +1721,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'series_thumbnail':
 				if ($row->series_thumbnail)
 				{
@@ -1744,7 +1731,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'submitted':
 				if (isset($row->submitted))
 				{
@@ -1755,15 +1741,16 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'teacherimage':
 				if (isset($row->teacher_thumbnail))
 				{
 					$element = '<img src="' . JURI::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '">';
 				}
-				else ($element = '');
+				else
+				{
+					$element = '';
+				};
 				break;
-
 			case 'teachername':
 				if (isset($row->teachername))
 				{
@@ -1774,7 +1761,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'jbsmedia':
 				if (isset($row->mids))
 				{
@@ -1789,16 +1775,13 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'thumbnail':
-				//assume study thumbnail
+				// Assume study thumbnail
 				$element = '<img src="' . JURI::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '">';
 				break;
-
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
 				break;
-
 			case 'teacher-title-name':
 				if (isset($row->teachertitle) && isset($row->teachername))
 				{
@@ -1810,7 +1793,6 @@ class JBSMListing
 				}
 				break;
 				break;
-
 			case 'topics':
 				if (isset($row->topics_text))
 				{
@@ -1830,8 +1812,6 @@ class JBSMListing
 					}
 				}
 				break;
-
-
 			case 'message_type':
 				if (isset($row->message_type))
 				{
@@ -1842,7 +1822,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'location_text':
 				if (isset($row->location_text))
 				{
@@ -1853,7 +1832,6 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 			case 'date':
 				if (isset($row->studydate))
 				{
@@ -1892,20 +1870,20 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-
 		}
-
 		return $element;
 	}
 
 	/**
-	 * @param   array   $array
-	 * @param   object  $property
-	 * @param   string  $order
+	 * Sort Array of Object by Property
+	 *
+	 * @param   array   $array     ?
+	 * @param   string  $property  ?
+	 * @param   string  $order     ?
 	 *
 	 * @return array
 	 */
-	function sortArrayofObjectByProperty($array, $property, $order = "ASC")
+	public function sortArrayofObjectByProperty($array, $property, $order = "ASC")
 	{
 		$cur           = 1;
 		$stack[1]['l'] = 0;
@@ -1923,7 +1901,7 @@ class JBSMListing
 				$j   = $r;
 				$tmp = $array[(int) (($l + $r) / 2)];
 
-				// split the array in to parts
+				// Split the array in to parts
 				// first: objects with "smaller" property $property
 				// second: objects with "bigger" property $property
 				do
@@ -1942,7 +1920,8 @@ class JBSMListing
 						$j--;
 					}
 
-				} while ($i <= $j);
+				}
+				while ($i <= $j);
 
 				if ($i < $r)
 				{
@@ -1955,6 +1934,7 @@ class JBSMListing
 			} while ($l < $r);
 
 		} while ($cur != 0);
+
 		// Added ordering.
 		if ($order == "DESC")
 		{
@@ -1968,10 +1948,10 @@ class JBSMListing
 	/**
 	 * Get Scripture
 	 *
-	 * @param   object  $params       Item Params
-	 * @param   object  $row          Row Info
-	 * @param   string  $esv          ESV String
-	 * @param   string  $scripturerow Scripture Row
+	 * @param   object  $params        Item Params
+	 * @param   object  $row           Row Info
+	 * @param   string  $esv           ESV String
+	 * @param   string  $scripturerow  Scripture Row
 	 *
 	 * @return string
 	 */
@@ -2139,8 +2119,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   JRegistry  $params Item Params
-	 * @param   Object     $row    Row info
+	 * @param   JRegistry  $params  Item Params
+	 * @param   Object     $row     Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2194,8 +2174,8 @@ class JBSMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   JRegistry  $params    Item Params
-	 * @param   string     $studydate Study Date
+	 * @param   JRegistry  $params     Item Params
+	 * @param   string     $studydate  Study Date
 	 *
 	 * @return string
 	 */
@@ -2248,32 +2228,32 @@ class JBSMListing
 		return $date;
 	}
 
-
 	/**
-	 * @param           $islink
-	 * @param           $id3
-	 * @param           $tid
-	 * @param           $smenu
-	 * @param           $tmenu
-	 * @param JRegistry $params
-	 * @param           $admin_params
-	 * @param           $row
-	 * @param           $template
+	 *  Get Link
+	 *
+	 * @param   bool       $islink        ?
+	 * @param   string     $id3           ?
+	 * @param   int        $tid           ?
+	 * @param   object     $smenu         ?
+	 * @param   object     $tmenu         ?
+	 * @param   JRegistry  $params        ?
+	 * @param   JRegistry  $admin_params  ?
+	 * @param   object     $row           ?
+	 * @param   int        $templateid    ?
 	 *
 	 * @return string
 	 */
-	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
+	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $templateid)
 	{
 		$input    = new JInput;
 		$Itemid   = $input->get('Itemid', '', 'int');
-		$view     = $input->getString('view');
+		$view     = $input->getString('view', '');
 		$column   = '';
 		$mime     = ' AND #__bsms_mediafiles.mime_type = 1';
 		$itemlink = $params->get('itemidlinktype');
 
 		switch ($islink)
 		{
-
 			case 1 :
 				$Itemid = $input->get('Itemid', '', 'int');
 
@@ -2324,7 +2304,7 @@ class JBSMListing
 				{
 					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
-				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
+				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
 				break;
@@ -2333,7 +2313,7 @@ class JBSMListing
 				// Case 5 is a file link with Tooltip
 				$filepath = $this->getFilepath($id3, 'study_id', $mime);
 				$link     = JRoute::_($filepath);
-				$column   = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $template);
+				$column   = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
 				break;
@@ -2365,10 +2345,10 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object         $row          Item Info
-	 * @param   JRegistry      $params       Item Params
-	 * @param   JRegistry      $admin_params Admin Params
-	 * @param   TableTemplate  $template     Template
+	 * @param   object         $row           Item Info
+	 * @param   JRegistry      $params        Item Params
+	 * @param   JRegistry      $admin_params  Admin Params
+	 * @param   TableTemplate  $template      Template
 	 *
 	 * @return object
 	 *
@@ -2413,16 +2393,15 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object    $row          Item Info
-	 * @param   JRegistry $params       Item Params
-	 * @param   JRegistry $admin_params Admin Params
-	 * @param   object    $template     Template
+	 * @param   object     $row           Item Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return object
 	 *
 	 * @deprecated 8.1.0
 	 */
-	public function getStudyExp($row, $params, $admin_params, $template)
+	public function getStudyExp($row, $params, $admin_params)
 	{
 		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
@@ -2454,7 +2433,6 @@ class JBSMListing
 		$label = str_replace('{{scripturelink}}', $link, $label);
 		$label = str_replace('{{plays}}', $row->totalplays, $label);
 		$label = str_replace('{{downloads}}', $row->totaldownloads, $label);
-
 
 		$mediaTable = $Media->getMediaTable($row, $params, $admin_params);
 		$label      = str_replace('{{media}}', $mediaTable, $label);
@@ -2494,13 +2472,15 @@ class JBSMListing
 	}
 
 	/**
-	 * @todo this doesn't work yet. TF
+	 * Run Content Plugins on content
 	 *
-	 * @param $item
-	 * @param $params
-	 * @param $type
+	 * @param   object     $item    ?
+	 * @param   JRegistry  $params  ?
+	 * @param   string     $type    ?
 	 *
 	 * @return bool|string
+	 *
+	 * @todo this doesn't work yet. TF
 	 */
 	public function runContentPlugins($item, $params, $type)
 	{
@@ -2531,28 +2511,31 @@ class JBSMListing
 
 		$event = new stdClass;
 
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
-			'com_biblestudy.' . $type,
-			&$item,
-			&$params,
-			$offset
-		));
+		$results = $dispatcher->trigger('onContentAfterTitle', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
 		$event->text->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
-			'com_biblestudy.' . $type,
-			&$item,
-			&$params,
-			$offset
-		));
+		$results = $dispatcher->trigger('onContentBeforeDisplay', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
 		$event->text->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
-			'com_biblestudy.' . $type,
-			&$item,
-			&$params,
-			$offset
-		));
+		$results = $dispatcher->trigger('onContentAfterDisplay', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
 		$event->text->afterDisplayContent = trim(implode("\n", $results));
 		$result                           = implode('', $event->text);
 
@@ -2562,20 +2545,20 @@ class JBSMListing
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string    $link         Link
-	 * @param   object    $row          Item Info
-	 * @param   JRegistry $params       Item Params
-	 * @param   JRegistry $admin_params Admin Params
+	 * @param   string     $link          Link
+	 * @param   object     $row           Item Info
+	 * @param   JRegistry  $params        Item Params
+	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return null|string
 	 *
-	 * FIXME Look like this is missing the $template var
+	 * FIXME Look like this is missing the $template var and rebuld with new
 	 */
 	public function getShare($link, $row, $params, $admin_params)
 	{
 		jimport('joomla.html.parameter');
 
-		// Finde a better way to do this.
+		// Find a better way to do this.
 		$template = (int) '1';
 
 		$sharetype = $params->get('sharetype', 1);
@@ -2614,9 +2597,7 @@ class JBSMListing
 			}
 
 			// Begin to form the table
-			$shareit = '
-						<div class="row-fluid bsmsshareiconrow">'
-						 . $sharetitle;
+			$shareit = '<div class="row-fluid bsmsshareiconrow">' . $sharetitle;
 
 			foreach ($rows as $sharerow)
 			{
@@ -2766,18 +2747,17 @@ class JBSMListing
 	/**
 	 * make a URL small
 	 *
-	 * @param   string $url     Url
-	 * @param   string $login   Login
-	 * @param   string $appkey  AppKey
-	 * @param   string $format  Format
-	 * @param   string $version Version
+	 * @param   string  $url      Url
+	 * @param   string  $login    Login
+	 * @param   string  $appkey   AppKey
+	 * @param   string  $format   Format
+	 * @param   string  $version  Version
 	 *
 	 * @return string
 	 */
 	private function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
 	{
 		// Create the URL
-
 		$bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
 			. $login . '&apiKey=' . $appkey . '&format=' . $format;
 
@@ -2803,8 +2783,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   JRegistry  $params Item Params
-	 * @param   object     $row    Item Info
+	 * @param   JRegistry  $params  Item Params
+	 * @param   object     $row     Item Info
 	 *
 	 * @return string
 	 */
@@ -2852,16 +2832,16 @@ class JBSMListing
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int    $id3    Study ID ID
-	 * @param   string $islink Is a Link
-	 * @param   object $params Item Params
+	 * @param   int        $id3     Study ID ID
+	 * @param   string     $islink  Is a Link
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return string
 	 */
 	public function getOtherlinks($id3, $islink, $params)
 	{
 		$link  = '';
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
 			->from('#__bsms_mediafiles')
