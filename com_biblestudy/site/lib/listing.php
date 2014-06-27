@@ -2304,7 +2304,7 @@ class JBSMListing
 				{
 					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
-				$column = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $templateid);
+				$column = JBSMHelper::getTooltip($row, $params, $admin_params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
 				break;
@@ -2313,7 +2313,7 @@ class JBSMListing
 				// Case 5 is a file link with Tooltip
 				$filepath = $this->getFilepath($id3, 'study_id', $mime);
 				$link     = JRoute::_($filepath);
-				$column   = JBSMHelper::getTooltip($row->id, $row, $params, $admin_params, $templateid);
+				$column   = JBSMHelper::getTooltip($row, $params, $admin_params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
 				break;

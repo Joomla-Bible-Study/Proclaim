@@ -36,24 +36,12 @@ class JBSMHelper
 	 *
 	 * @return string
 	 */
-	public static function getTooltip($rowid, $row, $params, $admin_params, $template)
+	public static function getTooltip($row, $params, $admin_params, $template)
 	{
 		$JBSMElements = new JBSMListing;
 
-		// Tom added the below because tooltip wasn't working as of 6.1.1
-		$toolTipArray = array(
-			'className' => 'custom',
-			'showDelay' => '500',
-			'hideDelay' => '500',
-			'fixed'     => true,
-			'onShow'    => "function(tip) {tip.effect('opacity',
- 		{duration: 500, wait: false}).start(0,1)}",
-			'onHide'    => "function(tip) {tip.effect('opacity',
-		{duration: 500, wait: false}).start(1,0)}"
-		);
-		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray);
-
-		$linktext = '<span class="zoomTip" title="<strong>' . $params->get('tip_title') . '  :: ';
+        JHTML::_('behavior.tooltip');
+		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
 		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $admin_params, $template, $type=0);
 		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $admin_params, $template, $type=0);
