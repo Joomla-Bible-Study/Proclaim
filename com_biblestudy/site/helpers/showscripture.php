@@ -84,8 +84,7 @@ class JBSMShowScripture
 	 */
 	public function getHideShow($row, $reference)
 	{
-		$elements = new JBSMElements;
-		$contents = $elements->body_only(file_get_contents($this->link));
+		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
 		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$passage .= '<div id="scripture" style="display: none;">';
@@ -106,8 +105,7 @@ class JBSMShowScripture
 	 */
 	public function getShow($row, $reference)
 	{
-		$elements = new JBSMElements;
-		$contents = $elements->body_only(file_get_contents($this->link));
+		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "passage">' . $contents . '</div>';
 
 		return $passage;
@@ -182,5 +180,21 @@ class JBSMShowScripture
 
 		return $link;
 	}
+
+    /**
+     * Only Return the Body of a html doc.
+     *
+     * @param   string $html  Html document
+     *
+     * @return string
+     *
+     * @since 8.0.0
+     *
+     *
+     */
+    public function body_only($html)
+    {
+        return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
+    }
 
 }

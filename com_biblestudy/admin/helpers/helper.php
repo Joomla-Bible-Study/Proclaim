@@ -38,7 +38,7 @@ class JBSMHelper
 	 */
 	public static function getTooltip($rowid, $row, $params, $admin_params, $template)
 	{
-		$JBSMElements = new JBSMElements;
+		$JBSMElements = new JBSMListing;
 
 		// Tom added the below because tooltip wasn't working as of 6.1.1
 		$toolTipArray = array(
@@ -54,11 +54,12 @@ class JBSMHelper
 		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray);
 
 		$linktext = '<span class="zoomTip" title="<strong>' . $params->get('tip_title') . '  :: ';
-		$tip1     = $JBSMElements->getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);
-		$tip2     = $JBSMElements->getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
-		$tip3     = $JBSMElements->getElementid($params->get('tip_item3'), $row, $params, $admin_params, $template);
-		$tip4     = $JBSMElements->getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
-		$tip5     = $JBSMElements->getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
+
+		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $admin_params, $template, $type=0);
+		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $admin_params, $template, $type=0);
+		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $admin_params, $template, $type=0);
+		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $admin_params, $template, $type=0);
+		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $admin_params, $template, $type=0);
 		$test     = $params->get('tip_item1');
 		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1->element . '<br />';
 		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2->element . '<br /><br />';
