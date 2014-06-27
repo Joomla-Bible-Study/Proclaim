@@ -60,12 +60,12 @@ class JBSMHelper
 		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $admin_params, $template, $type=0);
 		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $admin_params, $template, $type=0);
 		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $admin_params, $template, $type=0);
-		$test     = $params->get('tip_item1');
-		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2->element . '<br /><br />';
-		$linktext .= '<strong>' . $params->get('tip_item3_title') . '</strong>: ' . $tip3->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item4_title') . '</strong>: ' . $tip4->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item5_title') . '</strong>: ' . $tip5->element;
+
+		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2 . '<br /><br />';
+		$linktext .= '<strong>' . $params->get('tip_item3_title') . '</strong>: ' . $tip3 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item4_title') . '</strong>: ' . $tip4 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item5_title') . '</strong>: ' . $tip5;
 		$linktext .= '">';
 
 		return $linktext;
