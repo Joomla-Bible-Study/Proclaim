@@ -15,17 +15,18 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @package  BibleStudy.Admin
  * @since    8.1.0
  */
-class JBSM810Update
+class Migration810
 {
 	/**
 	 * Call Script for Updates of 8.1.0
 	 *
 	 * @return bool
 	 */
-	public function update810()
+	public function up($db)
 	{
-		self::updatetemplates();
+		self::updatetemplates($db);
         self::css810();
+        
 		return true;
 	}
 
@@ -34,9 +35,8 @@ class JBSM810Update
 	 *
 	 * @return void
 	 */
-	public function updatetemplates()
+	public function updatetemplates($db)
 	{
-		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, title, prarams')
 			->from('#__bsms_templates');

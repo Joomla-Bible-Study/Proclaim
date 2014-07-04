@@ -15,39 +15,39 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.2
  */
-class JBSM702Update
+class Migration702
 {
-
 	/**
 	 * Update CSS for 7.0.2
 	 *
 	 * @return boolean
 	 */
-	public function css702()
+	public function up()
 	{
 		$newcss = '#main ul, #main li
-{
-display: inline;
-}
+					{
+					display: inline;
+					}
 
-.component-content ul
-{
-text-align: center;
-}
+					.component-content ul
+					{
+					text-align: center;
+					}
 
-.component-content li
-{
-display: inline;
-}
+					.component-content li
+					{
+					display: inline;
+					}
 
-.pagenav
-{
-margin-left: 10px;
-margin-right: 10px;
-}
+					.pagenav
+					{
+					margin-left: 10px;
+					margin-right: 10px;
+					}
 
-#recaptcha_widget_div {
-position:static !important;}';
+					#recaptcha_widget_div {
+					position:static !important;}
+		';
 
 		$csscheck = '#main ul, #main li';
 
@@ -73,5 +73,4 @@ position:static !important;}';
 
 		return true;
 	}
-
 }

@@ -252,19 +252,125 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update
 	 *
-	 * @param   JInstallerFile $parent Where call is coming from
+	 * @param   JInstallerAdapterComponent $parent Where call is coming from
 	 *
 	 * @return   void
 	 */
 	public function update($parent)
 	{
-		$this->fixMenus();
-		$this->fixImagePaths();
-		$this->fixemptyaccess();
-		$this->fixemptylanguage();
-		JLoader::register('JBSM800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
-		$update800 = new JBSM800Update;
-		$update800->update800();
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
+
+		$update_count = 0;
+
+		if ($eid)
+		{
+			$db = JFactory::getDbo();
+			$schemapath = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/mysql';
+
+			$files = str_replace('.sql', '', JFolder::files($schemapath, '\.sql$'));
+			if (!count($files))
+			{
+				return false;
+			}
+
+			usort($files, 'version_compare');
+
+			// Load currently installed version
+			$query = $db->getQuery(true)->select('version_id')->from('#__schemas')->where('extension_id = ' . $eid);
+			$db->setQuery($query);
+			$version = $db->loadResult();
+
+			if ($version)
+			{
+				// We have a version!
+				foreach ($files as $file)
+				{
+					if (version_compare($file, $version) > 0)
+					{
+						$buffer = file_get_contents($schemapath . '/' . $file . '.sql');
+
+						// Graceful exit and rollback if read not successful
+						if ($buffer === false)
+						{
+							JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
+
+							return false;
+						}
+
+						// Create an array of queries from the sql file
+						$queries = JDatabaseDriver::splitSql($buffer);
+
+						if (count($queries) == 0)
+						{
+							// No queries to process
+							continue;
+						}
+
+						// Process each query in the $queries array (split out of sql file).
+						foreach ($queries as $query)
+						{
+							$query = trim($query);
+
+							if ($query != '' && $query{0} != '#')
+							{
+								$db->setQuery($query);
+
+								if (!$db->execute())
+								{
+									JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
+
+									return false;
+								}
+								else
+								{
+									$queryString = (string) $query;
+									$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+									JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $file, $queryString), JLog::INFO, 'Update');
+								}
+
+								$update_count++;
+							}
+						}
+
+						// Check for corresponding PHP file and run migration
+						$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $file . '.php';
+						if(JFile::exists($migration_file)) {
+							require_once $migration_file;
+							$migrationClass = "Migration".str_ireplace(".", '', $file);
+							$migration = new $migrationClass();
+							if(!$migration->up($db)) {
+								JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
+							}
+						}
+					}
+				}
+			}
+
+			// Update the database with new version
+			$query = $db->getQuery(true)->delete('#__schemas')->where('extension_id = ' . $eid);
+			$db->setQuery($query);
+
+			if ($db->execute())
+			{
+				$query->clear()->insert($db->quoteName('#__schemas'))
+					->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
+					->values($eid . ', ' . $db->quote(end($files)));
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
+		return $update_count;
+
+
+		// $this->fixMenus();
+		// $this->fixImagePaths();
+		// $this->fixemptyaccess();
+		// $this->fixemptylanguage();
+		// JLoader::register('JBSM800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
+		// $update800 = new JBSM800Update;
+		// $update800->update800();
 	}
 
 	/**
