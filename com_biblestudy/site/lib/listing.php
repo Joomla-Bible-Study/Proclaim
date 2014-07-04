@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
-
 /**
  * BibleStudy listing class
  *
@@ -57,13 +56,14 @@ class JBSMListing
 			$medias = $this->getFluidMediaids($items);
 			$item   = $items;
 		}
-		//get the media files in one query
+		// Get the media files in one query
 		if (isset($medias))
 		{
 			$mediafiles = $this->getMediaFiles($medias);
 		}
-		//create an array from each param variable set
-		//Find out what view we are in
+
+		// Create an array from each param variable set
+		// Find out what view we are in
 		$extra = '';
 
 		switch ($type)
@@ -1931,9 +1931,11 @@ class JBSMListing
 				}
 				$r = $j;
 
-			} while ($l < $r);
+			}
+			while ($l < $r);
 
-		} while ($cur != 0);
+		}
+		while ($cur != 0);
 
 		// Added ordering.
 		if ($order == "DESC")
@@ -2989,8 +2991,8 @@ class JBSMListing
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int       $rowcolid Row ID Column
-	 * @param   JRegistry $params   Item Params
+	 * @param   int        $rowcolid Row ID Column
+	 * @param   JRegistry  $params   Item Params
 	 *
 	 * @return string
 	 *
@@ -3008,9 +3010,9 @@ class JBSMListing
 	/**
 	 * Get File Path
 	 *
-	 * @param   string $id3      ID
-	 * @param   string $idfield  ID Filed
-	 * @param   string $mime     MimeType ID
+	 * @param   string  $id3      ID
+	 * @param   string  $idfield  ID Filed
+	 * @param   string  $mime     MimeType ID
 	 *
 	 * @return string
 	 */
