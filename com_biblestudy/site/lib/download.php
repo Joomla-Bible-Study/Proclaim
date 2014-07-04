@@ -64,7 +64,7 @@ class JBSMDownload
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		$jweb  = new JApplicationWeb();
+		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
 		$server        = $media->spath;
@@ -211,7 +211,7 @@ class JBSMDownload
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object  $url  URL
+	 * @param   string  $url  URL
 	 *
 	 * @return  boolean
 	 */

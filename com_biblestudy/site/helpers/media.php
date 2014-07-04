@@ -692,8 +692,6 @@ class JBSMMedia
 	 * @param   JRegistry  $admin_params  Admin Params
 	 *
 	 * @return null|string
-	 *
-	 * @deprecated 8.1.0
 	 */
 	public function getMediaTable($row, $params, $admin_params)
 	{
@@ -806,7 +804,6 @@ class JBSMMedia
 		} // End of foreach mediaids
 		// End of row holding media image/link
 		$table .= '</tr>';
-		$JBSMElements = new JBSMElements;
 
 		// This is the last part of the table where we see if we need to display the file size
 		if ($params->get('show_filesize') > 0 && isset($media))
@@ -818,13 +815,13 @@ class JBSMMedia
 				switch ($params->get('show_filesize'))
 				{
 					case 1:
-						$filesize = $JBSMElements->getFilesize($media->size);
+						$filesize = $this->getFilesize($media->size);
 						break;
 					case 2:
 						$filesize = $media->comment;
 						break;
 					case 3:
-						if ($media->comment ? $filesize = $media->comment : $filesize = $JBSMElements->getFilesize($media->size))
+						if ($media->comment ? $filesize = $media->comment : $filesize = $this->getFilesize($media->size))
 						{
 						}
 						break;
@@ -955,6 +952,49 @@ class JBSMMedia
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Function to get File Size
+	 *
+	 * @param   string  $file_size  Size in bytes
+	 *
+	 * @return null|string
+	 */
+	public function getFilesize($file_size)
+	{
+		if (!$file_size)
+		{
+			$file_size = null;
+
+			return $file_size;
+		}
+		switch ($file_size)
+		{
+			case $file_size < 1024 :
+				$file_size = $file_size . ' ' . 'Bytes';
+				break;
+			case $file_size < 1048576 :
+				$file_size = $file_size / 1024;
+				$file_size = number_format($file_size, 0);
+				$file_size = $file_size . ' ' . 'KB';
+				break;
+			case $file_size < 1073741824 :
+				$file_size = $file_size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = number_format($file_size, 1);
+				$file_size = $file_size . ' ' . 'MB';
+				break;
+			case $file_size > 1073741824 :
+				$file_size = $file_size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = $file_size / 1024;
+				$file_size = number_format($file_size, 1);
+				$file_size = $file_size . ' ' . 'GB';
+				break;
+		}
+
+		return $file_size;
 	}
 
 }
