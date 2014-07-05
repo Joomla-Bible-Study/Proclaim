@@ -34,7 +34,7 @@ class JBSMCustom
 	{
 		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
-
+        $JBSMElements = new JBSMListing();
 		while ($countbraces > 0)
 		{
 			$bracebegin = strpos($custom, '{');
@@ -45,11 +45,11 @@ class JBSMCustom
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid = $this->getElementid($rowid, $row, $params, $admin_params, $template);
-			$custom    = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$elementid = $JBSMElements->getElement($rowid, $row, $params, $admin_params, $template, $type=0);
+			$custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
-		$elementid->element = $custom;
+		$elementid = $custom;
 		$elementid->id      = 'custom';
 
 		return $elementid;
