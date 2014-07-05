@@ -67,7 +67,7 @@ class JBSMPodcast
 				if ($checkresult)
 				{
 					$description       = str_replace("&", "and", $podinfo->description);
-					$description       = strip_tags($description);
+					$description       = trim(html_entity_decode(strip_tags($description)));
 					$detailstemplateid = $podinfo->detailstemplateid;
                     $podcastimage = $this->jimage($podinfo->image);
 					if (!$detailstemplateid)
@@ -79,16 +79,16 @@ class JBSMPodcast
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
                 <channel>
-                	<title>' . htmlspecialchars($podinfo->title) . '</title>
+                	<title>' . trim(html_entity_decode(strip_tags($podinfo->title))) . '</title>
                 	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
                 	<itunes:summary>' . $description . '</itunes:summary>
-                	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
-                	<itunes:author>' . htmlspecialchars($podinfo->editor_name) . '</itunes:author>
+                	<itunes:subtitle>' . trim(html_entity_decode(strip_tags($podinfo->title))) . '</itunes:subtitle>
+                	<itunes:author>' . trim(html_entity_decode(strip_tags($podinfo->editor_name))) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
                 		<url>http://' . $podinfo->website . $podinfo->image. '</url>
-                		<title>' . htmlspecialchars($podinfo->title) . '</title>
+                		<title>' . trim(html_entity_decode(strip_tags($podinfo->title))) . '</title>
                 		<height>' . $podcastimage[1] . '</height>
                 		<width>' . $podcastimage[0] . '</width>
                 	</image>
@@ -102,10 +102,10 @@ class JBSMPodcast
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
                 	<generator>Joomla Bible Study</generator>
-                	<managingEditor>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</managingEditor>
-                	<webMaster>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</webMaster>
+                	<managingEditor>' . $podinfo->editor_email . ' (' . trim(html_entity_decode(strip_tags($podinfo->editor_name))) . ')</managingEditor>
+                	<webMaster>' . $podinfo->editor_email . ' (' . trim(html_entity_decode(strip_tags($podinfo->editor_name))) . ')</webMaster>
                 	<itunes:owner>
-                		<itunes:name>' . htmlspecialchars($podinfo->editor_name) . '</itunes:name>
+                		<itunes:name>' . trim(html_entity_decode(strip_tags($podinfo->editor_name))) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
                 	<itunes:explicit>no</itunes:explicit>
@@ -301,21 +301,21 @@ class JBSMPodcast
 						}
 						$title       = str_replace('&', "and", $title);
 						$description = str_replace('&', "and", $episode->studyintro);
-						$description = strip_tags($description);
+						$description = trim(html_entity_decode(strip_tags($description)));
 
 						$episodedetailtemp = '
                         	   <item>
-                        		<title>' . htmlspecialchars($title) . '</title>
+                        		<title>' . trim(html_entity_decode(strip_tags($title))) . '</title>
                         		<link>http://' . $podinfo->website . '/index.php?'. 'option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
                         		<comments>http://' . $podinfo->website . '/index.php?' . 'option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
-                        		<itunes:author>' . htmlspecialchars($episode->teachername) . '</itunes:author>
-                        		<dc:creator>' . htmlspecialchars($episode->teachername) . '</dc:creator>
+                        		<itunes:author>' . trim(html_entity_decode(strip_tags($episode->teachername))) . '</itunes:author>
+                        		<dc:creator>' . trim(html_entity_decode(strip_tags($episode->teachername))) . '</dc:creator>
                         		<description>' . $description . '</description>
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
-                        		<itunes:subtitle>' . htmlspecialchars($subtitle) . '</itunes:subtitle>
+                        		<itunes:subtitle>' . trim(html_entity_decode(strip_tags($subtitle))) . '</itunes:subtitle>
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(

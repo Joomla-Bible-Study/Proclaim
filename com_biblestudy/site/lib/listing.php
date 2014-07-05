@@ -2651,7 +2651,7 @@ class JBSMListing
 					}
 					else
 					{
-						$element1 = self::getElementid($share_params->get('item1'), $row, $params, $admin_params, $template);
+						$element1 = self::getElement($share_params->get('item1'), $row, $params, $admin_params, $template, $type=0);
 					}
 				}
 				if ($share_params->get('item2'))
@@ -2669,7 +2669,7 @@ class JBSMListing
 					}
 					else
 					{
-						$element2 = self::getElementid((int) $share_params->get('item2'), $row, $params, $admin_params, $template);
+						$element2 = self::getElement((int) $share_params->get('item2'), $row, $params, $admin_params, $template, $type=0);
 					}
 				}
 				if ($share_params->get('item3'))
@@ -2688,7 +2688,7 @@ class JBSMListing
 					}
 					else
 					{
-						$element3 = self::getElementid($share_params->get('item3'), $row, $params, $admin_params, $template);
+						$element3 = self::getElement($share_params->get('item3'), $row, $params, $admin_params, $template, $type=0);
 					}
 				}
 				if ($share_params->get('item4'))
@@ -2706,7 +2706,7 @@ class JBSMListing
 					}
 					else
 					{
-						$element4 = self::getElementid($share_params->get('item4'), $row, $params, $admin_params, $template);
+						$element4 = self::getElement($share_params->get('item4'), $row, $params, $admin_params, $template, $type=0);
 					}
 				}
 
