@@ -2,10 +2,10 @@
 /**
  * Default
  *
- * @package        BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Site
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -25,30 +25,14 @@ $doc->addStyleDeclaration($style);
 		$mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
 		echo JHTML::_('content.prepare', $mediacode);
 	}
-
-	if ($this->params->get('player') == 1 || $this->player == 1)
+	// Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWplayer.
+	if ($this->params->get('player') == 1 || $this->player == 1 || $this->player == 7)
 	{
+		$player = ($this->player == '7' ? true : false);
 		JHTML::_('jwplayer.framework');
-		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params->toObject(), true);
+		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params->toObject(), true, $player);
 	}
 
-	// Legacy Player (since JBS 6.2.2)
-	if ($this->player == 7)
-	{
-		$doc->addScriptDeclaration(JURI::base() . "media/com_biblestudy/legacyplayer/audio-player.js");
-		?>
-		<object type="application/x-shockwave-flash"
-		        data="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf"
-		        id="audioplayer<?php echo $this->media->id ?>" height="24" width="<?php echo $this->playerwidth ?>">
-			<param name="movie" value="<?php echo JURI::base() ?>media/com_biblestudy/legacyplayer/player.swf"/>
-			<param name="FlashVars"
-			       value="playerID=<?php echo $this->media->id ?>&amp;soundFile=<?php echo $this->path1 ?>"/>
-			<param name="quality" value="high"/>
-			<param name="menu" value="false"/>
-			<param name="wmode" value="transparent"/>
-		</object>
-	<?php
-	}
 	if ($this->player == 8)
 	{
 		echo stripslashes($this->media->mediacode);

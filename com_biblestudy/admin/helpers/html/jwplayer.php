@@ -12,9 +12,9 @@
 defined('JPATH_PLATFORM') or die;
 
 /**
- * Utility class for jQuery JavaScript behaviors
+ * Utility class for JW Player behaviors
  *
- * @package     Joomla.Libraries
+ * @package     BibleStudy.Admin
  * @subpackage  HTML
  * @since       3.0
  */
@@ -73,10 +73,11 @@ abstract class JHtmlJwplayer
 	 * @param   int     $id      ID of media
 	 * @param   object  $params  Params from media have to be in object for do to protection.
 	 * @param   bool    $popup   If from a popup
+	 * @param   bool    $player  To make player for audio like (MP3, M4A, etc..)
 	 *
 	 * @return  string
 	 */
-	public static function render($media, $id, $params, $popup = false)
+	public static function render($media, $id, $params, $popup = false, $player = false)
 	{
 		if (!isset($params->popupimage))
 		{
@@ -85,6 +86,10 @@ abstract class JHtmlJwplayer
 		if (!isset($params->playerposition))
 		{
 			$params->playerposition = "";
+		}
+		if ($player == true)
+		{
+			$media->playerheight = 30;
 		}
 		$render = "";
 		if ($popup)
