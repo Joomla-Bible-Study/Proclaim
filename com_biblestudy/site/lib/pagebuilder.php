@@ -42,7 +42,7 @@ class JBSMPageBuilder
 		// Media files image, links, download
 		$mids         = $item->mids;
 		$page         = new stdClass;
-		$JBSMElements = new JBSMElements;
+		$JBSMElements = new JBSMListing();
 
 		if ($mids)
 		{

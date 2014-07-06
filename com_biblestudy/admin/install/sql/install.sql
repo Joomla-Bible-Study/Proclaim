@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 
 CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0'
+  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0',
   `foldername` VARCHAR(250)     NOT NULL DEFAULT '',
   `folderpath` VARCHAR(250)     NOT NULL DEFAULT '',
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
@@ -168,50 +168,30 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
-  `id`               INT(10) UNSIGNED        NOT NULL AUTO_INCREMENT,
-  `study_id`         INT(5) DEFAULT NULL,
-  `media_image`      INT(3) DEFAULT NULL,
-  `server`           VARCHAR(250) DEFAULT NULL,
-  `path`             VARCHAR(250) DEFAULT NULL,
-  `special`          VARCHAR(250) DEFAULT '_self',
-  `filename`         TEXT,
-  `size`             VARCHAR(50) DEFAULT NULL,
-  `mime_type`        INT(3) DEFAULT NULL,
-  `podcast_id`       VARCHAR(50) DEFAULT NULL,
-  `internal_viewer`  TINYINT(1) DEFAULT '0',
-  `mediacode`        TEXT,
-  `ordering`         INT(11)                 NOT NULL DEFAULT '0',
-  `createdate`       DATETIME DEFAULT NULL,
-  `link_type`        CHAR(1) DEFAULT NULL,
-  `hits`             INT(10) DEFAULT NULL,
-  `published`        TINYINT(3)              NOT NULL DEFAULT '1',
-  `docMan_id`        VARCHAR(250) DEFAULT NULL,
-  `article_id`       INT(11) DEFAULT NULL,
+  `id`                INT(10) unsigned NOT NULL AUTO_INCREMENT,
+  `study_id`          INT(5) DEFAULT NULL,
+  `server_id`         INT(5) DEFAULT NULL,
+  `podcast_id`        VARCHAR(50) DEFAULT NULL,
+  `params`            TEXT,
+  `metadata`          TEXT,
+  `ordering`          INT(11) NOT NULL DEFAULT '0',
+  `createdate`        DATETIME DEFAULT NULL,
+  `published`         TINYINT(3) NOT NULL DEFAULT '1',
   `comment`          TEXT,
-  `virtueMart_id`    INT(11) DEFAULT NULL,
-  `downloads`        INT(10) DEFAULT '0',
-  `plays`            INT(10) DEFAULT '0',
-  `params`           TEXT,
-  `player`           INT(2) DEFAULT NULL,
-  `popup`            INT(2) DEFAULT NULL,
-  `asset_id`         INT(10) UNSIGNED        NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`           INT(10) UNSIGNED        NOT NULL DEFAULT '1',
-  `language`         CHAR(7)                 NOT NULL
-  COMMENT 'The language code for the MediaFile.',
-  `created_by`       INT(10) UNSIGNED        NOT NULL DEFAULT '0',
-  `created_by_alias` VARCHAR(255)
-                     CHARACTER SET utf8
-                     COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `modified`         DATETIME                NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by`      INT(10) UNSIGNED        NOT NULL DEFAULT '0',
+  `asset_id`          INT(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`            INT(10) unsigned NOT NULL DEFAULT '1',
+  `language`          CHAR(7) NOT NULL COMMENT 'The language code for the MediaFile.',
+  `created_by`        INT(10) unsigned NOT NULL DEFAULT '0',
+  `created_by_alias`  VARCHAR(255) NOT NULL DEFAULT '',
+  `modified`          DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by`       INT(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_study_id` (`study_id`),
   KEY `idx_access` (`access`)
 )
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
+  ENGINE=InnoDB
+  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -339,30 +319,20 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
-  `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `server_name`  VARCHAR(250)     NOT NULL DEFAULT '',
-  `server_path`  VARCHAR(250)     NOT NULL DEFAULT '',
-  `published`    TINYINT(3)       NOT NULL DEFAULT '1',
-  `server_type`  CHAR(255)          NOT NULL DEFAULT 'local',
-  `ftp_username` CHAR(255)        NOT NULL,
-  `ftp_password` CHAR(255)        NOT NULL,
-  `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`       INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `type`         TINYINT(3)       NOT NULL,
-  `ftphost`      VARCHAR(100)     NOT NULL,
-  `ftpuser`      VARCHAR(250)     NOT NULL,
-  `ftppassword`  VARCHAR(250)     NOT NULL,
-  `ftpport`      VARCHAR(10)      NOT NULL,
-  `aws_key`      VARCHAR(100)     NOT NULL,
-  `aws_secret`   VARCHAR(100)     NOT NULL,
-  `params`       TEXT             NOT NULL,
+  `id`           INT(10) unsigned NOT NULL AUTO_INCREMENT,
+  `server_name`  VARCHAR(250) NOT NULL DEFAULT '',
+  `type`         CHAR(255) NOT NULL,
+  `published`    TINYINT(3) NOT NULL DEFAULT '1',
+  `asset_id`     INT(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`       INT(10) unsigned NOT NULL DEFAULT '1',
+  `params`       TEXT NOT NULL,
+  `media`        TEXT,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 )
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
+  ENGINE=InnoDB
+  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

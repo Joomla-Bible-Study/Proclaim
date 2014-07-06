@@ -128,7 +128,12 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		return $this->_item[$pk];
 	}
 
-    public function getStudies()
+	/**
+	 * Get Studies
+	 *
+	 * @return bool|mixed
+	 */
+	public function getStudies()
     {
         $app = JFactory::getApplication('site');
         $sid = $app->getUserState('sid');
@@ -212,7 +217,6 @@ class BiblestudyModelSeriesdisplay extends JModelItem
         {
             $order = "DESC";
         }
-
 
         $query->order('studydate ' . $order);
         $db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));

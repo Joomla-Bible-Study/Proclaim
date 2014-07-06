@@ -183,7 +183,9 @@ class BiblestudyModelSermon extends JModelItem
 
             $data->params->merge($template->params);
             $mparams = clone $this->getState('params');
-            $data->params->merge($mparams);
+			$mj = new JRegistry;
+			$mj->loadString($mparams);
+            $data->params->merge($mj);
 
 			$a_params           = JBSMParams::getAdmin();
 			$data->admin_params = $a_params->params;

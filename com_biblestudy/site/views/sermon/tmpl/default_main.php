@@ -72,7 +72,7 @@ $row         = $this->item;
 
 	<?php
 	// Social Networking begins here
-	if ($this->item->admin_params->get('socialnetworking') > 0)
+	if ($this->item->params->get('socialnetworking') > 0)
 	{
 		?>
 			<?php

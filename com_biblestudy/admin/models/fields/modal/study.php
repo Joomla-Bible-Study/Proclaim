@@ -36,11 +36,11 @@ class JFormFieldModal_Study extends JFormField {
 
         // Build the script.
         $script = array();
-        $script[] = '	function jSelectStudy_' . $this->id . '(id, title, book, teacher, series, type, year, topic, state, object) {';
-        $script[] = '		document.id("' . $this->id . '_id").value = id;';
-        $script[] = '		document.id("' . $this->id . '_name").value = title;';
-        $script[] = '		SqueezeBox.close();';
-        $script[] = '	}';
+        $script[] = '   function jSelectStudy_' . $this->id . '(id, title, book, teacher, series, type, year, topic, state, object) {';
+        $script[] = '       document.id("' . $this->id . '_id").value = id;';
+        $script[] = '       document.id("' . $this->id . '_name").value = title;';
+        $script[] = '       SqueezeBox.close();';
+        $script[] = '   }';
 
         // Add the script to the document head.
         JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
@@ -68,15 +68,11 @@ class JFormFieldModal_Study extends JFormField {
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
         // The current user display field.
-        $html[] = '<div class="fltlft">';
+        $html[] = '<div class="input-append">';
         $html[] = '  <input type="text" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
-        $html[] = '</div>';
 
         // The user select button.
-        $html[] = '<div class="button2-left">';
-        $html[] = '  <div class="blank">';
-        $html[] = '	<a class="modal" title="' . JText::_('JBS_CMN_STUDY_CHANGE') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_STUDY_CHANGE') . '</a>';
-        $html[] = '  </div>';
+        $html[] = ' <a class="btn modal" title="' . JText::_('JBS_CMN_STUDY_CHANGE') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-list"></i></a>';
         $html[] = '</div>';
 
         // The active article id field.
