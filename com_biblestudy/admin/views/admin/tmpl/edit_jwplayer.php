@@ -17,13 +17,12 @@ foreach ($fieldSets as $name => $fieldSet)
 {
 	if ($name == 'jwplayer')
 	{
-		?>
-		<?php if (isset($fieldSet->description) && trim($fieldSet->description))
-	{
-		?>
-		<p><?php echo $this->escape(JText::_($fieldSet->description)); ?></p>
-	<?php
-	}
+		if (isset($fieldSet->description) && trim($fieldSet->description))
+		{
+			?>
+			<p><?php echo $this->escape(JText::_($fieldSet->description)); ?></p>
+		<?php
+		}
 		foreach ($this->form->getFieldset($name) as $field)
 		{
 			?>
@@ -31,23 +30,24 @@ foreach ($fieldSets as $name => $fieldSet)
 				<div class="control-label"><?php echo $field->label; ?></div>
 				<div class="controls"><?php echo $field->input; ?></div>
 			</div>
-		<?php } ?>
-	<?php
+		<?php
+		}
 	}
 	else
 	{
 		?>
-		<div id="jwplayer_pro_section" class="modal-body">
-		<?php foreach ($this->form->getFieldset($name) as $field)
-	{
-		?>
-		<div class="control-group">
-			<div class="control-label"><?php echo $field->label; ?></div>
-			<div class="controls"><?php echo $field->input; ?></div>
+		<div id="jwplayer_pro_section">
+			<?php foreach ($this->form->getFieldset($name) as $field)
+			{
+				?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $field->label; ?></div>
+					<div class="controls"><?php echo $field->input; ?></div>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 	<?php
 	}
-		?>
-		</div><?php
-	}
-} ?>
+}

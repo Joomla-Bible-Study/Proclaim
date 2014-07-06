@@ -182,7 +182,6 @@
 	    <!-- End of Eugen Note -->
 
 	    <!-- JWpalyer -->
-
 	    <fieldset name="jwplayer" label="JBS_ADM_PLAYER_ADMIN_LABLE"
 	              description="JBS_ADM_PLAYER_ADMIN_DESC">
             <field name="controls" type="radio" label="Controls" description="" default="1"
@@ -195,48 +194,47 @@
                 <option value="0">JBS_CMN_NO</option>
                 <option value="1">JBS_CMN_YES</option>
             </field>
+            <field name="jwplayer_key" type="text" label="JBS_JWPLAYER_KEY_LABEL" description="" class="inputbox span6"/>
+            <field name="jwplayer_cdn" type="text" label="JBS_JWPLAYER_CDN_LABEL" description="" class="inputbox span6" filter="row"/>
         </fieldset>
         <fieldset name="jwplayer_pro_standerd" label="JBS_ADM_PLAYER_ADMIN_LABLE"
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
-            <field name="key" type="text" label="JBS_KEY_LABEL" description="" size="3"/>
-            <field name="image" type="file"
-                   label="Image"
+            <field name="jwplayer_image" type="file" label="Image"
                    description="URL to a JPG/PNG poster image to display before playback is started. For audio-only media, the poster image stays visible during playback."/>
-            <field name="skin" type="skin"
+            <field name="jwplayer_skin" type="skin"
                    label="Skin"
                    description="Which skin to use for styling the player (we call the default Six). Is set to the URL of that skin on your site. If you have purchased JW Player, you can load one of the 8 premium skins off our CDN by simply inserting the skin name (e.g. skin: ' bekle' ). See Using JW Player Skins for more info."
                    default=""/>
-            <field name="autostart" type="radio"
+            <field name="jwplayer_autostart" type="radio"
                    label="AutoStart"
                    description="Automatically start playing the video on page load. Can be true or false (default). Autostart does not work on mobile devices like iOS and Android."
                    default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
-            <field name="fallback" type="radio"
+            <field name="jwplayer_fallback" type="radio"
                    label="FallBack"
                    description="Whether to render a nice download link for the video if HTML5 and/or Flash are not supported. Can be true (a fallback is rendered) or false (the original HTML is not touched). Defaults to true.' default='"/>
-            <field name="mute" type="radio"
+            <field name="jwplayer_mute" type="radio"
                    abel="Mute"
                    description="Whether to have the sound muted on startup or not. Can be false (default) or true."
                    default="false">
                 <option value="false">False</option>
                 <option value="true">True</option>
             </field>
-            <field name="stagevideo" type="radio"
+            <field name="jwplayer_stagevideo" type="radio"
                    label="Stage Video"
                    description="Set this flag to false to disable GPU-accelerated image compositing in the Flash rendering mode. With some combinations of H264 parameters and GPU cards, we see inconsistent issues with rendering of the video image. Disabling Stage Video fixes this issue."
                    default="false">
                 <option value="false">False</option>
                 <option value="true">True</option>
             </field>
-            <field name="primary" type="list" default="html5"
+            <field name="jwplayer_primary" type="list" default="html5"
                    label="Primary"
                    description="Which rendering mode to try first for rendering the player. Can be html5 (default) or flash.">
                 <option value="html5">HTML5</option>
                 <option value="flash">Flash</option>
             </field>
-
         </fieldset>
         <fieldset name="jwplayer_pro_listbar" label="JBS_ADM_PLAYER_ADMIN_LABLE"
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
@@ -244,24 +242,24 @@
 	                <option value="false">False</option>
 	                <option value="true">True</option>
 			</field>
-			<field name="listbar" type="radio" label="ListBar" description="Configures a sidebar that displays all playlist entries.">
+			<field name="jwplayer_listbar" type="radio" label="ListBar" description="Configures a sidebar that displays all playlist entries.">
 	                <option value="false">False</option>
 	                <option value="true">True</option>
 			</field>
-			<field name="logo" type="media" label="Logo" description="Configures an on-screen watermark for the Pro, Premium and Ads editions."/>
+			<field name="jwplayer_logo" type="media" label="Logo" description="Configures an on-screen watermark for the Pro, Premium and Ads editions."/>
 			<field name="sharing" type="radio" label="Sharing" description="Configures the Social Sharing overlay for the Pro, Premium and Ads editions." default="false">
 	                <option value="false">False</option>
 	                <option value="true">True</option>
 		    </field>
-			<field name="related" type="radio" label="Related" description="Configures the Related Videos overlay for the Premium and Ads editions." default="false">
+			<field name="jwplayer_related" type="radio" label="Related" description="Configures the Related Videos overlay for the Premium and Ads editions." default="false">
 	                <option value="false">False</option>
 	                <option value="true">True</option>
             </field>
-			<field name="advertising" type="text" rows="20" label="Advertising" description="Configures the VAST or IMA Advertising options for the Ads edition."/>
+			<field name="jwplayer_advertising" type="text" rows="20" label="Advertising" description="Configures the VAST or IMA Advertising options for the Ads edition."/>
 			<field name="rtmp" type="text" label="RTMP" description="Configures the playback of specific types of RTMP streams." class="readonly" default="Comming Soon"/>
 			<field name="ga" type="text" label="Google Analytics" description="Configures the Google Analytics connection for the Premium and Ads editions." class="readonly" default="Comming Soon"/>
 
-			<field name="sitecatalyst" type="text" label="Adobe SiteCatalyst" description=" Configures the Adobe SiteCatalyst connection for the Premium and Ads editions." class="readonly" default="Comming Soon"/>
+			<field name="jwplayer_sitecatalyst" type="text" label="Adobe SiteCatalyst" description=" Configures the Adobe SiteCatalyst connection for the Premium and Ads editions." class="readonly" default="Comming Soon"/>
 			<field name="captions" type="radio" label="Captions" description="Configures the layout of the closed captions rendering area (load captions using a playlist)." default="false">
 	                <option value="false">False</option>
 	                <option value="true">True</option>
