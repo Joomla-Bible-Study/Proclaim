@@ -48,7 +48,10 @@ class BiblestudyModelServers extends JModelList
         if(empty($this->rlu_id)) {
             $_rlu = array();
             foreach($this->getItems() as $server) {
-                $_rlu[$server->id] = $server->server_name;
+                $_rlu[$server->id] = array(
+                    'name' => $server->server_name,
+                    'type' => $server->type
+                );
             }
             $this->rlu_id = $_rlu;
 
@@ -114,7 +117,7 @@ class BiblestudyModelServers extends JModelList
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name'));
+        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
         $query->from('#__bsms_servers AS server');
 
         // Filter by published state
