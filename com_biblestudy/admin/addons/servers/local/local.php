@@ -1,15 +1,23 @@
 <?php
 defined('_JEXEC') or die;
 
-class JBSServerLocal extends JBSServer {
-    public $name = 'local';
+class JBSMAddonLocal extends JBSMAddon {
+    protected $config;
 
-    protected function __construct($options) {
-
+    public function __construct($config = array()) {
+        parent::__construct($config);
     }
 
-    protected function upload($target, $overwrite = true)
+    public function upload($data)
     {
-        // TODO: Implement upload() method.
+        $path = $data->get('path', null, 'PATH');
+        $fileName = $_FILES["file"]["name"];
+        if (!move_uploaded_file($_FILES["file"]["tmp_name"], JPATH_ROOT . '/' . $path . '/' . $fileName))
+            die('false');
+
+        return array(
+            'filename' => $_FILES['file']['name'],
+            'size' => $_FILES['file']['size']
+        );
     }
 }

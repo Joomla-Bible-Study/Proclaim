@@ -33,15 +33,15 @@ class JFormFieldServer extends JFormField {
 
         // Get a reverse lookup of the server id to server name
         $model = JModelLegacy::getInstance('servers', 'BibleStudyModel');
-        $rlu_type = $model->getIdToNameReverseLookup();
-
-        $value = JArrayHelper::getValue($rlu_type, $this->value);
+        $rlu = $model->getIdToNameReverseLookup();
+        $server = JArrayHelper::getValue($rlu, $this->value);
 
         JHtml::_('behavior.framework');
         JHtml::_('behavior.modal');
 
         $html[] = '<div class="input-append">';
-        $html[] = '<input type="text" id="jform_serverType" disabled="disabled" value="'.$value.'"'.$size.' />';
+        $html[] = '<input type="text" disabled="disabled" value="'.$server['name'].'"'.$size.' />';
+        $html[] = '<input type="hidden" id="jform_serverType" value="'.$server['type'].'"/>';
         $html[] = '<a class="btn" onclick="SqueezeBox.fromElement(this, {handler:\'iframe\', size: {x: 600, y: 450}, url:\''.JRoute::_('index.php?option=com_biblestudy&view=servers&layout=servers&tmpl=component&media_id='.$media_id).'\'})"><i class="icon-list"></i></a>';
         $html[] = '</div>';
 

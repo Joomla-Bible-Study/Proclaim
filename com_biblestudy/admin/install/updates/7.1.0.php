@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
  * @since    7.1.0
  * @todo     need to update JError as it has been deprecated, but is still used in Joomla 3.2
  */
-class JBSM710Update
+class Migration710
 {
 
 	/**
@@ -25,9 +25,8 @@ class JBSM710Update
 	 *
 	 * @return boolean
 	 */
-	public function update710()
+	public function up($db)
 	{
-		$db     = JFactory::getDBO();
 		$oldcss = false;
 		jimport('joomla.filesystem.file');
 

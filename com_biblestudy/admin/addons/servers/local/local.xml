@@ -2,9 +2,12 @@
 <server type="storage" supports="*.*">
     <name>Local Server</name>
     <description>Use the same server serving this website as a source of media.</description>
-    <fieldset name="params">
-        <fields name="params">
+    <config>
+        <media_resource>filename</media_resource>
+    </config>
+    <fields name="media">
+        <fieldset name="params" label="Parameters">
             <field name="baseurl" type="text" label="*Base URL*" description="*Base URL*"/>
-        </fields>
-    </fieldset>
+        </fieldset>
+    </fields>
 </server>
