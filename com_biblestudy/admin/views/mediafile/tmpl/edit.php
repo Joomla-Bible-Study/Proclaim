@@ -15,11 +15,13 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('jwplayer.framework');
 ?>
+
 <script type="text/javascript">
-    Joomla.submitbutton = function (task, server) {
-        if (task == 'mediafile.setServer') {
-            document.id('item-form').elements['jform[server_id]'].value = server;
+    Joomla.submitbutton = function (task, server_id) {
+        if (task == 'mediafile.setServerId') {
+            document.id('item-form').elements['jform[server_id]'].value = server_id;
             Joomla.submitform(task, document.getElementById('item-form'));
         } else if (task == 'mediafile.cancel') {
             Joomla.submitform(task, document.getElementById('item-form'));
@@ -143,6 +145,7 @@ JHtml::_('formbehavior.chosen', 'select');
         </div>
     </div>
     <?php echo $this->form->getInput('asset_id'); ?>
+    <?php echo $this->form->getInput('id'); ?>
     <input type="hidden" name="task" value=""/>
     <?php echo JHtml::_('form.token'); ?>
 </form>
