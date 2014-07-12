@@ -1402,9 +1402,7 @@ class JBSMLanding
 
 			if ($showdiv == 1)
 			{
-
 				$book .= "\n\t" . '</div> <!-- close show/hide books div-->';
-				$showdiv = 2;
 			}
 			$book .= '<div class="landing_separator"></div>';
 		}

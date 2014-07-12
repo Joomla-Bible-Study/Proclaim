@@ -99,7 +99,7 @@ class BiblestudyController extends JControllerLegacy
 		// Attempt to change mysql for error in large select
 		$db = JFactory::getDBO();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
-		$db->query();
+		$db->execute();
 		$t = $this->input->get('t', '', 'int');
 
 		if (!$t)
@@ -147,7 +147,6 @@ class BiblestudyController extends JControllerLegacy
 	public function comment()
 	{
 		$mainframe = JFactory::getApplication();
-		$option    = $this->input->get('option', '', 'cmd');
 
 		$model = $this->getModel('sermon');
 		$t     = $this->input->get('t');

@@ -32,7 +32,6 @@ class JBSMCustom
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
 	{
-		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
         $JBSMElements = new JBSMListing();
 		while ($countbraces > 0)

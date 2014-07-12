@@ -181,6 +181,8 @@ abstract class JBSMRoute
 	 * @param    string $scheme  Scheme that need to lead with.
 	 *
 	 * @return string  The fixed URL
+	 *
+	 * @deprecate 8.0.7
 	 */
 	public static function addScheme($url, $scheme = 'http://')
 	{
