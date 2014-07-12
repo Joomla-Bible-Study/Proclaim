@@ -89,7 +89,7 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -110,9 +110,6 @@ class BiblestudyViewPopup extends JViewLegacy
 		}
 
 		$document = JFactory::getDocument();
-
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
 		jimport('joomla.application.component.helper');
 
@@ -137,7 +134,7 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$JBSMElements    = new JBSMElements;
+		$JBSMElements    = new JBSMListing;
 		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
 		$this->date      = $JBSMElements->getstudyDate($this->params, $this->media->studydate);
@@ -238,11 +235,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string $text       Text info
-	 * @param   object $media      Media info
-	 * @param   string $scripture  scripture
-	 * @param   string $date       Date
-	 * @param   string $length     Length of Title
+	 * @param   string  $text       Text info
+	 * @param   object  $media      Media info
+	 * @param   string  $scripture  scripture
+	 * @param   string  $date       Date
+	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 */

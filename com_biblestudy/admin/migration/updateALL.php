@@ -356,7 +356,6 @@ class MigrationUpgrade
 		}
 
 
-
 		$table = '#__bsms_podcast';
 
 		if (!$this->addAssetColumn($table))
