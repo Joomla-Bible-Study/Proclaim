@@ -1,6 +1,8 @@
 language: php
+
 php:
   - 5.3
+  - 5.4
 
 before_script:
   - "export DISPLAY=:99:0"
@@ -18,7 +20,7 @@ before_script:
   - pear install phpunit/DbUnit
   - pear install phpunit/PHPUnit_Selenium
   - pear install phpmd/PHP_PMD
-  - pear install PHP_CodeSniffer-1.4.4
+  - pear install PHP_CodeSniffer
   - pear install phpdoc/phpDocumentor-alpha
   - pear install VersionControl_Git-0.4.4
   - phpenv rehash
