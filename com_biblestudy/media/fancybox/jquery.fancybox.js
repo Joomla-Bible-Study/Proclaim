@@ -143,7 +143,8 @@
 				error    : '<p class="fancybox-error">The requested content cannot be loaded.<br/>Please try again later.</p>',
 				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"></a>',
 				next     : '<a title="Next" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
-				prev     : '<a title="Previous" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>'
+				prev     : '<a title="Previous" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>',
+				loading  : '<div id="fancybox-loading"><div></div></div>'
 			},
 
 			// Properties for each animation type
@@ -261,7 +262,7 @@
 					if (isQuery(element)) {
 						obj = {
 							href    : element.data('fancybox-href') || element.attr('href'),
-							title   : element.data('fancybox-title') || element.attr('title'),
+							title   : $('<div/>').text( element.data('fancybox-title') || element.attr('title') || '' ).html(),
 							isDom   : true,
 							element : element
 						};
@@ -363,7 +364,7 @@
 		cancel: function () {
 			var coming = F.coming;
 
-			if (false === F.trigger('onCancel')) {
+			if (coming && false === F.trigger('onCancel')) {
 				return;
 			}
 
@@ -614,7 +615,7 @@
 
 			F.hideLoading();
 
-			el = $('<div id="fancybox-loading"><div></div></div>').click(F.cancel).appendTo('body');
+			el = $(F.opts.tpl.loading).click(F.cancel).appendTo('body');
 
 			// If user will press the escape-button, the request will be canceled
 			D.bind('keydown.loading', function(e) {
@@ -1430,7 +1431,7 @@
 
 			F.isOpen = F.isOpened = true;
 
-			F.wrap.css('overflow', 'visible').addClass('fancybox-opened');
+			F.wrap.css('overflow', 'visible').addClass('fancybox-opened').hide().show(0);
 
 			F.update();
 
@@ -1469,12 +1470,13 @@
 
 			// Stop the slideshow if this is the last item
 			if (!current.loop && current.index === current.group.length - 1) {
+
 				F.play( false );
 
 			} else if (F.opts.autoPlay && !F.player.isActive) {
 				F.opts.autoPlay = false;
 
-				F.play();
+				F.play(true);
 			}
 		},
 
