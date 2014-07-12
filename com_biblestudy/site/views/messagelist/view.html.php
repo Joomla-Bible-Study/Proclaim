@@ -75,7 +75,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -94,12 +94,6 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$registry->loadString($template->params);
 		$this->params = $registry;
 
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document = JFactory::getDocument();
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
 		$this->books        = $this->get('Books');

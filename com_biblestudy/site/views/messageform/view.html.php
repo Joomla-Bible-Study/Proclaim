@@ -80,16 +80,12 @@ class BiblestudyViewMessageform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-
-		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
-
 		// Get model data.
 		$this->state       = $this->get('State');
 		$this->item        = $this->get('Item');
@@ -98,9 +94,9 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$input        = new JInput;
 		$option       = $input->get('option', '', 'cmd');
-		$JApplication = new JApplication;
-		$JApplication->setUserState($option . 'sid', $this->item->id);
-		$JApplication->setUserState($option . 'sdate', $this->item->studydate);
+		$app = JFactory::getApplication();
+		$app->setUserState($option . 'sid', $this->item->id);
+		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$input->set('sid', $this->item->id);
 		$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
@@ -136,17 +132,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 		$document            = JFactory::getDocument();
 
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/bootstrap.js');
-		}
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
 		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
 		$script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -163,16 +150,9 @@ class BiblestudyViewMessageform extends JViewLegacy
              ";
 
 		$document->addScriptDeclaration($script);
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $params);
 
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document->addStyleSheet('media/com_biblestudy/jui/css/bootstrap.css');
-			$document->addStyleSheet('media/com_biblestudy/jui/css/chosen.css');
-			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-		}
-
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
 
 		$this->_prepareDocument();

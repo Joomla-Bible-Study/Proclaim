@@ -108,23 +108,14 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->params = $params;
 
-		$user = JFactory::getUser();
-
 		if (!$this->canDo->get('core.edit'))
 		{
 			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 			return;
 		}
-		$document = JFactory::getDocument();
-		$host     = JURI::root();
-		$document->addScript($host . 'media/com_biblestudy/js/mediafile/submitbutton.js');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		$document->addStyleSheet($host . 'media/system/css/modal.css');
-
-		// Needed to load the article field type for the article selector
-		JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $params);
 
 		$db = JFactory::getDBO();
 

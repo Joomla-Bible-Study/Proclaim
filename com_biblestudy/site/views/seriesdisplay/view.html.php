@@ -95,18 +95,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		// @todo Need ot move all this into a JS/CSS Loaders so we don't call this twice.
 		$document = JFactory::getDocument();
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$pathway       = $mainframe->getPathWay();
-		$contentConfig = JFactory::getApplication('site')->getParams();
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
-
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
@@ -134,16 +122,9 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		// Convert parameter fields to objects.
 		$this->admin_params = $this->admin->params;
-		$css                = $params->get('css');
 
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $params);
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
@@ -259,30 +240,15 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			$st_params = $registry;
 			$version   = $st_params->get('bible_version');
 		}
-		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 
-
-		if (isset($items->description))
-		{
-			//$items->text        = $items->description;
-			//$description        = $pagebuilder->runContentPlugins($items, $params);
-			//$items->description = $description->text;
-		}
 		// End process prepare content plugins
-		$this->template = $this->state->get('template');
-		$this->params   = $params;
-		$this->items    = $items;
-
-		// --$this->article = $article;
-		// --$this->passage_link = $passage_link;
+		$this->template    = $this->state->get('template');
+		$this->params      = $params;
+		$this->items       = $items;
 		$this->studies     = $studies;
 		$uri               = new JUri;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
-
-		// Let's get the studies from this series from the sermons model
-		//JLoader::import('joomla.application.component.modellist');
-
 
 		parent::display($tpl);
 	}

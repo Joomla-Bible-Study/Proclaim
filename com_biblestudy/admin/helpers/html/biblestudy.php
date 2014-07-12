@@ -28,7 +28,7 @@ abstract class JHtmlBiblestudy
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   mixed $debug  Is debugging mode on? [optional]
+	 * @param   mixed  $debug  Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -49,6 +49,7 @@ abstract class JHtmlBiblestudy
 			$debug  = (boolean) $config->get('debug');
 		}
 		JHtml::_('jquery.framework');
+		self::bootstrap($debug);
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 
 		self::$loaded[__METHOD__] = true;
@@ -61,7 +62,7 @@ abstract class JHtmlBiblestudy
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   mixed $debug  Is debugging mode on? [optional]
+	 * @param   mixed  $debug  Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -71,11 +72,6 @@ abstract class JHtmlBiblestudy
 	{
 		if (!version_compare(JVERSION, '3.0', 'ge'))
 		{
-			// Only load once
-//			if (!empty(self::$loaded[__METHOD__]))
-//			{
-//				return;
-//			}
 
 			// If no debugging value is set, use the configuration setting
 			if ($debug === null)
@@ -84,12 +80,11 @@ abstract class JHtmlBiblestudy
 				$debug  = (boolean) $config->get('debug');
 			}
 
-			JHtml::_('script', 'media/com_biblestudy/jui/js/plugins/bootstrap.min.js', false, true, false, false, $debug);
+			JHtml::_('script', 'media/com_biblestudy/jui/js/plugins/bootstrap.min.js', false, false, false, false, $debug);
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-extended.css');
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
 
-			self::$loaded[__METHOD__] = true;
 		}
 
 		return;
@@ -98,14 +93,37 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   array $attribs  Optional array of attributes to be passed to JHtml::_('stylesheet')
+	 * @param   JRegistry  $params  Params for css
+	 * @param   string     $url     Url of a css file to load
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($attribs = array())
+	public static function loadCss($params, $url = null)
 	{
+
+		// Import Stylesheets
+		JHtml::stylesheet('media/com_biblestudy/css/general.css');
+		$css = $params->get('css');
+
+		if ($css <= "-1")
+		{
+			JHtml::styleSheet('media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			JHtml::styleSheet('media/com_biblestudy/css/site/' . $css);
+		}
+		if ($url)
+		{
+			JHtml::stylesheet($url);
+		}
+
+		if (!BIBLESTUDY_CHECKREL)
+		{
+			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+		}
 	}
 
 	/**
@@ -228,7 +246,6 @@ abstract class JHtmlBiblestudy
 
 		return $options;
 	}
-
 
 	/**
 	 * Method to get the field options.

@@ -63,7 +63,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -71,8 +71,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	{
 		$app         = JFactory::getApplication();
 		$user        = JFactory::getUser();
-		$userId      = $user->get('id');
 		$JBSMListing = new JBSMListing;
+
 		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
@@ -102,7 +102,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		if (!$item)
 		{
-			return false;
+			return;
 		}
 
 		if ($this->getLayout() == 'pagebreak')
@@ -197,38 +197,22 @@ class BiblestudyViewSermon extends JViewLegacy
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
-		//Get Scripture references from listing class in case we don't use the pagebuilder class
+		// Get Scripture references from listing class in case we don't use the pagebuilder class
 		$this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
 		$this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
-		//@todo check to see if this works
+
+		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
 		$relatedstudies     = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
-		JHtml::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/html/');
-		$document = JFactory::getDocument();
-//		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-//		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
-		JHtml::_('jquery.framework');
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.bootstrap');
-		$css = $this->item->params->get('css');
+		JHtml::_('biblestudy.loadcss', $this->params);
 
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.min.css');
 
-		//Only load pagebuilder if the default template is NOT being used
+		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
 			$pagebuilder            = new JBSMPagebuilder;
@@ -515,7 +499,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string $tpl ?
+	 * @param   string  $tpl  ?
 	 *
 	 * @return void
 	 */

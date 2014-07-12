@@ -71,15 +71,32 @@ class BiblestudyModelTeachers extends JModelList
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$pk = $app->input->getInt('id');
+		$pk = $app->input->getInt('id', '');
 		$this->setState('sermon.id', $pk);
 
-		$offset = $app->input->getUInt('limitstart');
+		$offset = $app->input->getUInt('limitstart', '');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params   = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+
+		$params->merge($template->params);
+		$t = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
 		$this->setState('params', $params);
+
+		$admin = JBSMParams::getAdmin(true);
+		$this->setState('admin', $admin);
 
 		// TODO: Tune these values based on other permissions.
 		$user = JFactory::getUser();

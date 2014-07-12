@@ -50,7 +50,6 @@ class BiblestudyViewTerms extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$input       = new JInput;
-		$t           = $input->get('t', 1, 'int');
 		$mid         = $input->get('mid', '', 'int');
 		$compat_mode = $input->get('compat_mode', '0', 'int');
 

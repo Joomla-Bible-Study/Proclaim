@@ -86,13 +86,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->pagination = $this->get('Pagination');
 		$this->admin      = JBSMParams::getAdmin();
-		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
-
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		}
+//		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
+//		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))

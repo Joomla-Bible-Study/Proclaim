@@ -109,8 +109,6 @@ class BiblestudyViewPopup extends JViewLegacy
 			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
 
-		$document = JFactory::getDocument();
-
 		jimport('joomla.application.component.helper');
 
 		$this->getMedia = new JBSMMedia;
@@ -125,12 +123,8 @@ class BiblestudyViewPopup extends JViewLegacy
 		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
-		$css = $this->params->get('css', 'biblestudy.css');
-
-		if ($css != '-1')
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $this->params);
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
