@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,17 +24,15 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher
 	 *
-	 * @param   object $params        Item Params
-	 * @param   int    $id            Item ID
-	 * @param   object $admin_params  Admin Params
+	 * @param   JRegistry $params       Item Params
+	 * @param   int       $id           Item ID
+	 * @param   object    $admin_params Admin Params
 	 *
 	 * @return string
 	 */
 	public function getTeacher($params, $id, $admin_params)
 	{
-		$mainframe   = JFactory::getApplication();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
 		$teacher    = null;
@@ -50,7 +48,6 @@ class JBSMTeacher extends JBSMListing
 
 		if ($viewtype == 'sermons')
 		{
-			$teacherid  = $params->get('listteachers');
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
 		if ($viewtype == 'sermon' && $id != 0)
@@ -70,34 +67,38 @@ class JBSMTeacher extends JBSMListing
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
-			$i_path  = null;
-
-			// Check to see if there is a teacher image, if not, skip this step
-			$images = new JBSMImages;
-			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
-
-			if (!$image)
+			if ($tresult)
 			{
-				$image->path   = '';
-				$image->width  = 0;
-				$image->height = 0;
-			}
-			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
-				. '" height="' . $image->height . '" alt="" /></td></tr>';
+				$i_path = null;
 
-			$teacher .= '<tr><td>';
+				// Check to see if there is a teacher image, if not, skip this step
+				$images = new JBSMImages;
+				$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 
-			if ($params->get('teacherlink') > 0)
-			{
-				$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
-			}
-			$teacher .= $tresult->teachername;
+				if (!$image)
+				{
+					$image->path   = '';
+					$image->width  = 0;
+					$image->height = 0;
+				}
+				$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+					. '" height="' . $image->height . '" alt="" /></td></tr>';
 
-			if ($params->get('teacherlink') > 0)
-			{
-				$teacher .= '</a>';
+				$teacher .= '<tr><td>';
+
+				if ($params->get('teacherlink') > 0)
+				{
+					$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+				}
+				$teacher .= $tresult->teachername;
+
+				if ($params->get('teacherlink') > 0)
+				{
+					$teacher .= '</a>';
+				}
+				$teacher .= '</td>';
 			}
-			$teacher .= '</td></tr></table></td>';
+			$teacher .= '</tr></table></td>';
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
@@ -112,11 +113,11 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get TeacherList Exp
 	 *
-	 * @param   object $row           Table info
-	 * @param   object $params        Item Params
-	 * @param   string $oddeven       Odd Even
-	 * @param   object $admin_params  Admin Params
-	 * @param   object $template      Template
+	 * @param   object $row          Table info
+	 * @param   object $params       Item Params
+	 * @param   string $oddeven      Odd Even
+	 * @param   object $admin_params Admin Params
+	 * @param   object $template     Template
 	 *
 	 * @return object
 	 */
@@ -146,10 +147,10 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object    $row           Table Row
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $template      Template
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   object    $row          Table Row
+	 * @param   JRegistry $params       Item Params
+	 * @param   int       $template     Template
+	 * @param   JRegistry $admin_params Admin Params
 	 *
 	 * @return object
 	 */
@@ -186,10 +187,10 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int       $id            Item ID
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template
+	 * @param   int       $id           Item ID
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
+	 * @param   int       $template     Template
 	 *
 	 * @return string
 	 */
@@ -210,9 +211,9 @@ class JBSMTeacher extends JBSMListing
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text')
+			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text')
 			->from('#__bsms_studies')
 			->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
 			->leftJoin('#__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)')
