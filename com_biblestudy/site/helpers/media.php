@@ -521,6 +521,15 @@ class JBSMMedia
 			case 1: // Internal
 				switch ($player->type)
 				{
+					case 3: // Squeezebox view
+						JHtml::_('fancybox.framework', true, true);
+						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" rel="width="' .
+							$player->playerwidth . '" height="' . $player->playerheight .
+							'">' . $image . '</a>';
+
+						return $playercode;
+						break;
+
 					case 2: // Inline
 						$playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>

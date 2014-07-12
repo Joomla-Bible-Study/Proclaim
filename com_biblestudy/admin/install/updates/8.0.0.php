@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    8.0.0
  */
-class JBSM800Update
+class Migration800
 {
 
 	/**
@@ -24,10 +24,10 @@ class JBSM800Update
 	 *
 	 * @return boolean
 	 */
-	public function update800()
+	public function up($db)
 	{
-		self::migrate_topics();
-		self::fix_mediafile_params();
+		self::migrate_topics($db);
+		self::fix_mediafile_params($db);
 
 		return true;
 	}
@@ -37,9 +37,8 @@ class JBSM800Update
 	 *
 	 * @return bool
 	 */
-	private function migrate_topics()
+	private function migrate_topics($db)
 	{
-		$db       = JFactory::getDBO();
 		$registry = new JRegistry;
 		$query    = $db->getQuery(true);
 		$query->select('id, params')
@@ -82,7 +81,7 @@ class JBSM800Update
 					}
 					$new_topic->topic_text = $value;
 					$table->save($new_topic);
-					$this->update_studies($table, $topic->id);
+					$this->update_studies($table, $topic->id, $db);
 				}
 
 				// Delete old topic
@@ -112,9 +111,8 @@ class JBSM800Update
 	 *
 	 * @return void
 	 */
-	private function update_studies($topic_table, $old_topic_id)
+	private function update_studies($topic_table, $old_topic_id, $db)
 	{
-		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('studytopics.id, studytopics.topic_id, studytopics.study_id, study.language as study_language')
 			->from('#__bsms_studytopics AS studytopics')
@@ -151,9 +149,8 @@ class JBSM800Update
 	 *
 	 * @return mixed
 	 */
-	public function fix_mediafile_params()
+	public function fix_mediafile_params($db)
 	{
-		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')

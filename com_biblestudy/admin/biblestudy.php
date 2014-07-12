@@ -48,6 +48,7 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON);
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 addCSS();
 addJS();
@@ -72,7 +73,7 @@ function addCSS()
 	if (!BIBLESTUDY_CHECKREL)
 	{
 		JHTML::stylesheet('media/com_biblestudy/jui/css/icomoon.css');
-		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
 		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	}
 	JHTML::stylesheet('media/com_biblestudy/css/general.css');
@@ -88,6 +89,7 @@ function addCSS()
  */
 function addJS()
 {
+
 	if (!BIBLESTUDY_CHECKREL)
 	{
 		JHTML::script('media/com_biblestudy/jui/js/jquery.min.js');

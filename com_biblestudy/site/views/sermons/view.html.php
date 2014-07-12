@@ -622,22 +622,18 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 		}
-		$this->document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 
 		// Errors when using local swfobject.js file.  IE 6 doesn't work
 		// Import Scripts
-		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.min.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
 		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		$this->document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
 		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
+		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.min.css');
 
 		// Styles from tooltip.css moved to css/biblestudy.css
 		// Import Stylesheets

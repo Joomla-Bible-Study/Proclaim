@@ -21,6 +21,7 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {

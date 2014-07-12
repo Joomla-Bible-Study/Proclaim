@@ -141,12 +141,17 @@ $input = $app->input;
 		<!-- End Content -->
 		<!-- Begin Sidebar -->
 		<div class="span3 form-vertical">
-            <h4>*ADDON NAME*</h4>
-			<p>
-                * Addon Description *
-			</p>
-
-		</div>
+            <h4>
+                <?php
+                    echo $this->escape($this->item->addon->name);
+                ?>
+            </h4>
+            <p>
+                <?php
+                    echo $this->escape($this->item->addon->description);
+                ?>
+            </p>
+        </div>
 		<!-- End Sidebar -->
 	</div>
 </form>

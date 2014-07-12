@@ -29,11 +29,11 @@
             <file driver="mysql" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
         </sql>
     </uninstall>
-    <update> <!-- Runs on update; New in 1.6 -->
+   <!--  <update> Runs on update; New in 1.6
         <schemas>
             <schemapath type="mysql">install/sql/updates/mysql</schemapath>
         </schemas>
-    </update>
+    </update> -->
 
     <files folder="site">
         <filename>biblestudy.php</filename>
@@ -104,11 +104,11 @@
             <folder>install</folder>
             <folder>language</folder>
             <folder>lib</folder>
-            <folder>liveupdate</folder>
             <folder>migration</folder>
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
+            <folder>addons</folder>
         </files>
     </administration>
 

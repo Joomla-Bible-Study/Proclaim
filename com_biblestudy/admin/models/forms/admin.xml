@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fields name="params">
-
         <field name="metakey" type="text" class="inputbox" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
                description="JBS_STY_METAKEYWORDS_DESC" labelclass="control-label"/>
         <field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
@@ -137,8 +136,6 @@
                value_field="mimetext" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
         </field>
-
-
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>
@@ -171,19 +168,103 @@
             <option value="3">JBS_CMN_USE_GLOBAL</option>
         </field>
 
-
-        <!--
-        Eugen:
-        This is for future some our versions of the component to simplify all of our image
-        operations. Currently this is not implemented at all
-       	santon: Please use JBS_* phrases
-        -->
-        <field name="imageLib" type="list" label="JBS_ADM_IMAGE_LIBRARY" class="span12 small">
+	    <!--
+	Eugen:
+	This is for future some our versions of the component to simplify all of our image
+	operations. Currently this is not implemented at all
+	   santon: Please use JBS_* phrases
+	-->
+	    <field name="imageLib" type="list" label="JBS_ADM_IMAGE_LIBRARY" class="span12 small">
             <option value="legacy">Legacy</option>
             <option value="gd">GD</option>
             <option value="imagemagick">ImageMagick</option>
         </field>
-        <!-- End of Eugen Note -->
+	    <!-- End of Eugen Note -->
+
+	    <!-- JWpalyer -->
+	    <fieldset name="jwplayer" label="JBS_ADM_PLAYER_ADMIN_LABLE"
+	              description="JBS_ADM_PLAYER_ADMIN_DESC">
+            <field name="controls" type="radio" label="Controls" description="" default="1"
+                   class="btn-group" labelclass="control-label">
+                <option value="0">JBS_CMN_NO</option>
+                <option value="1">JBS_CMN_YES</option>
+            </field>
+            <field name="jwplayer_pro" type="radio" label="PRO" description="" default="0"
+                   class="btn-group" labelclass="control-label">
+                <option value="0">JBS_CMN_NO</option>
+                <option value="1">JBS_CMN_YES</option>
+            </field>
+            <field name="jwplayer_key" type="text" label="JBS_JWPLAYER_KEY_LABEL" description="" class="inputbox span6"/>
+            <field name="jwplayer_cdn" type="text" label="JBS_JWPLAYER_CDN_LABEL" description="" class="inputbox span6" filter="row"/>
+        </fieldset>
+        <fieldset name="jwplayer_pro_standerd" label="JBS_ADM_PLAYER_ADMIN_LABLE"
+                  description="JBS_ADM_PLAYER_ADMIN_DESC">
+            <field name="jwplayer_image" type="file" label="Image"
+                   description="URL to a JPG/PNG poster image to display before playback is started. For audio-only media, the poster image stays visible during playback."/>
+            <field name="jwplayer_skin" type="skin"
+                   label="Skin"
+                   description="Which skin to use for styling the player (we call the default Six). Is set to the URL of that skin on your site. If you have purchased JW Player, you can load one of the 8 premium skins off our CDN by simply inserting the skin name (e.g. skin: ' bekle' ). See Using JW Player Skins for more info."
+                   default=""/>
+            <field name="jwplayer_autostart" type="radio"
+                   label="AutoStart"
+                   description="Automatically start playing the video on page load. Can be true or false (default). Autostart does not work on mobile devices like iOS and Android."
+                   default="false">
+                <option value="false">JBS_CMN_NO</option>
+                <option value="true">JBS_CMN_YES</option>
+            </field>
+            <field name="jwplayer_fallback" type="radio"
+                   label="FallBack"
+                   description="Whether to render a nice download link for the video if HTML5 and/or Flash are not supported. Can be true (a fallback is rendered) or false (the original HTML is not touched). Defaults to true.' default='"/>
+            <field name="jwplayer_mute" type="radio"
+                   abel="Mute"
+                   description="Whether to have the sound muted on startup or not. Can be false (default) or true."
+                   default="false">
+                <option value="false">False</option>
+                <option value="true">True</option>
+            </field>
+            <field name="jwplayer_stagevideo" type="radio"
+                   label="Stage Video"
+                   description="Set this flag to false to disable GPU-accelerated image compositing in the Flash rendering mode. With some combinations of H264 parameters and GPU cards, we see inconsistent issues with rendering of the video image. Disabling Stage Video fixes this issue."
+                   default="false">
+                <option value="false">False</option>
+                <option value="true">True</option>
+            </field>
+            <field name="jwplayer_primary" type="list" default="html5"
+                   label="Primary"
+                   description="Which rendering mode to try first for rendering the player. Can be html5 (default) or flash.">
+                <option value="html5">HTML5</option>
+                <option value="flash">Flash</option>
+            </field>
+        </fieldset>
+        <fieldset name="jwplayer_pro_listbar" label="JBS_ADM_PLAYER_ADMIN_LABLE"
+                  description="JBS_ADM_PLAYER_ADMIN_DESC">
+			<field name="playlist" type="radio" label="playlist" description="Config block with playlist data or RSS feed link. Enables all sophisticated media playback options, like multiple quality levels or closed captions." default="false">
+	                <option value="false">False</option>
+	                <option value="true">True</option>
+			</field>
+			<field name="jwplayer_listbar" type="radio" label="ListBar" description="Configures a sidebar that displays all playlist entries.">
+	                <option value="false">False</option>
+	                <option value="true">True</option>
+			</field>
+			<field name="jwplayer_logo" type="media" label="Logo" description="Configures an on-screen watermark for the Pro, Premium and Ads editions."/>
+			<field name="sharing" type="radio" label="Sharing" description="Configures the Social Sharing overlay for the Pro, Premium and Ads editions." default="false">
+	                <option value="false">False</option>
+	                <option value="true">True</option>
+		    </field>
+			<field name="jwplayer_related" type="radio" label="Related" description="Configures the Related Videos overlay for the Premium and Ads editions." default="false">
+	                <option value="false">False</option>
+	                <option value="true">True</option>
+            </field>
+			<field name="jwplayer_advertising" type="text" rows="20" label="Advertising" description="Configures the VAST or IMA Advertising options for the Ads edition."/>
+			<field name="rtmp" type="text" label="RTMP" description="Configures the playback of specific types of RTMP streams." class="readonly" default="Comming Soon"/>
+			<field name="ga" type="text" label="Google Analytics" description="Configures the Google Analytics connection for the Premium and Ads editions." class="readonly" default="Comming Soon"/>
+
+			<field name="jwplayer_sitecatalyst" type="text" label="Adobe SiteCatalyst" description=" Configures the Adobe SiteCatalyst connection for the Premium and Ads editions." class="readonly" default="Comming Soon"/>
+			<field name="captions" type="radio" label="Captions" description="Configures the layout of the closed captions rendering area (load captions using a playlist)." default="false">
+	                <option value="false">False</option>
+	                <option value="true">True</option>
+			</field>
+        </fieldset>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES"
@@ -191,7 +272,6 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-
         <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
                class="btn-group" labelclass="control-label">
             <option value="0">JBS_CMN_NO</option>
