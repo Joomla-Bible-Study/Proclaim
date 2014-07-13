@@ -272,6 +272,20 @@ class TableMessage extends JTable
 	public $params = null;
 
 	/**
+	 * Alias
+	 *
+	 * @var string
+	 */
+	public $alias = null;
+
+	/**
+	 * Ordering
+	 *
+	 * @var string
+	 */
+	public $ordering = null;
+
+	/**
 	 * The rules associated with this record.
 	 *
 	 * @var    JRules    A JRules object.
