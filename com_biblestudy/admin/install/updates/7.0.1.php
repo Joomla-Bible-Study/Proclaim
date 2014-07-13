@@ -2,23 +2,31 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
+
 /**
  * Update for 7.0.1 class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-
 class Migration701
 {
-	function up($db) {
+	/**
+	 * Start of upgrade
+	 *
+	 * @param   JDatabaseDriver  $db  Data bass driver
+	 *
+	 * @return bool
+	 */
+	public function up($db)
+	{
 		// Modify table topics
 		$tables      = $db->getTableColumns('#__bsms_topics');
 		$languagetag = false;
