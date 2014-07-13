@@ -20,7 +20,7 @@ class Migration810
 	/**
 	 * Call Script for Updates of 8.1.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driveer
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
 	 */

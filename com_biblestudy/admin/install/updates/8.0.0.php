@@ -22,6 +22,8 @@ class Migration800
 	/**
 	 * Method to Update to 8.0.0
 	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 *
 	 * @return boolean
 	 */
 	public function up($db)
@@ -34,6 +36,8 @@ class Migration800
 
 	/**
 	 * Migrate Topics
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
 	 */
@@ -106,8 +110,9 @@ class Migration800
 	/**
 	 * Update studies to reference newly created topics
 	 *
-	 * @param   Object $topic_table   Object containing the saved topic record
-	 * @param   String $old_topic_id  Reference to the old topic id
+	 * @param   Object           $topic_table   Object containing the saved topic record
+	 * @param   String           $old_topic_id  Reference to the old topic id
+	 * @param   JDatabaseDriver  $db            Joomla Data bass driver
 	 *
 	 * @return void
 	 */
@@ -146,6 +151,8 @@ class Migration800
 
 	/**
 	 * Fix Media File Player settings
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return mixed
 	 */

@@ -20,9 +20,11 @@ class Migration702
 	/**
 	 * Update CSS for 7.0.2
 	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 *
 	 * @return boolean
 	 */
-	public function up()
+	public function up($db)
 	{
 		$newcss = '#main ul, #main li
 					{
