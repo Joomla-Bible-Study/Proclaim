@@ -24,8 +24,8 @@ class JBSMShowScripture
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object $row     Item Info
-	 * @param   object $params  Item Params
+	 * @param   object    $row     Item Info
+	 * @param   JRegitry  $params  Item Params
 	 *
 	 * @return boolean
 	 */
@@ -77,8 +77,8 @@ class JBSMShowScripture
 	/**
 	 * Get HideShow
 	 *
-	 * @param   object $row        ?
-	 * @param   string $reference  ?
+	 * @param   object  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
@@ -98,8 +98,8 @@ class JBSMShowScripture
 	/**
 	 * Get Show
 	 *
-	 * @param   string $row        ?
-	 * @param   string $reference  ?
+	 * @param   string  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
@@ -114,8 +114,8 @@ class JBSMShowScripture
 	/**
 	 * Get Link
 	 *
-	 * @param   object $row        ?
-	 * @param   string $reference  ?
+	 * @param   object  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
@@ -139,7 +139,7 @@ class JBSMShowScripture
 	/**
 	 * Create Form of Reference
 	 *
-	 * @param   object $row  ?
+	 * @param   object  $row  ?
 	 *
 	 * @return string
 	 */
@@ -169,8 +169,8 @@ class JBSMShowScripture
 	/**
 	 * Get Bible Gateway References
 	 *
-	 * @param   string $reference  ?
-	 * @param   string $version    ?
+	 * @param   string  $reference  ?
+	 * @param   string  $version    ?
 	 *
 	 * @return string
 	 */
@@ -181,20 +181,18 @@ class JBSMShowScripture
 		return $link;
 	}
 
-    /**
+	/**
      * Only Return the Body of a html doc.
      *
-     * @param   string $html  Html document
+     * @param   string  $html  Html document
      *
      * @return string
      *
      * @since 8.0.0
-     *
-     *
      */
-    public function body_only($html)
-    {
-        return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
-    }
+	public function body_only($html)
+	{
+		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
+	}
 
 }

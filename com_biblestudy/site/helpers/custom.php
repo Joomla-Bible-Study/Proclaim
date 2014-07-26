@@ -21,19 +21,18 @@ class JBSMCustom
 	/**
 	 * Get Custom page
 	 *
-	 * @param   int       $rowid         ID of Row
-	 * @param   string    $custom        Custom String
-	 * @param   JTable    $row           Row info
-	 * @param   JRegistry $params        Params for intro
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template ID
+	 * @param   int            $rowid     ID of Row
+	 * @param   string         $custom    Custom String
+	 * @param   object         $row       Row info
+	 * @param   JRegistry      $params    Params for intro
+	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object
 	 */
-	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
+	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
 		$countbraces = substr_count($custom, '{');
-        $JBSMElements = new JBSMListing();
+		$JBSMElements = new JBSMListing;
 		while ($countbraces > 0)
 		{
 			$bracebegin = strpos($custom, '{');
@@ -44,7 +43,7 @@ class JBSMCustom
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid = $JBSMElements->getElement($rowid, $row, $params, $admin_params, $template, $type=0);
+			$elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
 			$custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
@@ -57,7 +56,7 @@ class JBSMCustom
 	/**
 	 * Get Element Number.
 	 *
-	 * @param   int $rowid  Row ID
+	 * @param   int  $rowid  Row ID
 	 *
 	 * @return int
 	 */

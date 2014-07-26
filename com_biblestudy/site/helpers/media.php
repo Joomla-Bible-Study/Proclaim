@@ -22,23 +22,14 @@ class JBSMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object         $media         Media info
-	 * @param   JRegistry      $params        Params
-	 * @param   JRegistry      $admin_params  Admin Params
-	 * @param   TableTemplate  $template      Template Table
+	 * @param   Object         $media     Media info
+	 * @param   JRegistry      $params    Params
+	 * @param   TableTemplate  $template  Template Table
 	 *
 	 * @return string
 	 */
-	public function getFluidMedia($media, $params, $admin_params, $template)
+	public function getFluidMedia($media, $params, $template)
 	{
-
-		// @todo need to merge $itemparams and $admin_params
-		$registry = new JRegistry;
-		$registry->loadString($media->params);
-		$itemparams = $registry;
-		$registry   = new JRegistry;
-		$registry->loadString($admin_params);
-		$admin_params = $registry;
 		$mediaimage = '';
 
 		if ($media->impath)
@@ -54,9 +45,9 @@ class JBSMMedia
 			$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 		}
 		$image      = $this->useJImage($mediaimage, $media->malttext);
-		$player     = self::getPlayerAttributes($params, $itemparams, $media);
-		$playercode = self::getPlayerCode($params, $itemparams, $player, $image, $media);
-		$mediafile  = self::getFluidDownloadLink($media, $params, $admin_params, $template, $playercode);
+		$player     = self::getPlayerAttributes($params, $media);
+		$playercode = self::getPlayerCode($params, $player, $image, $media);
+		$mediafile  = self::getFluidDownloadLink($media, $params, $template, $playercode);
 
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
@@ -103,22 +94,21 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object         $media         Media
-	 * @param   JRegistry      $params        Params
-	 * @param   JRegistry      $admin_params  Admin Params
-	 * @param   TableTemplate  $template      Template ID
-	 * @param   string         $playercode    Player Code
+	 * @param   Object         $media       Media
+	 * @param   JRegistry      $params      Params
+	 * @param   TableTemplate  $template    Template ID
+	 * @param   string         $playercode  Player Code
 	 *
 	 * @return string
 	 */
-	public function getFluidDownloadLink($media, $params, $admin_params, $template, $playercode)
+	public function getFluidDownloadLink($media, $params, $template, $playercode)
 	{
 		$table = '';
 		$downloadlink = '';
 
-		if ($admin_params->get('default_download_image'))
+		if ($params->get('default_download_image'))
 		{
-			$admin_d_image = $admin_params->get('default_download_image');
+			$admin_d_image = $params->get('default_download_image');
 		}
 		else
 		{
@@ -130,7 +120,7 @@ class JBSMMedia
 
 		if ($media->link_type > 0)
 		{
-			$compat_mode = $admin_params->get('compat_mode');
+			$compat_mode = $params->get('compat_mode');
 
 			if ($compat_mode == 0)
 			{
@@ -239,25 +229,24 @@ class JBSMMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   JRegistry  $params      System params
-	 * @param   object     $itemparams  Item Params //@todo Thinking this could be merged into the $params
-	 * @param   object     $media       Media info
+	 * @param   JRegistry  $params  Params
+	 * @param   object     $media   Media info
 	 *
 	 * @return object
 	 */
-	public function getPlayerAttributes($params, $itemparams, $media)
+	public function getPlayerAttributes($params, $media)
 	{
 		$player               = new stdClass;
 		$player->playerwidth  = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');
 
-		if ($itemparams->get('playerheight'))
+		if ($params->get('playerheight'))
 		{
-			$player->playerheight = $itemparams->get('playerheight');
+			$player->playerheight = $params->get('playerheight');
 		}
-		if ($itemparams->get('playerwidth'))
+		if ($params->get('playerwidth'))
 		{
-			$player->playerwidth = $itemparams->get('playerwidth');
+			$player->playerwidth = $params->get('playerwidth');
 		}
 
 		/**
@@ -384,9 +373,9 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object  $media   Media
-	 * @param   object  $params  Item Params
-	 * @param   string  $image   Image
+	 * @param   object    $media   Media
+	 * @param   JRegitry  $params  Item Params
+	 * @param   string    $image   Image
 	 *
 	 * @return string
 	 */
@@ -454,15 +443,14 @@ class JBSMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   JRegistry  $params      System Params
-	 * @param   JRegistry  $itemparams  Item Params //@todo need to merge with $params
-	 * @param   object     $player      Player code
-	 * @param   String     $image       Image info
-	 * @param   object     $media       Media
+	 * @param   JRegistry  $params  Params are the merged of system and items.
+	 * @param   object     $player  Player code
+	 * @param   String     $image   Image info
+	 * @param   object     $media   Media
 	 *
 	 * @return string
 	 */
-	public function getPlayerCode($params, $itemparams, $player, $image, $media)
+	public function getPlayerCode($params, $player, $image, $media)
 	{
 		$input       = new JInput;
 		$height      = 24;
@@ -542,7 +530,7 @@ class JBSMMedia
 						'backcolor':'<?php echo $backcolor; ?>',
 						'frontcolor':'<?php echo $frontcolor; ?>',
 						'lightcolor':'<?php echo $lightcolor; ?>',
-						'screencolor':'<?php echo $screencolor; ?>',
+						'screencolor':'<?php echo $screencolor; ?>'
 						});
 						</script>";
 						break;
@@ -602,6 +590,7 @@ class JBSMMedia
 				break;
 
 			case 7: // Legacy internal player
+				// @todo need to remove for internal player do to the JS is out of date and broken on all new browsers.
 				switch ($player->type)
 				{
 					case 2:
@@ -696,156 +685,17 @@ class JBSMMedia
 	/**
 	 * Return Media Table
 	 *
-	 * @param   object     $row           Table info
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
+	 * @param   object     $row     Table info
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return null|string
+	 *
+	 * @deprecated 8.1.0 Removed for fluid.
 	 */
-	public function getMediaTable($row, $params, $admin_params)
+	public function getMediaTable($row, $params)
 	{
-		// First we get some items from GET and instantiate the images class
-		$input        = new JInput;
-		$template     = $input->get('t', '1', 'int');
-		$images       = new JBSMImages;
-		$filesize     = null;
-		$downloadlink = null;
-
-		// Here we get the administration row from the component, and determine the download image to use
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_admin');
-		$db->setQuery($query);
-		$admin    = $db->loadObject();
-		$registry = new JRegistry;
-		$registry->loadString($admin->params);
-		$admin->params = $registry->toArray();
-
-		if (isset($admin->params['default_download_image']))
-		{
-			$admin_d_image = $admin->params['default_download_image'];
-		}
-		else
-		{
-			$admin_d_image = null;
-		}
-		$d_image = ($admin_d_image ? $admin_d_image : 'media/com_biblestudy/images/download.png');
-
-		$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
-
-		$compat_mode = $admin_params->get('compat_mode');
-
-		// Here we get a list of the media ids associated with the study we got from $row
-
-		$mediaids = self::getMediaRows($row->id);
-
-		if (!$mediaids)
-		{
-			$table = null;
-
-			return $table;
-		}
-
-		// Here is where we begin to build the table
-		$table = '<table class="table mediatable"><tbody><tr>';
-
-		// Now we look at each mediaid, and get the rest of the media information
-		foreach ($mediaids AS $media)
-		{
-			// Step 1 is to get the media file
-			$image = $images->getMediaImage($media->impath, $media->path2);
-
-			// Convert parameter fields to objects.
-			$registry = new JRegistry;
-			$registry->loadString($media->params);
-			$itemparams = $registry;
-
-			// Get the attributes for the player used in this item
-			$player     = self::getPlayerAttributes($params, $itemparams, $media);
-			$playercode = self::getPlayerCode($params, $itemparams, $player, $image, $media);
-
-			// Now we build the column for each media file
-			$table .= '<td>';
-
-			// Check to see if a download link is needed
-
-			$link_type = $media->link_type;
-
-			if ($link_type > 0)
-			{
-				if ($compat_mode == 0)
-				{
-					$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
-						$media->id . '&amp;view=sermons&amp;task=download">';
-				}
-				else
-				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-						$media->spath . $media->fpath . $media->filename . '&amp;size=' . $media->size . '">';
-				}
-
-				// Check to see if they want to use a popup
-				if ($params->get('useterms') > 0)
-				{
-
-					$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
-						. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
-				}
-				$downloadlink .= $download_image . '</a>';
-			}
-			switch ($link_type)
-			{
-				case 0:
-					$table .= $playercode;
-					break;
-
-				case 1:
-					$table .= $playercode . $downloadlink;
-					break;
-
-				case 2:
-					$table .= $downloadlink;
-					break;
-			}
-			// End of the column holding the media image
-			$table .= '</td>';
-
-		} // End of foreach mediaids
-		// End of row holding media image/link
-		$table .= '</tr>';
-
-		// This is the last part of the table where we see if we need to display the file size
-		if ($params->get('show_filesize') > 0 && isset($media))
-		{
-			$table .= '<tr>';
-
-			foreach ($mediaids as $media)
-			{
-				switch ($params->get('show_filesize'))
-				{
-					case 1:
-						$filesize = $this->getFilesize($media->size);
-						break;
-					case 2:
-						$filesize = $media->comment;
-						break;
-					case 3:
-						if ($media->comment ? $filesize = $media->comment : $filesize = $this->getFilesize($media->size))
-						{
-						}
-						break;
-				}
-
-				$table .= '<td><span class="bsfilesize">' . $filesize . '</span></td>';
-
-			} // End second foreach
-			$table .= '</tr>';
-
-		} // End of if show_file size
-
-		$table .= '</tbody></table>';
-
-		return $table;
+		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaTable');
+		return false;
 	}
 
 	/**
@@ -854,18 +704,13 @@ class JBSMMedia
 	 * @param   int  $id  ID of media
 	 *
 	 * @return object
+	 *
+	 * @deprecated 8.1.0
 	 */
 	public function getMediaid($id)
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('m.id as mid, m.study_id, s.id as sid')
-			->from('#__bsms_mediafiles AS m')
-			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . (int) $db->q($id));
-		$db->setQuery($query);
-		$mediaids = $db->loadObjectList();
-
-		return $mediaids;
+		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaid');
+		return false;
 	}
 
 	/**
@@ -874,50 +719,13 @@ class JBSMMedia
 	 * @param   int  $id  ID of media Row
 	 *
 	 * @return object|boolean
+	 *
+	 * @deprecated 8.1.0
 	 */
 	public function getMediaRows($id)
 	{
-		if (!$id)
-		{
-			return false;
-		}
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-			. ' #__bsms_media.media_image_name AS imname,'
-			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
-
-		$query->from('#__bsms_mediafiles');
-
-		$query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-
-		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-
-		$query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-
-		$query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
-
-		$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-
-		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-
-		$query->where('#__bsms_mediafiles.study_id = ' . (int) $id);
-		$query->where('#__bsms_mediafiles.published = 1');
-		$query->order('ordering ASC, #__bsms_media.media_image_name ASC');
-		$db->setQuery($query);
-		$media = $db->loadObjectList();
-
-		if ($media)
-		{
-			return $media;
-		}
-		else
-		{
-			return false;
-		}
+		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaRows');
+		return false;
 	}
 
 	/**
@@ -926,9 +734,13 @@ class JBSMMedia
 	 * @param   int  $id  ID of Row
 	 *
 	 * @return object|boolean
+	 *
+	 * @todo Need to redo for new table system, Eugen
 	 */
 	public function getMediaRows2($id)
 	{
+		JFactory::getApplication()->enqueueMessage('Function Needs to be rebuilt Eugen getMediaRows2');
+
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -969,41 +781,13 @@ class JBSMMedia
 	 * @param   string  $file_size  Size in bytes
 	 *
 	 * @return null|string
+	 *
+	 * @deprecate 8.1.0 This is replace by getFluidFilesize
 	 */
 	public function getFilesize($file_size)
 	{
-		if (!$file_size)
-		{
-			$file_size = null;
-
-			return $file_size;
-		}
-		switch ($file_size)
-		{
-			case $file_size < 1024 :
-				$file_size = $file_size . ' ' . 'Bytes';
-				break;
-			case $file_size < 1048576 :
-				$file_size = $file_size / 1024;
-				$file_size = number_format($file_size, 0);
-				$file_size = $file_size . ' ' . 'KB';
-				break;
-			case $file_size < 1073741824 :
-				$file_size = $file_size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = number_format($file_size, 1);
-				$file_size = $file_size . ' ' . 'MB';
-				break;
-			case $file_size > 1073741824 :
-				$file_size = $file_size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = number_format($file_size, 1);
-				$file_size = $file_size . ' ' . 'GB';
-				break;
-		}
-
-		return $file_size;
+		JFactory::getApplication()->enqueueMessage('Use JBSMedia->getFluidFilesize');
+		return false;
 	}
 
 }

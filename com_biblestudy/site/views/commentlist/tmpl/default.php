@@ -177,7 +177,8 @@ $sortFields = $this->getSortFields();
 					<td class=" has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
+								<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - ' .
+										JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
 							<?php else : ?>
 								<?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?>
 							<?php endif; ?>

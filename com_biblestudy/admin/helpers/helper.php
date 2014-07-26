@@ -28,26 +28,24 @@ class JBSMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   int        $rowid         ID
-	 * @param   object     $row           JTable
-	 * @param   JRegistry  $params        Item Params
-	 * @param   JRegistry  $admin_params  Admin Params
-	 * @param   int        $template      ID
+	 * @param   object         $row       JTable
+	 * @param   JRegistry      $params    Item Params
+	 * @param   TableTemplate  $template  ID
 	 *
 	 * @return string
 	 */
-	public static function getTooltip($row, $params, $admin_params, $template)
+	public static function getTooltip($row, $params, $template)
 	{
 		$JBSMElements = new JBSMListing;
 
-        JHTML::_('behavior.tooltip');
+		JHTML::_('behavior.tooltip');
 		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
-		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $admin_params, $template, $type=0);
-		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $admin_params, $template, $type=0);
-		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $admin_params, $template, $type=0);
-		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $admin_params, $template, $type=0);
-		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $admin_params, $template, $type=0);
+		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
+		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
+		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
+		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
+		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
 
 		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1 . '<br />';
 		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2 . '<br />';

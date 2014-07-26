@@ -16,15 +16,15 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.1.0
  *
- * @todo     still needs lots of work. bcc
+ * @deprecate 8.1.0 No longer used.
  */
 class JBSMUpload
 {
 	/**
 	 * Method to load javascript for squeezebox modal
 	 *
-	 * @param   string $host   the site base url
-	 * @param   string $admin  ?
+	 * @param   string  $host   the site base url
+	 * @param   string  $admin  ?
 	 *
 	 * @return    string
 	 */
@@ -145,9 +145,9 @@ class JBSMUpload
 	/**
 	 * Method to get path variable
 	 *
-	 * @param   array  $url       message details.
-	 * @param   string $tempfile  Temp file path.
-	 * @param   string $front     Front info
+	 * @param   array   $url       message details.
+	 * @param   string  $tempfile  Temp file path.
+	 * @param   string  $front     Front info
 	 *
 	 * @return    string
 	 */
@@ -185,7 +185,7 @@ class JBSMUpload
 	/**
 	 * Method to delete temp file
 	 *
-	 * @param   string $tempfile  Temp file path.
+	 * @param   string  $tempfile  Temp file path.
 	 *
 	 * @return    boolean
 	 */
@@ -202,7 +202,7 @@ class JBSMUpload
 	/**
 	 * Method to check upload file to see if it is allowed
 	 *
-	 * @param   array $file  File info
+	 * @param   array  $file  File info
 	 *
 	 * @return    boolean
 	 */
@@ -225,8 +225,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param   string $tempfile  tempfile location
-	 * @param   object $filename  File info
+	 * @param   string  $tempfile  tempfile location
+	 * @param   object  $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -267,8 +267,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param   array  $file      tempfile location
-	 * @param   object $filename  File info
+	 * @param   array   $file      tempfile location
+	 * @param   object  $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -328,8 +328,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file
 	 *
-	 * @param   object $filename  Destination file details.
-	 * @param   array  $file      Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -349,8 +349,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file for ftp upload
 	 *
-	 * @param   string $filename  Destination file details.
-	 * @param   array  $file      Source File details.
+	 * @param   string  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -370,9 +370,9 @@ class JBSMUpload
 	/**
 	 * Method to upload the file over ftp
 	 *
-	 * @param   array  $file      Source File details.
-	 * @param   object $filename  Destination file details.
-	 * @param   int    $admin     Sets whether call is from Joomla admin or site.
+	 * @param   array   $file      Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   int     $admin     Sets whether call is from Joomla admin or site.
 	 *
 	 * @return  boolean
 	 */
@@ -456,12 +456,12 @@ class JBSMUpload
 	/**
 	 * Method to build filepath
 	 *
-	 * @param   array  $file      File details.
-	 * @param   string $type      Type
-	 * @param   int    $serverid  Server ID
-	 * @param   int    $folderid  Folder Id
-	 * @param   int    $path      The path id.
-	 * @param   int    $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
+	 * @param   array   $file      File details.
+	 * @param   string  $type      Type
+	 * @param   int     $serverid  Server ID
+	 * @param   int     $folderid  Folder Id
+	 * @param   int     $path      The path id.
+	 * @param   int     $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
 	 *
 	 * @return    object
 	 */
@@ -560,9 +560,9 @@ class JBSMUpload
 	/**
 	 * AWS
 	 *
-	 * @param   string $file      File
-	 * @param   object $filename  FileName
-	 * @param   int    $admin     Admin
+	 * @param   string  $file      File
+	 * @param   object  $filename  FileName
+	 * @param   int     $admin     Admin
 	 *
 	 * @return boolean
 	 */
@@ -733,8 +733,8 @@ class JBSMUpload
 	/**
 	 * Amazon HMAC
 	 *
-	 * @param   string $stringToSign  Sign
-	 * @param   string $aws_secret    Secret
+	 * @param   string  $stringToSign  Sign
+	 * @param   string  $aws_secret    Secret
 	 *
 	 * @return string
 	 */
@@ -756,7 +756,7 @@ class JBSMUpload
 	/**
 	 * BinSha1
 	 *
-	 * @param   string $d  ?
+	 * @param   string  $d  ?
 	 *
 	 * @return string
 	 */
@@ -776,9 +776,9 @@ class JBSMUpload
 	/**
 	 * Send Rest
 	 *
-	 * @param   resource $fp     ?
-	 * @param   string   $q      ?
-	 * @param   boolean  $debug  debug
+	 * @param   resource  $fp     ?
+	 * @param   string    $q      ?
+	 * @param   boolean   $debug  debug
 	 *
 	 * @return string
 	 */

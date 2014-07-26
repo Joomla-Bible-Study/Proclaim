@@ -21,7 +21,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Subscribe Table
 	 *
-	 * @param   string $introtext  Intro Text
+	 * @param   string  $introtext  Intro Text
 	 *
 	 * @return string
 	 */
@@ -86,7 +86,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Standard Podcast
 	 *
-	 * @param   object $podcast  Podcast Info
+	 * @param   object  $podcast  Podcast Info
 	 *
 	 * @return string
 	 */
@@ -117,7 +117,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Alternate Podcast
 	 *
-	 * @param   object $podcast  Podcast info
+	 * @param   object  $podcast  Podcast info
 	 *
 	 * @return string
 	 */
@@ -174,8 +174,8 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Podcast Image
 	 *
-	 * @param   array $podcastimagefromdb  Podcast image
-	 * @param   array $words               Alt podcast image text
+	 * @param   array  $podcastimagefromdb  Podcast image
+	 * @param   array  $words               Alt podcast image text
 	 *
 	 * @return string
 	 */

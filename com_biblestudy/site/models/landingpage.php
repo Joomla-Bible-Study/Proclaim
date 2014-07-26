@@ -53,8 +53,8 @@ class BiblestudyModelLandingpage extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -64,6 +64,9 @@ class BiblestudyModelLandingpage extends JModelList
 	{
 		$order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
 		$this->setState('filter.order', $order);
+
+		$params = JBSMParams::getTemplateparams()->params;
+		$this->setState('params', $params);
 
 		parent::populateState('s.studydate', 'DESC');
 	}

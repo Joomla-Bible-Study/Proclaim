@@ -40,7 +40,7 @@ class JBSMPodcast
 		$db->setQuery($query);
 		$podids       = $db->loadObjectList();
 		$custom       = new JBSMCustom;
-		$JBSMElements = new JBSMElements;
+		$JBSMlisting  = new JBSMListing;
 		$title        = null;
 
 		// Now iterate through the podcasts, and pick up the mediafiles
@@ -69,7 +69,7 @@ class JBSMPodcast
 					$description       = str_replace("&", "and", $podinfo->description);
 					$description       = trim(html_entity_decode(strip_tags($description)));
 					$detailstemplateid = $podinfo->detailstemplateid;
-                    $podcastimage = $this->jimage($podinfo->image);
+					$podcastimage      = $this->jimage($podinfo->image);
 					if (!$detailstemplateid)
 					{
 						$detailstemplateid = 1;
@@ -87,7 +87,7 @@ class JBSMPodcast
                 	<itunes:author>' . trim(html_entity_decode(strip_tags($podinfo->editor_name))) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>http://' . $podinfo->website . $podinfo->image. '</url>
+                		<url>http://' . $podinfo->website . $podinfo->image . '</url>
                 		<title>' . trim(html_entity_decode(strip_tags($podinfo->title))) . '</title>
                 		<height>' . $podcastimage[1] . '</height>
                 		<width>' . $podcastimage[0] . '</width>
@@ -125,7 +125,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
-					$registry        = new JRegistry;
+					$registry        = new \Joomla\Registry\Registry;
 					$podinfo->params = '{"show_verses":"1"}';
 					$registry->loadString($podinfo->params);
 					$params = $registry;
@@ -155,7 +155,7 @@ class JBSMPodcast
 						$esv          = 0;
 						$scripturerow = 1;
 						$episode->id  = $episode->study_id;
-						$scripture    = $JBSMElements->getScripture($params, $episode, $esv, $scripturerow);
+						$scripture    = $JBSMlisting->getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
 						$pod_subtitle = $podinfo->episodesubtitle;
 
@@ -410,8 +410,8 @@ class JBSMPodcast
 	/**
 	 * Get Episodes
 	 *
-	 * @param   int    $id     Id for Episode
-	 * @param   string $limit  Limit of records
+	 * @param   int     $id     Id for Episode
+	 * @param   string  $limit  Limit of records
 	 *
 	 * @return object
 	 */
@@ -445,26 +445,30 @@ class JBSMPodcast
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-            ->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
+			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
-//go through each and remove the -1 strings and retest
-        $epis = array();
-        foreach ($episodes as $e)
-        {
-            $e->podcast_id = str_replace('-1','',$e->podcast_id);
-            if (substr_count($e->podcast_id,$id)){$epis[]= $e;}
-        }
 
-        return $epis;
+		// Go through each and remove the -1 strings and retest
+		$epis = array();
+		foreach ($episodes as $e)
+		{
+			$e->podcast_id = str_replace('-1', '', $e->podcast_id);
+			if (substr_count($e->podcast_id, $id))
+			{
+				$epis[] = $e;
+			}
+		}
+
+		return $epis;
 	}
 
 	/**
 	 * Write the File
 	 *
-	 * @param   string $file         File Name
-	 * @param   string $filecontent  File Content
+	 * @param   string  $file         File Name
+	 * @param   string  $filecontent  File Content
 	 *
 	 * @return boolean|string
 	 */
@@ -510,16 +514,22 @@ class JBSMPodcast
 		return $podcastresults;
 	}
 
-    public function jimage($path)
-    {
-        if (!$path)
-        {
-            return false;
-        }
+	/**
+	 * JImage
+	 *
+	 * @param   string  $path  ?
+	 *
+	 * @return array|bool
+	 */
+	public function jimage($path)
+	{
+		if (!$path)
+		{
+			return false;
+		}
 
+		$return = getimagesize(JURI::root() . $path);
 
-        $return = getimagesize(JURI::root().$path);
-
-        return $return;
-    }
+		return $return;
+	}
 }

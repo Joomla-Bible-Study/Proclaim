@@ -46,7 +46,7 @@ class JBSMDownload
 		$template = $db->loadObject();
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new \Joomla\Registry\Registry;
 		$registry->loadString($template->params);
 		$params = $registry;
 

@@ -24,17 +24,16 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string    $r              ?
-	 * @param   object    $row            JTable
-	 * @param   object    $customelement  ?
-	 * @param   string    $custom         ?
-	 * @param   string    $islink         Is a Link
-	 * @param   JRegistry $admin_params   Admin Params
-	 * @param   JRegistry $params         Item Params
+	 * @param   string     $r              ?
+	 * @param   object     $row            JTable
+	 * @param   object     $customelement  ?
+	 * @param   string     $custom         ?
+	 * @param   string     $islink         Is a Link
+	 * @param   JRegistry  $params         Item Params
 	 *
 	 * @return string
 	 */
-	public function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_params, $params)
+	public function seriesGetcustom($r, $row, $customelement, $custom, $islink, $params)
 	{
 		$countbraces = substr_count($custom, '{');
 		$braceend    = 0;
@@ -45,7 +44,7 @@ class JBSMSerieslist extends JBSMListing
 			$braceend      = strpos($custom, '}');
 			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 			$customelement = $this->getseriesElementnumber($subcustom);
-			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $admin_params, $params, $view = null);
+			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $params, $view = null);
 			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
@@ -56,7 +55,7 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series ElementNumber
 	 *
-	 * @param   string $subcustom  ?
+	 * @param   string  $subcustom  ?
 	 *
 	 * @return int
 	 */
@@ -102,14 +101,13 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object    $row           JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $template      Template
+	 * @param   object     $row       JTable
+	 * @param   JRegistry  $params    Item Params
+	 * @param   object     $template  Template
 	 *
 	 * @return object
 	 */
-	public function getSerieslistExp($row, $params, $admin_params, $template)
+	public function getSerieslistExp($row, $params, $template)
 	{
 		$t      = $params->get('serieslisttemplateid');
 		$images = new JBSMImages;
@@ -129,14 +127,13 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object    $row           JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $template      Template
+	 * @param   object     $row       JTable
+	 * @param   JRegistry  $params    Item Params
+	 * @param   object     $template  Template
 	 *
 	 * @return object
 	 */
-	public function getSeriesDetailsExp($row, $params, $admin_params, $template)
+	public function getSeriesDetailsExp($row, $params, $template)
 	{
 		$images = new JBSMImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
@@ -155,14 +152,13 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int       $id            ID
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   object    $template      Template
+	 * @param   int        $id        ID
+	 * @param   JRegistry  $params    Item Params
+	 * @param   object     $template  Template
 	 *
 	 * @return string
 	 */
-	public function getSeriesstudiesExp($id, $params, $admin_params, $template)
+	public function getSeriesstudiesExp($id, $params, $template)
 	{
 
 		$input   = new JInput;

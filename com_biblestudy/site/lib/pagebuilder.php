@@ -28,13 +28,12 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object  $item          Item info
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   object     $item    Item info
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return object
 	 */
-	public function buildPage($item, $params, $admin_params)
+	public function buildPage($item, $params)
 	{
 		$item->tp_id = '1';
 		$images      = new JBSMImages;
@@ -42,11 +41,11 @@ class JBSMPageBuilder
 		// Media files image, links, download
 		$mids         = $item->mids;
 		$page         = new stdClass;
-		$JBSMElements = new JBSMListing();
+		$JBSMElements = new JBSMListing;
 
 		if ($mids)
 		{
-			$page->media = self::mediaBuilder($mids, $params, $admin_params);
+			$page->media = self::mediaBuilder($mids, $params);
 		}
 		else
 		{
@@ -211,16 +210,18 @@ class JBSMPageBuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array   $mediaids      ID of Media
-	 * @param   object  $params        Item Params
-	 * @param   object  $admin_params  Admin Params
+	 * @param   array      $mediaids  ID of Media
+	 * @param   JRegistry  $params    Item Params
 	 *
 	 * @return string
+	 *
+	 * @todo Eugen will need to redo this sql
 	 */
-	private function mediaBuilder($mediaids, $params, $admin_params)
+	private function mediaBuilder($mediaids, $params)
 	{
 		$images        = new JBSMImages;
 		$mediaelements = new JBSMMedia;
+		$mediaimage    = '';
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -248,7 +249,7 @@ class JBSMPageBuilder
 			$link_type = $media->link_type;
 			$registry  = new JRegistry;
 			$registry->loadString($media->params);
-			$itemparams     = $registry;
+			$params->merge($registry);
 			$mediaid        = $media->id;
 			if ($media->impath)
 			{
@@ -263,12 +264,12 @@ class JBSMPageBuilder
 				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 			}
 			$image          = $mediaelements->useJImage($mediaimage, $media->mimetext);
-			$player         = $mediaelements->getPlayerAttributes($params, $itemparams, $media);
-			$playercode     = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
-			$d_image        = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png');
+			$player         = $mediaelements->getPlayerAttributes($params, $media);
+			$playercode     = $mediaelements->getPlayerCode($params, $player, $image, $media);
+			$d_image        = ($params->get('default_download_image') ? $params->get('default_download_image') : 'download.png');
 			$download_tmp   = $images->getMediaImage($d_image, null);
 			$download_image = $download_tmp->path;
-			$compat_mode    = $admin_params->get('compat_mode');
+			$compat_mode    = $params->get('compat_mode');
 			$downloadlink   = null;
 
 			if ($link_type > 0)
@@ -312,16 +313,15 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string  $whereitem     ?
-	 * @param   string  $wherefield    ?
-	 * @param   object  $params        Item params
-	 * @param   object  $admin_params  Admin params
-	 * @param   int     $limit         Limit of Records
-	 * @param   string  $order         DESC or ASC
+	 * @param   string    $whereitem   ?
+	 * @param   string    $wherefield  ?
+	 * @param   JRegitry  $params      Item params
+	 * @param   int       $limit       Limit of Records
+	 * @param   string    $order       DESC or ASC
 	 *
 	 * @return object
 	 */
-	public function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order)
+	public function studyBuilder($whereitem, $wherefield, $params, $limit, $order)
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDBO();
@@ -385,6 +385,7 @@ class JBSMPageBuilder
 		$query->select('users.name as submitted');
 		$query->join('LEFT', '#__users as users on study.user_id = users.id');
 
+		// @todo Need eugen to redo this sql may be off loaded?
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
 		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
@@ -454,24 +455,24 @@ class JBSMPageBuilder
 			'com_biblestudy.sermon',
 			&$item,
 			&$params,
-			$offset
-		));
+			$offset )
+		);
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
 		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
 			'com_biblestudy.sermon',
 			&$item,
 			&$params,
-			$offset
-		));
+			$offset )
+		);
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
 		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
 			'com_biblestudy.sermon',
 			&$item,
 			&$params,
-			$offset
-		));
+			$offset )
+		);
 		$item->event->afterDisplayContent = trim(implode("\n", $results));
 
 		return $item;

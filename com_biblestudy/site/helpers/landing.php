@@ -21,24 +21,21 @@ class JBSMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $id            Item ID
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      Item ID
 	 *
 	 * @return string
 	 */
-	public function getLocationsLandingPage($params, $id, $admin_params)
+	public function getLocationsLandingPage($params, $id)
 	{
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
-		$JViewLegacy = new JViewLegacy;
-		$location  = null;
-		$teacherid = null;
-		$template  = $params->get('studieslisttemplateid', 1);
-		$limit     = $params->get('landinglocationslimit');
+		$location    = null;
+		$teacherid   = null;
+		$template    = $params->get('studieslisttemplateid', 1);
+		$limit       = $params->get('landinglocationslimit');
 
 		if (!$limit)
 		{
@@ -243,13 +240,12 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   object $params        Item Params
-	 * @param   int    $id            Item ID
-	 * @param   object $admin_params  Admin Params
+	 * @param   JRegitry  $params  Item Params
+	 * @param   int       $id      Item ID
 	 *
 	 * @return string
 	 */
-	public function getTeacherLandingPage($params, $id, $admin_params)
+	public function getTeacherLandingPage($params, $id)
 	{
 		$input       = new JInput;
 		$mainframe   = JFactory::getApplication();
@@ -484,15 +480,14 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   object $params        Item Params
-	 * @param   int    $id            ID
-	 * @param   object $admin_params  Admin Params
+	 * @param   JRegitry  $params  Item Params
+	 * @param   int       $id      ID
 	 *
 	 * @return string
 	 *
 	 * @todo look like $numRows was not defined not sure if needed. TOM
 	 */
-	public function getSeriesLandingPage($params, $id, $admin_params)
+	public function getSeriesLandingPage($params, $id)
 	{
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
@@ -724,13 +719,12 @@ class JBSMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $id            Item ID
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      Item ID
 	 *
 	 * @return string
 	 */
-	public function getYearsLandingPage($params, $id, $admin_params)
+	public function getYearsLandingPage($params, $id)
 	{
 		$mainframe = JFactory::getApplication();
 		$db        = JFactory::getDBO();
@@ -882,13 +876,12 @@ class JBSMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $id            ID
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      ID
 	 *
 	 * @return string
 	 */
-	public function getTopicsLandingPage($params, $id, $admin_params)
+	public function getTopicsLandingPage($params, $id)
 	{
 		$mainframe = JFactory::getApplication();
 		$user      = JFactory::getUser();
@@ -1040,13 +1033,12 @@ class JBSMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   JRegistry $params        Item Params
-	 * @param   int       $id            ID
-	 * @param   JRegistry $admin_params  Admin Params
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      ID
 	 *
 	 * @return string
 	 */
-	public function getMessageTypesLandingPage($params, $id, $admin_params)
+	public function getMessageTypesLandingPage($params, $id)
 	{
 		$mainframe   = JFactory::getApplication();
 		$db          = JFactory::getDBO();
@@ -1258,7 +1250,7 @@ class JBSMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   JRegistry $params  Item Params
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return string
 	 */

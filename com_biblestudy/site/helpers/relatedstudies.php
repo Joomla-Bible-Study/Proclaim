@@ -24,8 +24,8 @@ class JBSMRelatedStudies
 	/**
 	 * Get Related
 	 *
-	 * @param   object $row     JTable
-	 * @param   object $params  Item Params
+	 * @param   object    $row     JTable
+	 * @param   JRegitry  $params  Item Params
 	 *
 	 * @return boolean
 	 *
@@ -36,9 +36,7 @@ class JBSMRelatedStudies
 		$this->score = array();
 		$keygo       = true;
 		$topicsgo    = false;
-		$registry    = new JRegistry;
-		$registry->loadString($row->params);
-		$keywords = $registry->get('metakey');
+		$keywords = $params->get('metakey');
 
 		$topics = $row->tp_id;
 
@@ -79,7 +77,6 @@ class JBSMRelatedStudies
 				$this->parseKeys($keywords, $compare, $study->id);
 			}
 
-
 			if ($study->tp_id)
 			{
 				$this->parseKeys($topicslist, $study->tp_id, $study->id);
@@ -99,9 +96,9 @@ class JBSMRelatedStudies
 	/**
 	 * Parse keys
 	 *
-	 * @param   string $source   ?
-	 * @param   string $compare  ?
-	 * @param   int    $id       ?
+	 * @param   string  $source   ?
+	 * @param   string  $compare  ?
+	 * @param   int     $id       ?
 	 *
 	 * @return boolean
 	 */
@@ -111,7 +108,6 @@ class JBSMRelatedStudies
 		$compareisarray = false;
 		$sourcearray    = array();
 		$comparearray   = array();
-
 
 		if (substr_count($source, ','))
 		{
@@ -263,7 +259,7 @@ class JBSMRelatedStudies
 		$topics     = $db->loadObjectList();
 		$topicslist = array();
 
-		foreach ($topics as $key => $value)
+		foreach ($topics as $value)
 		{
 			foreach ($value as $v)
 			{
@@ -278,7 +274,7 @@ class JBSMRelatedStudies
 	/**
 	 * Remove Common Words form render.
 	 *
-	 * @param   string $input  Home
+	 * @param   string  $input  Home
 	 *
 	 * @return array
 	 */

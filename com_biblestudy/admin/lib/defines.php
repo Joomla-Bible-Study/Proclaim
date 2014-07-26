@@ -63,3 +63,11 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 
 // Database defines
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
+
+/**
+ * @deprecated 4.0 Use \Joomla\Registry\Registry instead
+ * @see        \Joomla\Registry\Registry
+ **/
+class JRegistry extends \Joomla\Registry\Registry
+{
+}
