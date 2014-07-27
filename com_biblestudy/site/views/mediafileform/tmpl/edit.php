@@ -26,22 +26,14 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-	JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
 }
 
-JHtml::script('media/com_biblestudy/js/noconflict.js');
-JHtml::script('media/com_biblestudy/js/biblestudy.js');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 
 // Create shortcut to parameters.
 $params = $this->item->params;
 $app = JFactory::getApplication();
-$input = $app->input;
 
 // Get the studyid if this is coming to us in a modal form
 $folder = '';
@@ -65,7 +57,7 @@ elseif ($serverid)
 }
 elseif (empty($this->item->study_id))
 {
-	$server = $this->admin_params->get('server');
+	$server = $this->params->get('server');
 }
 $folderid = $app->getUserState('folderid');
 
@@ -79,7 +71,7 @@ elseif ($folderid)
 }
 elseif (empty($this->item->study_id))
 {
-	$folder = $this->admin_params->get('path');
+	$folder = $this->params->get('path');
 }
 ?>
 <script>
@@ -320,7 +312,7 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('podcast_id'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->admin_params->get('podcast') : null); ?>
+			<?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->params->get('podcast') : null); ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -328,7 +320,7 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('link_type'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->admin_params->get('download') : $this->item->link_type); ?>
+			<?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->params->get('download') : $this->item->link_type); ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -459,7 +451,7 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('special'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->admin_params->get('target') : $this->item->special); ?>
+			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->params->get('target') : $this->item->special); ?>
 		</div>
 	</div>
 
@@ -505,7 +497,11 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('media_image'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('media_image', null, empty($this->item->study_id) ? $this->admin_params->get('media_image') : $this->item->media_image); ?>
+			<?php echo $this->form->getInput(
+				'media_image',
+				null,
+				empty($this->item->study_id) ? $this->params->get('media_image') : $this->item->media_image
+			); ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -513,7 +509,7 @@ elseif (empty($this->item->study_id))
 			<?php echo $this->form->getLabel('mime_type'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->admin_params->get('mime') : $this->item->mime_type); ?>
+			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->params->get('mime') : $this->item->mime_type); ?>
 		</div>
 	</div>
 

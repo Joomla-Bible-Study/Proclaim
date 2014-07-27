@@ -32,7 +32,6 @@ $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 JHTML::_('behavior.tooltip');
 $params = $this->item->params;
-$admin_params = $this->item->admin_params;
 $document = JFactory::getDocument();
 
 $row = $this->studydetails;
@@ -40,7 +39,7 @@ $row = $this->studydetails;
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 	<?php
 	// @todo need to be converted to bootstrap.
-	$details = $JBSMListing->getStudyExp($row, $params, $admin_params, $this->template);
+	$details = $JBSMListing->getStudyExp($row, $params, $this->template);
 	echo $details;
 
 	switch ($this->item->params->get('show_passage_view', '0'))

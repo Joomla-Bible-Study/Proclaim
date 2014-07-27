@@ -169,7 +169,6 @@ class BiblestudyViewMessageform extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,

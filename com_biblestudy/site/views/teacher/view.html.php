@@ -31,9 +31,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  String Contact */
 	protected $contact;
 
-	/**  @var JRegistry Admin Params */
-	protected $admin_params;
-
 	/** @var  JObject Admin */
 	protected $admin;
 
@@ -58,17 +55,10 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
-		$app         = JFactory::getApplication();
 		$pagebuilder = new JBSMPagebuilder;
-		$document    = JFactory::getDocument();
 
 		$this->studies = $this->get('studies');
 		$images        = new JBSMImages;
-
-		$this->admin        = JBSMParams::getAdmin();
-		$this->admin_params = $this->admin->params;
-		$input              = new JInput;
 
 		$template = JBSMParams::getTemplateparams();
 
@@ -159,14 +149,13 @@ class BiblestudyViewTeacher extends JViewLegacy
 					$whereitem,
 					$wherefield,
 					$params,
-					$this->admin_params,
 					$limit,
 					$order
 				);
 
 				foreach ($studies as $i => $study)
 				{
-					$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+					$pelements               = $pagebuilder->buildPage($study, $params);
 					$studies[$i]->scripture1 = $pelements->scripture1;
 					$studies[$i]->scripture2 = $pelements->scripture2;
 					$studies[$i]->media      = $pelements->media;
@@ -286,7 +275,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		}
 		else
 		{
-			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
+			$this->document->setMetadata('keywords', $this->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -299,7 +288,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		}
 		else
 		{
-			$this->document->setDescription($this->admin_params->get('metadesc'));
+			$this->document->setDescription($this->params->get('metadesc'));
 		}
 
 		if ($this->params->get('robots'))

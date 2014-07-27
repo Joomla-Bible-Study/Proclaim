@@ -73,7 +73,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -85,9 +85,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->pagination = $this->get('Pagination');
-		$this->admin      = JBSMParams::getAdmin();
-//		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-//		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
+		$this->admin      = $this->state->admin;
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -135,7 +133,6 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,

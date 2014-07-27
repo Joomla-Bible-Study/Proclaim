@@ -34,16 +34,16 @@ defined('_JEXEC') or die;
 
 		if (in_array($show_comments, $groups))
 		{
-			//Determine what kind of comments component to use
+			// Determine what kind of comments component to use
 			switch ($this->item->params->get('comments_type', 0))
 			{
 				case 0:
-					//this should be using JBS comments only
+					// This should be using JBS comments only
 					echo $this->loadTemplate('commentsform');
 					break;
 
 				case 1:
-					//This is a just JComments
+					// This is a just JComments
 					$comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
 					if (file_exists($comments))
 					{
@@ -53,7 +53,7 @@ defined('_JEXEC') or die;
 					break;
 
 				case 2:
-					//this is a combination of JBS and JComments
+					// This is a combination of JBS and JComments
 					$comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
 					if (file_exists($comments))
 					{

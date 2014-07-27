@@ -16,7 +16,6 @@ $pathway = $mainframe->getPathWay();
 $uri = new JUri;
 $database = JFactory::getDBO();
 $teacher = $this->teacher;
-$admin_params = $this->admin_params;
 $params = $this->params;
 $image = new stdClass;
 $JBSMTeacher = new JBSMTeacher;
@@ -74,12 +73,12 @@ else
 	?>
 	<table class="table table-striped bslisttable">
 		<?php
-		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
+		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template);
 		echo $listing;
 
 		if ($this->params->get('show_teacher_studies') > 0)
 		{
-			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $this->template);
 			echo $studies;
 		}
 

@@ -26,10 +26,10 @@ class JBSMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object         $items         Items
-	 * @param   JRegistry      $params        Page Params
-	 * @param   TableTemplate  $template      Template name
-	 * @param   String         $type          Type of Listing
+	 * @param   Object         $items     Items
+	 * @param   JRegistry      $params    Page Params
+	 * @param   TableTemplate  $template  Template name
+	 * @param   String         $type      Type of Listing
 	 *
 	 * @return string
 	 */
@@ -2595,7 +2595,7 @@ class JBSMListing
 			{
 
 				// Convert parameter fields to objects.
-				$registry = new \Joomla\Registry\Registry;
+				$registry = new JRegistry;
 				$registry->loadString($sharerow->params);
 				$share_params = $registry;
 				$custom       = new JBSMCustom;

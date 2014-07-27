@@ -63,7 +63,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -216,7 +216,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
 			$pagebuilder            = new JBSMPagebuilder;
-			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params);
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
@@ -354,7 +354,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 
 		$this->page         = new stdClass;
-		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
+		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);
 		JHTML::_('behavior.tooltip');
 
 		// End process prepare content plugins

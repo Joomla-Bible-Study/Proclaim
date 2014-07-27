@@ -148,8 +148,8 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -159,8 +159,25 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	{
 
 		// Load the parameters.
-		$params = JFactory::getApplication('site')->getParams();
+		$params   = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$params->merge($template->params);
+		$params->merge($admin->params);
+		$t = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
 		$this->setState('params', $params);
+		$this->setState('admin', $admin);
 
 		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
 		$this->setState('filter.filename', $filename);

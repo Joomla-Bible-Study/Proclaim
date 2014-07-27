@@ -82,7 +82,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -91,19 +91,16 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
 
 		// @todo Need ot move all this into a JS/CSS Loaders so we don't call this twice.
 		$document = JFactory::getDocument();
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
-		$this->admin        = JBSMParams::getAdmin();
-		$this->admin_params = $this->admin->params;
 		$items              = $this->get('Item');
 		$this->state        = $this->get('State');
+		$params             = $this->state->get('params');
+		$this->template     = $this->state->get('template');
 
 		// Get studies associated with this series
 		$mainframe->setUserState('sid', $items->id);
@@ -116,12 +113,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$teacherimage        = $images->getTeacherThumbnail($items->thumb, $image2 = null);
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
-		$t                   = $input->get('t', '1', 'int');
-		$this->t             = $t;
-		$params              = $this->state->get('params');
-
-		// Convert parameter fields to objects.
-		$this->admin_params = $this->admin->params;
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $params);
@@ -138,11 +129,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 			$limit       = $params->get('series_detail_limit', 10);
 			$seriesorder = $params->get('series_detail_order', 'DESC');
-			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $seriesorder);
+			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $limit, $seriesorder);
 
 			foreach ($studies AS $i => $study)
 			{
-				$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+				$pelements               = $pagebuilder->buildPage($study, $params);
 				$studies[$i]->scripture1 = $pelements->scripture1;
 				$studies[$i]->scripture2 = $pelements->scripture2;
 				$studies[$i]->media      = $pelements->media;
@@ -242,7 +233,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		}
 
 		// End process prepare content plugins
-		$this->template    = $this->state->get('template');
 		$this->params      = $params;
 		$this->items       = $items;
 		$this->studies     = $studies;

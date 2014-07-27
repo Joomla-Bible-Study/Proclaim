@@ -65,8 +65,26 @@ class BiblestudyModelLandingpage extends JModelList
 		$order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
 		$this->setState('filter.order', $order);
 
-		$params = JBSMParams::getTemplateparams()->params;
+		// Load the parameters.
+		$params   = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$params->merge($template->params);
+		$params->merge($admin->params);
+		$t = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
 		$this->setState('params', $params);
+		$this->setState('admin', $admin);
 
 		parent::populateState('s.studydate', 'DESC');
 	}

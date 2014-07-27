@@ -84,15 +84,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-
-		// Load the Admin settings and params from the template
-		$this->admin = JBSMParams::getAdmin(true);
-		$template = JBSMParams::getTemplateparams();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$this->params = $registry;
+		$this->params     = $this->state->get('params');
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
@@ -132,7 +124,6 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,

@@ -61,8 +61,8 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Populate the State
 	 *
-	 * @param   string $ordering   ?
-	 * @param   string $direction  ?
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return void
 	 */
@@ -80,8 +80,10 @@ class BiblestudyModelTeachers extends JModelList
 		// Load the parameters.
 		$params   = $app->getParams();
 		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
 
 		$params->merge($template->params);
+		$params->merge($admin->params);
 		$t = $params->get('teachertemplateid');
 
 		if (!$t)
@@ -94,8 +96,6 @@ class BiblestudyModelTeachers extends JModelList
 
 		$this->setState('template', $template);
 		$this->setState('params', $params);
-
-		$admin = JBSMParams::getAdmin(true);
 		$this->setState('admin', $admin);
 
 		// TODO: Tune these values based on other permissions.

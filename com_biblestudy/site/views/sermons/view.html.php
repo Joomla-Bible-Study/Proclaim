@@ -62,13 +62,6 @@ class BiblestudyViewSermons extends JViewLegacy
 	protected $admin;
 
 	/**
-	 * Admin Params
-	 *
-	 * @var JRegistry
-	 */
-	protected $admin_params;
-
-	/**
 	 * Params
 	 *
 	 * @var JRegistry
@@ -204,7 +197,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -231,14 +224,14 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		$this->limitbox   = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
 		$this->pagination = $pagination;
-		$this->admin      = JBSMParams::getAdmin();
+		$this->admin      = $this->state->get('admin');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
+		/** @var  $params JRegistry */
 		$params = $this->state->params;
 
-		$this->admin_params = $this->admin->params;
 		$images             = new JBSMImages;
 		$this->main         = $images->mainStudyImage();
 
@@ -260,7 +253,7 @@ class BiblestudyViewSermons extends JViewLegacy
 				{
 					$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-					$pelements        = $page_builder->buildPage($item, $params, $this->admin_params);
+					$pelements        = $page_builder->buildPage($item, $params);
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
 					$item->media      = $pelements->media;
@@ -317,8 +310,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-		JViewLegacy::loadHelper('image');
-
 		$uri = new JUri;
 
 		$filter_topic       = $this->state->get('filter.topic');
@@ -339,9 +330,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->topics       = $this->get('Topics');
 		$this->orders       = $this->get('Orders');
 		$this->books        = $this->get('Books');
-
-		// This is the helper for scripture formatting
-		JViewLegacy::loadHelper('scripture');
 
 		// End scripture helper
 		// Get the data for the drop down boxes
@@ -539,7 +527,6 @@ class BiblestudyViewSermons extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -576,18 +563,10 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->params->get('metakey'));
 		}
-		elseif (!$this->params->get('metakey') && $this->admin_params->get('metakey'))
-		{
-			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
-		}
 
 		if ($this->params->get('metadesc'))
 		{
 			$this->document->setDescription($this->params->get('metadesc'));
-		}
-		elseif (!$this->params->get('metadesc') && $this->admin_params->get('metadesc'))
-		{
-			$this->document->setDescription($this->admin_params->get('metadesc'));
 		}
 
 		if ($this->params->get('menu-meta_description'))

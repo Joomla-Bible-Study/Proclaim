@@ -22,7 +22,6 @@ if (!$t)
 {
 	$t = $input->get('t', 1, 'int');
 }
-$admin_params = $this->admin_params;
 $JBSMTeacher = new JBSMTeacher;
 ?>
 <div id="biblestudy" class="noRefTagger">
@@ -55,7 +54,7 @@ $JBSMTeacher = new JBSMTeacher;
 
 	foreach ($this->items as $row)
 	{ // Run through each row of the data result from the model
-		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
+		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $t);
 		echo $listing;
 	}
 

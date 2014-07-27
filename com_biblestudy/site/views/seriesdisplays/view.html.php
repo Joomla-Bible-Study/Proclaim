@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/params.php');
-JLoader::register('JBSMPagebuilder', JPATH_SITE . '/components/com_biblestudy/lib/pagebuilder.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
-
 /**
  * View class for SeriesDisplays
  *
@@ -26,9 +21,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
 	/** @var object Admin Info */
 	protected $admin;
-
-	/** @var JRegistry Admin Params */
-	protected $admin_params;
 
 	/** @var  JObject Items */
 	protected $items;
@@ -48,6 +40,9 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 	/** @var  String Page */
 	protected $page;
 
+	/** @var JRegistry State */
+	protected $state;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -63,20 +58,13 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
-		JViewLegacy::loadHelper('image');
+		$this->state = $this->get('state');
+		/** @var  $params JRegistry */
+		$params = $this->state->get('params');
+		$this->template = $this->state->get('tepmlate');
 
 		$document = JFactory::getDocument();
 
-		//  $model = $this->getModel();
-		// Load the Admin settings and params from the template
-		$this->admin = JBSMParams::getAdmin();
-
-		$t = $input->get('t', 1, 'int');
-
-		$template           = JBSMParams::getTemplateparams();
-		$params             = $template->params;
-		$a_params           = JBSMParams::getAdmin();
-		$this->admin_params = $a_params->params;
 		/** @var $itemparams JRegistry */
 		$itemparams = $mainframe->getPageParameters();
 
@@ -87,7 +75,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		}
 		elseif (!$itemparams->get('metakey'))
 		{
-			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
+			$document->setMetadata('keywords', $params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -96,7 +84,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		}
 		elseif (!$itemparams->get('metadesc'))
 		{
-			$document->setDescription($this->admin_params->get('metadesc'));
+			$document->setDescription($params->get('metadesc'));
 		}
 
 		JHtml::_('biblestudy.framework');
@@ -118,7 +106,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 				. str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
 			$seriesimage        = $images->getSeriesThumbnail($item->series_thumbnail);
 			$item->image        = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
-			$item->serieslink   = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
+			$item->serieslink   = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
 			$teacherimage       = $images->getTeacherImage($item->thumb, $image2 = null);
 			$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
 				'" width="' . $teacherimage->width . '" alt="" />';
@@ -161,9 +149,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$years                 = $this->get('Years');
 
 		// End scripture helper
-		$this->template   = $template;
 		$this->pagination = $pagination;
-
 
 		// Get the main study list image
 		$mainimage        = $images->mainStudyImage();

@@ -73,7 +73,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -81,7 +81,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	{
 
 		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
 
 		// Get model data.
 		$this->state       = $this->get('State');
@@ -91,22 +90,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
-		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
-
-		$this->admin = JBSMParams::getAdmin();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($this->admin->params);
-		$this->admin_params = $registry;
-
-		$template = JBSMParams::getTemplateparams();
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$params->merge($registry);
-
-		$this->params = $params;
+		$this->params = $this->state->params;
 
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -114,8 +98,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 			return;
 		}
-		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params);
 
 		$db = JFactory::getDBO();
 

@@ -20,12 +20,10 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
 }
+
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();

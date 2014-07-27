@@ -160,7 +160,7 @@ $JBSMTeacher = new JBSMTeacher;
 
 		foreach ($this->items as $row)
 		{ // Run through each row of the data result from the model
-			$listing = $JBSMTeacher->getListingExp($row, $params, $this->admin_params, $this->template);
+			$listing = $JBSMTeacher->getListingExp($row, $params, $this->template);
 			echo $listing;
 		}
 

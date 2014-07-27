@@ -32,6 +32,9 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  JRegistry Params */
 	protected $params;
 
+	/** @var  JRegistry Params */
+	protected $state;
+
 	/** @var  string Scripture Text */
 	public $scripture;
 
@@ -113,8 +116,8 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
-		$template       = JBSMParams::getTemplateparams();
-		$this->params   = $template->params;
+		$this->state   = $this->get('state');
+		$this->params  = $this->state->get('params');
 
 		/*
 		 *  Convert parameter fields to objects.

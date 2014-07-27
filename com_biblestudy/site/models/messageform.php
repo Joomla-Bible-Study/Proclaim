@@ -43,8 +43,25 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params   = $app->getParams();
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$params->merge($template->params);
+		$params->merge($admin->params);
+		$t = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
 		$this->setState('params', $params);
+		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 	}

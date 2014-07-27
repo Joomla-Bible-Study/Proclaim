@@ -27,7 +27,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -42,7 +42,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Set ID
 	 *
-	 * @param   int $id  ID To Set
+	 * @param   int  $id  ID To Set
 	 *
 	 * @return void
 	 */
@@ -180,8 +180,8 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Publish record
 	 *
-	 * @param   array $cid      Id's
-	 * @param   int   $publish  State
+	 * @param   array  $cid      Id's
+	 * @param   int    $publish  State
 	 *
 	 * @return boolean
 	 */
@@ -195,7 +195,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 			$query->update('#__bsms_mediafiles')->set('published = ' . intval($publish))->where('id IN ( ' . $cids . ' )');
 			$this->_db->setQuery($query);
 
-			if (!$this->_db->query())
+			if (!$this->_db->execute())
 			{
 
 				return false;
@@ -208,7 +208,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   string $direction  ACS or DEC
+	 * @param   string  $direction  ACS or DEC
 	 *
 	 * @access    public
 	 *
@@ -238,8 +238,8 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   array  $cid    Id's
-	 * @param   string $order  Order ASC or DEC
+	 * @param   array   $cid    Id's
+	 * @param   string  $order  Order ASC or DEC
 	 *
 	 * @access    public
 	 *
@@ -247,7 +247,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	 *
 	 * @since     1.5
 	 */
-	public function saveorder($cid = array(), $order)
+	public function saveorder($cid, $order)
 	{
 		$row       = $this->getTable();
 		$groupings = array();

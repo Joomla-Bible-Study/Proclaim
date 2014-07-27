@@ -77,7 +77,7 @@ $JBSMSerieslist = new JBSMSerieslist;
 
 			foreach ($this->items as $row)
 			{ // Run through each row of the data result from the model
-				$listing = $JBSMSerieslist->getSerieslistExp($row, $params, $this->admin_params, $this->template);
+				$listing = $JBSMSerieslist->getSerieslistExp($row, $params, $this->template);
 				echo $listing;
 			}
 
