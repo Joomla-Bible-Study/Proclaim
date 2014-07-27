@@ -125,7 +125,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
-					$registry        = new \Joomla\Registry\Registry;
+					$registry        = new JRegistry;
 					$podinfo->params = '{"show_verses":"1"}';
 					$registry->loadString($podinfo->params);
 					$params = $registry;
