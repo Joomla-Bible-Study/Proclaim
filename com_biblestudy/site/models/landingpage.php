@@ -66,9 +66,9 @@ class BiblestudyModelLandingpage extends JModelList
 		$this->setState('filter.order', $order);
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params   = JFactory::getApplication()->getParams();
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
+		$admin    = JBSMParams::getAdmin();
 
 		$params->merge($template->params);
 		$params->merge($admin->params);

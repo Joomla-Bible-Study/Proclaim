@@ -44,6 +44,13 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	protected $state;
 
 	/**
+	 * State
+	 *
+	 * @var array
+	 */
+	protected $params;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -56,6 +63,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+		$this->params     = $this->state->params;
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))

@@ -29,6 +29,13 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	public $params;
 
 	/**
+	 * Params
+	 *
+	 * @var JRegistry
+	 */
+	public $state;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -39,7 +46,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	{
 		$document  = JFactory::getDocument();
 
-		$this->params      = $this->get('state');
+		$this->state  = $this->get('state');
+		$this->params = $this->state->get('params');
 
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 
@@ -63,6 +71,12 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		}
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params, $this->params->get('stylesheet'));
+
+		$images   = new JBSMImages;
+		$images->getShowhide();
+
+		// Get the main study list image
+		$this->main              = $images->mainStudyImage();
 
 		$uri                = new JUri;
 		$Uri_toString      = $uri->toString();
