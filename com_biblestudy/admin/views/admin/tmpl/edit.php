@@ -24,28 +24,25 @@ $app = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
-	Joomla.submitbutton3 = function (pressbutton) {
-		var form = document.getElementById('adminForm');
-		form.tooltype.value = 'players';
-		form.task = 'tools';
-		form.submit();
-	}
+	jQuery.submitbutton3 = function () {
+		jQuery('[name=tooltype]').val('players');
+		jQuery('[name=task]').val('admin.tools');
+		jQuery("#item-admin").submit();
+	};
 
-	Joomla.submitbutton4 = function (pressbutton) {
-		var form = document.getElementById('adminForm');
-		form.tooltype.value = 'popups';
-		form.task = 'tools';
-		form.submit();
-	}
+	jQuery.submitbutton4 = function () {
+		jQuery('[name=tooltype]').val('popups');
+		jQuery('[name=task]').val('admin.tools');
+		jQuery("#item-admin").submit();
+	};
 
 	Joomla.submitbutton = function (task) {
-		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-admin'))) {
-			Joomla.submitform(task, document.getElementById('item-admin'));
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
-
 </script>
 
 <form
@@ -307,7 +304,9 @@ $input = $app->input;
 			</div>
 		</div>
 		<div class="control-group">
-			<input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/>
+			<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton3(task)">
+				<i class="icon-user icon-white"></i> Submit
+			</button>
 		</div>
 	</div>
 	<div class="span6">
@@ -333,7 +332,9 @@ $input = $app->input;
 			</div>
 		</div>
 		<div class="control-group">
-			<input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
+			<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton4(task)">
+				<i class="icon-user icon-white"></i> Submit
+			</button>
 		</div>
 	</div>
 </div>

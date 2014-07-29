@@ -94,7 +94,15 @@ abstract class JHtmlJwplayer
 		$render = "";
 		if ($popup)
 		{
-			$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
+			if (!isset($params->playerresposive) or $params->playerresposive != 0)
+			{
+				$media->playerwidth = '100%';
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
+			}
+			else
+			{
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
+			}
 		}
 		$render .= " <div id='placeholder" . $id . "'>
 						<a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>
@@ -106,18 +114,29 @@ abstract class JHtmlJwplayer
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
 						jwplayer('placeholder" . $id . "').setup({
 							'file': '" . $media->path1 . "',
-							'height': '" . $media->playerheight . "',
-							'width': '" . $media->playerwidth . "',
-							'image': '" . $params->popupimage . "',
-							'autostart': '" . $media->autostart . "',
-							'backcolor': '" . $media->backcolor . "',
-							'frontcolor': '" . $media->frontcolor . "',
-							'lightcolor': '" . $media->lightcolor . "',
-							'screencolor': '" . $media->screencolor . "',
-							'controlbar.position': '" . $params->playerposition . "',
-							'controlbar.idlehide': '" . $media->playeridlehide . "'
-						});
-					</script>";
+							";
+		if (isset($params->playerresposive) or $params->playerresposive == 0)
+		{
+			$render .= "'height': '" . $media->playerheight . "',
+			";
+		}
+		else
+		{
+			$render .= "'aspectratio': '16:9',
+			";
+		}
+
+			$render .= "'width': '" . $media->playerwidth . "',
+						'image': '" . $params->popupimage . "',
+						'autostart': '" . $media->autostart . "',
+						'backcolor': '" . $media->backcolor . "',
+						'frontcolor': '" . $media->frontcolor . "',
+						'lightcolor': '" . $media->lightcolor . "',
+						'screencolor': '" . $media->screencolor . "',
+						'controlbar.position': '" . $params->playerposition . "',
+						'controlbar.idlehide': '" . $media->playeridlehide . "'
+					});
+				</script>";
 
 		return $render;
 

@@ -37,6 +37,11 @@ $doc->addStyleDeclaration($style);
 	{
 		echo stripslashes($this->media->mediacode);
 	}
+	if ($this->player == 0)
+	{
+		echo '<a href="' . JRoute::_('http://' . $this->media->spath . $this->media->fpath . $this->media->filename) . '"> Link to: ' .
+			$this->media->studytitle . '</a>';
+	}
 	?>
 	<div class="popupfooter">
 		<p class="popupfooter">
