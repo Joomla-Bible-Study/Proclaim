@@ -157,15 +157,18 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication('site');
 
 		// Load the parameters.
 		$params   = $app->getParams();
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
-		$t = $params->get('teachertemplateid');
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('mediafileid');
 
 		if (!$t)
 		{
@@ -176,7 +179,6 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');

@@ -60,6 +60,9 @@ class BiblestudyViewSermon extends JViewLegacy
 	/** @var  string Article */
 	protected $article;
 
+	/** @var  array Article */
+	protected $comments;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -122,7 +125,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
-		$this->params = $this->state->get('params');
+		$this->params = $this->state->template->get('params');
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 
@@ -427,15 +430,15 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check for empty title and add site name if param is set
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		if (empty($title))
 		{
@@ -475,7 +478,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
 		}
-		if ($app->getCfg('MetaAuthor') == '1')
+		if ($app->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->teachername);
 		}

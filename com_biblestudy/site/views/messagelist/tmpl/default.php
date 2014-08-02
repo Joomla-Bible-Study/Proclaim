@@ -129,7 +129,7 @@ $saveOrder = $listOrder == 'ordering';
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
 				$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
 				?>
-				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id; ?>">
+				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
 					<td class="center hidden-phone">
 						<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>

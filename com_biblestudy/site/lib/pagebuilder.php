@@ -313,11 +313,11 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string    $whereitem   ?
-	 * @param   string    $wherefield  ?
-	 * @param   JRegitry  $params      Item params
-	 * @param   int       $limit       Limit of Records
-	 * @param   string    $order       DESC or ASC
+	 * @param   string     $whereitem   ?
+	 * @param   string     $wherefield  ?
+	 * @param   JRegistry  $params      Item params
+	 * @param   int        $limit       Limit of Records
+	 * @param   string     $order       DESC or ASC
 	 *
 	 * @return object
 	 */

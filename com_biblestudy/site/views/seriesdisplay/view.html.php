@@ -91,15 +91,15 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
-
-		// @todo Need ot move all this into a JS/CSS Loaders so we don't call this twice.
 		$document = JFactory::getDocument();
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
 		$items              = $this->get('Item');
 		$this->state        = $this->get('State');
-		$params             = $this->state->get('params');
+
+		/** @var JRegistry $params */
+		$params             = $this->state->template->get('params');
 		$this->template     = $this->state->get('template');
 
 		// Get studies associated with this series
@@ -233,7 +233,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		}
 
 		// End process prepare content plugins
-		$this->params      = $params;
+		$this->params      = & $params;
 		$this->items       = $items;
 		$this->studies     = $studies;
 		$uri               = new JUri;

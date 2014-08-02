@@ -20,39 +20,19 @@ defined('_JEXEC') or die;
 class BiblestudyViewMediafileform extends JViewLegacy
 {
 
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
+	/** @var array Form */
 	protected $form;
 
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
+	/** @var array Item */
 	protected $item;
 
-	/**
-	 * Return Page
-	 *
-	 * @var string
-	 */
+	/** @var string Return Page */
 	protected $return_page;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+	/** @var array State */
 	protected $state;
 
-	/**
-	 * Admin
-	 *
-	 * @var array
-	 */
+	/** @var array Admin */
 	protected $admin;
 
 	/** @var  JRegistry Params */
@@ -90,7 +70,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
-		$this->params = $this->state->params;
+		$this->params = $this->state->template->get('params');
 
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -123,7 +103,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$query = $db->getQuery(true);
 		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published=1')->order('foldername asc');
 		$db->setQuery($query);
-		$folders             = $db->loadObjectList();
 		$folder              = array(
 			array(
 				'value' => '',
@@ -151,7 +130,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -178,13 +156,13 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::sprintf('JBS_CMN_EDIT', $this->form->getValue('studytitle'));
 		$title .= ' : ' . $state;
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

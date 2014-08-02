@@ -91,9 +91,11 @@ class BiblestudyModelSermon extends JModelItem
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
-		$t = $params->get('teachertemplateid');
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('sermonid');
 
 		if (!$t)
 		{
@@ -104,7 +106,6 @@ class BiblestudyModelSermon extends JModelItem
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		$user = JFactory::getUser();

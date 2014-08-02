@@ -69,7 +69,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/** @var  string New Link */
 	public $newlink;
 
-	/** @var  string Document */
+	/** @var  JDocument Document */
 	public $document;
 
 	/**
@@ -84,7 +84,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-		$this->params     = $this->state->get('params');
+		$this->params     = $this->state->template->get('params');
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
@@ -122,7 +122,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = JFactory::getApplication('site');
 		$menus   = $app->getMenu();
 		$title   = null;
 
@@ -140,15 +140,17 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		}
 
 		$title = $this->params->def('page_title', '');
-		$title .= ' : ' . JText::_('JBS_CMN_MESSAGES_LIST');
-
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if (empty($title))
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+		}
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

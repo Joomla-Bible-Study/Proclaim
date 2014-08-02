@@ -20,46 +20,22 @@ defined('_JEXEC') or die;
 class BiblestudyViewMessageform extends JViewLegacy
 {
 
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
+	/**  Form @var array */
 	protected $form;
 
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
+	/** Item @var array */
 	protected $item;
 
-	/**
-	 * Return Page
-	 *
-	 * @var string
-	 */
+	/** Return Page @var string */
 	protected $return_page;
 
-	/**
-	 * Return Page Item
-	 *
-	 * @var string
-	 */
+	/** Return Page Item @var string */
 	protected $return_page_item;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+	/** State @var array */
 	protected $state;
 
-	/**
-	 * Admin
-	 *
-	 * @var array
-	 */
+	/** Admin @var array */
 	protected $admin;
 
 	/** @var  string Media Files */
@@ -101,19 +77,16 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
-		$this->admin      = JBSMParams::getAdmin($isSite = true);
 
 		$user = JFactory::getUser();
 
 		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
+		$params = & $this->state->template->get('params');
 
-		if (!$this->admin->params->def('page_title', ''))
+		if (!$this->params->def('page_title', ''))
 		{
 			define('JBSPAGETITLE', 0);
 		}
-		$params->merge($this->admin->params);
-		$this->admin->params->merge($params);
 		$this->params = $params;
 		$this->user   = $user;
 
@@ -195,13 +168,13 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		$title .= ' : ' . $state . ' : ' . $this->form->getValue('studytitle');
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

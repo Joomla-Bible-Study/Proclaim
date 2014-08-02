@@ -36,7 +36,7 @@ $listing = new JBSMListing;
 			if ($this->params->get('teacherlink', '1') > 0)
 			{
 				echo '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . (int) $this->item->id
-					. '&amp;t=' . $this->t . '"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
+					. '&amp;t=' . $this->template->id . '"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
 			}
 			?>
 		</div>

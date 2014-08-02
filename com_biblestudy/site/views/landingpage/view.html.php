@@ -47,7 +47,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$document  = JFactory::getDocument();
 
 		$this->state  = $this->get('state');
-		$this->params = $this->state->get('params');
+		$this->params = $this->state->template->get('params');
 
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 

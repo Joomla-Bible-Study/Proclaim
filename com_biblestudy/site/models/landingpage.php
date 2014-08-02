@@ -66,13 +66,15 @@ class BiblestudyModelLandingpage extends JModelList
 		$this->setState('filter.order', $order);
 
 		// Load the parameters.
-		$params   = JFactory::getApplication()->getParams();
+		$params   = JFactory::getApplication('site')->getParams();
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
-		$t = $params->get('teachertemplateid');
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('sermonsid');
 
 		if (!$t)
 		{
@@ -83,7 +85,6 @@ class BiblestudyModelLandingpage extends JModelList
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		parent::populateState('s.studydate', 'DESC');

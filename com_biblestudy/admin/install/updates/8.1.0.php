@@ -194,6 +194,7 @@ class Migration810
 			}
 
 			// Store the table to invoke defaults of new params
+			// Todo need ot add change from page_title to page_headline to not conflict with menu.
 
 			$table->store();
 		}

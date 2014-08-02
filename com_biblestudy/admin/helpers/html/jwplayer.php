@@ -44,6 +44,7 @@ abstract class JHtmlJwplayer
 		}
 
 		$doc = JFactory::getDocument();
+		/** @var  $params JRegistry */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
 		$cdn = $params->get('jwplayer_cdn');
@@ -87,6 +88,10 @@ abstract class JHtmlJwplayer
 		{
 			$params->playerposition = "";
 		}
+		if (!isset($params->playerresponsive))
+		{
+			$params->playerresponsive = 0;
+		}
 		if ($player == true)
 		{
 			$media->playerheight = 30;
@@ -94,7 +99,7 @@ abstract class JHtmlJwplayer
 		$render = "";
 		if ($popup)
 		{
-			if (!isset($params->playerresposive) or $params->playerresposive != 0)
+			if ($params->playerresponsive != 0)
 			{
 				$media->playerwidth = '100%';
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
@@ -115,7 +120,7 @@ abstract class JHtmlJwplayer
 						jwplayer('placeholder" . $id . "').setup({
 							'file': '" . $media->path1 . "',
 							";
-		if (isset($params->playerresposive) or $params->playerresposive == 0)
+		if ($params->playerresponsive == 0)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
 			";

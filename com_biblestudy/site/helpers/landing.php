@@ -31,7 +31,6 @@ class JBSMLanding
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
 		$db          = JFactory::getDBO();
-		$input       = new JInput;
 		$location    = null;
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
@@ -240,14 +239,13 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   JRegitry  $params  Item Params
-	 * @param   int       $id      Item ID
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      Item ID
 	 *
 	 * @return string
 	 */
 	public function getTeacherLandingPage($params, $id)
 	{
-		$input       = new JInput;
 		$mainframe   = JFactory::getApplication();
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
@@ -480,8 +478,8 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   JRegitry  $params  Item Params
-	 * @param   int       $id      ID
+	 * @param   JRegistry  $params  Item Params
+	 * @param   int        $id      ID
 	 *
 	 * @return string
 	 *

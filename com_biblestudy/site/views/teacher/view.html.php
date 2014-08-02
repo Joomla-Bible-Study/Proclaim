@@ -10,12 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMPagebuilder', BIBLESTUDY_PATH_LIB . '/pagebuilder.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
-
 /**
  * View class for Teacher
  *
@@ -31,8 +25,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  String Contact */
 	protected $contact;
 
-	/** @var  JObject Admin */
-	protected $admin;
+	/** @var  JRegistry Admin */
+	protected $state;
 
 	/** @var  JRegistry Params */
 	protected $params;
@@ -45,6 +39,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 	/** @var  JObject Print */
 	protected $print;
+
+	/** @var  JObject Studies */
+	protected $studies;
 
 	/**
 	 * Execute and display a template script.
@@ -59,21 +56,14 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$this->studies = $this->get('studies');
 		$images        = new JBSMImages;
+		$this->state   = $this->get('state');
 
-		$template = JBSMParams::getTemplateparams();
-
-		$params = $template->params;
+		$params = $this->state->template->get('params');
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $params);
 
 		$input = new JInput;
-		$t     = $params->get('teachertemplateid');
-		if (!$t)
-		{
-			$t = $input->get('t', 1, 'int');
-		}
-		$this->t = $t;
 
 		$item = $this->get('Item');
 
@@ -214,7 +204,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Build the html select list for ordering
 		$this->print    = $print;
 		$this->params   = $params;
-		$this->template = $template;
+		$this->template = $this->state->template;
 
 		$this->_prepareDocument();
 
@@ -254,13 +244,13 @@ class BiblestudyViewTeacher extends JViewLegacy
 		{
 			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

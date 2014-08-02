@@ -17,18 +17,7 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-	JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
 }
-
-// Create shortcut to parameters.
-JHtml::script('media/com_biblestudy/js/noconflict.js');
-JHtml::script('media/com_biblestudy/js/biblestudy.js');
 JHtml::_('behavior.formvalidation');
 ?>
 <script type="text/javascript">
@@ -414,7 +403,8 @@ $input = $app->input;
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
 					<td class="center">
-						<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
+						<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' .
+							(int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 						<a class="btn btn-primary"
 						   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
 						   title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
@@ -439,7 +429,8 @@ $input = $app->input;
 		<tfoot>
 		<tr>
 			<td colspan="4">
-				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
+				<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' .
+					$this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 				<?php
 				if (empty($this->item->id))
 				{

@@ -54,8 +54,10 @@ class BiblestudyModelTeacher extends JModelItem
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
 		$t = $params->get('teachertemplateid');
 
 		if (!$t)
@@ -67,7 +69,6 @@ class BiblestudyModelTeacher extends JModelItem
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		// TODO: Tune these values based on other permissions.

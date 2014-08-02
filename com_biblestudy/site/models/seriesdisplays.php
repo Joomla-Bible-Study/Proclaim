@@ -39,6 +39,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication('site');
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -49,13 +50,15 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		}
 
 		// Load the parameters.
-		$params   = JFactory::getApplication()->getParams();
+		$params   = $app->getParams();
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
-		$t = $params->get('teachertemplateid');
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('seriesid');
 
 		if (!$t)
 		{
@@ -66,7 +69,6 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
@@ -92,7 +94,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$this->setState('filter.access', false);
 		}
-		$input = new JInput;
+
 		$this->setState('layout', $input->get('layout', '', 'cmd'));
 		parent::populateState('se.id', 'ASC');
 		$value = $input->get('start', '', 'int');

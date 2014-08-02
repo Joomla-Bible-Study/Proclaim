@@ -37,9 +37,10 @@ class BiblestudyModelPopup extends JModelLegacy
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$params->merge($template->params);
-		$params->merge($admin->params);
-		$t = $params->get('teachertemplateid');
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+
+		$t = $params->get('popupid');
 
 		if (!$t)
 		{
@@ -50,7 +51,6 @@ class BiblestudyModelPopup extends JModelLegacy
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('params', $params);
 		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));

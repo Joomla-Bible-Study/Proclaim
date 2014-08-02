@@ -19,179 +19,79 @@ defined('_JEXEC') or die;
 class BiblestudyViewSermons extends JViewLegacy
 {
 
-	/**
-	 * Items
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $items;
 
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $pagination;
 
-	/**
-	 * State
-	 *
-	 * @var JRegistry
-	 */
+	/** @var JRegistry */
 	protected $state;
 
-	/**
-	 * Page Links
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $pagelinks;
 
-	/**
-	 * Limit Box
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $limitbox;
 
-	/**
-	 * Admin Info
-	 *
-	 * @var JObject
-	 */
+	/** @var JObject */
 	protected $admin;
 
-	/**
-	 * Params
-	 *
-	 * @var JRegistry
-	 */
+	/** @var JRegistry */
 	protected $params;
 
-	/**
-	 * Study
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $study;
 
-	/**
-	 * Subscribe
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $subscribe;
 
-	/**
-	 * Series
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $series;
 
-	/**
-	 * Teachers
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $teachers;
 
-	/**
-	 * Message Types
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $messageTypes;
 
-	/**
-	 * Years
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $years;
 
-	/**
-	 * Locations
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $locations;
 
-	/**
-	 * Topics
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $topics;
 
-	/**
-	 * Orders
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $orders;
 
-	/**
-	 * Books
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $books;
 
-	/**
-	 * Templates
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $template;
 
-	/**
-	 * Order
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $order;
 
-	/**
-	 * Topic
-	 *
-	 * @var array
-	 */
+	/** @var array */
 	protected $topic;
 
-	/**
-	 * Main
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $main;
 
-	/**
-	 * Page
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	protected $page;
 
-	/**
-	 * Request Url
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	protected $request_url;
 
-	/**
-	 * Document
-	 *
-	 * @var object
-	 */
+	/** @var object */
 	public $document;
 
-	/**
-	 * Limit Start
-	 *
-	 * @var int
-	 */
+	/** @var int */
 	protected $limitstart;
 
 	/**
@@ -230,7 +130,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		/** @var  $params JRegistry */
-		$params = $this->state->params;
+		$params = $this->state->template->get('params');
 
 		$images             = new JBSMImages;
 		$this->main         = $images->mainStudyImage();
@@ -544,9 +444,12 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		$title = $this->params->def('page_title', '');
-		$title .= ' : ' . JText::_('JBS_CMN_MESSAGES_LIST');
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
 		{
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		}

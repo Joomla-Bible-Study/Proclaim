@@ -117,7 +117,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
-		$this->params   = $this->state->get('params');
+
+		/** @var JRegistry params */
+		$this->params   = $this->state->template->get('params');
 		$this->template = $this->state->get('template');
 
 		/*
