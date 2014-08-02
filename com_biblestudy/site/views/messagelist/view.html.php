@@ -84,7 +84,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-		$this->params     = $this->state->template->get('params');
+		$this->params     = $this->state->template->params;
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 

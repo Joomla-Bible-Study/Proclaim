@@ -60,7 +60,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$option    = $input->get('option', '', 'cmd');
 		$this->state = $this->get('state');
 		/** @var  $params JRegistry */
-		$params = $this->state->template->get('params');
+		$params = $this->state->template->params;
 		$this->template = $this->state->get('tepmlate');
 
 		$document = JFactory::getDocument();

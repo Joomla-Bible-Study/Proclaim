@@ -119,7 +119,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->state    = $this->get('state');
 
 		/** @var JRegistry params */
-		$this->params   = $this->state->template->get('params');
+		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		/*

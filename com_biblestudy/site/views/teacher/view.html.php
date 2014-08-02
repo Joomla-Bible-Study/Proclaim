@@ -58,7 +58,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
 
-		$params = $this->state->template->get('params');
+		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $params);

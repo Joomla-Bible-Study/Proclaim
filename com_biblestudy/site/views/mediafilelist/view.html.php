@@ -79,7 +79,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		}
 
 		// Create a shortcut to the parameters.
-		$this->params = & $this->state->template->get('params');
+		$this->params = & $this->state->template->params;
 
 		// Render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
 		// Puts a new record link at the top of the form

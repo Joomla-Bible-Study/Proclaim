@@ -125,7 +125,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
-		$this->params = $this->state->template->get('params');
+		$this->params = $this->state->template->params;
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 

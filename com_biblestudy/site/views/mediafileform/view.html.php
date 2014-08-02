@@ -70,7 +70,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
-		$this->params = $this->state->template->get('params');
+		$this->params = $this->state->template->params;
 
 		if (!$this->canDo->get('core.edit'))
 		{

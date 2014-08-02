@@ -99,7 +99,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$this->state        = $this->get('State');
 
 		/** @var JRegistry $params */
-		$params             = $this->state->template->get('params');
+		$params             = $this->state->template->params;
 		$this->template     = $this->state->get('template');
 
 		// Get studies associated with this series

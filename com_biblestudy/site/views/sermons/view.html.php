@@ -130,7 +130,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		/** @var  $params JRegistry */
-		$params = $this->state->template->get('params');
+		$params = $this->state->template->params;
 
 		$images             = new JBSMImages;
 		$this->main         = $images->mainStudyImage();

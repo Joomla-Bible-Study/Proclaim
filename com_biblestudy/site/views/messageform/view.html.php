@@ -81,7 +81,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Create a shortcut to the parameters.
-		$params = & $this->state->template->get('params');
+		$params = & $this->state->template->params;
 
 		if (!$this->params->def('page_title', ''))
 		{
