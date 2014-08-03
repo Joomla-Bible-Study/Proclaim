@@ -14,7 +14,8 @@ if (BIBLESTUDY_CHECKREL)
 	JHtml::_('bootstrap.framework');
 }
 
-$JBSMListing = new JBSMListing;
+$JBSMTeacher = new JBSMTeacher;
+$teachers = $JBSMTeacher->getTeachersFluid($this->params);
 ?>
 
 <div class="container-fluid">

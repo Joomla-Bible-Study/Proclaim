@@ -34,6 +34,7 @@ class BiblestudyModelPopup extends JModelLegacy
 
 		// Load the parameters.
 		$params   = $app->getParams();
+		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 

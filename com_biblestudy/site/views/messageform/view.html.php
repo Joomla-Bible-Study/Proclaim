@@ -81,14 +81,14 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Create a shortcut to the parameters.
-		$params = & $this->state->template->params;
+		$this->params = $this->state->template->params;
+
+		$this->user   = $user;
 
 		if (!$this->params->def('page_title', ''))
 		{
 			define('JBSPAGETITLE', 0);
 		}
-		$this->params = $params;
-		$this->user   = $user;
 
 		$canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
 
@@ -98,11 +98,9 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 			return;
 		}
-		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
 		$document            = JFactory::getDocument();
 
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
@@ -124,7 +122,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$document->addScriptDeclaration($script);
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params);
+		JHtml::_('biblestudy.loadcss', $this->params);
 
 		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
 
@@ -156,14 +154,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
-		if (JBSPAGETITLE)
-		{
-			$title = $this->params->def('page_title', '');
-		}
-		else
-		{
-			$title = JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY');
-		}
+		$title = $this->params->def('page_title', '');
 		$isNew = ($this->item->id == 0);
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		$title .= ' : ' . $state . ' : ' . $this->form->getValue('studytitle');

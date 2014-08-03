@@ -15,7 +15,7 @@ $listing = new JBSMListing;
 <div class="container-fluid">
 
 	<?php
-	$list = $listing->getFluidListing($this->item, $this->params, $this->t, $type = 'teacher');
+	$list = $listing->getFluidListing($this->item, $this->params, $this->template, $type = 'teacher');
 	echo $list;
 	?>
 
@@ -29,14 +29,16 @@ $listing = new JBSMListing;
 
 	<div class="row-fluid">
 		<div class="span12">
-			<a href="index.php?option=com_biblestudy&amp;view=teachers&amp;t=<?php echo $this->t; ?>">
+			<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers&t=' . $this->template->id) ?>">
 				<button class="btn"><?php echo '&lt;-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
 			</a>
 			<?php
 			if ($this->params->get('teacherlink', '1') > 0)
 			{
-				echo '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_teacher=' . (int) $this->item->id
-					. '&amp;t=' . $this->template->id . '"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
+				echo '<a href="' .
+					JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
+					) .
+					'"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
 			}
 			?>
 		</div>

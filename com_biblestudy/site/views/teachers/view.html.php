@@ -96,7 +96,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$items  = $this->get('Items');
 
 		/** @var $params JRegistry */
-		$params	= $state->template->get('params');
+		$params	= $state->template->params;
 
 		$this->template        = $state->get('template');
 

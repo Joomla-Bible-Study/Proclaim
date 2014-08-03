@@ -44,14 +44,13 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		// Load the parameters.
 		$params   = $app->getParams();
+		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
-
-		$t = $params->get('sermonsid');
+		$params->merge($template->params);
+		$params->merge($admin->params);
+		$t = $params->get('teachertemplateid');
 
 		if (!$t)
 		{
