@@ -215,8 +215,9 @@ class BiblestudyModelServer extends JModelAdmin
             $type = $this->getState('server.type');
             $this->data->type = empty($type) ? $this->data->type : $type;
 
-            // Load server type configuration
-            $this->data->addon = $this->getConfig($this->data->type);
+            // Load server type configuration if available
+            if($this->data->type)
+                $this->data->addon = $this->getConfig($this->data->type);
         }
         return $this->data;
     }

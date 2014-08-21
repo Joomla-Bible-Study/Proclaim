@@ -15,19 +15,10 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class JBSM701Update
+
+class Migration701
 {
-
-	/**
-	 * Upgrade for 7.0.1
-	 *
-	 * @return boolean
-	 */
-	public function do701update()
-	{
-
-		$db = JFactory::getDBO();
-
+	function up($db) {
 		// Modify table topics
 		$tables      = $db->getTableColumns('#__bsms_topics');
 		$languagetag = false;
@@ -85,6 +76,7 @@ class JBSM701Update
 
 		return true;
 	}
+
 
 	/**
 	 * Update the Topics
