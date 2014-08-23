@@ -214,7 +214,7 @@ class JBSMSerieslist extends JBSMListing
 				$images = new JBSMImages;
 				$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
-				$element = '<img src="test' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
+				$element = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
 
 				if ($islink > 0 && $view == 0)
 				{
