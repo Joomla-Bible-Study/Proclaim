@@ -74,7 +74,7 @@ $teachers = $params->get('teacher_id');
 	<div id="listintro">
 		<p>
 			<?php
-			if ($params->get('intro_show') == 1)
+			if ($this->template->params->get('intro_show') == 1)
 			{
 				echo $params->get('list_intro');
 			}
