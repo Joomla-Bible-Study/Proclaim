@@ -29,7 +29,7 @@ if ($this->params->get('player') == 3 || $this->player == 3 || $this->params->ge
 if ($this->params->get('player') == 1 || $this->player == 1)
 {
 	?>
-
+<?php echo JHtml::script(JURI::base() . 'media/com_biblestudy/player/key.js'); ?>
 <div class='playeralign' style="margin-left: auto; margin-right: auto; width:<?php echo $this->playerwidth + 1; ?>px;">
     <div id='placeholder'>
         <a href='//www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>

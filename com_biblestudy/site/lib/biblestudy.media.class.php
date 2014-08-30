@@ -562,21 +562,22 @@ class jbsMedia
 				{
 					case 2: // Inline
 						$base = JUri::base();
+						JHtml::script(JURI::base() . 'media/com_biblestudy/player/key.js');
 						$playercode = "<div id='placeholder'><a href='//www.adobe.com/go/getflashplayer'>"
 							. JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
 									<script language=\"javascript\" type=\"text/javascript\">
-    jwplayer('placeholder').setup({
-	    'file' : '" . $path . "',
-	    'height' : '" . $height . "',
-	    'width' : '" . $width . "',
-        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
-        'flashplayer':'" . $base . "media/com_biblestudy/player/jwplayer.flash.swf',
-        'backcolor':'" . $backcolor . "',
-        'frontcolor':'" . $frontcolor . "',
-        'lightcolor':'" . $lightcolor . "',
-        'screencolor':'" . $screencolor . "',
-    });
-</script>";
+									    jwplayer('placeholder').setup({
+										    'file' : '" . $path . "',
+										    'height' : '" . $height . "',
+										    'width' : '" . $width . "',
+									        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
+									        'flashplayer':'" . $base . "media/com_biblestudy/player/jwplayer.flash.swf',
+									        'backcolor':'" . $backcolor . "',
+									        'frontcolor':'" . $frontcolor . "',
+									        'lightcolor':'" . $lightcolor . "',
+									        'screencolor':'" . $screencolor . "',
+									    });
+									</script>";
 						break;
 
 					case 1: // Popup
