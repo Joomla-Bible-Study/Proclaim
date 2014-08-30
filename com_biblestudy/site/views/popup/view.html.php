@@ -161,7 +161,7 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		if (preg_match('@^(?:http://)?([^/]+)@i', $this->path1))
 		{
-			$this->path1 = 'http://' . $this->path1;
+			$this->path1 = '//' . $this->path1;
 		}
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');
