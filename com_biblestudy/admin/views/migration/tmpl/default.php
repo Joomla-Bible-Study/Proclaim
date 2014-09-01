@@ -28,7 +28,7 @@ if(version_compare(JVERSION, '3.0', 'ge')) {
     <div class="bar" style="width: <?php echo $this->percentage ?>%"></div>
 </div>
 <div class="migration-status">
-	<div class="status"><?php echo JText::_('JBS_MIG_Processing') . ' ' . $this->running; ?></div>
+	<div class="status"><?php echo JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
 <form action="index.php" name="adminForm" id="adminForm">
