@@ -1402,7 +1402,7 @@ class JBSMListing
 			case $extra . 'messagetype':
 				if ($header == 1)
 				{
-					$data = JText::_('JBS_CMN_MESSAGE_TYPE');
+					$data = JText::_('JBS_CMN_MESSAGETYPE');
 				}
 				else
 				{

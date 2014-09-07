@@ -7,7 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
+// No Direct Access
 defined('_JEXEC') or die;
+
 
 /**
  * View class for Styles
@@ -65,9 +67,9 @@ class BiblestudyViewStyles extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'style');
+		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -119,7 +121,6 @@ class BiblestudyViewStyles extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-
 		JToolBarHelper::title(JText::_('JBS_CMN_STYLES'), 'css.png');
 
 		if ($this->canDo->get('core.create'))
@@ -135,9 +136,10 @@ class BiblestudyViewStyles extends JViewLegacy
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
-			JToolBarHelper::publishList('styles.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublishList('styles.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::archiveList('styles.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::publishList('styles.publish');
+			JToolBarHelper::unpublishList('styles.unpublish');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('styles.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))

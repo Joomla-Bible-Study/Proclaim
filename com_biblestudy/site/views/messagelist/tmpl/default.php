@@ -74,7 +74,7 @@ $saveOrder = $listOrder == 'ordering';
 			</div>
 			<div class="btn-group btn-small pull-right">
 				<select name="filter_message_type" class="inputbox" onchange="Joomla.submitbutton()">
-					<option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+					<option value=""><?php echo JText::_('JBS_CMN_MESSAGETYPE'); ?></option>
 					<?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
 				</select>
 				<select name="filter_year" class="inputbox" onchange="Joomla.submitbutton()">
@@ -116,7 +116,7 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>

@@ -231,7 +231,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
+				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
 				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}

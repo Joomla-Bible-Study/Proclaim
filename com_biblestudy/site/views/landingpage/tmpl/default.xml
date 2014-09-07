@@ -81,7 +81,7 @@
             </field>
             <field name="messagetypes_order"
                    type="list"
-                   label="JBS_CMN_MESSAGETYPES_ORDERING"
+                   label="JBS_CMN_MESSAGETYPE_ORDERING"
                    description="JBS_CMN_ORDERING_DESC"
                    default="2">
                 <option value="1">JBS_CMN_DESCENDING</option>

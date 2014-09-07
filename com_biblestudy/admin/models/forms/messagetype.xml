@@ -19,8 +19,8 @@
             JTRASHED
         </option>
     </field>
-    <field name="message_type" type="text" label="JBS_MST_MESSAGE_TYPE_TEXT"
-           description="JBS_MST_MESSAGE_TYPE_DESC" size="75" required="true"/>
+    <field name="message_type" type="text" label="JBS_MST_MESSAGETYPE_TEXT"
+           description="JBS_MST_MESSAGETYPE_DESC" size="75" required="true"/>
     <field name="alias"
            type="text"
            label="JFIELD_ALIAS_LABEL"

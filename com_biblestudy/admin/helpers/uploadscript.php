@@ -241,7 +241,7 @@ class UploadScript
 		'Status' : '<?php echo JText::_('JBS_UPLOADER_STATUS') ?>',
 		'Size' : '<?php echo JText::_('JBS_UPLOADER_SIZE') ?>',
 		'Add files' : '<?php echo JText::_('JBS_UPLOADER_ADD_FILES') ?>',
-		'Start upload':'<?php echo JText::_('JBS_UPLOADER_ADD_FILES') ?>',
+		'Start upload':'<?php echo JText::_('JBS_UPLOADER_START_UPLOAD') ?>',
 		'Stop current upload' : '<?php echo JText::_('JBS_UPLOADER_STOP_CURRENT_UPLOAD') ?>',
 		'Start uploading queue' : '<?php echo JText::_('JBS_UPLOADER_START_UPLOADING_QUEUE') ?>',
 		'Drag files here.' : '<?php echo JText::_('JBS_UPLOADER_DRAG_FILES') ?>'
