@@ -81,7 +81,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
@@ -142,23 +141,28 @@ class BiblestudyViewMediafiles extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
+
 		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'mp3.png');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('mediafile.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('mediafile.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('mediafiles.publish');
 			JToolBarHelper::unpublishList('mediafiles.unpublish');
-			JToolBarHelper::archiveList('mediafiles.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('mediafiles.archive');
 		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'mediafiles.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -166,12 +170,12 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		elseif ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::trash('mediafiles.trash');
-			JToolBarHelper::divider();
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -182,6 +186,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
@@ -205,20 +210,23 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT_YEAR'),
+				JText::_('JBS_CMN_SELECT_YEAR'),
 				'filter_mediaYears',
 				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
 			);
+
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_FILTER_DOWNLOAD'),
+				JText::_('JBS_MED_FILTER_DOWNLOAD'),
 				'filter_download',
 				JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
 			);
+
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMS_FILTER_PLAYER'),
+				JText::_('JBS_CMN_FILTER_PLAYER'),
 				'filter_player',
 				JHtml::_('select.options', JHtmlBiblestudy::playerlist(), 'value', 'text', $this->state->get('filter.player'))
 			);
+
 			JHtmlSidebar::addFilter(
 				JText::_('JBS_CMN_FILTER_POPUP'),
 				'filter_popup',

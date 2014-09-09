@@ -134,7 +134,7 @@ $sortFields = $this->getSortFields();
 						<?php echo JHtml::_('grid.sort', 'JBS_MMT_MIME_TEXT', 'mimetype.mimetext', $listDirn, $listOrder); ?>
 					</th>
 					<th width="15%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('grid.sort', 'JBS_CMN_MIME_TYPE', 'mimetype.mimetype', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'JBS_CMN_MIMETYPE', 'mimetype.mimetype', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mimetype.id', $listDirn, $listOrder); ?>

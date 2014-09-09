@@ -132,10 +132,12 @@ class BiblestudyViewComments extends JViewLegacy
 		{
 			JToolBarHelper::addNew('comment.add');
 		}
+
 		if ($canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('comment.edit');
 		}
+
 		if ($canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
@@ -145,15 +147,19 @@ class BiblestudyViewComments extends JViewLegacy
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
+			JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
         elseif ($canDo->get('core.delete'))
         {
+			JToolBarHelper::divider();
             JToolBarHelper::trash('comments.trash');
         }
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -164,6 +170,7 @@ class BiblestudyViewComments extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=comments');

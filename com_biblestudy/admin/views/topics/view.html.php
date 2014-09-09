@@ -11,6 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+
 /**
  * View class for Topics
  *
@@ -77,6 +78,7 @@ class BiblestudyViewTopics extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'topic');
 
 		// Check for errors
@@ -137,17 +139,21 @@ class BiblestudyViewTopics extends JViewLegacy
 		{
 			JToolBarHelper::addNew('topic.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('topic.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('topics.publish');
 			JToolBarHelper::unpublishList('topics.unpublish');
+			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
+
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
         {
             JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -155,8 +161,6 @@ class BiblestudyViewTopics extends JViewLegacy
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('topics.trash');
-
-
 		}
 		if (BIBLESTUDY_CHECKREL)
 		{

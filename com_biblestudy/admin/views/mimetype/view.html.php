@@ -95,7 +95,7 @@ class BiblestudyViewMimetype extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_MIME_TYPES') . ': <small><small>[' . $title . ']</small></small>', 'mimetype.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_MIMETYPES') . ': <small><small>[' . $title . ']</small></small>', 'mimetype.png');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
@@ -139,7 +139,7 @@ class BiblestudyViewMimetype extends JViewLegacy
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_MIME_TYPES_CREATING') : JText::sprintf('JBS_TITLE_MIME_TYPES_EDITING', $this->item->mimetext));
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_MIMETYPES_CREATING') : JText::sprintf('JBS_TITLE_MIMETYPES_EDITING', $this->item->mimetext));
 	}
 
 }

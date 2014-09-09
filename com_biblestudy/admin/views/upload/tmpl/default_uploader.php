@@ -71,7 +71,7 @@ echo JRoute::_($url);
 
     <div id="uploader">
 
-        <p><?php JText::printf('JBS_ERROR_RUNTIME_NOT_SUPORTED', $this->runtime) ?></p>
+        <p><?php JText::printf('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED', $this->runtime) ?></p>
 
 </div>
 <?php echo JHtml::_('form.token'); ?>

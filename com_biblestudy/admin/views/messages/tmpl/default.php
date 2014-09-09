@@ -124,7 +124,7 @@ $sortFields = $this->getSortFields();
 			<label for="filter_year" id="filter_year"
 			       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 			<select name="filter_year" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_YEAR'); ?></option>
+				<option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
 				<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year')); ?>
 			</select>
 		</div>
@@ -132,7 +132,7 @@ $sortFields = $this->getSortFields();
 			<label for="filter_book" id="filter_book"
 			       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 			<select name="filter_book" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_BOOK'); ?></option>
+				<option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
 				<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book')); ?>
 			</select>
 		</div>
@@ -140,7 +140,7 @@ $sortFields = $this->getSortFields();
 			<label for="filter_messagetype" id="filter_messagetype"
 			       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 			<select name="filter_messagetype" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_MESSAGETYPE'); ?></option>
+				<option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGETYPE'); ?></option>
 				<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype')); ?>
 			</select>
 		</div>
@@ -148,7 +148,7 @@ $sortFields = $this->getSortFields();
 			<label for="filter_location" id="filter_location"
 			       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 			<select name="filter_location" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_LOCATION'); ?></option>
+				<option value=""><?php echo JText::_('JBS_CMN_SELECT_LOCATION'); ?></option>
 				<?php echo JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location')); ?>
 			</select>
 		</div>
@@ -183,7 +183,7 @@ $sortFields = $this->getSortFields();
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 		</th>
 		<th class="nowrap hidden-phone hidden-tablet">
-			<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 		</th>
 		<th class="nowrap hidden-phone hidden-tablet">
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>

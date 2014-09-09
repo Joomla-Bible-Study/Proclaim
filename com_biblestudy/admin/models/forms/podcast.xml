@@ -40,7 +40,7 @@
            size="80"/>
     <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
         <option value="*">JALL</option>
     </field>
     <field name="detailstemplateid" type="sql"

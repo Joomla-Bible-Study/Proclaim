@@ -38,7 +38,7 @@
     <field name="language"
            type="contentlanguage"
            label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC"
+           description="JBS_CMN_SELECT_LANGUAGE_DESC"
            class="chzn-color-state">
         <option value="*">JALL</option>
     </field>

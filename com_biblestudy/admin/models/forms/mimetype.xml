@@ -24,10 +24,10 @@
             JTRASHED
         </option>
     </field>
-    <field name="mimetext" type="text" label="JBS_CMN_MIME_TYPE"
-           description="JBS_MMT_MIME_TYPE_DESC" size="50" required="true"/>
-    <field name="mimetype" type="text" label="JBS_MMT_MIME_TYPE_CODE"
-           description="JBS_MMT_MIME_TYPE_CODE_DESC" size="75" required="true"/>
+    <field name="mimetext" type="text" label="JBS_CMN_MIMETYPE"
+           description="JBS_MMT_MIMETYPE_DESC" size="50" required="true"/>
+    <field name="mimetype" type="text" label="JBS_MMT_MIMETYPE_CODE"
+           description="JBS_MMT_MIMETYPE_CODE_DESC" size="75" required="true"/>
     <field name="asset_id" type="hidden" filter="unset"/>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"

@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+
 /**
  * View class for Series
  *
@@ -77,6 +78,7 @@ class BiblestudyViewSeries extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'serie');
 
 		// Check for errors
@@ -140,16 +142,19 @@ class BiblestudyViewSeries extends JViewLegacy
 		{
 			JToolBarHelper::addNew('serie.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('serie.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('series.publish');
 			JToolBarHelper::unpublishList('series.unpublish');
-			JToolBarHelper::archiveList('series.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('series.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
@@ -160,9 +165,11 @@ class BiblestudyViewSeries extends JViewLegacy
         {
             JToolBarHelper::trash('series.trash');
         }
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -225,5 +232,4 @@ class BiblestudyViewSeries extends JViewLegacy
 			'series.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }
