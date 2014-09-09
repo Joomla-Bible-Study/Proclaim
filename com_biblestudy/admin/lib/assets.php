@@ -208,13 +208,13 @@ class JBSMAssets
 				'name'       => '#__bsms_message_type',
 				'titlefield' => 'message_type',
 				'assetname'  => 'messagetype',
-				'realname'   => 'JBS_CMN_MESSAGE_TYPES'
+				'realname'   => 'JBS_CMN_MESSAGETYPES'
 			),
 			array(
 				'name'       => '#__bsms_mimetype',
 				'titlefield' => 'mimetext',
 				'assetname'  => 'mimetype',
-				'realname'   => 'JBS_CMN_MIME_TYPES'
+				'realname'   => 'JBS_CMN_MIMETYPES'
 			),
 			array(
 				'name'       => '#__bsms_podcast',

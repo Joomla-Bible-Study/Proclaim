@@ -109,14 +109,13 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
-		$modelView   = $this->getModel();
-		$this->items = $modelView->getTranslated($items);
+		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'message');
+		$modelView        = $this->getModel();
+		$this->items      = $modelView->getTranslated($items);
 
 		$this->books        = $this->get('Books');
 		$this->teachers     = $this->get('Teachers');
@@ -175,6 +174,8 @@ class BiblestudyViewMessages extends JViewLegacy
 	protected function addToolbar()
 	{
 		$user = JFactory::getUser();
+
+		// Get the toolbar object instance
 		$bar  = JToolBar::getInstance('toolbar');
 
 		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
@@ -192,10 +193,10 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
-			JToolBarHelper::publishList('messages.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublishList('messages.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('messages.publish');
+			JToolBarHelper::unpublishList('messages.unpublish');
 			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('messages.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::archiveList('messages.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
@@ -205,12 +206,12 @@ class BiblestudyViewMessages extends JViewLegacy
 		elseif ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::trash('messages.trash');
-			JToolBarHelper::divider();
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -221,6 +222,7 @@ class BiblestudyViewMessages extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
@@ -242,19 +244,19 @@ class BiblestudyViewMessages extends JViewLegacy
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT_YEAR'),
+				JText::_('JBS_CMN_SELECT_YEAR'),
 				'filter_year',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMS_SELECT_BOOK'),
+				JText::_('JBS_CMN_SELECT_BOOK'),
 				'filter_book',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'),
+				JText::_('JBS_CMN_SELECT_MESSAGETYPE'),
 				'filter_messagetype',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
 			);
@@ -264,15 +266,15 @@ class BiblestudyViewMessages extends JViewLegacy
 				'filter_location',
 				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
 			);
-
 		}
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @since    7.1.0
 	 * @return void
+	 *
+	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{

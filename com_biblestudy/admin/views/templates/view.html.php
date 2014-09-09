@@ -82,10 +82,10 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
 		$templates        = $this->get('templates');
 		$types[]          = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
@@ -144,10 +144,12 @@ class BiblestudyViewTemplates extends JViewLegacy
 		{
 			JToolBarHelper::addNew('template.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('template.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
@@ -156,10 +158,12 @@ class BiblestudyViewTemplates extends JViewLegacy
 		}
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
+			JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
+			JToolBarHelper::divider();
 			JToolBarHelper::trash('templates.trash');
 		}
 		JToolBarHelper::divider();
@@ -213,5 +217,4 @@ class BiblestudyViewTemplates extends JViewLegacy
 			'template.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }

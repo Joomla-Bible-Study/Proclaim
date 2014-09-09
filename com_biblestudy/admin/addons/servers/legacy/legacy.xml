@@ -43,7 +43,7 @@
                    key_field="id" value_field="media_image_name" required="true">
             </field>
             <field name="mime_type" type="sql" extension="com_biblestudy"
-                   label="JBS_MED_CHOOSE_MIME_TYPE" description="JBS_MED_CHOOSE_MIME_TYPE_DESC"
+                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
                    class="inputbox"
                    query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
                    key_field="id" value_field="mimetext">

@@ -12,6 +12,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+
 /**
  * View class for TemplateCodes
  *
@@ -20,6 +21,7 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTemplatecodes extends JViewLegacy
 {
+
 	/**
 	 * Items
 	 *
@@ -74,9 +76,12 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->canDo = JBSMBibleStudyHelper::getActions('', 'templatecode');
-		$this->state = $this->get('State');
-		$this->items = $this->get('Items');
+		$this->items      = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
+		$this->state      = $this->get('State');
+
+		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'templatecode');
+		$modelView        = $this->getModel();
 
 		foreach ($this->items as $item)
 		{
@@ -105,8 +110,6 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 					break;
 			}
 		}
-		$modelView        = $this->getModel();
-		$this->pagination = $this->get('Pagination');
 
 		// Levels filter.
 		$options   = array();
@@ -150,7 +153,6 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-
 		JToolBarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'templates.png');
 
 		if ($this->canDo->get('core.create'))
@@ -166,10 +168,10 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
-			JToolBarHelper::publishList('templatecodes.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublishList('templatecodes.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('templatecodes.publish');
+			JToolBarHelper::unpublishList('templatecodes.unpublish');
 			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('templatecodes.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::archiveList('templatecodes.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
@@ -179,7 +181,6 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 		elseif ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::trash('templatecodes.trash');
-			JToolBarHelper::divider();
 		}
 		if (BIBLESTUDY_CHECKREL)
 		{

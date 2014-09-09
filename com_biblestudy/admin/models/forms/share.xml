@@ -53,7 +53,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
                 <option value="24">JBS_CMN_CUSTOM</option>
             </field>
@@ -78,7 +78,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
                 <option value="24">JBS_CMN_CUSTOM</option>
             </field>
@@ -103,7 +103,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
                 <option value="24">JBS_CMN_CUSTOM</option>
             </field>
@@ -128,7 +128,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
                 <option value="24">JBS_CMN_CUSTOM</option>
             </field>
