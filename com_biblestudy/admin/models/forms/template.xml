@@ -133,7 +133,7 @@
             <field name="messagetype" type="sql"
                    query="SELECT * FROM #__bsms_message_type WHERE published = 1"
                    key_field="id" value_field="message_type" default="-1" multiple="true"
-                   size="5" label="JBS_CMN_FILTERS_MESSAGE_TYPES" description="JBS_CMN_FILTERS_DESC">
+                   size="5" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="locations" type="sql"
@@ -1372,7 +1372,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
             <field name="tip_item2_title" type="text" default="Details"
@@ -1393,7 +1393,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
             <field name="tip_item3_title" type="text" default="Teacher"
@@ -1414,7 +1414,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
             <field name="tip_item4_title" type="text" default="Reference"
@@ -1435,7 +1435,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
             <field name="tip_item5_title" type="text" default="Date"
@@ -1456,7 +1456,7 @@
                 <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
                 <option value="topics">JBS_CMN_TOPIC</option>
                 <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGE_TYPE</option>
+                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
         </fieldset>
@@ -1668,7 +1668,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_2" default="series"
@@ -1678,7 +1678,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_3" default="books"
@@ -1688,7 +1688,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_4" default="topics"
@@ -1698,7 +1698,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_5" default="locations"
@@ -1708,7 +1708,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_6" default="messagetypes"
@@ -1718,7 +1718,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
             <field type="list" name="headingorder_7" default="years"
@@ -1728,7 +1728,7 @@
                 <option value="books">JBS_CMN_BOOKS</option>
                 <option value="topics">JBS_CMN_TOPICS</option>
                 <option value="locations">JBS_CMN_LOCATIONS</option>
-                <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+                <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
 

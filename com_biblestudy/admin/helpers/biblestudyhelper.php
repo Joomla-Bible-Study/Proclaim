@@ -171,7 +171,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
 		self::rendermenu(
-			JText::_('JBS_CMN_MESSAGE_TYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
+			JText::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
 		);
 		self::rendermenu(
 			JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
@@ -204,7 +204,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'
 		);
 		self::rendermenu(
-			JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
+			JText::_('JBS_CMN_MIMETYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
 		);
 		self::rendermenu(
 			JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'

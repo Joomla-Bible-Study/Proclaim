@@ -20,26 +20,26 @@ $app = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
-	Joomla.submitbutton = function (task, type) {
+    Joomla.submitbutton = function (task, type) {
         if(task == 'server.setType') {
             document.id('item-form').elements['jform[type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
         } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-		}
-	}
+            Joomla.submitform(task, document.getElementById('item-form'));
+        } else {
+            alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+        }
+    }
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
-	<div class="row-fluid">
-		<!-- Begin Content -->
-		<div class="span8 form-horizontal">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-				</li>
+    <div class="row-fluid">
+        <!-- Begin Content -->
+        <div class="span8 form-horizontal">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+                </li>
                 <?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
                 <li>
                     <a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
@@ -50,41 +50,41 @@ $input = $app->input;
                 <?php if(count($this->server_form->getFieldsets('media')) > 0): ?>
                     <li>
                         <a href="#media_settings" data-toggle="tab">
-                            <?php echo JText::_("JBS_ADDON_MEDIA_SETTINGS"); ?>
+                            <?php echo JText::_("JBS_SVR_MEDIA_SETTINGS"); ?>
                         </a>
                     </li>
                 <?php endif; ?>
-				<?php if ($this->canDo->get('core.admin')): ?>
-					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-					</li>
-				<?php endif ?>
-			</ul>
-			<div class="tab-content">
-				<!-- Begin Tabs -->
-				<div class="tab-pane active" id="general">
-					<div class="control-group">
+                <?php if ($this->canDo->get('core.admin')): ?>
+                    <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+                    </li>
+                <?php endif ?>
+            </ul>
+            <div class="tab-content">
+                <!-- Begin Tabs -->
+                <div class="tab-pane active" id="general">
+                    <div class="control-group">
                         <div class="control-label">
                             <?php echo $this->form->getLabel('server_name'); ?>
                         </div>
                         <div class="controls">
                             <?php echo $this->form->getInput('server_name'); ?>
                         </div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('type'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('type'); ?>
-						</div>
-					</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('type'); ?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('type'); ?>
+                        </div>
+                    </div>
                     <div class="control-group">
                         <?php echo $this->form->getLabel('published'); ?>
                         <div class="controls">
                             <?php echo $this->form->getInput('published'); ?>
                         </div>
                     </div>
-				</div>
+                </div>
                 <?php foreach($this->server_form->getFieldsets('params') as $fieldset): ?>
                     <div class="tab-pane" id="<?php echo $fieldset->name; ?>">
                         <?php foreach($this->server_form->getFieldset($fieldset->name) as $field): ?>
@@ -129,18 +129,18 @@ $input = $app->input;
                     </div>
                 </div>
                 <?php if ($this->canDo->get('core.admin')): ?>
-					<div class="tab-pane" id="permissions">
-						<?php echo $this->form->getInput('rules'); ?>
-					</div>
-				<?php endif; ?>
-			</div>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
-		</div>
-		<!-- End Content -->
-		<!-- Begin Sidebar -->
-		<div class="span3 form-vertical">
+                    <div class="tab-pane" id="permissions">
+                        <?php echo $this->form->getInput('rules'); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <input type="hidden" name="task" value=""/>
+            <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+            <?php echo JHtml::_('form.token'); ?>
+        </div>
+        <!-- End Content -->
+        <!-- Begin Sidebar -->
+        <div class="span3 form-vertical">
             <h4>
                 <?php
                     echo $this->escape($this->item->addon->name);
@@ -152,6 +152,6 @@ $input = $app->input;
                 ?>
             </p>
         </div>
-		<!-- End Sidebar -->
-	</div>
+        <!-- End Sidebar -->
+    </div>
 </form>

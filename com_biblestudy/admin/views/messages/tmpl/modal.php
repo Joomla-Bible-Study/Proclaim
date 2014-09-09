@@ -55,7 +55,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
 			</select>
 			<select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
+				<option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGETYPE'); ?></option>
 				<?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
 			</select>
 			<select name="filter_year" class="inputbox" onchange="this.form.submit()">
@@ -93,7 +93,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 			</th>
 			<th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 			</th>
 			<th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>

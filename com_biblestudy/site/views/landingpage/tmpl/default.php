@@ -75,7 +75,7 @@ $params = $this->params;
 
 				case 'messagetypes':
 					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = 0);
-					$showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
+					$showIt_phrase = JText::_('JBS_CMN_MESSAGETYPES');
 					break;
 
 				case 'topics':

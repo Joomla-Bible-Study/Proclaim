@@ -77,6 +77,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'messagetype');
 
 		// Check for errors
@@ -133,27 +134,41 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGE_TYPES'), 'messagetype.png');
+
+		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'messagetype.png');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('messagetype.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('messagetype.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('messagetypes.publish');
 			JToolBarHelper::unpublishList('messagetypes.unpublish');
-			JToolBarHelper::archiveList('messagetypes.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('messagetypes.archive');
 		}
+
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
+        elseif ($this->canDo->get('core.delete'))
+        {
+            JToolBarHelper::trash('messagetypes.trash');
+        }
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -164,14 +179,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-		{
-			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
-		}
-        elseif ($this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('messagetypes.trash');
-        }
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messagetypes');
@@ -203,7 +211,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	protected function setDocument()
 	{
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_MESSAGE_TYPES'));
+		$document->setTitle(JText::_('JBS_TITLE_MESSAGETYPES'));
 	}
 
 	/**

@@ -40,7 +40,7 @@ JHtml::_('formbehavior.chosen', 'select');
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a href="#general" data-toggle="tab">
-                        <?php echo JText::_("JBS_GENERAL"); ?>
+                        <?php echo JText::_("JBS_CMN_GENERAL"); ?>
                     </a>
                 </li>
                 <?php foreach ($this->media_form->getFieldsets('params') as $name => $fieldset): ?>
