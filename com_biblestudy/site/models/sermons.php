@@ -257,6 +257,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$params     = $app->getParams();
+        $params     = $this->getstate('params');
 		$menuparams = new JRegistry;
 		$menu       = $app->getMenu()->getActive();
 
@@ -606,20 +607,9 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		// Order by order filter
-		$orderparam = $params->get('default_order');
+		$order = $params->get('default_order');
 
-		if (empty($orderparam))
-		{
-			$orderparam = $t_params->get('default_order', '1');
-		}
-		if ($orderparam == 2)
-		{
-			$order = "ASC";
-		}
-		else
-		{
-			$order = "DESC";
-		}
+
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
