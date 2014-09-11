@@ -85,14 +85,14 @@ class BiblestudyModelSermons extends JModelList
 
 		// Load the parameters.
 		$params   = $app->getParams();
-		$this->setState('params', $params);
+		
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
 		$params = $template->params;
-
+		$this->setState('params', $params);
 		$t = $params->get('sermonsid');
 
 		if (!$t)
@@ -597,14 +597,11 @@ class BiblestudyModelSermons extends JModelList
 		// Order by order filter
 		$orderparam = $params->get('default_order');
 
-		if ($orderparam == 2)
-		{
-			$order = "ASC";
-		}
-		else
+		if empty($orderparam)
 		{
 			$order = "DESC";
 		}
+		
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
