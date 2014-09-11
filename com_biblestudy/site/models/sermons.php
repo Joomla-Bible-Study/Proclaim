@@ -192,6 +192,7 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$user            = JFactory::getUser();
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
+		$secondaryorderstate = 0;
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$query->select(
@@ -505,7 +506,8 @@ class BiblestudyModelSermons extends JModelList
 			$input = new JInput;
 			$chb   = $input->get('minChapt', '', 'int');
 			$che   = $input->get('maxChapt', '', 'int');
-
+			//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
@@ -540,6 +542,8 @@ class BiblestudyModelSermons extends JModelList
 		if ($teacher >= 1)
 		{
 			$query->where('study.teacher_id = ' . (int) $teacher);
+			//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by series
@@ -548,6 +552,8 @@ class BiblestudyModelSermons extends JModelList
 		if ($series >= 1)
 		{
 			$query->where('study.series_id = ' . (int) $series);
+						//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by message type
@@ -556,6 +562,8 @@ class BiblestudyModelSermons extends JModelList
 		if ($messageType >= 1)
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
+						//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by Year
@@ -564,6 +572,8 @@ class BiblestudyModelSermons extends JModelList
 		if ($year >= 1)
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
+						//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by topic
@@ -572,6 +582,8 @@ class BiblestudyModelSermons extends JModelList
 		if (!empty($topic))
 		{
 			$query->where('st.topic_id LIKE "%' . $topic . '%"');
+						//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by location
@@ -580,6 +592,8 @@ class BiblestudyModelSermons extends JModelList
 		if ($location >= 1)
 		{
 			$query->where('study.location_id = ' . (int) $location);
+						//set the secondary order
+            		$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by language
@@ -601,7 +615,11 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$order = "DESC";
 		}
-		
+		 $seondaryorderstate = $this->getState('secondaryorderstate');
+	        if (!empty($secondaryorderstate))
+	        {
+	            $order = $params->get('default_order_secondary');
+	        }
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
