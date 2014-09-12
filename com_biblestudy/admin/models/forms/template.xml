@@ -287,6 +287,11 @@
                 <option value="DESC">JBS_CMN_DESCENDING</option>
                 <option value="ASC">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="default_order_secondary" type="list" default="ASC"
+                   label="JBS_TPL_FILTERS_DEFAULTORDERSECONDARY" description="JBS_TPL_FILTERS_DEFAULTORDERSECONDARY_DESC">
+                <option value="DESC">JBS_CMN_DESCENDING</option>
+                <option value="ASC">JBS_CMN_ASCENDING</option>
+            </field>
             <field name="show_page_title" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE">
                 <option value="0">JBS_CMN_HIDE</option>

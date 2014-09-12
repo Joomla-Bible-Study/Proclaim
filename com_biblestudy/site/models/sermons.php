@@ -61,6 +61,8 @@ class BiblestudyModelSermons extends JModelList
 			);
 		}
 
+		$this->input = new JInput;
+
 		parent::__construct($config);
 	}
 
@@ -84,24 +86,15 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$app = JFactory::getApplication();
 
-		// Load the parameters. Merge Global and Menu Item params into new object
+		// Load the parameters.
 		$params     = $app->getParams();
-		$menuParams = new JRegistry;
-		$menu       = $app->getMenu()->getActive();
-
-		if ($menu)
-		{
-			$menuParams->loadString($menu->params);
-		}
 
 		$template = JBSMParams::getTemplateparams();
 		$this->setState('template', $template);
 
-		$mergedParams = clone $menuParams;
-		$mergedParams->merge($params);
-		$mergedParams->merge($template->params);
+		$params->merge($template->params);
 
-		$this->setState('params', $mergedParams);
+		$this->setState('params', $params);
 
 		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 
@@ -143,8 +136,7 @@ class BiblestudyModelSermons extends JModelList
 		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
 		parent::populateState('study.studydate', 'DESC');
-		$input = new JInput;
-		$value = $input->get('start', '', 'int');
+		$value = $this->input->get('start', '', 'int');
 		$this->setState('list.start', $value);
 	}
 
@@ -192,8 +184,7 @@ class BiblestudyModelSermons extends JModelList
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
-		$template_params = JBSMParams::getTemplateparams();
-		$t_params        = $template_params->params;
+		$secondaryorderstate = 0;
 		$query->select(
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
@@ -251,20 +242,6 @@ class BiblestudyModelSermons extends JModelList
 		// Select only published studies
 		$query->where('study.published = 1');
 
-		// Begin the filters for menu items
-		// These params are the filters set by the menu item, not in the JBS template
-		$app = JFactory::getApplication('site');
-
-		// Load the parameters. Merge Global and Menu Item params into new object
-		$params     = $app->getParams();
-        $params     = $this->getstate('params');
-		$menuparams = new JRegistry;
-		$menu       = $app->getMenu()->getActive();
-
-		if ($menu)
-		{
-			$menuparams->loadString($menu->params);
-		}
 		$books       = null;
 		$teacher     = null;
 		$locations   = null;
@@ -274,22 +251,21 @@ class BiblestudyModelSermons extends JModelList
 		$years       = null;
 
 		// See if we are getting itemid
-		$input       = new JInput;
-		$itemid      = $input->get('Itemid', '', 'int');
-		$application = JFactory::getApplication();
-		$menu        = $application->getMenu();
-		$item        = $menu->getItem($itemid);
+		$itemid      = $this->input->get('Itemid', '', 'int');
+		$item        = JFactory::getApplication()->getMenu()->getItem($itemid);
+
+		$params = $this->getState('params');
 
 		// Only do this if item id is available
 		if ($item != null)
 		{
-			$teacher     = $menuparams->get('mteacher_id');
-			$locations   = $menuparams->get('mlocations');
-			$books       = $menuparams->get('mbooknumber');
-			$series      = $menuparams->get('mseries_id');
-			$topics      = $menuparams->get('mtopic_id');
-			$messagetype = $menuparams->get('mmessagetype');
-			$years       = $menuparams->get('years');
+			$teacher     = $params->get('mteacher_id');
+			$locations   = $params->get('mlocations');
+			$books       = $params->get('mbooknumber');
+			$series      = $params->get('mseries_id');
+			$topics      = $params->get('mtopic_id');
+			$messagetype = $params->get('mmessagetype');
+			$years       = $params->get('years');
 
 			// Filter over teachers
 			$filters = $teacher;
@@ -518,6 +494,8 @@ class BiblestudyModelSermons extends JModelList
 			$chb   = $input->get('minChapt', '', 'int');
 			$che   = $input->get('maxChapt', '', 'int');
 
+			//set the secondary order
+			$secondaryorderstate = $this->setState('secondaryorderstate', 1);
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
@@ -552,6 +530,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($teacher >= 1)
 		{
 			$query->where('study.teacher_id = ' . (int) $teacher);
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by series
@@ -560,6 +539,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($series >= 1)
 		{
 			$query->where('study.series_id = ' . (int) $series);
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by message type
@@ -568,6 +548,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($messageType >= 1)
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by Year
@@ -576,6 +557,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($year >= 1)
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by topic
@@ -584,6 +566,7 @@ class BiblestudyModelSermons extends JModelList
 		if (!empty($topic))
 		{
 			$query->where('st.topic_id LIKE "%' . $topic . '%"');
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by location
@@ -592,6 +575,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($location >= 1)
 		{
 			$query->where('study.location_id = ' . (int) $location);
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by language
@@ -609,7 +593,12 @@ class BiblestudyModelSermons extends JModelList
 		// Order by order filter
 		$order = $params->get('default_order');
 
+		$secondaryorderstate = $this->getState('secondaryorderstate');
 
+		if (!empty($secondaryorderstate))
+		{
+			$order = $params->get('default_order_secondary');
+		}
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
@@ -633,10 +622,10 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-		foreach ($items as $item)
+		foreach ($items as $i => $item)
 		{
-			$item->bookname   = JText::_($item->bookname);
-			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+			$items[$i]->bookname   = JText::_($item->bookname);
+			$items[$i]->topic_text = JBSMTranslated::getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -671,7 +660,7 @@ class BiblestudyModelSermons extends JModelList
 
 			$output = array();
 
-			foreach ($db_result as $i => $value)
+			foreach ($db_result as $value)
 			{
 				$value->text = JBSMTranslated::getTopicItemTranslated($value);
 
@@ -695,8 +684,7 @@ class BiblestudyModelSermons extends JModelList
 	public function getBooks()
 	{
 
-		$template = JBSMParams::getTemplateparams();
-		$params   = $template->params;
+		$params   = $this->getState('params');
 
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
@@ -814,9 +802,8 @@ class BiblestudyModelSermons extends JModelList
 		$query->order('value');
 
 		$db->setQuery($query->__toString());
-		$year = $db->loadObjectList();
 
-		return $year;
+		return $db->loadObjectList();
 	}
 
 	/**
@@ -838,9 +825,8 @@ class BiblestudyModelSermons extends JModelList
 		$query->group('study_id');
 		$query->where('study_id = ' . $id);
 		$db->setQuery($query->__toString());
-		$plays = $db->loadResult();
 
-		return $plays;
+		return $db->loadResult();
 	}
 
 	/**
