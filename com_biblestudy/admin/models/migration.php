@@ -289,7 +289,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			// Just finished
 			$this->doneVersions = 90;
 			$this->resetStack();
-			$this->running .= 'Finished';
+			$this->running .= JText::_('JBS_MIG_FINISHED');
 			$this->finish();
 
 			return false;
