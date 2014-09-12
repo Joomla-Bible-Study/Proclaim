@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.environment.response');
-jimport('joomla.application.web');
 
 /**
  * BibleStudy Download Class
@@ -66,8 +65,7 @@ class Dump_File
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		$app = new JApplicationWeb;
-		$app->clearHeaders();
+        JResponse::clearHeaders();
 		$server        = $media->spath;
 		$path          = $media->fpath;
 		$filename      = $media->filename;
