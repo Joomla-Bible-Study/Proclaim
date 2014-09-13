@@ -15,8 +15,6 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- *
- * @todo     need to recode to JBSM/MVC Standers and update the way we do params.  bcc
  */
 class BiblestudyViewSeriesdisplay extends JViewLegacy
 {

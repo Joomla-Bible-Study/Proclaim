@@ -100,7 +100,6 @@ class BiblestudyModelTeachers extends JModelList
 		$this->setState('template', $template);
 		$this->setState('admin', $admin);
 
-		// TODO: Tune these values based on other permissions.
 		$user = JFactory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))

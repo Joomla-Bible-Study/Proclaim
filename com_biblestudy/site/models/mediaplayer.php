@@ -218,6 +218,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	 */
 	public function move($direction)
 	{
+		/** @var TableMediafile $row */
 		$row = $this->getTable();
 
 		if (!$row->load($this->_id))

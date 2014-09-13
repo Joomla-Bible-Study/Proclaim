@@ -29,7 +29,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -72,8 +72,8 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -157,7 +157,7 @@ class BiblestudyModelSermons extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id  A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -192,7 +192,6 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$user            = JFactory::getUser();
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
-		$secondaryorderstate = 0;
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$query->select(
@@ -211,7 +210,8 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
 		// Join over Teachers
-		$query->select('teacher.teachername AS teachername, teacher.title as teachertitle, teacher.teacher_thumbnail as thumb, teacher.thumbh, teacher.thumbw');
+		$query->select('teacher.teachername AS teachername, teacher.title as teachertitle, teacher.teacher_thumbnail as thumb,
+			teacher.thumbh, teacher.thumbw');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
 		// Join over Series
@@ -506,8 +506,9 @@ class BiblestudyModelSermons extends JModelList
 			$input = new JInput;
 			$chb   = $input->get('minChapt', '', 'int');
 			$che   = $input->get('maxChapt', '', 'int');
-			//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
@@ -542,8 +543,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($teacher >= 1)
 		{
 			$query->where('study.teacher_id = ' . (int) $teacher);
-			//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by series
@@ -552,8 +554,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($series >= 1)
 		{
 			$query->where('study.series_id = ' . (int) $series);
-						//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by message type
@@ -562,8 +565,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($messageType >= 1)
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
-						//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by Year
@@ -572,8 +576,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($year >= 1)
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
-						//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by topic
@@ -582,8 +587,9 @@ class BiblestudyModelSermons extends JModelList
 		if (!empty($topic))
 		{
 			$query->where('st.topic_id LIKE "%' . $topic . '%"');
-						//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by location
@@ -592,8 +598,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($location >= 1)
 		{
 			$query->where('study.location_id = ' . (int) $location);
-						//set the secondary order
-            		$this->setState('secondaryorderstate', 1);
+
+			// Set the secondary order
+			$this->setState('secondaryorderstate', 1);
 		}
 
 		// Filter by language
@@ -610,16 +617,18 @@ class BiblestudyModelSermons extends JModelList
 
 		// Order by order filter
 		$orderparam = $params->get('default_order');
+		$order = 'ACS';
 
-		if empty($orderparam)
+		if (empty($orderparam))
 		{
 			$order = "DESC";
 		}
-		 $seondaryorderstate = $this->getState('secondaryorderstate');
-	        if (!empty($secondaryorderstate))
-	        {
-	            $order = $params->get('default_order_secondary');
-	        }
+
+		$secondaryorderstate = $this->getState('secondaryorderstate');
+		if (!empty($secondaryorderstate))
+		{
+			$order = $params->get('default_order_secondary');
+		}
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
@@ -635,7 +644,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array $items  Books
+	 * @param   array  $items  Books
 	 *
 	 * @return object
 	 *
@@ -829,7 +838,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int $id  ID
+	 * @param   int  $id  ID
 	 *
 	 * @return array
 	 *
@@ -886,7 +895,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @param   int $id  ID of Download
+	 * @param   int  $id  ID of Download
 	 *
 	 * @return string
 	 *

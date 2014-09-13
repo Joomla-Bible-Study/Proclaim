@@ -76,7 +76,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$user        = JFactory::getUser();
 		$JBSMListing = new JBSMListing;
 
-		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
 			$dispatcher = JEventDispatcher::getInstance();
