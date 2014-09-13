@@ -44,14 +44,14 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Status
 	 *
-	 * @var JObject
+	 * @var Object
 	 */
 	public $status;
 
 	/**
 	 * Display
 	 *
-	 * @param   string $tpl  Template to display
+	 * @param   string  $tpl  Template to display
 	 *
 	 * @return null
 	 */
@@ -152,7 +152,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		jimport('joomla.installer.installer');
 		$db                    = JFactory::getDBO();
-		$this->status          = new JObject;
+		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
 

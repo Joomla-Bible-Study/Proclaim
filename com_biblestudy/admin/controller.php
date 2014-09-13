@@ -35,8 +35,8 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Core Display
 	 *
-	 * @param   boolean $cachable   Cachable system
-	 * @param   boolean $urlparams  Url params
+	 * @param   boolean  $cachable   Cachable system
+	 * @param   boolean  $urlparams  Url params
 	 *
 	 * @return  JController        This object to support chaining.
 	 */
@@ -66,6 +66,8 @@ class BiblestudyController extends JControllerLegacy
 			$jbsname = $jbsstate->get('jbsname');
 			$jbstype = $jbsstate->get('jbstype');
 			JBSMDbHelper::setinstallstate();
+			$cache = new JCache(array('defaultgroup' => 'default'));
+			$cache->clean();
 			$this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
 		}
 		$type = $app->input->getWord('view');
