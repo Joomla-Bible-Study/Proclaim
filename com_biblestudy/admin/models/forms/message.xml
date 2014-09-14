@@ -127,7 +127,7 @@
     </field>
 
     <field name="topics" type="topics" class="inputbox" size="30" label="JBS_CMN_TOPIC_TAG"
-           description="JBS_CMN_TOPIC_TAG_DESC"/>
+           description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
 
     <field name="messagetype" type="sql" extension="com_biblestudy"
            label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"

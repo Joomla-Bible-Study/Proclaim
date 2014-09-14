@@ -104,7 +104,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	{
 		$model     = $this->getModel('Topic');
 		$jinput    = new JInput;
-		$data      = $jinput->get('jform');
+		$data      = $jinput->post->get('jform', array(), 'array');
 		$topic_ids = array();
 
 		// Non-numeric topics are assumed to be new and are added to the database
