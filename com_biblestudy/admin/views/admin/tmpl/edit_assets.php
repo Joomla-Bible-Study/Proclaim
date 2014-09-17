@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-assets">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>

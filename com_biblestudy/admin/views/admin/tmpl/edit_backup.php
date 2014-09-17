@@ -10,7 +10,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-backup">
 	<div class="row-fluid">
 		<div class="span10 form-horizontal">
 			<h3><?php echo JText::_('JBS_CMN_EXPORT'); ?></h3>

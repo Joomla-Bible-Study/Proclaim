@@ -202,7 +202,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// End for database
 		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->getCfg('tmp_path');
+		$this->tmp_dest = $config->get('tmp_path');
 
 		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
@@ -212,7 +212,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+		$path = JPATH_SITE . '/media/com_biblestudy/database';
 
 		if (JFolder::exists($path))
 		{

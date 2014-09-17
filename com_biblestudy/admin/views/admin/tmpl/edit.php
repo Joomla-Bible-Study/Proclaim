@@ -37,8 +37,8 @@ $input = $app->input;
 	};
 
 	Joomla.submitbutton = function (task) {
-		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-admin'))) {
+			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
