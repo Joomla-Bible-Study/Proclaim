@@ -86,12 +86,12 @@ class JBSMPodcast
                 	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>http://' . $podinfo->website . $podinfo->image . '</url>
+                		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
                 		<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 		<height>' . $podcastimage[1] . '</height>
                 		<width>' . $podcastimage[0] . '</width>
                 	</image>
-                	<itunes:image href="http://' . $podinfo->website . $podinfo->podcastimage . '" />
+                	<itunes:image href="http://' . $podinfo->website . '/' . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
@@ -303,7 +303,7 @@ class JBSMPodcast
 
 						$episodedetailtemp = '
                         	   <item>
-                        		<title>' . $this->escapeHTML($title) . '</title>
+                        		<title>' . $title . '</title>
                         		<link>http://' . $podinfo->website . '/index.php?'. 'option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
                         		<comments>http://' . $podinfo->website . '/index.php?' . 'option=com_biblestudy&amp;view=sermon&amp;id='
