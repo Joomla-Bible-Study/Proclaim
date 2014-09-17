@@ -21,7 +21,7 @@ jimport('joomla.application.component.controllerform');
 class BiblestudyControllerAdmin extends JControllerForm
 {
 	/**
-	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
 	 * @param  string
 	 *
