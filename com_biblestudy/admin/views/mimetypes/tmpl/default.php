@@ -108,14 +108,6 @@ $sortFields = $this->getSortFields();
 							<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
 						</select>
 					</div>
-					<div class="btn-group pull-right">
-						<label for="filter_language" id="filter_language"
-						       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-						<select name="filter_language" class="input-medium" onchange="this.form.submit()">
-							<option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-							<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
-						</select>
-					</div>
 				<?php endif; ?>
 			</div>
 			<div class="clearfix"></div>
