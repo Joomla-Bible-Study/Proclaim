@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -87,9 +87,9 @@ class BiblestudyViewMigration extends JViewLegacy
 			$script .= "});\n";
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
-		JToolBarHelper::title(JText::_('Joomla Bible Study Migration'), 'administration');
+		JToolBarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('Joomla Bible Study Migration'));
+		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
 		return parent::display($tpl);
 	}

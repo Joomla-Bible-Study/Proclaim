@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -125,7 +125,7 @@ $sortFields = $this->getSortFields();
             <?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
         </th>
         <th>
-            <?php echo JText::_('JBS_MEDIAFILE_RESOURCE_NAME'); ?>
+            <?php echo JText::_('JBS_MED_RESOURCE_NAME'); ?>
         </th>
         <th>
             <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
@@ -140,10 +140,10 @@ $sortFields = $this->getSortFields();
             <?php echo JHtml::_('grid.sort', 'JBS_CMN_MODIFIED', 'mediafile.modified', $listDirn, $listOrder); ?>
         </th>
         <th>
-            <?php echo JHtml::_('grid.sort', 'JBS_CMN_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('grid.sort', 'JBS_MED_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
         </th>
         <th>
-            <?php echo JHtml::_('grid.sort', 'JBS_MEDIAFILE_STATISTICS', 'mediafile.plays', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_FILES_STATS', 'mediafile.plays', $listDirn, $listOrder); ?>
         </th>
     </tr>
     </thead>

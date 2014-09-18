@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,13 +20,10 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
 }
 JHtml::_('behavior.multiselect');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 
 $app = JFactory::getApplication();
 $user = JFactory::getUser();

@@ -69,7 +69,7 @@ abstract class JBSMAddon
             $r = null;
             if (!preg_match('/JBSMAddon(.*)/i', get_class($this), $r)) {
                 //@TODO Changed to a localized exception
-                throw new Exception(JText::_('Cant addon class name'), 500);
+                throw new Exception(JText::sprintf('CANT ADDON CLASS NAME'), 500);
             }
             $this->type = strtolower($r[1]);
         }
@@ -91,7 +91,7 @@ abstract class JBSMAddon
             $xml = simplexml_load_file($path);
         } else {
             //@TODO Need to properly translate this string
-            throw new Exception(JText::sprintf('COULD NOT LOAD ADDON configuration'), 404);
+            throw new Exception(JText::sprintf('COULD NOT LOAD ADDON CONFIGURATION'), 404);
 
             return false;
         }

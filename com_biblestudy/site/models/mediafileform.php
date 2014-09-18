@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -55,8 +55,27 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params   = $app->getParams();
 		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('mediafileid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 	}

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -96,7 +96,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGE_TYPES') . ': <small><small>[' . $title . ']</small></small>', 'messagetype.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'messagetype.png');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
@@ -129,8 +129,8 @@ class BiblestudyViewMessagetype extends JViewLegacy
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
 		$document->setTitle(
-			$isNew ? JText::_('JBS_TITLE_MESSAGE_TYPES_CREATING')
-				: JText::sprintf('JBS_TITLE_MESSAGE_TYPES_EDITING', $this->item->message_type)
+			$isNew ? JText::_('JBS_TITLE_MESSAGETYPES_CREATING')
+				: JText::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
 		);
 	}
 

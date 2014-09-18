@@ -7,4 +7,3 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 
 INSERT INTO `#__bsms_update` (id, version) VALUES (1, '7.0.0')
 ON DUPLICATE KEY UPDATE version= '7.0.0';
-

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,39 +20,19 @@ defined('_JEXEC') or die;
 class BiblestudyViewMediafileform extends JViewLegacy
 {
 
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
+	/** @var array Form */
 	protected $form;
 
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
+	/** @var array Item */
 	protected $item;
 
-	/**
-	 * Return Page
-	 *
-	 * @var string
-	 */
+	/** @var string Return Page */
 	protected $return_page;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+	/** @var array State */
 	protected $state;
 
-	/**
-	 * Admin
-	 *
-	 * @var array
-	 */
+	/** @var array Admin */
 	protected $admin;
 
 	/** @var  JRegistry Params */
@@ -73,7 +53,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -81,7 +61,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	{
 
 		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
 
 		// Get model data.
 		$this->state       = $this->get('State');
@@ -91,24 +70,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
-		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
-
-		$this->admin = JBSMParams::getAdmin();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($this->admin->params);
-		$this->admin_params = $registry;
-
-		$template = JBSMParams::getTemplateparams();
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$params->merge($registry);
-
-		$this->params = $params;
-
-		$user = JFactory::getUser();
+		$this->params = $this->state->template->params;
 
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -116,15 +78,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 			return;
 		}
-		$document = JFactory::getDocument();
-		$host     = JURI::root();
-		$document->addScript($host . 'media/com_biblestudy/js/mediafile/submitbutton.js');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		$document->addStyleSheet($host . 'media/system/css/modal.css');
-
-		// Needed to load the article field type for the article selector
-		JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
 
 		$db = JFactory::getDBO();
 
@@ -150,7 +103,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$query = $db->getQuery(true);
 		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published=1')->order('foldername asc');
 		$db->setQuery($query);
-		$folders             = $db->loadObjectList();
 		$folder              = array(
 			array(
 				'value' => '',
@@ -178,7 +130,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -205,13 +156,13 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::sprintf('JBS_CMN_EDIT', $this->form->getValue('studytitle'));
 		$title .= ' : ' . $state;
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

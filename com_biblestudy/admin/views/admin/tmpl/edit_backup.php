@@ -3,14 +3,14 @@
  * Form sub backup
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-backup">
 	<div class="row-fluid">
 		<div class="span10 form-horizontal">
 			<h3><?php echo JText::_('JBS_CMN_EXPORT'); ?></h3>

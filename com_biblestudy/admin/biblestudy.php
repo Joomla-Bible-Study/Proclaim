@@ -3,7 +3,7 @@
  * Core Admin BibleStudy file
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -49,6 +49,7 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 JLoader::discover('JHtml', BIBLESTUDY_PATH_ADMIN_HELPERS.DIRECTORY_SEPARATOR.'html');
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON);
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 addCSS();
 addJS();
@@ -73,7 +74,7 @@ function addCSS()
 	if (!BIBLESTUDY_CHECKREL)
 	{
 		JHTML::stylesheet('media/com_biblestudy/jui/css/icomoon.css');
-		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
+		JHTML::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
 		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 	}
 	JHTML::stylesheet('media/com_biblestudy/css/general.css');
@@ -89,6 +90,7 @@ function addCSS()
  */
 function addJS()
 {
+
 	if (!BIBLESTUDY_CHECKREL)
 	{
 		JHTML::script('media/com_biblestudy/jui/js/jquery.min.js');

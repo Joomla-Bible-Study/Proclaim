@@ -12,7 +12,7 @@ Joomla.submitbutton = function (task) {
             alert("<?php echo JText::_('JBS_MED_PATH_OR_FOLDER');?>");
         }
         else if (document.adminForm.upload_server.value == '') {
-            alert("<?php echo JText::_('JBS_MED_SERVER');?>");
+            alert("<?php echo JText::_('JBS_CMN_SERVER');?>");
         }
         else {
             Joomla.submitform(task);

@@ -49,21 +49,24 @@ class Com_BiblestudyInstallerScript
      * */
     protected $biblestudy_extension = 'com_biblestudy';
 
-    /**
-     * $parent is the class calling this method.
-     * $type is the type of change (install, update or discover_install, not uninstall).
-     * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
-     * If preflight returns false, Joomla will abort the update and undo everything already done.
-     *
-     * @param   string $type Type of install
-     * @param   JInstallerFile $parent Where it is coming from
-     *
-     * @return boolean
-     */
-    public function preflight($type, $parent)
-    {
-        // This component does not work with Joomla releases prior to 2.5
-        // abort if the current Joomla release is older
+	/** @var string Path to Mysql files */
+	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
+	/**
+	 * $parent is the class calling this method.
+	 * $type is the type of change (install, update or discover_install, not uninstall).
+	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
+	 * If preflight returns false, Joomla will abort the update and undo everything already done.
+	 *
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
+	 *
+	 * @return boolean
+	 */
+	public function preflight($type, $parent)
+	{
+		// This component does not work with Joomla releases prior to 2.5
+		// abort if the current Joomla release is older
 
         // Extract the version number from the manifest. This will overwrite the 1.0 value set above
         /** @noinspection PhpUndefinedMethodInspection */
@@ -119,17 +122,17 @@ class Com_BiblestudyInstallerScript
         return $install_good;
     }
 
-    /**
-     * Install
-     *
-     * @param   JInstallerFile $parent Where call is coming from
-     *
-     * @return  void
-     */
-    public function install($parent)
-    {
-        $db = JFactory::getDBO();
-        $buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
+	/**
+	 * Install
+	 *
+	 * @param   JInstallerFile  $parent  Where call is coming from
+	 *
+	 * @return  void
+	 */
+	public function install($parent)
+	{
+		$db     = JFactory::getDBO();
+		$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
 
         if ($buffer === false) {
             die('No install-defaults.sql file');
@@ -155,19 +158,19 @@ class Com_BiblestudyInstallerScript
 
     }
 
-    /**
-     * Uninstall
-     *
-     * @param   JInstallerFile $parent Where call is coming from
-     *
-     * @return   void
-     */
-    public function uninstall($parent)
-    {
-        // Need to load JBSMDbHelper for script
-        JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-        $dbhelper = new JBSMDbHelper;
-        $drop_result = '';
+	/**
+	 * Uninstall
+	 *
+	 * @param   JInstallerFile  $parent  Where call is coming from
+	 *
+	 * @return   void
+	 */
+	public function uninstall($parent)
+	{
+		// Need to load JBSMDbHelper for script
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+		$dbhelper    = new JBSMDbHelper;
+		$drop_result = '';
 
         if ($dbhelper->checkIfTable('#__bsms_admin')) {
             $db = JFactory::getDBO();
@@ -230,29 +233,27 @@ class Com_BiblestudyInstallerScript
         echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
     }
 
-    /**
-     * Update
-     *
-     * @param   JInstallerAdapterComponent $parent Where call is coming from
-     *
-     * @return   void
-     */
-    public function update($parent, $version = null)
-    {
-        $row = JTable::getInstance('extension');
-        $eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
+	/**
+	 * Update
+	 *
+	 * @param   JInstallerAdapterComponent  $parent  Where call is coming from
+	 *
+	 * @return   void
+	 */
+	public function update($parent)
+	{
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
 
-        $update_count = 0;
+		if ($eid)
+		{
+			$db         = JFactory::getDbo();
 
-        if ($eid) {
-            $db = JFactory::getDbo();
-            if (!$version) {
-                $schemapath = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/mysql';
-
-                $files = str_replace('.sql', '', JFolder::files($schemapath, '\.sql$'));
-                if (!count($files)) {
-                    return false;
-                }
+			$files = str_replace('.sql', '', JFolder::files($this->filePath, '\.sql$'));
+			if (!count($files))
+			{
+				return;
+			}
 
                 usort($files, 'version_compare');
 
@@ -262,61 +263,17 @@ class Com_BiblestudyInstallerScript
                 $version = $db->loadResult();
             }
 
-            if ($version) {
-                // We have a version!
-                foreach ($files as $file) {
-                    if (version_compare($file, $version) > 0) {
-                        $buffer = file_get_contents($schemapath . '/' . $file . '.sql');
-
-                        // Graceful exit and rollback if read not successful
-                        if ($buffer === false) {
-                            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
-
-                            return false;
-                        }
-
-                        // Create an array of queries from the sql file
-                        $queries = JDatabaseDriver::splitSql($buffer);
-
-                        if (count($queries) == 0) {
-                            // No queries to process
-                            continue;
-                        }
-
-                        // Process each query in the $queries array (split out of sql file).
-                        foreach ($queries as $query) {
-                            $query = trim($query);
-
-                            if ($query != '' && $query{0} != '#') {
-                                $db->setQuery($query);
-
-                                if (!$db->execute()) {
-                                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-
-                                    return false;
-                                } else {
-                                    $queryString = (string)$query;
-                                    $queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-                                    JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $file, $queryString), JLog::INFO, 'Update');
-                                }
-
-                                $update_count++;
-                            }
-                        }
-
-                        // Check for corresponding PHP file and run migration
-                        $migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $file . '.php';
-                        if (JFile::exists($migration_file)) {
-                            require_once $migration_file;
-                            $migrationClass = "Migration" . str_ireplace(".", '', $file);
-                            $migration = new $migrationClass();
-                            if (!$migration->up($db)) {
-                                JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
-                            }
-                        }
-                    }
-                }
-            }
+			if ($version)
+			{
+				// We have a version!
+				foreach ($files as $file)
+				{
+					if (version_compare($file, $version) > 0)
+					{
+						$this->allUpdate($file);
+					}
+				}
+			}
 
             // Update the database with new version
             $query = $db->getQuery(true)->delete('#__schemas')->where('extension_id = ' . $eid);
@@ -331,36 +288,32 @@ class Com_BiblestudyInstallerScript
             }
         }
 
-        return $update_count;
+		return;
 
+		// $this->fixMenus();
+		// $this->fixImagePaths();
+		// $this->fixemptyaccess();
+		// $this->fixemptylanguage();
+	}
 
-        // $this->fixMenus();
-        // $this->fixImagePaths();
-        // $this->fixemptyaccess();
-        // $this->fixemptylanguage();
-        // JLoader::register('JBSM800Update', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/8.0.0.php');
-        // $update800 = new JBSM800Update;
-        // $update800->update800();
-    }
-
-    /**
-     * Post Flight
-     *
-     * @param   string $type Type of install
-     * @param   JInstallerFile $parent Where it is coming from
-     *
-     * @return   void
-     */
-    public function postflight($type, $parent)
-    {
-        // Set the #__schemas version_id to the correct number for error from 7.0.0
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('extension_id')
-            ->from('#__extensions')
-            ->where('name LIKE' . $db->q('%com_biblestudy%'));
-        $db->setQuery($query);
-        $extensionid = $db->loadResult();
+	/**
+	 * Post Flight
+	 *
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
+	 *
+	 * @return   void
+	 */
+	public function postflight($type, $parent)
+	{
+		// Set the #__schemas version_id to the correct number for error from 7.0.0
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('extension_id')
+			->from('#__extensions')
+			->where('name LIKE' . $db->q('%com_biblestudy%'));
+		$db->setQuery($query);
+		$extensionid = $db->loadResult();
 
         if ($extensionid) {
             $query = $db->getQuery(true);
@@ -400,44 +353,45 @@ class Com_BiblestudyInstallerScript
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
     }
 
-    /**
-     * Get a variable from the manifest file (actually, from the manifest cache).
-     *
-     * @param   string $name Name of param
-     *
-     * @return string
-     */
-    public function getParam($name)
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('manifest_cache')
-            ->from('#_extensions')
-            ->where('name = ' . $db->q($this->biblestudy_extension));
-        $db->setQuery($query);
-        $manifest = json_decode($db->loadResult(), true);
+	/**
+	 * Get a variable from the manifest file (actually, from the manifest cache).
+	 *
+	 * @param   string  $name  Name of param
+	 *
+	 * @return string
+	 */
+	public function getParam($name)
+	{
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('manifest_cache')
+			->from('#_extensions')
+			->where('name = ' . $db->q($this->biblestudy_extension));
+		$db->setQuery($query);
+		$manifest = json_decode($db->loadResult(), true);
 
         return $manifest[$name];
     }
 
-    /**
-     * sets parameter values in the component's row of the extension table
-     *
-     * @param   array $param_array Array of params to set.
-     *
-     * @return   void
-     */
-    public function setParams($param_array)
-    {
-        if (count($param_array) > 0) {
-            // Read the existing component value(s)
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query->select('params')
-                ->from('#__extensions')
-                ->where('name = ' . $db->q($this->biblestudy_extension));
-            $db->setQuery($query);
-            $params = json_decode($db->loadResult(), true);
+	/**
+	 * sets parameter values in the component's row of the extension table
+	 *
+	 * @param   array  $param_array  Array of params to set.
+	 *
+	 * @return   void
+	 */
+	public function setParams($param_array)
+	{
+		if (count($param_array) > 0)
+		{
+			// Read the existing component value(s)
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('params')
+				->from('#__extensions')
+				->where('name = ' . $db->q($this->biblestudy_extension));
+			$db->setQuery($query);
+			$params = json_decode($db->loadResult(), true);
 
             // Add the new variable(s) to the existing one(s)
             foreach ($param_array as $name => $value) {
@@ -944,5 +898,77 @@ class Com_BiblestudyInstallerScript
 
         return $urls;
     }
+
+	/**
+	 * Function to do using the version number
+	 *
+	 * @param   string  $value  The File to run sql query.
+	 *
+	 * @return boolean
+	 *
+	 * @since 7.0.4
+	 */
+	public function allUpdate($value)
+	{
+		$db  = JFactory::getDbo();
+
+		$buffer = file_get_contents($this->filePath . '/' . $value . '.sql');
+
+		// Graceful exit and rollback if read not successful
+		if ($buffer === false)
+		{
+			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Create an array of queries from the sql file
+		$queries = JDatabaseDriver::splitSql($buffer);
+
+		if (count($queries) == 0)
+		{
+			// No queries to process
+			return false;
+		}
+
+		// Process each query in the $queries array (split out of sql file).
+		foreach ($queries as $query)
+		{
+			$query = trim($query);
+
+			if ($query != '' && $query{0} != '#')
+			{
+				$db->setQuery($query);
+
+				if (!$db->execute())
+				{
+					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
+
+					return false;
+				}
+				else
+				{
+					$queryString = (string) $query;
+					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $value, $queryString), JLog::INFO, 'Update');
+				}
+			}
+		}
+
+		// Check for corresponding PHP file and run migration
+		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
+		if (JFile::exists($migration_file))
+		{
+			require_once $migration_file;
+			$migrationClass = "Migration" . str_ireplace(".", '', $value);
+			$migration      = new $migrationClass;
+			if (!$migration->up($db))
+			{
+				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
+			}
+		}
+
+		return true;
+	}
 
 }

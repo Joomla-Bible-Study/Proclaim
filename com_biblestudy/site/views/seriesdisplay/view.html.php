@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -15,8 +15,6 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- *
- * @todo     need to recode to JBSM/MVC Standers and update the way we do params.  bcc
  */
 class BiblestudyViewSeriesdisplay extends JViewLegacy
 {
@@ -82,7 +80,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -91,31 +89,16 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
-
-		// @todo Need ot move all this into a JS/CSS Loaders so we don't call this twice.
 		$document = JFactory::getDocument();
-		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$pathway       = $mainframe->getPathWay();
-		$contentConfig = JFactory::getApplication('site')->getParams();
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
-
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-		$this->loadHelper('params');
-		$this->admin        = JBSMParams::getAdmin();
-		$this->admin_params = $this->admin->params;
 		$items              = $this->get('Item');
 		$this->state        = $this->get('State');
+
+		/** @var JRegistry $params */
+		$params             = $this->state->template->params;
+		$this->template     = $this->state->get('template');
 
 		// Get studies associated with this series
 		$mainframe->setUserState('sid', $items->id);
@@ -128,22 +111,9 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$teacherimage        = $images->getTeacherThumbnail($items->thumb, $image2 = null);
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
-		$t                   = $input->get('t', '1', 'int');
-		$this->t             = $t;
-		$params              = $this->state->get('params');
 
-		// Convert parameter fields to objects.
-		$this->admin_params = $this->admin->params;
-		$css                = $params->get('css');
-
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $params);
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
@@ -157,11 +127,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 			$limit       = $params->get('series_detail_limit', 10);
 			$seriesorder = $params->get('series_detail_order', 'DESC');
-			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $seriesorder);
+			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $limit, $seriesorder);
 
 			foreach ($studies AS $i => $study)
 			{
-				$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+				$pelements               = $pagebuilder->buildPage($study, $params);
 				$studies[$i]->scripture1 = $pelements->scripture1;
 				$studies[$i]->scripture2 = $pelements->scripture2;
 				$studies[$i]->media      = $pelements->media;
@@ -259,30 +229,14 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			$st_params = $registry;
 			$version   = $st_params->get('bible_version');
 		}
-		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 
-
-		if (isset($items->description))
-		{
-			//$items->text        = $items->description;
-			//$description        = $pagebuilder->runContentPlugins($items, $params);
-			//$items->description = $description->text;
-		}
 		// End process prepare content plugins
-		$this->template = $this->state->get('template');
-		$this->params   = $params;
-		$this->items    = $items;
-
-		// --$this->article = $article;
-		// --$this->passage_link = $passage_link;
+		$this->params      = & $params;
+		$this->items       = $items;
 		$this->studies     = $studies;
 		$uri               = new JUri;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
-
-		// Let's get the studies from this series from the sermons model
-		//JLoader::import('joomla.application.component.modellist');
-
 
 		parent::display($tpl);
 	}

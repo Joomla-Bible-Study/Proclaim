@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -69,6 +69,7 @@ class BiblestudyViewShares extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'share');
 
 		// Check for errors
@@ -130,23 +131,28 @@ class BiblestudyViewShares extends JViewLegacy
 	protected function addToolbar()
 	{
 		$user = JFactory::getUser();
+
 		JToolBarHelper::title(JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'social.png');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('share.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('share.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('shares.publish');
 			JToolBarHelper::unpublishList('shares.unpublish');
-			JToolBarHelper::archiveList('shares.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('shares.archive');
 		}
+
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
         {
             JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -155,6 +161,7 @@ class BiblestudyViewShares extends JViewLegacy
 		{
 			JToolBarHelper::trash('shares.trash');
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=shares');

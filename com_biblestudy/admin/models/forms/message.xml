@@ -35,7 +35,7 @@
         </option>
     </field>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12 small">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12 small">
         <option value="*">JALL</option>
     </field>
 
@@ -127,14 +127,14 @@
     </field>
 
     <field name="topics" type="topics" class="inputbox" size="30" label="JBS_CMN_TOPIC_TAG"
-           description="JBS_CMN_TOPIC_TAG_DESC"/>
+           description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
 
     <field name="messagetype" type="sql" extension="com_biblestudy"
-           label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"
+           label="JBS_CMN_MESSAGETYPE" description="JBS_STY_MESSAGETYPE_DESC"
            class="inputbox"
            query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
            key_field="id" value_field="message_type">
-        <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
+        <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
     </field>
     <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE"/>
     <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"

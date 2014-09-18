@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,12 +20,10 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
 }
+
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();
@@ -76,7 +74,7 @@ $saveOrder = $listOrder == 'ordering';
 			</div>
 			<div class="btn-group btn-small pull-right">
 				<select name="filter_message_type" class="inputbox" onchange="Joomla.submitbutton()">
-					<option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+					<option value=""><?php echo JText::_('JBS_CMN_MESSAGETYPE'); ?></option>
 					<?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
 				</select>
 				<select name="filter_year" class="inputbox" onchange="Joomla.submitbutton()">
@@ -118,7 +116,7 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>
@@ -131,7 +129,7 @@ $saveOrder = $listOrder == 'ordering';
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
 				$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
 				?>
-				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id; ?>">
+				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
 					<td class="center hidden-phone">
 						<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>

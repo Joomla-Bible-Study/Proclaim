@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -23,25 +23,13 @@ jimport('joomla.html.toolbar');
 class BiblestudyViewMediafilelist extends JViewLegacy
 {
 
-	/**
-	 * Items
-	 *
-	 * @var JObject
-	 */
+	/** Items @var JObject */
 	protected $items;
 
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
+	/** Pagination @var array */
 	protected $pagination;
 
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
+	/** State @var object */
 	protected $state;
 
 	/** @var  string Can Do */
@@ -50,18 +38,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/** @var  string Media Types */
 	public $mediatypes;
 
-	/**
-	 * Admin
-	 *
-	 * @var object
-	 */
-	protected $admin;
-
-	/**
-	 * Params
-	 *
-	 * @var JRegistry
-	 */
+	/** @var  JRegistry */
 	protected $params;
 
 	/** @var  string Page Class SFX */
@@ -73,7 +50,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -85,14 +62,6 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->pagination = $this->get('Pagination');
-		$this->admin      = JBSMParams::getAdmin();
-		JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-		JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
-
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			JHTML::stylesheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		}
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -110,10 +79,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		}
 
 		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
-		$params->merge($this->admin->params);
-		$this->admin->params->merge($params);
-		$this->params = $params;
+		$this->params = & $this->state->template->params;
 
 		// Render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
 		// Puts a new record link at the top of the form
@@ -124,7 +90,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		}
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
 
 		$this->_prepareDocument();
 
@@ -140,7 +106,6 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -159,13 +124,13 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		$title = $this->params->def('page_title', '');
 		$title .= ' : ' . JText::_('JBS_TITLE_MEDIA_FILES');
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

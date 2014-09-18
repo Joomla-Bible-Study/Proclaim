@@ -3,7 +3,7 @@
  * JView html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -71,6 +71,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'teacher');
 
 		// Check for errors
@@ -127,35 +128,41 @@ class BiblestudyViewTeachers extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
+
 		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'teachers.png');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('teacher.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('teacher.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('teachers.publish');
 			JToolBarHelper::unpublishList('teachers.unpublish');
-			JToolBarHelper::archiveList('teachers.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('teachers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
+        elseif ($this->canDo->get('core.edit.state'))
         {
             JToolBarHelper::trash('teachers.trash');
         }
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
+			JToolBarHelper::divider();
 			if (BIBLESTUDY_CHECKREL)
 			{
 				JHtml::_('bootstrap.modal', 'collapseModal');
@@ -166,6 +173,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=teachers');
@@ -186,9 +194,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Add the page title to browser.
 	 *
+	 * @since    7.1.0
 	 * @return void
 	 *
-	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{

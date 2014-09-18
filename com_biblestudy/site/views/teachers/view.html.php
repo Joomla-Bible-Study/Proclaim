@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -43,30 +43,16 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Params
 	 *
-	 * @var object
+	 * @var JRegistry
 	 */
 	protected $params = null;
 
 	/**
-	 * Item
+	 * Admin
 	 *
 	 * @var object
 	 */
-	protected $item = null;
-
-	/**
-	 * Admin
-	 *
-	 * @var JObject
-	 */
 	protected $admin;
-
-	/**
-	 * Admin Params
-	 *
-	 * @var JRegistry
-	 */
-	protected $admin_params;
 
 	/**
 	 * Page
@@ -90,17 +76,29 @@ class BiblestudyViewTeachers extends JViewLegacy
 	public $document;
 
 	/**
+	 * Template Table
+	 *
+	 * @var TableTemplate
+	 */
+	public $template;
+
+	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return void
 	 */
 	public function display($tpl = null)
 	{
 
-		$state = $this->get('State');
-		$items = $this->get('Items');
+		$state  = $this->get('State');
+		$items  = $this->get('Items');
+
+		/** @var $params JRegistry */
+		$params	= $state->template->params;
+
+		$this->template        = $state->get('template');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -111,53 +109,12 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 
 		// Load the Admin settings and params from the template
-		$this->admin = JBSMParams::getAdmin(true);
-		$template = JBSMParams::getTemplateparams();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$params = $registry;
-		$state->params->merge($params);
-		$t = $params->get('teachertemplateid');
-
-		if (!$t)
-		{
-			$input = new JInput;
-			$t     = $input->get('t', 1, 'int');
-		}
-		$this->template = $t;
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($this->admin->params);
-		$this->admin_params = $registry;
-		$document           = JFactory::getDocument();
+		$this->admin = $state->get('admin');
 		$uri                = new JUri;
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
-		// Import Stylesheets
-		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
-		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
-		$css = $params->get('css');
-
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.css');
-		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-min.css');
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $params);
+		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');
 
 		$images = new JBSMImages;
 		if ($params->get('useexpert_teacherdetail') > 0 && !$params->get('teacherstemplate'))
@@ -173,7 +130,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 						. '" alt="' . $item->teachername . '" />';
 					$items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 						. str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-					$items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
+					$items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $this->template->id);
 
 					if (isset($items[$i]->information))
 					{
@@ -233,19 +190,17 @@ class BiblestudyViewTeachers extends JViewLegacy
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
 		$title = $this->params->get('page_title', '');
-		$title .= ' : ' . JText::_('JBS_CMN_TEACHERS');
-
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 
@@ -260,7 +215,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 		else
 		{
-			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
+			$this->document->setMetadata('keywords', $this->admin->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -273,7 +228,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		}
 		else
 		{
-			$this->document->setDescription($this->admin_params->get('metadesc'));
+			$this->document->setDescription($this->admin->params->get('metadesc'));
 		}
 
 		if ($this->params->get('robots'))

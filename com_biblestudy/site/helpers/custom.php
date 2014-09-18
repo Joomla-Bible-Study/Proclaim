@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,20 +21,18 @@ class JBSMCustom
 	/**
 	 * Get Custom page
 	 *
-	 * @param   int       $rowid         ID of Row
-	 * @param   string    $custom        Custom String
-	 * @param   JTable    $row           Row info
-	 * @param   JRegistry $params        Params for intro
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      Template ID
+	 * @param   int            $rowid     ID of Row
+	 * @param   string         $custom    Custom String
+	 * @param   object         $row       Row info
+	 * @param   JRegistry      $params    Params for intro
+	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object
 	 */
-	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
+	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
-		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
-
+		$JBSMElements = new JBSMListing;
 		while ($countbraces > 0)
 		{
 			$bracebegin = strpos($custom, '{');
@@ -45,11 +43,11 @@ class JBSMCustom
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid = $this->getElementid($rowid, $row, $params, $admin_params, $template);
-			$custom    = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
+			$custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
-		$elementid->element = $custom;
+		$elementid = $custom;
 		$elementid->id      = 'custom';
 
 		return $elementid;
@@ -58,7 +56,7 @@ class JBSMCustom
 	/**
 	 * Get Element Number.
 	 *
-	 * @param   int $rowid  Row ID
+	 * @param   int  $rowid  Row ID
 	 *
 	 * @return int
 	 */

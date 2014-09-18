@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -452,41 +452,46 @@ class JBSMStats
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
 		$plays         = $db->loadObjectList();
-		$total_players = count($plays);
+		$media_players = null;
 
-		foreach ($plays as $player)
+		if($plays)
 		{
-			switch ($player->player)
-			{
-				case 0:
-					$count_no_player++;
-					break;
-				case '100':
-					$count_global_player++;
-					break;
-				case '1':
-					$count_internal_player++;
-					break;
-				case '3':
-					$count_av_player++;
-					break;
-				case '7':
-					$count_legacy_player++;
-					break;
-				case '8':
-					$count_embed_code++;
-					break;
-			}
-		}
+			$total_players = count($plays);
 
-		$media_players = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
-			'<br /><strong>' . JText::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
-			'<br /><strong><a href="http://extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">' .
-			JText::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
-			JText::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
-			JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
-			JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
-			JText::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
+			foreach ($plays as $player)
+			{
+				switch ($player->player)
+				{
+					case 0:
+						$count_no_player++;
+						break;
+					case '100':
+						$count_global_player++;
+						break;
+					case '1':
+						$count_internal_player++;
+						break;
+					case '3':
+						$count_av_player++;
+						break;
+					case '7':
+						$count_legacy_player++;
+						break;
+					case '8':
+						$count_embed_code++;
+						break;
+				}
+			}
+
+			$media_players = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
+				'<br /><strong>' . JText::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
+				'<br /><strong><a href="http://extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">' .
+				JText::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
+				JText::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
+				JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
+				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
+				JText::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
+		}
 
 		return $media_players;
 	}
@@ -510,32 +515,36 @@ class JBSMStats
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
 		$popups            = $db->loadObjectList();
-		$total_media_files = count($popups);
 
-		foreach ($popups as $popup)
+		if($popups)
 		{
-			switch ($popup->popup)
-			{
-				case 0:
-					$no_player++;
-					break;
-				case 1:
-					$pop_count++;
-					break;
-				case 2:
-					$inline_count++;
-					break;
-				case 3:
-					$global_count++;
-					break;
-			}
-		}
+			$total_media_files = count($popups);
 
-		$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-			'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-			JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-			JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
-			JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+			foreach ($popups as $popup)
+			{
+				switch ($popup->popup)
+				{
+					case 0:
+						$no_player++;
+						break;
+					case 1:
+						$pop_count++;
+						break;
+					case 2:
+						$inline_count++;
+						break;
+					case 3:
+						$global_count++;
+						break;
+				}
+			}
+
+			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
+				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
+				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+		}
 
 		return $popups;
 	}

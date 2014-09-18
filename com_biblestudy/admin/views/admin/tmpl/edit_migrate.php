@@ -3,7 +3,7 @@
  * Form sub migrate
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * @since      7.1.0
@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" enctype="multipart/form-data"
-      method="post" name="adminForm" id="adminForm">
+      method="post" name="adminForm" id="item-migrate">
 	<div id="j-main-container">
 		<table class="row-fluid">
 			<tr>

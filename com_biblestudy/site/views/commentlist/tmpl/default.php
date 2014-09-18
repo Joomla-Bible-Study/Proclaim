@@ -20,13 +20,10 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
 }
 JHtml::_('behavior.multiselect');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->state->params);
 
 $app = JFactory::getApplication();
 $user = JFactory::getUser();
@@ -37,8 +34,6 @@ $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
-
-// todo need to check if call outs for the pull down work and filter. BCC
 ?>
 <script type="text/javascript">
 	var table;
@@ -177,7 +172,8 @@ $sortFields = $this->getSortFields();
 					<td class=" has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
+								<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - ' .
+										JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
 							<?php else : ?>
 								<?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?>
 							<?php endif; ?>

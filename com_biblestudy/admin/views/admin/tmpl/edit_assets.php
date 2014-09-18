@@ -3,7 +3,7 @@
  * Admin Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
+<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-assets">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>

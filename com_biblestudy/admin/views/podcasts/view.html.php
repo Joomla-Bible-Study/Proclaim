@@ -4,7 +4,7 @@
  * JView html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -70,8 +70,8 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'podcast');
-		$this->addToolbar();
 
 		// Levels filter.
 		$options   = array();
@@ -88,6 +88,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 
 		$this->f_levels = $options;
 
+		$this->addToolbar();
 		if (BIBLESTUDY_CHECKREL)
 		{
 			$this->sidebar = JHtmlSidebar::render();
@@ -114,17 +115,21 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		{
 			JToolBarHelper::addNew('podcast.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('podcast.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('podcasts.publish');
 			JToolBarHelper::unpublishList('podcasts.unpublish');
-			JToolBarHelper::archiveList('podcasts.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('podcasts.archive');
 		}
+
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
         {
             JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -133,11 +138,13 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		{
 			JToolBarHelper::trash('podcasts.trash');
 		}
+
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::custom('writeXMLFile', 'xml.png', 'JBS_PDC_WRITE_XML_FILES', 'JBS_PDC_WRITE_XML_FILES', false, false);
 		}
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=series');

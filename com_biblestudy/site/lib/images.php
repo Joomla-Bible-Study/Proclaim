@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,7 +22,7 @@ class JBSMImages
 	/**
 	 * Get Image Path
 	 *
-	 * @param   string $path  ?
+	 * @param   string  $path  ?
 	 *
 	 * @return object
 	 */
@@ -167,7 +167,7 @@ class JBSMImages
 	/**
 	 * Get Study Thumbnail
 	 *
-	 * @param   string $image  ?
+	 * @param   string  $image  ?
 	 *
 	 * @return object
 	 */
@@ -188,7 +188,7 @@ class JBSMImages
 	/**
 	 * Get Series Thumbnail
 	 *
-	 * @param   string $image  ?
+	 * @param   string  $image  ?
 	 *
 	 * @return object
 	 */
@@ -209,8 +209,8 @@ class JBSMImages
 	/**
 	 * Get Teacher Thumbnail
 	 *
-	 * @param   string $image1  ?
-	 * @param   string $image2  ?
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
 	 *
 	 * @return object
 	 */
@@ -245,8 +245,8 @@ class JBSMImages
 	/**
 	 * Get Teacher Image
 	 *
-	 * @param   string $image1  ?
-	 * @param   string $image2  ?
+	 * @param   string  $image1  ?
+	 * @param   string  $image2  ?
 	 *
 	 * @return object
 	 */
@@ -281,8 +281,8 @@ class JBSMImages
 	/**
 	 * Get Media Image
 	 *
-	 * @param   string $media1  ?
-	 * @param   string $media2  ?
+	 * @param   string  $media1  ?
+	 * @param   string  $media2  ?
 	 *
 	 * @return object
 	 */

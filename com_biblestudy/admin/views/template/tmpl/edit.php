@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -40,7 +40,7 @@ $input = $app->input;
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
 <ul class="nav nav-tabs">
-	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_TPL_GENERAL'); ?></a></li>
+	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_GENERAL'); ?></a></li>
 	<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_CMN_MEDIA'); ?></a></li>
 	<li><a href="#landing" data-toggle="tab"><?php echo JText::_('JBS_TPL_LANDING_PAGE'); ?></a></li>
 	<li><a href="#list" data-toggle="tab"><?php echo JText::_('JBS_TPL_STUDY_LIST_VIEW'); ?></a></li>

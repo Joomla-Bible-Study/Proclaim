@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -61,8 +61,8 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Populate the State
 	 *
-	 * @param   string $ordering   ?
-	 * @param   string $direction  ?
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return void
 	 */
@@ -71,17 +71,35 @@ class BiblestudyModelTeachers extends JModelList
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$pk = $app->input->getInt('id');
+		$pk = $app->input->getInt('id', '');
 		$this->setState('sermon.id', $pk);
 
-		$offset = $app->input->getUInt('limitstart');
+		$offset = $app->input->getUInt('limitstart', '');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params = $app->getParams();
+		$params   = $app->getParams();
 		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
 
-		// TODO: Tune these values based on other permissions.
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('teachersid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
+
 		$user = JFactory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))

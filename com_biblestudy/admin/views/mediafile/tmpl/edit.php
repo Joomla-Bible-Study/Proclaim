@@ -3,7 +3,7 @@
  * Edit
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -42,7 +42,7 @@ JHtml::_('jwplayer.framework');
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a href="#general" data-toggle="tab">
-                        <?php echo JText::_("JBS_GENERAL"); ?>
+                        <?php echo JText::_("JBS_CMN_GENERAL"); ?>
                     </a>
                 </li>
                 <?php foreach ($this->media_form->getFieldsets('params') as $name => $fieldset): ?>

@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,17 +22,9 @@ if (BIBLESTUDY_CHECKREL)
 else
 {
 	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-	JHTML::stylesheet('media/com_biblestudy/jui/css/chosen.css');
-	JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 }
-
-JHtml::script(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-JHtml::script(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->state->params);
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');

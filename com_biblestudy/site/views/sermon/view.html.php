@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -60,10 +60,13 @@ class BiblestudyViewSermon extends JViewLegacy
 	/** @var  string Article */
 	protected $article;
 
+	/** @var  array Article */
+	protected $comments;
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -71,9 +74,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	{
 		$app         = JFactory::getApplication();
 		$user        = JFactory::getUser();
-		$userId      = $user->get('id');
 		$JBSMListing = new JBSMListing;
-		// @todo may think of moving this to the core helper.
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			$dispatcher = JEventDispatcher::getInstance();
@@ -102,7 +104,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		if (!$item)
 		{
-			return false;
+			return;
 		}
 
 		if ($this->getLayout() == 'pagebreak')
@@ -122,7 +124,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
-		$this->params = $this->state->get('params');
+		$this->params = $this->state->template->params;
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone ($this->params);
 
@@ -197,42 +199,26 @@ class BiblestudyViewSermon extends JViewLegacy
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
-		//Get Scripture references from listing class in case we don't use the pagebuilder class
+		// Get Scripture references from listing class in case we don't use the pagebuilder class
 		$this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
 		$this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
-		//@todo check to see if this works
+
+		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
 		$relatedstudies     = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
-		JHtml::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/html/');
-		$document = JFactory::getDocument();
-//		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-//		$document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
-		JHtml::_('jquery.framework');
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.bootstrap');
-		$css = $this->item->params->get('css');
+		JHtml::_('biblestudy.loadcss', $this->params);
 
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
-//		$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/jui/css/bootstrap.min.css');
 
-		//Only load pagebuilder if the default template is NOT being used
+		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
 			$pagebuilder            = new JBSMPagebuilder;
-			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->item->admin_params);
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params);
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
@@ -370,7 +356,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 
 		$this->page         = new stdClass;
-		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params, $this->item->admin_params);
+		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);
 		JHTML::_('behavior.tooltip');
 
 		// End process prepare content plugins
@@ -443,15 +429,15 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check for empty title and add site name if param is set
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		if (empty($title))
 		{
@@ -491,7 +477,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
 		}
-		if ($app->getCfg('MetaAuthor') == '1')
+		if ($app->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->teachername);
 		}
@@ -515,7 +501,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string $tpl ?
+	 * @param   string  $tpl  ?
 	 *
 	 * @return void
 	 */

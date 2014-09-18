@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,8 +24,8 @@ class JBSMShowScripture
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object $row     Item Info
-	 * @param   object $params  Item Params
+	 * @param   object    $row     Item Info
+	 * @param   JRegitry  $params  Item Params
 	 *
 	 * @return boolean
 	 */
@@ -77,15 +77,14 @@ class JBSMShowScripture
 	/**
 	 * Get HideShow
 	 *
-	 * @param   object $row        ?
-	 * @param   string $reference  ?
+	 * @param   object  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
 	public function getHideShow($row, $reference)
 	{
-		$elements = new JBSMElements;
-		$contents = $elements->body_only(file_get_contents($this->link));
+		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
 		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$passage .= '<div id="scripture" style="display: none;">';
@@ -99,15 +98,14 @@ class JBSMShowScripture
 	/**
 	 * Get Show
 	 *
-	 * @param   string $row        ?
-	 * @param   string $reference  ?
+	 * @param   string  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
 	public function getShow($row, $reference)
 	{
-		$elements = new JBSMElements;
-		$contents = $elements->body_only(file_get_contents($this->link));
+		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "passage">' . $contents . '</div>';
 
 		return $passage;
@@ -116,8 +114,8 @@ class JBSMShowScripture
 	/**
 	 * Get Link
 	 *
-	 * @param   object $row        ?
-	 * @param   string $reference  ?
+	 * @param   object  $row        ?
+	 * @param   string  $reference  ?
 	 *
 	 * @return string
 	 */
@@ -141,7 +139,7 @@ class JBSMShowScripture
 	/**
 	 * Create Form of Reference
 	 *
-	 * @param   object $row  ?
+	 * @param   object  $row  ?
 	 *
 	 * @return string
 	 */
@@ -171,8 +169,8 @@ class JBSMShowScripture
 	/**
 	 * Get Bible Gateway References
 	 *
-	 * @param   string $reference  ?
-	 * @param   string $version    ?
+	 * @param   string  $reference  ?
+	 * @param   string  $version    ?
 	 *
 	 * @return string
 	 */
@@ -181,6 +179,20 @@ class JBSMShowScripture
 		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
 
 		return $link;
+	}
+
+	/**
+     * Only Return the Body of a html doc.
+     *
+     * @param   string  $html  Html document
+     *
+     * @return string
+     *
+     * @since 8.0.0
+     */
+	public function body_only($html)
+	{
+		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
 	}
 
 }

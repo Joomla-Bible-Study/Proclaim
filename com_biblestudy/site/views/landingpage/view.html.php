@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -29,31 +29,27 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	public $params;
 
 	/**
-	 * Admin Params
+	 * Params
 	 *
 	 * @var JRegistry
 	 */
-	public $admin_params;
+	public $state;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-		$input  = new JInput;
-
-		// Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$document  = JFactory::getDocument();
 
-		$itemparams = JComponentHelper::getParams('com_biblestudy');
+		$this->state  = $this->get('state');
+		$this->params = $this->state->template->params;
 
-		// Convert parameter fields to objects.
-		$this->admin_params = JBSMParams::getAdmin()->params;
+		$itemparams = JComponentHelper::getParams('com_biblestudy');
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
@@ -62,7 +58,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		}
 		elseif (!$itemparams->get('metakey'))
 		{
-			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
+			$document->setMetadata('keywords', $this->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -71,54 +67,20 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		}
 		elseif (!$itemparams->get('metadesc'))
 		{
-			$document->setDescription($this->admin_params->get('metadesc'));
+			$document->setDescription($this->params->get('metadesc'));
 		}
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $this->params, $this->params->get('stylesheet'));
 
-		$t = $input->get('t', 1, 'int');
-
-		if (!$t)
-		{
-			$t = 1;
-		}
-
-		$params = JBSMParams::getTemplateparams()->params;
-
-		$css = $params->get('css');
-		JHtml::_('jquery.framework');
-
-		// Import Scripts
-		JHtml::script('media/com_biblestudy/js/biblestudy.js');
-
-		// Import Stylesheets
-		JHtml::stylesheet('media/com_biblestudy/css/general.css');
-
-		if ($css <= "-1")
-		{
-			JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
-		}
-
-		$url = $params->get('stylesheet');
-
-		if ($url)
-		{
-			$document->addStyleSheet($url);
-		}
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-extended.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-responsive-min.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap.css');
-        $this->document->addStyleSheet(JURI::base(). 'media/com_biblestudy/jui/css/bootstrap-min.css');
-
-		$uri                = new JUri;
+		$images   = new JBSMImages;
+		$images->getShowhide();
 
 		// Get the main study list image
+		$this->main              = $images->mainStudyImage();
+
+		$uri                = new JUri;
 		$Uri_toString      = $uri->toString();
 		$this->request_url = $Uri_toString;
-		$this->params      = $params;
 
 		parent::display($tpl);
 	}

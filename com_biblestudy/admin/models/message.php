@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,13 +22,6 @@ class BiblestudyModelMessage extends JModelAdmin
 {
 
 	/**
-	 * Admin
-	 *
-	 * @var string
-	 */
-	private $_admin = null;
-
-	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
@@ -44,7 +37,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Fix up special html fields
 
-		$row        = & $this->getTable();
+		/** @var TableMessage $row */
+		$row        = $this->getTable();
 		$input      = new JInput;
 		$data       = $input->post;
 		$scriptures = null;
@@ -98,9 +92,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$vTags = $input->get('topic_tags', '', 'string');
 		$iTags = explode(",", $vTags);
 
-		JTable::addIncludePath(
-			JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables'
-		);
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		foreach ($iTags as $aTag)
 		{
@@ -110,7 +102,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				if ($aTag != "")
 				{
 
-					$tagRow = & JTable::getInstance('studytopics', 'Table');
+					$tagRow = JTable::getInstance('studytopics', 'Table');
 
 					$isDup = $this->isDuplicate($row->id, $aTag);
 
@@ -133,7 +125,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				// It's a new tag.  Gotta insert it into the Topics table.
 				if ($aTag != "")
 				{
-					$topicRow             = & JTable::getInstance('topic', 'Table');
+					$topicRow             = JTable::getInstance('topic', 'Table');
 					$tempText             = $aTag;
 					$tempText             = str_replace("0_", "", $tempText);
 					$topicRow->topic_text = $tempText;
@@ -147,7 +139,7 @@ class BiblestudyModelMessage extends JModelAdmin
 					}
 
 					// Gotta somehow make sure this isn't a duplicate...
-					$tagRow           = & JTable::getInstance('studytopics', 'Table');
+					$tagRow           = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $row->id;
 					$tagRow->topic_id = $topicRow->id;
 
@@ -172,19 +164,19 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Duplicate Check
 	 *
-	 * @param   int $study_id  Study ID
-	 * @param   int $topic_id  Topic ID
+	 * @param   int  $study_id  Study ID
+	 * @param   int  $topic_id  Topic ID
 	 *
 	 * @return boolean
-	 *
-	 * @todo look like this was not implemented. Need to look into this and see if it is still needed, (I didn't write this one)
-     * I don't know where this came from. Tom didn't write it either
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_studytopics')->where('study_id = ' . (int) $study_id)->where('topic_id = ' . (int) $topic_id);
+		$query->select('*')
+			->from('#__bsms_studytopics')
+			->where('study_id = ' . (int) $study_id)
+			->where('topic_id = ' . (int) $topic_id);
 		$db->setQuery($query);
 		$tresult = $db->loadObject();
 
@@ -289,7 +281,7 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		$query->select('mediafile.id, mediafile.filename, mediafile.createdate, media.media_image_name');
 		$query->from('#__bsms_mediafiles AS mediafile');
-        $query->join('LEFT','#__bsms_media as media ON media.id = mediafile.media_image');
+		$query->join('LEFT', '#__bsms_media as media ON media.id = mediafile.media_image');
 		$query->where('mediafile.study_id = ' . (int) $this->getItem()->id);
 		$query->order('mediafile.createdate DESC');
 
@@ -301,7 +293,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param   string $data  The form data.
+	 * @param   string  $data  The form data.
 	 *
 	 * @return boolean
 	 *
@@ -322,8 +314,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Routine to save the topics(tags)
 	 *
-	 * @param   int    $pks   Is the id of the record being saved.
-	 * @param   string $data  from post
+	 * @param   int     $pks   Is the id of the record being saved.
+	 * @param   string  $data  from post
 	 *
 	 * @return boolean
 	 *
@@ -348,7 +340,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$query->where('study_id = ' . $pks);
 		$db->setQuery($query->__toString());
 
-		if (!$db->query())
+		if (!$db->execute())
 		{
 			return false;
 		}
@@ -361,13 +353,16 @@ class BiblestudyModelMessage extends JModelAdmin
 
 			foreach ($topics as $topic)
 			{
-				$tdata           = new stdClass;
-				$tdata->topic_id = $topic;
-				$tdata->study_id = $pks;
-
-				if (!$db->insertObject('#__bsms_studytopics', $tdata))
+				if ($topic)
 				{
-					return false;
+					$tdata           = new stdClass;
+					$tdata->topic_id = $topic;
+					$tdata->study_id = $pks;
+
+					if (!$db->insertObject('#__bsms_studytopics', $tdata))
+					{
+						return false;
+					}
 				}
 			}
 
@@ -379,8 +374,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return string
 	 *
@@ -420,8 +415,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -459,9 +453,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string $type    The table type to instantiate
-	 * @param   string $prefix  A prefix for the table class name. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    JTable    A database object
 	 *
@@ -475,7 +469,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable $table  A reference to a JTable object.
+	 * @param   TableMessage  $table  A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -484,15 +478,13 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplication::stringURLSafe($table->alias);
+		$table->alias      = JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplication::stringURLSafe($table->studytitle);
+			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))
@@ -513,7 +505,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk  The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -527,8 +519,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -543,8 +535,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array   $pks    An array of primary key ids.
-	 * @param   integer $order  +1 or -1
+	 * @param   array    $pks    An array of primary key ids.
+	 * @param   integer  $order  +1 or -1
 	 *
 	 * @return  mixed
 	 *
@@ -552,7 +544,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
-		$row        = & $this->getTable();
+		/** @var TableMessage $row */
+		$row        = $this->getTable();
 		$conditions = array();
 
 		// Update ordering values
@@ -611,9 +604,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
-	 * @param   array $commands  An array of commands to perform.
-	 * @param   array $pks       An array of item ids.
-	 * @param   array $contexts  An array of item contexts.
+	 * @param   array  $commands  An array of commands to perform.
+	 * @param   array  $pks       An array of item ids.
+	 * @param   array  $contexts  An array of item contexts.
 	 *
 	 * @return    boolean     Returns true on success, false on failure.
 	 *
@@ -669,14 +662,16 @@ class BiblestudyModelMessage extends JModelAdmin
 
 			$done = true;
 		}
+
+		return $done;
 	}
 
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -686,6 +681,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @var TableMessage $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -720,9 +716,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -732,6 +728,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @var TableMessage $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -766,9 +763,9 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -778,6 +775,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @var TableMessage $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -808,6 +806,5 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		return true;
 	}
-
 
 }

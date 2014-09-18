@@ -3,7 +3,7 @@
  * Default Custom
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,20 +22,15 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 $JBSMSerieslist = new JBSMSerieslist;
-$t = $this->params->get('serieslisttemplateid');
-
-if (!$t)
-{
-	$t = $input->get('t', 1, 'int');
-}
+$t = $this->template->id;
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
 	<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 		<?php
-		echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
+		echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params, $this->template);
 		?>
 		<table class="table table-striped bslisttable"> <?php
-			$studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
+			$studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->template);
 			echo $studies;
 			?></table>
 		<?php

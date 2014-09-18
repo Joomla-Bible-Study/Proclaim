@@ -4,7 +4,7 @@
  * Controller MediaFile
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -61,7 +61,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerForm
 	 * @since   12.2
@@ -81,7 +81,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data  An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -96,8 +96,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data  An array of input data.
-	 * @param   string $key   The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -111,7 +111,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param   string $key  The name of the primary key of the URL variable.
+	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
 	 * @return  Boolean    True if access level checks pass, false otherwise.
 	 *
@@ -128,8 +128,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param   string $key     The name of the primary key of the URL variable.
-	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
 	 *
@@ -145,9 +145,9 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return  object  The model.
 	 *
@@ -166,8 +166,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param   int    $recordId  The primary key id for the item.
-	 * @param   string $urlVar    The name of the URL variable for the id.
+	 * @param   int     $recordId  The primary key id for the item.
+	 * @param   string  $urlVar    The name of the URL variable for the id.
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
 	 *
@@ -179,7 +179,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit');
 		$append = '';
 
 		// Setup redirect info.
@@ -243,8 +242,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key     The name of the primary key of the URL variable.
-	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
 	 *
@@ -262,61 +261,4 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		return $result;
 	}
-
-
-
-	/**
-	 * Link to Sections May need to be Removed.
-	 *
-	 * @todo This is brocken and not sure if needed. TOM
-	 * @return object
-
-	public function articlesSectionCategories()
-	{
-		error_reporting(0);
-		$input = new JInput;
-		$secId = $input->get('secId', '', 'int');
-
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getArticlesSectionCategories($secId);
-
-		return $items;
-	}
-*/
-	/**
-	 * Link to Articles Category Items
-	 *
-	 * @todo This is bracken and not sure if needed. TOM
-	 * @return object
-
-	public function articlesCategoryItems()
-	{
-		$input = new JInput;
-		error_reporting(0);
-		$catId = $input->get('catId', '', 'int');
-
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getCategoryItems($catId);
-
-		return $items;
-	}
-*/
-	/**
-	 * Link to VertueMart Items
-	 *
-	 * @todo This is brocken and not sure if needed. TOM
-	 * @return object
-
-	public function virtueMartItems()
-	{
-		$input = new JInput;
-		error_reporting(0);
-		$catId = $input->get('catId', '', 'int');
-
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getVirtueMartItems($catId);
-
-		return $items;
-	}
-*/
 }

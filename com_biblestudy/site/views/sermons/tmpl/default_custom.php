@@ -3,7 +3,7 @@
  * Default Custom
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -160,7 +160,7 @@ $JBSMTeacher = new JBSMTeacher;
 
 		foreach ($this->items as $row)
 		{ // Run through each row of the data result from the model
-			$listing = $JBSMTeacher->getListingExp($row, $params, $this->admin_params, $this->template);
+			$listing = $JBSMTeacher->getListingExp($row, $params, $this->template);
 			echo $listing;
 		}
 

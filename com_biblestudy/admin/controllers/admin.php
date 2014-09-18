@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,7 +21,7 @@ jimport('joomla.application.component.controllerform');
 class BiblestudyControllerAdmin extends JControllerForm
 {
 	/**
-	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
 	 * @param  string
 	 *
@@ -32,7 +32,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    1.6
 	 */
@@ -55,14 +55,10 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			case 'players':
 				$this->changePlayers();
-				$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-				$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
 				break;
 
 			case 'popups':
 				$this->changePopup();
-				$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-				$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
 				break;
 		}
 	}
@@ -74,21 +70,26 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetHits()
 	{
-		$msg   = null;
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->update('#__bsms_studies')
-			->set('hits = ' . 0);
+		$db     = JFactory::getDBO();
+		$msg    = null;
+		$post   = $_POST['jform'];
+		$reg = new JRegistry;
+		$reg->loadArray($post['params']);
+		$from   = $reg->get(';from');
+		$to     = $reg->get(';to');
+		$query  = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('popup = ' . $db->q($to))
+			->where('popup = ' . $db->q($from));
 		$db->setQuery($query);
 
 		if (!$db->execute())
 		{
-			$msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS');
+			$msg = JText::_('JBS_ADM_ERROR_OCCURED');
 		}
 		else
 		{
-			$updated = $db->getAffectedRows();
-			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
@@ -152,36 +153,40 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function changePlayers()
 	{
-		$jinput = JFactory::getApplication()->input;
 		$db     = JFactory::getDBO();
-		$msg    = null;
-		$from   = $jinput->getInt('from', '', 'post');
-		$to     = $jinput->getInt('to', '', 'post');
-
-		switch ($from)
+		$msg    = JText::_('JBS_ADM_ERROR_OCCURED');
+		$post   = $_POST['jform'];
+		$reg    = new JRegistry;
+		$reg->loadArray($post['params']);
+		$from   = $reg->get('from');
+		$to     = $reg->get('to');
+		if ($from != 'x' && $to != 'x')
 		{
-			case '100':
-				$query = $db->getQuery(true);
-				$query->update('#__bsms_mediafiles')
-					->set('player = ' . $db->quote($to))
-					->where('player IS NULL');
-				break;
+			switch ($from)
+			{
+				case '100':
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player IS NULL');
+					break;
 
-			default:
-				$query = $db->getQuery(true);
-				$query->update('#__bsms_mediafiles')
-					->set('player = ' . $db->quote($to))
-					->where('player = ' . $db->quote($from));
-		}
-		$db->setQuery($query);
+				default:
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player = ' . $db->quote($from));
+			}
+			$db->setQuery($query);
 
-		if (!$db->execute())
-		{
-			$msg = JText::_('JBS_ADM_ERROR_OCCURED');
+			if ($db->execute())
+			{
+				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			}
 		}
 		else
 		{
-			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			$msg .= ': Missed setting the From or Two';
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}

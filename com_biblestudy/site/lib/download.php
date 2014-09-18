@@ -3,7 +3,7 @@
  * BibleStudy Download Class
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -64,7 +64,7 @@ class JBSMDownload
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
-		$jweb  = new JApplicationWeb();
+		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
 		$server        = $media->spath;
@@ -211,7 +211,7 @@ class JBSMDownload
 	/**
 	 * Method to get file size
 	 *
-	 * @param   object  $url  URL
+	 * @param   string  $url  URL
 	 *
 	 * @return  boolean
 	 */

@@ -3,12 +3,13 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 
 /**
  * View class for Mediaimages
@@ -145,22 +146,24 @@ class BiblestudyViewMediaimages extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		// Get the toolbar object instance
 		JToolBarHelper::title(JText::_('JBS_CMN_MEDIAIMAGES'), 'mediaimages');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('mediaimage.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('mediaimage.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('mediaimages.publish');
 			JToolBarHelper::unpublishList('mediaimages.unpublish');
+			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('mediaimages.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
@@ -172,6 +175,7 @@ class BiblestudyViewMediaimages extends JViewLegacy
         {
             JToolBarHelper::trash('mediaimages.trash');
         }
+
 		if (BIBLESTUDY_CHECKREL)
 		{
 			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediaimages');

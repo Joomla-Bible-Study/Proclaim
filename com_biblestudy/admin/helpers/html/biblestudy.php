@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -28,7 +28,7 @@ abstract class JHtmlBiblestudy
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   mixed $debug  Is debugging mode on? [optional]
+	 * @param   mixed  $debug  Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -49,6 +49,7 @@ abstract class JHtmlBiblestudy
 			$debug  = (boolean) $config->get('debug');
 		}
 		JHtml::_('jquery.framework');
+		self::bootstrap($debug);
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 
 		self::$loaded[__METHOD__] = true;
@@ -61,7 +62,7 @@ abstract class JHtmlBiblestudy
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   mixed $debug  Is debugging mode on? [optional]
+	 * @param   mixed  $debug  Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -71,11 +72,6 @@ abstract class JHtmlBiblestudy
 	{
 		if (!version_compare(JVERSION, '3.0', 'ge'))
 		{
-			// Only load once
-//			if (!empty(self::$loaded[__METHOD__]))
-//			{
-//				return;
-//			}
 
 			// If no debugging value is set, use the configuration setting
 			if ($debug === null)
@@ -84,12 +80,11 @@ abstract class JHtmlBiblestudy
 				$debug  = (boolean) $config->get('debug');
 			}
 
-			JHtml::_('script', 'media/com_biblestudy/jui/js/plugins/bootstrap.min.js', false, true, false, false, $debug);
+			JHtml::_('script', 'media/com_biblestudy/jui/js/plugins/bootstrap.min.js', false, false, false, false, $debug);
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-extended.css');
 			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
 
-			self::$loaded[__METHOD__] = true;
 		}
 
 		return;
@@ -98,14 +93,37 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   array $attribs  Optional array of attributes to be passed to JHtml::_('stylesheet')
+	 * @param   JRegistry  $params  Params for css
+	 * @param   string     $url     Url of a css file to load
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($attribs = array())
+	public static function loadCss($params, $url = null)
 	{
+
+		// Import Stylesheets
+		JHtml::stylesheet('media/com_biblestudy/css/general.css');
+		$css = $params->get('css');
+
+		if ($css <= "-1")
+		{
+			JHtml::styleSheet('media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			JHtml::styleSheet('media/com_biblestudy/css/site/' . $css);
+		}
+		if ($url)
+		{
+			JHtml::stylesheet($url);
+		}
+
+		if (!BIBLESTUDY_CHECKREL)
+		{
+			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
+		}
 	}
 
 	/**
@@ -228,7 +246,6 @@ abstract class JHtmlBiblestudy
 
 		return $options;
 	}
-
 
 	/**
 	 * Method to get the field options.
@@ -358,7 +375,7 @@ abstract class JHtmlBiblestudy
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_PLAYER')
 			. '::' . JText::_('JBS_MED_PLAYER_DESC') . '">',
 			JText::_('JBS_MED_PLAYER'), '</label>', '<select name="batch[player]" class="inputbox" id="batch-player">',
-			'<option value="">' . JText::_('JBS_CMN_PLAYER_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_PLAYER_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::playerlist(), 'value', 'text'), '</select>'
 		);
 
@@ -380,7 +397,7 @@ abstract class JHtmlBiblestudy
 			. '::' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
 			JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'), '</label>',
 			'<select name="batch[link_type]" class="inputbox" id="batch-link_type">',
-			'<option value="">' . JText::_('JBS_CMN_DOWNLOAD_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_DOWNLOAD_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Link_typelist(), 'value', 'text'), '</select>'
 		);
 
@@ -401,7 +418,7 @@ abstract class JHtmlBiblestudy
 			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_INTERNAL_POPUP')
 			. '::' . JText::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
 			JText::_('JBS_MED_POPUP'), '</label>', '<select name="batch[popup]" class="inputbox" id="batch-popup">',
-			'<option value="">' . JText::_('JBS_CMN_POPUP_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::popuplist(), 'value', 'text'), '</select>'
 		);
 
@@ -417,13 +434,13 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function mediatype()
 	{
-		// Create the batch selector to change the player on a selection list.
+		// Create the batch selector to change the mediatype on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_IMAGE')
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_IMAGE')
 			. '::' . JText::_('JBS_MED_IMAGE_DESC') . '">',
 			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
 			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
-			'<option value="">' . JText::_('JBS_CMN_MEDIATYPE_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'), '</select>'
 		);
 
@@ -439,12 +456,12 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function mimetype()
 	{
-		// Create the batch selector to change the player on a selection list.
+		// Create the batch selector to change the mime type on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MIMETYPE') . '::' . JText::_('JBS_MIMETYPE_DESC') . '">',
-			JText::_('JBS_MIMETYPE'), '</label>',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
+			JText::_('JBS_CMN_MIMETYPE'), '</label>',
 			'<select name="batch[mimetype]" class="inputbox" id="batch-mimetype">',
-			'<option value="">' . JText::_('JBS_CMN__MIMETYPE_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_MIMETYPE_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Mimetypelist(), 'value', 'text'), '</select>'
 		);
 
@@ -460,12 +477,12 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function Teacher()
 	{
-		// Create the batch selector to change the player on a selection list.
+		// Create the batch selector to change the teacher on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_TEACHER') . '::' . JText::_('JBS_TEACHER_DESC') . '">',
-			JText::_('JBS_TEACHER'), '</label>',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_TEACHER') . '::' . JText::_('JBS_BAT_TEACHER_DESC') . '">',
+			JText::_('JBS_CMN_TEACHER'), '</label>',
 			'<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
-			'<option value="">' . JText::_('JBS_CMN_TEACHER_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Teacherlist(), 'value', 'text'), '</select>'
 		);
 
@@ -481,12 +498,12 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function Messagetype()
 	{
-		// Create the batch selector to change the player on a selection list.
+		// Create the batch selector to change the message type on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MESSAGETYPE') . '::' . JText::_('JBS_MESSAGETYPE_DESC') . '">',
-			JText::_('JBS_MESSAGETYPE'), '</label>',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MESSAGETYPE') . '::' . JText::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
+			JText::_('JBS_CMN_MESSAGETYPE'), '</label>',
 			'<select name="batch[messagetype]" class="inputbox" id="batch-messagetype">',
-			'<option value="">' . JText::_('JBS_CMN_MESSAGETYPE_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Messagetypelist(), 'value', 'text'), '</select>'
 		);
 
@@ -502,12 +519,12 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function Series()
 	{
-		// Create the batch selector to change the player on a selection list.
+		// Create the batch selector to change the series on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_SERIES') . '::' . JText::_('JBS_SERIES_DESC') . '">',
-			JText::_('JBS_SERIES'), '</label>',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_SERIES') . '::' . JText::_('JBS_BAT_SERIES_DESC') . '">',
+			JText::_('JBS_CMN_SERIES'), '</label>',
 			'<select name="batch[series]" class="inputbox" id="batch-series">',
-			'<option value="">' . JText::_('JBS_CMN_SERIES_NOCHANGE') . '</option>',
+			'<option value="">' . JText::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',
 			JHtml::_('select.options', self::Serieslist(), 'value', 'text'), '</select>'
 		);
 

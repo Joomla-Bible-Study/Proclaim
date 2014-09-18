@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  */
@@ -22,6 +22,8 @@ class Migration710
 
 	/**
 	 * Method to Update to 7.1.0
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return boolean
 	 */
@@ -269,7 +271,7 @@ div.listingfooter ul li {
 			}
 			catch (Exception $e)
 			{
-                JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'jerror');
+				JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'jerror');
 			}
 		}
 	}

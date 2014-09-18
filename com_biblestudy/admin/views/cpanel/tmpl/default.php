@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  */
@@ -122,9 +122,9 @@ if ($msg)
 			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=messagetypes"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-messagetype.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?> </span></a></div>
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a></div>
 			</div>
 			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=locations"
@@ -193,9 +193,9 @@ if ($msg)
 			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mimetypes"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MIME_TYPES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_MIMETYPES'); ?>"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-mimetype.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MIME_TYPES'); ?> </span></a></div>
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_MIMETYPES'); ?> </span></a></div>
 			</div>
 			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=styles"
@@ -204,7 +204,6 @@ if ($msg)
 							src="../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align="middle"
 							border="0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a></div>
 			</div>
-			<?php echo LiveUpdate::getIcon(); ?>
 		</div>
 		<div style="clear: both;"></div>
 	</div>

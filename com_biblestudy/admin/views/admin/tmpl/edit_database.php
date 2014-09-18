@@ -3,7 +3,7 @@
  * Admin form subset database
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * @since      7.1.0
@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 ?>
 <div id="installer-database">
-	<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+	<form action="index.php" method="post" name="adminForm" id="item-database" enctype="multipart/form-data">
 		<div id="j-main-container">
 			<?php if ($this->errorCount === 0) : ?>
 			<div class="alert alert-info">

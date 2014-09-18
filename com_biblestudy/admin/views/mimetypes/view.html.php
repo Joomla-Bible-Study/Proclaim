@@ -3,12 +3,13 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 
 /**
  * View class for Mimetypes
@@ -77,6 +78,7 @@ class BiblestudyViewMimetypes extends JViewLegacy
 
 			return false;
 		}
+
 		// Levels filter.
 		$options   = array();
 		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
@@ -119,21 +121,24 @@ class BiblestudyViewMimetypes extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_MIME_TYPES'), 'mimetype.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_MIMETYPES'), 'mimetype.png');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('mimetype.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('mimetype.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('mimetypes.publish');
 			JToolBarHelper::unpublishList('mimetypes.unpublish');
+			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('mimetypes.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
@@ -153,16 +158,6 @@ class BiblestudyViewMimetypes extends JViewLegacy
 				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-			);
 		}
 	}
 
@@ -176,7 +171,7 @@ class BiblestudyViewMimetypes extends JViewLegacy
 	protected function setDocument()
 	{
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_MIME_TYPES'));
+		$document->setTitle(JText::_('JBS_TITLE_MIMETYPES'));
 	}
 
 	/**
@@ -189,7 +184,7 @@ class BiblestudyViewMimetypes extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'mimetype.mimetype' => JText::_('JBS_CMN_MIME_TYPE'),
+			'mimetype.mimetype' => JText::_('JBS_CMN_MIMETYPE'),
 			'mimetype.mimetext' => JText::_('JBS_MMT_MIME_TEXT'),
 			'mimetype.id'       => JText::_('JGRID_HEADING_ID')
 		);

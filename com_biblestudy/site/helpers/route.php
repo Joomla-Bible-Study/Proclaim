@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -32,8 +32,8 @@ abstract class JBSMRoute
 	/**
 	 * Get Article Rout
 	 *
-	 * @param   int $id        The route of the study item
-	 * @param   int $language  The state of language
+	 * @param   int  $id        The route of the study item
+	 * @param   int  $language  The state of language
 	 *
 	 * @return string
 	 */
@@ -82,7 +82,7 @@ abstract class JBSMRoute
 	/**
 	 * Get Teacher Route
 	 *
-	 * @param   int $id  The route of the teacher item
+	 * @param   int  $id  The route of the teacher item
 	 *
 	 * @return string
 	 */
@@ -97,7 +97,7 @@ abstract class JBSMRoute
 	/**
 	 * Get Series Route
 	 *
-	 * @param   int $id  ID
+	 * @param   int  $id  ID
 	 *
 	 * @return string
 	 */
@@ -112,7 +112,7 @@ abstract class JBSMRoute
 	/**
 	 * Find Item
 	 *
-	 * @param   string $needles  ?
+	 * @param   string  $needles  ?
 	 *
 	 * @return mixed
 	 */
@@ -177,10 +177,14 @@ abstract class JBSMRoute
 	}
 
 	/**
-	 * @param    string $url     URL of website
-	 * @param    string $scheme  Scheme that need to lead with.
+	 * Add Scheme to url
+	 *
+	 * @param   string  $url     URL of website
+	 * @param   string  $scheme  Scheme that need to lead with.
 	 *
 	 * @return string  The fixed URL
+	 *
+	 * @deprecate 8.0.7
 	 */
 	public static function addScheme($url, $scheme = 'http://')
 	{

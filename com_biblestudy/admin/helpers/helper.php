@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -28,43 +28,30 @@ class JBSMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   int       $rowid         ID
-	 * @param   object    $row           JTable
-	 * @param   JRegistry $params        Item Params
-	 * @param   JRegistry $admin_params  Admin Params
-	 * @param   int       $template      ID
+	 * @param   object         $row       JTable
+	 * @param   JRegistry      $params    Item Params
+	 * @param   TableTemplate  $template  ID
 	 *
 	 * @return string
 	 */
-	public static function getTooltip($rowid, $row, $params, $admin_params, $template)
+	public static function getTooltip($row, $params, $template)
 	{
-		$JBSMElements = new JBSMElements;
+		$JBSMElements = new JBSMListing;
 
-		// Tom added the below because tooltip wasn't working as of 6.1.1
-		$toolTipArray = array(
-			'className' => 'custom',
-			'showDelay' => '500',
-			'hideDelay' => '500',
-			'fixed'     => true,
-			'onShow'    => "function(tip) {tip.effect('opacity',
- 		{duration: 500, wait: false}).start(0,1)}",
-			'onHide'    => "function(tip) {tip.effect('opacity',
-		{duration: 500, wait: false}).start(1,0)}"
-		);
-		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray);
+		JHTML::_('behavior.tooltip');
+		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
-		$linktext = '<span class="zoomTip" title="<strong>' . $params->get('tip_title') . '  :: ';
-		$tip1     = $JBSMElements->getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);
-		$tip2     = $JBSMElements->getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
-		$tip3     = $JBSMElements->getElementid($params->get('tip_item3'), $row, $params, $admin_params, $template);
-		$tip4     = $JBSMElements->getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
-		$tip5     = $JBSMElements->getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
-		$test     = $params->get('tip_item1');
-		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2->element . '<br /><br />';
-		$linktext .= '<strong>' . $params->get('tip_item3_title') . '</strong>: ' . $tip3->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item4_title') . '</strong>: ' . $tip4->element . '<br />';
-		$linktext .= '<strong>' . $params->get('tip_item5_title') . '</strong>: ' . $tip5->element;
+		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
+		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
+		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
+		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
+		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
+
+		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item3_title') . '</strong>: ' . $tip3 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item4_title') . '</strong>: ' . $tip4 . '<br />';
+		$linktext .= '<strong>' . $params->get('tip_item5_title') . '</strong>: ' . $tip5;
 		$linktext .= '">';
 
 		return $linktext;

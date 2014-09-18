@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -69,13 +69,13 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/** @var  string New Link */
 	public $newlink;
 
-	/** @var  string Document */
+	/** @var  JDocument Document */
 	public $document;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -84,22 +84,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+		$this->params     = $this->state->template->params;
 
-		// Load the Admin settings and params from the template
-		$this->admin = JBSMParams::getAdmin(true);
-		$template = JBSMParams::getTemplateparams();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$this->params = $registry;
-
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document = JFactory::getDocument();
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
 		$this->books        = $this->get('Books');
@@ -136,9 +122,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = JFactory::getApplication('site');
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -155,15 +140,17 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		}
 
 		$title = $this->params->def('page_title', '');
-		$title .= ' : ' . JText::_('JBS_CMN_MESSAGES_LIST');
-
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if (empty($title))
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+		}
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

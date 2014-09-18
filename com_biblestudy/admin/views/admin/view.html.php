@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -202,7 +202,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// End for database
 		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->getCfg('tmp_path');
+		$this->tmp_dest = $config->get('tmp_path');
 
 		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
@@ -212,7 +212,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+		$path = JPATH_SITE . '/media/com_biblestudy/database';
 
 		if (JFolder::exists($path))
 		{
@@ -231,7 +231,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
+				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
 				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}

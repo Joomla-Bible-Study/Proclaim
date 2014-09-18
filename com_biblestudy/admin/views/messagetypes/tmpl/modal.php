@@ -3,7 +3,7 @@
  * Modal
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -48,7 +48,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<?php endif; ?>
 			</th>
 			<th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
 			</th>
 			<th width="1%" class="nowrap">
 				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>

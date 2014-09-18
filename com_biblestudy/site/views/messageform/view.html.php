@@ -3,7 +3,7 @@
  * Message JViewLegacy
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,46 +20,22 @@ defined('_JEXEC') or die;
 class BiblestudyViewMessageform extends JViewLegacy
 {
 
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
+	/**  Form @var array */
 	protected $form;
 
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
+	/** Item @var array */
 	protected $item;
 
-	/**
-	 * Return Page
-	 *
-	 * @var string
-	 */
+	/** Return Page @var string */
 	protected $return_page;
 
-	/**
-	 * Return Page Item
-	 *
-	 * @var string
-	 */
+	/** Return Page Item @var string */
 	protected $return_page_item;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+	/** State @var array */
 	protected $state;
 
-	/**
-	 * Admin
-	 *
-	 * @var array
-	 */
+	/** Admin @var array */
 	protected $admin;
 
 	/** @var  string Media Files */
@@ -80,16 +56,12 @@ class BiblestudyViewMessageform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-
-		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
-
 		// Get model data.
 		$this->state       = $this->get('State');
 		$this->item        = $this->get('Item');
@@ -98,28 +70,25 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$input        = new JInput;
 		$option       = $input->get('option', '', 'cmd');
-		$JApplication = new JApplication;
-		$JApplication->setUserState($option . 'sid', $this->item->id);
-		$JApplication->setUserState($option . 'sdate', $this->item->studydate);
+		$app = JFactory::getApplication();
+		$app->setUserState($option . 'sid', $this->item->id);
+		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$input->set('sid', $this->item->id);
 		$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
-		$this->admin      = JBSMParams::getAdmin($isSite = true);
 
 		$user = JFactory::getUser();
 
 		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
+		$this->params = $this->state->template->params;
 
-		if (!$this->admin->params->def('page_title', ''))
+		$this->user   = $user;
+
+		if (!$this->params->def('page_title', ''))
 		{
 			define('JBSPAGETITLE', 0);
 		}
-		$params->merge($this->admin->params);
-		$this->admin->params->merge($params);
-		$this->params = $params;
-		$this->user   = $user;
 
 		$canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
 
@@ -129,24 +98,13 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 			return;
 		}
-		// Create a shortcut to the parameters.
-		$params = & $this->state->params;
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
 		$document            = JFactory::getDocument();
 
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.ui.core.min.js');
-			$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/bootstrap.js');
-		}
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
 		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-		$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
 		$script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -163,16 +121,9 @@ class BiblestudyViewMessageform extends JViewLegacy
              ";
 
 		$document->addScriptDeclaration($script);
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $this->params);
 
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document->addStyleSheet('media/com_biblestudy/jui/css/bootstrap.css');
-			$document->addStyleSheet('media/com_biblestudy/jui/css/chosen.css');
-			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-		}
-
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
 
 		$this->_prepareDocument();
@@ -189,7 +140,6 @@ class BiblestudyViewMessageform extends JViewLegacy
 	{
 		$app     = JFactory::getApplication();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -204,25 +154,18 @@ class BiblestudyViewMessageform extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
-		if (JBSPAGETITLE)
-		{
-			$title = $this->params->def('page_title', '');
-		}
-		else
-		{
-			$title = JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY');
-		}
+		$title = $this->params->def('page_title', '');
 		$isNew = ($this->item->id == 0);
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		$title .= ' : ' . $state . ' : ' . $this->form->getValue('studytitle');
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

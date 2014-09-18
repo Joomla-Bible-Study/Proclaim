@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -40,7 +40,7 @@ class JBSMPodcast
 		$db->setQuery($query);
 		$podids       = $db->loadObjectList();
 		$custom       = new JBSMCustom;
-		$JBSMElements = new JBSMElements;
+		$JBSMlisting  = new JBSMListing;
 		$title        = null;
 
 		// Now iterate through the podcasts, and pick up the mediafiles
@@ -66,10 +66,9 @@ class JBSMPodcast
 
 				if ($checkresult)
 				{
-					$description       = str_replace("&", "and", $podinfo->description);
-					$description       = strip_tags($description);
+					$description       = $this->escapeHTML($podinfo->description);;
 					$detailstemplateid = $podinfo->detailstemplateid;
-                    $podcastimage = $this->jimage($podinfo->image);
+					$podcastimage      = $this->jimage($podinfo->image);
 					if (!$detailstemplateid)
 					{
 						$detailstemplateid = 1;
@@ -79,33 +78,33 @@ class JBSMPodcast
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
                 <channel>
-                	<title>' . htmlspecialchars($podinfo->title) . '</title>
+                	<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
                 	<itunes:summary>' . $description . '</itunes:summary>
-                	<itunes:subtitle>' . htmlspecialchars($podinfo->title) . '</itunes:subtitle>
-                	<itunes:author>' . htmlspecialchars($podinfo->editor_name) . '</itunes:author>
+                	<itunes:subtitle>' . $this->escapeHTML($podinfo->title) . '</itunes:subtitle>
+                	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
-                		<url>http://' . $podinfo->website . $podinfo->image. '</url>
-                		<title>' . htmlspecialchars($podinfo->title) . '</title>
+                		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
+                		<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 		<height>' . $podcastimage[1] . '</height>
                 		<width>' . $podcastimage[0] . '</width>
                 	</image>
-                	<itunes:image href="http://' . $podinfo->website . $podinfo->podcastimage . '" />
+                	<itunes:image href="http://' . $podinfo->website . '/' . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
-                	<language>' . $podinfo->language . '</language>
+                	<language>' . $language . '</language>
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
                 	<generator>Joomla Bible Study</generator>
-                	<managingEditor>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</managingEditor>
-                	<webMaster>' . $podinfo->editor_email . ' (' . htmlspecialchars($podinfo->editor_name) . ')</webMaster>
+                	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
+                	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
                 	<itunes:owner>
-                		<itunes:name>' . htmlspecialchars($podinfo->editor_name) . '</itunes:name>
+                		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
                 	<itunes:explicit>no</itunes:explicit>
@@ -155,7 +154,7 @@ class JBSMPodcast
 						$esv          = 0;
 						$scripturerow = 1;
 						$episode->id  = $episode->study_id;
-						$scripture    = $JBSMElements->getScripture($params, $episode, $esv, $scripturerow);
+						$scripture    = $JBSMlisting->getScripture($params, $episode, $esv, $scripturerow);
 						$pod_title    = $podinfo->episodetitle;
 						$pod_subtitle = $podinfo->episodesubtitle;
 
@@ -299,23 +298,22 @@ class JBSMPodcast
 								$subtitle = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
-						$title       = str_replace('&', "and", $title);
-						$description = str_replace('&', "and", $episode->studyintro);
-						$description = strip_tags($description);
+						$title       = $this->escapeHTML($title);
+						$description = $this->escapeHTML($episode->studyintro);
 
 						$episodedetailtemp = '
                         	   <item>
-                        		<title>' . htmlspecialchars($title) . '</title>
+                        		<title>' . $title . '</title>
                         		<link>http://' . $podinfo->website . '/index.php?'. 'option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
                         		<comments>http://' . $podinfo->website . '/index.php?' . 'option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
-                        		<itunes:author>' . htmlspecialchars($episode->teachername) . '</itunes:author>
-                        		<dc:creator>' . htmlspecialchars($episode->teachername) . '</dc:creator>
+                        		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
+                        		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
                         		<description>' . $description . '</description>
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
-                        		<itunes:subtitle>' . htmlspecialchars($subtitle) . '</itunes:subtitle>
+                        		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(
@@ -410,8 +408,8 @@ class JBSMPodcast
 	/**
 	 * Get Episodes
 	 *
-	 * @param   int    $id     Id for Episode
-	 * @param   string $limit  Limit of records
+	 * @param   int     $id     Id for Episode
+	 * @param   string  $limit  Limit of records
 	 *
 	 * @return object
 	 */
@@ -445,26 +443,30 @@ class JBSMPodcast
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_mimetype AS mt ON (mt.id = mf.mime_type)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-            ->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
+			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
-//go through each and remove the -1 strings and retest
-        $epis = array();
-        foreach ($episodes as $e)
-        {
-            $e->podcast_id = str_replace('-1','',$e->podcast_id);
-            if (substr_count($e->podcast_id,$id)){$epis[]= $e;}
-        }
 
-        return $epis;
+		// Go through each and remove the -1 strings and retest
+		$epis = array();
+		foreach ($episodes as $e)
+		{
+			$e->podcast_id = str_replace('-1', '', $e->podcast_id);
+			if (substr_count($e->podcast_id, $id))
+			{
+				$epis[] = $e;
+			}
+		}
+
+		return $epis;
 	}
 
 	/**
 	 * Write the File
 	 *
-	 * @param   string $file         File Name
-	 * @param   string $filecontent  File Content
+	 * @param   string  $file         File Name
+	 * @param   string  $filecontent  File Content
 	 *
 	 * @return boolean|string
 	 */
@@ -510,16 +512,45 @@ class JBSMPodcast
 		return $podcastresults;
 	}
 
-    public function jimage($path)
-    {
-        if (!$path)
-        {
-            return false;
-        }
+	/**
+	 * JImage
+	 *
+	 * @param   string  $path  ?
+	 *
+	 * @return array|bool
+	 */
+	public function jimage($path)
+	{
+		if (!$path)
+		{
+			return false;
+		}
 
+		$return = getimagesize(JURI::root() . $path);
 
-        $return = getimagesize(JURI::root().$path);
+		return $return;
+	}
 
-        return $return;
-    }
+	/**
+	 * Escape Html to XML
+	 *
+	 * @param $html
+	 *
+	 * @return mixed|string
+	 */
+	protected function escapeHTML($html)
+	{
+		$string = str_replace(' & ', " and ", $html);
+		$string = trim(html_entity_decode($string));
+		if(!empty($string))
+		{
+			$string = '<![CDATA[' . $string . ']]>';
+		}
+		else
+		{
+			$string = "";
+		}
+
+		return $string;
+	}
 }
