@@ -154,7 +154,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
+        elseif ($this->canDo->get('core.edit.state'))
         {
             JToolBarHelper::trash('teachers.trash');
         }
