@@ -27,6 +27,50 @@ class BiblestudyControllerMediafile extends JControllerForm
      * @since 7.0
      */
     protected $view_list = 'mediafiles';
+    protected $state_context = 'com_biblestudy.edit.mediafile';
+
+    /**
+     * Method to add a new mediafile item
+     *
+     * @return  bool    True if access level checks pass, false otherwise
+     *
+     * @since   8.1.0
+     */
+    public function add()
+    {
+        $app = JFactory::getApplication();
+
+        $result = parent::add();
+        if ($result) {
+            $app->setUserState($this->state_context . '.server.id', null);
+
+            $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafile' . $this->getRedirectToItemAppend(), false));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Method to cancel an edit
+     *
+     * @return  bool    True if access level checks pass, false otherwise
+     *
+     * @since   8.1.0
+     */
+    public function cancel()
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        $app = JFactory::getApplication();
+        $result = parent::cancel();
+
+        if ($result) {
+            // Clear data from the session
+            $app->setUserState($this->state_context . '.server.id', null);
+        }
+
+        return $result;
+    }
 
     /**
      * Class constructor.
@@ -94,20 +138,19 @@ class BiblestudyControllerMediafile extends JControllerForm
      * @return  void
      * @since   8.1.0
      */
-    function setServer()
+    function setServerId()
     {
         $app = JFactory::getApplication();
         $input = $app->input;
 
         $data = $input->get('jform', array(), 'post', 'array');
-        $data = json_decode(base64_decode($data['server_id']));
 
-        $media_id = isset($data->media_id) ? $data->media_id : 0;
-        $server_id = isset($data->server_id) ? $data->server_id : 0;
+        // Get the server type
 
-        // Save server in the session
-        $app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($media_id), false));
+        // Save session
+        $app->setUserState($this->state_context . '.server.id', $data['server_id']);
+
+        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($data['id']), false));
     }
 }
