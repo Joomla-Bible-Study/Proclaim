@@ -301,14 +301,25 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		if (parent::save($data))
-		{
-			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+        $input = JFactory::getApplication()->input;
+        $data = $input->get('jform', false, 'array');
+        $files = $input->files->get('jform');
 
-			return true;
-		}
+        // If no image uploaded, just save data as usual
+        if (empty($files['image']['tmp_name'])) {
+            $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+            return parent::save($data);
+        }
 
-		return false;
+        $path = 'images/BibleStudy/studies/' . $data['id'];
+        JBSMThumbnail::create($files['image'], $path);
+
+        // Modify model data
+        $data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
+
+        $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+
+        return parent::save($data);
 	}
 
 	/**
@@ -480,11 +491,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias      = JApplication::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
+			$table->alias = JApplication::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))
