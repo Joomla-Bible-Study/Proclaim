@@ -285,6 +285,12 @@ class TableMessage extends JTable
 	 */
 	public $ordering = null;
 
+	/** @var string Publish Up */
+	public $publish_up = '0000-00-00 00:00:00';
+
+	/** @var string Publish Down */
+	public $publish_down = '0000-00-00 00:00:00';
+
 	/**
 	 * The rules associated with this record.
 	 *

@@ -79,7 +79,7 @@ class BiblestudyModelMessages extends JModelList
 	public function getDownloads($id)
 	{
 		$query  = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
-//		$result = $this->_getList($query);
+		$result = $this->_getList($query);
 
 		if (!$result)
 		{
@@ -143,7 +143,6 @@ class BiblestudyModelMessages extends JModelList
 				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
 				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
 				->where('study_id = ' . $sermon_id);
-//			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
 		$this->_files = $mediaFiles;
@@ -272,11 +271,11 @@ class BiblestudyModelMessages extends JModelList
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-//		$query->select(
-//			'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
-//		);
-//		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
-//		$query->group('study.id');
+		$query->select(
+			'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+		);
+		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+		$query->group('study.id');
 
 		// Implement View Level Access
 		if (!$user->authorise('core.admin'))

@@ -487,6 +487,18 @@ class BiblestudyModelMessage extends JModelAdmin
 			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
 		}
 
+		// Set the publish date to now
+		$db = $this->getDbo();
+		if ($table->published == 1 && (int) $table->publish_up == 0)
+		{
+			$table->publish_up = JFactory::getDate()->toSql();
+		}
+
+		if ($table->published == 1 && intval($table->publish_down) == 0)
+		{
+			$table->publish_down = $db->getNullDate();
+		}
+
 		if (empty($table->id))
 		{
 
@@ -502,19 +514,19 @@ class BiblestudyModelMessage extends JModelAdmin
 		}
 	}
 
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
-	}
+//	/**
+//	 * Method to check-out a row for editing.
+//	 *
+//	 * @param   integer  $pk  The numeric id of the primary key.
+//	 *
+//	 * @return  boolean  False on failure or error, true otherwise.
+//	 *
+//	 * @since   11.1
+//	 */
+//	public function checkout($pk = null)
+//	{
+//		return $pk;
+//	}
 
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules

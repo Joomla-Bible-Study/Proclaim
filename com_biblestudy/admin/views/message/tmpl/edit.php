@@ -50,6 +50,7 @@ $input = $app->input;
 	<li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
 	<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
 	<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
+	<li><a href="#publish" data-toggle="tab"><?php echo JText::_('JBS_STY_PUBLISH'); ?></a></li>
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 	<?php endif ?>
@@ -266,6 +267,87 @@ $input = $app->input;
 		</div>
 	</div>
 </div>
+<div class="tab-pane" id="publish">
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('created_by'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('created_by', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id); ?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('user_id'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('created_by_alias'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('created_by_alias'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('created'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('created'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_up'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_up'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_down'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_down'); ?>
+		</div>
+	</div>
+
+	<?php if (@$this->item->modified_by) : ?>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $this->form->getLabel('modified_by'); ?>
+			</div>
+			<div class="controls">
+				<?php echo $this->form->getInput('modified_by'); ?>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $this->form->getLabel('modified'); ?>
+			</div>
+			<div class="controls">
+				<?php echo $this->form->getInput('modified'); ?>
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<?php if ($this->item->hits) : ?>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $this->form->getLabel('hits'); ?>
+			</div>
+			<div class="controls">
+				<?php echo $this->form->getInput('hits'); ?>
+			</div>
+		</div>
+		<?php endif; ?>
+</div>
 <?php if ($this->canDo->get('core.admin')): ?>
 	<div class="tab-pane" id="permissions">
 
@@ -413,14 +495,6 @@ foreach ($params as $name => $fieldSet): ?>
 		</div>
 		<div class="controls">
 			<?php echo $this->form->getInput('comments'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('user_id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
 		</div>
 	</div>
 	<div class="control-group">

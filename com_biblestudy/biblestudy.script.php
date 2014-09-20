@@ -683,6 +683,7 @@ class Com_BiblestudyInstallerScript
 			'/components/com_biblestudy/views/serieslist',
 			'/components/com_biblestudy/views/seriesdetail',
 			'/administrator/media',
+			'/administrator/components/com_biblestudy/migration',
 			'/administrator/components/com_biblestudy/assets',
 			'/administrator/components/com_biblestudy/images',
 			'/administrator/components/com_biblestudy/css',
