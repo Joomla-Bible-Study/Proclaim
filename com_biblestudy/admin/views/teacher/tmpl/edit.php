@@ -265,7 +265,6 @@ $input = $app->input;
             </h3>
             <?php echo $this->form->getLabel('image'); ?>
             <?php echo $this->form->getInput('image'); ?>
-            <?php echo $this->form->getInput('teacher_image'); ?>
         </div>
     </div>
     <hr/>
@@ -312,4 +311,5 @@ $input = $app->input;
 </div>
 <!-- End Sidebar -->
 <?php echo $this->form->getInput('id'); ?>
+<?php echo $this->form->getInput('teacher_image'); ?>
 </form>
