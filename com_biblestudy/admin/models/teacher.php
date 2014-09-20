@@ -208,7 +208,7 @@ class BiblestudyModelTeacher extends JModelAdmin
             return parent::save($data);
         }
 
-        $path = 'images/BibleStudy/teachers/' . JStringNormalise::toCamelCase($data['teachername']);
+        $path = 'images/BibleStudy/teachers/' . $data['id'];
         JBSMThumbnail::create($files['image'], $path);
 
         // Modify model data
