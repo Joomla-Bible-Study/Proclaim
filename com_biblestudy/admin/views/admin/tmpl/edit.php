@@ -244,7 +244,9 @@ $input = $app->input;
 				</div>
 			</div>
 		</div>
-		<div>
+    </div>
+    <div class="row-fluid">
+		<div class="span6">
 			<h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
 
 			<div class="control-group">
@@ -278,6 +280,28 @@ $input = $app->input;
 				</div>
 			</div>
 		</div>
+        <div class="span6">
+            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h4>
+
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_teacher_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_teacher_size', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_series_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_series_size', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_study_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_study_size', 'params'); ?>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 <div class="tab-pane" id="playersettings">
