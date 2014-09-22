@@ -199,6 +199,7 @@ class BiblestudyModelTeacher extends JModelAdmin
      */
     public function save($data)
     {
+        $params = JBSMParams::getAdmin()->params;
         $input = JFactory::getApplication()->input;
         $data = $input->get('jform', false, 'array');
         $files = $input->files->get('jform');
@@ -209,7 +210,7 @@ class BiblestudyModelTeacher extends JModelAdmin
         }
 
         $path = 'images/BibleStudy/teachers/' . $data['id'];
-        JBSMThumbnail::create($files['image'], $path);
+        JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_teacher_size'));
 
         // Modify model data
         $data['teacher_image'] = $path . '/original_' . $files['image']['name'];

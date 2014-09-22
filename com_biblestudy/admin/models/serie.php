@@ -368,7 +368,7 @@ class BiblestudyModelSerie extends JModelAdmin
         }
 
         $path = 'images/BibleStudy/series/' . $data['id'];
-        JBSMThumbnail::create($files['image'], $path);
+        JBSMThumbnail::create($files['image'], $path, 'thumbnail_series_size');
 
         // Modify model data
         $data['series_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
