@@ -64,6 +64,330 @@ class BiblestudyModelSermons extends JModelList
 	}
 
 	/**
+	 * Translate item entries: books, topics
+	 *
+	 * @param   array $items Books
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getTranslated($items = array())
+	{
+		foreach ($items as $item)
+		{
+			$item->bookname   = JText::_($item->bookname);
+			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Returns the topics
+	 *
+	 * @return Array
+	 *
+	 * @since 7.0.2
+	 */
+	public function getTopics()
+	{
+		if (empty($this->_Topics))
+		{
+			$db    = $this->getDBO();
+			$query = $db->getQuery(true);
+			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
+				->from('#__bsms_studies')
+				->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
+				->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
+				->where('#__bsms_topics.published = 1')
+				->order('#__bsms_topics.topic_text ASC');
+			$db->setQuery($query);
+			$db_result = $db->loadObjectList();
+
+			if (empty($db_result))
+			{
+				return false;
+			}
+
+			$output = array();
+
+			foreach ($db_result as $value)
+			{
+				$value->text = JBSMTranslated::getTopicItemTranslated($value);
+
+				$value->value = $value->id;
+				$output[]     = $value;
+			}
+
+			$this->_Topics = $output;
+		}
+
+		return $this->_Topics;
+	}
+
+	/**
+	 * Get a list of all used books
+	 *
+	 * @return mixed
+	 *
+	 * @since 7.0
+	 */
+	public function getBooks()
+	{
+		$params = $this->getState('params');
+
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
+		$query->from('#__bsms_books AS book');
+
+		if ($params->get('booklist') == 1)
+		{
+			$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
+		}
+		$query->group('book.id');
+		$query->order('book.booknumber');
+
+		$db->setQuery($query->__toString());
+
+		$db_result = $db->loadAssocList();
+
+		foreach ($db_result as $i => $value)
+		{
+			$db_result[$i]['text'] = JText::_($value['text']);
+		}
+
+		return $db_result;
+	}
+
+	/**
+	 * Get a list of all used teachers
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getTeachers()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('teacher.id AS value, teacher.teachername AS text');
+		$query->from('#__bsms_teachers AS teacher');
+		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
+		$query->group('teacher.id');
+		$query->order('teacher.teachername');
+
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get a list of all used series
+	 *
+	 * @since 7.0
+	 * @return Object
+	 */
+	public function getSeries()
+	{
+		$db     = $this->getDbo();
+		$user   = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
+		$query = $db->getQuery(true);
+
+		$query->select('series.id AS value, series.series_text AS text, series.access');
+		$query->from('#__bsms_series AS series');
+		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
+		$query->group('series.id');
+
+		// Filter only for authorized view
+		$query->where('series.access IN (' . $groups . ')');
+		$query->order('series.series_text');
+
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get a list of all used message types
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getMessageTypes()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('messageType.id AS value, messageType.message_type AS text');
+		$query->from('#__bsms_message_type AS messageType');
+		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
+		$query->group('messageType.id');
+		$query->order('messageType.message_type');
+
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get a list of all used years
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getYears()
+	{
+		$db    = $this->getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
+		$query->from('#__bsms_studies');
+		$query->order('value');
+
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get the number of plays of this study
+	 *
+	 * @param   int $id ID
+	 *
+	 * @return array
+	 *
+	 * @since 7.0
+	 */
+	public function getPlays($id)
+	{
+		$db    = $this->getDBO();
+		$query = $db->getQuery(true);
+
+		$query->select('SUM(plays) AS totalPlays');
+		$query->from('#__bsms_mediafiles');
+		$query->group('study_id');
+		$query->where('study_id = ' . $id);
+		$db->setQuery($query->__toString());
+
+		return $db->loadResult();
+	}
+
+	/**
+	 * Returns the locations
+	 *
+	 * @return JObject
+	 *
+	 * @since 7.0.2
+	 */
+	public function getLocations()
+	{
+		if (empty($this->_Locations))
+		{
+			$db    = $this->getDBO();
+			$query = $db->getQuery(true);
+			$query->select('id AS value, location_text as text, published');
+			$query->from('#__bsms_locations');
+			$query->where('published = 1');
+			$query->order('location_text ASC');
+			$db->setQuery($query->__toString());
+			$this->_Locations = $db->loadObjectList();
+		}
+
+		return $this->_Locations;
+	}
+
+	/**
+	 * Get Start 2
+	 *
+	 * @return string
+	 */
+	public function getStart2()
+	{
+		return $this->getState('list.start');
+	}
+
+	/**
+	 * Get Downloads
+	 *
+	 * @param   int $id ID of Download
+	 *
+	 * @return string
+	 *
+	 * @todo Need to see if we can use this out of a helper to reduce code.
+	 */
+	public function getDownloads($id)
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
+		$result = $this->_getList($query);
+
+		if (!$result)
+		{
+			$result = '0';
+
+			return $result;
+		}
+
+		return $result[0]->totalDownloads;
+	}
+
+	/**
+	 * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
+	 * It then adds to the dataObject the mediafiles associated with the sermon.
+	 *
+	 * @return string
+	 */
+	public function getFiles()
+	{
+		$mediaFiles = null;
+		$db         = JFactory::getDBO();
+		$i          = 0;
+
+		foreach ($this->_data as $sermon)
+		{
+			$i++;
+			$sermon_id = $sermon->id;
+			$query     = $db->getQuery(true);
+			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+				->from('#__bsms_mediafiles')
+				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
+				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
+				->where('study_id` = ' . $sermon_id);
+			$db->setQuery($query);
+			$mediaFiles[$sermon->id] = $db->loadAssocList();
+		}
+		$this->_files = $mediaFiles;
+
+		return $this->_files;
+	}
+
+	/**
+	 * Method to get the total number of studies items
+	 *
+	 * @access public
+	 * @return integer
+	 */
+	public function getTotal()
+	{
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_total))
+		{
+			$query        = $this->_getListQuery();
+			$this->_total = $this->_getListCount($query);
+		}
+
+		return $this->_total;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -191,18 +515,38 @@ class BiblestudyModelSermons extends JModelList
 	protected function getListQuery()
 	{
 		$user            = JFactory::getUser();
-		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$query->select(
 			$this->getState(
-				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+				'list.select', 'study.id,' .
+				// Use created if publish_up is 0
+				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.created ELSE study.publish_up END as publish_up,' .
+				'study.publish_down, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
 		                study.verse_end2, study.verse_begin2 ') . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+
+		// Process an Archived Article layout
+		if ($this->getState('filter.published') == 2)
+		{
+			// If badcats is not null, this means that the article is inside an archived category
+			// In this case, the state is set to 2 to indicate Archived (even if the article state is Published)
+			$query->select($this->getState('list.select', 'CASE WHEN badcats.id is null THEN study.publish ELSE 2 END AS publish'));
+		}
+		else
+		{
+			/*
+			Process non-archived layout
+			If badcats is not null, this means that the article is inside an unpublished category
+			In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
+			*/
+			$query->select($this->getState('list.select', 'CASE WHEN badcats.id is not null THEN 0 ELSE study.publish END AS publish'));
+		}
+
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -245,12 +589,18 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
 		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
-		// Filter only for authorized view
-		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
-		$query->where('study.access IN (' . $groups . ')');
+		// Filter by access level.
+		if ($access = $this->getState('filter.access'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('study.access IN (' . $groups . ')')
+				->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
+		}
 
 		// Select only published studies
-		$query->where('study.published = 1');
+		$published = $this->getState('filter.published', '1');
+		$query->where('study.published = ' . (int) $published);
+
 
 		// Begin the filters for menu items
 		$params      = $this->getState('params');
@@ -639,330 +989,6 @@ class BiblestudyModelSermons extends JModelList
 		$query->order('studydate ' . $order);
 
 		return $query;
-	}
-
-	/**
-	 * Translate item entries: books, topics
-	 *
-	 * @param   array  $items  Books
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTranslated($items = array())
-	{
-		foreach ($items as $item)
-		{
-			$item->bookname   = JText::_($item->bookname);
-			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Returns the topics
-	 *
-	 * @return Array
-	 *
-	 * @since 7.0.2
-	 */
-	public function getTopics()
-	{
-		if (empty($this->_Topics))
-		{
-			$db    = $this->getDBO();
-			$query = $db->getQuery(true);
-			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
-				->from('#__bsms_studies')
-				->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-				->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-				->where('#__bsms_topics.published = 1')
-				->order('#__bsms_topics.topic_text ASC');
-			$db->setQuery($query);
-			$db_result = $db->loadObjectList();
-
-			if (empty($db_result))
-			{
-				return false;
-			}
-
-			$output = array();
-
-			foreach ($db_result as $value)
-			{
-				$value->text = JBSMTranslated::getTopicItemTranslated($value);
-
-				$value->value = $value->id;
-				$output[]     = $value;
-			}
-
-			$this->_Topics = $output;
-		}
-
-		return $this->_Topics;
-	}
-
-	/**
-	 * Get a list of all used books
-	 *
-	 * @return mixed
-	 *
-	 * @since 7.0
-	 */
-	public function getBooks()
-	{
-		$params   = $this->getState('params');
-
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
-		$query->from('#__bsms_books AS book');
-
-		if ($params->get('booklist') == 1)
-		{
-			$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-		}
-		$query->group('book.id');
-		$query->order('book.booknumber');
-
-		$db->setQuery($query->__toString());
-
-		$db_result = $db->loadAssocList();
-
-		foreach ($db_result as $i => $value)
-		{
-			$db_result[$i]['text'] = JText::_($value['text']);
-		}
-
-		return $db_result;
-	}
-
-	/**
-	 * Get a list of all used teachers
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTeachers()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('teacher.id AS value, teacher.teachername AS text');
-		$query->from('#__bsms_teachers AS teacher');
-		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
-		$query->group('teacher.id');
-		$query->order('teacher.teachername');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used series
-	 *
-	 * @since 7.0
-	 * @return Object
-	 */
-	public function getSeries()
-	{
-		$db     = $this->getDbo();
-		$user   = JFactory::getUser();
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-
-		$query = $db->getQuery(true);
-
-		$query->select('series.id AS value, series.series_text AS text, series.access');
-		$query->from('#__bsms_series AS series');
-		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-		$query->group('series.id');
-
-		// Filter only for authorized view
-		$query->where('series.access IN (' . $groups . ')');
-		$query->order('series.series_text');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used message types
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getMessageTypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('messageType.id AS value, messageType.message_type AS text');
-		$query->from('#__bsms_message_type AS messageType');
-		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-		$query->group('messageType.id');
-		$query->order('messageType.message_type');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used years
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getYears()
-	{
-		$db    = $this->getDBO();
-		$query = $db->getQuery(true);
-
-		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
-		$query->from('#__bsms_studies');
-		$query->order('value');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get the number of plays of this study
-	 *
-	 * @param   int  $id  ID
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	public function getPlays($id)
-	{
-		$db    = $this->getDBO();
-		$query = $db->getQuery(true);
-
-		$query->select('SUM(plays) AS totalPlays');
-		$query->from('#__bsms_mediafiles');
-		$query->group('study_id');
-		$query->where('study_id = ' . $id);
-		$db->setQuery($query->__toString());
-
-		return $db->loadResult();
-	}
-
-	/**
-	 * Returns the locations
-	 *
-	 * @return JObject
-	 *
-	 * @since 7.0.2
-	 */
-	public function getLocations()
-	{
-		if (empty($this->_Locations))
-		{
-			$db    = $this->getDBO();
-			$query = $db->getQuery(true);
-			$query->select('id AS value, location_text as text, published');
-			$query->from('#__bsms_locations');
-			$query->where('published = 1');
-			$query->order('location_text ASC');
-			$db->setQuery($query->__toString());
-			$this->_Locations = $db->loadObjectList();
-		}
-
-		return $this->_Locations;
-	}
-
-	/**
-	 * Get Start 2
-	 *
-	 * @return string
-	 */
-	public function getStart2()
-	{
-		return $this->getState('list.start');
-	}
-
-	/**
-	 * Get Downloads
-	 *
-	 * @param   int  $id  ID of Download
-	 *
-	 * @return string
-	 *
-	 * @todo Need to see if we can use this out of a helper to reduce code.
-	 */
-	public function getDownloads($id)
-	{
-		$query = $this->_db->getQuery(true);
-		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
-		$result = $this->_getList($query);
-
-		if (!$result)
-		{
-			$result = '0';
-
-			return $result;
-		}
-
-		return $result[0]->totalDownloads;
-	}
-
-	/**
-	 * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
-	 * It then adds to the dataObject the mediafiles associated with the sermon.
-	 *
-	 * @return string
-	 */
-	public function getFiles()
-	{
-		$mediaFiles = null;
-		$db         = JFactory::getDBO();
-		$i          = 0;
-
-		foreach ($this->_data as $sermon)
-		{
-			$i++;
-			$sermon_id = $sermon->id;
-			$query     = $db->getQuery(true);
-			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
-				->from('#__bsms_mediafiles')
-				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
-				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
-				->where('study_id` = ' . $sermon_id);
-			$db->setQuery($query);
-			$mediaFiles[$sermon->id] = $db->loadAssocList();
-		}
-		$this->_files = $mediaFiles;
-
-		return $this->_files;
-	}
-
-	/**
-	 * Method to get the total number of studies items
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	public function getTotal()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query        = $this->_getListQuery();
-			$this->_total = $this->_getListCount($query);
-		}
-
-		return $this->_total;
 	}
 
 }
