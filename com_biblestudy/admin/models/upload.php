@@ -23,17 +23,16 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelUpload extends JModelAdmin
 {
     /**
+     * @var    string  The prefix to use with controller messages.
+     * @since  1.6
+     */
+	protected $text_prefix = 'COM_BIBLESTUDY';
+	/**
      * Admin
      *
      * @var string
      */
     private $_admin;
-
-    /**
-     * @var    string  The prefix to use with controller messages.
-     * @since  1.6
-     */
-    protected $text_prefix = 'COM_BIBLESTUDY';
 
     /**
      * Get the form data

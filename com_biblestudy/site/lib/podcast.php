@@ -406,6 +406,48 @@ class JBSMPodcast
 	}
 
 	/**
+	 * Escape Html to XML
+	 *
+	 * @param $html
+	 *
+	 * @return mixed|string
+	 */
+	protected function escapeHTML($html)
+	{
+		$string = str_replace(' & ', " and ", $html);
+		$string = trim(html_entity_decode($string));
+		if (!empty($string))
+		{
+			$string = '<![CDATA[' . $string . ']]>';
+		}
+		else
+		{
+			$string = "";
+		}
+
+		return $string;
+	}
+
+	/**
+	 * JImage
+	 *
+	 * @param   string $path ?
+	 *
+	 * @return array|bool
+	 */
+	public function jimage($path)
+	{
+		if (!$path)
+		{
+			return false;
+		}
+
+		$return = getimagesize(JURI::root() . $path);
+
+		return $return;
+	}
+
+	/**
 	 * Get Episodes
 	 *
 	 * @param   int     $id     Id for Episode
@@ -510,47 +552,5 @@ class JBSMPodcast
 		}
 
 		return $podcastresults;
-	}
-
-	/**
-	 * JImage
-	 *
-	 * @param   string  $path  ?
-	 *
-	 * @return array|bool
-	 */
-	public function jimage($path)
-	{
-		if (!$path)
-		{
-			return false;
-		}
-
-		$return = getimagesize(JURI::root() . $path);
-
-		return $return;
-	}
-
-	/**
-	 * Escape Html to XML
-	 *
-	 * @param $html
-	 *
-	 * @return mixed|string
-	 */
-	protected function escapeHTML($html)
-	{
-		$string = str_replace(' & ', " and ", $html);
-		$string = trim(html_entity_decode($string));
-		if(!empty($string))
-		{
-			$string = '<![CDATA[' . $string . ']]>';
-		}
-		else
-		{
-			$string = "";
-		}
-
-		return $string;
 	}
 }

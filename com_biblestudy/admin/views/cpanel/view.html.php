@@ -24,39 +24,35 @@ if (!BIBLESTUDY_CHECKREL)
 class BiblestudyViewCpanel extends JViewLegacy
 {
 	/**
-	 * State
-	 *
-	 * @var string
-	 */
-	protected $state;
-
-	/**
 	 * Version
 	 *
 	 * @var string
 	 */
 	public $version;
-
 	/**
 	 * Version date
 	 *
 	 * @var string
 	 */
 	public $versiondate;
-
 	/**
 	 * Total Messages
 	 *
 	 * @var string
 	 */
 	public $total_messages;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+	/**
+	 * State
+	 *
+	 * @var string
+	 */
+	protected $state;
 
 	/**
 	 * Display

@@ -48,6 +48,16 @@ class TableShare extends JTable
 	public $params = null;
 
 	/**
+	 * Constructor
+	 *
+	 * @param   JDatabaseDriver &$db Database connector object
+	 */
+	public function TableShare(& $db)
+	{
+		parent::__construct('#__bsms_share', 'id', $db);
+	}
+
+	/**
 	 * Method to bind an associative array or object to the JTable instance.This
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
@@ -128,16 +138,6 @@ class TableShare extends JTable
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
-	 */
-	public function TableShare(& $db)
-	{
-		parent::__construct('#__bsms_share', 'id', $db);
 	}
 
 }

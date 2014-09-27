@@ -73,6 +73,32 @@ class JBSExport
 	}
 
 	/**
+	 * Get Opjects for tables
+	 *
+	 * @return array
+	 */
+	public function getObjects()
+	{
+		$db        = JFactory::getDBO();
+		$tables    = $db->getTableList();
+		$prefix    = $db->getPrefix();
+		$prelength = strlen($prefix);
+		$bsms      = 'bsms_';
+		$objects   = array();
+
+		foreach ($tables as $table)
+		{
+			if (substr_count($table, $prefix) && substr_count($table, $bsms))
+			{
+				$table     = substr_replace($table, '#__', 0, $prelength);
+				$objects[] = array('name' => $table);
+			}
+		}
+
+		return $objects;
+	}
+
+	/**
 	 * Get Export Table
 	 *
 	 * @param   string $table  Table Name exp: #__bsms_admin
@@ -300,32 +326,6 @@ class JBSExport
 		unlink($file);
 
 		return true;
-	}
-
-	/**
-	 * Get Opjects for tables
-	 *
-	 * @return array
-	 */
-	public function getObjects()
-	{
-		$db        = JFactory::getDBO();
-		$tables    = $db->getTableList();
-		$prefix    = $db->getPrefix();
-		$prelength = strlen($prefix);
-		$bsms      = 'bsms_';
-		$objects   = array();
-
-		foreach ($tables as $table)
-		{
-			if (substr_count($table, $prefix) && substr_count($table, $bsms))
-			{
-				$table     = substr_replace($table, '#__', 0, $prelength);
-				$objects[] = array('name' => $table);
-			}
-		}
-
-		return $objects;
 	}
 
 }

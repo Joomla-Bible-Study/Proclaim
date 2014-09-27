@@ -84,59 +84,6 @@ class JBSMPodcastSubscribe
 	}
 
 	/**
-	 * Build Standard Podcast
-	 *
-	 * @param   object  $podcast  Podcast Info
-	 *
-	 * @return string
-	 */
-	public function buildStandardPodcast($podcast)
-	{
-		$subscribe = '';
-
-		if (!empty($podcast->podcast_image_subscribe))
-		{
-			$image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-			$link  = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
-			$subscribe .= $link;
-		}
-
-		if (empty($podcast->podcast_subscribe_desc))
-		{
-			$name = $podcast->title;
-		}
-		else
-		{
-			$name = $podcast->podcast_subscribe_desc;
-		}
-		$subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $name . '</a></div>';
-
-		return $subscribe;
-	}
-
-	/**
-	 * Build Alternate Podcast
-	 *
-	 * @param   object  $podcast  Podcast info
-	 *
-	 * @return string
-	 */
-	public function buildAlternatePodcast($podcast)
-	{
-		$subscribe = '';
-
-		if (!empty($podcast->alternateimage))
-		{
-			$image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-			$link  = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
-			$subscribe .= $link;
-		}
-		$subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
-
-		return $subscribe;
-	}
-
-	/**
 	 * Get Podcasts
 	 *
 	 * @return object
@@ -172,6 +119,37 @@ class JBSMPodcastSubscribe
 	}
 
 	/**
+	 * Build Standard Podcast
+	 *
+	 * @param   object $podcast Podcast Info
+	 *
+	 * @return string
+	 */
+	public function buildStandardPodcast($podcast)
+	{
+		$subscribe = '';
+
+		if (!empty($podcast->podcast_image_subscribe))
+		{
+			$image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
+			$link  = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
+			$subscribe .= $link;
+		}
+
+		if (empty($podcast->podcast_subscribe_desc))
+		{
+			$name = $podcast->title;
+		}
+		else
+		{
+			$name = $podcast->podcast_subscribe_desc;
+		}
+		$subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $name . '</a></div>';
+
+		return $subscribe;
+	}
+
+	/**
 	 * Build Podcast Image
 	 *
 	 * @param   array  $podcastimagefromdb  Podcast image
@@ -192,6 +170,28 @@ class JBSMPodcastSubscribe
 		}
 
 		return $podcastimage;
+	}
+
+	/**
+	 * Build Alternate Podcast
+	 *
+	 * @param   object $podcast Podcast info
+	 *
+	 * @return string
+	 */
+	public function buildAlternatePodcast($podcast)
+	{
+		$subscribe = '';
+
+		if (!empty($podcast->alternateimage))
+		{
+			$image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
+			$link  = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
+			$subscribe .= $link;
+		}
+		$subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
+
+		return $subscribe;
 	}
 
 }

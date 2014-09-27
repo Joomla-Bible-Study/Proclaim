@@ -51,7 +51,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Display
 	 *
-	 * @param   string  $tpl  Template to display
+	 * @param   string $tpl Template to display
 	 *
 	 * @return null
 	 */
@@ -86,33 +86,6 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		// Display the template
 		return parent::display($tpl);
-	}
-
-	/**
-	 * Add Toolbar to page
-	 *
-	 * @since 7.0.0
-	 *
-	 * @return null
-	 */
-	protected function addToolbar()
-	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		JToolBarHelper::help('biblestudy', true);
-		JToolBarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @since    7.1.0
-	 *
-	 * @return null
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->jbstype, $this->jbsname));
 	}
 
 	/**
@@ -152,7 +125,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		jimport('joomla.installer.installer');
 		$db                    = JFactory::getDBO();
-		$this->status          = new stdClass;
+		$this->status = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
 
@@ -201,6 +174,33 @@ class BiblestudyViewInstall extends JViewLegacy
 				}
 			}
 		}
+	}
+
+	/**
+	 * Add Toolbar to page
+	 *
+	 * @since 7.0.0
+	 *
+	 * @return null
+	 */
+	protected function addToolbar()
+	{
+		JFactory::getApplication()->input->set('hidemainmenu', true);
+		JToolBarHelper::help('biblestudy', true);
+		JToolBarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
+	}
+
+	/**
+	 * Add the page title to browser.
+	 *
+	 * @since    7.1.0
+	 *
+	 * @return null
+	 */
+	protected function setDocument()
+	{
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->jbstype, $this->jbsname));
 	}
 
 }

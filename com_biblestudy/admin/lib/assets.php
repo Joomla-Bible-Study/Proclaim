@@ -82,79 +82,6 @@ class JBSMAssets
 	}
 
 	/**
-	 * Check Assets
-	 *
-	 * @return array
-	 */
-	public static function checkAssets()
-	{
-		$return = array();
-		$db     = JFactory::getDBO();
-		$result = new stdClass;
-
-		// First get the new parent_id
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__assets')
-			->where('name = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		$parent_id = $db->loadResult();
-
-		// Get the names of the JBS tables
-		$objects = self::getassetObjects();
-
-		// Run through each table
-		foreach ($objects as $object)
-		{
-			// Put the table into the return array
-			// Get the total number of rows and collect the table into a query
-			$query = $db->getQuery(true);
-			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
-				->from($db->qn($object['name']) . ' as j')
-				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
-			$db->setQuery($query);
-			$results     = $db->loadObjectList();
-			$nullrows    = 0;
-			$matchrows   = 0;
-			$nomatchrows = 0;
-			$numrows     = count($results);
-
-			// Now go through each record to test it for asset id
-			foreach ($results as $result)
-			{
-				// If there is no jasset_id it means that this has not been set and should be
-				if (!$result->jasset_id)
-				{
-					$nullrows++;
-				}
-				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if ($parent_id != $result->parent_id && $result->jasset_id)
-				{
-					$nomatchrows++;
-				}
-				// If $parent_id and $result->parent_id match then everything is okay
-				if ($parent_id == $result->parent_id)
-				{
-					$matchrows++;
-				}
-			}
-			$return[] = array(
-				'realname'         => $object['realname'],
-				'numrows'          => $numrows,
-				'nullrows'         => $nullrows,
-				'matchrows'        => $matchrows,
-				'nomatchrows'      => $nomatchrows,
-				'parent_id'        => $parent_id,
-				'result_parent_id' => $result->parent_id,
-				'id'               => $result->jid,
-				'assetid'          => $result->jasset_id
-			);
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Table list Array.
 	 *
 	 * @return array
@@ -346,6 +273,79 @@ class JBSMAssets
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Check Assets
+	 *
+	 * @return array
+	 */
+	public static function checkAssets()
+	{
+		$return = array();
+		$db     = JFactory::getDBO();
+		$result = new stdClass;
+
+		// First get the new parent_id
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__assets')
+			->where('name = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query);
+		$parent_id = $db->loadResult();
+
+		// Get the names of the JBS tables
+		$objects = self::getassetObjects();
+
+		// Run through each table
+		foreach ($objects as $object)
+		{
+			// Put the table into the return array
+			// Get the total number of rows and collect the table into a query
+			$query = $db->getQuery(true);
+			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
+				->from($db->qn($object['name']) . ' as j')
+				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+			$db->setQuery($query);
+			$results     = $db->loadObjectList();
+			$nullrows    = 0;
+			$matchrows   = 0;
+			$nomatchrows = 0;
+			$numrows     = count($results);
+
+			// Now go through each record to test it for asset id
+			foreach ($results as $result)
+			{
+				// If there is no jasset_id it means that this has not been set and should be
+				if (!$result->jasset_id)
+				{
+					$nullrows++;
+				}
+				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+				if ($parent_id != $result->parent_id && $result->jasset_id)
+				{
+					$nomatchrows++;
+				}
+				// If $parent_id and $result->parent_id match then everything is okay
+				if ($parent_id == $result->parent_id)
+				{
+					$matchrows++;
+				}
+			}
+			$return[] = array(
+				'realname'         => $object['realname'],
+				'numrows'          => $numrows,
+				'nullrows'         => $nullrows,
+				'matchrows'        => $matchrows,
+				'nomatchrows'      => $nomatchrows,
+				'parent_id'        => $parent_id,
+				'result_parent_id' => $result->parent_id,
+				'id'               => $result->jid,
+				'assetid'          => $result->jasset_id
+			);
+		}
+
+		return $return;
 	}
 
 }

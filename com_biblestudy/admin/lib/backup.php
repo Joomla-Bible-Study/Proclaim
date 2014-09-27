@@ -30,15 +30,12 @@ class JBSMBackup
 
 	/** @var string Data cache, used to cache data before being written to disk */
 	protected $data_cache = '';
-
-	/** @var resource Filepointer to the current dump part */
-	private $_fp = null;
-
 	/** @var string Absolute path to the temp file */
 	protected $tempFile = '';
-
 	/** @var string Relative path of how the file should be saved in the archive */
 	protected $saveAsName = '';
+	/** @var resource Filepointer to the current dump part */
+	private $_fp = null;
 
 	/**
 	 * Export DB//

@@ -20,77 +20,53 @@ class BiblestudyViewSermons extends JViewLegacy
 {
 
 	/** @var object */
+	public $document;
+	/** @var object */
 	protected $items;
-
 	/** @var object */
 	protected $pagination;
-
 	/** @var JRegistry */
 	protected $state;
-
 	/** @var string */
 	protected $pagelinks;
-
 	/** @var string */
 	protected $limitbox;
-
 	/** @var JObject */
 	protected $admin;
-
 	/** @var JRegistry */
 	protected $params;
-
 	/** @var object */
 	protected $study;
-
 	/** @var string */
 	protected $subscribe;
-
 	/** @var string */
 	protected $series;
-
 	/** @var string */
 	protected $teachers;
-
 	/** @var string */
 	protected $messageTypes;
-
 	/** @var string */
 	protected $years;
-
 	/** @var string */
 	protected $locations;
-
 	/** @var string */
 	protected $topics;
-
 	/** @var string */
 	protected $orders;
-
 	/** @var string */
 	protected $books;
-
 	/** @var object */
 	protected $template;
-
 	/** @var string */
 	protected $order;
-
 	/** @var array */
 	protected $topic;
-
 	/** @var object */
 	protected $main;
-
 	/** @var object */
 	protected $page;
-
 	/** @var string */
 	protected $request_url;
-
-	/** @var object */
-	public $document;
-
 	/** @var int */
 	protected $limitstart;
 

@@ -22,6 +22,48 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 {
 
 	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer $pk The id of the primary key.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		// Initialise variables.
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('comment.id');
+
+		// Get a row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $table->load($pk);
+
+		// Check for a table object error.
+		if ($return === false)
+		{
+			return false;
+		}
+
+		$properties = $table->getProperties(1);
+		$value      = JArrayHelper::toObject($properties, 'JObject');
+
+		return $value;
+	}
+
+	/**
+	 * Get the return URL.
+	 *
+	 * @return  string    The return URL.
+	 *
+	 * @since    1.6
+	 */
+	public function getReturnPage()
+	{
+		return base64_encode($this->getState('return_page'));
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -69,48 +111,6 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param   integer  $pk  The id of the primary key.
-	 *
-	 * @return  mixed    Object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		// Initialise variables.
-		$pk = (int) (!empty($pk)) ? $pk : $this->getState('comment.id');
-
-		// Get a row instance.
-		$table = $this->getTable();
-
-		// Attempt to load the row.
-		$return = $table->load($pk);
-
-		// Check for a table object error.
-		if ($return === false)
-		{
-			return false;
-		}
-
-		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		return $value;
-	}
-
-	/**
-	 * Get the return URL.
-	 *
-	 * @return  string    The return URL.
-	 *
-	 * @since    1.6
-	 */
-	public function getReturnPage()
-	{
-		return base64_encode($this->getState('return_page'));
 	}
 
 }

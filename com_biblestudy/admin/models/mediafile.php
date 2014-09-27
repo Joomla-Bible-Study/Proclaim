@@ -73,34 +73,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 		return true;
 	}
 
-    /**
-     * Method to get media item
-     *
-     * @param   null        $pk
-     * @return  mixed|void
-     *
-     * @since   8.1.0
-     */
-    public function getItem($pk = null) {
-        if(!empty($this->data))
-            return $this->data;
-
-        $this->data = parent::getItem($pk);
-
-        if(!empty($this->data)) {
-            // Convert metadata field to array
-            $registry = new JRegistry($this->data->metadata);
-            $this->data->metadata = $registry->toArray();
-
-            // Set the server_id from session if available or fall back on the db value
-            $server_id = $this->getState('mediafile.server_id');
-            $this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
-
-        }
-
-        return $this->data;
-    }
-
 	/**
 	 * Returns a Table object, always creating it.
 	 *
@@ -193,6 +165,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
         return $form;
     }
+
 	/**
 	 * Get the form data
 	 *
@@ -252,6 +225,37 @@ class BiblestudyModelMediafile extends JModelAdmin
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Method to get media item
+	 *
+	 * @param   null $pk
+	 *
+	 * @return  mixed|void
+	 *
+	 * @since   8.1.0
+	 */
+	public function getItem($pk = null)
+	{
+		if (!empty($this->data))
+			return $this->data;
+
+		$this->data = parent::getItem($pk);
+
+		if (!empty($this->data))
+		{
+			// Convert metadata field to array
+			$registry             = new JRegistry($this->data->metadata);
+			$this->data->metadata = $registry->toArray();
+
+			// Set the server_id from session if available or fall back on the db value
+			$server_id             = $this->getState('mediafile.server_id');
+			$this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
+
+		}
+
+		return $this->data;
 	}
 
 	/**

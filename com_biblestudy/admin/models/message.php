@@ -162,6 +162,22 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return    JTable    A database object
+	 *
+	 * @since    1.6
+	 */
+	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
 	 * Duplicate Check
 	 *
 	 * @param   int  $study_id  Study ID
@@ -301,26 +317,28 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function save($data)
 	{
-        $params = JBSMParams::getAdmin()->params;
-        $input = JFactory::getApplication()->input;
-        $data = $input->get('jform', false, 'array');
-        $files = $input->files->get('jform');
+		$params = JBSMParams::getAdmin()->params;
+		$input  = JFactory::getApplication()->input;
+		$data   = $input->get('jform', false, 'array');
+		$files  = $input->files->get('jform');
 
-        // If no image uploaded, just save data as usual
-        if (empty($files['image']['tmp_name'])) {
-            $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
-            return parent::save($data);
-        }
+		// If no image uploaded, just save data as usual
+		if (empty($files['image']['tmp_name']))
+		{
+			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
 
-        $path = 'images/BibleStudy/studies/' . $data['id'];
-        JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_study_size'));
+			return parent::save($data);
+		}
 
-        // Modify model data
-        $data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
+		$path = 'images/BibleStudy/studies/' . $data['id'];
+		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_study_size'));
 
-        $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+		// Modify model data
+		$data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
 
-        return parent::save($data);
+		$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+
+		return parent::save($data);
 	}
 
 	/**
@@ -444,77 +462,6 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  array    The default data is an empty array.
-	 *
-	 * @since   7.0
-	 */
-	protected function loadFormData()
-	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    JTable    A database object
-	 *
-	 * @since    1.6
-	 */
-	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   TableMessage  $table  A reference to a JTable object.
-	 *
-	 * @return    void
-	 *
-	 * @since    1.6
-	 */
-	protected function prepareTable($table)
-	{
-		jimport('joomla.filter.output');
-
-		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplication::stringURLSafe($table->alias);
-
-		if (empty($table->alias))
-		{
-			$table->alias = JApplication::stringURLSafe($table->studytitle);
-		}
-
-		if (empty($table->id))
-		{
-
-			// Set ordering to the last item if not set
-			if (empty($table->ordering))
-			{
-				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_studies');
-				$max = $db->loadResult();
-
-				$table->ordering = $max + 1;
-			}
-		}
-	}
-
-	/**
 	 * Method to check-out a row for editing.
 	 *
 	 * @param   integer  $pk  The numeric id of the primary key.
@@ -526,22 +473,6 @@ class BiblestudyModelMessage extends JModelAdmin
 	public function checkout($pk = null)
 	{
 		return $pk;
-	}
-
-	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
-	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_biblestudy');
-		parent::cleanCache('mod_biblestudy');
 	}
 
 	/**
@@ -611,6 +542,22 @@ class BiblestudyModelMessage extends JModelAdmin
 		$this->cleanCache();
 
 		return true;
+	}
+
+	/**
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 *
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
 	}
 
 	/**
@@ -736,6 +683,53 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @since   2.5
 	 */
+	protected function batchSeries($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		/** @var TableMessage $table */
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$table->series_id = (int) $value;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
 	protected function batchMessagetype($value, $pks, $contexts)
 	{
 		// Set the variables
@@ -773,50 +767,58 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
-	 * Batch popup changes for a group of media files.
+	 * Method to get the data that should be injected in the form.
 	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @return  array    The default data is an empty array.
 	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
+	 * @since   7.0
 	 */
-	protected function batchSeries($value, $pks, $contexts)
+	protected function loadFormData()
 	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		/** @var TableMessage $table */
-		$table = $this->getTable();
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
 
-		foreach ($pks as $pk)
+		if (empty($data))
 		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->series_id = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
+			$data = $this->getItem();
 		}
 
-		// Clean the cache
-		$this->cleanCache();
+		return $data;
+	}
 
-		return true;
+	/**
+	 * Prepare and sanitise the table prior to saving.
+	 *
+	 * @param   TableMessage $table A reference to a JTable object.
+	 *
+	 * @return    void
+	 *
+	 * @since    1.6
+	 */
+	protected function prepareTable($table)
+	{
+		jimport('joomla.filter.output');
+
+		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
+		$table->alias      = JApplication::stringURLSafe($table->alias);
+
+		if (empty($table->alias))
+		{
+			$table->alias = JApplication::stringURLSafe($table->studytitle);
+		}
+
+		if (empty($table->id))
+		{
+
+			// Set ordering to the last item if not set
+			if (empty($table->ordering))
+			{
+				$db = JFactory::getDbo();
+				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_studies');
+				$max = $db->loadResult();
+
+				$table->ordering = $max + 1;
+			}
+		}
 	}
 
 }

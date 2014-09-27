@@ -21,53 +21,47 @@ class BiblestudyViewMediaimages extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var array
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * Directory
 	 *
 	 * @var string
 	 */
 	public $directory;
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
-
 	/**
 	 * Filter Levels
 	 *
 	 * @var string
 	 */
 	public $f_levels;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+	/**
+	 * Items
+	 *
+	 * @var array
+	 */
+	protected $items;
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
 
 	/**
 	 * Execute and display a template script.

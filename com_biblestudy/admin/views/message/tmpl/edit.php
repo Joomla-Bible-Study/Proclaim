@@ -192,17 +192,17 @@ $input = $app->input;
 </div>
 
 <div class="tab-pane" id="info">
-    <div class="row-fluid">
-        <div class="span3">
-            <?php echo $this->form->getLabel('image'); ?>
-            <?php echo $this->form->getInput('image'); ?>
-        </div>
-        <div class="span9">
-            <div class="thumbnail">
-                <img src="<?php echo JURI::root() . $this->item->thumbnailm; ?>"/>
-            </div>
-        </div>
-    </div>
+	<div class="row-fluid">
+		<div class="span3">
+			<?php echo $this->form->getLabel('image'); ?>
+			<?php echo $this->form->getInput('image'); ?>
+		</div>
+		<div class="span9">
+			<div class="thumbnail">
+				<img src="<?php echo JURI::root() . $this->item->thumbnailm; ?>"/>
+			</div>
+		</div>
+	</div>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('media_hours'); ?>

@@ -21,39 +21,35 @@ class BiblestudyViewComments extends JViewLegacy
 {
 
 	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 */
+	public $sidebar;
+	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
 	/**
 	 * Filter Levels
 	 *
 	 * @var string
 	 */
 	protected $f_levels;
-
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.

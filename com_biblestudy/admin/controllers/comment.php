@@ -34,6 +34,28 @@ class BiblestudyControllerComment extends JControllerForm
 	}
 
 	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   JModelLegacy $model The model.
+	 *
+	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   1.6
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Comment', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=comments' . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
+	}
+
+	/**
 	 * Method override to check if you can add a new record.
 	 *
 	 * @param   array $data  An array of input data.
@@ -72,28 +94,6 @@ class BiblestudyControllerComment extends JControllerForm
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
-	}
-
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   JModelLegacy  $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Comment', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=comments' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
 	}
 
 }

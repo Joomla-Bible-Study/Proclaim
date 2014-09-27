@@ -31,6 +31,99 @@ class BiblestudyModelStyle extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
+	 * Method to get the record form.
+	 *
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return    mixed    A JForm object on success, false on failure
+	 *
+	 * @since    2.5
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.style', 'style', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer $pk The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
+	 * Fix the css naming of ID and Class
+	 *
+	 * @param   array $pks ID
+	 *
+	 * @return boolean
+	 */
+	public function fixcss($pks)
+	{
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
+
+			return false;
+		}
+		try
+		{
+			foreach ($pks AS $id)
+			{
+				$parent   = false;
+				$filename = null;
+				JBSMDbHelper::fixupcss($filename, $parent, null, $id);
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+
+			return false;
+		}
+
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 *
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -78,29 +171,6 @@ class BiblestudyModelStyle extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the record form.
-	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return    mixed    A JForm object on success, false on failure
-	 *
-	 * @since    2.5
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		// Get the form.
-		$form = $this->loadForm('com_biblestudy.style', 'style', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
-	}
-
-	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return    mixed    The data for the form.
@@ -139,76 +209,6 @@ class BiblestudyModelStyle extends JModelAdmin
 		}
 
 		return $item;
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
-	}
-
-	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
-	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_biblestudy');
-		parent::cleanCache('mod_biblestudy');
-	}
-
-	/**
-	 * Fix the css naming of ID and Class
-	 *
-	 * @param   array $pks  ID
-	 *
-	 * @return boolean
-	 */
-	public function fixcss($pks)
-	{
-		// Sanitize the ids.
-		$pks = (array) $pks;
-		JArrayHelper::toInteger($pks);
-
-		if (empty($pks))
-		{
-			$this->setError(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
-
-			return false;
-		}
-		try
-		{
-			foreach ($pks AS $id)
-			{
-				$parent   = false;
-				$filename = null;
-				JBSMDbHelper::fixupcss($filename, $parent, null, $id);
-			}
-		}
-		catch (Exception $e)
-		{
-			$this->setError($e->getMessage());
-
-			return false;
-		}
-
-		$this->cleanCache();
-
-		return true;
 	}
 
 }

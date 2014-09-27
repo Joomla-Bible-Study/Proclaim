@@ -19,58 +19,46 @@ defined('_JEXEC') or die;
 class BiblestudyViewMessagelist extends JViewLegacy
 {
 
+	/** @var  string Can Do */
+	public $canDo;
+	/** @var  string Books */
+	public $books;
+	/** @var  JRegistry Teachers */
+	public $teachers;
+	/** @var  string Series */
+	public $series;
+	/** @var  string Message Types */
+	public $messageTypes;
+	/** @var  string Years */
+	public $years;
+	/** @var  string New Link */
+	public $newlink;
+	/** @var  JDocument Document */
+	public $document;
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var array
 	 */
 	protected $state;
-
 	/**
 	 * @var object
 	 */
 	protected $admin;
-
-	/** @var  string Can Do */
-	public $canDo;
-
-	/** @var  string Books */
-	public $books;
-
-	/** @var  JRegistry Teachers */
-	public $teachers;
-
-	/** @var  string Series */
-	public $series;
-
-	/** @var  string Message Types */
-	public $messageTypes;
-
-	/** @var  string Years */
-	public $years;
-
 	/** @var JRegistry Params */
 	protected $params;
-
-	/** @var  string New Link */
-	public $newlink;
-
-	/** @var  JDocument Document */
-	public $document;
 
 	/**
 	 * Execute and display a template script.

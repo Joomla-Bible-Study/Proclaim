@@ -216,6 +216,21 @@ class PlgSystemjbsbackup extends JPlugin
 	}
 
 	/**
+	 * Do the backup
+	 *
+	 * @return boolean
+	 */
+	public function doBackup()
+	{
+		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
+		include_once $path1 . 'biblestudy.backup.php';
+		$dbbackup = new JBSExport;
+		$backup   = $dbbackup->exportdb($run = 2);
+
+		return $backup;
+	}
+
+	/**
 	 * Update the time
 	 *
 	 * @return boolean
@@ -237,21 +252,6 @@ class PlgSystemjbsbackup extends JPlugin
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Do the backup
-	 *
-	 * @return boolean
-	 */
-	public function doBackup()
-	{
-		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
-		include_once $path1 . 'biblestudy.backup.php';
-		$dbbackup = new JBSExport;
-		$backup   = $dbbackup->exportdb($run = 2);
-
-		return $backup;
 	}
 
 	/**
