@@ -69,6 +69,23 @@ class JBSMAlias
 	}
 
 	/**
+	 * Get Object's for tables
+	 *
+	 * @return array
+	 */
+	private static function getObjects()
+	{
+		$objects = array(
+			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
+			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
+			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
+			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
+		);
+
+		return $objects;
+	}
+
+	/**
 	 * Get Table fields for updating.
 	 *
 	 * @param   string $table  Table
@@ -106,23 +123,6 @@ class JBSMAlias
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Get Object's for tables
-	 *
-	 * @return array
-	 */
-	private static function getObjects()
-	{
-		$objects = array(
-			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
-			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
-			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
-			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
-		);
-
-		return $objects;
 	}
 
 }

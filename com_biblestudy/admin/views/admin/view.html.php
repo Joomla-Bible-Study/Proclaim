@@ -20,151 +20,131 @@ class BiblestudyViewAdmin extends JViewLegacy
 {
 
 	/**
-	 * Form
-	 *
-	 * @var array
-	 */
-	protected $form;
-
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
-	protected $item;
-
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
-	protected $state;
-
-	/**
 	 * Version
 	 *
 	 * @var string
 	 */
 	public $version;
-
 	/**
 	 * Can Do
 	 *
 	 * @var string
 	 */
 	public $canDo;
-
 	/**
 	 * Change Set
 	 *
 	 * @var string
 	 */
 	public $changeSet;
-
 	/**
 	 * Errors
 	 *
 	 * @var string
 	 */
 	public $errors;
-
 	/**
 	 * Results
 	 *
 	 * @var string
 	 */
 	public $results;
-
 	/**
 	 * Schema Version
 	 *
 	 * @var string
 	 */
 	public $schemaVersion;
-
 	/**
 	 * Update Version
 	 *
 	 * @var string
 	 */
 	public $updateVersion;
-
 	/**
 	 * Filter Params
 	 *
 	 * @var JRegistry
 	 */
 	public $filterParams;
-
 	/**
 	 * Pagination
 	 *
 	 * @var string
 	 */
 	public $pagination;
-
 	/**
 	 * Error Count
 	 *
 	 * @var string
 	 */
 	public $errorCount;
-
 	/**
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
 	 */
 	public $jversion;
-
 	/**
 	 * Temp Destination
 	 *
 	 * @var string
 	 */
 	public $tmp_dest;
-
 	/**
 	 * Player Stats
 	 *
 	 * @var string
 	 */
 	public $playerstats;
-
 	/**
 	 * Assets
 	 *
 	 * @var string
 	 */
 	public $assets;
-
 	/**
 	 * Popups
 	 *
 	 * @var string
 	 */
 	public $popups;
-
 	/**
 	 * SS
 	 *
 	 * @var string
 	 */
 	public $ss;
-
 	/**
 	 * Lists
 	 *
 	 * @var string
 	 */
 	public $lists;
-
 	/**
 	 * PI
 	 *
 	 * @var string
 	 */
 	public $pi;
+	/**
+	 * Form
+	 *
+	 * @var array
+	 */
+	protected $form;
+	/**
+	 * Item
+	 *
+	 * @var array
+	 */
+	protected $item;
+	/**
+	 * State
+	 *
+	 * @var array
+	 */
+	protected $state;
 
 	/**
 	 * Execute and display a template script.

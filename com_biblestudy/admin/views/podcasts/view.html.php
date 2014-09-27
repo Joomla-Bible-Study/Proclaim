@@ -22,38 +22,33 @@ class BiblestudyViewPodcasts extends JViewLegacy
 {
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+	/** @var  array Filter Levels */
+	public $f_levels;
+	/** @var  array Side Bar */
+	public $sidebar;
+	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
-
-	/** @var  array Filter Levels */
-	public $f_levels;
-
-	/** @var  array Side Bar */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.

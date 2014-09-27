@@ -20,54 +20,47 @@ class BiblestudyViewMediafile extends JViewLegacy
 {
 
 	/**
-	 * Form
-	 *
-	 * @var object
-	 */
-	protected $form;
-
-    /**
-     * Media form
-     *
-     * @var
-     */
-    protected $media_form;
-
-
-	/**
-	 * Item
-	 *
-	 * @var object
-	 */
-	protected $item;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
-	 * Admin
-	 *
-	 * @var object
-	 */
-	protected $admin;
-
-	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
-
 	/**
 	 * Admin Params
 	 *
 	 * @var JRegistry
 	 */
 	public $admin_params;
+	/**
+	 * Form
+	 *
+	 * @var object
+	 */
+	protected $form;
+    /**
+     * Media form
+     *
+     * @var
+     */
+    protected $media_form;
+	/**
+	 * Item
+	 *
+	 * @var object
+	 */
+	protected $item;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+	/**
+	 * Admin
+	 *
+	 * @var object
+	 */
+	protected $admin;
 
 	/**
 	 * Execute and display a template script.

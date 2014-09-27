@@ -80,36 +80,6 @@ abstract class JBSMRoute
 	}
 
 	/**
-	 * Get Teacher Route
-	 *
-	 * @param   int  $id  The route of the teacher item
-	 *
-	 * @return string
-	 */
-	public static function getTeacherRoute($id)
-	{
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
-
-		return $link;
-	}
-
-	/**
-	 * Get Series Route
-	 *
-	 * @param   int  $id  ID
-	 *
-	 * @return string
-	 */
-	public static function getSeriesRoute($id)
-	{
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
-
-		return $link;
-	}
-
-	/**
 	 * Find Item
 	 *
 	 * @param   string  $needles  ?
@@ -174,6 +144,36 @@ abstract class JBSMRoute
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get Teacher Route
+	 *
+	 * @param   int $id The route of the teacher item
+	 *
+	 * @return string
+	 */
+	public static function getTeacherRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
+
+		return $link;
+	}
+
+	/**
+	 * Get Series Route
+	 *
+	 * @param   int $id ID
+	 *
+	 * @return string
+	 */
+	public static function getSeriesRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
+
+		return $link;
 	}
 
 	/**

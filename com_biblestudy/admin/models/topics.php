@@ -42,6 +42,27 @@ class BiblestudyModelTopics extends JModelList
 	}
 
 	/**
+	 * translate item entries: books, topics
+	 *
+	 * @param   array $items Items for entries
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getTranslated($items = array())
+	{
+		$translate = new JBSMTranslated;
+
+		foreach ($items as $item)
+		{
+			$item->topic_text = $translate->getTopicItemTranslated($item);
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Populate State
 	 *
 	 * @param   string $ordering   An optional ordering field.
@@ -135,26 +156,5 @@ class BiblestudyModelTopics extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * translate item entries: books, topics
-	 *
-	 * @param   array $items  Items for entries
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTranslated($items = array())
-	{
-		$translate = new JBSMTranslated;
-
-		foreach ($items as $item)
-		{
-			$item->topic_text = $translate->getTopicItemTranslated($item);
-		}
-
-		return $items;
 	}
 }

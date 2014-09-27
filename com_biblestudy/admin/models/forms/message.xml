@@ -12,7 +12,7 @@
            key_field="id" value_field="foldername">
         <option value="-1">JBS_CMN_SELECT_FOLDER</option>
     </field>
-    <field name="id" type="hidden" default="0" readonly="true" />
+    <field name="id" type="hidden" default="0" readonly="true"/>
     <field name="published"
            type="list"
            class="span12 small"
@@ -134,7 +134,7 @@
            key_field="id" value_field="message_type">
         <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
     </field>
-    <field name="thumbnailm" type="hidden" />
+    <field name="thumbnailm" type="hidden"/>
     <field name="image" type="file" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
     <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
            filter="JBSMBibleStudyHelper::filterText" buttons="true"/>

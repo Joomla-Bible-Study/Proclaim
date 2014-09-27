@@ -46,7 +46,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int  $pk  ID
+	 * @param   int $pk ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -67,61 +67,9 @@ class BiblestudyModelSermon extends JModelItem
 	}
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return void
-	 *
-	 * @since    1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$pk = $app->input->get('id', '', 'int');
-		$this->setState('study.id', $pk);
-
-		$offset = $app->input->get('limitstart', '', 'int');
-		$this->setState('list.offset', $offset);
-
-		// Load the parameters.
-		$params   = $app->getParams();
-		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
-
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
-
-		$t = $params->get('sermonid');
-
-		if (!$t)
-		{
-			$input = new JInput;
-			$t     = $input->get('t', 1, 'int');
-		}
-
-		$template->id = $t;
-
-		$this->setState('template', $template);
-		$this->setState('admin', $admin);
-
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-	}
-
-	/**
 	 * Method to get study data.
 	 *
-	 * @param   int  $pk  The id of the study.
+	 * @param   int $pk The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -303,6 +251,58 @@ class BiblestudyModelSermon extends JModelItem
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->get('id', '', 'int');
+		$this->setState('study.id', $pk);
+
+		$offset = $app->input->get('limitstart', '', 'int');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('sermonid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
 	}
 
 

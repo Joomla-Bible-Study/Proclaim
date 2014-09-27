@@ -14,8 +14,9 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-if(BIBLESTUDY_CHECKREL) {
-    JHtml::_('formbehavior.chosen', 'select');
+if (BIBLESTUDY_CHECKREL)
+{
+	JHtml::_('formbehavior.chosen', 'select');
 }
 ?>
 <script type="text/javascript">

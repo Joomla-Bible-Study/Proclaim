@@ -21,46 +21,41 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	protected $canDo;
-
-	/**
 	 * Filter Levels
 	 *
 	 * @var array
 	 */
 	public $f_levels;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var object
 	 */
 	public $sidebar;
+	/**
+	 * Items
+	 *
+	 * @var object
+	 */
+	protected $items;
+	/**
+	 * Pagination
+	 *
+	 * @var object
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	protected $canDo;
 
 	/**
 	 * Execute and display a template script.

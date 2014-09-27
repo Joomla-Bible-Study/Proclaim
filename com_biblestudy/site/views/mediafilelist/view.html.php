@@ -23,29 +23,22 @@ jimport('joomla.html.toolbar');
 class BiblestudyViewMediafilelist extends JViewLegacy
 {
 
-	/** Items @var JObject */
-	protected $items;
-
-	/** Pagination @var array */
-	protected $pagination;
-
-	/** State @var object */
-	protected $state;
-
 	/** @var  string Can Do */
 	public $canDo;
-
 	/** @var  string Media Types */
 	public $mediatypes;
-
-	/** @var  JRegistry */
-	protected $params;
-
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
-
 	/** @var  string New Link */
 	public $newlink;
+	/** Items @var JObject */
+	protected $items;
+	/** Pagination @var array */
+	protected $pagination;
+	/** State @var object */
+	protected $state;
+	/** @var  JRegistry */
+	protected $params;
 
 	/**
 	 * Execute and display a template script.

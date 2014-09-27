@@ -23,24 +23,6 @@ class BiblestudyControllerStyles extends JControllerAdmin
 {
 
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.1.0
-	 */
-	public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Tries to fix css renaming.
 	 *
 	 * @return void
@@ -85,6 +67,24 @@ class BiblestudyControllerStyles extends JControllerAdmin
 			}
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=styles');
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return JModel
+	 *
+	 * @since 7.1.0
+	 */
+	public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 
 }

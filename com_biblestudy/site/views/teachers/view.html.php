@@ -20,67 +20,59 @@ class BiblestudyViewTeachers extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items = null;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var JRegistry
-	 */
-	protected $state = null;
-
-	/**
-	 * Params
-	 *
-	 * @var JRegistry
-	 */
-	protected $params = null;
-
-	/**
-	 * Admin
-	 *
-	 * @var object
-	 */
-	protected $admin;
-
-	/**
-	 * Page
-	 *
-	 * @var object
-	 */
-	protected $page;
-
-	/**
-	 * Request Url
-	 *
-	 * @var string
-	 */
-	protected $request_url;
-
-	/**
 	 * Document
 	 *
 	 * @var object
 	 */
 	public $document;
-
 	/**
 	 * Template Table
 	 *
 	 * @var TableTemplate
 	 */
 	public $template;
+	/**
+	 * Items
+	 *
+	 * @var object
+	 */
+	protected $items = null;
+	/**
+	 * Pagination
+	 *
+	 * @var object
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var JRegistry
+	 */
+	protected $state = null;
+	/**
+	 * Params
+	 *
+	 * @var JRegistry
+	 */
+	protected $params = null;
+	/**
+	 * Admin
+	 *
+	 * @var object
+	 */
+	protected $admin;
+	/**
+	 * Page
+	 *
+	 * @var object
+	 */
+	protected $page;
+	/**
+	 * Request Url
+	 *
+	 * @var string
+	 */
+	protected $request_url;
 
 	/**
 	 * Execute and display a template script.

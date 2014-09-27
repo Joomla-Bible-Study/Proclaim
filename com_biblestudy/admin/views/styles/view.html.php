@@ -21,38 +21,33 @@ class BiblestudyViewStyles extends JViewLegacy
 {
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+	/** @var  array Filter Levels */
+	public $f_levels;
+	/** @var  object Side Bar */
+	public $sidebar;
+	/**
 	 * Items
 	 *
 	 * @var object
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
-
-	/** @var  array Filter Levels */
-	public $f_levels;
-
-	/** @var  object Side Bar */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.

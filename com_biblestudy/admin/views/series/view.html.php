@@ -21,46 +21,41 @@ class BiblestudyViewSeries extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
-
 	/**
 	 * Filter Levels
 	 *
 	 * @var array
 	 */
 	public $f_levels;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+	/**
+	 * Items
+	 *
+	 * @var object
+	 */
+	protected $items;
+	/**
+	 * Pagination
+	 *
+	 * @var object
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
 
 	/**
 	 * Execute and display a template script.

@@ -103,11 +103,11 @@ $input = $app->input;
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('image'); ?>
-                                    <?php echo $this->form->getInput('image'); ?>
+									<?php echo $this->form->getInput('image'); ?>
 								</div>
 								<div class="controls">
-                                    <img src="<?php echo JURI::root() . $this->item->series_thumbnail; ?>"/>
-                                </div>
+									<img src="<?php echo JURI::root() . $this->item->series_thumbnail; ?>"/>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -161,6 +161,6 @@ $input = $app->input;
 		</div>
 		<!-- End Sidebar -->
 	</div>
-    <?php echo $this->form->getInput('series_thumbnail'); ?>
-    <?php echo $this->form->getInput('id'); ?>
+	<?php echo $this->form->getInput('series_thumbnail'); ?>
+	<?php echo $this->form->getInput('id'); ?>
 </form>

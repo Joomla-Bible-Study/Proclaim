@@ -20,25 +20,23 @@ defined('_JEXEC') or die;
 class BiblestudyViewTerms extends JViewLegacy
 {
 	/**
+	 * Media
+	 *
+	 * @var Object
+	 */
+	public $media;
+	/**
 	 * Params
 	 *
 	 * @var JRegistry
 	 */
 	protected $params;
-
 	/**
 	 * Document
 	 *
 	 * @var JDocument
 	 */
 	protected $document;
-
-	/**
-	 * Media
-	 *
-	 * @var Object
-	 */
-	public $media;
 
 	/**
 	 * Execute and display a template script.

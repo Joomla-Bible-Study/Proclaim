@@ -335,6 +335,16 @@ class TableMessage extends JTable
 	}
 
 	/**
+	 * Ordering.
+	 *
+	 * @return void
+	 */
+	public function ordering()
+	{
+
+	}
+
+	/**
 	 * Method to compute the default name of the asset.
 	 * The default name is in the form `table_name.id`
 	 * where id is the value of the primary key of the table.
@@ -383,16 +393,6 @@ class TableMessage extends JTable
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
-	}
-
-	/**
-	 * Ordering.
-	 *
-	 * @return void
-	 */
-	public function ordering()
-	{
-
 	}
 
 }

@@ -19,6 +19,126 @@ class JBSMRestore
 {
 
 	/**
+	 * Alter tables for Blob
+	 *
+	 * @return boolean
+	 */
+	protected static function TablestoBlob()
+	{
+		$backuptables = self::getObjects();
+
+		$db = JFactory::getDBO();
+
+		foreach ($backuptables AS $backuptable)
+		{
+
+			if (substr_count($backuptable['name'], 'studies'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
+				$db->setQuery($query);
+				$db->execute();
+
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'podcast'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'series'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'teachers'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get Objects for tables
+	 *
+	 * @return array
+	 */
+	protected static function getObjects()
+	{
+		$db        = JFactory::getDBO();
+		$tables    = $db->getTableList();
+		$prefix    = $db->getPrefix();
+		$prelength = strlen($prefix);
+		$bsms      = 'bsms_';
+		$objects   = array();
+
+		foreach ($tables as $table)
+		{
+			if (substr_count($table, $bsms))
+			{
+				$table     = substr_replace($table, '#__', 0, $prelength);
+				$objects[] = array('name' => $table);
+			}
+		}
+
+		return $objects;
+	}
+
+	/**
+	 * Modify tables to Text
+	 *
+	 * @return boolean
+	 */
+	protected static function TablestoText()
+	{
+		$backuptables = self::getObjects();
+
+		$db = JFactory::getDBO();
+
+		foreach ($backuptables AS $backuptable)
+		{
+
+			if (substr_count($backuptable['name'], 'studies'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
+				$db->setQuery($query);
+				$db->execute();
+
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'podcast'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'series'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if (substr_count($backuptable['name'], 'teachers'))
+			{
+				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Import DB
 	 *
 	 * @param   boolean  $parent  Switch to see if it is coming from migration or restore.
@@ -80,6 +200,76 @@ class JBSMRestore
 
 		// Todo: delete uploaded files or have a option to do this??
 		return $result;
+	}
+
+	/**
+	 * Restore DB for exerting Joomla Bible Study
+	 *
+	 * @param   string $backuprestore ?
+	 *
+	 * @return boolean See if the restore worked.
+	 */
+	public static function restoreDB($backuprestore)
+	{
+		$app = JFactory::getApplication();
+		$db  = JFactory::getDBO();
+		/**
+		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+		 */
+		if (!ini_get('safe_mode'))
+		{
+			set_time_limit(300);
+		}
+		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/database/' . $backuprestore);
+
+		// Check to see if this is a backup from an old db and not a migration
+		$isold   = substr_count($query, '#__bsms_admin_genesis');
+		$isnot   = substr_count($query, '#__bsms_studies');
+		$iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+
+		if ($isold !== 0 && $isnot === 0)
+		{
+			$app->enqueueMessage(JText::_('JBS_IBM_OLD_DB'), 'warning');
+
+			return false;
+		}
+		elseif ($isnot === 0)
+		{
+			$app->enqueueMessage(JText::_('JBS_IBM_NOT_DB'), 'warning');
+
+			return false;
+		}
+		elseif (!$iscernt)
+		{
+			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
+
+			return false;
+		}
+		else
+		{
+			$queries = $db->splitSql($query);
+
+			foreach ($queries as $querie)
+			{
+				$db->setQuery($querie);
+				$db->execute();
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get Package from Folder
+	 *
+	 * @return boolean
+	 */
+	private static function _getPackageFromFolder()
+	{
+		$input = new JInput;
+		$p_dir = $input->getString('install_directory');
+
+		return $p_dir;
 	}
 
 	/**
@@ -247,196 +437,6 @@ class JBSMRestore
 						return false;
 					}
 				}
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Restore DB for exerting Joomla Bible Study
-	 *
-	 * @param   string  $backuprestore  ?
-	 *
-	 * @return boolean See if the restore worked.
-	 */
-	public static function restoreDB($backuprestore)
-	{
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
-		/**
-		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(300);
-		}
-		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/database/' . $backuprestore);
-
-		// Check to see if this is a backup from an old db and not a migration
-		$isold   = substr_count($query, '#__bsms_admin_genesis');
-		$isnot   = substr_count($query, '#__bsms_studies');
-		$iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
-
-		if ($isold !== 0 && $isnot === 0)
-		{
-			$app->enqueueMessage(JText::_('JBS_IBM_OLD_DB'), 'warning');
-
-			return false;
-		}
-		elseif ($isnot === 0)
-		{
-			$app->enqueueMessage(JText::_('JBS_IBM_NOT_DB'), 'warning');
-
-			return false;
-		}
-		elseif (!$iscernt)
-		{
-			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
-
-			return false;
-		}
-		else
-		{
-			$queries = $db->splitSql($query);
-
-			foreach ($queries as $querie)
-			{
-				$db->setQuery($querie);
-				$db->execute();
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Get Package from Folder
-	 *
-	 * @return boolean
-	 */
-	private static function _getPackageFromFolder()
-	{
-		$input = new JInput;
-		$p_dir = $input->getString('install_directory');
-
-		return $p_dir;
-	}
-
-	/**
-	 * Get Objects for tables
-	 *
-	 * @return array
-	 */
-	protected static function getObjects()
-	{
-		$db        = JFactory::getDBO();
-		$tables    = $db->getTableList();
-		$prefix    = $db->getPrefix();
-		$prelength = strlen($prefix);
-		$bsms      = 'bsms_';
-		$objects   = array();
-
-		foreach ($tables as $table)
-		{
-			if (substr_count($table, $bsms))
-			{
-				$table     = substr_replace($table, '#__', 0, $prelength);
-				$objects[] = array('name' => $table);
-			}
-		}
-
-		return $objects;
-	}
-
-	/**
-	 * Alter tables for Blob
-	 *
-	 * @return boolean
-	 */
-	protected static function TablestoBlob()
-	{
-		$backuptables = self::getObjects();
-
-		$db = JFactory::getDBO();
-
-		foreach ($backuptables AS $backuptable)
-		{
-
-			if (substr_count($backuptable['name'], 'studies'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
-				$db->setQuery($query);
-				$db->execute();
-
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'podcast'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'series'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'teachers'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
-				$db->setQuery($query);
-				$db->execute();
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Modify tables to Text
-	 *
-	 * @return boolean
-	 */
-	protected static function TablestoText()
-	{
-		$backuptables = self::getObjects();
-
-		$db = JFactory::getDBO();
-
-		foreach ($backuptables AS $backuptable)
-		{
-
-			if (substr_count($backuptable['name'], 'studies'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
-				$db->setQuery($query);
-				$db->execute();
-
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'podcast'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'series'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if (substr_count($backuptable['name'], 'teachers'))
-			{
-				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
-				$db->setQuery($query);
-				$db->execute();
 			}
 		}
 

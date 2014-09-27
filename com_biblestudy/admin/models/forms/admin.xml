@@ -51,8 +51,8 @@
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
 
-        <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
+	    <!--Thumbnail sizes-->
+	    <field name="thumbnail_teacher_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
         <field name="thumbnail_series_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
         <field name="thumbnail_study_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
 
@@ -127,7 +127,7 @@
                value_field="title" labelclass="control-label">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
         </field>
-        <field name="media_image" type="sql" class="inputbox" 
+        <field name="media_image" type="sql" class="inputbox"
                label="JBS_CMN_MEDIA_IMAGE" description="JBS_CMN_MEDIA_IMAGE_DESC"
                default="-1"
                query="SELECT id, media_text FROM #__bsms_media WHERE published = 1 ORDER BY media_text ASC"
@@ -239,7 +239,7 @@
         </fieldset>
         <fieldset name="jwplayer_pro_listbar" label="JBS_ADM_PLAYER_ADMIN_LABLE"
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
-            <field name="playlist" type="radio" 
+            <field name="playlist" type="radio"
                    label="JBS_ADM_JWPLAYER_PLAYLIST" description="JBS_ADM_JWPLAYER_PLAYLIST_DESC"
                    default="false">
                 <option value="false">JBS_CMN_NO</option>

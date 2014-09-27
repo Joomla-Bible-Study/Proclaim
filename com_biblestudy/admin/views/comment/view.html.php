@@ -20,32 +20,29 @@ class BiblestudyViewComment extends JViewLegacy
 {
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+	/**
 	 * Form Data
 	 *
 	 * @var object
 	 */
 	protected $form;
-
 	/**
 	 * Item
 	 *
 	 * @var object
 	 */
 	protected $item;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
 
 	/**
 	 * Display the view
