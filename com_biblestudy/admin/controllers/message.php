@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -31,7 +31,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -73,7 +73,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object $model  The model.
+	 * @param   object  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -95,8 +95,8 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key     The name of the primary key of the URL variable.
-	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 */
@@ -104,7 +104,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	{
 		$model     = $this->getModel('Topic');
 		$jinput    = new JInput;
-		$data      = $jinput->get('jform');
+		$data      = $jinput->post->get('jform', array(), 'array');
 		$topic_ids = array();
 
 		// Non-numeric topics are assumed to be new and are added to the database

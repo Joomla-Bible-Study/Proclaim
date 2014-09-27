@@ -34,8 +34,6 @@ $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
-
-// todo need to check if call outs for the pull down work and filter. BCC
 ?>
 <script type="text/javascript">
 	var table;

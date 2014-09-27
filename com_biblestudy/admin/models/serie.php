@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -358,13 +358,22 @@ class BiblestudyModelSerie extends JModelAdmin
 			$data['alias'] = $alias;
 		}
 
-		if (parent::save($data))
-		{
+        $input = JFactory::getApplication()->input;
+        $data = $input->get('jform', false, 'array');
+        $files = $input->files->get('jform');
 
-			return true;
-		}
+        // If no image uploaded, just save data as usual
+        if (empty($files['image']['tmp_name'])) {
+            return parent::save($data);
+        }
 
-		return false;
+        $path = 'images/BibleStudy/series/' . $data['id'];
+        JBSMThumbnail::create($files['image'], $path, 'thumbnail_series_size');
+
+        // Modify model data
+        $data['series_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+
+        return parent::save($data);
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -44,14 +44,14 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Status
 	 *
-	 * @var JObject
+	 * @var Object
 	 */
 	public $status;
 
 	/**
 	 * Display
 	 *
-	 * @param   string $tpl  Template to display
+	 * @param   string  $tpl  Template to display
 	 *
 	 * @return null
 	 */
@@ -152,7 +152,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		jimport('joomla.installer.installer');
 		$db                    = JFactory::getDBO();
-		$this->status          = new JObject;
+		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
 

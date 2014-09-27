@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -301,14 +301,26 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		if (parent::save($data))
-		{
-			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+        $params = JBSMParams::getAdmin()->params;
+        $input = JFactory::getApplication()->input;
+        $data = $input->get('jform', false, 'array');
+        $files = $input->files->get('jform');
 
-			return true;
-		}
+        // If no image uploaded, just save data as usual
+        if (empty($files['image']['tmp_name'])) {
+            $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+            return parent::save($data);
+        }
 
-		return false;
+        $path = 'images/BibleStudy/studies/' . $data['id'];
+        JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_study_size'));
+
+        // Modify model data
+        $data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
+
+        $this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+
+        return parent::save($data);
 	}
 
 	/**
@@ -480,11 +492,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias      = JApplication::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
+			$table->alias = JApplication::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))

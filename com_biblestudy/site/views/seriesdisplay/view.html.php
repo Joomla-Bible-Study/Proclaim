@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -15,8 +15,6 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- *
- * @todo     need to recode to JBSM/MVC Standers and update the way we do params.  bcc
  */
 class BiblestudyViewSeriesdisplay extends JViewLegacy
 {

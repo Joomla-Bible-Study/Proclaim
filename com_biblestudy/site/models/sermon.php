@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -46,7 +46,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int $pk  ID
+	 * @param   int  $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -121,7 +121,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int $pk  The id of the study.
+	 * @param   int  $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -146,7 +146,8 @@ class BiblestudyModelSermon extends JModelItem
 			$query->from('#__bsms_studies AS s');
 
 			// Join over teachers
-			$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh, t.teacher_thumbnail as thumb, t.thumbw, t.thumbh');
+			$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh,' .
+				't.teacher_thumbnail as thumb, t.thumbw, t.thumbh');
 
 			$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
 
@@ -195,16 +196,16 @@ class BiblestudyModelSermon extends JModelItem
 			$data->topic_text = $topic_text;
 			$data->bookname      = JText::_($data->bookname);
 
-            $registry = new JRegistry;
-            $registry->loadString($data->params);
-            $data->params = $registry;
-            $template = JBSMParams::getTemplateparams();
+			$registry = new JRegistry;
+			$registry->loadString($data->params);
+			$data->params = $registry;
+			$template = JBSMParams::getTemplateparams();
 
-            $data->params->merge($template->params);
-            $mparams = clone $this->getState('params');
+			$data->params->merge($template->params);
+			$mparams = clone $this->getState('params');
 			$mj = new JRegistry;
 			$mj->loadString($mparams);
-            $data->params->merge($mj);
+			$data->params->merge($mj);
 
 			$a_params           = JBSMParams::getAdmin();
 			$data->admin_params = $a_params->params;

@@ -3,7 +3,7 @@
  * JView html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -154,7 +154,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
+        elseif ($this->canDo->get('core.edit.state'))
         {
             JToolBarHelper::trash('teachers.trash');
         }

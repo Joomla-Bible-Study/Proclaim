@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -27,7 +27,7 @@ class JBSMDbHelper
 	/**
 	 * System to Check if Table Exists
 	 *
-	 * @param    string $cktable  Table to check for exp:"#__bsms_admin
+	 * @param   string  $cktable  Table to check for exp:"#__bsms_admin
 	 *
 	 * @return bool  If table is there True else False if not.
 	 */
@@ -55,8 +55,8 @@ class JBSMDbHelper
 	/**
 	 * Discover the fields in a table
 	 *
-	 * @param   string $table  Is the table you are checking
-	 * @param   string $field  Checking against.
+	 * @param   string  $table  Is the table you are checking
+	 * @param   string  $field  Checking against.
 	 *
 	 * @return boolean false equals field does not exist
 	 */
@@ -80,8 +80,8 @@ class JBSMDbHelper
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
-	 * @param   array  $tables  Tables is an array of tables, fields, type of query and optional command line
-	 * @param   string $from    Where the query is coming from for msg
+	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
+	 * @param   string  $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
 	 */
@@ -169,8 +169,8 @@ class JBSMDbHelper
 	/**
 	 * performs a database query
 	 *
-	 * @param   string $query  Is a Joomla ready query
-	 * @param   string $from   Where the sorce of the query comes from
+	 * @param   string  $query  Is a Joomla ready query
+	 * @param   string  $from   Where the source of the query comes from
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
@@ -198,13 +198,12 @@ class JBSMDbHelper
 	/**
 	 * Checks a table for the existence of a field, if it does not find it, runs the Admin model fix()
 	 *
-	 * @param   string  $table        table is the table you are checking
-	 * @param   string  $field        field you are checking
-	 * @param   boolean $description  ?
+	 * @param   string  $table  table is the table you are checking
+	 * @param   string  $field  field you are checking
 	 *
 	 * @return boolean
 	 */
-	public static function checkDB($table, $field, $description = null)
+	public static function checkDB($table, $field)
 	{
 		$done = self::checkTables($table, $field);
 
@@ -287,7 +286,11 @@ class JBSMDbHelper
 	 */
 	public static function setInstallState()
 	{
-		$query = 'UPDATE #__bsms_admin SET installstate = NULL WHERE id = 1';
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_admin')
+			->set('installstate = NULL')
+			->where('id = 1');
 
 		if (!self::performDB($query, null))
 		{
@@ -302,10 +305,10 @@ class JBSMDbHelper
 	/**
 	 * Fixupcss.
 	 *
-	 * @param   string  $filename  Name of css file
-	 * @param   boolean $parent    if coming form the update script
-	 * @param   string  $newcss    New css style
-	 * @param   int     $id        this is the id of record to be fixed
+	 * @param   string   $filename  Name of css file
+	 * @param   boolean  $parent    if coming form the update script
+	 * @param   string   $newcss    New css style
+	 * @param   int      $id        this is the id of record to be fixed
 	 *
 	 * @return boolean
 	 *
@@ -386,8 +389,8 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object $result  Objectlist that we will get the id from.
-	 * @param   string $table   Table to be reloaded.
+	 * @param   object  $result  Objectlist that we will get the id from.
+	 * @param   string  $table   Table to be reloaded.
 	 *
 	 * @return boolean
 	 *

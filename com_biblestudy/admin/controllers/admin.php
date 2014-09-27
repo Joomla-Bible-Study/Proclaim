@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,7 +21,7 @@ jimport('joomla.application.component.controllerform');
 class BiblestudyControllerAdmin extends JControllerForm
 {
 	/**
-	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
 	 * @param  string
 	 *

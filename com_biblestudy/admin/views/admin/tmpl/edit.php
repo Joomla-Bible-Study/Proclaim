@@ -3,7 +3,7 @@
  * Admin Form
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -37,8 +37,8 @@ $input = $app->input;
 	};
 
 	Joomla.submitbutton = function (task) {
-		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-admin'))) {
+			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
@@ -244,7 +244,9 @@ $input = $app->input;
 				</div>
 			</div>
 		</div>
-		<div>
+    </div>
+    <div class="row-fluid">
+		<div class="span6">
 			<h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
 
 			<div class="control-group">
@@ -278,6 +280,28 @@ $input = $app->input;
 				</div>
 			</div>
 		</div>
+        <div class="span6">
+            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h4>
+
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_teacher_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_teacher_size', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_series_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_series_size', 'params'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo $this->form->getLabel('thumbnail_study_size', 'params'); ?>
+                <div class="controls">
+                    <?php echo $this->form->getInput('thumbnail_study_size', 'params'); ?>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 <div class="tab-pane" id="playersettings">
