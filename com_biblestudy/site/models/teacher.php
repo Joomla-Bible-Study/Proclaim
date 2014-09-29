@@ -29,60 +29,6 @@ class BiblestudyModelTeacher extends JModelItem
 	protected $_context = 'com_biblestudy.teacher';
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$input = new JInput;
-		$pk    = $input->get('id', '', 'int');
-		$this->setState('teacher.id', $pk);
-
-		$offset = $input->get('limitstart', '', 'int');
-		$this->setState('list.offset', $offset);
-
-		// Load the parameters.
-		$params   = $app->getParams();
-		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
-
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
-
-		$t = $params->get('teachertemplateid');
-
-		if (!$t)
-		{
-			$input = new JInput;
-			$t     = $input->get('t', 1, 'int');
-		}
-
-		$template->id = $t;
-
-		$this->setState('template', $template);
-		$this->setState('admin', $admin);
-
-		// TODO: Tune these values based on other permissions.
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-	}
-
-	/**
 	 * Method to get study data.
 	 *
 	 * @param   int  $pk  The id of the study.
@@ -237,6 +183,59 @@ class BiblestudyModelTeacher extends JModelItem
 		}
 
 		return $studies;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$input = new JInput;
+		$pk    = $input->get('id', '', 'int');
+		$this->setState('teacher.id', $pk);
+
+		$offset = $input->get('limitstart', '', 'int');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin(true);
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('teachertemplateid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
 	}
 // End class
 }

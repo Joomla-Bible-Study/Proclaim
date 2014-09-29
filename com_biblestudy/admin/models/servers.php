@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -73,6 +73,53 @@ class BiblestudyModelServers extends JModelList
     }
 
     /**
+     * Get a list of available endpoints
+     *
+     * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
+     * @since   8.1.0
+     */
+	public function getServerOptions()
+	{
+
+		$options = array();
+
+		// Path to endpoints
+		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers';
+
+		if (JFolder::exists($path))
+			$servers = JFolder::folders($path);
+		else
+			return false;
+
+		foreach ($servers as $server)
+		{
+			$file = $path . '/' . $server . '/' . $server . '.xml';
+
+			if (is_file($file))
+			{
+				if ($xml = simplexml_load_file($file))
+				{
+					//Create the reverse lookup for Endpoint type to Endpoint name
+					$this->rlu_type[$server] = (string) $xml->name;
+
+					$o              = new JObject();
+					$o->type        = (string) $xml['type'];
+					$o->name        = (string) $server;
+					$o->image_url   = JURI::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
+					$o->title       = (string) $xml->name;
+					$o->description = (string) $xml->description;
+					$o->path        = $path . '/' . $server . '/';
+
+					$options[$o->type][] = $o;
+					unset($xml);
+				}
+			}
+		}
+
+		return $options;
+	}
+
+	/**
      * Method to auto-populate the model state.
      *
      * This method should only be called once per instantiation and is designed
@@ -138,48 +185,6 @@ class BiblestudyModelServers extends JModelList
         $query->order($db->escape($orderCol . ' ' . $orderDirn));
 
         return $query;
-    }
-
-    /**
-     * Get a list of available endpoints
-     *
-     * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
-     * @since   8.1.0
-     */
-    public function getServerOptions() {
-
-        $options = array();
-
-        // Path to endpoints
-        $path = JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers';
-
-        if(JFolder::exists($path))
-            $servers = JFolder::folders($path);
-        else
-            return false;
-
-        foreach($servers as $server) {
-            $file = $path.'/'.$server.'/'.$server.'.xml';
-
-            if(is_file($file)) {
-                if($xml = simplexml_load_file($file)) {
-                    //Create the reverse lookup for Endpoint type to Endpoint name
-                    $this->rlu_type[$server] = (string)$xml->name;
-
-                    $o = new JObject();
-                    $o->type = (string)$xml['type'];
-                    $o->name = (string)$server;
-                    $o->image_url = JURI::base().'/components/com_biblestudy/addons/servers/'.$server.'/'.$server.'.png';
-                    $o->title = (string)$xml->name;
-                    $o->description = (string)$xml->description;
-                    $o->path = $path.'/'.$server.'/';
-
-                    $options[$o->type][] = $o;
-                    unset($xml);
-                }
-            }
-        }
-        return $options;
     }
 
 }

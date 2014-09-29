@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -83,6 +83,20 @@ class BiblestudyModelMimetype extends JModelAdmin
 	}
 
 	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer $pk The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
 	 * Load Form Data
 	 *
 	 * @return  array    The default data is an empty array.
@@ -99,20 +113,6 @@ class BiblestudyModelMimetype extends JModelAdmin
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
 	}
 
 	/**

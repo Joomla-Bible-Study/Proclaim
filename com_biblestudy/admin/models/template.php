@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -73,15 +73,33 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Get Items
+	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk  The id of the primary key.
+	 * @param   integer $pk The numeric id of the primary key.
 	 *
-	 * @return  mixed    Object on success, false on failure.
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
 	 */
-	public function getItem($pk = null)
+	public function checkout($pk = null)
 	{
-		return parent::getItem($pk);
+		return $pk;
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string $name    The table name. Optional.
+	 * @param   string $prefix  The class prefix. Optional.
+	 * @param   array  $options Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since       1.6
+	 */
+	public function getTable($name = 'template', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**
@@ -104,33 +122,15 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Method to check-out a row for editing.
+	 * Get Items
 	 *
-	 * @param   integer $pk  The numeric id of the primary key.
+	 * @param   integer $pk The id of the primary key.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
+	 * @return  mixed    Object on success, false on failure.
 	 */
-	public function checkout($pk = null)
+	public function getItem($pk = null)
 	{
-		return $pk;
-	}
-
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since       1.6
-	 */
-	public function getTable($name = 'template', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
+		return parent::getItem($pk);
 	}
 
 	/**

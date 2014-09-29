@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * For php storm
  *
  * @package     BibleStudy.Admin
- * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  *
  * @see         \Joomla\Registry\Registry

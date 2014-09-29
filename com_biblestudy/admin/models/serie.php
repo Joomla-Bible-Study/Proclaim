@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -26,6 +26,132 @@ class BiblestudyModelSerie extends JModelAdmin
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	/**
+	 * Abstract method for getting the form from the model.
+	 *
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
+			return false;
+		}
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$id = $jinput->get('a_id', 0);
+
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$id = $jinput->get('id', 0);
+		}
+
+		$user = JFactory::getUser();
+
+		// Check for existing article.
+		// Modify the form based on Edit State access controls.
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
+		)
+		{
+			// Disable fields for display.
+			$form->setFieldAttribute('ordering', 'disabled', 'true');
+			$form->setFieldAttribute('published', 'disabled', 'true');
+
+			// Disable fields while saving.
+			// The controller has already verified this is an article you can edit.
+			$form->setFieldAttribute('ordering', 'filter', 'unset');
+			$form->setFieldAttribute('published', 'filter', 'unset');
+
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Get Teacher data
+	 *
+	 * @return object
+	 */
+	public function getTeacher()
+	{
+		if (empty($this->_teacher))
+		{
+			$query          = 'SELECT id AS value, teachername AS text'
+				. ' FROM #__bsms_teachers'
+				. ' WHERE published = 1';
+			$this->_teacher = $this->_getList($query);
+		}
+
+		return $this->_teacher;
+	}
+
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array $data The form data.
+	 *
+	 * @return    boolean    True on success.
+	 *
+	 * @since    1.6
+	 */
+	public function save($data)
+	{
+		$app = JFactory::getApplication();
+
+		// Alter the title for save as copy
+		if ($app->input->get('task') == 'save2copy')
+		{
+			list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
+			$data['title'] = $title;
+			$data['alias'] = $alias;
+		}
+
+		$input = JFactory::getApplication()->input;
+		$data  = $input->get('jform', false, 'array');
+		$files = $input->files->get('jform');
+
+		// If no image uploaded, just save data as usual
+		if (empty($files['image']['tmp_name']))
+		{
+			return parent::save($data);
+		}
+
+		$path = 'images/BibleStudy/series/' . $data['id'];
+		JBSMThumbnail::create($files['image'], $path, 'thumbnail_series_size');
+
+		// Modify model data
+		$data['series_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+
+		return parent::save($data);
+	}
+
+	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer $pk The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
 
 	/**
 	 * Batch copy items to a new category or current.
@@ -117,6 +243,37 @@ class BiblestudyModelSerie extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string $name    The table name. Optional.
+	 * @param   string $prefix  The class prefix. Optional.
+	 * @param   array  $options Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 */
+	public function getTable($name = 'Serie', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
+	}
+
+	/**
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 *
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_biblestudy_podcast');
 	}
 
     /**
@@ -212,111 +369,6 @@ class BiblestudyModelSerie extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 */
-	public function getTable($name = 'Serie', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param   int $pk  The id of the primary key.
-	 *
-	 * @return    mixed    Object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		$item = parent::getItem($pk);
-
-		if ($item)
-		{
-			$item->admin = JBSMParams::getAdmin();
-		}
-
-		return $item;
-	}
-
-	/**
-	 * Abstract method for getting the form from the model.
-	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 *
-	 * @since 7.0
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		// Get the form.
-		$form = $this->loadForm('com_biblestudy.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form))
-		{
-			return false;
-		}
-		$jinput = JFactory::getApplication()->input;
-
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$id = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
-		else
-		{
-			$id = $jinput->get('id', 0);
-		}
-
-		$user = JFactory::getUser();
-
-		// Check for existing article.
-		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('ordering', 'disabled', 'true');
-			$form->setFieldAttribute('published', 'disabled', 'true');
-
-			// Disable fields while saving.
-			// The controller has already verified this is an article you can edit.
-			$form->setFieldAttribute('ordering', 'filter', 'unset');
-			$form->setFieldAttribute('published', 'filter', 'unset');
-
-		}
-
-		return $form;
-	}
-
-	/**
-	 * Get Teacher data
-	 *
-	 * @return object
-	 */
-	public function getTeacher()
-	{
-		if (empty($this->_teacher))
-		{
-			$query          = 'SELECT id AS value, teachername AS text'
-				. ' FROM #__bsms_teachers'
-				. ' WHERE published = 1';
-			$this->_teacher = $this->_getList($query);
-		}
-
-		return $this->_teacher;
-	}
-
-	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  array    The default data is an empty array.
@@ -338,33 +390,22 @@ class BiblestudyModelSerie extends JModelAdmin
 	}
 
 	/**
-	 * Method to save the form data.
+	 * Method to get a single record.
 	 *
-	 * @param   array $data  The form data.
+	 * @param   int $pk The id of the primary key.
 	 *
-	 * @return    boolean    True on success.
-	 *
-	 * @since    1.6
+	 * @return    mixed    Object on success, false on failure.
 	 */
-	public function save($data)
+	public function getItem($pk = null)
 	{
-		$app = JFactory::getApplication();
+		$item = parent::getItem($pk);
 
-		// Alter the title for save as copy
-		if ($app->input->get('task') == 'save2copy')
+		if ($item)
 		{
-			list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
-			$data['title'] = $title;
-			$data['alias'] = $alias;
+			$item->admin = JBSMParams::getAdmin();
 		}
 
-		if (parent::save($data))
-		{
-
-			return true;
-		}
-
-		return false;
+		return $item;
 	}
 
 	/**
@@ -395,37 +436,6 @@ class BiblestudyModelSerie extends JModelAdmin
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
 	{
 		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
-	}
-
-	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
-	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_biblestudy');
-		parent::cleanCache('mod_biblestudy');
-		parent::cleanCache('mod_biblestudy_podcast');
 	}
 
 }

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -18,6 +18,40 @@ defined('_JEXEC') or die;
  */
 class JBSMImages
 {
+
+	/**
+	 * Main Study Image
+	 *
+	 * @return object
+	 */
+	public static function mainStudyImage()
+	{
+		$path     = null;
+		$image    = null;
+		$database = JFactory::getDBO();
+		$query    = $database->getQuery(true);
+		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+		$database->setQuery($query);
+		$admin = $database->loadObject();
+
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadString($admin->params);
+		$admin_params = $registry;
+
+		if (!$admin_params->get('default_main_image'))
+		{
+			$path = 'media/com_biblestudy/images/openbible.png';
+		}
+		else
+		{
+			$path = $admin_params->get('default_main_image');
+		}
+
+		$mainimage = self::getImagePath($path);
+
+		return $mainimage;
+	}
 
 	/**
 	 * Get Image Path
@@ -79,95 +113,9 @@ class JBSMImages
 	}
 
 	/**
-	 * Main Study Image
-	 *
-	 * @return object
-	 */
-	public static function mainStudyImage()
-	{
-		$path     = null;
-		$image    = null;
-		$database = JFactory::getDBO();
-		$query    = $database->getQuery(true);
-		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-		$database->setQuery($query);
-		$admin = $database->loadObject();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($admin->params);
-		$admin_params = $registry;
-
-		if (!$admin_params->get('default_main_image'))
-		{
-			$path = 'media/com_biblestudy/images/openbible.png';
-		}
-		else
-		{
-			$path = $admin_params->get('default_main_image');
-		}
-
-		$mainimage = self::getImagePath($path);
-
-		return $mainimage;
-	}
-
-	/**
-	 * Get MediaImage Folder
-	 *
-	 * @return string
-	 */
-	private static function getMediaImageFolder()
-	{
-
-		$mediaimagefolder = 'media/com_biblestudy/images';
-
-		return $mediaimagefolder;
-	}
-
-	/**
-	 * Get SeriesImage Folder
-	 *
-	 * @return string
-	 */
-	private static function getSeriesImageFolder()
-	{
-
-		$seriesimagefolder = 'images';
-
-		return $seriesimagefolder;
-	}
-
-	/**
-	 * Get StudiesImage Folder
-	 *
-	 * @return string
-	 */
-	private static function getStudiesImageFolder()
-	{
-
-		$studiesimagefolder = 'images';
-
-		return $studiesimagefolder;
-	}
-
-	/**
-	 * Get TeacherImage Folder
-	 *
-	 * @return string
-	 */
-	private static function getTeacherImageFolder()
-	{
-
-		$teacherimagefolder = 'images';
-
-		return $teacherimagefolder;
-	}
-
-	/**
 	 * Get Study Thumbnail
 	 *
-	 * @param   string  $image  ?
+	 * @param   string $image ?
 	 *
 	 * @return object
 	 */
@@ -183,6 +131,19 @@ class JBSMImages
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
+	}
+
+	/**
+	 * Get StudiesImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getStudiesImageFolder()
+	{
+
+		$studiesimagefolder = 'images';
+
+		return $studiesimagefolder;
 	}
 
 	/**
@@ -204,6 +165,19 @@ class JBSMImages
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
+	}
+
+	/**
+	 * Get SeriesImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getSeriesImageFolder()
+	{
+
+		$seriesimagefolder = 'images';
+
+		return $seriesimagefolder;
 	}
 
 	/**
@@ -240,6 +214,19 @@ class JBSMImages
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
+	}
+
+	/**
+	 * Get TeacherImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getTeacherImageFolder()
+	{
+
+		$teacherimagefolder = 'images';
+
+		return $teacherimagefolder;
 	}
 
 	/**
@@ -313,6 +300,19 @@ class JBSMImages
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
+	}
+
+	/**
+	 * Get MediaImage Folder
+	 *
+	 * @return string
+	 */
+	private static function getMediaImageFolder()
+	{
+
+		$mediaimagefolder = 'media/com_biblestudy/images';
+
+		return $mediaimagefolder;
 	}
 
 	/**

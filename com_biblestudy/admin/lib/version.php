@@ -3,7 +3,7 @@
  * Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  *
@@ -54,6 +54,19 @@ class JBSMBiblestudyVersion
 	}
 
 	/**
+	 * Retrieve installed Bible Study version as string.
+	 *
+	 * @return string "X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname]"
+	 */
+	public function version()
+	{
+		$version = self::versionObject();
+
+		return '<table><tr><td><strong>' . JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY') . '</strong></td></tr><tr><td>' . JText::_('JBS_CPL_CURRENT_VERSION')
+		. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
+	}
+
+	/**
 	 * Retrieve installed Biblestudy version as array.
 	 *
 	 * @return object Contains fields: version, versiondate, build, versionname
@@ -71,19 +84,6 @@ class JBSMBiblestudyVersion
 		$biblestudyversion->versiondate = $manifestvariable->creationDate;
 
 		return $biblestudyversion;
-	}
-
-	/**
-	 * Retrieve installed Bible Study version as string.
-	 *
-	 * @return string "X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname]"
-	 */
-	public function version()
-	{
-		$version = self::versionObject();
-
-		return '<table><tr><td><strong>' . JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY') . '</strong></td></tr><tr><td>' . JText::_('JBS_CPL_CURRENT_VERSION')
-		. ': ' . $version->version . '</td></tr><tr><td>' . JText::_('JBS_CPL_DATE') . ': ' . $version->versiondate . '</td></tr></table>';
 	}
 
 	/**

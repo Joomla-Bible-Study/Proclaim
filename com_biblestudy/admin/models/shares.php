@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -45,6 +45,32 @@ class BiblestudyModelShares extends JModelList
 			);
 		}
 		parent::__construct($config);
+	}
+
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return    mixed    An array of objects on success, false on failure.
+	 */
+	public function &getItems()
+	{
+		// Invoke the parent getItems method to get the main list
+		$items = parent::getItems();
+
+		// Convert the params field into an object, saving original in _params
+		for ($i = 0, $n = count($items); $i < $n; $i++)
+		{
+			$item = &$items[$i];
+
+			if (!isset($this->_params))
+			{
+				$params = new JRegistry;
+				$params->loadString($item->params);
+				$item->params = $params;
+			}
+		}
+
+		return $items;
 	}
 
 	/**
@@ -94,32 +120,6 @@ class BiblestudyModelShares extends JModelList
 		$id .= ':' . $this->getState('filter.published');
 
 		return parent::getStoreId($id);
-	}
-
-	/**
-	 * Method to get a list of items.
-	 *
-	 * @return    mixed    An array of objects on success, false on failure.
-	 */
-	public function &getItems()
-	{
-		// Invoke the parent getItems method to get the main list
-		$items = parent::getItems();
-
-		// Convert the params field into an object, saving original in _params
-		for ($i = 0, $n = count($items); $i < $n; $i++)
-		{
-			$item = & $items[$i];
-
-			if (!isset($this->_params))
-			{
-				$params = new JRegistry;
-				$params->loadString($item->params);
-				$item->params = $params;
-			}
-		}
-
-		return $items;
 	}
 
 	/**

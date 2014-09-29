@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -39,6 +39,27 @@ class BiblestudyModelTopics extends JModelList
 		}
 
 		parent::__construct($config);
+	}
+
+	/**
+	 * translate item entries: books, topics
+	 *
+	 * @param   array $items Items for entries
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getTranslated($items = array())
+	{
+		$translate = new JBSMTranslated;
+
+		foreach ($items as $item)
+		{
+			$item->topic_text = $translate->getTopicItemTranslated($item);
+		}
+
+		return $items;
 	}
 
 	/**
@@ -135,26 +156,5 @@ class BiblestudyModelTopics extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * translate item entries: books, topics
-	 *
-	 * @param   array $items  Items for entries
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTranslated($items = array())
-	{
-		$translate = new JBSMTranslated;
-
-		foreach ($items as $item)
-		{
-			$item->topic_text = $translate->getTopicItemTranslated($item);
-		}
-
-		return $items;
 	}
 }

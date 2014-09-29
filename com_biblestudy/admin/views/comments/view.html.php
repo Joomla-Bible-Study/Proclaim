@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,39 +21,35 @@ class BiblestudyViewComments extends JViewLegacy
 {
 
 	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 */
+	public $sidebar;
+	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
 	/**
 	 * Filter Levels
 	 *
 	 * @var string
 	 */
 	protected $f_levels;
-
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.

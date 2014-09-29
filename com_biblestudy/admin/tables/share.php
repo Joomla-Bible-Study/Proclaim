@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -46,6 +46,16 @@ class TableShare extends JTable
 	 * @var string
 	 */
 	public $params = null;
+
+	/**
+	 * Constructor
+	 *
+	 * @param   JDatabaseDriver &$db Database connector object
+	 */
+	public function TableShare(& $db)
+	{
+		parent::__construct('#__bsms_share', 'id', $db);
+	}
 
 	/**
 	 * Method to bind an associative array or object to the JTable instance.This
@@ -128,16 +138,6 @@ class TableShare extends JTable
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
-	 */
-	public function TableShare(& $db)
-	{
-		parent::__construct('#__bsms_share', 'id', $db);
 	}
 
 }

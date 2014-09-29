@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -76,7 +76,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$user        = JFactory::getUser();
 		$JBSMListing = new JBSMListing;
 
-		// @todo may think of moving this to the core helper.
 		if (BIBLESTUDY_CHECKREL)
 		{
 			$dispatcher = JEventDispatcher::getInstance();
@@ -377,6 +376,19 @@ class BiblestudyViewSermon extends JViewLegacy
 	}
 
 	/**
+	 * Display PageBrack
+	 *
+	 * @param   string $tpl ?
+	 *
+	 * @return void
+	 */
+	protected function _displayPagebreak($tpl)
+	{
+		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		parent::display($tpl);
+	}
+
+	/**
 	 * Prepares the document
 	 *
 	 * @return void
@@ -497,19 +509,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', 'noindex, nofollow');
 		}
-	}
-
-	/**
-	 * Display PageBrack
-	 *
-	 * @param   string  $tpl  ?
-	 *
-	 * @return void
-	 */
-	protected function _displayPagebreak($tpl)
-	{
-		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
-		parent::display($tpl);
 	}
 
 }

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,39 +20,35 @@ class BiblestudyViewSerie extends JViewLegacy
 {
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+	/**
 	 * Form
 	 *
 	 * @var object
 	 */
 	protected $form;
-
 	/**
 	 * Item
 	 *
 	 * @var object
 	 */
 	protected $item;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
 	/**
 	 * Admin
 	 *
 	 * @var object
 	 */
 	protected $admin;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
 
 	/**
 	 * Execute and display a template script.

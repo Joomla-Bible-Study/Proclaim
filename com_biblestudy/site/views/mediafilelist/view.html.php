@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -23,29 +23,22 @@ jimport('joomla.html.toolbar');
 class BiblestudyViewMediafilelist extends JViewLegacy
 {
 
-	/** Items @var JObject */
-	protected $items;
-
-	/** Pagination @var array */
-	protected $pagination;
-
-	/** State @var object */
-	protected $state;
-
 	/** @var  string Can Do */
 	public $canDo;
-
 	/** @var  string Media Types */
 	public $mediatypes;
-
-	/** @var  JRegistry */
-	protected $params;
-
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
-
 	/** @var  string New Link */
 	public $newlink;
+	/** Items @var JObject */
+	protected $items;
+	/** Pagination @var array */
+	protected $pagination;
+	/** State @var object */
+	protected $state;
+	/** @var  JRegistry */
+	protected $params;
 
 	/**
 	 * Execute and display a template script.

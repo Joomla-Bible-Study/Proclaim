@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,29 +20,22 @@ defined('_JEXEC') or die;
 class BiblestudyViewMigration extends JViewLegacy
 {
 
-	/** @var array The pre versions to process */
-	private $_versionStack = array();
-
 	/** @var int Total numbers of Versions */
 	public $totalVersions = 0;
-
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
-
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
-
-	/** @var array Array of SQL files to parse. */
-	private $_filesStack = array();
-
-	/** @var array Array of PHP Function to parse. */
-	private $_afterStack = array();
-
 	/** @var string More */
 	protected $more;
-
 	/** @var  string Percentage */
 	protected $percentage;
+	/** @var array The pre versions to process */
+	private $_versionStack = array();
+	/** @var array Array of SQL files to parse. */
+	private $_filesStack = array();
+	/** @var array Array of PHP Function to parse. */
+	private $_afterStack = array();
 
 	/**
 	 * Execute and display a template script.

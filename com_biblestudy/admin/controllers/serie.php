@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -31,6 +31,28 @@ class BiblestudyControllerSerie extends JControllerForm
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+	}
+
+	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object $model The model.
+	 *
+	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   1.6
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Serie', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=series' . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
 	}
 
 	/**
@@ -82,28 +104,6 @@ class BiblestudyControllerSerie extends JControllerForm
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
-	}
-
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Serie', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=series' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
 	}
 
 }

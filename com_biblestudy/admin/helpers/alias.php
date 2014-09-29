@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -69,6 +69,23 @@ class JBSMAlias
 	}
 
 	/**
+	 * Get Object's for tables
+	 *
+	 * @return array
+	 */
+	private static function getObjects()
+	{
+		$objects = array(
+			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
+			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
+			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
+			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
+		);
+
+		return $objects;
+	}
+
+	/**
 	 * Get Table fields for updating.
 	 *
 	 * @param   string $table  Table
@@ -106,23 +123,6 @@ class JBSMAlias
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Get Object's for tables
-	 *
-	 * @return array
-	 */
-	private static function getObjects()
-	{
-		$objects = array(
-			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
-			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
-			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
-			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
-		);
-
-		return $objects;
 	}
 
 }

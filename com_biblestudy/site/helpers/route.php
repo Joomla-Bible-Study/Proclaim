@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -80,36 +80,6 @@ abstract class JBSMRoute
 	}
 
 	/**
-	 * Get Teacher Route
-	 *
-	 * @param   int  $id  The route of the teacher item
-	 *
-	 * @return string
-	 */
-	public static function getTeacherRoute($id)
-	{
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
-
-		return $link;
-	}
-
-	/**
-	 * Get Series Route
-	 *
-	 * @param   int  $id  ID
-	 *
-	 * @return string
-	 */
-	public static function getSeriesRoute($id)
-	{
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
-
-		return $link;
-	}
-
-	/**
 	 * Find Item
 	 *
 	 * @param   string  $needles  ?
@@ -174,6 +144,36 @@ abstract class JBSMRoute
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get Teacher Route
+	 *
+	 * @param   int $id The route of the teacher item
+	 *
+	 * @return string
+	 */
+	public static function getTeacherRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
+
+		return $link;
+	}
+
+	/**
+	 * Get Series Route
+	 *
+	 * @param   int $id ID
+	 *
+	 * @return string
+	 */
+	public static function getSeriesRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
+
+		return $link;
 	}
 
 	/**

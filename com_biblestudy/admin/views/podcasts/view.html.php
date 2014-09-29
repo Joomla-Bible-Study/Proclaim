@@ -4,7 +4,7 @@
  * JView html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,38 +22,33 @@ class BiblestudyViewPodcasts extends JViewLegacy
 {
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+	/** @var  array Filter Levels */
+	public $f_levels;
+	/** @var  array Side Bar */
+	public $sidebar;
+	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
-
-	/** @var  array Filter Levels */
-	public $f_levels;
-
-	/** @var  array Side Bar */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.

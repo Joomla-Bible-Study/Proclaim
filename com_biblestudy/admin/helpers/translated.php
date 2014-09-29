@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,6 +24,27 @@ class JBSMTranslated
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';
+
+	/**
+	 * Translate a list of topicItems to clear text each
+	 *
+	 * @param   array $topicItems array of stdClass containing topic_text and topic_params
+	 *
+	 * @return  array  list of topicItems containing translated strings in topic_text
+	 */
+	public static function getTopicItemsTranslated($topicItems = array())
+	{
+		$output = array();
+
+		foreach ($topicItems as $topicItem)
+		{
+			$text                  = self::getTopicItemTranslated($topicItem);
+			$topicItem->topic_text = $text;
+			$output[]              = $topicItem;
+		}
+
+		return $output;
+	}
 
 	/**
 	 * Translate a topicItem to clear text
@@ -76,27 +97,6 @@ class JBSMTranslated
 		}
 
 		return (null);
-	}
-
-	/**
-	 * Translate a list of topicItems to clear text each
-	 *
-	 * @param   array  $topicItems  array of stdClass containing topic_text and topic_params
-	 *
-	 * @return  array  list of topicItems containing translated strings in topic_text
-	 */
-	public static function getTopicItemsTranslated($topicItems = array())
-	{
-		$output = array();
-
-		foreach ($topicItems as $topicItem)
-		{
-			$text                  = self::getTopicItemTranslated($topicItem);
-			$topicItem->topic_text = $text;
-			$output[]              = $topicItem;
-		}
-
-		return $output;
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,46 +21,41 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	protected $canDo;
-
-	/**
 	 * Filter Levels
 	 *
 	 * @var array
 	 */
 	public $f_levels;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var object
 	 */
 	public $sidebar;
+	/**
+	 * Items
+	 *
+	 * @var object
+	 */
+	protected $items;
+	/**
+	 * Pagination
+	 *
+	 * @var object
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	protected $canDo;
 
 	/**
 	 * Execute and display a template script.

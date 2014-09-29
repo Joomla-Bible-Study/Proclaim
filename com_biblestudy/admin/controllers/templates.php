@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -301,6 +301,26 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	}
 
 	/**
+	 * Perform DB Query
+	 *
+	 * @param   string $query Query
+	 *
+	 * @return boolean
+	 */
+	public function performDB($query)
+	{
+		$db = JFactory::getDBO();
+		$db->setQuery($query);
+
+		if (!$db->query())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Export the Template
 	 *
 	 * @return boolean
@@ -458,26 +478,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin
                         ';
 
 		return $templatereturn;
-	}
-
-	/**
-	 * Perform DB Query
-	 *
-	 * @param   string $query  Query
-	 *
-	 * @return boolean
-	 */
-	public function performDB($query)
-	{
-		$db = JFactory::getDBO();
-		$db->setQuery($query);
-
-		if (!$db->query())
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 }

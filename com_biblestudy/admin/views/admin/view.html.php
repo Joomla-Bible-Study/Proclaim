@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,151 +20,131 @@ class BiblestudyViewAdmin extends JViewLegacy
 {
 
 	/**
-	 * Form
-	 *
-	 * @var array
-	 */
-	protected $form;
-
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
-	protected $item;
-
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
-	protected $state;
-
-	/**
 	 * Version
 	 *
 	 * @var string
 	 */
 	public $version;
-
 	/**
 	 * Can Do
 	 *
 	 * @var string
 	 */
 	public $canDo;
-
 	/**
 	 * Change Set
 	 *
 	 * @var string
 	 */
 	public $changeSet;
-
 	/**
 	 * Errors
 	 *
 	 * @var string
 	 */
 	public $errors;
-
 	/**
 	 * Results
 	 *
 	 * @var string
 	 */
 	public $results;
-
 	/**
 	 * Schema Version
 	 *
 	 * @var string
 	 */
 	public $schemaVersion;
-
 	/**
 	 * Update Version
 	 *
 	 * @var string
 	 */
 	public $updateVersion;
-
 	/**
 	 * Filter Params
 	 *
 	 * @var JRegistry
 	 */
 	public $filterParams;
-
 	/**
 	 * Pagination
 	 *
 	 * @var string
 	 */
 	public $pagination;
-
 	/**
 	 * Error Count
 	 *
 	 * @var string
 	 */
 	public $errorCount;
-
 	/**
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
 	 */
 	public $jversion;
-
 	/**
 	 * Temp Destination
 	 *
 	 * @var string
 	 */
 	public $tmp_dest;
-
 	/**
 	 * Player Stats
 	 *
 	 * @var string
 	 */
 	public $playerstats;
-
 	/**
 	 * Assets
 	 *
 	 * @var string
 	 */
 	public $assets;
-
 	/**
 	 * Popups
 	 *
 	 * @var string
 	 */
 	public $popups;
-
 	/**
 	 * SS
 	 *
 	 * @var string
 	 */
 	public $ss;
-
 	/**
 	 * Lists
 	 *
 	 * @var string
 	 */
 	public $lists;
-
 	/**
 	 * PI
 	 *
 	 * @var string
 	 */
 	public $pi;
+	/**
+	 * Form
+	 *
+	 * @var array
+	 */
+	protected $form;
+	/**
+	 * Item
+	 *
+	 * @var array
+	 */
+	protected $item;
+	/**
+	 * State
+	 *
+	 * @var array
+	 */
+	protected $state;
 
 	/**
 	 * Execute and display a template script.
@@ -202,7 +182,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// End for database
 		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->getCfg('tmp_path');
+		$this->tmp_dest = $config->get('tmp_path');
 
 		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
@@ -212,7 +192,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+		$path = JPATH_SITE . '/media/com_biblestudy/database';
 
 		if (JFolder::exists($path))
 		{

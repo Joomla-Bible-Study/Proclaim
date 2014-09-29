@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -101,6 +101,18 @@ class UploadScript
 		$this->_resizeWidth   = '640';
 		$this->_resizeHeight  = '480';
 		$this->_resizeQuality = '90';
+	}
+
+	/**
+	 * Clean Comma Separated Option
+	 *
+	 * @param string $string Option to be cleaned
+	 *
+	 * @return string
+	 */
+	private function _cleanOption($string)
+	{
+		return trim($string);
 	}
 
 	/**
@@ -457,20 +469,6 @@ class UploadScript
 	{
 		return $this->_SCRIPT;
 	}
-
-	/**
-	 * Clean Comma Separated Option
-	 *
-	 * @param string $string Option to be cleaned
-	 *
-	 * @return string
-	 */
-	private function _cleanOption($string)
-	{
-		return trim($string);
-	}
-
-
 
 	public function UIScript()
 	{

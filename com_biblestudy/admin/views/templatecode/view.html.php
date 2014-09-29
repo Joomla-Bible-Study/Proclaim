@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,53 +21,47 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 {
 
 	/**
-	 * Form
-	 *
-	 * @var object
-	 */
-	protected $form;
-
-	/**
-	 * Item
-	 *
-	 * @var object
-	 */
-	protected $item;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
-	 * Defaults
-	 *
-	 * @var object
-	 */
-	protected $defaults;
-
-	/**
 	 * Default Code for the Edit if content is null
 	 *
 	 * @var string
 	 */
 	public $defaultcode;
-
 	/**
 	 * Type
 	 *
 	 * @var string
 	 */
 	public $type;
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
+	/**
+	 * Form
+	 *
+	 * @var object
+	 */
+	protected $form;
+	/**
+	 * Item
+	 *
+	 * @var object
+	 */
+	protected $item;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+	/**
+	 * Defaults
+	 *
+	 * @var object
+	 */
+	protected $defaults;
 
 	/**
 	 * Execute and display a template script.

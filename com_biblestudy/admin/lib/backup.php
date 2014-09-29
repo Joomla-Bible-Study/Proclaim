@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -30,15 +30,12 @@ class JBSMBackup
 
 	/** @var string Data cache, used to cache data before being written to disk */
 	protected $data_cache = '';
-
-	/** @var resource Filepointer to the current dump part */
-	private $_fp = null;
-
 	/** @var string Absolute path to the temp file */
 	protected $tempFile = '';
-
 	/** @var string Relative path of how the file should be saved in the archive */
 	protected $saveAsName = '';
+	/** @var resource Filepointer to the current dump part */
+	private $_fp = null;
 
 	/**
 	 * Export DB//

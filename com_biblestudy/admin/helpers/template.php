@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,21 +24,6 @@ class JBSMTemplate extends JObject
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';
-
-	/**
-	 * Tags
-	 *
-	 * @var string
-	 */
-	private $_tags;
-
-	/**
-	 *  DBO
-	 *
-	 * @var string
-	 */
-	private $_DBO;
-
 	/**
 	 * Template types
 	 *
@@ -48,6 +33,18 @@ class JBSMTemplate extends JObject
 		'tmplList'       => 'List', 'tmplListItem' => 'List Item', 'tmplSingleItem' => 'Single Item',
 		'tmplModuleList' => 'Module List', 'tmplModuleItem' => 'Module List Item', 'tmplPopup' => 'Popup Media Player'
 	);
+	/**
+	 * Tags
+	 *
+	 * @var string
+	 */
+	private $_tags;
+	/**
+	 *  DBO
+	 *
+	 * @var string
+	 */
+	private $_DBO;
 
 	/**
 	 * Builds arrays of all the possible tags.
@@ -166,6 +163,24 @@ class JBSMTemplate extends JObject
 	}
 
 	/**
+	 * Returns the template object from the database
+	 *
+	 * @param   int $id The id of the template to query
+	 *
+	 * @return Object  Row Object list
+	 */
+	public function queryTemplate($id)
+	{
+		$query = $this->_DBO->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_templates')
+			->from('id = ' . (int) $id);
+		$this->_DBO->setQuery($query);
+
+		return $this->_DBO->loadObject();
+	}
+
+	/**
 	 * Generates a drop down list of all the template types. Used in TemplateEdit View to
 	 * generate the dropdown box of template types.
 	 *
@@ -184,24 +199,6 @@ class JBSMTemplate extends JObject
 		}
 
 		return JHTML::_('select.genericlist', $i, 'type', null, 'value', 'text', $DefaultSelected);
-	}
-
-	/**
-	 * Returns the template object from the database
-	 *
-	 * @param   int $id  The id of the template to query
-	 *
-	 * @return Object  Row Object list
-	 */
-	public function queryTemplate($id)
-	{
-		$query = $this->_DBO->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_templates')
-			->from('id = ' . (int) $id);
-		$this->_DBO->setQuery($query);
-
-		return $this->_DBO->loadObject();
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,6 +21,48 @@ JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/c
  */
 class BiblestudyModelMessageform extends BiblestudyModelMessage
 {
+
+	/**
+	 * Method to get article data.
+	 *
+	 * @param   int $pk The id of the article.
+	 *
+	 * @return    mixed    Content item data object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		// Initialise variables.
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('sermon.id');
+
+		// Get a row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $table->load($pk);
+
+		// Check for a table object error.
+		if ($return === false)
+		{
+			return false;
+		}
+
+		$properties = $table->getProperties(1);
+		$value      = JArrayHelper::toObject($properties, 'JObject');
+
+		return $value;
+	}
+
+	/**
+	 * Get the return URL.
+	 *
+	 * @return    string    The return URL.
+	 *
+	 * @since    1.6
+	 */
+	public function getReturnPage()
+	{
+		return base64_encode($this->getState('return_page'));
+	}
 
 	/**
 	 * Method to auto-populate the model state.
@@ -64,49 +106,6 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
-	}
-
-	/**
-	 * Method to get article data.
-	 *
-	 * @param   int $pk  The id of the article.
-	 *
-	 * @return    mixed    Content item data object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		// Initialise variables.
-		$pk = (int) (!empty($pk)) ? $pk : $this->getState('sermon.id');
-
-		// Get a row instance.
-		$table = $this->getTable();
-
-		// Attempt to load the row.
-		$return = $table->load($pk);
-
-		// Check for a table object error.
-		if ($return === false)
-		{
-			return false;
-		}
-
-		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		return $value;
-	}
-
-
-	/**
-	 * Get the return URL.
-	 *
-	 * @return    string    The return URL.
-	 *
-	 * @since    1.6
-	 */
-	public function getReturnPage()
-	{
-		return base64_encode($this->getState('return_page'));
 	}
 
 }

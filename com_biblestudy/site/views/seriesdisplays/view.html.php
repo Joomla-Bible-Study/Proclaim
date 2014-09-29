@@ -125,6 +125,10 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$count  = count($items);
 
 		// @todo need to redo this. bcc Why? TF
+
+		/** There is a better way to do this under the query and we
+		 * should be able to work this out. this will speed up rendering.
+		 */
 		if ($count > 0)
 		{
 			for ($i = 0; $i < $count; $i++)

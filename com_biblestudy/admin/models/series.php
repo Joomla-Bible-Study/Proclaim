@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -50,6 +50,37 @@ class BiblestudyModelSeries extends JModelList
 		}
 
 		parent::__construct($config);
+	}
+
+	/**
+	 * Method to get a list of articles.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return    mixed    An array of data items on success, false on failure.
+	 *
+	 * @since    1.6.1
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+		$app   = JFactory::getApplication();
+
+		if ($app->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
 	}
 
 	/**
@@ -236,37 +267,6 @@ class BiblestudyModelSeries extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return    mixed    An array of data items on success, false on failure.
-	 *
-	 * @since    1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$app   = JFactory::getApplication();
-
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
 	}
 
 }

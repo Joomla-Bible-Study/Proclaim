@@ -2,7 +2,7 @@
 /**
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
- * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -216,6 +216,21 @@ class PlgSystemjbsbackup extends JPlugin
 	}
 
 	/**
+	 * Do the backup
+	 *
+	 * @return boolean
+	 */
+	public function doBackup()
+	{
+		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
+		include_once $path1 . 'biblestudy.backup.php';
+		$dbbackup = new JBSExport;
+		$backup   = $dbbackup->exportdb($run = 2);
+
+		return $backup;
+	}
+
+	/**
 	 * Update the time
 	 *
 	 * @return boolean
@@ -237,21 +252,6 @@ class PlgSystemjbsbackup extends JPlugin
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Do the backup
-	 *
-	 * @return boolean
-	 */
-	public function doBackup()
-	{
-		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
-		include_once $path1 . 'biblestudy.backup.php';
-		$dbbackup = new JBSExport;
-		$backup   = $dbbackup->exportdb($run = 2);
-
-		return $backup;
 	}
 
 	/**

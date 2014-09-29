@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -21,24 +21,6 @@ jimport('joomla.application.component.controlleradmin');
 
 class BiblestudyControllerStyles extends JControllerAdmin
 {
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.1.0
-	 */
-	public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
 
 	/**
 	 * Tries to fix css renaming.
@@ -85,6 +67,24 @@ class BiblestudyControllerStyles extends JControllerAdmin
 			}
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=styles');
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return JModel
+	 *
+	 * @since 7.1.0
+	 */
+	public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 
 }

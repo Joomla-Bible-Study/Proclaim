@@ -4,7 +4,7 @@
  * JView html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,53 +22,47 @@ class BiblestudyViewTemplates extends JViewLegacy
 {
 
 	/**
-	 * Items
-	 *
-	 * @var array
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	public $canDo;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	public $templates;
-
 	/**
 	 * State
 	 *
 	 * @var array
 	 */
 	public $f_levels;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	public $sidebar;
+	/**
+	 * Items
+	 *
+	 * @var array
+	 */
+	protected $items;
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
+	protected $pagination;
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
 
 	/**
 	 * Execute and display a template script.

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -70,6 +70,32 @@ class JBSExport
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get Opjects for tables
+	 *
+	 * @return array
+	 */
+	public function getObjects()
+	{
+		$db        = JFactory::getDBO();
+		$tables    = $db->getTableList();
+		$prefix    = $db->getPrefix();
+		$prelength = strlen($prefix);
+		$bsms      = 'bsms_';
+		$objects   = array();
+
+		foreach ($tables as $table)
+		{
+			if (substr_count($table, $prefix) && substr_count($table, $bsms))
+			{
+				$table     = substr_replace($table, '#__', 0, $prelength);
+				$objects[] = array('name' => $table);
+			}
+		}
+
+		return $objects;
 	}
 
 	/**
@@ -300,32 +326,6 @@ class JBSExport
 		unlink($file);
 
 		return true;
-	}
-
-	/**
-	 * Get Opjects for tables
-	 *
-	 * @return array
-	 */
-	public function getObjects()
-	{
-		$db        = JFactory::getDBO();
-		$tables    = $db->getTableList();
-		$prefix    = $db->getPrefix();
-		$prelength = strlen($prefix);
-		$bsms      = 'bsms_';
-		$objects   = array();
-
-		foreach ($tables as $table)
-		{
-			if (substr_count($table, $prefix) && substr_count($table, $bsms))
-			{
-				$table     = substr_replace($table, '#__', 0, $prelength);
-				$objects[] = array('name' => $table);
-			}
-		}
-
-		return $objects;
 	}
 
 }

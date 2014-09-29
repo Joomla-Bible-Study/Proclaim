@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -23,17 +23,16 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelUpload extends JModelAdmin
 {
     /**
+     * @var    string  The prefix to use with controller messages.
+     * @since  1.6
+     */
+	protected $text_prefix = 'COM_BIBLESTUDY';
+	/**
      * Admin
      *
      * @var string
      */
     private $_admin;
-
-    /**
-     * @var    string  The prefix to use with controller messages.
-     * @since  1.6
-     */
-    protected $text_prefix = 'COM_BIBLESTUDY';
 
     /**
      * Get the form data

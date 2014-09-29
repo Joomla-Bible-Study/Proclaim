@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -95,6 +95,29 @@ class BiblestudyModelMediafiles extends JModelList
 	}
 
 	/**
+	 * Builds a list of mediatypes (Used for the filter combo box)
+	 *
+	 * @return array Array of Objects
+	 *
+	 * @since 7.0
+	 */
+	public function getMediatypes()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('media.id AS value, media.media_text AS text');
+		$query->from('#__bsms_media AS media');
+		$query->join('INNER', '#__bsms_mediafiles AS mediafile ON mediafile.media_image = media.id');
+		$query->group('media.id');
+		$query->order('media.media_text');
+
+		$db->setQuery($query->__toString());
+
+		//return $db->loadObjectList();
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -160,29 +183,6 @@ class BiblestudyModelMediafiles extends JModelList
 		$this->setState('filter.popup', $popup);
 
 		parent::populateState('mediafile.createdate', 'DESC');
-	}
-
-	/**
-	 * Builds a list of mediatypes (Used for the filter combo box)
-	 *
-	 * @return array Array of Objects
-	 *
-	 * @since 7.0
-	 */
-	public function getMediatypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('media.id AS value, media.media_text AS text');
-		$query->from('#__bsms_media AS media');
-		$query->join('INNER', '#__bsms_mediafiles AS mediafile ON mediafile.media_image = media.id');
-		$query->group('media.id');
-		$query->order('media.media_text');
-
-		$db->setQuery($query->__toString());
-
-		//return $db->loadObjectList();
 	}
 
 	/**

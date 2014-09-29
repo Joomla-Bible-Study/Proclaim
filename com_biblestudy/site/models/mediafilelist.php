@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,6 +24,25 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 {
 
 	/**
+	 * Retrieves the data
+	 *
+	 * @return array Array of objects containing the data from the database
+	 *
+	 * @todo may not be needed.
+	 */
+	public function getData()
+	{
+		// Lets load the data if it doesn't already exist
+		if (empty($this->_data))
+		{
+			$query       = $this->_buildQuery();
+			$this->_data = $this->_getList($query, (int) $this->getState('limitstart'), (int) $this->getState('limit'));
+		}
+
+		return $this->_data;
+	}
+
+	/**
 	 * Build Query
 	 *
 	 * @return string
@@ -42,25 +61,6 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 			. $orderby;
 
 		return $query;
-	}
-
-	/**
-	 * Retrieves the data
-	 *
-	 * @return array Array of objects containing the data from the database
-	 *
-	 * @todo may not be needed.
-	 */
-	public function getData()
-	{
-		// Lets load the data if it doesn't already exist
-		if (empty($this->_data))
-		{
-			$query       = $this->_buildQuery();
-			$this->_data = $this->_getList($query, (int) $this->getState('limitstart'), (int) $this->getState('limit'));
-		}
-
-		return $this->_data;
 	}
 
 	/**

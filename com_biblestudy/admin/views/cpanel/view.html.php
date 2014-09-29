@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,39 +24,35 @@ if (!BIBLESTUDY_CHECKREL)
 class BiblestudyViewCpanel extends JViewLegacy
 {
 	/**
-	 * State
-	 *
-	 * @var string
-	 */
-	protected $state;
-
-	/**
 	 * Version
 	 *
 	 * @var string
 	 */
 	public $version;
-
 	/**
 	 * Version date
 	 *
 	 * @var string
 	 */
 	public $versiondate;
-
 	/**
 	 * Total Messages
 	 *
 	 * @var string
 	 */
 	public $total_messages;
-
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+	/**
+	 * State
+	 *
+	 * @var string
+	 */
+	protected $state;
 
 	/**
 	 * Display

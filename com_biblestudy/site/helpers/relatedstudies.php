@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -91,156 +91,6 @@ class JBSMRelatedStudies
 		$related = $this->getRelatedLinks();
 
 		return $related;
-	}
-
-	/**
-	 * Parse keys
-	 *
-	 * @param   string  $source   ?
-	 * @param   string  $compare  ?
-	 * @param   int     $id       ?
-	 *
-	 * @return boolean
-	 */
-	public function parseKeys($source, $compare, $id)
-	{
-		$sourceisarray  = false;
-		$compareisarray = false;
-		$sourcearray    = array();
-		$comparearray   = array();
-
-		if (substr_count($source, ','))
-		{
-			$sourcearray   = explode(',', $source);
-			$sourceisarray = true;
-		}
-		if (substr_count($compare, ','))
-		{
-			$comparearray   = explode(',', $compare);
-			$compareisarray = true;
-		}
-		if ($sourceisarray && $compareisarray)
-		{
-			foreach ($sourcearray as $sarray)
-			{
-				if (in_array($sarray, $comparearray))
-				{
-					$this->score[] = $id;
-				}
-			}
-		}
-		if ($sourceisarray && !$compareisarray)
-		{
-			if (in_array($compare, $sourcearray))
-			{
-				$this->score[] = $id;
-			}
-		}
-
-		if (!$sourceisarray && $compareisarray)
-		{
-			if (in_array($source, $comparearray))
-			{
-				$this->score[] = $id;
-			}
-		}
-
-		if (!$sourceisarray && !$compareisarray)
-		{
-			if (strcmp($source, $compare))
-			{
-				$this->score[] = $id;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Get Studies
-	 *
-	 * @return JObject
-	 */
-	public function getStudies()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery('true');
-		$query->select('s.id, s.params, s.access');
-		$query->from('#__bsms_studies as s');
-		$query->select('group_concat(stp.id separator ", ") AS tp_id');
-		$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
-		$query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
-		$query->group('s.id');
-		$query->where('s.published = 1');
-		$db->setQuery($query);
-		$studies = $db->loadObjectList();
-
-		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
-		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($studies);
-
-		for ($i = 0; $i < $count; $i++)
-		{
-
-			if ($studies[$i]->access > 1)
-			{
-				if (!in_array($studies[$i]->access, $groups))
-				{
-					unset($studies[$i]);
-				}
-			}
-		}
-
-		return $studies;
-	}
-
-	/**
-	 * Look for Related Links.
-	 *
-	 * @return string
-	 */
-	public function getRelatedLinks()
-	{
-		$db           = JFactory::getDBO();
-		$scored       = array_count_values($this->score);
-		$sorted       = arsort($scored);
-		$output       = array_slice($scored, 0, 20, true);
-		$links        = array();
-		$studyrecords = array();
-		$studyrecord  = '';
-
-		foreach ($output as $key => $value)
-		{
-			$links[] = $key;
-		}
-		foreach ($links as $link)
-		{
-			$query = $db->getQuery('true');
-			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
-			$query->from('#__bsms_studies as s');
-			$query->select('b.bookname');
-			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
-			$query->where('s.id = ' . $link);
-			$db->setQuery($query);
-			$studyrecords[] = $db->loadObject();
-		}
-
-		$related = '<select onchange="goTo()" id="urlList"><option value="">' . JText::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
-		$input   = new JInput;
-
-		foreach ($studyrecords as $studyrecord)
-		{
-			$related .= '<option value="'
-				. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
-				. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
-				. ' ' . $studyrecord->chapter_begin . '</option>';
-		}
-		$related .= '</select>';
-
-		$relatedlinks = '<div class="related"><form action="#">' . $related . '</form></div>';
-
-		return $relatedlinks;
 	}
 
 	/**
@@ -952,6 +802,156 @@ class JBSMRelatedStudies
 		$contentarray = explode(',', $content);
 
 		return $contentarray;
+	}
+
+	/**
+	 * Get Studies
+	 *
+	 * @return JObject
+	 */
+	public function getStudies()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery('true');
+		$query->select('s.id, s.params, s.access');
+		$query->from('#__bsms_studies as s');
+		$query->select('group_concat(stp.id separator ", ") AS tp_id');
+		$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
+		$query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
+		$query->group('s.id');
+		$query->where('s.published = 1');
+		$db->setQuery($query);
+		$studies = $db->loadObjectList();
+
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+		$user   = JFactory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
+		$count  = count($studies);
+
+		for ($i = 0; $i < $count; $i++)
+		{
+
+			if ($studies[$i]->access > 1)
+			{
+				if (!in_array($studies[$i]->access, $groups))
+				{
+					unset($studies[$i]);
+				}
+			}
+		}
+
+		return $studies;
+	}
+
+	/**
+	 * Parse keys
+	 *
+	 * @param   string $source  ?
+	 * @param   string $compare ?
+	 * @param   int    $id      ?
+	 *
+	 * @return boolean
+	 */
+	public function parseKeys($source, $compare, $id)
+	{
+		$sourceisarray  = false;
+		$compareisarray = false;
+		$sourcearray    = array();
+		$comparearray   = array();
+
+		if (substr_count($source, ','))
+		{
+			$sourcearray   = explode(',', $source);
+			$sourceisarray = true;
+		}
+		if (substr_count($compare, ','))
+		{
+			$comparearray   = explode(',', $compare);
+			$compareisarray = true;
+		}
+		if ($sourceisarray && $compareisarray)
+		{
+			foreach ($sourcearray as $sarray)
+			{
+				if (in_array($sarray, $comparearray))
+				{
+					$this->score[] = $id;
+				}
+			}
+		}
+		if ($sourceisarray && !$compareisarray)
+		{
+			if (in_array($compare, $sourcearray))
+			{
+				$this->score[] = $id;
+			}
+		}
+
+		if (!$sourceisarray && $compareisarray)
+		{
+			if (in_array($source, $comparearray))
+			{
+				$this->score[] = $id;
+			}
+		}
+
+		if (!$sourceisarray && !$compareisarray)
+		{
+			if (strcmp($source, $compare))
+			{
+				$this->score[] = $id;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Look for Related Links.
+	 *
+	 * @return string
+	 */
+	public function getRelatedLinks()
+	{
+		$db           = JFactory::getDBO();
+		$scored       = array_count_values($this->score);
+		$sorted       = arsort($scored);
+		$output       = array_slice($scored, 0, 20, true);
+		$links        = array();
+		$studyrecords = array();
+		$studyrecord  = '';
+
+		foreach ($output as $key => $value)
+		{
+			$links[] = $key;
+		}
+		foreach ($links as $link)
+		{
+			$query = $db->getQuery('true');
+			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
+			$query->from('#__bsms_studies as s');
+			$query->select('b.bookname');
+			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
+			$query->where('s.id = ' . $link);
+			$db->setQuery($query);
+			$studyrecords[] = $db->loadObject();
+		}
+
+		$related = '<select onchange="goTo()" id="urlList"><option value="">' . JText::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
+		$input   = new JInput;
+
+		foreach ($studyrecords as $studyrecord)
+		{
+			$related .= '<option value="'
+				. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
+				. ' ' . $studyrecord->chapter_begin . '</option>';
+		}
+		$related .= '</select>';
+
+		$relatedlinks = '<div class="related"><form action="#">' . $related . '</form></div>';
+
+		return $relatedlinks;
 	}
 
 }

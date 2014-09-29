@@ -3,7 +3,7 @@
  * Message JViewLegacy
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,38 +20,28 @@ defined('_JEXEC') or die;
 class BiblestudyViewMessageform extends JViewLegacy
 {
 
-	/**  Form @var array */
-	protected $form;
-
-	/** Item @var array */
-	protected $item;
-
-	/** Return Page @var string */
-	protected $return_page;
-
-	/** Return Page Item @var string */
-	protected $return_page_item;
-
-	/** State @var array */
-	protected $state;
-
-	/** Admin @var array */
-	protected $admin;
-
 	/** @var  string Media Files */
 	public $mediafiles;
-
 	/** @var  string Can Do */
 	public $canDo;
-
 	/** @var  JRegistry Params */
 	public $params;
-
 	/** @var  string User */
 	public $user;
-
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
+	/**  Form @var array */
+	protected $form;
+	/** Item @var array */
+	protected $item;
+	/** Return Page @var string */
+	protected $return_page;
+	/** Return Page Item @var string */
+	protected $return_page_item;
+	/** State @var array */
+	protected $state;
+	/** Admin @var array */
+	protected $admin;
 
 	/**
 	 * Execute and display a template script.

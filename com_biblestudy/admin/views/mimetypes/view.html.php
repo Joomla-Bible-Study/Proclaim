@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,39 +20,34 @@ defined('_JEXEC') or die;
 class BiblestudyViewMimetypes extends JViewLegacy
 {
 
+	/** @var  array Filter Levels */
+	public $f_levels;
+	/** @var  array Side Bar */
+	public $sidebar;
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
-
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
-
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	protected $canDo;
-
-	/** @var  array Filter Levels */
-	public $f_levels;
-
-	/** @var  array Side Bar */
-	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -157,16 +152,6 @@ class BiblestudyViewMimetypes extends JViewLegacy
 			JHtmlSidebar::addFilter(
 				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
 			);
 		}
 	}

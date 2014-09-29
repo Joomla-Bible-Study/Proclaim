@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -20,77 +20,53 @@ class BiblestudyViewSermons extends JViewLegacy
 {
 
 	/** @var object */
+	public $document;
+	/** @var object */
 	protected $items;
-
 	/** @var object */
 	protected $pagination;
-
 	/** @var JRegistry */
 	protected $state;
-
 	/** @var string */
 	protected $pagelinks;
-
 	/** @var string */
 	protected $limitbox;
-
 	/** @var JObject */
 	protected $admin;
-
 	/** @var JRegistry */
 	protected $params;
-
 	/** @var object */
 	protected $study;
-
 	/** @var string */
 	protected $subscribe;
-
 	/** @var string */
 	protected $series;
-
 	/** @var string */
 	protected $teachers;
-
 	/** @var string */
 	protected $messageTypes;
-
 	/** @var string */
 	protected $years;
-
 	/** @var string */
 	protected $locations;
-
 	/** @var string */
 	protected $topics;
-
 	/** @var string */
 	protected $orders;
-
 	/** @var string */
 	protected $books;
-
 	/** @var object */
 	protected $template;
-
 	/** @var string */
 	protected $order;
-
 	/** @var array */
 	protected $topic;
-
 	/** @var object */
 	protected $main;
-
 	/** @var object */
 	protected $page;
-
 	/** @var string */
 	protected $request_url;
-
-	/** @var object */
-	public $document;
-
 	/** @var int */
 	protected $limitstart;
 

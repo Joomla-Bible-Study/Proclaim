@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -39,54 +39,67 @@ class BiblestudyModelServer extends JModelAdmin
     }
 
     /**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object $record A record object.
-     *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-     *
-     * @since    1.6
-     */
-    protected function canDelete($record)
-    {
-        $user = JFactory::getUser();
-
-        return $user->authorise('core.delete', 'com_biblestudy.article.' . (int)$record->id);
-    }
-
-    /**
-     * Method to test whether a state can be edited.
-     *
-     * @param   object $record A record object.
-     *
-     * @return   boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-     *
-     * @since    1.6
-     */
-    protected function canEditState($record)
-    {
-        $user = JFactory::getUser();
-
-        // Check for existing article.
-        if (!empty($record->id)) {
-            return $user->authorise('core.edit.state', 'com_biblestudy.server.' . (int)$record->id);
-        } // Default to component settings if neither article nor category known.
-        else {
-            return parent::canEditState($record);
-        }
-    }
-
-    /**
      * Reverse look up of id to server_type
      *
      * @param $pk
      *
      * @return String
      */
-    public function getType($pk)
+	public function getType($pk)
     {
-        $item = $this->getItem($pk);
-        return $item->type;
+	    $item = $this->getItem($pk);
+
+	    return $item->type;
+    }
+
+    /**
+     * Method to get a server item.
+     *
+     * @param null $pk An optional id of the object to get
+     *
+     * @return mixed Server Server data object, false on failure
+     *
+     * @since 8.1.0
+     */
+	public function getItem($pk = null)
+    {
+	    if (!empty($this->data))
+		    return $this->data;
+
+	    $this->data = parent::getItem($pk);
+
+	    if ($this->data)
+	    {
+		    // Convert media field to array
+		    $registry          = new JRegistry($this->data->media);
+		    $this->data->media = $registry->toArray();
+
+		    // Set the type from session if available or fall back on the db value
+		    $type             = $this->getState('server.type');
+		    $this->data->type = empty($type) ? $this->data->type : $type;
+
+		    // Load server type configuration if available
+		    if ($this->data->type)
+			    $this->data->addon = $this->getConfig($this->data->type);
+        }
+
+	    return $this->data;
+    }
+
+    /**
+     * Return the configuration xml of a server
+     *
+     * @param $addon Type of server
+     *
+     * @return SimpleXMLElement
+     * @since   8.1.0
+     */
+	public function getConfig($addon)
+	{
+		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $addon . '/' . $addon . '.xml';
+		$xml  = simplexml_load_file($path);
+
+		return $xml;
     }
 
     /**
@@ -155,6 +168,46 @@ class BiblestudyModelServer extends JModelAdmin
     }
 
     /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object $record A record object.
+     *
+     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     *
+     * @since    1.6
+     */
+	protected function canDelete($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.delete', 'com_biblestudy.article.' . (int) $record->id);
+	}
+
+	/**
+	 * Method to test whether a state can be edited.
+	 *
+	 * @param   object $record A record object.
+	 *
+	 * @return   boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since    1.6
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		// Check for existing article.
+		if (!empty($record->id))
+		{
+			return $user->authorise('core.edit.state', 'com_biblestudy.server.' . (int) $record->id);
+		} // Default to component settings if neither article nor category known.
+		else
+		{
+			return parent::canEditState($record);
+		}
+	}
+
+	/**
      * Method to get the data that should be injected in the form.
      *
      * @return  array    The default data is an empty array.
@@ -188,53 +241,6 @@ class BiblestudyModelServer extends JModelAdmin
     {
         parent::cleanCache('com_biblestudy');
         parent::cleanCache('mod_biblestudy');
-    }
-
-    /**
-     * Method to get a server item.
-     *
-     * @param null $pk An optional id of the object to get
-     *
-     * @return mixed Server Server data object, false on failure
-     *
-     * @since 8.1.0
-     */
-    public function getItem($pk = null)
-    {
-        if (!empty($this->data))
-            return $this->data;
-
-        $this->data = parent::getItem($pk);
-
-        if ($this->data) {
-            // Convert media field to array
-            $registry = new JRegistry($this->data->media);
-            $this->data->media = $registry->toArray();
-
-            // Set the type from session if available or fall back on the db value
-            $type = $this->getState('server.type');
-            $this->data->type = empty($type) ? $this->data->type : $type;
-
-            // Load server type configuration if available
-            if($this->data->type)
-                $this->data->addon = $this->getConfig($this->data->type);
-        }
-        return $this->data;
-    }
-
-    /**
-     * Return the configuration xml of a server
-     *
-     * @param $addon Type of server
-     * @return SimpleXMLElement
-     * @since   8.1.0
-     */
-    public function getConfig($addon)
-    {
-        $path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $addon . '/' . $addon . '.xml';
-        $xml = simplexml_load_file($path);
-
-        return $xml;
     }
 
     /**

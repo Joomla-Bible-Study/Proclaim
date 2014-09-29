@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -75,6 +75,51 @@ class JBSMShowScripture
 	}
 
 	/**
+	 * Create Form of Reference
+	 *
+	 * @param   object $row ?
+	 *
+	 * @return string
+	 */
+	public function formReference($row)
+	{
+		$book      = JText::_($row->bookname);
+		$book      = str_replace(' ', '+', $book);
+		$book      = $book . '+';
+		$reference = $book . $row->chapter_begin;
+
+		if ($row->verse_begin)
+		{
+			$reference .= ':' . $row->verse_begin;
+		}
+		if ($row->chapter_end && $row->verse_end)
+		{
+			$reference .= '-' . $row->chapter_end . ':' . $row->verse_end;
+		}
+		if ($row->verse_end && !$row->chapter_end)
+		{
+			$reference .= '-' . $row->verse_end;
+		}
+
+		return $reference;
+	}
+
+	/**
+	 * Get Bible Gateway References
+	 *
+	 * @param   string $reference ?
+	 * @param   string $version   ?
+	 *
+	 * @return string
+	 */
+	public function getBiblegateway($reference, $version)
+	{
+		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
+
+		return $link;
+	}
+
+	/**
 	 * Get HideShow
 	 *
 	 * @param   object  $row        ?
@@ -93,6 +138,20 @@ class JBSMShowScripture
 		$passage .= '</div>';
 
 		return $passage;
+	}
+
+	/**
+	 * Only Return the Body of a html doc.
+	 *
+	 * @param   string $html Html document
+	 *
+	 * @return string
+	 *
+	 * @since 8.0.0
+	 */
+	public function body_only($html)
+	{
+		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
 	}
 
 	/**
@@ -134,65 +193,6 @@ class JBSMShowScripture
 		$passage .= '</div>';
 
 		return $passage;
-	}
-
-	/**
-	 * Create Form of Reference
-	 *
-	 * @param   object  $row  ?
-	 *
-	 * @return string
-	 */
-	public function formReference($row)
-	{
-		$book      = JText::_($row->bookname);
-		$book      = str_replace(' ', '+', $book);
-		$book      = $book . '+';
-		$reference = $book . $row->chapter_begin;
-
-		if ($row->verse_begin)
-		{
-			$reference .= ':' . $row->verse_begin;
-		}
-		if ($row->chapter_end && $row->verse_end)
-		{
-			$reference .= '-' . $row->chapter_end . ':' . $row->verse_end;
-		}
-		if ($row->verse_end && !$row->chapter_end)
-		{
-			$reference .= '-' . $row->verse_end;
-		}
-
-		return $reference;
-	}
-
-	/**
-	 * Get Bible Gateway References
-	 *
-	 * @param   string  $reference  ?
-	 * @param   string  $version    ?
-	 *
-	 * @return string
-	 */
-	public function getBiblegateway($reference, $version)
-	{
-		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
-
-		return $link;
-	}
-
-	/**
-     * Only Return the Body of a html doc.
-     *
-     * @param   string  $html  Html document
-     *
-     * @return string
-     *
-     * @since 8.0.0
-     */
-	public function body_only($html)
-	{
-		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
 	}
 
 }

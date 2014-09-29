@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,30 +20,22 @@ defined('_JEXEC') or die;
 class BiblestudyViewMediafileform extends JViewLegacy
 {
 
-	/** @var array Form */
-	protected $form;
-
-	/** @var array Item */
-	protected $item;
-
-	/** @var string Return Page */
-	protected $return_page;
-
-	/** @var array State */
-	protected $state;
-
-	/** @var array Admin */
-	protected $admin;
-
-	/** @var  JRegistry Params */
-	protected $params;
-
 	/** @var  string Upload Folder */
 	public $upload_folder;
-
 	/** @var  string Upload Folder */
 	public $upload_server;
-
+	/** @var array Form */
+	protected $form;
+	/** @var array Item */
+	protected $item;
+	/** @var string Return Page */
+	protected $return_page;
+	/** @var array State */
+	protected $state;
+	/** @var array Admin */
+	protected $admin;
+	/** @var  JRegistry Params */
+	protected $params;
 	/** @var  JRegistry Admin Params */
 	protected $admin_params;
 
