@@ -36,7 +36,9 @@ $input = $app->input;
     };
 
     Joomla.submitbutton = function (task) {
-        if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-admin'))) {
+        if (task === 'admin.cancel') {
+            Joomla.submitform(task, document.getElementById('item-admin'));
+        } else if (document.formvalidator.isValid(document.id('item-admin'))) {
             if (task === 'admin.save' || task === 'admin.apply') {
                 // Confirm thumbnail changes
                 var thumbnail_changes = [];
@@ -53,7 +55,7 @@ $input = $app->input;
                     var resize_thumbnails = confirm("You modified the default thumbnail size(s). Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
                     if (resize_thumbnails) {
                         jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1', {images: thumbnail_changes}, function (response) {
-                                jQuery('#dialog_thumbnail_resize').modal();
+                                jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
                                 var total_paths = response.total, counter = 0;
                                 var progress = 0;
                                 jQuery.each(response.paths, function () {
@@ -86,8 +88,6 @@ $input = $app->input;
                             }
                         )
                     }
-                } else {
-                    Joomla.submitform(task, document.getElementById('item-admin'));
                 }
             }
         } else {
