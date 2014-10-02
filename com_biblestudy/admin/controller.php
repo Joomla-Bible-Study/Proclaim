@@ -35,8 +35,8 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Core Display
 	 *
-	 * @param   boolean  $cachable   Cachable system
-	 * @param   boolean  $urlparams  Url params
+	 * @param   boolean $cachable  Cachable system
+	 * @param   boolean $urlparams Url params
 	 *
 	 * @return  JController        This object to support chaining.
 	 */
@@ -123,51 +123,6 @@ class BiblestudyController extends JControllerLegacy
 	}
 
 	/**
-	 * Get File List
-	 *
-	 * @return null
-	 *
-	 * @since 7.0.0
-	 */
-	public function getFileList()
-	{
-		$app      = JFactory::getApplication();
-		$server   = new JBSMServer;
-		$serverId = $app->input->get('server');
-		$folderId = $app->input->get('path');
-
-		$server = $server->getServer($serverId);
-		$folder = $server->getFolder($folderId);
-
-		$type  = $server->server_type;
-		$files = null;
-
-		switch ($type)
-		{
-			case 'ftp':
-				$ftp_server = $server->server_path;
-				$conn_id    = ftp_connect($ftp_server);
-
-				// Login with username and password
-				$ftp_user_name = $server->ftp_username;
-				$ftp_user_pass = $server->ftp_password;
-				$login_result  = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
-
-				// Get contents of the current directory
-				$files = ftp_nlist($conn_id, $folder->folderpath);
-
-				break;
-			case 'local':
-				$searchpath = JPATH_ROOT . $folder->folderpath;
-				$files      = JFolder::files($searchpath);
-				break;
-		}
-
-		// Output $contents
-		echo json_encode($files);
-	}
-
-	/**
 	 * Change Players
 	 *
 	 * @return string
@@ -243,6 +198,51 @@ class BiblestudyController extends JControllerLegacy
 		}
 
 		return $msg;
+	}
+
+	/**
+	 * Get File List
+	 *
+	 * @return null
+	 *
+	 * @since 7.0.0
+	 */
+	public function getFileList()
+	{
+		$app      = JFactory::getApplication();
+		$server   = new JBSMServer;
+		$serverId = $app->input->get('server');
+		$folderId = $app->input->get('path');
+
+		$server = $server->getServer($serverId);
+		$folder = $server->getFolder($folderId);
+
+		$type  = $server->server_type;
+		$files = null;
+
+		switch ($type)
+		{
+			case 'ftp':
+				$ftp_server = $server->server_path;
+				$conn_id    = ftp_connect($ftp_server);
+
+				// Login with username and password
+				$ftp_user_name = $server->ftp_username;
+				$ftp_user_pass = $server->ftp_password;
+				$login_result  = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+
+				// Get contents of the current directory
+				$files = ftp_nlist($conn_id, $folder->folderpath);
+
+				break;
+			case 'local':
+				$searchpath = JPATH_ROOT . $folder->folderpath;
+				$files      = JFolder::files($searchpath);
+				break;
+		}
+
+		// Output $contents
+		echo json_encode($files);
 	}
 
 	/**

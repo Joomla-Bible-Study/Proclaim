@@ -48,6 +48,32 @@ class BiblestudyModelShares extends JModelList
 	}
 
 	/**
+	 * Method to get a list of items.
+	 *
+	 * @return    mixed    An array of objects on success, false on failure.
+	 */
+	public function &getItems()
+	{
+		// Invoke the parent getItems method to get the main list
+		$items = parent::getItems();
+
+		// Convert the params field into an object, saving original in _params
+		for ($i = 0, $n = count($items); $i < $n; $i++)
+		{
+			$item = &$items[$i];
+
+			if (!isset($this->_params))
+			{
+				$params = new JRegistry;
+				$params->loadString($item->params);
+				$item->params = $params;
+			}
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Populate State
 	 *
 	 * @param   string $ordering   An optional ordering field.
@@ -94,32 +120,6 @@ class BiblestudyModelShares extends JModelList
 		$id .= ':' . $this->getState('filter.published');
 
 		return parent::getStoreId($id);
-	}
-
-	/**
-	 * Method to get a list of items.
-	 *
-	 * @return    mixed    An array of objects on success, false on failure.
-	 */
-	public function &getItems()
-	{
-		// Invoke the parent getItems method to get the main list
-		$items = parent::getItems();
-
-		// Convert the params field into an object, saving original in _params
-		for ($i = 0, $n = count($items); $i < $n; $i++)
-		{
-			$item = & $items[$i];
-
-			if (!isset($this->_params))
-			{
-				$params = new JRegistry;
-				$params->loadString($item->params);
-				$item->params = $params;
-			}
-		}
-
-		return $items;
 	}
 
 	/**

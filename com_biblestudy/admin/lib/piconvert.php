@@ -684,6 +684,85 @@ class JBSMPIconvert
 	}
 
 	/**
+	 * Get Books
+	 *
+	 * @return array
+	 */
+	private function getBooks()
+	{
+		$books = array(
+			array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
+			array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
+			array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
+			array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
+			array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
+			array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
+			array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
+			array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
+			array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
+			array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
+			array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
+			array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
+			array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
+			array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
+			array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
+			array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
+			array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
+			array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
+			array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
+			array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
+			array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
+			array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
+			array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
+			array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
+			array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
+			array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
+			array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
+			array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
+			array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
+			array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
+			array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
+			array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
+			array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
+			array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
+			array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
+			array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
+			array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
+			array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
+			array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
+			array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
+			array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
+			array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
+			array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
+			array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
+			array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
+			array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
+			array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
+			array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
+			array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
+			array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
+			array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
+			array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
+			array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
+			array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
+			array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
+			array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
+			array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
+			array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
+			array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
+			array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
+			array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
+			array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
+			array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
+			array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
+			array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
+			array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
+		);
+
+		return $books;
+	}
+
+	/**
 	 * Insert Media into BibleStudy
 	 *
 	 * @param   object $pi     ?
@@ -928,85 +1007,6 @@ class JBSMPIconvert
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Books
-	 *
-	 * @return array
-	 */
-	private function getBooks()
-	{
-		$books = array(
-			array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
-			array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
-			array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
-			array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
-			array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
-			array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
-			array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
-			array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
-			array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
-			array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
-			array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
-			array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
-			array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
-			array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
-			array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
-			array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
-			array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
-			array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
-			array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
-			array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
-			array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
-			array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
-			array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
-			array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
-			array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
-			array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
-			array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
-			array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
-			array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
-			array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
-			array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
-			array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
-			array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
-			array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
-			array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
-			array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
-			array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
-			array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
-			array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
-			array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
-			array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
-			array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
-			array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
-			array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
-			array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
-			array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
-			array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
-			array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
-			array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
-			array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
-			array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
-			array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
-			array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
-			array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
-			array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
-			array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
-			array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
-			array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
-			array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
-			array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
-			array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
-			array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
-			array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
-			array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
-			array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
-			array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
-		);
-
-		return $books;
 	}
 
 	/**

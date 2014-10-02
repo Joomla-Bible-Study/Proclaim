@@ -32,9 +32,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
+	 * @param   string $name    The table name. Optional.
+	 * @param   string $prefix  The class prefix. Optional.
+	 * @param   array  $options Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 *
@@ -46,31 +46,10 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a single record.
-	 *
-	 * @param   int $pk  The id of the primary key.
-	 *
-	 * @return    mixed    Object on success, false on failure.
-	 *
-	 * @since    1.7.0
-	 */
-	public function getItem($pk = null)
-	{
-		$item = parent::getItem($pk);
-
-		if ($item)
-		{
-			// Convert the params field to an array.
-		}
-
-		return $item;
-	}
-
-	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -106,6 +85,52 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer $pk The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
+	 * Saves data creating image thumbnails
+	 *
+	 * @param array $data
+	 *
+	 * @return bool
+	 *
+	 * @since 8.1.0
+	 */
+	public function save($data)
+	{
+		$params = JBSMParams::getAdmin()->params;
+		$input  = JFactory::getApplication()->input;
+		$data   = $input->get('jform', false, 'array');
+		$files  = $input->files->get('jform');
+
+		// If no image uploaded, just save data as usual
+		if (empty($files['image']['tmp_name']))
+		{
+			return parent::save($data);
+		}
+
+		$path = 'images/BibleStudy/teachers/' . $data['id'];
+		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_teacher_size'));
+
+		// Modify model data
+		$data['teacher_image']     = $path . '/original_' . $files['image']['name'];
+		$data['teacher_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+
+		return parent::save($data);
+	}
+
+	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return    mixed    The data for the form.
@@ -125,11 +150,31 @@ class BiblestudyModelTeacher extends JModelAdmin
 		return $data;
 	}
 
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   int $pk The id of the primary key.
+	 *
+	 * @return    mixed    Object on success, false on failure.
+	 *
+	 * @since    1.7.0
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+
+		if ($item)
+		{
+			// Convert the params field to an array.
+		}
+
+		return $item;
+	}
 
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable $table  A reference to a JTable object.
+	 * @param   JTable $table A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -167,24 +212,10 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
-	}
-
-	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -195,6 +226,4 @@ class BiblestudyModelTeacher extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
-
 }

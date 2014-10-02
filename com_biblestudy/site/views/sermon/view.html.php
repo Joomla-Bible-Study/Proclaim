@@ -376,6 +376,19 @@ class BiblestudyViewSermon extends JViewLegacy
 	}
 
 	/**
+	 * Display PageBrack
+	 *
+	 * @param   string $tpl ?
+	 *
+	 * @return void
+	 */
+	protected function _displayPagebreak($tpl)
+	{
+		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		parent::display($tpl);
+	}
+
+	/**
 	 * Prepares the document
 	 *
 	 * @return void
@@ -496,19 +509,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', 'noindex, nofollow');
 		}
-	}
-
-	/**
-	 * Display PageBrack
-	 *
-	 * @param   string  $tpl  ?
-	 *
-	 * @return void
-	 */
-	protected function _displayPagebreak($tpl)
-	{
-		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
-		parent::display($tpl);
 	}
 
 }

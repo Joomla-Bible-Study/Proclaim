@@ -23,7 +23,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since   12.2
 	 */

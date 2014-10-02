@@ -55,43 +55,26 @@ class BiblestudyControllerSermon extends JControllerForm
 	}
 
 	/**
-	 * Method override to check if you can add a new record.
+	 * Get the return URL.
 	 *
-	 * @param   array $data  An array of input data.
+	 * If a "return" variable has been passed in the request
 	 *
-	 * @return    boolean
+	 * @return    string    The return URL.
 	 *
 	 * @since    1.6
 	 */
-	protected function allowAdd($data = array())
+	protected function getReturnPage()
 	{
-		$user  = JFactory::getUser();
-		$allow = null;
+		$return = JFactory::getApplication()->input->get('return', null, 'base64');
 
-		if ($allow === null)
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			// In the absense of better information, revert to the component permissions.
-			return parent::allowAdd();
+			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
 		}
 		else
 		{
-			return $allow;
+			return base64_decode($return);
 		}
-	}
-
-	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array  $data  An array of input data.
-	 * @param   string $key   The name of the key for the primary key.
-	 *
-	 * @return  boolean
-	 *
-	 * @since    1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		return true;
 	}
 
 	/**
@@ -126,101 +109,6 @@ class BiblestudyControllerSermon extends JControllerForm
 		$result = parent::edit($key, $urlVar);
 
 		return $result;
-	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
-	 *
-	 * @return    object    The model.
-	 *
-	 * @since    1.5
-	 */
-	public function getModel($name = 'Messageform', $prefix = '', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
-	 * Gets the URL arguments to append to an item redirect.
-	 *
-	 * @param   int    $recordId  The primary key id for the item.
-	 * @param   string $urlVar    The name of the URL variable for the id.
-	 *
-	 * @return    string    The arguments to append to the redirect URL.
-	 *
-	 * @since    1.6
-	 */
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
-	{
-		$this->input = new JInput;
-
-		// Need to override the parent method completely.
-		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit');
-		$append = '';
-
-		// Setup redirect info.
-		if ($tmpl)
-		{
-			$append .= '&tmpl=' . $tmpl;
-		}
-
-		$append .= '&layout=edit';
-
-		if ($recordId)
-		{
-			$append .= '&' . $urlVar . '=' . $recordId;
-		}
-
-		$itemId = $this->input->getInt('Itemid');
-		$return = $this->getReturnPage();
-		$catId  = $this->input->getInt('catid', null, 'get');
-
-		if ($itemId)
-		{
-			$append .= '&Itemid=' . $itemId;
-		}
-
-		if ($catId)
-		{
-			$append .= '&catid=' . $catId;
-		}
-
-		if ($return)
-		{
-			$append .= '&return=' . base64_encode($return);
-		}
-
-		return $append;
-	}
-
-	/**
-	 * Get the return URL.
-	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return    string    The return URL.
-	 *
-	 * @since    1.6
-	 */
-	protected function getReturnPage()
-	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
-
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
-		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
-		}
-		else
-		{
-			return base64_decode($return);
-		}
 	}
 
 	/**
@@ -333,24 +221,22 @@ class BiblestudyControllerSermon extends JControllerForm
 
 	}
 
-
 	/**
-	 * Download system
+	 * Method to get a model object, loading it if required.
 	 *
-	 * @return null
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return    object    The model.
+	 *
+	 * @since    1.5
 	 */
-	public function download()
+	public function getModel($name = 'Messageform', $prefix = '', $config = array('ignore_request' => true))
 	{
-		$input = new JInput;
-		$task  = $input->get('task');
-		$mid   = $input->getInt('id');
+		$model = parent::getModel($name, $prefix, $config);
 
-		if ($task == 'download')
-		{
-			$downloader = new JBSMDownload;
-			$downloader->download($mid);
-			die;
-		}
+		return $model;
 	}
 
 	/**
@@ -417,6 +303,119 @@ class BiblestudyControllerSermon extends JControllerForm
 		$mail->setSubject($Subject . ' ' . $comment_livesite);
 		$mail->setBody($Body);
 		$mail->Send();
+	}
+
+	/**
+	 * Download system
+	 *
+	 * @return null
+	 */
+	public function download()
+	{
+		$input = new JInput;
+		$task  = $input->get('task');
+		$mid   = $input->getInt('id');
+
+		if ($task == 'download')
+		{
+			$downloader = new JBSMDownload;
+			$downloader->download($mid);
+			die;
+		}
+	}
+
+	/**
+	 * Method override to check if you can add a new record.
+	 *
+	 * @param   array $data An array of input data.
+	 *
+	 * @return    boolean
+	 *
+	 * @since    1.6
+	 */
+	protected function allowAdd($data = array())
+	{
+		$user  = JFactory::getUser();
+		$allow = null;
+
+		if ($allow === null)
+		{
+			// In the absense of better information, revert to the component permissions.
+			return parent::allowAdd();
+		}
+		else
+		{
+			return $allow;
+		}
+	}
+
+	/**
+	 * Method override to check if you can edit an existing record.
+	 *
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
+	 *
+	 * @return  boolean
+	 *
+	 * @since    1.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		return true;
+	}
+
+	/**
+	 * Gets the URL arguments to append to an item redirect.
+	 *
+	 * @param   int    $recordId The primary key id for the item.
+	 * @param   string $urlVar   The name of the URL variable for the id.
+	 *
+	 * @return    string    The arguments to append to the redirect URL.
+	 *
+	 * @since    1.6
+	 */
+	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
+	{
+		$this->input = new JInput;
+
+		// Need to override the parent method completely.
+		$tmpl   = $this->input->get('tmpl');
+		$layout = $this->input->get('layout', 'edit');
+		$append = '';
+
+		// Setup redirect info.
+		if ($tmpl)
+		{
+			$append .= '&tmpl=' . $tmpl;
+		}
+
+		$append .= '&layout=edit';
+
+		if ($recordId)
+		{
+			$append .= '&' . $urlVar . '=' . $recordId;
+		}
+
+		$itemId = $this->input->getInt('Itemid');
+		$return = $this->getReturnPage();
+		$catId  = $this->input->getInt('catid', null, 'get');
+
+		if ($itemId)
+		{
+			$append .= '&Itemid=' . $itemId;
+		}
+
+		if ($catId)
+		{
+			$append .= '&catid=' . $catId;
+		}
+
+		if ($return)
+		{
+			$append .= '&return=' . base64_encode($return);
+		}
+
+		return $append;
 	}
 
 }

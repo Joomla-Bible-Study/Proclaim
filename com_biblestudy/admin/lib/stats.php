@@ -454,7 +454,7 @@ class JBSMStats
 		$plays         = $db->loadObjectList();
 		$media_players = null;
 
-		if($plays)
+		if ($plays)
 		{
 			$total_players = count($plays);
 
@@ -516,7 +516,7 @@ class JBSMStats
 		$db->setQuery($query);
 		$popups            = $db->loadObjectList();
 
-		if($popups)
+		if ($popups)
 		{
 			$total_media_files = count($popups);
 

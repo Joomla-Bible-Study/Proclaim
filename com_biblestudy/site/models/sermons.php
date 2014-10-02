@@ -29,7 +29,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -396,8 +396,8 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -481,7 +481,7 @@ class BiblestudyModelSermons extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -515,14 +515,12 @@ class BiblestudyModelSermons extends JModelList
 	protected function getListQuery()
 	{
 		$user            = JFactory::getUser();
+		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$query->select(
 			$this->getState(
-				'list.select', 'study.id, ' .
-				// Use created if publish_up is 0
-				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END as publish_up, ' .
-				'study.publish_down, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
@@ -571,17 +569,12 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
 		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
-		// Filter by access level.
-		if ($access = $this->getState('filter.access'))
-		{
-			$groups = implode(',', $user->getAuthorisedViewLevels());
-			$query->where('study.access IN (' . $groups . ')')
-				->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
-		}
+		// Filter only for authorized view
+		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
+		$query->where('study.access IN (' . $groups . ')');
 
 		// Select only published studies
-		$query->where('study.published = ' . (int) '1');
-
+		$query->where('study.published = 1');
 
 		// Begin the filters for menu items
 		$params      = $this->getState('params');

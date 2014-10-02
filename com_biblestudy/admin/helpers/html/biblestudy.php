@@ -127,6 +127,167 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
+	 * Display a batch widget for the player selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+	public static function players()
+	{
+		// Create the batch selector to change the player on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_PLAYER')
+			. '::' . JText::_('JBS_MED_PLAYER_DESC') . '">',
+			JText::_('JBS_MED_PLAYER'), '</label>', '<select name="batch[player]" class="inputbox" id="batch-player">',
+			'<option value="">' . JText::_('JBS_BAT_PLAYER_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::playerlist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function playerlist()
+	{
+		$options   = array();
+		$options[] = array('value' => 100, 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
+		$options[] = array('value' => 0, 'text' => JText::_('JBS_CMN_DIRECT_LINK'));
+		$options[] = array('value' => 1, 'text' => JText::_('JBS_CMN_USE_INTERNAL_PLAYER'));
+		$options[] = array('value' => 3, 'text' => JText::_('JBS_CMN_USE_AV'));
+		$options[] = array('value' => 7, 'text' => JText::_('JBS_CMN_USE_LEGACY_PLAYER'));
+		$options[] = array('value' => 8, 'text' => JText::_('JBS_CMN_USE_EMBED_CODE'));
+		$object    = new stdClass;
+
+		foreach ($options as $key => $value)
+		{
+			$object->$key = $value;
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Display a batch widget for the player selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+	public static function link_type()
+	{
+		// Create the batch selector to change the player on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON')
+			. '::' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
+			JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'), '</label>',
+			'<select name="batch[link_type]" class="inputbox" id="batch-link_type">',
+			'<option value="">' . JText::_('JBS_BAT_DOWNLOAD_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Link_typelist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return   array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Link_typelist()
+	{
+		$options = array();
+
+		$options[] = array('value' => 0, 'text' => JText::_('JBS_MED_NO_DOWNLOAD_ICON'));
+		$options[] = array('value' => 1, 'text' => JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'));
+		$options[] = array('value' => 2, 'text' => JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON'));
+
+		$object = new stdClass;
+
+		foreach ($options as $key => $value)
+		{
+			$object->$key = $value;
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Display a batch widget for the popup selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+	public static function popup()
+	{
+		// Create the batch selector to change the popup on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_INTERNAL_POPUP')
+			. '::' . JText::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
+			JText::_('JBS_MED_POPUP'), '</label>', '<select name="batch[popup]" class="inputbox" id="batch-popup">',
+			'<option value="">' . JText::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::popuplist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function popuplist()
+	{
+		$options   = array();
+		$options[] = array('value' => 3, 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
+		$options[] = array('value' => 2, 'text' => JText::_('JBS_CMN_INLINE'));
+		$options[] = array('value' => 1, 'text' => JText::_('JBS_CMN_POPUP'));
+
+		$object = new stdClass;
+
+		foreach ($options as $key => $value)
+		{
+			$object->$key = $value;
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Display a batch widget for the player selector.
+	 *
+	 * @return  string  The necessary HTML for the widget.
+	 *
+	 * @since   2.5
+	 */
+	public static function mediatype()
+	{
+		// Create the batch selector to change the mediatype on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_IMAGE')
+			. '::' . JText::_('JBS_MED_IMAGE_DESC') . '">',
+			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
+			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
+			'<option value="">' . JText::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'), '</select>'
+		);
+
+		return implode("\n", $lines);
+	}
+
+	/**
 	 * Method to get the field options.
 	 *
 	 * @return    array    The field option objects.
@@ -159,28 +320,24 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
-	 * Method to get the field options.
+	 * Display a batch widget for the player selector.
 	 *
-	 * @return   array    The field option objects.
+	 * @return  string  The necessary HTML for the widget.
 	 *
-	 * @since    1.6
+	 * @since   2.5
 	 */
-	public static function Link_typelist()
+	public static function mimetype()
 	{
-		$options = array();
+		// Create the batch selector to change the mime type on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
+			JText::_('JBS_CMN_MIMETYPE'), '</label>',
+			'<select name="batch[mimetype]" class="inputbox" id="batch-mimetype">',
+			'<option value="">' . JText::_('JBS_BAT_MIMETYPE_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Mimetypelist(), 'value', 'text'), '</select>'
+		);
 
-		$options[] = array('value' => 0, 'text' => JText::_('JBS_MED_NO_DOWNLOAD_ICON'));
-		$options[] = array('value' => 1, 'text' => JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'));
-		$options[] = array('value' => 2, 'text' => JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON'));
-
-		$object = new stdClass;
-
-		foreach ($options as $key => $value)
-		{
-			$object->$key = $value;
-		}
-
-		return $object;
+		return implode("\n", $lines);
 	}
 
 	/**
@@ -216,117 +373,24 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
-	 * Method to get the field options.
+	 * Display a batch widget for the teacher selector.
 	 *
-	 * @return    array    The field option objects.
+	 * @return  string  The necessary HTML for the widget.
 	 *
-	 * @since    1.6
+	 * @since   2.5
 	 */
-	public static function Serieslist()
+	public static function Teacher()
 	{
-		$options = null;
-		$db      = JFactory::getDbo();
-		$query   = $db->getQuery(true);
+		// Create the batch selector to change the teacher on a selection list.
+		$lines = array(
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_TEACHER') . '::' . JText::_('JBS_BAT_TEACHER_DESC') . '">',
+			JText::_('JBS_CMN_TEACHER'), '</label>',
+			'<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
+			'<option value="">' . JText::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
+			JHtml::_('select.options', self::Teacherlist(), 'value', 'text'), '</select>'
+		);
 
-		$query->select('id As value, series_text As text');
-		$query->from('#__bsms_series AS a');
-		$query->order('a.series_text ASC');
-
-		// Get the options.
-		$db->setQuery($query);
-
-		try
-		{
-			$options = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
-		}
-
-		return $options;
-	}
-
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return    array    The field option objects.
-	 *
-	 * @since    1.6
-	 */
-	public static function Messagetypelist()
-	{
-		$options = null;
-		$db      = JFactory::getDbo();
-		$query   = $db->getQuery(true);
-
-		$query->select('id As value, message_type As text');
-		$query->from('#__bsms_message_type AS a');
-		$query->order('a.message_type ASC');
-
-		// Get the options.
-		$db->setQuery($query);
-
-		try
-		{
-			$options = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
-		}
-
-		return $options;
-	}
-
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return    array    The field option objects.
-	 *
-	 * @since    1.6
-	 */
-	public static function playerlist()
-	{
-		$options   = array();
-		$options[] = array('value' => 100, 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
-		$options[] = array('value' => 0, 'text' => JText::_('JBS_CMN_DIRECT_LINK'));
-		$options[] = array('value' => 1, 'text' => JText::_('JBS_CMN_USE_INTERNAL_PLAYER'));
-		$options[] = array('value' => 3, 'text' => JText::_('JBS_CMN_USE_AV'));
-		$options[] = array('value' => 7, 'text' => JText::_('JBS_CMN_USE_LEGACY_PLAYER'));
-		$options[] = array('value' => 8, 'text' => JText::_('JBS_CMN_USE_EMBED_CODE'));
-		$object    = new stdClass;
-
-		foreach ($options as $key => $value)
-		{
-			$object->$key = $value;
-		}
-
-		return $object;
-	}
-
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return    array    The field option objects.
-	 *
-	 * @since    1.6
-	 */
-	public static function popuplist()
-	{
-		$options   = array();
-		$options[] = array('value' => 3, 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
-		$options[] = array('value' => 2, 'text' => JText::_('JBS_CMN_INLINE'));
-		$options[] = array('value' => 1, 'text' => JText::_('JBS_CMN_POPUP'));
-
-		$object = new stdClass;
-
-		foreach ($options as $key => $value)
-		{
-			$object->$key = $value;
-		}
-
-		return $object;
+		return implode("\n", $lines);
 	}
 
 	/**
@@ -362,134 +426,6 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
-	 * Display a batch widget for the player selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function players()
-	{
-		// Create the batch selector to change the player on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_PLAYER')
-			. '::' . JText::_('JBS_MED_PLAYER_DESC') . '">',
-			JText::_('JBS_MED_PLAYER'), '</label>', '<select name="batch[player]" class="inputbox" id="batch-player">',
-			'<option value="">' . JText::_('JBS_BAT_PLAYER_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::playerlist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Display a batch widget for the player selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function link_type()
-	{
-		// Create the batch selector to change the player on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON')
-			. '::' . JText::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
-			JText::_('JBS_MED_SHOW_DOWNLOAD_ICON'), '</label>',
-			'<select name="batch[link_type]" class="inputbox" id="batch-link_type">',
-			'<option value="">' . JText::_('JBS_BAT_DOWNLOAD_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Link_typelist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Display a batch widget for the popup selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function popup()
-	{
-		// Create the batch selector to change the popup on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_MED_INTERNAL_POPUP')
-			. '::' . JText::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
-			JText::_('JBS_MED_POPUP'), '</label>', '<select name="batch[popup]" class="inputbox" id="batch-popup">',
-			'<option value="">' . JText::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::popuplist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Display a batch widget for the player selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function mediatype()
-	{
-		// Create the batch selector to change the mediatype on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_IMAGE')
-			. '::' . JText::_('JBS_MED_IMAGE_DESC') . '">',
-			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
-			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
-			'<option value="">' . JText::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Display a batch widget for the player selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function mimetype()
-	{
-		// Create the batch selector to change the mime type on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
-			JText::_('JBS_CMN_MIMETYPE'), '</label>',
-			'<select name="batch[mimetype]" class="inputbox" id="batch-mimetype">',
-			'<option value="">' . JText::_('JBS_BAT_MIMETYPE_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Mimetypelist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Display a batch widget for the teacher selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function Teacher()
-	{
-		// Create the batch selector to change the teacher on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_TEACHER') . '::' . JText::_('JBS_BAT_TEACHER_DESC') . '">',
-			JText::_('JBS_CMN_TEACHER'), '</label>',
-			'<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
-			'<option value="">' . JText::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Teacherlist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.
@@ -511,6 +447,38 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Messagetypelist()
+	{
+		$options = null;
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
+
+		$query->select('id As value, message_type As text');
+		$query->from('#__bsms_message_type AS a');
+		$query->order('a.message_type ASC');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.
@@ -529,5 +497,37 @@ abstract class JHtmlBiblestudy
 		);
 
 		return implode("\n", $lines);
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return    array    The field option objects.
+	 *
+	 * @since    1.6
+	 */
+	public static function Serieslist()
+	{
+		$options = null;
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
+
+		$query->select('id As value, series_text As text');
+		$query->from('#__bsms_series AS a');
+		$query->order('a.series_text ASC');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+		}
+
+		return $options;
 	}
 }

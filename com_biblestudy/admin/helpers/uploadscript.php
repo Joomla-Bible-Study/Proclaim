@@ -104,6 +104,18 @@ class UploadScript
 	}
 
 	/**
+	 * Clean Comma Separated Option
+	 *
+	 * @param string $string Option to be cleaned
+	 *
+	 * @return string
+	 */
+	private function _cleanOption($string)
+	{
+		return trim($string);
+	}
+
+	/**
 	 * Sets up the JavaScript code with component parameters
 	 *
 	 * @return void
@@ -457,20 +469,6 @@ class UploadScript
 	{
 		return $this->_SCRIPT;
 	}
-
-	/**
-	 * Clean Comma Separated Option
-	 *
-	 * @param string $string Option to be cleaned
-	 *
-	 * @return string
-	 */
-	private function _cleanOption($string)
-	{
-		return trim($string);
-	}
-
-
 
 	public function UIScript()
 	{

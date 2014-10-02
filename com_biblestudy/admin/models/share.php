@@ -121,6 +121,20 @@ class BiblestudyModelShare extends JModelAdmin
 	}
 
 	/**
+	 * Method to check-out a row for editing.
+	 *
+	 * @param   integer $pk The numeric id of the primary key.
+	 *
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function checkout($pk = null)
+	{
+		return $pk;
+	}
+
+	/**
 	 * Load Form Data
 	 *
 	 * @return  array    The default data is an empty array.
@@ -137,20 +151,6 @@ class BiblestudyModelShare extends JModelAdmin
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null)
-	{
-		return $pk;
 	}
 
 	/**

@@ -311,6 +311,66 @@ class JBSMPageBuilder
 	}
 
 	/**
+	 * Run Content Plugins
+	 *
+	 * @param   object $item   Item info
+	 * @param   object $params Item params
+	 *
+	 * @return object
+	 */
+	public function runContentPlugins($item, $params)
+	{
+		// We don't need offset but it is a required argument for the plugin dispatcher
+		$offset = '';
+		JPluginHelper::importPlugin('content');
+
+		// Run content plugins
+		if (version_compare(JVERSION, '3.0', 'ge'))
+		{
+			$dispatcher = JEventDispatcher::getInstance();
+		}
+		else
+		{
+			$dispatcher = JDispatcher::getInstance();
+		}
+		$dispatcher->trigger('onContentPrepare', array(
+				'com_biblestudy.sermon',
+				& $item,
+				& $params,
+				$offset
+			)
+		);
+
+		$item->event = new stdClass;
+
+		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
+				'com_biblestudy.sermon',
+				&$item,
+				&$params,
+				$offset)
+		);
+		$item->event->afterDisplayTitle = trim(implode("\n", $results));
+
+		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+				'com_biblestudy.sermon',
+				&$item,
+				&$params,
+				$offset)
+		);
+		$item->event->beforeDisplayContent = trim(implode("\n", $results));
+
+		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+				'com_biblestudy.sermon',
+				&$item,
+				&$params,
+				$offset)
+		);
+		$item->event->afterDisplayContent = trim(implode("\n", $results));
+
+		return $item;
+	}
+
+	/**
 	 * Study Builder
 	 *
 	 * @param   string     $whereitem   ?
@@ -416,65 +476,5 @@ class JBSMPageBuilder
 		$studies = $db->loadObjectList();
 
 		return $studies;
-	}
-
-	/**
-	 * Run Content Plugins
-	 *
-	 * @param   object  $item    Item info
-	 * @param   object  $params  Item params
-	 *
-	 * @return object
-	 */
-	public function runContentPlugins($item, $params)
-	{
-		// We don't need offset but it is a required argument for the plugin dispatcher
-		$offset = '';
-		JPluginHelper::importPlugin('content');
-
-		// Run content plugins
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
-		$dispatcher->trigger('onContentPrepare', array(
-				'com_biblestudy.sermon',
-				& $item,
-				& $params,
-				$offset
-			)
-		);
-
-		$item->event = new stdClass;
-
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
-			'com_biblestudy.sermon',
-			&$item,
-			&$params,
-			$offset )
-		);
-		$item->event->afterDisplayTitle = trim(implode("\n", $results));
-
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
-			'com_biblestudy.sermon',
-			&$item,
-			&$params,
-			$offset )
-		);
-		$item->event->beforeDisplayContent = trim(implode("\n", $results));
-
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
-			'com_biblestudy.sermon',
-			&$item,
-			&$params,
-			$offset )
-		);
-		$item->event->afterDisplayContent = trim(implode("\n", $results));
-
-		return $item;
 	}
 }

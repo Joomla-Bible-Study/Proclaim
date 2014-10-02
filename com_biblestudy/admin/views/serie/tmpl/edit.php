@@ -39,7 +39,7 @@ $input = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">
@@ -59,9 +59,6 @@ $input = $app->input;
 					<fieldset class="adminform">
 						<div class="control-group form-inline">
 							<?php echo $this->form->getLabel('series_text'); ?> <?php echo $this->form->getInput('series_text'); ?>
-						</div>
-						<div class="control-group  form-inline">
-							<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
 						</div>
 						<?php echo $this->form->getInput('description'); ?>
 					</fieldset>
@@ -105,13 +102,11 @@ $input = $app->input;
 							</div>
 							<div class="control-group">
 								<div class="control-label">
-									<?php echo $this->form->getLabel('series_thumbnail'); ?>
+									<?php echo $this->form->getLabel('image'); ?>
+									<?php echo $this->form->getInput('image'); ?>
 								</div>
 								<div class="controls">
-									<?php
-									// series_text is required; fill in default if empty and leave value otherwise
-									echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_text) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail);
-									?>
+									<img src="<?php echo JURI::root() . $this->item->series_thumbnail; ?>"/>
 								</div>
 							</div>
 						</div>
@@ -166,4 +161,6 @@ $input = $app->input;
 		</div>
 		<!-- End Sidebar -->
 	</div>
+	<?php echo $this->form->getInput('series_thumbnail'); ?>
+	<?php echo $this->form->getInput('id'); ?>
 </form>

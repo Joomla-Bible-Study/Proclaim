@@ -94,57 +94,6 @@ class TableTopic extends JTable
 	}
 
 	/**
-	 * Method to compute the default name of the asset.
-	 * The default name is in the form `table_name.id`
-	 * where id is the value of the primary key of the table.
-	 *
-	 * @return      string
-	 *
-	 * @since       1.6
-	 */
-	protected function _getAssetName()
-	{
-		$k = $this->_tbl_key;
-
-		return 'com_biblestudy.topic.' . (int) $this->$k;
-	}
-
-	/**
-	 * Method to return the title to use for the asset table.
-	 *
-	 * @return      string
-	 *
-	 * @since       1.6
-	 */
-	protected function _getAssetTitle()
-	{
-		$title = 'JBS Topic: ' . $this->topic_text;
-
-		return $title;
-	}
-
-	/**
-	 * Method to get the parent asset under which to register this one.
-	 * By default, all assets are registered to the ROOT node with ID 1.
-	 * The extended class can define a table and id to lookup.  If the
-	 * asset does not exist it will be created.
-	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
-	 *
-	 * @return  integer
-	 *
-	 * @since   11.1
-	 */
-	protected function _getAssetParentId($table = null, $id = null)
-	{
-		$asset = JTable::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
-
-		return $asset->id;
-	}
-
-	/**
 	 * Overloaded load function
 	 *
 	 * @param   mixed   $keys          An optional primary key value to load the row by, or an array of fields to match.  If not
@@ -219,6 +168,57 @@ class TableTopic extends JTable
 		$data['topic_text'] = $topic;
 
 		return $data;
+	}
+
+	/**
+	 * Method to compute the default name of the asset.
+	 * The default name is in the form `table_name.id`
+	 * where id is the value of the primary key of the table.
+	 *
+	 * @return      string
+	 *
+	 * @since       1.6
+	 */
+	protected function _getAssetName()
+	{
+		$k = $this->_tbl_key;
+
+		return 'com_biblestudy.topic.' . (int) $this->$k;
+	}
+
+	/**
+	 * Method to return the title to use for the asset table.
+	 *
+	 * @return      string
+	 *
+	 * @since       1.6
+	 */
+	protected function _getAssetTitle()
+	{
+		$title = 'JBS Topic: ' . $this->topic_text;
+
+		return $title;
+	}
+
+	/**
+	 * Method to get the parent asset under which to register this one.
+	 * By default, all assets are registered to the ROOT node with ID 1.
+	 * The extended class can define a table and id to lookup.  If the
+	 * asset does not exist it will be created.
+	 *
+	 * @param   JTable  $table A JTable object for the asset parent.
+	 * @param   integer $id    Id to look up
+	 *
+	 * @return  integer
+	 *
+	 * @since   11.1
+	 */
+	protected function _getAssetParentId($table = null, $id = null)
+	{
+		$asset = JTable::getInstance('Asset');
+		$asset->loadByName('com_biblestudy');
+
+		return $asset->id;
 	}
 
 }

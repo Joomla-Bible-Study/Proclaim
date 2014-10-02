@@ -45,7 +45,7 @@ $input = $app->input;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 <div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
@@ -53,7 +53,6 @@ $input = $app->input;
 <ul class="nav nav-tabs">
 	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
 	<li><a href="#information" data-toggle="tab"><?php echo JText::_('JBS_TCH_INFO'); ?></a></li>
-	<li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_TCH_IMAGES'); ?></a></li>
 	<li><a href="#links" data-toggle="tab"><?php echo JText::_('JBS_TCH_LINKS'); ?></a></li>
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
@@ -160,40 +159,6 @@ $input = $app->input;
 		</div>
 	</div>
 </div>
-<div class="tab-pane" id="images">
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('teacher_image'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('teacher_image'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('teacher_thumbnail'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('teacher_thumbnail'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('image'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('image'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('thumb'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('thumb'); ?>
-		</div>
-	</div>
-</div>
 <div class="tab-pane" id="links">
 	<div class="control-group">
 		<div class="control-label">
@@ -294,21 +259,18 @@ $input = $app->input;
 
 <!-- Begin Sidebar -->
 <div class="span2 form-vertical">
-	<h4><?php echo JText::_('JDETAILS'); ?></h4>
-	<hr/>
-	<div class="control-group">
-		<div class="control-group">
-			<div class="controls">
+	<div class="row">
+		<div class="thumbnail">
+			<img src="<?php echo JURI::root() . $this->item->teacher_thumbnail; ?>"/>
+
+			<h3 class="text-center">
 				<?php echo $this->form->getValue('teachername'); ?>
-			</div>
-		</div>
-		<div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
+			</h3>
+			<?php echo $this->form->getLabel('image'); ?>
+			<?php echo $this->form->getInput('image'); ?>
 		</div>
 	</div>
+	<hr/>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('published'); ?>
@@ -351,5 +313,6 @@ $input = $app->input;
 	</div>
 </div>
 <!-- End Sidebar -->
-
+<?php echo $this->form->getInput('id'); ?>
+<?php echo $this->form->getInput('teacher_image'); ?>
 </form>

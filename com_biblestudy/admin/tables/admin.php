@@ -97,6 +97,16 @@ class TableAdmin extends JTable
 	public $drop_tables = null;
 
 	/**
+	 * Constructor
+	 *
+	 * @param   JDatabaseDriver &$db Database connector object
+	 */
+	public function TableAdmin(& $db)
+	{
+		parent::__construct('#__bsms_admin', 'id', $db);
+	}
+
+	/**
 	 * Method to bind an associative array or object to the JTable instance.This
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
@@ -150,16 +160,6 @@ class TableAdmin extends JTable
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
-	 */
-	public function TableAdmin(& $db)
-	{
-		parent::__construct('#__bsms_admin', 'id', $db);
 	}
 
 	/**

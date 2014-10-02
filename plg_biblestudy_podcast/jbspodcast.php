@@ -225,6 +225,19 @@ class PlgSystemJbspodcast extends JPlugin
 	}
 
 	/**
+	 * Do Podcast
+	 *
+	 * @return object
+	 */
+	public function doPodcast()
+	{
+		$podcasts = new JBSMPodcast;
+		$result   = $podcasts->makePodcasts();
+
+		return $result;
+	}
+
+	/**
 	 * Update Time
 	 *
 	 * @return boolean
@@ -246,19 +259,6 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Do Podcast
-	 *
-	 * @return object
-	 */
-	public function doPodcast()
-	{
-		$podcasts = new JBSMPodcast;
-		$result   = $podcasts->makePodcasts();
-
-		return $result;
 	}
 
 	/**

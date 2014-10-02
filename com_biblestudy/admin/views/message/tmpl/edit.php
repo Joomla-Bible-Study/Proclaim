@@ -40,7 +40,7 @@ $input = $app->input;
 </script>
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="item-form" class="form-validate">
+	method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 <div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
@@ -193,6 +193,17 @@ $input = $app->input;
 </div>
 
 <div class="tab-pane" id="info">
+	<div class="row-fluid">
+		<div class="span3">
+			<?php echo $this->form->getLabel('image'); ?>
+			<?php echo $this->form->getInput('image'); ?>
+		</div>
+		<div class="span9">
+			<div class="thumbnail">
+				<img src="<?php echo JURI::root() . $this->item->thumbnailm; ?>"/>
+			</div>
+		</div>
+	</div>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('media_hours'); ?>
@@ -458,7 +469,6 @@ foreach ($params as $name => $fieldSet): ?>
 
 	</div>
 <?php endif; ?>
-<input type="hidden" name="task" value=""/>
 <?php echo JHtml::_('form.token'); ?>
 </div>
 </div>
@@ -513,14 +523,9 @@ foreach ($params as $name => $fieldSet): ?>
 			<?php echo $this->form->getInput('language'); ?>
 		</div>
 	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-		</div>
-	</div>
 </div>
 <!-- End Sidebar -->
+<?php echo $this->form->getInput('thumbnailm'); ?>
+<?php echo $this->form->getInput('id'); ?>
+<input type="hidden" name="task" value=""/>
 </form>

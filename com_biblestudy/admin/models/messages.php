@@ -92,36 +92,6 @@ class BiblestudyModelMessages extends JModelList
 	}
 
 	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string $id  A prefix for the store id.
-	 *
-	 * @return  string  A store id.
-	 *
-	 * @since   7.1.0
-	 */
-	protected function getStoreId($id = '')
-	{
-
-		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.studytitle');
-		$id .= ':' . $this->getState('filter.book');
-		$id .= ':' . $this->getState('filter.teacher');
-		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.messagetype');
-		$id .= ':' . $this->getState('filter.year');
-		$id .= ':' . $this->getState('filter.published');
-		$id .= ':' . $this->getState('filter.language');
-
-		return parent::getStoreId($id);
-	}
-
-	/**
 	 * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
 	 * It then adds to the dataObject the mediafiles associated with the sermon.
 	 *
@@ -148,6 +118,228 @@ class BiblestudyModelMessages extends JModelList
 		$this->_files = $mediaFiles;
 
 		return $this->_files;
+	}
+
+	/**
+	 * Translate item entries: books, topics
+	 *
+	 * @param   array $items Items for entries
+	 *
+	 * @since 7.0
+	 * @return object
+	 */
+	public function getTranslated($items = array())
+	{
+		$translate = new JBSMTranslated;
+
+		foreach ($items as $item)
+		{
+			$item->bookname = JText::_($item->bookname);
+
+			// $item->topic_text = $translate->getTopicItemTranslated($item);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Get a list of all used books
+	 *
+	 * @since 7.0
+	 * @return mixed
+	 */
+	public function getBooks()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
+		$query->from('#__bsms_books AS book');
+		$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
+		$query->group('book.id');
+		$query->order('book.booknumber');
+		$db->setQuery($query->__toString());
+		$db_result = $db->loadAssocList();
+
+		foreach ($db_result as $i => $value)
+		{
+			$db_result[$i]['text'] = JText::_($value['text']);
+		}
+
+		return $db_result;
+	}
+
+	/**
+	 * Get a list of all used teachers
+	 *
+	 * @since 7.0
+	 * @return object
+	 */
+	public function getTeachers()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('teacher.id AS value, teacher.teachername AS text');
+		$query->from('#__bsms_teachers AS teacher');
+		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
+		$query->group('teacher.id');
+		$query->order('teacher.teachername');
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get a list of all used series
+	 *
+	 * @since 7.0
+	 * @return object
+	 */
+	public function getSeries()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('series.id AS value, series.series_text AS text');
+		$query->from('#__bsms_series AS series');
+		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
+		$query->group('series.id');
+		$query->order('series.series_text');
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get a list of all used message types
+	 *
+	 * @since 7.0
+	 * @return object
+	 */
+	public function getMessageTypes()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('messageType.id AS value, messageType.message_type AS text');
+		$query->from('#__bsms_message_type AS messageType');
+		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
+		$query->group('messageType.id');
+		$query->order('messageType.message_type');
+		$db->setQuery($query->__toString());
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * get a list of all used years
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getYears()
+	{
+		// Create a new query object.
+		$db    = $this->getDBO();
+		$query = $db->getQuery(true);
+
+		// Construct the query
+		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
+		$query->from('#__bsms_studies');
+		$query->order('value');
+
+		// Setup the query
+		$db->setQuery($query->__toString());
+
+		// Return the result
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get the number of plays of this study
+	 *
+	 * @param   int $id ID for plays
+	 *
+	 * @since 7.0
+	 * @return array
+	 */
+	public function getPlays($id)
+	{
+		// Create a new query object.
+		$db    = $this->getDBO();
+		$query = $db->getQuery(true);
+
+		// Construct the query
+		$query->select('SUM(plays) AS totalPlays');
+		$query->from('#__bsms_mediafiles');
+		$query->group('study_id');
+		$query->where('study_id = ' . $id);
+
+		// Setup the query
+//		$db->setQuery($query->__toString());
+
+		// Return the result
+		return $db->loadResult();
+	}
+
+	/**
+	 * Method to get a list of articles.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return    mixed    An array of data items on success, false on failure.
+	 *
+	 * @since    1.6.1
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+		$app   = JFactory::getApplication();
+
+		if ($app->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string $id A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   7.1.0
+	 */
+	protected function getStoreId($id = '')
+	{
+
+		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . $this->getState('filter.studytitle');
+		$id .= ':' . $this->getState('filter.book');
+		$id .= ':' . $this->getState('filter.teacher');
+		$id .= ':' . $this->getState('filter.series');
+		$id .= ':' . $this->getState('filter.messagetype');
+		$id .= ':' . $this->getState('filter.year');
+		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.language');
+
+		return parent::getStoreId($id);
 	}
 
 	/**
@@ -382,198 +574,6 @@ class BiblestudyModelMessages extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * Translate item entries: books, topics
-	 *
-	 * @param   array $items  Items for entries
-	 *
-	 * @since 7.0
-	 * @return object
-	 */
-	public function getTranslated($items = array())
-	{
-		$translate = new JBSMTranslated;
-
-		foreach ($items as $item)
-		{
-			$item->bookname = JText::_($item->bookname);
-
-			// $item->topic_text = $translate->getTopicItemTranslated($item);
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Get a list of all used books
-	 *
-	 * @since 7.0
-	 * @return mixed
-	 */
-	public function getBooks()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
-		$query->from('#__bsms_books AS book');
-		$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-		$query->group('book.id');
-		$query->order('book.booknumber');
-		$db->setQuery($query->__toString());
-		$db_result = $db->loadAssocList();
-
-		foreach ($db_result as $i => $value)
-		{
-			$db_result[$i]['text'] = JText::_($value['text']);
-		}
-
-		return $db_result;
-	}
-
-	/**
-	 * Get a list of all used teachers
-	 *
-	 * @since 7.0
-	 * @return object
-	 */
-	public function getTeachers()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-		$query->select('teacher.id AS value, teacher.teachername AS text');
-		$query->from('#__bsms_teachers AS teacher');
-		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
-		$query->group('teacher.id');
-		$query->order('teacher.teachername');
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used series
-	 *
-	 * @since 7.0
-	 * @return object
-	 */
-	public function getSeries()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-		$query->select('series.id AS value, series.series_text AS text');
-		$query->from('#__bsms_series AS series');
-		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-		$query->group('series.id');
-		$query->order('series.series_text');
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used message types
-	 *
-	 * @since 7.0
-	 * @return object
-	 */
-	public function getMessageTypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-		$query->select('messageType.id AS value, messageType.message_type AS text');
-		$query->from('#__bsms_message_type AS messageType');
-		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-		$query->group('messageType.id');
-		$query->order('messageType.message_type');
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * get a list of all used years
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getYears()
-	{
-		// Create a new query object.
-		$db    = $this->getDBO();
-		$query = $db->getQuery(true);
-
-		// Construct the query
-		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
-		$query->from('#__bsms_studies');
-		$query->order('value');
-
-		// Setup the query
-		$db->setQuery($query->__toString());
-
-		// Return the result
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get the number of plays of this study
-	 *
-	 * @param   int $id  ID for plays
-	 *
-	 * @since 7.0
-	 * @return array
-	 */
-	public function getPlays($id)
-	{
-		// Create a new query object.
-		$db    = $this->getDBO();
-		$query = $db->getQuery(true);
-
-		// Construct the query
-		$query->select('SUM(plays) AS totalPlays');
-		$query->from('#__bsms_mediafiles');
-		$query->group('study_id');
-		$query->where('study_id = ' . $id);
-
-		// Setup the query
-//		$db->setQuery($query->__toString());
-
-		// Return the result
-		return $db->loadResult();
-	}
-
-	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return    mixed    An array of data items on success, false on failure.
-	 *
-	 * @since    1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$app   = JFactory::getApplication();
-
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
 	}
 
 }

@@ -32,27 +32,6 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 	}
 
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string $name    The name of the model
-	 * @param   string $prefix  The prefix for the PHP class name
-	 * @param   array  $config  Set ignore request
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.0
-	 */
-	public function &getModel(
-		$name = 'Mediafile',
-		$prefix = 'BiblestudyModel',
-		$config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *
 	 * @return    void
@@ -82,5 +61,26 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 
 		// Close the application
 		JFactory::getApplication()->close();
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string $name   The name of the model
+	 * @param   string $prefix The prefix for the PHP class name
+	 * @param   array  $config Set ignore request
+	 *
+	 * @return JModel
+	 *
+	 * @since 7.0
+	 */
+	public function &getModel(
+		$name = 'Mediafile',
+		$prefix = 'BiblestudyModel',
+		$config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }
