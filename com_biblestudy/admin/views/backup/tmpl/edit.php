@@ -7,10 +7,28 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+JHtml::_('jquery.framework');
+
+if (BIBLESTUDY_CHECKREL)
+{
+	JHtml::_('formbehavior.chosen', 'select');
+}
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-backup">
+<script type="text/javascript">
+	Joomla.submitbutton = function (task) {
+		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-backup'))) {
+			Joomla.submitform(task, document.getElementById('item-backup'));
+		} else {
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+		}
+	}
+</script>
+<form action="index.php" method="post" name="adminForm" id="item-backup">
 	<div class="row-fluid">
 		<div class="span10 form-horizontal">
 			<h3><?php echo JText::_('JBS_CMN_EXPORT'); ?></h3>
@@ -71,6 +89,5 @@ defined('_JEXEC') or die;
 		</div>
 	</div>
 	<input type="hidden" name="option" value="com_biblestudy"/>
-	<input type="hidden" name="task" value="admin.import"/>
 	<input type="hidden" name="controller" value="admin"/>
 </form>

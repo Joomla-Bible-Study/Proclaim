@@ -34,8 +34,7 @@ if ($msg)
 }
 ?>
 <!-- Header -->
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=cpanel'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="row-fluid">
 <div id="j-sidebar-container" class="span2">
 	<div id="fbheader">

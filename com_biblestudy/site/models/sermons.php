@@ -519,9 +519,9 @@ class BiblestudyModelSermons extends JModelList
 		$query           = $db->getQuery(true);
 		$query->select(
 			$this->getState(
-				'list.select', 'study.id,' .
+				'list.select', 'study.id, ' .
 				// Use created if publish_up is 0
-				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.created ELSE study.publish_up END as publish_up,' .
+				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END as publish_up, ' .
 				'study.publish_down, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
@@ -529,24 +529,6 @@ class BiblestudyModelSermons extends JModelList
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
 		                study.verse_end2, study.verse_begin2 ') . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
-
-		// Process an Archived Article layout
-		if ($this->getState('filter.published') == 2)
-		{
-			// If badcats is not null, this means that the article is inside an archived category
-			// In this case, the state is set to 2 to indicate Archived (even if the article state is Published)
-			$query->select($this->getState('list.select', 'CASE WHEN badcats.id is null THEN study.publish ELSE 2 END AS publish'));
-		}
-		else
-		{
-			/*
-			Process non-archived layout
-			If badcats is not null, this means that the article is inside an unpublished category
-			In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
-			*/
-			$query->select($this->getState('list.select', 'CASE WHEN badcats.id is not null THEN 0 ELSE study.publish END AS publish'));
-		}
-
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -598,8 +580,7 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		// Select only published studies
-		$published = $this->getState('filter.published', '1');
-		$query->where('study.published = ' . (int) $published);
+		$query->where('study.published = ' . (int) '1');
 
 
 		// Begin the filters for menu items

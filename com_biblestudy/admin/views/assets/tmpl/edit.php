@@ -10,14 +10,23 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+JHtml::_('jquery.framework');
+
+if (BIBLESTUDY_CHECKREL)
+{
+	JHtml::_('formbehavior.chosen', 'select');
+}
 ?>
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm" id="item-assets">
+<form action="index.php" method="post" name="adminForm" id="item-assets">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
 
 			<div class="span2">
-				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.checkassets') ?>"><img
+				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.checkassets') ?>"><img
 						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
 						alt="Check Assets" height="48" width="48" style="clear: right"/>
 
@@ -25,7 +34,7 @@ defined('_JEXEC') or die;
 				</a>
 			</div>
 			<div class="span2">
-				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&amp;view=admin&layout=edit&id=1&task=admin.fixAssets') ?>"><img
+				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.fixAssets') ?>"><img
 						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
 						alt="Fix Assets" height="48" width="48"/>
 

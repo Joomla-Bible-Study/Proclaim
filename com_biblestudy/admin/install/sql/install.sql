@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS `#__bsms_install`;
-
 DROP TABLE IF EXISTS `#__bsms_update`;
 
 CREATE TABLE IF NOT EXISTS `#__bsms_update` (

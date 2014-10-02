@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 ?>
 <div id="installer-database">
-	<form action="index.php" method="post" name="adminForm" id="item-database" enctype="multipart/form-data">
+	<form action="index.php" method="post" name="adminForm" id="item-database">
 		<div id="j-main-container">
 			<?php if ($this->errorCount === 0) : ?>
 			<div class="alert alert-info">

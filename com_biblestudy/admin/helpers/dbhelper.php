@@ -53,30 +53,6 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Discover the fields in a table
-	 *
-	 * @param   string  $table  Is the table you are checking
-	 * @param   string  $field  Checking against.
-	 *
-	 * @return boolean false equals field does not exist
-	 */
-	public static function checkTables($table, $field)
-	{
-		$db     = JFactory::getDBO();
-		$fields = $db->getTableColumns($table, 'false');
-
-		if ($fields)
-		{
-			if (array_key_exists($field, $fields) === true)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
@@ -164,6 +140,30 @@ class JBSMDbHelper
 		}
 
 		return true;
+	}
+
+	/**
+	 * Discover the fields in a table
+	 *
+	 * @param   string $table Is the table you are checking
+	 * @param   string $field Checking against.
+	 *
+	 * @return boolean false equals field does not exist
+	 */
+	public static function checkTables($table, $field)
+	{
+		$db     = JFactory::getDBO();
+		$fields = $db->getTableColumns($table, 'false');
+
+		if ($fields)
+		{
+			if (array_key_exists($field, $fields) === true)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -466,7 +466,7 @@ class JBSMDbHelper
 				{
 					$db->setQuery($query);
 
-					if (!$db->execute())
+					if (!$db->query())
 					{
 						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 

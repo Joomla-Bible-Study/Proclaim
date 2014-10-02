@@ -52,27 +52,50 @@ $input = $app->input;
 <!-- Begin Content -->
 <div class="span12 form-horizontal">
 <ul class="nav nav-tabs">
-	<li class="active"><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
+	<li class="active"><a href="#cpanl" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_CPANL'); ?></a></li>
+	<li><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
 	<li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
 	<li><a href="#playersettings" data-toggle="tab"><?php echo JText::_('JBS_ADM_PLAYER_SETTINGS'); ?></a></li>
 	<li><a href="#jwplayer" data-toggle="tab"><?php echo JText::_('JBS_ADM_JWPLAYER'); ?></a></li>
-	<li><a href="#assets" data-toggle="tab"><?php echo JText::_('JBS_ADM_DB'); ?></a></li>
-	<li><a href="#backup" data-toggle="tab"><?php echo JText::_('JBS_IBM_BACKUP'); ?></a></li>
-	<?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1)
-	{
-		?>
-		<li><a href="#migrationsys" data-toggle="tab"><?php echo JText::_('JBS_IBM_MIGRATE'); ?></a></li>
-	<?php
-	}
-	?>
-	<li><a href="#database" data-toggle="tab"><?php echo JText::_('JBS_ADM_DATABASE'); ?></a></li>
 	<li><a href="#convert" data-toggle="tab"><?php echo JText::_('JBS_IBM_CONVERT'); ?></a></li>
 </ul>
 
 <div class="tab-content">
 
 <!-- Begin Tabs -->
-<div class="tab-pane active" id="admin">
+<div class="tab-pane active" id="cpanl">
+	<div id="cpanel" style="padding-left: 20px">
+		<div style="float:left;">
+			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
+			                     style="text-decoration:none;"
+			                     title="Assets Check"> <img
+						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
+						border="0"/> <span> Assets Check </span></a></div>
+		</div>
+		<div style="float:left;">
+			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>"
+			                     style="text-decoration:none;"
+			                     title="Database Check"> <img
+						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
+						border="0"/> <span> Database Check </span></a></div>
+		</div>
+		<div style="float:left;">
+			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+			                     style="text-decoration:none;"
+			                     title="Migrate"> <img
+						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
+						border="0"/> <span> Migrate </span></a></div>
+		</div>
+		<div style="float:left;">
+			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
+			                     style="text-decoration:none;"
+			                     title="Backup / Restor"> <img
+						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
+						border="0"/> <span> Backup / Restor </span></a></div>
+		</div>
+	</div>
+</div>
+<div class="tab-pane" id="admin">
 	<h4><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h4>
 
 	<div class="control-group">
@@ -340,23 +363,6 @@ $input = $app->input;
 </div>
 <div class="tab-pane" id="jwplayer">
 	<?php echo $this->loadTemplate('jwplayer'); ?>
-</div>
-<div class="tab-pane" id="assets">
-	<?php echo $this->loadTemplate('assets'); ?>
-</div>
-<div class="tab-pane" id="backup">
-	<?php echo $this->loadTemplate('backup'); ?>
-</div>
-<?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1)
-{
-	?>
-	<div class="tab-pane" id="migrationsys">
-		<?php echo $this->loadTemplate('migrate'); ?>
-	</div>
-<?php
-} ?>
-<div class="tab-pane" id="database">
-	<?php echo $this->loadTemplate('database'); ?>
 </div>
 <div class="tab-pane" id="convert">
 	<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>

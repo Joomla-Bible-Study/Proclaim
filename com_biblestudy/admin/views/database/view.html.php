@@ -2,10 +2,10 @@
 /**
  * View html
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class BiblestudyViewAdmin extends JViewLegacy
+class BiblestudyViewDataBase extends JViewLegacy
 {
 
 	/**
@@ -149,7 +149,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -158,6 +158,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		$model = JModel::getInstance('Admin', 'BiblestudyModel');
+		$this->setModel($model, true);
+
 		$language = JFactory::getLanguage();
 		$language->load('com_installer');
 
@@ -181,70 +184,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->jversion      = $this->get('CompVersion');
 
 		// End for database
-		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->get('tmp_path');
-
-		$stats             = new JBSMStats;
-		$this->playerstats = $stats->players();
-		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
-		$popups            = $stats->popups();
-		$this->popups      = $popups;
-
-		// Get the list of backup files
-		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/database';
-
-		if (JFolder::exists($path))
-		{
-			if (!$files = JFolder::files($path, '.sql'))
-			{
-				$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
-			}
-			else
-			{
-				asort($files, SORT_STRING);
-				$filelist = array();
-
-				foreach ($files as $value)
-				{
-					$filelisttemp = array('value' => $value, 'text' => $value);
-					$filelist[]   = $filelisttemp;
-				}
-
-				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_IBM_SELECT_DB'));
-				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
-			}
-		}
-		else
-		{
-			$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
-		}
-
-		// Check for SermonSpeaker and PreachIt
-		$extensions = $this->get('SSorPI');
-
-		foreach ($extensions as $extension)
-		{
-			if ($extension->element == 'com_sermonspeaker')
-			{
-				$this->ss = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertSermonSpeaker">'
-					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
-			}
-			else
-			{
-				$this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
-			}
-			if ($extension->element == 'com_preachit')
-			{
-				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'
-					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
-			}
-			else
-			{
-				$this->pi = JText::_('JBS_IBM_NO_PREACHIT_FOUND');
-			}
-		}
+		$config = JFactory::getApplication();
 
 		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
@@ -288,13 +228,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolBarHelper::divider();
-		JToolBarHelper::save('admin.save');
-		JToolBarHelper::apply('admin.apply');
-		JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
+		JToolBarHelper::custom('admin.back', 'back', 'back', 'Back', false);
 		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
-		JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
-		JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
+		JToolBarHelper::custom('admin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
 	}
@@ -310,48 +246,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 	{
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
-	}
-
-	/**
-	 * Added for SermonSpeaker and PreachIt.
-	 *
-	 * @param   string $component  Component it is coming from
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.1.0
-	 */
-	protected function versionXML($component)
-	{
-		switch ($component)
-		{
-			case 'sermonspeaker':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
-
-				if ($data)
-				{
-					return $data['version'];
-				}
-				else
-				{
-					return false;
-				}
-				break;
-
-			case 'preachit':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
-
-				if ($data)
-				{
-					return $data['version'];
-				}
-				else
-				{
-					return false;
-				}
-				break;
-		}
-		return false;
 	}
 
 }

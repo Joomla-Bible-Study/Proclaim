@@ -9,10 +9,18 @@
  * @since      7.1.0
  * */
 
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+JHtml::_('jquery.framework');
+
+if (BIBLESTUDY_CHECKREL)
+{
+	JHtml::_('formbehavior.chosen', 'select');
+}
 defined('_JEXEC') or die;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" enctype="multipart/form-data"
-      method="post" name="adminForm" id="item-migrate">
+<form action="index.php" method="post" name="adminForm" id="item-migrate">
 	<div id="j-main-container">
 		<table class="row-fluid">
 			<tr>

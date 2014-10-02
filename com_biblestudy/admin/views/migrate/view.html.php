@@ -2,10 +2,10 @@
 /**
  * View html
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class BiblestudyViewAdmin extends JViewLegacy
+class BiblestudyViewMigrate extends JViewLegacy
 {
 
 	/**
@@ -149,7 +149,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -158,6 +158,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
+		$this->setModel($model, true);
+
 		$language = JFactory::getLanguage();
 		$language->load('com_installer');
 
@@ -167,28 +170,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
-		// Get data from the model for database
-		$this->changeSet     = $this->get('Items');
-		$this->errors        = $this->changeSet->check();
-		$this->results       = $this->changeSet->getStatus();
-		$this->schemaVersion = $this->get('SchemaVersion');
-		$this->updateVersion = $this->get('UpdateVersion');
-		$this->filterParams  = $this->get('DefaultTextFilters');
-		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-		$this->pagination    = $this->get('Pagination');
-		$this->errorCount    = count($this->errors);
-		$this->jversion      = $this->get('CompVersion');
-
-		// End for database
 		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');
-
-		$stats             = new JBSMStats;
-		$this->playerstats = $stats->players();
-		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
-		$popups            = $stats->popups();
-		$this->popups      = $popups;
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
@@ -288,13 +271,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolBarHelper::divider();
-		JToolBarHelper::save('admin.save');
-		JToolBarHelper::apply('admin.apply');
-		JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
-		JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
-		JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
+		JToolBarHelper::custom('admin.back', 'back', 'back', 'Back', false);
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
 	}
@@ -315,7 +292,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	/**
 	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string $component  Component it is coming from
+	 * @param   string $component Component it is coming from
 	 *
 	 * @return boolean
 	 *
@@ -351,6 +328,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 				}
 				break;
 		}
+
 		return false;
 	}
 

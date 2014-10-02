@@ -64,6 +64,80 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
+	 * Change Player Modes
+	 *
+	 * @return void
+	 */
+	public function changePlayers()
+	{
+		$db   = JFactory::getDBO();
+		$msg  = JText::_('JBS_ADM_ERROR_OCCURED');
+		$post = $_POST['jform'];
+		$reg  = new JRegistry;
+		$reg->loadArray($post['params']);
+		$from = $reg->get('from');
+		$to   = $reg->get('to');
+		if ($from != 'x' && $to != 'x')
+		{
+			switch ($from)
+			{
+				case '100':
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player IS NULL');
+					break;
+
+				default:
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player = ' . $db->quote($from));
+			}
+			$db->setQuery($query);
+
+			if ($db->execute())
+			{
+				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			}
+		}
+		else
+		{
+			$msg .= ': Missed setting the From or Two';
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+	}
+
+	/**
+	 * Change Media Popup
+	 *
+	 * @return void
+	 */
+	public function changePopup()
+	{
+		$jinput = JFactory::getApplication()->input;
+		$db     = JFactory::getDBO();
+		$msg    = null;
+		$from   = $jinput->getInt('pfrom', '', 'post');
+		$to     = $jinput->getInt('pto', '', 'post');
+		$query  = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('popup = ' . $db->q($to))
+			->where('popup = ' . $db->q($from));
+		$db->setQuery($query);
+
+		if (!$db->execute())
+		{
+			$msg = JText::_('JBS_ADM_ERROR_OCCURED');
+		}
+		else
+		{
+			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+	}
+
+	/**
 	 * Reset Hits
 	 *
 	 * @return void
@@ -147,76 +221,12 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
-	 * Change Player Modes
+	 * Return back to cpanl
 	 *
 	 * @return void
 	 */
-	public function changePlayers()
+	public function back()
 	{
-		$db     = JFactory::getDBO();
-		$msg    = JText::_('JBS_ADM_ERROR_OCCURED');
-		$post   = $_POST['jform'];
-		$reg    = new JRegistry;
-		$reg->loadArray($post['params']);
-		$from   = $reg->get('from');
-		$to     = $reg->get('to');
-		if ($from != 'x' && $to != 'x')
-		{
-			switch ($from)
-			{
-				case '100':
-					$query = $db->getQuery(true);
-					$query->update('#__bsms_mediafiles')
-						->set('player = ' . $db->quote($to))
-						->where('player IS NULL');
-					break;
-
-				default:
-					$query = $db->getQuery(true);
-					$query->update('#__bsms_mediafiles')
-						->set('player = ' . $db->quote($to))
-						->where('player = ' . $db->quote($from));
-			}
-			$db->setQuery($query);
-
-			if ($db->execute())
-			{
-				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-			}
-		}
-		else
-		{
-			$msg .= ': Missed setting the From or Two';
-		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-	}
-
-	/**
-	 * Change Media Popup
-	 *
-	 * @return void
-	 */
-	public function changePopup()
-	{
-		$jinput = JFactory::getApplication()->input;
-		$db     = JFactory::getDBO();
-		$msg    = null;
-		$from   = $jinput->getInt('pfrom', '', 'post');
-		$to     = $jinput->getInt('pto', '', 'post');
-		$query  = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')
-			->set('popup = ' . $db->q($to))
-			->where('popup = ' . $db->q($from));
-		$db->setQuery($query);
-
-		if (!$db->execute())
-		{
-			$msg = JText::_('JBS_ADM_ERROR_OCCURED');
-		}
-		else
-		{
-			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
 
@@ -370,35 +380,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
-	 * Import function from the backup page
-	 *
-	 * @return void
-	 *
-	 * @since 7.1.0
-	 */
-	public function import()
-	{
-		$application = JFactory::getApplication();
-		$import      = new JBSMRestore;
-		$parent      = false;
-		$result      = $import->importdb($parent);
-
-		if ($result === true)
-		{
-			$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
-		}
-		elseif ($result === false)
-		{
-
-		}
-		else
-		{
-			$application->enqueueMessage('' . $result . '');
-		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
-	}
-
-	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
 	 * @param   string $oldprefix  Old table Prefix
@@ -444,6 +425,35 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 
 		return true;
+	}
+
+	/**
+	 * Import function from the backup page
+	 *
+	 * @return void
+	 *
+	 * @since 7.1.0
+	 */
+	public function import()
+	{
+		$application = JFactory::getApplication();
+		$import      = new JBSMRestore;
+		$parent      = false;
+		$result      = $import->importdb($parent);
+
+		if ($result === true)
+		{
+			$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
+		}
+		elseif ($result === false)
+		{
+
+		}
+		else
+		{
+			$application->enqueueMessage('' . $result . '');
+		}
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
 	}
 
 	/**
