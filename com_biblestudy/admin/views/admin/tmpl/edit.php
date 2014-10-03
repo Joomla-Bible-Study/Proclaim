@@ -88,6 +88,8 @@ $input = $app->input;
                             }
                         )
                     }
+                } else {
+                    Joomla.submitform(task, document.getElementById('item-admin'));
                 }
             }
         } else {
