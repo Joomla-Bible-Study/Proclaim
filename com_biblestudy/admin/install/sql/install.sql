@@ -213,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `downloads`         INT(10) DEFAULT '0',
   `plays`             INT(10) DEFAULT '0',
   `player`            INT(2) DEFAULT NULL,
+  `popup`             INT(2) DEFAULT NULL,
   `ordering`          INT(11) NOT NULL DEFAULT '0',
   `createdate`        DATETIME DEFAULT NULL,
   `published`         TINYINT(3) NOT NULL DEFAULT '1',

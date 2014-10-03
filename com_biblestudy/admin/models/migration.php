@@ -356,7 +356,7 @@ class BibleStudyModelMigration extends JModelLegacy
 				$version              = $updates->version;
 				$this->_versionSwitch = $version;
 
-				$this->callstack['subversiontype1_version'] = $version;
+				$this->callstack['subversiontype_version'] = $version;
 				break;
 			case 2:
 				// This is a current database version so we check to see which version. We query to get the highest build in the version table
@@ -370,7 +370,7 @@ class BibleStudyModelMigration extends JModelLegacy
 
 				$this->_versionSwitch = implode('.', preg_split('//', $version->build, -1, PREG_SPLIT_NO_EMPTY));
 
-				$this->callstack['subversiontype2_version'] = $version->build;
+				$this->callstack['subversiontype_version'] = $version->build;
 				break;
 
 			case 3:
@@ -390,11 +390,11 @@ class BibleStudyModelMigration extends JModelLegacy
 
 				$this->_versionSwitch = implode('.', preg_split('//', $schema, -1, PREG_SPLIT_NO_EMPTY));
 
-				$this->callstack['subversiontype3_version'] = $schema;
+				$this->callstack['subversiontype_version'] = $schema;
 				break;
 
 			case 4:
-				$this->callstack['subversiontype4_version'] = JText::_('JBS_IBM_VERSION_TOO_OLD');
+				$this->callstack['subversiontype_version'] = JText::_('JBS_IBM_VERSION_TOO_OLD');
 
 				// There is a version installed, but it is older than 6.0.8 and we can't upgrade it
 				$this->setState('scanerror', JText::_('JBS_IBM_VERSION_TOO_OLD'));
@@ -403,7 +403,7 @@ class BibleStudyModelMigration extends JModelLegacy
 				break;
 		}
 
-		if ($this->callstack['subversiontype_version'] < 000)
+		if ($this->callstack['subversiontype_version'] > 000)
 		{
 			$app = JFactory::getApplication();
 

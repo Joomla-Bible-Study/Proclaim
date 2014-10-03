@@ -125,6 +125,10 @@ class Migration810
 			}
 		}
 
+        // Modify admin table to add thumbnail default parameters
+        $admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));
+        $admin->load(1);
+
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);

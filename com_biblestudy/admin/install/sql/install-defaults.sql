@@ -124,7 +124,7 @@ VALUES
 -- Dumping data for table `#__bsms_mediafiles`
 --
 
-INSERT INTO `j_bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
+INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
 VALUES
   (1, 1, 1, '1',
    '{\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\"}',
