@@ -1,6 +1,6 @@
 <?php
 /**
- * Mod_Biblesutdy core file
+ * Mod_Biblestudy core file
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy

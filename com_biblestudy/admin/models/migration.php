@@ -22,19 +22,20 @@ class BibleStudyModelMigration extends JModelLegacy
 {
 	/** @var int Total numbers of Versions */
 	public $totalVersions = 0;
+
 	/** @var string Running Now */
 	public $running = null;
+
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
+
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
+	/** @var int Id of Extinction Table */
+	public $subrun = null;
 	/** @var string Path to Mysql files */
 	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
-	/**
-	 * Set start Time
-	 *
-	 * @var float The time the process started
-	 */
+	/** @var float The time the process started */
 	private $_startTime = null;
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
@@ -74,10 +75,11 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'biblestudy');
+		$session->set('migration', '', 'biblestudy');
 		$this->_versionStack = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
-		$this->running       = null;
+		$this->running = JText::_('Starting');
 	}
 
 	/**
@@ -434,6 +436,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 		$session = JFactory::getSession();
 		$session->set('migration_stack', $stack, 'biblestudy');
+		$session->set('migration', $this->subrun, 'biblestudy');
 	}
 
 	/**
@@ -473,12 +476,16 @@ class BibleStudyModelMigration extends JModelLegacy
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
 
+		// Load sub values
+		$subrun            = $session->get('migration', '', 'biblestudy');
+
 		if (empty($stack))
 		{
 			$this->_versionStack = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
-			$this->running       = null;
+			$this->running = JText::_('Starting');
+			$this->subrun  = null;
 
 			return;
 		}
@@ -498,6 +505,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
 		$this->running       = $stack['run'];
+		$this->subrun      = $subrun;
 
 	}
 
@@ -538,6 +546,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			// Just finished
 			$this->resetStack();
 			$this->running .= JText::_('JBS_MIG_FINISHED');
+			$this->subrun = null;
 			$this->finish();
 
 			return false;

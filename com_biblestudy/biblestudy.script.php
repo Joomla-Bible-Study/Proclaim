@@ -322,7 +322,9 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function allUpdate($value)
 	{
-		$db = JFactory::getDbo();
+		$db      = JFactory::getDbo();
+		$session = JFactory::getSession();
+		$session->set('migration', $value . '.sql', 'biblestudy');
 
 		$db->setQuery('CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 						  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -378,6 +380,7 @@ class Com_BiblestudyInstallerScript
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
 		if (JFile::exists($migration_file))
 		{
+			$session->set('migration', $value . '.php', 'biblestudy');
 			require_once $migration_file;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
 			$migration      = new $migrationClass;

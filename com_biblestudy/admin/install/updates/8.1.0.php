@@ -20,12 +20,14 @@ class Migration810
 	/**
 	 * Call Script for Updates of 8.1.0
 	 *
-	 * @param   JDatabase $db Joomla Data bass driver
+	 * @param   JDatabaseDriver $db Joomla Data bass driver
 	 *
 	 * @return bool
 	 */
 	public function up($db)
 	{
+		$session = JFactory::getSession();
+
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Migrate servers
@@ -34,6 +36,7 @@ class Migration810
 
 		foreach ($db->loadObjectList() as $server)
 		{
+			$session->set('migration', 'Server ' . $server->server_name . ' Prossesing...', 'biblestudy');
 			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 			$newServer->load($server->id);
 			$params = array();
@@ -83,6 +86,8 @@ class Migration810
 
 			foreach ($db->loadObjectList() as $mediaFile)
 			{
+
+				$session->set('migration', 'Server ' . $server->server_name . ' Prossesing Media file: ' . $mediaFile->id, 'biblestudy');
 				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
 				$newMediaFile->load($mediaFile->id);
 				$params   = array();
@@ -125,9 +130,9 @@ class Migration810
 			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
-        // Modify admin table to add thumbnail default parameters
-        $admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));
-        $admin->load(1);
+		// Modify admin table to add thumbnail default parameters
+		$admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));
+		$admin->load(1);
 
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
@@ -139,9 +144,9 @@ class Migration810
 	/**
 	 * Set del colums
 	 *
-	 * @param   string    $table   Table
-	 * @param   array     $columns Column to drop
-	 * @param   JDatabase $db      Data bass driver
+	 * @param   string          $table   Table
+	 * @param   array           $columns Column to drop
+	 * @param   JDatabaseDriver $db      Data bass driver
 	 *
 	 * @return void
 	 */
@@ -157,8 +162,8 @@ class Migration810
 	/**
 	 * Delete Table
 	 *
-	 * @param   string    $table Table
-	 * @param   JDatabase $db    Data bass driver
+	 * @param   string          $table Table
+	 * @param   JDatabaseDriver $db    Data bass driver
 	 *
 	 * @return void
 	 */
@@ -171,7 +176,7 @@ class Migration810
 	/**
 	 * Update Templates to work with 8.1.0 that cannot be don doing normal sql file.
 	 *
-	 * @param   JDatabase $db Data bass driver
+	 * @param   JDatabaseDriver $db Data bass driver
 	 *
 	 * @return void
 	 */
