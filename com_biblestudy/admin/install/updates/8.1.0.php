@@ -139,9 +139,9 @@ class Migration810
 	/**
 	 * Set del colums
 	 *
-	 * @param   string           $table    Table
-	 * @param   array            $columns  Column to drop
-	 * @param   JDatabaseDriver  $db       Data bass driver
+	 * @param   string    $table   Table
+	 * @param   array     $columns Column to drop
+	 * @param   JDatabase $db      Data bass driver
 	 *
 	 * @return void
 	 */
@@ -157,8 +157,8 @@ class Migration810
 	/**
 	 * Delete Table
 	 *
-	 * @param   string           $table  Table
-	 * @param   JDatabaseDriver  $db     Data bass driver
+	 * @param   string    $table Table
+	 * @param   JDatabase $db    Data bass driver
 	 *
 	 * @return void
 	 */
@@ -171,7 +171,7 @@ class Migration810
 	/**
 	 * Update Templates to work with 8.1.0 that cannot be don doing normal sql file.
 	 *
-	 * @param   JDatabaseDriver  $db  Data bass driver
+	 * @param   JDatabase $db Data bass driver
 	 *
 	 * @return void
 	 */

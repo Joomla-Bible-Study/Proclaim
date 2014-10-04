@@ -291,8 +291,6 @@ class BiblestudyViewBackup extends JViewLegacy
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.back', 'back', 'back', 'Back', false);
-		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
 	}
 
