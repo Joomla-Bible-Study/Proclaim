@@ -8,8 +8,6 @@ ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `server_id` INT(5) NULL AFTER `study
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `metadata` TEXT NOT NULL AFTER `params`;
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
-ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by_alias` VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `Idx_checkout` (`checked_out`);
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_createdby` (`created_by`);
 
@@ -46,8 +44,8 @@ ALTER TABLE `#__bsms_locations` ADD `created_by_alias` varchar(255) NOT NULL DEF
 ALTER TABLE `#__bsms_locations` ADD `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `created_by_alias`;
 ALTER TABLE `#__bsms_locations` ADD `modified_by` int(10) unsigned NOT NULL DEFAULT '0' AFTER `modified`;
 ALTER TABLE `#__bsms_locations` ADD `metakey` text NOT NULL AFTER `modified_by`;
-ALTER TABLE `#__bsms_locations` ADD `metadesc` text NOT NULL AFTER `medakey`;
-ALTER TABLE `#__bsms_locations` ADD `metadata` text NOT NULL AFTER `medadesc`;
+ALTER TABLE `#__bsms_locations` ADD `metadesc` TEXT NOT NULL AFTER `metakey`;
+ALTER TABLE `#__bsms_locations` ADD `metadata` TEXT NOT NULL AFTER `metadesc`;
 ALTER TABLE `#__bsms_locations` ADD `featured` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Set if article is featured.' AFTER `metadata`;
 ALTER TABLE `#__bsms_locations` ADD `xreference` varchar(50) NOT NULL COMMENT 'A reference to enable linkages to external data sets.' AFTER `featured`;
 ALTER TABLE `#__bsms_locations` ADD `version` int(10) unsigned NOT NULL DEFAULT '1' AFTER `xreference`;

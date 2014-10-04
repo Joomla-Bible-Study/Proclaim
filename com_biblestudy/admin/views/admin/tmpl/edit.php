@@ -463,11 +463,11 @@ $input = $app->input;
 <div>
     <!-- Track thumbnail sizes to fire event if they are changed -->
     <input type="hidden" id="thumbnail_teacher_size_old"
-           value="<?php echo $this->item->params['thumbnail_teacher_size']; ?>"/>
+           value="<?php echo @$this->item->params['thumbnail_teacher_size']; ?>"/>
     <input type="hidden" id="thumbnail_series_size_old"
-           value="<?php echo $this->item->params['thumbnail_series_size']; ?>"/>
+           value="<?php echo @$this->item->params['thumbnail_series_size']; ?>"/>
     <input type="hidden" id="thumbnail_study_size_old"
-           value="<?php echo $this->item->params['thumbnail_study_size']; ?>"/>
+           value="<?php echo @$this->item->params['thumbnail_study_size']; ?>"/>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
     <?php echo JHtml::_('form.token'); ?>

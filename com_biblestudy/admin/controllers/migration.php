@@ -63,7 +63,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 		{
 			JBSMDbHelper::resetdb();
 			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
-			$this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migrate');
 		}
 		else
 		{

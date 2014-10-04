@@ -20,7 +20,7 @@ class Migration810
 	/**
 	 * Call Script for Updates of 8.1.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   JDatabase $db Joomla Data bass driver
 	 *
 	 * @return bool
 	 */
@@ -115,15 +115,15 @@ class Migration810
 				$newMediaFile->id        = null;
 				$newMediaFile->store();
 
-				// Delete unused columns
-				$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-					'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
-				$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
-
 				// Delete old mediafile
 				JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
 			}
 		}
+
+		// Delete unused columns
+		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
+			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
+		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
         // Modify admin table to add thumbnail default parameters
         $admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));

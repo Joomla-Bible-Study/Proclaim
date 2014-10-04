@@ -22,25 +22,29 @@ class BiblestudyViewMigration extends JViewLegacy
 
 	/** @var int Total numbers of Versions */
 	public $totalVersions = 0;
+
 	/** @var int Numbers of Versions already processed */
 	public $doneVersions = 0;
+
+	/** @var string Running Now */
+	public $running = null;
+
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
+
 	/** @var string More */
 	protected $more;
+
 	/** @var  string Percentage */
 	protected $percentage;
+
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
-	/** @var array Array of SQL files to parse. */
-	private $_filesStack = array();
-	/** @var array Array of PHP Function to parse. */
-	private $_afterStack = array();
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -100,10 +104,9 @@ class BiblestudyViewMigration extends JViewLegacy
 		if (empty($stack))
 		{
 			$this->_versionStack = array();
-			$this->_filesStack   = array();
-			$this->_afterStack   = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
+			$this->running = null;
 
 			return;
 		}
@@ -120,10 +123,9 @@ class BiblestudyViewMigration extends JViewLegacy
 		$stack = json_decode($stack, true);
 
 		$this->_versionStack = $stack['version'];
-		$this->_filesStack   = $stack['files'];
-		$this->_afterStack   = $stack['after'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
+		$this->running = $stack['run'];
 
 	}
 }

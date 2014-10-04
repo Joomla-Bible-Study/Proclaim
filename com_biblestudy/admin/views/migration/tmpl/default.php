@@ -26,11 +26,16 @@ else
 <?php else: ?>
 	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
+<div class="migration-status">
+	<div class="status"><?php echo JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+</div>
 
 
 <div class="progress progress-striped active">
-	<div class="bar" style="width: <?php echo $this->percentage ?>%"></div>
+	<div class="bar"
+	     style="margin-right: 5px; width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%
 </div>
+<br/>
 
 <form action="index.php" name="adminForm" id="adminForm">
 	<input type="hidden" name="option" value="com_biblestudy"/>

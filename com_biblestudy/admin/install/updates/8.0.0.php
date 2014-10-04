@@ -22,7 +22,7 @@ class Migration800
 	/**
 	 * Method to Update to 8.0.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   JDatabase $db Joomla Data bass driver
 	 *
 	 * @return boolean
 	 */

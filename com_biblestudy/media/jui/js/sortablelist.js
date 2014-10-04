@@ -1,5 +1,5 @@
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -71,7 +71,7 @@
 				$('td', $(this)).removeClass('dndlist-dragged-row');
 				$(ui.item).css({opacity:0});
 				$(ui.item).animate({
-					opacity:1
+					opacity: 1,
 				}, 800, function (){
 					$(ui.item).css('opacity','');
 				});
@@ -84,10 +84,17 @@
 					//clone and check all the checkboxes in sortable range to post
 					root.cloneMarkedCheckboxes();
 
+					// Detach task field if exists
+					var f = $('#' + formId);
+					var ft = $('input[name|="task"]', f);
+
+					if (ft.length) ft.detach();
+
 					//serialize form then post to callback url
-					var formData = $('#' + formId).serialize();
-					formData = formData.replace('task', '');
-					$.post(saveOrderingUrl, formData);
+					$.post(saveOrderingUrl, f.serialize());
+
+					// Re-Append original task field
+					if (ft.length) ft.appendTo(f);
 
 					//remove cloned checkboxes
 					root.removeClonedCheckboxes();
@@ -214,7 +221,7 @@
 					}
 					$(range).each(function () {
 						var _top = $(this).position().top;
-						if ( ui.item.get(0) !== $(this).get(0)){
+						if (ui.item.get(0) !== $(this).get(0)) {
 							if (_top > ui.item.position().top && _top <= ui.originalPosition.top) {
 								if (sortDir == 'asc') {
 									var newValue = parseInt($('[type=text]', $(this)).attr('value')) + 1;
@@ -232,7 +239,7 @@
 					}
 					$(range).each(function () {
 						var _top = $(this).position().top;
-						if ( ui.item.get(0) !== $(this).get(0)){
+						if (ui.item.get(0) !== $(this).get(0)) {
 							if (_top < ui.item.position().top && _top >= ui.originalPosition.top) {
 								if (sortDir == 'asc') {
 									var newValue = parseInt($('[type=text]', $(this)).attr('value')) - 1;
@@ -269,7 +276,7 @@
 		}
 
 		this.getSameLevelNodes = function (level) {
-			return $('tr[level='+level+']');
+			return $('tr[level=' + level + ']');
 		}
 
 	}

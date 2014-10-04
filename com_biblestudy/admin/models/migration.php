@@ -20,144 +20,28 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class BibleStudyModelMigration extends JModelLegacy
 {
+	/** @var int Total numbers of Versions */
+	public $totalVersions = 0;
+	/** @var string Running Now */
+	public $running = null;
+	/** @var int Numbers of Versions already processed */
+	public $doneVersions = 0;
+	/** @var array Call stack for the Visioning System. */
+	public $callstack = array();
+	/** @var string Path to Mysql files */
+	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 	/**
 	 * Set start Time
 	 *
 	 * @var float The time the process started
 	 */
 	private $_startTime = null;
-
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
-
-	/** @var int Total numbers of Versions */
-	public $totalVersions = 0;
-
-	/** @var int Numbers of Versions already processed */
-	public $doneVersions = 0;
-
-	/** @var array Call stack for the Visioning System. */
-	public $callstack = array();
-
 	/** @var string Version of BibleStudy */
 	private $_versionSwitch = null;
-
 	/** @var int Id of Extinction Table */
 	private $_biblestudyEid = 0;
-
-	/** @var string Path to Mysql files */
-	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
-
-	/**
-	 * Returns the current timestamps in decimal seconds
-	 *
-	 * @return string
-	 */
-	private function microtime_float()
-	{
-		list($usec, $sec) = explode(" ", microtime());
-
-		return ((float) $usec + (float) $sec);
-	}
-
-	/**
-	 * Starts or resets the internal timer
-	 *
-	 * @return void
-	 */
-	private function resetTimer()
-	{
-		$this->_startTime = $this->microtime_float();
-	}
-
-	/**
-	 * Makes sure that no more than 3 seconds since the start of the timer have elapsed
-	 *
-	 * @return bool
-	 */
-	private function haveEnoughTime()
-	{
-		$now     = $this->microtime_float();
-		$elapsed = abs($now - $this->_startTime);
-
-		return $elapsed < 3;
-	}
-
-	/**
-	 * Saves the Versions/SQL/After stack in the session
-	 *
-	 * @return void
-	 */
-	private function saveStack()
-	{
-		$stack = array(
-			'version' => $this->_versionStack,
-			'total'   => $this->totalVersions,
-			'done'    => $this->doneVersions,
-		);
-		$stack = json_encode($stack);
-
-		if (function_exists('base64_encode') && function_exists('base64_decode'))
-		{
-			if (function_exists('gzdeflate') && function_exists('gzinflate'))
-			{
-				$stack = gzdeflate($stack, 9);
-			}
-			$stack = base64_encode($stack);
-		}
-		$session = JFactory::getSession();
-		$session->set('migration_stack', $stack, 'biblestudy');
-	}
-
-	/**
-	 * Resets the Versions/SQL/After stack saved in the session
-	 *
-	 * @return void
-	 */
-	private function resetStack()
-	{
-		$session = JFactory::getSession();
-		$session->set('migration_stack', '', 'biblestudy');
-		$this->_versionStack = array();
-		$this->totalVersions = 0;
-		$this->doneVersions  = 0;
-	}
-
-	/**
-	 * Loads the Versions/SQL/After stack from the session
-	 *
-	 * @return void
-	 */
-	private function loadStack()
-	{
-		$session = JFactory::getSession();
-		$stack   = $session->get('migration_stack', '', 'biblestudy');
-
-		if (empty($stack))
-		{
-			$this->_versionStack = array();
-			$this->totalVersions = 0;
-			$this->doneVersions  = 0;
-
-			return;
-		}
-
-		if (function_exists('base64_encode') && function_exists('base64_decode'))
-		{
-			$stack = base64_decode($stack);
-
-			if (function_exists('gzdeflate') && function_exists('gzinflate'))
-			{
-				$stack = gzinflate($stack);
-			}
-		}
-		$stack = json_decode($stack, true);
-
-		$this->_versionStack = $stack['version'];
-		$this->totalVersions = $stack['total'];
-		$this->doneVersions  = $stack['done'];
-
-	}
 
 	/**
 	 * Start Looking though the Versions
@@ -182,61 +66,40 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 *  Run the Migration will there is time.
+	 * Resets the Versions/SQL/After stack saved in the session
 	 *
-	 * @param   bool  $resetTimer  If the time must be reset
-	 *
-	 * @return bool
+	 * @return void
 	 */
-	public function run($resetTimer = true)
+	private function resetStack()
 	{
-		if ($resetTimer)
-		{
-			$this->resetTimer();
-		}
-
-		$this->loadStack();
-		$result = true;
-
-		while ($result && $this->haveEnoughTime())
-		{
-			$result = $this->RealRun();
-		}
-
-		$this->saveStack();
-
-		return $result;
+		$session = JFactory::getSession();
+		$session->set('migration_stack', '', 'biblestudy');
+		$this->_versionStack = array();
+		$this->totalVersions = 0;
+		$this->doneVersions  = 0;
+		$this->running       = null;
 	}
 
 	/**
-	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
+	 * Starts or resets the internal timer
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	private function RealRun()
+	private function resetTimer()
 	{
-		if (!empty($this->_versionStack))
-		{
-			while (!empty($this->_versionStack) && $this->haveEnoughTime())
-			{
-				$version = array_pop($this->_versionStack);
-				$this->doneVersions++;
-				$script = new Com_BiblestudyInstallerScript;
-				$script->allUpdate($version);
-			}
-		}
+		$this->_startTime = $this->microtime_float();
+	}
 
-		if (empty($this->_versionStack))
-		{
-			// Just finished
-			$this->resetStack();
-			$this->finish();
+	/**
+	 * Returns the current timestamps in decimal seconds
+	 *
+	 * @return string
+	 */
+	private function microtime_float()
+	{
+		list($usec, $sec) = explode(" ", microtime());
 
-			return false;
-		}
-
-		// If we have more Versions or SQL files, continue in the next step
-		return true;
+		return ((float) $usec + (float) $sec);
 	}
 
 	/**
@@ -444,8 +307,8 @@ class BibleStudyModelMigration extends JModelLegacy
 				}
 				elseif ($files)
 				{
-					$this->totalVersions += count($files);
-					$files             = array_reverse($files);
+					$this->totalVersions = count($files);
+					$files               = array_reverse($files);
 					$this->_versionStack = $files;
 				}
 				else
@@ -506,8 +369,8 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Set the schema version for an extension by looking at its latest update
 	 *
-	 * @param   string   $version  Version number
-	 * @param   integer  $eid      Extension ID
+	 * @param   string  $version Version number
+	 * @param   integer $eid     Extension ID
 	 *
 	 * @return  void
 	 *
@@ -547,24 +410,141 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
-	 * Returns Update Version form Table
+	 * Saves the Versions/SQL/After stack in the session
 	 *
-	 * @return string Returns the Last Version in the #_bsms_update table
+	 * @return void
 	 */
-	private function getUpdateVersion()
+	private function saveStack()
 	{
-		$db = JFactory::getDbo();
+		$stack = array(
+			'version' => $this->_versionStack,
+			'total'   => $this->totalVersions,
+			'done'    => $this->doneVersions,
+			'run'     => $this->running,
+		);
+		$stack = json_encode($stack);
 
-		/* Find Last updated Version in Update table */
-		$query = $db->getQuery(true);
-		$query
-			->select('version')
-			->from('#__bsms_update');
-		$db->setQuery($query);
-		$updates = $db->loadObjectList();
-		$update  = end($updates);
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzdeflate($stack, 9);
+			}
+			$stack = base64_encode($stack);
+		}
+		$session = JFactory::getSession();
+		$session->set('migration_stack', $stack, 'biblestudy');
+	}
 
-		return $update->version;
+	/**
+	 *  Run the Migration will there is time.
+	 *
+	 * @param   bool  $resetTimer  If the time must be reset
+	 *
+	 * @return bool
+	 */
+	public function run($resetTimer = true)
+	{
+		if ($resetTimer)
+		{
+			$this->resetTimer();
+		}
+
+		$this->loadStack();
+		$result = true;
+
+		while ($result && $this->haveEnoughTime())
+		{
+			$result = $this->RealRun();
+		}
+
+		$this->saveStack();
+
+		return $result;
+	}
+
+	/**
+	 * Loads the Versions/SQL/After stack from the session
+	 *
+	 * @return void
+	 */
+	private function loadStack()
+	{
+		$session = JFactory::getSession();
+		$stack   = $session->get('migration_stack', '', 'biblestudy');
+
+		if (empty($stack))
+		{
+			$this->_versionStack = array();
+			$this->totalVersions = 0;
+			$this->doneVersions  = 0;
+			$this->running       = null;
+
+			return;
+		}
+
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			$stack = base64_decode($stack);
+
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzinflate($stack);
+			}
+		}
+		$stack = json_decode($stack, true);
+
+		$this->_versionStack = $stack['version'];
+		$this->totalVersions = $stack['total'];
+		$this->doneVersions  = $stack['done'];
+		$this->running       = $stack['run'];
+
+	}
+
+	/**
+	 * Makes sure that no more than 3 seconds since the start of the timer have elapsed
+	 *
+	 * @return bool
+	 */
+	private function haveEnoughTime()
+	{
+		$now     = $this->microtime_float();
+		$elapsed = abs($now - $this->_startTime);
+
+		return $elapsed < 3;
+	}
+
+	/**
+	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
+	 *
+	 * @return bool
+	 */
+	private function RealRun()
+	{
+		if (!empty($this->_versionStack))
+		{
+			while (!empty($this->_versionStack) && $this->haveEnoughTime())
+			{
+				$version = array_pop($this->_versionStack);
+				$this->running .= ', ' . $version;
+				$this->doneVersions++;
+				$script = new Com_BiblestudyInstallerScript;
+				$script->allUpdate($version);
+			}
+		}
+
+		if (empty($this->_versionStack))
+		{
+			// Just finished
+			$this->resetStack();
+			$this->running .= JText::_('JBS_MIG_FINISHED');
+			$this->finish();
+
+			return false;
+		}
+
+		// If we have more Versions or SQL files, continue in the next step
+		return true;
 	}
 
 	/**
@@ -601,6 +581,27 @@ class BibleStudyModelMigration extends JModelLegacy
 
 			return false;
 		}
+	}
+
+	/**
+	 * Returns Update Version form Table
+	 *
+	 * @return string Returns the Last Version in the #_bsms_update table
+	 */
+	private function getUpdateVersion()
+	{
+		$db = JFactory::getDbo();
+
+		/* Find Last updated Version in Update table */
+		$query = $db->getQuery(true);
+		$query
+			->select('version')
+			->from('#__bsms_update');
+		$db->setQuery($query);
+		$updates = $db->loadObjectList();
+		$update  = end($updates);
+
+		return $update->version;
 	}
 
 }
