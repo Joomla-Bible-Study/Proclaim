@@ -322,11 +322,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_versionStack))
-		{
-			$this->totalVersions += count($this->_versionStack);
-		}
-
 		return true;
 	}
 
@@ -477,7 +472,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
 
 		// Load sub values
-		$subrun            = $session->get('migration', '', 'biblestudy');
+		$subrun       = $session->get('migration', '', 'biblestudy');
 
 		if (empty($stack))
 		{
@@ -505,7 +500,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
 		$this->running       = $stack['run'];
-		$this->subrun      = $subrun;
+		$this->subrun = $subrun;
 
 	}
 
@@ -536,8 +531,15 @@ class BibleStudyModelMigration extends JModelLegacy
 				$version = array_pop($this->_versionStack);
 				$this->running .= ', ' . $version;
 				$this->doneVersions++;
+				$this->subrun = $version;
 				$script = new Com_BiblestudyInstallerScript;
-				$script->allUpdate($version);
+				$ps           = $script->allUpdate($version);
+				if (!$ps)
+				{
+					$this->subrun = $ps;
+
+					return false;
+				}
 			}
 		}
 
@@ -577,7 +579,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			$assets->fixAssets();
 			$installer = new Com_BiblestudyInstallerScript;
 			$installer->fixMenus();
-			$installer->fixImagePaths();
 			$installer->fixemptyaccess();
 			$installer->fixemptylanguage();
 

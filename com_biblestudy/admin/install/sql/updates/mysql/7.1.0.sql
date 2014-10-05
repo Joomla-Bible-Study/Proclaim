@@ -3,40 +3,29 @@ ON DUPLICATE KEY UPDATE version= '7.1.0';
 --
 -- Admin Table
 --
-
 ALTER TABLE `#__bsms_admin` ADD COLUMN `installstate` TEXT;
 ALTER TABLE `#__bsms_admin` ADD COLUMN `debug` TINYINT(3) NOT NULL DEFAULT '0';
-
 --
 -- Books
 --
-
 ALTER TABLE `#__bsms_books` MODIFY `published` TINYINT(3) NOT NULL DEFAULT '1';
-
 --
 -- Comments Table
 --
-
 ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR(3) NOT NULL DEFAULT '';
-
 UPDATE `#__bsms_comments`
 SET `language` = '*'
 WHERE `#__bsms_comments`.`language` = '';
-
 --
 -- Folders Table
 --
-
 --
 -- Locations Table
 --
-
 ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
-
 --
 -- Media Table
 --
-
 --
 -- MediaFiles Table
 
@@ -48,17 +37,13 @@ COLLATE utf8_general_ci NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_study_id` (`study_id`);
-
 UPDATE `#__bsms_mediafiles`
 SET `language` = '*'
 WHERE `#__bsms_mediafiles`.`language` = '';
-
 --
 -- Message Type Table
 --
-
 ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
-
 --
 -- MimType Table
 --
@@ -172,7 +157,6 @@ UPDATE `#__bsms_teachers`
 SET `language` = '*'
 WHERE `#__bsms_teachers`.`language` = '';
 
-
 --
 -- TemplateCode Table
 --
@@ -195,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
 --
 
 --
--- Tiemset Table
+-- Time set Table
 --
 
 --

@@ -32,4 +32,3 @@ ALTER TABLE `#__bsms_topics` ADD COLUMN `language` CHAR(7) DEFAULT '*';
 ALTER TABLE `#__bsms_studies` DROP `topics_id` ;
 
 ALTER TABLE `#__bsms_studies` ADD COLUMN `download_id` INT(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile';
-

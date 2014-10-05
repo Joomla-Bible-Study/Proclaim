@@ -31,12 +31,16 @@ class BiblestudyViewMigration extends JViewLegacy
 
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
+
 	/** @var null Sub running processes */
 	public $subrun = null;
+
 	/** @var string More */
 	protected $more;
+
 	/** @var  string Percentage */
 	protected $percentage;
+
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
 
@@ -100,7 +104,7 @@ class BiblestudyViewMigration extends JViewLegacy
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
 
-		$subrun            = $session->get('migration', '', 'biblestudy');
+		$subrun        = $session->get('migration', '', 'biblestudy');
 
 		if (empty($stack))
 		{
@@ -130,8 +134,8 @@ class BiblestudyViewMigration extends JViewLegacy
 		$this->_versionStack = $stack['version'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
-		$this->running     = $stack['run'];
-		$this->subrun      = $subrun;
+		$this->running = $stack['run'];
+		$this->subrun  = $subrun;
 
 	}
 }

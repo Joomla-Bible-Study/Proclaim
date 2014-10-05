@@ -26,8 +26,6 @@ class Migration810
 	 */
 	public function up($db)
 	{
-		$session = JFactory::getSession();
-
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Migrate servers
@@ -36,7 +34,6 @@ class Migration810
 
 		foreach ($db->loadObjectList() as $server)
 		{
-			$session->set('migration', 'Server ' . $server->server_name . ' Prossesing...', 'biblestudy');
 			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 			$newServer->load($server->id);
 			$params = array();
@@ -69,10 +66,6 @@ class Migration810
 			$newServer->id     = null;
 			$newServer->store();
 
-			// Delete unused columns
-			$columns = array('ftp_username', 'ftp_password', 'ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'aws_key', 'aws_secret', 'server_type');
-			$this->deleteColumns('#__bsms_servers', $columns, $db);
-
 			// Delete old server
 			JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
 
@@ -86,8 +79,6 @@ class Migration810
 
 			foreach ($db->loadObjectList() as $mediaFile)
 			{
-
-				$session->set('migration', 'Server ' . $server->server_name . ' Prossesing Media file: ' . $mediaFile->id, 'biblestudy');
 				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
 				$newMediaFile->load($mediaFile->id);
 				$params   = array();
@@ -129,6 +120,10 @@ class Migration810
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
+
+		// Delete unused columns
+		$columns = array('ftp_username', 'ftp_password', 'ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'aws_key', 'aws_secret', 'server_type');
+		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters
 		$admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));

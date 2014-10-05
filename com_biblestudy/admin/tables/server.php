@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class TableServer extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
@@ -63,7 +62,7 @@ class TableServer extends JTable
 
 	public $params = null;
 
-    public $media = null;
+	public $media = null;
 
 	/**
 	 * Constructor
@@ -98,12 +97,13 @@ class TableServer extends JTable
 			$array['params'] = (string) $registry;
 		}
 
-        // Bind the media defaults
-        if (isset($array['media']) && is_array($array['media'])) {
-            $registry = new JRegistry;
-            $registry->loadArray($array['media']);
-            $array['media'] = (string) $registry;
-        }
+		// Bind the media defaults
+		if (isset($array['media']) && is_array($array['media']))
+		{
+			$registry = new JRegistry;
+			$registry->loadArray($array['media']);
+			$array['media'] = (string) $registry;
+		}
 
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))

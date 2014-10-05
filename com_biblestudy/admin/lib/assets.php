@@ -95,12 +95,12 @@ class JBSMAssets
 				'assetname'  => 'server',
 				'realname'   => 'JBS_CMN_SERVERS'
 			),
-			array(
-				'name'       => '#__bsms_folders',
-				'titlefield' => 'foldername',
-				'assetname'  => 'folder',
-				'realname'   => 'JBS_CMN_FOLDERS'
-			),
+//			array(
+//				'name'       => '#__bsms_folders',
+//				'titlefield' => 'foldername',
+//				'assetname'  => 'folder',
+//				'realname'   => 'JBS_CMN_FOLDERS'
+//			),
 			array(
 				'name'       => '#__bsms_studies',
 				'titlefield' => 'studytitle',
@@ -119,12 +119,12 @@ class JBSMAssets
 				'assetname'  => 'location',
 				'realname'   => 'JBS_CMN_LOCATIONS'
 			),
-			array(
-				'name'       => '#__bsms_media',
-				'titlefield' => 'media_text',
-				'assetname'  => 'mediaimage',
-				'realname'   => 'JBS_CMN_MEDIAIMAGES'
-			),
+//			array(
+//				'name'       => '#__bsms_media',
+//				'titlefield' => 'media_text',
+//				'assetname'  => 'mediaimage',
+//				'realname'   => 'JBS_CMN_MEDIAIMAGES'
+//			),
 			array(
 				'name'       => '#__bsms_mediafiles',
 				'titlefield' => 'filename',
@@ -137,12 +137,12 @@ class JBSMAssets
 				'assetname'  => 'messagetype',
 				'realname'   => 'JBS_CMN_MESSAGETYPES'
 			),
-			array(
-				'name'       => '#__bsms_mimetype',
-				'titlefield' => 'mimetext',
-				'assetname'  => 'mimetype',
-				'realname'   => 'JBS_CMN_MIMETYPES'
-			),
+//			array(
+//				'name'       => '#__bsms_mimetype',
+//				'titlefield' => 'mimetext',
+//				'assetname'  => 'mimetype',
+//				'realname'   => 'JBS_CMN_MIMETYPES'
+//			),
 			array(
 				'name'       => '#__bsms_podcast',
 				'titlefield' => 'title',

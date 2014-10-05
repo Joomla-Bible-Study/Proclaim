@@ -25,14 +25,17 @@ class Com_BiblestudyInstallerScript
 	 * @var string
 	 * */
 	protected $biblestudy_extension = 'com_biblestudy';
+
 	/** @var string Path to Mysql files */
 	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
 	/**
 	 * The release value to be displayed and check against throughout this file.
 	 *
 	 * @var string
 	 */
 	private $_release = '8.1.0';
+
 	/**
 	 * Find minimum required joomla version for this extension.
 	 * It will be read from the version attribute (install tag) in the manifest file
@@ -40,6 +43,7 @@ class Com_BiblestudyInstallerScript
 	 * @var string
 	 */
 	private $_minimum_joomla_release = '2.5.6';
+
 	/**
 	 * Find minimum required PHP version for this extension.
 	 * It will be read from the version attribute (install tag) in the manifest file
@@ -323,8 +327,6 @@ class Com_BiblestudyInstallerScript
 	public function allUpdate($value)
 	{
 		$db      = JFactory::getDbo();
-		$session = JFactory::getSession();
-		$session->set('migration', $value . '.sql', 'biblestudy');
 
 		$db->setQuery('CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 						  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -380,7 +382,6 @@ class Com_BiblestudyInstallerScript
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
 		if (JFile::exists($migration_file))
 		{
-			$session->set('migration', $value . '.php', 'biblestudy');
 			require_once $migration_file;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
 			$migration      = new $migrationClass;
@@ -858,61 +859,61 @@ class Com_BiblestudyInstallerScript
 		}
 	}
 
-	/**
-	 * Fix Image paths
-	 *
-	 * @since 7.1.0
-	 *
-	 * @return   void
-	 */
-	public function fixImagePaths()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_media');
-		$db->setQuery($query);
-		$images = $db->loadObjectList();
-
-		foreach ($images as $image)
-		{
-			if (!empty($image->media_image_path))
-			{
-				$image->media_image_path = str_replace('components', 'media', $image->media_image_path);
-				$query                   = $db->getQuery(true);
-				$query->update('#__bsms_media')
-					->set("media_image_path = " . $db->q($image->media_image_path))
-					->where('id = ' . $db->q($image->id));
-				$db->setQuery($query);
-				$db->execute();
-			}
-		}
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_share');
-		$db->setQuery($query);
-		$datas = $db->loadObjectList();
-
-		foreach ($datas as $data)
-		{
-			// Need to adjust the params and write back
-			$registry = new JRegistry;
-			$registry->loadString($data->params);
-			$params     = $registry;
-			$shareimage = $params->get('shareimage');
-			$shareimage = str_replace('components', 'media', $shareimage);
-			$params->set('shareimage', $shareimage);
-
-			// Now write the params back into the $table array and store.
-			$data->params = (string) $params->toString();
-			$qeery        = $db->getQuery(true);
-			$qeery->update('#__bsms_share')
-				->set('params =' . $db->q($data->params))
-				->where('id = ' . $db->q($data->id));
-			$db->setQuery($query);
-			$db->execute();
-		}
-	}
+//	/**
+//	 * Fix Image paths
+//	 *
+//	 * @since 7.1.0
+//	 *
+//	 * @return   void
+//	 */
+//	public function fixImagePaths()
+//	{
+//		$db    = JFactory::getDBO();
+//		$query = $db->getQuery(true);
+//		$query->select('*')
+//			->from('#__bsms_media');
+//		$db->setQuery($query);
+//		$images = $db->loadObjectList();
+//
+//		foreach ($images as $image)
+//		{
+//			if (!empty($image->media_image_path))
+//			{
+//				$image->media_image_path = str_replace('components', 'media', $image->media_image_path);
+//				$query                   = $db->getQuery(true);
+//				$query->update('#__bsms_media')
+//					->set("media_image_path = " . $db->q($image->media_image_path))
+//					->where('id = ' . $db->q($image->id));
+//				$db->setQuery($query);
+//				$db->execute();
+//			}
+//		}
+//		$query = $db->getQuery(true);
+//		$query->select('*')
+//			->from('#__bsms_share');
+//		$db->setQuery($query);
+//		$datas = $db->loadObjectList();
+//
+//		foreach ($datas as $data)
+//		{
+//			// Need to adjust the params and write back
+//			$registry = new JRegistry;
+//			$registry->loadString($data->params);
+//			$params     = $registry;
+//			$shareimage = $params->get('shareimage');
+//			$shareimage = str_replace('components', 'media', $shareimage);
+//			$params->set('shareimage', $shareimage);
+//
+//			// Now write the params back into the $table array and store.
+//			$data->params = (string) $params->toString();
+//			$qeery        = $db->getQuery(true);
+//			$qeery->update('#__bsms_share')
+//				->set('params =' . $db->q($data->params))
+//				->where('id = ' . $db->q($data->id));
+//			$db->setQuery($query);
+//			$db->execute();
+//		}
+//	}
 
 	/**
 	 * Function to find empty language field and set them to "*"
@@ -959,7 +960,7 @@ class Com_BiblestudyInstallerScript
 			array('table' => '#__bsms_admin'),
 			array('table' => '#__bsms_mediafiles'),
 			array('table' => '#__bsms_message_type'),
-			array('table' => '#__bsms_mimetype'),
+			//array('table' => '#__bsms_mimetype'),
 			array('table' => '#__bsms_podcast'),
 			array('table' => '#__bsms_series'),
 			array('table' => '#__bsms_servers'),

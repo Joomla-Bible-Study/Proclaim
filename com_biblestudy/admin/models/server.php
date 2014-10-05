@@ -154,7 +154,7 @@ class BiblestudyModelServer extends JModelAdmin
         if (empty($data)) {
             $this->getItem();
         } else {
-            $this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
+	        //$this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
         }
 
         // Get the forms.
