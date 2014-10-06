@@ -167,19 +167,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
-		// Get data from the model for database
-		$this->changeSet     = $this->get('Items');
-		$this->errors        = $this->changeSet->check();
-		$this->results       = $this->changeSet->getStatus();
-		$this->schemaVersion = $this->get('SchemaVersion');
-		$this->updateVersion = $this->get('UpdateVersion');
-		$this->filterParams  = $this->get('DefaultTextFilters');
-		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-		$this->pagination    = $this->get('Pagination');
-		$this->errorCount    = count($this->errors);
-		$this->jversion      = $this->get('CompVersion');
-
 		// End for database
 		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');

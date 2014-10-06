@@ -62,3 +62,6 @@ ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_up` DATETIME NOT NULL DEFAULT 
 ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`created_by`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
+
+-- drop all asset ides referring to folder media and memtype;
+

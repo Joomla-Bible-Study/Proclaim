@@ -113,34 +113,12 @@
                value_field="server_name" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
-        <field name="path" type="sql" class="inputbox" label="JBS_CMN_FOLDERS"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, foldername FROM #__bsms_folders WHERE published = 1 ORDER BY id ASC"
-               key_field="id"
-               value_field="foldername" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_FOLDER</option>
-        </field>
         <field name="podcast" type="sql" class="inputbox" multiple="true" label="JBS_CMN_PODCAST"
                description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
                query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
                key_field="id"
                value_field="title" labelclass="control-label">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
-        </field>
-        <field name="media_image" type="sql" class="inputbox"
-               label="JBS_CMN_MEDIA_IMAGE" description="JBS_CMN_MEDIA_IMAGE_DESC"
-               default="-1"
-               query="SELECT id, media_text FROM #__bsms_media WHERE published = 1 ORDER BY media_text ASC"
-               key_field="id"
-               value_field="media_text" labelclass="control-label">
-            <option value="-1">JBS_ADM_NO_MEDIA_IMAGE</option>
-               </field>
-        <field name="mime" type="sql" class="inputbox" label="JBS_CMN_MIMETYPE"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-               key_field="id"
-               value_field="mimetext" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
         </field>
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>

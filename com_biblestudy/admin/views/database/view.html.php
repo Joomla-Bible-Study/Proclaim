@@ -158,7 +158,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$model = JModel::getInstance('Admin', 'BiblestudyModel');
+		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
 		$language = JFactory::getLanguage();

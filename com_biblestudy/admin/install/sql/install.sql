@@ -95,28 +95,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#__bsms_folders`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
-  `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `server_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `foldername` VARCHAR(250)     NOT NULL DEFAULT '',
-  `folderpath` VARCHAR(250)     NOT NULL DEFAULT '',
-  `published`  TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`     INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `#__bsms_locations`
 --
 
@@ -165,31 +143,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
   `access`        INT(10) UNSIGNED NOT NULL DEFAULT '1',
   `ordering`      INT(11)          NOT NULL DEFAULT '0',
   `landing_show`  INT(3),
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `#__bsms_media`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_media` (
-  `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `media_text`       TEXT,
-  `media_image_name` VARCHAR(250)     NOT NULL DEFAULT '',
-  `media_image_path` VARCHAR(250)     NOT NULL DEFAULT '',
-  `path2`            VARCHAR(150)     NOT NULL,
-  `media_alttext`    VARCHAR(250)     NOT NULL DEFAULT '',
-  `published`        TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `ordering`         INT(11)          NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
@@ -259,26 +212,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
   DEFAULT CHARSET =utf8;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `#__bsms_mimetype`
---
-
-CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `mimetype`  VARCHAR(50) DEFAULT NULL,
-  `mimetext`  VARCHAR(50) DEFAULT NULL,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `ordering`  INT(11)          NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
 
 --
 -- Table structure for table `#__bsms_podcast`
