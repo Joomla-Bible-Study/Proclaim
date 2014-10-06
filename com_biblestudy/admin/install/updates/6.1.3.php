@@ -230,7 +230,7 @@ class Migration613
 			return false;
 		}
 
-		$query = "INSERT INTO #__bsms_media SET `media_text` = 'Download',`media_image_name` = 'Download',`path2` = " .
+		$query = "INSERT INTO `#__bsms_media` SET `media_text` = 'Download',`media_image_name` = 'Download',`path2` = " .
 			"'download.png', `media_alttext` = 'Download',`published` = '1'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
@@ -308,7 +308,7 @@ class Migration613
 			return false;
 		}
 
-		$query = "INSERT INTO #__bsms_version SET `version` = '6.1.0', `installdate`='2009-11-30', " .
+		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.1.0', `installdate`='2009-11-30', " .
 			"`build`='613', `versionname`='Numbers', `versiondate`='2009-11-30'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 613: "))
