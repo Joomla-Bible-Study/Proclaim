@@ -135,13 +135,15 @@ $input = $app->input;
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
 						border="0"/> <span> Assets Check </span></a></div>
 		</div>
-		<div style="float:left;">
-			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>"
-			                     style="text-decoration:none;"
-			                     title="Database Check"> <img
-						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Database Check </span></a></div>
-		</div>
+<!--        Disabled until we figure out a better way to do this.-->
+
+<!--		<div style="float:left;">-->
+<!--			<div class="icon"><a href="--><?php //echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?><!--"-->
+<!--			                     style="text-decoration:none;"-->
+<!--			                     title="Database Check"> <img-->
+<!--						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"-->
+<!--						border="0"/> <span> Database Check </span></a></div>-->
+<!--		</div>-->
 		<div style="float:left;">
 			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
 			                     style="text-decoration:none;"
