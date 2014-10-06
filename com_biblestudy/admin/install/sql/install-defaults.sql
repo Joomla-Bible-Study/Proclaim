@@ -87,38 +87,11 @@ INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`) VALUES
   (73, 'JBS_BBK_BARUCH', 173, 1);
 
 --
--- Dumping data for table `#__bsms_folders`
---
-
-INSERT INTO `#__bsms_folders` (`id`, `foldername`, `folderpath`, `published`, `asset_id`, `access`) VALUES
-  (1, 'My Folder Name', '/media/', 1, 0, 1);
-
---
 -- Dumping data for table `#__bsms_locations`
 --
 
 INSERT INTO `#__bsms_locations` (`id`, `location_text`, `published`, `asset_id`, `access`, `ordering`) VALUES
   (1, 'My Location', 1, 0, 1, 1);
-
---
--- Dumping data for table `#__bsms_media`
---
-
-INSERT INTO `#__bsms_media` (`id`, `media_text`, `media_image_name`, `media_image_path`, `path2`, `media_alttext`, `published`, `asset_id`, `access`, `ordering`)
-VALUES
-  (1, 'mp3 compressed audio file', 'mp3', '', 'speaker24.png', 'mp3 audio file', 1, 0, 1, 1),
-(2, 'Video', 'Video File', '', 'video24.png', 'Video File', 1, 0, 1, 2),
-(3, 'm4v', 'Video Podcast', '', 'podcast-video24.png', 'Video Podcast', 1, 0, 1, 3),
-(4, 'Streaming Audio', 'Streaming Audio', '', 'streamingaudio24.png', 'Streaming Audio', 1, 0, 1, 4),
-(5, 'Streaming Video', 'Streaming Video', '', 'streamingvideo24.png', 'Streaming Video', 1, 0, 1, 5),
-(6, 'Real Audio', 'Real Audio', '', 'realplayer24.png', 'Real Audio', 1, 0, 1, 6),
-(7, 'Windows Media Audio', 'Windows Media Audio', '', 'windows-media24.png', 'Windows Media File', 1, 0, 1, 7),
-(8, 'Podcast Audio', 'Podcast Audio', '', 'podcast-audio24.png', 'Podcast Audio', 1, 0, 1, 8),
-(9, 'CD', 'CD', '', 'cd.png', 'CD', 1, 0, 1, 9),
-(10, 'DVD', 'DVD', '', 'dvd.png', 'DVD', 1, 0, 1, 10),
-(11, 'Download', 'Download', '', 'download.png', 'Download', 1, 0, 1, 11),
-  (12, 'Article', 'Article', '', 'textfile24.png', 'Article', 1, 0, 1, 12),
-  (13, 'You Tube', 'You Tube', '', 'youtube24.png', 'You Tube Video', 1, 0, 1, 13);
 
 --
 -- Dumping data for table `#__bsms_mediafiles`
@@ -132,34 +105,12 @@ VALUES
    'admin',
    '0000-00-00 00:00:00', 1);
 
-
 --
 -- Dumping data for table `#__bsms_message_type`
 --
 
 INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, `asset_id`, `access`, `ordering`) VALUES
   (1, 'Sunday', 'sunday', 1, 0, 1, 1);
-
---
--- Dumping data for table `#__bsms_mimetype`
---
-
-INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`, `asset_id`, `access`, `ordering`) VALUES
-  (1, 'audio/mpeg3', 'MP3 Audio', 1, 0, 1, 1),
-  (2, 'audio/x-pn-realaudio', 'Real Audio', 1, 0, 1, 2),
-  (3, 'video/x-m4v', 'Podcast Video m4v', 1, 0, 1, 3),
-  (4, 'application/vnd.rn-realmedia', 'Real Media rm', 1, 0, 1, 4),
-  (5, 'audio/x-ms-wma', 'Windows Media Audio WMA', 1, 0, 1, 5),
-  (6, 'text/html', 'Text', 1, 0, 1, 6),
-  (7, 'audio/x-wav', 'Windows wav File', 1, 0, 1, 7),
-  (8, 'audio/x-pn-realaudio-plugin', ' Real audio Plugin.rpm', 1, 0, 1, 8),
-  (9, 'audio/x-pn-realaudio', 'Real Media File .rm', 1, 0, 1, 9),
-  (10, 'audio/x-realaudio', 'Rea Audio File .ra', 1, 0, 1, 10),
-  (11, 'audio/x-pn-realaudio', 'Read Audio File.ram', 1, 0, 1, 11),
-  (12, 'video/mpeg', ' Mpeg video .mpg', 1, 0, 1, 12),
-  (13, 'audio/mpeg', 'Video .mp2 File', 1, 0, 1, 13),
-  (14, 'video/x-msvideo', ' Video .avi File', 1, 0, 1, 14),
-  (15, 'video/x-flv', ' Flash Video FLV', 1, 0, 1, 15);
 
 --
 -- Dumping data for table `#__bsms_podcast`
