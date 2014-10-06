@@ -46,6 +46,21 @@ class Migration622
 				}
 			}
 		}
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+
+		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		{
+			return false;
+		}
+
 		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.2', `installdate`='2010-10-25', `build`='622', " .
 			"`versionname`='Judges', `versiondate`='2010-10-25'";
 

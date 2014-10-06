@@ -52,6 +52,20 @@ class Migration611
 			return false;
 		}
 
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+
+		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		{
+			return false;
+		}
+
 		$query = "INSERT INTO #__bsms_version SET `version` = '6.0.11', `installdate`='2008-10-22', `build`='611'," .
 			"`versionname`='Leviticus', `versiondate`='2008-10-22'";
 
