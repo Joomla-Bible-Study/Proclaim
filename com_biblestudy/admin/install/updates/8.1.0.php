@@ -84,11 +84,18 @@ class Migration810
 				$params   = array();
 				$metadata = array();
 
-				$mediaImage = JTable::getInstance('Mediaimage', 'Table', array('dbo' => $db));
-				$mediaImage->load($mediaFile->media_image);
+                $query = $db->getQuery(true);
 
-				$path = JTable::getInstance('Folder', 'Table', array('dbo' => $db));
-				$path->load($mediaFile->path);
+                $query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
+                $db->setQuery($query);
+
+                $mediaImage = $db->loadObject();
+
+                $query = $db->getQuery(true);
+                $query->select('*')->from('#__bsms_folders')->where('id = '.$mediaFile->path);
+                $db->setQuery($query);
+
+                $path = $db->loadObject();
 
 				$params['media_image']   = $mediaImage->media_text;
 				$params['special']       = $mediaFile->special;
@@ -122,7 +129,7 @@ class Migration810
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
-		$columns = array('ftp_username', 'ftp_password', 'ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'aws_key', 'aws_secret', 'server_type');
+		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'aws_key', 'aws_secret');
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters
