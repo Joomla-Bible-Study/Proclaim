@@ -252,7 +252,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$asset = new JBSMAssets;
 		$asset->fixAssets();
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.checkassets');
+		$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
 	}
 
 	/**
@@ -486,6 +486,13 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 	}
 
+	/**
+	 * Get Thumbnail List XHR
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
 	public function getThumbnailListXHR()
 	{
 		JSession::checkToken('get') or die('Invalid Token');
@@ -509,6 +516,13 @@ class BiblestudyControllerAdmin extends JControllerForm
 		JFactory::getApplication()->close();
 	}
 
+	/**
+	 * Create Thumbnail XHR
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
 	public function createThumbnailXHR()
 	{
 		JSession::checkToken('get') or die('Invalid Token');

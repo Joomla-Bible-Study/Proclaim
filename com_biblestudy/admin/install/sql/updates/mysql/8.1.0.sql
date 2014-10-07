@@ -64,4 +64,3 @@ ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`created_by`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
 
 -- drop all asset ides referring to folder media and memtype;
-

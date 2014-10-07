@@ -84,18 +84,17 @@ class Migration810
 				$params   = array();
 				$metadata = array();
 
-                $query = $db->getQuery(true);
+				$query = $db->getQuery(true);
+				$query->select('*')->from('#__bsms_media')->where('id = ' . (int) $mediaFile->media_image);
+				$db->setQuery($query);
 
-                $query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
-                $db->setQuery($query);
+				$mediaImage = $db->loadObject();
 
-                $mediaImage = $db->loadObject();
+				$query = $db->getQuery(true);
+				$query->select('*')->from('#__bsms_folders')->where('id = ' . (int) $mediaFile->path);
+				$db->setQuery($query);
 
-                $query = $db->getQuery(true);
-                $query->select('*')->from('#__bsms_folders')->where('id = '.$mediaFile->path);
-                $db->setQuery($query);
-
-                $path = $db->loadObject();
+				$path = $db->loadObject();
 
 				$params['media_image']   = $mediaImage->media_text;
 				$params['special']       = $mediaFile->special;

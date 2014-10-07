@@ -565,16 +565,22 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/controllers/cssedit.php',
 			'/administrator/components/com_biblestudy/controllers/folderslist.php',
 			'/administrator/components/com_biblestudy/controllers/foldersedit.php',
+			'/administrator/components/com_biblestudy/controllers/folder.php',
+			'/administrator/components/com_biblestudy/controllers/folders.php',
 			'/administrator/components/com_biblestudy/controllers/locationslist.php',
 			'/administrator/components/com_biblestudy/controllers/locationsedit.php',
 			'/administrator/components/com_biblestudy/controllers/mediaedit.php',
 			'/administrator/components/com_biblestudy/controllers/mediafilesedit.php',
 			'/administrator/components/com_biblestudy/controllers/mediafileslist.php',
+			'/administrator/components/com_biblestudy/controllers/mediaimage.php',
+			'/administrator/components/com_biblestudy/controllers/mediaimages.php',
 			'/administrator/components/com_biblestudy/controllers/medialist.php',
 			'/administrator/components/com_biblestudy/controllers/messagetypelist.php',
 			'/administrator/components/com_biblestudy/controllers/messagetypeedit.php',
 			'/administrator/components/com_biblestudy/controllers/mimetypelist.php',
 			'/administrator/components/com_biblestudy/controllers/mimetypeedit.php',
+			'/administrator/components/com_biblestudy/controllers/mimetype.php',
+			'/administrator/components/com_biblestudy/controllers/mimetypes.php',
 			'/administrator/components/com_biblestudy/controllers/podcastlist.php',
 			'/administrator/components/com_biblestudy/controllers/podcastedit.php',
 			'/administrator/components/com_biblestudy/controllers/serieslist.php',
@@ -593,11 +599,14 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/controllers/topicsedit.php',
 			'/administrator/components/com_biblestudy/models/forms/commentsedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/foldersedit.xml',
+			'/administrator/components/com_biblestudy/models/forms/folder.xml',
 			'/administrator/components/com_biblestudy/models/forms/locationsedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/mediaedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/mediafilesedit.xml',
+			'/administrator/components/com_biblestudy/models/forms/mediaimage.xml',
 			'/administrator/components/com_biblestudy/models/forms/messagetypeedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/mimetypeedit.xml',
+			'/administrator/components/com_biblestudy/models/forms/mimetype.xml',
 			'/administrator/components/com_biblestudy/models/forms/podcastedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/seriesedit.xml',
 			'/administrator/components/com_biblestudy/models/forms/serversedit.xml',
@@ -612,16 +621,22 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/models/cssedit.php',
 			'/administrator/components/com_biblestudy/models/folderslist.php',
 			'/administrator/components/com_biblestudy/models/foldersedit.php',
+			'/administrator/components/com_biblestudy/models/folder.php',
+			'/administrator/components/com_biblestudy/models/folders.php',
 			'/administrator/components/com_biblestudy/models/locationslist.php',
 			'/administrator/components/com_biblestudy/models/locationsedit.php',
 			'/administrator/components/com_biblestudy/models/mediaedit.php',
 			'/administrator/components/com_biblestudy/models/mediafilesedit.php',
 			'/administrator/components/com_biblestudy/models/mediafileslist.php',
+			'/administrator/components/com_biblestudy/models/mediaimage.php',
+			'/administrator/components/com_biblestudy/models/mediaimages.php',
 			'/administrator/components/com_biblestudy/models/medialist.php',
 			'/administrator/components/com_biblestudy/models/messagetypelist.php',
 			'/administrator/components/com_biblestudy/models/messagetypeedit.php',
 			'/administrator/components/com_biblestudy/models/mimetypelist.php',
 			'/administrator/components/com_biblestudy/models/mimetypeedit.php',
+			'/administrator/components/com_biblestudy/models/mimetype.php',
+			'/administrator/components/com_biblestudy/models/mimetypes.php',
 			'/administrator/components/com_biblestudy/models/podcastlist.php',
 			'/administrator/components/com_biblestudy/models/podcastedit.php',
 			'/administrator/components/com_biblestudy/models/serieslist.php',
@@ -671,85 +686,85 @@ class Com_BiblestudyInstallerScript
 			'/administrator/language/no-NO/no-NO.com_biblestudy.sys.ini',
 			// JBSM 8.0.0
 			// Site:
-			'/components/com_biblestudy/controllers\commentsedit.php',
-			'/components/com_biblestudy/controllers\commentslist.php',
-			'/components/com_biblestudy/controllers\mediafile.php',
-			'/components/com_biblestudy/controllers\mediafiles.php',
-			'/components/com_biblestudy/controllers\message.php',
-			'/components/com_biblestudy/controllers\messages.php',
-			'/components/com_biblestudy/helpers\book.php',
-			'/components/com_biblestudy/helpers\date.php',
-			'/components/com_biblestudy/helpers\duration.php',
-			'/components/com_biblestudy/helpers\editlink.php',
-			'/components/com_biblestudy/helpers\editlisting.php',
-			'/components/com_biblestudy/helpers\filepath.php',
-			'/components/com_biblestudy/helpers\filesize.php',
-			'/components/com_biblestudy/helpers\header.php',
-			'/components/com_biblestudy/helpers\listing.php',
-			'/components/com_biblestudy/helpers\location.php',
-			'/components/com_biblestudy/helpers\mediatable.php',
-			'/components/com_biblestudy/helpers\messagetype.php',
-			'/components/com_biblestudy/helpers\params.php',
-			'/components/com_biblestudy/helpers\passage.php',
-			'/components/com_biblestudy/helpers\scripture.php',
-			'/components/com_biblestudy/helpers\share.php',
-			'/components/com_biblestudy/helpers\store.php',
-			'/components/com_biblestudy/helpers\textlink.php',
-			'/components/com_biblestudy/helpers\title.php',
-			'/components/com_biblestudy/helpers\toolbar.php',
-			'/components/com_biblestudy/helpers\topics.php',
-			'/components/com_biblestudy/helpers\year.php',
-			'/components/com_biblestudy/lib\biblestudy.admin.class.php',
-			'/components/com_biblestudy/lib\biblestudy.defines.php',
-			'/components/com_biblestudy/lib\biblestudy.stats.class.php',
-			'/components/com_biblestudy/models\forms\commentsedit.xml',
-			'/components/com_biblestudy/models\commentsedit.php',
-			'/components/com_biblestudy/models\commentslist.php',
-			'/components/com_biblestudy/models\mediafile.php',
-			'/components/com_biblestudy/models\mediafiles.php',
-			'/components/com_biblestudy/models\message.php',
-			'/components/com_biblestudy/models\messages.php',
+			'/components/com_biblestudy/controllers/commentsedit.php',
+			'/components/com_biblestudy/controllers/commentslist.php',
+			'/components/com_biblestudy/controllers/mediafile.php',
+			'/components/com_biblestudy/controllers/mediafiles.php',
+			'/components/com_biblestudy/controllers/message.php',
+			'/components/com_biblestudy/controllers/messages.php',
+			'/components/com_biblestudy/helpers/book.php',
+			'/components/com_biblestudy/helpers/date.php',
+			'/components/com_biblestudy/helpers/duration.php',
+			'/components/com_biblestudy/helpers/editlink.php',
+			'/components/com_biblestudy/helpers/editlisting.php',
+			'/components/com_biblestudy/helpers/filepath.php',
+			'/components/com_biblestudy/helpers/filesize.php',
+			'/components/com_biblestudy/helpers/header.php',
+			'/components/com_biblestudy/helpers/listing.php',
+			'/components/com_biblestudy/helpers/location.php',
+			'/components/com_biblestudy/helpers/mediatable.php',
+			'/components/com_biblestudy/helpers/messagetype.php',
+			'/components/com_biblestudy/helpers/params.php',
+			'/components/com_biblestudy/helpers/passage.php',
+			'/components/com_biblestudy/helpers/scripture.php',
+			'/components/com_biblestudy/helpers/share.php',
+			'/components/com_biblestudy/helpers/store.php',
+			'/components/com_biblestudy/helpers/textlink.php',
+			'/components/com_biblestudy/helpers/title.php',
+			'/components/com_biblestudy/helpers/toolbar.php',
+			'/components/com_biblestudy/helpers/topics.php',
+			'/components/com_biblestudy/helpers/year.php',
+			'/components/com_biblestudy/lib/biblestudy.admin.class.php',
+			'/components/com_biblestudy/lib/biblestudy.defines.php',
+			'/components/com_biblestudy/lib/biblestudy.stats.class.php',
+			'/components/com_biblestudy/models/forms/commentsedit.xml',
+			'/components/com_biblestudy/models/commentsedit.php',
+			'/components/com_biblestudy/models/commentslist.php',
+			'/components/com_biblestudy/models/mediafile.php',
+			'/components/com_biblestudy/models/mediafiles.php',
+			'/components/com_biblestudy/models/message.php',
+			'/components/com_biblestudy/models/messages.php',
 			// Admin:
-			'/administrator/components/com_biblestudy/controllers\ajax.php',
-			'/administrator/components/com_biblestudy/helpers\cleanurl.php',
-			'/administrator/components/com_biblestudy/helpers\toolbar.php',
-			'/administrator/components/com_biblestudy/lib\biblestudy.admin.class.php',
-			'/administrator/components/com_biblestudy/lib\biblestudy.migrate.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.611.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.612.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.613.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.614.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.622.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.623.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\biblestudy.700.upgrade.php',
-			'/administrator/components/com_biblestudy/migration\update701.php',
-			'/administrator/components/com_biblestudy/models\fields\locationordering.php',
-			'/administrator/components/com_biblestudy/models\fields\mediaordering.php',
-			'/administrator/components/com_biblestudy/models\fields\messagetypeordering.php',
-			'/administrator/components/com_biblestudy/models\fields\shareordering.php',
-			'/administrator/components/com_biblestudy/models\fields\teacherordering.php',
-			'/administrator/components/com_biblestudy/views\admin\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\admin\tmpl\form_assets.php',
-			'/administrator/components/com_biblestudy/views\admin\tmpl\form_backup.php',
-			'/administrator/components/com_biblestudy/views\admin\tmpl\form_database.php',
-			'/administrator/components/com_biblestudy/views\admin\tmpl\form_migrate.php',
-			'/administrator/components/com_biblestudy/views\comment\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\folder\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\folders\tmpl\index.html',
-			'/administrator/components/com_biblestudy/views\location\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\mediaimage\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\message\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\messagetype\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\mimetype\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\podcast\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\serie\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\server\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\server\tmpl\index.html',
-			'/administrator/components/com_biblestudy/views\share\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\teacher\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\template\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\templatecode\tmpl\form.php',
-			'/administrator/components/com_biblestudy/views\topic\tmpl\form.php',
+			'/administrator/components/com_biblestudy/controllers/ajax.php',
+			'/administrator/components/com_biblestudy/helpers/cleanurl.php',
+			'/administrator/components/com_biblestudy/helpers/toolbar.php',
+			'/administrator/components/com_biblestudy/lib/biblestudy.admin.class.php',
+			'/administrator/components/com_biblestudy/lib/biblestudy.migrate.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.611.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.612.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.613.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.614.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.622.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.623.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/biblestudy.700.upgrade.php',
+			'/administrator/components/com_biblestudy/migration/update701.php',
+			'/administrator/components/com_biblestudy/models/fields/locationordering.php',
+			'/administrator/components/com_biblestudy/models/fields/mediaordering.php',
+			'/administrator/components/com_biblestudy/models/fields/messagetypeordering.php',
+			'/administrator/components/com_biblestudy/models/fields/shareordering.php',
+			'/administrator/components/com_biblestudy/models/fields/teacherordering.php',
+			'/administrator/components/com_biblestudy/views/admin/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/admin/tmpl/form_assets.php',
+			'/administrator/components/com_biblestudy/views/admin/tmpl/form_backup.php',
+			'/administrator/components/com_biblestudy/views/admin/tmpl/form_database.php',
+			'/administrator/components/com_biblestudy/views/admin/tmpl/form_migrate.php',
+			'/administrator/components/com_biblestudy/views/comment/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/folder/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/folders/tmpl/index.html',
+			'/administrator/components/com_biblestudy/views/location/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/mediaimage/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/message/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/messagetype/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/mimetype/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/podcast/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/serie/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/server/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/server/tmpl/index.html',
+			'/administrator/components/com_biblestudy/views/share/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/teacher/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/template/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/templatecode/tmpl/form.php',
+			'/administrator/components/com_biblestudy/views/topic/tmpl/form.php',
 		);
 
 		$folders = array(
@@ -772,16 +787,22 @@ class Com_BiblestudyInstallerScript
 			'/administrator/components/com_biblestudy/views/cssedit',
 			'/administrator/components/com_biblestudy/views/folderslist',
 			'/administrator/components/com_biblestudy/views/foldersedit',
+			'/administrator/components/com_biblestudy/views/folder',
+			'/administrator/components/com_biblestudy/views/folders',
 			'/administrator/components/com_biblestudy/views/locationslist',
 			'/administrator/components/com_biblestudy/views/locationsedit',
 			'/administrator/components/com_biblestudy/views/mediaedit',
 			'/administrator/components/com_biblestudy/views/mediafilesedit',
 			'/administrator/components/com_biblestudy/views/mediafileslist',
+			'/administrator/components/com_biblestudy/views/mediaimage',
+			'/administrator/components/com_biblestudy/views/mediaimages',
 			'/administrator/components/com_biblestudy/views/medialist',
 			'/administrator/components/com_biblestudy/views/messagetypelist',
 			'/administrator/components/com_biblestudy/views/messagetypeedit',
 			'/administrator/components/com_biblestudy/views/mimetypelist',
 			'/administrator/components/com_biblestudy/views/mimetypeedit',
+			'/administrator/components/com_biblestudy/views/mimetype',
+			'/administrator/components/com_biblestudy/views/mimetypes',
 			'/administrator/components/com_biblestudy/views/podcastlist',
 			'/administrator/components/com_biblestudy/views/podcastedit',
 			'/administrator/components/com_biblestudy/views/serieslist',
@@ -859,62 +880,6 @@ class Com_BiblestudyInstallerScript
 		}
 	}
 
-//	/**
-//	 * Fix Image paths
-//	 *
-//	 * @since 7.1.0
-//	 *
-//	 * @return   void
-//	 */
-//	public function fixImagePaths()
-//	{
-//		$db    = JFactory::getDBO();
-//		$query = $db->getQuery(true);
-//		$query->select('*')
-//			->from('#__bsms_media');
-//		$db->setQuery($query);
-//		$images = $db->loadObjectList();
-//
-//		foreach ($images as $image)
-//		{
-//			if (!empty($image->media_image_path))
-//			{
-//				$image->media_image_path = str_replace('components', 'media', $image->media_image_path);
-//				$query                   = $db->getQuery(true);
-//				$query->update('#__bsms_media')
-//					->set("media_image_path = " . $db->q($image->media_image_path))
-//					->where('id = ' . $db->q($image->id));
-//				$db->setQuery($query);
-//				$db->execute();
-//			}
-//		}
-//		$query = $db->getQuery(true);
-//		$query->select('*')
-//			->from('#__bsms_share');
-//		$db->setQuery($query);
-//		$datas = $db->loadObjectList();
-//
-//		foreach ($datas as $data)
-//		{
-//			// Need to adjust the params and write back
-//			$registry = new JRegistry;
-//			$registry->loadString($data->params);
-//			$params     = $registry;
-//			$shareimage = $params->get('shareimage');
-//			$shareimage = str_replace('components', 'media', $shareimage);
-//			$params->set('shareimage', $shareimage);
-//
-//			// Now write the params back into the $table array and store.
-//			$data->params = (string) $params->toString();
-//			$qeery        = $db->getQuery(true);
-//			$qeery->update('#__bsms_share')
-//				->set('params =' . $db->q($data->params))
-//				->where('id = ' . $db->q($data->id));
-//			$db->setQuery($query);
-//			$db->execute();
-//		}
-//	}
-
 	/**
 	 * Function to find empty language field and set them to "*"
 	 *
@@ -960,7 +925,6 @@ class Com_BiblestudyInstallerScript
 			array('table' => '#__bsms_admin'),
 			array('table' => '#__bsms_mediafiles'),
 			array('table' => '#__bsms_message_type'),
-			//array('table' => '#__bsms_mimetype'),
 			array('table' => '#__bsms_podcast'),
 			array('table' => '#__bsms_series'),
 			array('table' => '#__bsms_servers'),
