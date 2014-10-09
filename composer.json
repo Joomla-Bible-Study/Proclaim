@@ -1,0 +1,21 @@
+{
+    "name": "joomla-bible-study/joomla-bible-study",
+    "description": "Joomla-Bible-Study",
+    "require": {
+        
+    },
+    "require-dev": {
+        "phing/phing": "2.8.2",
+        "phpunit/phpunit": "4.0.17",
+        "sebastian/phpcpd": "2.0.0",
+        "phploc/phploc": "2.0.4",
+        "phpmd/phpmd": "1.5.0",
+        "phpunit/php-invoker": "~1.1"
+    },
+    "authors": [
+        {
+            "name": "Michael Heiniger",
+            "email": "michael.heiniger@gmail.com"
+        }
+    ]
+}
