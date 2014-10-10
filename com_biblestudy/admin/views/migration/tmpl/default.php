@@ -36,7 +36,6 @@ else
 	     style="margin-right: 5px; width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%
 </div>
 <br/>
-<h2><?php echo $this->subrun; ?></h2>
 
 <form action="index.php" name="adminForm" id="adminForm">
 	<input type="hidden" name="option" value="com_biblestudy"/>

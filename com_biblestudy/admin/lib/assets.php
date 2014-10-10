@@ -19,6 +19,8 @@ defined('_JEXEC') or die;
 class JBSMAssets
 {
 
+	public static $parent_id = null;
+
 	/**
 	 * Fix Assets function.
 	 *
@@ -37,12 +39,7 @@ class JBSMAssets
 		}
 
 		// First get the new parent_id
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__assets')
-			->where('name = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		$parent_id = $db->loadResult();
+		self::parentid();
 
 		// Get the names of the JBS tables
 		$objects = self::getassetObjects();
@@ -70,7 +67,7 @@ class JBSMAssets
 				}
 
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if ($parent_id != $result->parent_id && $result->asset_id)
+				if (self::$parent_id != $result->parent_id && $result->asset_id)
 				{
 					self::deleteasset($result);
 					self::setasset($result, $object['assetname']);
@@ -79,6 +76,24 @@ class JBSMAssets
 		}
 
 		return true;
+	}
+
+	/**
+	 * Set Parent ID
+	 *
+	 * @return void
+	 */
+	public static function parentid()
+	{
+		$db = JFactory::getDBO();
+
+		// First get the new parent_id
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__assets')
+			->where('name = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query);
+		self::$parent_id = $db->loadResult();
 	}
 
 	/**
@@ -95,12 +110,6 @@ class JBSMAssets
 				'assetname'  => 'server',
 				'realname'   => 'JBS_CMN_SERVERS'
 			),
-//			array(
-//				'name'       => '#__bsms_folders',
-//				'titlefield' => 'foldername',
-//				'assetname'  => 'folder',
-//				'realname'   => 'JBS_CMN_FOLDERS'
-//			),
 			array(
 				'name'       => '#__bsms_studies',
 				'titlefield' => 'studytitle',
@@ -119,12 +128,6 @@ class JBSMAssets
 				'assetname'  => 'location',
 				'realname'   => 'JBS_CMN_LOCATIONS'
 			),
-//			array(
-//				'name'       => '#__bsms_media',
-//				'titlefield' => 'media_text',
-//				'assetname'  => 'mediaimage',
-//				'realname'   => 'JBS_CMN_MEDIAIMAGES'
-//			),
 			array(
 				'name'       => '#__bsms_mediafiles',
 				'titlefield' => 'filename',
@@ -137,12 +140,6 @@ class JBSMAssets
 				'assetname'  => 'messagetype',
 				'realname'   => 'JBS_CMN_MESSAGETYPES'
 			),
-//			array(
-//				'name'       => '#__bsms_mimetype',
-//				'titlefield' => 'mimetext',
-//				'assetname'  => 'mimetype',
-//				'realname'   => 'JBS_CMN_MIMETYPES'
-//			),
 			array(
 				'name'       => '#__bsms_podcast',
 				'titlefield' => 'title',
@@ -212,14 +209,22 @@ class JBSMAssets
 	 */
 	private static function setasset($data, $assetname)
 	{
-		$db = JFactory::getDBO();
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table = JTable::getInstance($assetname, 'Table', array('dbo' => $db));
+		$table = JTable::getInstance($assetname, 'Table');
 
 		if ($data->id)
 		{
 			try
 			{
+				if ($assetname == 'mediafile')
+				{
+					$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
+						'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
+					foreach ($columns as $col)
+					{
+						unset($table->$col);
+					}
+				}
 				$table->load($data->id);
 			}
 			catch (Exception $e)
@@ -228,12 +233,7 @@ class JBSMAssets
 
 				return false;
 			}
-			if (@!$table->store())
-			{
-				JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-
-				return false;
-			}
+			@$table->store();
 		}
 
 		return true;
@@ -252,19 +252,13 @@ class JBSMAssets
 
 		if (isset($data->jasset_id))
 		{
-			if ($data->jasset_id >= 2)
+			if ($data->jasset_id >= 2 && $data->jasset_id != self::$parent_id)
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__assets')
 					->where('id = ' . $db->quote($data->jasset_id));
 				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					JFactory::getApplication()->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
-
-					return false;
-				}
+				$db->execute();
 			}
 
 			return true;
@@ -287,12 +281,10 @@ class JBSMAssets
 		$result = new stdClass;
 
 		// First get the new parent_id
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__assets')
-			->where('name = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		$parent_id = $db->loadResult();
+		if (!self::$parent_id)
+		{
+			self::parentid();
+		}
 
 		// Get the names of the JBS tables
 		$objects = self::getassetObjects();
@@ -322,12 +314,12 @@ class JBSMAssets
 					$nullrows++;
 				}
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if ($parent_id != $result->parent_id && $result->jasset_id)
+				if (self::$parent_id != $result->parent_id && $result->jasset_id)
 				{
 					$nomatchrows++;
 				}
 				// If $parent_id and $result->parent_id match then everything is okay
-				if ($parent_id == $result->parent_id)
+				if (self::$parent_id == $result->parent_id)
 				{
 					$matchrows++;
 				}
@@ -338,7 +330,7 @@ class JBSMAssets
 				'nullrows'         => $nullrows,
 				'matchrows'        => $matchrows,
 				'nomatchrows'      => $nomatchrows,
-				'parent_id'        => $parent_id,
+				'parent_id' => self::$parent_id,
 				'result_parent_id' => $result->parent_id,
 				'id'               => $result->jid,
 				'assetid'          => $result->jasset_id

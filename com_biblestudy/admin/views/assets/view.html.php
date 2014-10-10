@@ -18,13 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewAssets extends JViewLegacy
 {
-
-	/**
-	 * Version
-	 *
-	 * @var string
-	 */
-	public $version;
 	/**
 	 * Can Do
 	 *
@@ -32,101 +25,11 @@ class BiblestudyViewAssets extends JViewLegacy
 	 */
 	public $canDo;
 	/**
-	 * Change Set
-	 *
-	 * @var string
-	 */
-	public $changeSet;
-	/**
-	 * Errors
-	 *
-	 * @var string
-	 */
-	public $errors;
-	/**
-	 * Results
-	 *
-	 * @var string
-	 */
-	public $results;
-	/**
-	 * Schema Version
-	 *
-	 * @var string
-	 */
-	public $schemaVersion;
-	/**
-	 * Update Version
-	 *
-	 * @var string
-	 */
-	public $updateVersion;
-	/**
-	 * Filter Params
-	 *
-	 * @var JRegistry
-	 */
-	public $filterParams;
-	/**
-	 * Pagination
-	 *
-	 * @var string
-	 */
-	public $pagination;
-	/**
-	 * Error Count
-	 *
-	 * @var string
-	 */
-	public $errorCount;
-	/**
-	 * Joomla BibleStudy Version
-	 *
-	 * @var string
-	 */
-	public $jversion;
-	/**
-	 * Temp Destination
-	 *
-	 * @var string
-	 */
-	public $tmp_dest;
-	/**
-	 * Player Stats
-	 *
-	 * @var string
-	 */
-	public $playerstats;
-	/**
 	 * Assets
 	 *
 	 * @var string
 	 */
 	public $assets;
-	/**
-	 * Popups
-	 *
-	 * @var string
-	 */
-	public $popups;
-	/**
-	 * SS
-	 *
-	 * @var string
-	 */
-	public $ss;
-	/**
-	 * Lists
-	 *
-	 * @var string
-	 */
-	public $lists;
-	/**
-	 * PI
-	 *
-	 * @var string
-	 */
-	public $pi;
 	/**
 	 * Form
 	 *
@@ -165,36 +68,11 @@ class BiblestudyViewAssets extends JViewLegacy
 		$language->load('com_installer');
 
 		// Get data from the model
-		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
-
-		// End for database
-		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->get('tmp_path');
-
-		$stats             = new JBSMStats;
-		$this->playerstats = $stats->players();
-		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
-		$popups            = $stats->popups();
-		$this->popups      = $popups;
-
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
-		$this->version = $jbsversion['version'];
-
-		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
-		{
-			$this->errorCount++;
-		}
-		if (!$this->filterParams)
-		{
-			$this->errorCount++;
-		}
-		if (($this->updateVersion != $this->version))
-		{
-			$this->errorCount++;
-		}
+		$this->form   = $this->get("Form");
+		$this->item   = $this->get("Item");
+		$this->state  = $this->get("State");
+		$this->canDo  = JBSMBibleStudyHelper::getActions($this->item->id);
+		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
 
 		$this->setLayout('edit');
 

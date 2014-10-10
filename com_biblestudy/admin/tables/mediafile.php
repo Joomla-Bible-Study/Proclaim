@@ -26,6 +26,13 @@ class TableMediafile extends JTable
 	public $id = null;
 
 	/**
+	 * Study id
+	 *
+	 * @var int
+	 */
+	public $study_id = null;
+
+	/**
      * Server id
      *
      * @var int

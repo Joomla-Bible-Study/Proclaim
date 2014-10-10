@@ -99,7 +99,6 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 			$this->_data->media_image     = null;
 			$this->_data->server          = null;
 			$this->_data->path            = null;
-			$this->_data->special         = null;
 			$this->_data->filename        = null;
 			$this->_data->size            = null;
 			$this->_data->podcast_id      = null;

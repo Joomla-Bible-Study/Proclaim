@@ -79,6 +79,7 @@ class Migration810
 
 			foreach ($db->loadObjectList() as $mediaFile)
 			{
+
 				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
 				$newMediaFile->load($mediaFile->id);
 				$params   = array();
@@ -96,6 +97,12 @@ class Migration810
 
 				$path = $db->loadObject();
 
+				// Some people do not have logos set to there media so we have this.
+				if (!$mediaImage)
+				{
+					$mediaImage             = new stdClass;
+					$mediaImage->media_text = null;
+				}
 				$params['media_image']   = $mediaImage->media_text;
 				$params['special']       = $mediaFile->special;
 				$params['filename']      = $server->server_path . $path->folderpath . $mediaFile->filename;

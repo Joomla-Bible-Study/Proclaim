@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -56,6 +56,8 @@ class BiblestudyViewMigration extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		$input = new JInput;
+		$input->set('hidemainmenu', true);
 		$app   = JFactory::getApplication();
 		$state = $app->input->getBool('scanstate', false);
 		$this->loadStack();
@@ -75,10 +77,10 @@ class BiblestudyViewMigration extends JViewLegacy
 			$more    = false;
 		}
 
-		$this->more = & $more;
+		$this->more = &$more;
 		$this->setLayout('default');
 
-		$this->percentage = & $percent;
+		$this->percentage = &$percent;
 
 		if ($more)
 		{
@@ -103,8 +105,7 @@ class BiblestudyViewMigration extends JViewLegacy
 	{
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
-
-		$subrun        = $session->get('migration', '', 'biblestudy');
+		$subrun = $session->get('migration', '', 'biblestudy');
 
 		if (empty($stack))
 		{
@@ -135,7 +136,7 @@ class BiblestudyViewMigration extends JViewLegacy
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
 		$this->running = $stack['run'];
-		$this->subrun  = $subrun;
+		$this->subrun = $subrun;
 
 	}
 }
