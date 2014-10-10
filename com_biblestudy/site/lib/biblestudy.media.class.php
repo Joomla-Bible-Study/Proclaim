@@ -568,8 +568,8 @@ class jbsMedia
 									<script language=\"javascript\" type=\"text/javascript\">
 									    jwplayer('placeholder').setup({
 										    'file' : '" . $path . "',
-										    'height' : '" . $height . "',
-										    'width' : '" . $width . "',
+										    'height' : '" . $player->playerheight . "',
+										    'width' : '" . $player->playerwidth . "',
 									        'image':'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
 									        'flashplayer':'" . $base . "media/com_biblestudy/player/jwplayer.flash.swf',
 									        'backcolor':'" . $backcolor . "',
