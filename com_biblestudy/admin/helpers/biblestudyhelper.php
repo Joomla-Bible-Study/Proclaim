@@ -50,33 +50,30 @@ class JBSMBibleStudyHelper
 				case 'admin':
 					$assetName = 'com_biblestudy.admin.' . (int) $Itemid;
 					break;
-
-				case 'folder':
-					$assetName = 'com_biblestudy.foldersedit.' . (int) $Itemid;
+				case 'assets':
+					$assetName = 'com_biblestudy.assets.' . (int) $Itemid;
 					break;
-
-				case 'comments':
-					$assetName = 'com_biblestudy.commentsedit.' . (int) $Itemid;
+				case 'backup':
+					$assetName = 'com_biblestudy.backup.' . (int) $Itemid;
 					break;
-
+				case 'comment':
+					$assetName = 'com_biblestudy.comment.' . (int) $Itemid;
+					break;
+				case 'database':
+					$assetName = 'com_biblestudy.database.' . (int) $Itemid;
+					break;
 				case 'location':
-					$assetName = 'com_biblestudy.locationsedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.location.' . (int) $Itemid;
 					break;
-
-				case 'mediaimage':
-					$assetName = 'com_biblestudy.mediaedit.' . (int) $Itemid;
-					break;
-
 				case 'messagetype':
-					$assetName = 'com_biblestudy.messagetypeedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.messagetype.' . (int) $Itemid;
 					break;
-
-				case 'mimetype':
-					$assetName = 'com_biblestudy.mimetypeedit.' . (int) $Itemid;
+				case 'migrate':
+					$assetName = 'com_biblestudy.migrate.' . (int) $Itemid;
 					break;
 
 				case 'podcast':
-					$assetName = 'com_biblestudy.podcastedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.podcast.' . (int) $Itemid;
 					break;
 
 				case 'serie':
@@ -84,23 +81,23 @@ class JBSMBibleStudyHelper
 					break;
 
 				case 'server':
-					$assetName = 'com_biblestudy.serversedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.server.' . (int) $Itemid;
 					break;
 
 				case 'share':
-					$assetName = 'com_biblestudy.shareedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.share.' . (int) $Itemid;
 					break;
 
 				case 'teacher':
-					$assetName = 'com_biblestudy.teacheredit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.teacher.' . (int) $Itemid;
 					break;
 
 				case 'template':
-					$assetName = 'com_biblestudy.templateedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.template.' . (int) $Itemid;
 					break;
 
 				case 'topic':
-					$assetName = 'com_biblestudy.topicsedit.' . (int) $Itemid;
+					$assetName = 'com_biblestudy.topic.' . (int) $Itemid;
 					break;
 
 				case 'message':
@@ -186,9 +183,6 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
 		);
 		self::rendermenu(
-			JText::_('JBS_CMN_FOLDERS'), 'index.php?option=com_biblestudy&view=folders', $vName == 'folders'
-		);
-		self::rendermenu(
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
 		self::rendermenu(
@@ -199,12 +193,6 @@ class JBSMBibleStudyHelper
 		);
 		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_MIMETYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
 		);
 		self::rendermenu(
 			JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
@@ -410,34 +398,16 @@ class JBSMBibleStudyHelper
 	/**
 	 * Media Types
 	 *
-	 * @return array        Returns lists of media types
-	 *
 	 * @since 8.0.0
+	 * @depreciated 8.1.0
+	 *
+	 * @throws Exception For bad function
+	 * @return void
 	 */
 	public static function getMediaTypes()
 	{
-		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('id As value, media_image_name As text');
-		$query->from('#__bsms_media AS a');
-		$query->order('a.media_image_name');
-
-		// Get the options.
-		$db->setQuery($query);
-
-		try
-		{
-			$options = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
-		}
-
-		return $options;
+		JLog::add('getMediaTypes is nologer supported');
+		throw new Exception('Bad function getMediaTypes is nologer supported');
 	}
 
 	/**
