@@ -219,7 +219,7 @@ class JBSMAssets
 				if ($assetname == 'mediafile')
 				{
 					$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-						'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
+						'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
 					foreach ($columns as $col)
 					{
 						unset($table->$col);
