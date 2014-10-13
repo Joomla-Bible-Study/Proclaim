@@ -97,11 +97,11 @@ INSERT INTO `#__bsms_locations` (`id`, `location_text`, `published`, `asset_id`,
 -- Dumping data for table `#__bsms_mediafiles`
 --
 
-INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `downloads`, `plays`, `hits`, `player`, `popup`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
+INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `downloads`, `plays`, `hits`, `player`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
 VALUES
   (1, 1, 1, '1',
    '{\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\"}',
-   '{statistics: {plays: 0, downloads: 0}}', 0, 0, 0, 0, 1, 0, '2009-09-13 00:10:00', 1, 'Sample Media file', 0, 1, '', 1,
+   '{statistics: {plays: 0, downloads: 0}}', 0, 0, 0, 1, 0, '2009-09-13 00:10:00', 1, 'Sample Media file', 0, 1, '', 1,
    'admin',
    '0000-00-00 00:00:00', 1);
 
