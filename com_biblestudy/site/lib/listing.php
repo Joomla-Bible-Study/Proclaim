@@ -2531,8 +2531,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   object $row Item Info
+	 * @param   JRegistry $params Item Params
+	 * @param   object    $row    Item Info
 	 *
 	 * @return string
 	 */
@@ -2593,7 +2593,7 @@ class JBSMListing
 		jimport('joomla.html.parameter');
 
 		// Find a better way to do this.
-		$template     = new TableTemplate(JFactory::getDbo());
+		$template = new TableTemplate(JFactory::getDbo());
 		$template->id = (int) '1';
 
 		$sharetype = $params->get('sharetype', 1);
