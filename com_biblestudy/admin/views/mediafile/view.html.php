@@ -110,19 +110,19 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->$ref1com = $ref1;
 
 		// Get folders for upload dropdown
-		$query = $db->getQuery(true);
-		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published = ' . 1)->order('foldername asc');
-		$db->setQuery($query);
-		$folder     = array(
-			array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
-		);
-		$folderlist = array_merge($folder, $db->loadObjectList());
-
-		$ref2           = JHTML::_('select.genericList', $folderlist, 'upload_folder',
-			'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
-		$ref2com        = 'upload_folder';
-		$this->$ref2com = $ref2;
-		$this->setLayout('edit');
+//		$query = $db->getQuery(true);
+//		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published = ' . 1)->order('foldername asc');
+//		$db->setQuery($query);
+//		$folder     = array(
+//			array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
+//		);
+//		$folderlist = array_merge($folder, $db->loadObjectList());
+//
+//		$ref2           = JHTML::_('select.genericList', $folderlist, 'upload_folder',
+//			'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
+//		$ref2com        = 'upload_folder';
+//		$this->$ref2com = $ref2;
+//		$this->setLayout('edit');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

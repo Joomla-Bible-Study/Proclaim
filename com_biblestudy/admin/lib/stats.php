@@ -503,50 +503,50 @@ class JBSMStats
 	 */
 	public static function popups()
 	{
-		$no_player    = 0;
-		$pop_count    = 0;
-		$inline_count = 0;
-		$global_count = 0;
-		$db           = JFactory::getDBO();
-		$query        = $db->getQuery(true);
-		$query
-			->select('popup')
-			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'));
-		$db->setQuery($query);
-		$popups            = $db->loadObjectList();
+//		$no_player    = 0;
+//		$pop_count    = 0;
+//		$inline_count = 0;
+//		$global_count = 0;
+//		$db           = JFactory::getDBO();
+//		$query        = $db->getQuery(true);
+//		$query
+//			->select('popup')
+//			->from('#__bsms_mediafiles')
+//			->where('published = ' . $db->q('1'));
+//		$db->setQuery($query);
+//		$popups            = $db->loadObjectList();
+//
+//		if ($popups)
+//		{
+//			$total_media_files = count($popups);
+//
+//			foreach ($popups as $popup)
+//			{
+//				switch ($popup->popup)
+//				{
+//					case 0:
+//						$no_player++;
+//						break;
+//					case 1:
+//						$pop_count++;
+//						break;
+//					case 2:
+//						$inline_count++;
+//						break;
+//					case 3:
+//						$global_count++;
+//						break;
+//				}
+//			}
+//
+//			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+//				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+//		}
 
-		if ($popups)
-		{
-			$total_media_files = count($popups);
-
-			foreach ($popups as $popup)
-			{
-				switch ($popup->popup)
-				{
-					case 0:
-						$no_player++;
-						break;
-					case 1:
-						$pop_count++;
-						break;
-					case 2:
-						$inline_count++;
-						break;
-					case 3:
-						$global_count++;
-						break;
-				}
-			}
-
-			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
-				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
-		}
-
-		return $popups;
+		return 'need to redo';
 	}
 
 	/**

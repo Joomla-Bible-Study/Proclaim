@@ -39,7 +39,7 @@ $doc->addStyleDeclaration($style);
 	}
 	if ($this->player == 0)
 	{
-		echo '<a href="' . JRoute::_('http://' . $this->media->spath . $this->media->fpath . $this->media->filename) . '"> Link to: ' .
+		echo '<a href="' . JRoute::_($this->params->get('filename')) . '"> Link to: ' .
 			$this->media->studytitle . '</a>';
 	}
 	?>

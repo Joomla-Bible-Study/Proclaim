@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -244,18 +244,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
-	 * Fix Assets
-	 *
-	 * @return void
-	 */
-	public function fixAssets()
-	{
-		$asset = new JBSMAssets;
-		$asset->fixAssets();
-		$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
-	}
-
-	/**
 	 * Convert SermonSpeaker to BibleStudy
 	 *
 	 * @return void
@@ -307,6 +295,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
+			self::fixAssets();
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 		else
@@ -315,6 +304,23 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 
+	}
+
+	/**
+	 * Fix Assets
+	 *
+	 * @param   bool $dbReset To check if this is coming from dbReset
+	 *
+	 * @return void
+	 */
+	public function fixAssets($dbReset = false)
+	{
+		$asset = new JBSMAssets;
+		$asset->fixAssets();
+		if (!$dbReset)
+		{
+			$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
+		}
 	}
 
 	/**

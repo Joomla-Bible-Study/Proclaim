@@ -246,6 +246,12 @@ class JBSMPageBuilder
 			$registry  = new JRegistry;
 			$registry->loadString($media->params);
 			$params->merge($registry);
+			$registry = new JRegistry;
+			$registry->loadString($media->smedia);
+			$media->smedia = $registry;
+			$registry      = new JRegistry;
+			$registry->loadString($media->sparams);
+			$media->sparams = $registry;
 			$mediaid        = $media->id;
 			if ($media->impath)
 			{

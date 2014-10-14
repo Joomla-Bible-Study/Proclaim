@@ -132,14 +132,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
+		$this->path1 = $this->params->get('filename');
 
-		if ($this->media->spath == 'localhost')
-		{
-			$this->media->spath = JUri::base() . '/';
-		}
-		$this->path1            = $this->media->spath . $this->media->fpath . $this->media->filename;
-
-		if (!substr_count($this->path1, '://'))
+		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
 		{
 			$protocol = $this->params->get('protocol', 'http://');
 			$this->path1     = $protocol . $this->path1;
@@ -233,9 +228,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		{
 			$text = str_replace('{{studydate}}', $date, $text);
 		}
-		if (isset($media->filename))
+		if ($this->params->get('filename'))
 		{
-			$text = str_replace('{{filename}}', $media->filename, $text);
+			$text = str_replace('{{filename}}', $this->params->get('filename'), $text);
 		}
 		if (isset($media->studyintro))
 		{

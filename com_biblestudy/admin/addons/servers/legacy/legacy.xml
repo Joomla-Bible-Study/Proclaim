@@ -5,6 +5,11 @@
     <config>
         <media_resource>filename</media_resource>
     </config>
+	<fields name="params">
+		<fieldset name="Server" label="JBS_ADDON_LEGACY_DETAILS">
+	        <field name="path" type="text" label="path" description="test" class="inputbox" size="35"></field>
+		</fieldset>
+	</fields>
     <fields name="media">
         <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
             <field name="link_type" type="list" extension="com_biblestudy"
@@ -36,17 +41,13 @@
                    filter="raw"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
-            <field name="media_image" type="sql" extension="com_biblestudy"
+            <field name="media_image" type="text" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-                   class="inputbox"
-                   query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-                   key_field="id" value_field="media_image_name" required="true">
+                   class="inputbox" required="true">
             </field>
-            <field name="mime_type" type="sql" extension="com_biblestudy"
+            <field name="mime_type" type="text" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-                   class="inputbox"
-                   query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-                   key_field="id" value_field="mimetext">
+                   class="inputbox">
             </field>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
