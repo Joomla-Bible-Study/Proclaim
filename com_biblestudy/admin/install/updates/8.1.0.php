@@ -60,6 +60,7 @@ class Migration810
 			else
 			{
 				$newServer->type = "legacy";
+				$params['path'] = $server->path;
 			}
 
 			$newServer->params = json_encode($params);
@@ -92,18 +93,38 @@ class Migration810
 				$mediaImage = $db->loadObject();
 
 				$query = $db->getQuery(true);
+				$query->select('*')->from('#__bsms_mimetype')->where('id = ' . (int) $mediaFile->mime_type);
+				$db->setQuery($query);
+
+				$mimtype = $db->loadObject();
+
+				$query = $db->getQuery(true);
 				$query->select('*')->from('#__bsms_folders')->where('id = ' . (int) $mediaFile->path);
 				$db->setQuery($query);
 
-				$path = $db->loadObject();
+				$path   = $db->loadObject();
+				$mimage = null;
 
 				// Some people do not have logos set to there media so we have this.
 				if (!$mediaImage)
 				{
-					$mediaImage             = new stdClass;
-					$mediaImage->media_text = null;
+					$mediaImage         = new stdClass;
+					$mediaImage->mimage = null;
 				}
-				$params['media_image']   = $mediaImage->media_text;
+				else
+				{
+					if ($mediaImage->media_image_path)
+					{
+						$mimage = $mediaImage->media_image_path;
+					}
+					else
+					{
+						$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+					}
+				}
+				$params['media_image'] = $mimage;
+				$params['media_text']  = $mediaImage->media_alttext;
+				$params['mime_type']   = $mimtype->mimetype;
 				$params['special']       = $mediaFile->special;
 				$params['filename']      = $server->server_path . $path->folderpath . $mediaFile->filename;
 				$params['size']          = $mediaFile->size;
@@ -115,6 +136,7 @@ class Migration810
 				$params['player']        = $mediaFile->player;
 				$params['popup']         = $mediaFile->popup;
 
+				// @todo I don't thing we want to add both hits and plays to gather. I'm under hits a as the one but will need to verify this with tom
 				$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
 				$metadata['downloads'] = $mediaFile->downloads;
 

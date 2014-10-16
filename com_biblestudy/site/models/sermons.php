@@ -356,10 +356,9 @@ class BiblestudyModelSermons extends JModelList
 			$i++;
 			$sermon_id = $sermon->id;
 			$query     = $db->getQuery(true);
-			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+			$query->select('study_id, filename, #__bsms_servers.server_path')
 				->from('#__bsms_mediafiles')
 				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
-				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
 				->where('study_id` = ' . $sermon_id);
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
@@ -960,7 +959,7 @@ class BiblestudyModelSermons extends JModelList
 			$order = $orderstate;
 		}
 
-		$query->order('studydate ' . $order);
+		//$query->order('studydate ' . $order);
 
 		return $query;
 	}

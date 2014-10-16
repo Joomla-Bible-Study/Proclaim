@@ -465,17 +465,11 @@ class JBSMListing
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-			. ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
-			. ' #__bsms_media.media_image_name AS imname,'
-			. ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-			. ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype');
+		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
+			. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
 		$query->from('#__bsms_mediafiles');
-		$query->leftJoin('#__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)');
-		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)');
-		$query->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)');
-		$query->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)');
+		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
 		$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
 		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
 		$where2   = array();
@@ -498,7 +492,7 @@ class JBSMListing
 		$subquery .= ')';
 		$query->where($subquery);
 		$query->where('#__bsms_mediafiles.published = 1');
-		$query->order('ordering ASC, #__bsms_media.media_image_name ASC');
+		$query->order('ordering ASC');
 		$db->setQuery($query);
 		$mediafiles = $db->loadObjectList();
 
@@ -525,6 +519,75 @@ class JBSMListing
 		$l->customtext = $this->params->get($paramtext . 'text');
 
 		return $l;
+	}
+
+	/**
+	 * Sort Array of Object by Property
+	 *
+	 * @param   array  $array    ?
+	 * @param   string $property ?
+	 * @param   string $order    ?
+	 *
+	 * @return array
+	 */
+	public function sortArrayofObjectByProperty($array, $property, $order = "ASC")
+	{
+		$cur           = 1;
+		$stack[1]['l'] = 0;
+		$stack[1]['r'] = count($array) - 1;
+
+		do
+		{
+			$l = $stack[$cur]['l'];
+			$r = $stack[$cur]['r'];
+			$cur--;
+
+			do
+			{
+				$i   = $l;
+				$j   = $r;
+				$tmp = $array[(int) (($l + $r) / 2)];
+
+				// Split the array in to parts
+				// first: objects with "smaller" property $property
+				// second: objects with "bigger" property $property
+				do
+				{
+					while ($array[$i]->{$property} < $tmp->{$property}) $i++;
+					while ($tmp->{$property} < $array[$j]->{$property}) $j--;
+
+					// Swap elements of two parts if necesary
+					if ($i <= $j)
+					{
+						$w         = $array[$i];
+						$array[$i] = $array[$j];
+						$array[$j] = $w;
+
+						$i++;
+						$j--;
+					}
+
+				} while ($i <= $j);
+
+				if ($i < $r)
+				{
+					$cur++;
+					$stack[$cur]['l'] = $i;
+					$stack[$cur]['r'] = $r;
+				}
+				$r = $j;
+
+			} while ($l < $r);
+
+		} while ($cur != 0);
+
+		// Added ordering.
+		if ($order == "DESC")
+		{
+			$array = array_reverse($array);
+		}
+
+		return $array;
 	}
 
 	/**
@@ -1551,64 +1614,13 @@ class JBSMListing
 	}
 
 	/**
-	 * Use JImage Class
-	 *
-	 * @param   String  $path  Path to File
-	 * @param   String  $alt   Alternate Text
-	 *
-	 * @return bool|stdClass
-	 *
-	 * @since 8.1.0
-	 */
-	public function useJImage($path, $alt = null)
-	{
-		$image = new JImage;
-
-		try
-		{
-			$return = $image->getImageFileProperties($path);
-		}
-		catch (Exception $e)
-		{
-			$return = false;
-		}
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . '>';
-
-		return $imagereturn;
-	}
-
-	/**
-	 * Get Fluid Media Files
-	 *
-	 * @param   Object         $item      ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 *
-	 * @return string
-	 *
-	 * @since 8.1.0
-	 */
-	public function getFluidMediaFiles($item, $params, $template)
-	{
-		$med      = new JBSMMedia;
-		$mediarow = '<div style="display:inline;">';
-		foreach ($item->mediafiles as $media)
-		{
-			$mediarow .= $med->getFluidMedia($media, $params, $template);
-		}
-		$mediarow .= '</div>';
-
-		return $mediarow;
-	}
-
-	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String         $custom    ?
-	 * @param   Object         $item      ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   String         $type      ?
+	 * @param   String        $custom   ?
+	 * @param   Object        $item     ?
+	 * @param   JRegistry     $params   ?
+	 * @param   TableTemplate $template ?
+	 * @param   String        $type     ?
 	 *
 	 * @return mixed
 	 */
@@ -1633,11 +1645,11 @@ class JBSMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String         $custom    ?
-	 * @param   Object         $row       ?
+	 * @param   String $custom ?
+	 * @param   Object $row    ?
 	 * @param   JRegistry      $params    ?
 	 * @param   TableTemplate  $template  ?
-	 * @param   String         $type      ?
+	 * @param   String $type   ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -1864,89 +1876,17 @@ class JBSMListing
 				}
 				break;
 		}
+
 		return $element;
 	}
 
 	/**
-	 * Sort Array of Object by Property
-	 *
-	 * @param   array   $array     ?
-	 * @param   string  $property  ?
-	 * @param   string  $order     ?
-	 *
-	 * @return array
-	 */
-	public function sortArrayofObjectByProperty($array, $property, $order = "ASC")
-	{
-		$cur           = 1;
-		$stack[1]['l'] = 0;
-		$stack[1]['r'] = count($array) - 1;
-
-		do
-		{
-			$l = $stack[$cur]['l'];
-			$r = $stack[$cur]['r'];
-			$cur--;
-
-			do
-			{
-				$i   = $l;
-				$j   = $r;
-				$tmp = $array[(int) (($l + $r) / 2)];
-
-				// Split the array in to parts
-				// first: objects with "smaller" property $property
-				// second: objects with "bigger" property $property
-				do
-				{
-					while ($array[$i]->{$property} < $tmp->{$property}) $i++;
-					while ($tmp->{$property} < $array[$j]->{$property}) $j--;
-
-					// Swap elements of two parts if necesary
-					if ($i <= $j)
-					{
-						$w         = $array[$i];
-						$array[$i] = $array[$j];
-						$array[$j] = $w;
-
-						$i++;
-						$j--;
-					}
-
-				}
-				while ($i <= $j);
-
-				if ($i < $r)
-				{
-					$cur++;
-					$stack[$cur]['l'] = $i;
-					$stack[$cur]['r'] = $r;
-				}
-				$r = $j;
-
-			}
-			while ($l < $r);
-
-		}
-		while ($cur != 0);
-
-		// Added ordering.
-		if ($order == "DESC")
-		{
-			$array = array_reverse($array);
-		}
-
-		return $array;
-	}
-
-
-	/**
 	 * Get Scripture
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   object  $row           Row Info
-	 * @param   string  $esv           ESV String
-	 * @param   string  $scripturerow  Scripture Row
+	 * @param   object $params       Item Params
+	 * @param   object $row          Row Info
+	 * @param   string $esv          ESV String
+	 * @param   string $scripturerow Scripture Row
 	 *
 	 * @return string
 	 */
@@ -2114,8 +2054,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   Object     $row     Row info
+	 * @param   JRegistry $params Item Params
+	 * @param   Object    $row    Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2167,10 +2107,34 @@ class JBSMListing
 	}
 
 	/**
+	 * Get Fluid Media Files
+	 *
+	 * @param   Object        $item     ?
+	 * @param   JRegistry     $params   ?
+	 * @param   TableTemplate $template ?
+	 *
+	 * @return string
+	 *
+	 * @since 8.1.0
+	 */
+	public function getFluidMediaFiles($item, $params, $template)
+	{
+		$med      = new JBSMMedia;
+		$mediarow = '<div style="display:inline;">';
+		foreach ($item->mediafiles as $media)
+		{
+			$mediarow .= $med->getFluidMedia($media, $params, $template);
+		}
+		$mediarow .= '</div>';
+
+		return $mediarow;
+	}
+
+	/**
 	 * Get StudyDate
 	 *
-	 * @param   JRegistry  $params     Item Params
-	 * @param   string     $studydate  Study Date
+	 * @param   JRegistry $params    Item Params
+	 * @param   string    $studydate Study Date
 	 *
 	 * @return string
 	 */
@@ -2221,6 +2185,33 @@ class JBSMListing
 		}
 
 		return $date;
+	}
+
+	/**
+	 * Use JImage Class
+	 *
+	 * @param   String $path Path to File
+	 * @param   String $alt  Alternate Text
+	 *
+	 * @return bool|stdClass
+	 *
+	 * @since 8.1.0
+	 */
+	public function useJImage($path, $alt = null)
+	{
+		$image = new JImage;
+
+		try
+		{
+			$return = $image->getImageFileProperties($path);
+		}
+		catch (Exception $e)
+		{
+			$return = false;
+		}
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . '>';
+
+		return $imagereturn;
 	}
 
 	/**
@@ -2337,11 +2328,85 @@ class JBSMListing
 	}
 
 	/**
+	 * Get File Path
+	 *
+	 * @param   string $id3     ID
+	 * @param   string $idfield ID Filed
+	 * @param   string $mime    MimeType ID
+	 *
+	 * @return string
+	 */
+	public function getFilepath($id3, $idfield, $mime = null)
+	{
+		JFactory::getApplication()->enqueueMessage('must remove fuction getFilepath');
+
+		return false;
+	}
+
+	/**
+	 * Get Other Links
+	 *
+	 * @param   int       $id3    Study ID ID
+	 * @param   string    $islink Is a Link
+	 * @param   JRegistry $params Item Params
+	 *
+	 * @return string
+	 */
+	public function getOtherlinks($id3, $islink, $params)
+	{
+		$link  = '';
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*')
+			->from('#__bsms_mediafiles')
+			->where('study_id = ' . $db->q($id3))
+			->where('#__bsms_mediafiles.published = 1');
+		$db->setQuery($query);
+		$db->execut();
+		$num_rows = $db->getNumRows();
+
+		if ($num_rows > 0)
+		{
+			$mediafiles = $db->loadObjectList();
+
+			foreach ($mediafiles AS $media)
+			{
+				switch ($islink)
+				{
+					case 6:
+						if ($media->article_id > 0)
+						{
+							$link = 'index.php?option=com_content&view=article&id=' . $media->article_id;
+						}
+						break;
+
+					case 7:
+						if ($media->virtueMart_id > 0)
+						{
+							$link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
+								. $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
+						}
+						break;
+
+					case 8:
+						if ($media->docMan_id > 0)
+						{
+							$link = 'index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id;
+						}
+						break;
+				}
+			}
+		}
+
+		return $link;
+	}
+
+	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object         $row       Item Info
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   object        $row      Item Info
+	 * @param   JRegistry     $params   Item Params
+	 * @param   TableTemplate $template Template
 	 *
 	 * @return object
 	 *
@@ -2352,26 +2417,26 @@ class JBSMListing
 		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
-		$label  = $params->get('templatecode');
+		$label = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
 		$label  = str_replace('{{date}}', $this->getStudydate($params, $row->studydate), $label);
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
 		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
 			. $image->height . '" id="bsms_studyThumbnail" />', $label
 		);
-		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
+		$label = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
-		$label  = str_replace('{{bookname}}', $row->bookname, $label);
-		$label  = str_replace('{{topics}}', $row->topic_text, $label);
+		$label = str_replace('{{bookname}}', $row->bookname, $label);
+		$label = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{hits}}', $row->hits, $label);
 		$label  = str_replace('{{location}}', $row->location_text, $label);
-		$label  = str_replace('{{plays}}', $row->totalplays, $label);
-		$label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
+		$label = str_replace('{{plays}}', $row->totalplays, $label);
+		$label = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
 		// @todo need to replace this with a new fuction.
 		// For now we need to use the existing mediatable function to get all the media
@@ -2386,8 +2451,8 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object     $row     Item Info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object    $row    Item Info
+	 * @param   JRegistry $params Item Params
 	 *
 	 * @return object
 	 *
@@ -2464,82 +2529,60 @@ class JBSMListing
 	}
 
 	/**
-	 * Run Content Plugins on content
+	 * Get Passage
 	 *
-	 * @param   object     $item    ?
-	 * @param   JRegistry  $params  ?
-	 * @param   string     $type    ?
+	 * @param   JRegistry $params Item Params
+	 * @param   object    $row    Item Info
 	 *
-	 * @return bool|string
-	 *
-	 * @todo this doesn't work yet. TF
+	 * @return string
 	 */
-	public function runContentPlugins($item, $params, $type)
+	public function getPassage($params, $row)
 	{
-		if (!$item)
-		{
-			return false;
-		}
-		// We don't need offset but it is a required argument for the plugin dispatcher
-		$offset = '';
-		JPluginHelper::importPlugin('content');
+		$esv          = 1;
+		$scripturerow = 1;
+		$scripture    = $this->getScripture($params, $row, $esv, $scripturerow);
 
-		// Run content plugins
-		if (version_compare(JVERSION, '3.0', 'ge'))
+		if ($scripture)
 		{
-			$dispatcher = JEventDispatcher::getInstance();
+			$key      = "IP";
+			$response = "" . $scripture . " (ESV)";
+			$passage  = urlencode($scripture);
+			$options  = "include-passage-references=false";
+			$url      = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
+
+			// This tests to see if the curl functions are there. It will return false if curl not installed
+			$p = (get_extension_funcs("curl"));
+
+			if ($p)
+			{ // If curl is installed then we go on
+
+				// This will return false if curl is not enabled
+				$ch = curl_init($url);
+
+				if ($ch)
+				{ // This will return false if curl is not enabled
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$response .= curl_exec($ch);
+					curl_close($ch);
+
+				} // End of if ($ch)
+
+			} // End if ($p)
 		}
 		else
 		{
-			$dispatcher = JDispatcher::getInstance();
+			$response = JText::_('JBS_STY_NO_PASSAGE_INCLUDED');
 		}
-		$dispatcher->trigger('onContentPrepare', array(
-				'com_biblestudy.' . $type,
-				& $item,
-				& $params,
-				$offset
-			)
-		);
 
-		$event = new stdClass;
-
-		$results = $dispatcher->trigger('onContentAfterTitle', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->afterDisplayTitle = trim(implode("\n", $results));
-
-		$results = $dispatcher->trigger('onContentBeforeDisplay', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->beforeDisplayContent = trim(implode("\n", $results));
-
-		$results = $dispatcher->trigger('onContentAfterDisplay', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->afterDisplayContent = trim(implode("\n", $results));
-		$result                           = implode('', $event->text);
-
-		return $result;
+		return $response;
 	}
 
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string     $link    Link
-	 * @param   object     $row     Item Info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   string    $link   Link
+	 * @param   object    $row    Item Info
+	 * @param   JRegistry $params Item Params
 	 *
 	 * @return null|string
 	 *
@@ -2739,11 +2782,11 @@ class JBSMListing
 	/**
 	 * make a URL small
 	 *
-	 * @param   string  $url      Url
-	 * @param   string  $login    Login
-	 * @param   string  $appkey   AppKey
-	 * @param   string  $format   Format
-	 * @param   string  $version  Version
+	 * @param   string $url     Url
+	 * @param   string $login   Login
+	 * @param   string $appkey  AppKey
+	 * @param   string $format  Format
+	 * @param   string $version Version
 	 *
 	 * @return string
 	 */
@@ -2772,120 +2815,85 @@ class JBSMListing
 		return $short;
 	}
 
+	/* @todo I believe all of the functions below can be removed TF */
+
 	/**
-	 * Get Passage
+	 * Run Content Plugins on content
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   object     $row     Item Info
+	 * @param   object    $item   ?
+	 * @param   JRegistry $params ?
+	 * @param   string    $type   ?
 	 *
-	 * @return string
+	 * @return bool|string
+	 *
+	 * @todo this doesn't work yet. TF
 	 */
-	public function getPassage($params, $row)
+	public function runContentPlugins($item, $params, $type)
 	{
-		$esv          = 1;
-		$scripturerow = 1;
-		$scripture    = $this->getScripture($params, $row, $esv, $scripturerow);
-
-		if ($scripture)
+		if (!$item)
 		{
-			$key      = "IP";
-			$response = "" . $scripture . " (ESV)";
-			$passage  = urlencode($scripture);
-			$options  = "include-passage-references=false";
-			$url      = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
+			return false;
+		}
+		// We don't need offset but it is a required argument for the plugin dispatcher
+		$offset = '';
+		JPluginHelper::importPlugin('content');
 
-			// This tests to see if the curl functions are there. It will return false if curl not installed
-			$p = (get_extension_funcs("curl"));
-
-			if ($p)
-			{ // If curl is installed then we go on
-
-				// This will return false if curl is not enabled
-				$ch = curl_init($url);
-
-				if ($ch)
-				{ // This will return false if curl is not enabled
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					$response .= curl_exec($ch);
-					curl_close($ch);
-
-				} // End of if ($ch)
-
-			} // End if ($p)
+		// Run content plugins
+		if (version_compare(JVERSION, '3.0', 'ge'))
+		{
+			$dispatcher = JEventDispatcher::getInstance();
 		}
 		else
 		{
-			$response = JText::_('JBS_STY_NO_PASSAGE_INCLUDED');
+			$dispatcher = JDispatcher::getInstance();
 		}
+		$dispatcher->trigger('onContentPrepare', array(
+				'com_biblestudy.' . $type,
+				& $item,
+				& $params,
+				$offset
+			)
+		);
 
-		return $response;
+		$event = new stdClass;
+
+		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
+		$event->text->afterDisplayTitle = trim(implode("\n", $results));
+
+		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
+		$event->text->beforeDisplayContent = trim(implode("\n", $results));
+
+		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+				'com_biblestudy.' . $type,
+				&$item,
+				&$params,
+				$offset
+			)
+		);
+		$event->text->afterDisplayContent = trim(implode("\n", $results));
+		$result                           = implode('', $event->text);
+
+		return $result;
 	}
 
-	/**
-	 * Get Other Links
-	 *
-	 * @param   int        $id3     Study ID ID
-	 * @param   string     $islink  Is a Link
-	 * @param   JRegistry  $params  Item Params
-	 *
-	 * @return string
-	 */
-	public function getOtherlinks($id3, $islink, $params)
-	{
-		$link  = '';
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*')
-			->from('#__bsms_mediafiles')
-			->where('study_id = ' . $db->q($id3))
-			->where('#__bsms_mediafiles.published = 1');
-		$db->setQuery($query);
-		$db->execut();
-		$num_rows = $db->getNumRows();
-
-		if ($num_rows > 0)
-		{
-			$mediafiles = $db->loadObjectList();
-
-			foreach ($mediafiles AS $media)
-			{
-				switch ($islink)
-				{
-					case 6:
-						if ($media->article_id > 0)
-						{
-							$link = 'index.php?option=com_content&view=article&id=' . $media->article_id;
-						}
-						break;
-
-					case 7:
-						if ($media->virtueMart_id > 0)
-						{
-							$link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
-								. $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
-						}
-						break;
-
-					case 8:
-						if ($media->docMan_id > 0)
-						{
-							$link = 'index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id;
-						}
-						break;
-				}
-			}
-		}
-
-		return $link;
-	}
-
-	/* @todo I believe all of the functions below can be removed TF */
 	/**
 	 * Get Title
 	 *
-	 * @param   JRegistry  $params    System Params
-	 * @param   object     $row       Item info
-	 * @param   int        $template  Template
+	 * @param   JRegistry $params   System Params
+	 * @param   object    $row      Item info
+	 * @param   int       $template Template
 	 *
 	 * @return string
 	 *
@@ -2897,12 +2905,11 @@ class JBSMListing
 		return false;
 	}
 
-
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int        $rowcolid  Row ID Column
-	 * @param   JRegistry  $params    Item Params
+	 * @param   int       $rowcolid Row ID Column
+	 * @param   JRegistry $params   Item Params
 	 *
 	 * @return string
 	 *
@@ -2911,21 +2918,6 @@ class JBSMListing
 	private function getCustomhead($rowcolid, $params)
 	{
 		JFactory::getApplication()->enqueueMessage('must remove fuction getCustomhead');
-		return false;
-	}
-
-	/**
-	 * Get File Path
-	 *
-	 * @param   string  $id3      ID
-	 * @param   string  $idfield  ID Filed
-	 * @param   string  $mime     MimeType ID
-	 *
-	 * @return string
-	 */
-	public function getFilepath($id3, $idfield, $mime = null)
-	{
-		JFactory::getApplication()->enqueueMessage('must remove fuction getFilepath');
 		return false;
 	}
 

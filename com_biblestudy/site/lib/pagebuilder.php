@@ -229,14 +229,10 @@ class JBSMPageBuilder
 		$query->from('#__bsms_mediafiles as media');
 		$query->select('server.id as serverid, server.server_path as spath');
 		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server');
-		$query->select('folder.folderpath as fpath');
-		$query->join('LEFT', '#__bsms_folders as folder ON folder.id = media.path');
 		$query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
 		$query->join('LEFT', '#__bsms_media as image ON image.id = media.media_image');
 		$query->select('study.media_hours, study.media_minutes, study.media_seconds');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
-		$query->select('mime.mimetext');
-		$query->join('LEFT', '#__bsms_mimetype as mime ON mime.id = media.mime_type');
 		$query->where('media.id IN (' . $mediaids . ')');
 		$query->where('media.published = 1');
 		$query->order('media.ordering, image.media_image_name ASC');
@@ -250,6 +246,12 @@ class JBSMPageBuilder
 			$registry  = new JRegistry;
 			$registry->loadString($media->params);
 			$params->merge($registry);
+			$registry = new JRegistry;
+			$registry->loadString($media->smedia);
+			$media->smedia = $registry;
+			$registry      = new JRegistry;
+			$registry->loadString($media->sparams);
+			$media->sparams = $registry;
 			$mediaid        = $media->id;
 			if ($media->impath)
 			{

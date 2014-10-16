@@ -281,7 +281,8 @@ abstract class JHtmlBiblestudy
 			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
 			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
 			'<option value="">' . JText::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'), '</select>'
+			//JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'),
+			'</select>'
 		);
 
 		return implode("\n", $lines);

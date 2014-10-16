@@ -91,9 +91,11 @@ class TableMediafile extends JTable
 	/** @var null string */
 	public $filename = null;
 
-    public $plays = 0;
-    public $downloads = 0;
-    public $hits = 0;
+	public $plays = 0;
+
+	public $downloads = 0;
+
+	public $hits = 0;
 
 	/**
 	 * Constructor
