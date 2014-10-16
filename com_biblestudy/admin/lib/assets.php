@@ -225,7 +225,7 @@ class JBSMAssets
 						unset($table->$col);
 					}
 				}
-				$table->load($data->id);
+				$table->load($data->id, false);
 			}
 			catch (Exception $e)
 			{
@@ -233,7 +233,7 @@ class JBSMAssets
 
 				return false;
 			}
-			@$table->store();
+			$table->store();
 		}
 
 		return true;

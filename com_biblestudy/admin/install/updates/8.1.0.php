@@ -153,7 +153,7 @@ class Migration810
 
 		// Delete unused columns
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'hits', 'downloads', 'plays', 'path');
+			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
