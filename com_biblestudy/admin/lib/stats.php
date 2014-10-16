@@ -510,19 +510,22 @@ class JBSMStats
 		$db           = JFactory::getDBO();
 		$query        = $db->getQuery(true);
 		$query
-			->select('popup')
+			->select('params')
 			->from('#__bsms_mediafiles')
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
-		$popups            = $db->loadObjectList();
+		$params            = $db->loadObjectList();
 
-		if ($popups)
+		if ($params)
 		{
-			$total_media_files = count($popups);
+			$total_media_files = count($params);
 
-			foreach ($popups as $popup)
+			foreach ($params as $param)
 			{
-				switch ($popup->popup)
+                $registry = new JRegistry();
+                $paramObj = $registry->loadString($param)->toObject();
+
+				switch ($paramObj->popup)
 				{
 					case 0:
 						$no_player++;
@@ -539,14 +542,14 @@ class JBSMStats
 				}
 			}
 
-			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+			$params = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
 				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
 				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
 				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
 				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
 		}
 
-		return $popups;
+		return $params;
 	}
 
 	/**
