@@ -198,12 +198,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			);
 
 			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT'),
-				'filter_mediaType',
-				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaTypes(), 'value', 'text', $this->state->get('filter.mediaType'))
-			);
-
-			JHtmlSidebar::addFilter(
 				JText::_('JBS_CMN_SELECT_YEAR'),
 				'filter_mediaYears',
 				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
@@ -213,18 +207,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 				JText::_('JBS_MED_FILTER_DOWNLOAD'),
 				'filter_download',
 				JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_FILTER_PLAYER'),
-				'filter_player',
-				JHtml::_('select.options', JHtmlBiblestudy::playerlist(), 'value', 'text', $this->state->get('filter.player'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_FILTER_POPUP'),
-				'filter_popup',
-				JHtml::_('select.options', JHtmlBiblestudy::popuplist(), 'value', 'text', $this->state->get('filter.popup'))
 			);
 		}
 	}

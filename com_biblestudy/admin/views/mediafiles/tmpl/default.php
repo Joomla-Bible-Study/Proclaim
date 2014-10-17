@@ -130,9 +130,9 @@ $sortFields = $this->getSortFields();
         <th>
             <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
         </th>
-        <th>
-            <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
-        </th>
+        <!--        <th>-->
+        <!--            --><?php //echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
+        <!--        </th>-->
         <th>
             <?php echo JHtml::_('grid.sort', 'JBS_CMN_CREATED', 'mediafile.createdate', $listDirn, $listOrder); ?>
         </th>
@@ -189,7 +189,7 @@ $sortFields = $this->getSortFields();
             <td>
                 <div class="pull-left">
                     <span class="label">
-                        <?php echo($this->escape($item->serverConfig->name->__toString().' - '.$item->serverConfig->config->media_resource->__toString())); ?>
+                        <?php echo($this->escape($item->serverConfig->name->__toString() . ' - ' . $item->serverConfig->config->media_resource->__toString())); ?>
                     </span>
                     <?php if ($canEdit || $canEditOwn) : ?>
                         <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int)$item->id); ?>">
@@ -247,10 +247,10 @@ $sortFields = $this->getSortFields();
                 <?php echo $this->escape($item->access_level); ?>
             </td>
             <td>
-                <!--			--><?php //echo $this->escape($item->plays); ?>
+                <?php echo $this->escape($item->plays); ?>
             </td>
             <td>
-                <!--			--><?php //echo $this->escape($item->downloads); ?>
+                <?php echo $this->escape($item->downloads); ?>
             </td>
         </tr>
     <?php endforeach; ?>
