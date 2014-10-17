@@ -108,10 +108,8 @@ class BiblestudyModelMessages extends JModelList
 			$i++;
 			$sermon_id = $sermon->id;
 			$query     = $db->getQuery(true);
-			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+			$query->select('study_id, filename')
 				->from('#__bsms_mediafiles')
-				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
-				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
 				->where('study_id = ' . $sermon_id);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
@@ -130,13 +128,9 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-		$translate = new JBSMTranslated;
-
 		foreach ($items as $item)
 		{
 			$item->bookname = JText::_($item->bookname);
-
-			// $item->topic_text = $translate->getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -275,7 +269,7 @@ class BiblestudyModelMessages extends JModelList
 		$query->where('study_id = ' . $id);
 
 		// Setup the query
-//		$db->setQuery($query->__toString());
+		$db->setQuery($query->__toString());
 
 		// Return the result
 		return $db->loadResult();

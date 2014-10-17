@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -22,7 +22,7 @@ class JBSMStats
 	/**
 	 * Total plays of media files per study
 	 *
-	 * @param   int $id  Id number of study
+	 * @param   int $id Id number of study
 	 *
 	 * @return int Total plays form the media
 	 */
@@ -43,8 +43,8 @@ class JBSMStats
 	/**
 	 * Total messages in Bible Study
 	 *
-	 * @param   string $start  ?
-	 * @param   string $end    ?
+	 * @param   string $start ?
+	 * @param   string $end   ?
 	 *
 	 * @return int Total Messages
 	 */
@@ -80,8 +80,8 @@ class JBSMStats
 	/**
 	 * Total topics in Bible Study
 	 *
-	 * @param   string $start  ?
-	 * @param   string $end    ?
+	 * @param   string $start ?
+	 * @param   string $end   ?
 	 *
 	 * @return int  Total Topics
 	 */
@@ -388,16 +388,16 @@ class JBSMStats
 			->from('#__bsms_mediafiles')
 			->where('published = ' . 1)
 			->group('study_id')
-            ->order('added DESC');
+			->order('added DESC');
 		$db->setQuery($query);
 		$results = $db->loadAssocList();
-        array_splice($results, 5);
-		foreach ($results as $key=>$result)
+		array_splice($results, 5);
+		foreach ($results as $key => $result)
 		{
 			$query = $db->getQuery(true);
 			$query
 				->select('#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits,' .
-				'#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies')
+					'#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies')
 				->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result['study_id']);
 			$db->setQuery($query);
@@ -603,7 +603,10 @@ class JBSMStats
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
-            if (!$hits){return false;}
+			if (!$hits)
+			{
+				return false;
+			}
 			if (!$hits->studytitle)
 			{
 				$name = $hits->id;

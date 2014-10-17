@@ -239,7 +239,7 @@ class PlgSystemjbsbackup extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
+		$query = 'UPDATE `#__jbsbackup_timeset` SET `backup` = ' . $time;
 		$db->setQuery($query);
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
@@ -333,7 +333,7 @@ class PlgSystemjbsbackup extends JPlugin
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
-		$exclude       = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);

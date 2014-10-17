@@ -195,7 +195,7 @@ class JBSMPIconvert
 				$datafolders->foldername = $pi->name;
 				$datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
 				$datafolders->published  = $pi->published;
-
+// @todo need ot update this to work with the new file system.
 				if (!$db->insertObject('#__bsms_folders', $datafolders, 'id'))
 				{
 					$fnoadd++;
