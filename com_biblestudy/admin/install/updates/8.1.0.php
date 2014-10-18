@@ -24,7 +24,7 @@ class Migration810
 	 *
 	 * @return bool
 	 */
-	public function up($db)
+	public function up ($db)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
@@ -60,7 +60,7 @@ class Migration810
 			else
 			{
 				$newServer->type = "legacy";
-				$params['path'] = $server->path;
+				$params['path']  = $server->path;
 			}
 
 			$newServer->params = json_encode($params);
@@ -74,8 +74,8 @@ class Migration810
 
 			// Migrate media files
 			$query = $db->getQuery(true)->select('*')
-				->from('#__bsms_mediafiles')
-				->where('server = ' . $server->id);
+					->from('#__bsms_mediafiles')
+					->where('server = ' . $server->id);
 			$db->setQuery($query);
 
 			foreach ($db->loadObjectList() as $mediaFile)
@@ -122,9 +122,9 @@ class Migration810
 						$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
 					}
 				}
-				$params['media_image'] = $mimage;
-				$params['media_text']  = $mediaImage->media_alttext;
-				$params['mime_type']   = $mimtype->mimetype;
+				$params['media_image']   = $mimage;
+				$params['media_text']    = $mediaImage->media_alttext;
+				$params['mime_type']     = $mimtype->mimetype;
 				$params['special']       = $mediaFile->special;
 				$params['filename']      = $server->server_path . $path->folderpath . $mediaFile->filename;
 				$params['size']          = $mediaFile->size;
@@ -153,7 +153,7 @@ class Migration810
 
 		// Delete unused columns
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
+				'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
@@ -180,7 +180,7 @@ class Migration810
 	 *
 	 * @return void
 	 */
-	private function deleteColumns($table, $columns, $db)
+	private function deleteColumns ($table, $columns, $db)
 	{
 		foreach ($columns as $column)
 		{
@@ -197,7 +197,7 @@ class Migration810
 	 *
 	 * @return void
 	 */
-	private function deleteTable($table, $db)
+	private function deleteTable ($table, $db)
 	{
 		$db->setQuery('DROP TABLE ' . $table);
 		$db->execute();
@@ -210,11 +210,11 @@ class Migration810
 	 *
 	 * @return void
 	 */
-	public function updatetemplates($db)
+	public function updatetemplates ($db)
 	{
 		$query = $db->getQuery(true);
 		$query->select('id, title, prarams')
-			->from('#__bsms_templates');
+				->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
 		foreach ($data as $d)
@@ -244,7 +244,7 @@ class Migration810
 	 *
 	 * @return boolean
 	 */
-	public function css810()
+	public function css810 ()
 	{
 		$csscheck = 'display:table-header';
 
