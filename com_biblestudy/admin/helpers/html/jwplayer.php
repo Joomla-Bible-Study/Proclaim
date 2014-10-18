@@ -47,19 +47,15 @@ abstract class JHtmlJwplayer
 		/** @var  $params JRegistry */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
-		$cdn = $params->get('jwplayer_cdn');
+		$cdn = $params->get('jwplayer_cdn', '//jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
 		if ($cdn)
 		{
 			JHtml::script($cdn);
 		}
-		elseif ($key)
+		else
 		{
 			JHtml::script('media/com_biblestudy/player/jwplayer.js');
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-		}
-		else
-		{
-			JFactory::getApplication()->enqueueMessage('No key for Selft Hosting');
 		}
 
 		self::$loaded[__METHOD__] = true;
@@ -109,9 +105,7 @@ abstract class JHtmlJwplayer
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
 			}
 		}
-		$render .= " <div id='placeholder" . $id . "'>
-						<a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?>
-					</div>";
+		$render .= " <div id='placeholder" . $id . "'></div>";
 		if ($popup)
 		{
 			$render .= "</div>";
