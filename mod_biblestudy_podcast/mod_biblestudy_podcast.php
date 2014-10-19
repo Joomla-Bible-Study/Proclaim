@@ -23,7 +23,10 @@ else
 {
 	$versionName = false;
 }
-define('BIBLESTUDY_CHECKREL', $versionName);
+if (!defined('BIBLESTUDY_CHECKREL'))
+{
+	define('BIBLESTUDY_CHECKREL', $versionName);
+}
 
 $templateparams = null;
 
