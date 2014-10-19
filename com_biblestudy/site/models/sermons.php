@@ -521,10 +521,16 @@ class BiblestudyModelSermons extends JModelList
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
+				// Use created if modified is 0
+				'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END as modified, ' .
+				'study.modified_by, uam.name as modified_by_name,' .
+				// Use created if publish_up is 0
+				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
+				'study.publish_down,
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2 ') . ','
+		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore') . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
 
@@ -560,9 +566,11 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
 		$query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
-		// Join over users
-		$query->select('users.name as submitted');
-		$query->join('LEFT', '#__users as users on study.user_id = users.id');
+		// Join over the users for the author and modified_by names.
+		$query->select("CASE WHEN study.user_name > ' ' THEN study.user_name ELSE users.name END AS submitted")
+			->select("users.email AS author_email")
+			->join('LEFT', '#__users AS users ON study.user_id = users.id')
+			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
 		$query->group('study.id');
 
@@ -572,6 +580,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Select only published studies
 		$query->where('study.published = 1');
+		$query->where('series.published = 1 or study.series_id <= 0');
 
 		// Begin the filters for menu items
 		$params      = $this->getState('params');

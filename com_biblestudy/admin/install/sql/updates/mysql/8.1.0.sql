@@ -54,12 +54,12 @@ ALTER TABLE `#__bsms_locations` ADD COLUMN `publish_up` DATETIME NOT NULL DEFAUL
 ALTER TABLE `#__bsms_locations` ADD COLUMN `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `publish_up`;
 
 -- -- Studies
-ALTER TABLE `#__bsms_studies` ADD COLUMN `created_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `#__bsms_studies` ADD COLUMN `created_by_alias` VARCHAR(255) NOT NULL DEFAULT '';
-ALTER TABLE `#__bsms_studies` ADD COLUMN `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `#__bsms_studies` ADD COLUMN `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
-ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
-ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
+ALTER TABLE `#__bsms_studies` ADD COLUMN `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `params`;
+ALTER TABLE `#__bsms_studies` ADD COLUMN `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `checked_out`;
+ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `published`;
+ALTER TABLE `#__bsms_studies` ADD COLUMN `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `publish_up`;
+ALTER TABLE `#__bsms_studies` ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `publish_down`;
+ALTER TABLE `#__bsms_studies` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `modified`;
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`created_by`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
 

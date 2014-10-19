@@ -161,13 +161,14 @@ INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`, `asset_id`, `a
 -- Dumping data for table `#__bsms_studies`
 --
 
-INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `publish_up`, `publish_down`, `published`, `asset_id`, `access`, `ordering`, `language`)
+INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `checked_out`, `checked_out_time`, `published`, `publish_up`, `publish_down`, `modified`, `modified_by`, `asset_id`, `access`, `ordering`, `language`, `download_id`)
 VALUES
   (1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL,
    '0', NULL, 1, 0, 0, NULL, '0', -1, 'Sample Study Title', 'sample-study-title',
    'Sample text you can use as an introduction to your study', '', '', '', '1', -1,
    'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com',
-   '', NULL, NULL, '{"metakey":"","metadesc":""}', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0, 1, 1, '*');
+   '', NULL, NULL, '{"metakey":"","metadesc":""}', 0, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00',
+   '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 1, 1, '*', 0);
 
 --
 -- Dumping data for table `#__bsms_styles`
