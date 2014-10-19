@@ -42,7 +42,7 @@ class JFormFieldMediafile extends JFormFieldList
 			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->select('a.id');
-			$query->from('#__bsms_mediafiles as a');;
+			$query->from('#__bsms_mediafiles as a');
 			$query->where('study_id = ' . $this->form->getValue('id'));
 			$db->setQuery((string) $query);
 			$messages = $db->loadObjectList();
