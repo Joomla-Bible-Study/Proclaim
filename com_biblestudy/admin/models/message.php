@@ -804,14 +804,17 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	protected function prepareTable($table)
 	{
+		$date          = JFactory::getDate();
+		$user          = JFactory::getUser();
+
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplication::stringURLSafe($table->alias);
+		$table->alias  = JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplication::stringURLSafe($table->studytitle);
+			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))
@@ -821,11 +824,20 @@ class BiblestudyModelMessage extends JModelAdmin
 			if (empty($table->ordering))
 			{
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__bsms_studies');
+				$query = $db->getQuery(true)
+					->select('MAX(ordering)')
+					->from($db->quoteName('#__bsms_studies'));
+				$db->setQuery($query);
 				$max = $db->loadResult();
 
 				$table->ordering = $max + 1;
 			}
+		}
+		else
+		{
+			// Set the values
+			$table->modified    = $date->toSql();
+			$table->modified_by = $user->get('id');
 		}
 	}
 
