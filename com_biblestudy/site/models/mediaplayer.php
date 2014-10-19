@@ -207,7 +207,7 @@ class BiblestudyModelMediaplayer extends JModelLegacy
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   string  $direction  ACS or DEC
+	 * @param   string $direction ASC or DEC
 	 *
 	 * @access    public
 	 *

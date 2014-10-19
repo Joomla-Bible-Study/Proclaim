@@ -937,7 +937,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Order by order filter
 		$orderparam = $params->get('default_order');
-		$order = 'ACS';
+		$order = 'ASC';
 
 		if (empty($orderparam))
 		{
