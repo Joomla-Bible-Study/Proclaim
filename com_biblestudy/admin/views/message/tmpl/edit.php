@@ -410,8 +410,8 @@ foreach ($params as $name => $fieldSet): ?>
 						<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
 						<a class="btn btn-primary"
 						   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
-						   title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) :   $this->escape($item->media_image_name); ?>">
-							<?php echo($this->escape($item->filename) ? $this->escape($item->filename) :  $this->escape($item->media_image_name)); ?>
+						   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
+							<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 						</a>
 					</td>
 					<td class="center">

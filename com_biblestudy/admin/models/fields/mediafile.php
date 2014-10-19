@@ -41,7 +41,7 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
-			$query->select('a.id');
+			$query->select('a.id, a.params');
 			$query->from('#__bsms_mediafiles as a');
 			$query->where('study_id = ' . $this->form->getValue('id'));
 			$db->setQuery((string) $query);
@@ -58,7 +58,12 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, empty($message->filename) ? $message->id . ' - ' . $message->mimetext : $message->filename);
+				$reg = new JRegistry;
+				$reg->loadString($message->params);
+				$message->params = $reg;
+				$options[]       = JHtml::_('select.option', $message->id, $message->params->get('filename') ? $message->id . ' - ' .
+						$message->params->get('mimetext') : $message->params->get('filename')
+				);
 			}
 		}
 
