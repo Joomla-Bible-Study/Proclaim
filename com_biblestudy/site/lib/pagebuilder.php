@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -28,8 +28,8 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object     $item    Item info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object    $item   Item info
+	 * @param   JRegistry $params Item Params
 	 *
 	 * @return object
 	 */
@@ -210,8 +210,8 @@ class JBSMPageBuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array      $mediaids  ID of Media
-	 * @param   JRegistry  $params    Item Params
+	 * @param   array     $mediaids ID of Media
+	 * @param   JRegistry $params   Item Params
 	 *
 	 * @return string
 	 *
@@ -229,8 +229,6 @@ class JBSMPageBuilder
 		$query->from('#__bsms_mediafiles as media');
 		$query->select('server.id as serverid, server.server_path as spath');
 		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server');
-		$query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
-		$query->join('LEFT', '#__bsms_media as image ON image.id = media.media_image');
 		$query->select('study.media_hours, study.media_minutes, study.media_seconds');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
 		$query->where('media.id IN (' . $mediaids . ')');
@@ -265,7 +263,7 @@ class JBSMPageBuilder
 			{
 				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 			}
-			$image          = $mediaelements->useJImage($mediaimage, $media->mimetext);
+			$image = $mediaelements->useJImage($mediaimage, $media->params->get('mimetext'));
 			$player         = $mediaelements->getPlayerAttributes($params, $media);
 			$playercode     = $mediaelements->getPlayerCode($params, $player, $image, $media);
 			$d_image        = ($params->get('default_download_image') ? $params->get('default_download_image') : 'download.png');
@@ -287,7 +285,7 @@ class JBSMPageBuilder
 				else
 				{
 					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-						$media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
+						$media->params->get('filename') . '&size=' . $media->params->get('size') . '">';
 				}
 				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
 					$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
@@ -375,11 +373,11 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string     $whereitem   ?
-	 * @param   string     $wherefield  ?
-	 * @param   JRegistry  $params      Item params
-	 * @param   int        $limit       Limit of Records
-	 * @param   string     $order       DESC or ASC
+	 * @param   string    $whereitem  ?
+	 * @param   string    $wherefield ?
+	 * @param   JRegistry $params     Item params
+	 * @param   int       $limit      Limit of Records
+	 * @param   string    $order      DESC or ASC
 	 *
 	 * @return object
 	 */
@@ -430,14 +428,15 @@ class JBSMPageBuilder
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,
+		SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
 		$query->select('locations.location_text');
 		$query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
 
-		// Join over topics
+		// Join over studytopics
 		$query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
 		$query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
 		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text, GROUP_CONCAT(DISTINCT t.params) as topic_params');
@@ -447,14 +446,7 @@ class JBSMPageBuilder
 		$query->select('users.name as submitted');
 		$query->join('LEFT', '#__users as users on study.user_id = users.id');
 
-		// @todo Need eugen to redo this sql may be off loaded?
-		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
-
 		$query->group('study.id');
-
-		$query->select('GROUP_CONCAT(DISTINCT media.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as media ON study.id = media.study_id');
 		$query->where('study.published = 1');
 		$query->where($wherefield . ' = ' . $whereitem);
 		$query->where('study.language in (' . $language . ')');

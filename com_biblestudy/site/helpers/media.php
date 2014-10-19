@@ -349,18 +349,9 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 2:
-						$playercode = '<script type="text/javascript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
-                 <object type="application/x-shockwave-flash" data="' . JURI::base()
-							. 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id
-							. '" border="0" height="24" width="' . $player->playerwidth . '">
-                                 <param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" />
-                                 <param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path . '" />
-                                 <param name="quality" value="high" />
-                                 <param name="menu" value="false" />
-                                 <param name="wmode" value="transparent" />
-                                 </object>
-                                 ';
 
+						JHTML::_('jwplayer.framework');
+						$playercode = JHtmlJwplayer::render($media, $media->id, $params, false, true);
 						return $playercode;
 						break;
 

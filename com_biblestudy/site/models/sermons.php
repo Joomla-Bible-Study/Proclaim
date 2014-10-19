@@ -546,7 +546,7 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
@@ -564,9 +564,6 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__users as users on study.user_id = users.id');
 
 		$query->group('study.id');
-
-		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
 		// Filter only for authorized view
 		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
@@ -959,7 +956,7 @@ class BiblestudyModelSermons extends JModelList
 			$order = $orderstate;
 		}
 
-		//$query->order('studydate ' . $order);
+		$query->order('studydate ' . $order);
 
 		return $query;
 	}
