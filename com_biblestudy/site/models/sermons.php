@@ -546,7 +546,8 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
+			'SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
