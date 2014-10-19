@@ -9,7 +9,6 @@
 	margin: 0;
 	border-collapse: separate;
 }
-
 #bsm_teachertable_list td {
 	text-align: left;
 	padding: 0 5px 0 5px;
@@ -76,12 +75,10 @@
 	padding: 8px 4px 4px;
 	border-bottom: 1px solid #999999;
 }
-
 #bsm_teachertable_list tr.bsodd {
 	background-color: #ffffff;
 	border-bottom: 1px solid #999999;
 }
-
 #bsm_teachertable_list tr.bseven {
 	background-color: #fffff0;
 	border-bottom: 1px solid #999999;
@@ -97,7 +94,6 @@
 	border-top: 1px solid #999999;
 	padding: 4px 1px 1px 4px;
 }
-
 /* New Teacher Details Codes */
 
 #bsm_teachertable .teacheraddress {
@@ -151,7 +147,6 @@
 
 .termslink {
 	}
-
 /* Podcast Subscription Display Settings */
 
 .podcastsubscribe {
@@ -238,36 +233,30 @@ div.listingfooter ul li {
 	margin: 0;
 	border-collapse: separate;
 }
-
 .bslisttable th, .bslisttable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
 	border: none;
 	}
-
 .bslisttable .row1col1,
 .bslisttable .row2col1,
 .bslisttable .row3col1,
 .bslisttable .row4col1 {
 	border-left: grey 2px solid;
 	}
-
 .bslisttable .lastcol {
 	border-right: grey 2px solid;
 	}
-
 .bslisttable .lastrow td {
 	border-bottom: 2px solid grey;
 	padding-bottom: 7px;
 	}
-
 .bslisttable th {
 	background-color: #707070;
 	font-weight: bold;
 	color: white;
 
 	}
-
 .bslisttable th.row1col1,
 .bslisttable th.row1col2,
 .bslisttable th.row1col3,
@@ -275,11 +264,9 @@ div.listingfooter ul li {
 	border-top: grey 2px solid;
 	padding-top: 3px;
 	}
-
 .bslisttable th.firstrow {
 	border-bottom: grey 2px solid;
 	}
-
 .bslisttable tr.lastrow th {
 	border-bottom: 2px solid grey;
 	padding-bottom: 3px;
@@ -288,7 +275,6 @@ div.listingfooter ul li {
 .bslisttable tr.bsodd td {
 	background-color: #ffffff;
 	}
-
 .bslisttable tr.bseven td {
 	background-color: #fffff0;
 	}
@@ -322,72 +308,55 @@ div.listingfooter ul li {
 	white-space: nowrap;
 	font-style: italic;
 }
-
 .bslisttable .studyintro {
 
 	}
-
 .bslisttable .teacher {
 	white-space: nowrap;
 	}
-
 .bslisttable .location_text {
 	white-space: nowrap;
 	}
-
 .bslisttable .topic_text {
 	white-space: nowrap;
 	}
-
 .bslisttable .message_type {
 	white-space: nowrap;
 	}
-
 .bslisttable .jbsmedia {
 	white-space: nowrap;
 	}
-
 .bslisttable .store {
 	white-space: nowrap;
 	}
-
 .bslisttable .details-text {
 	white-space: nowrap;
 	}
-
 .bslisttable .details-pdf {
 	white-space: nowrap;
 	}
-
 .bslisttable .details-text-pdf {
 	white-space: nowrap;
 	}
-
 .bslisttable .detailstable td {
 	border: none;
 	padding: 0 2px 0 0;
 	}
-
 .bslisttable .secondary_reference {
 	white-space: nowrap;
 	}
-
 .bslisttable .teacher-title-name {
 	white-space: nowrap;
 	}
-
 .bslisttable .submitted {
 	white-space: nowrap;
 	}
-
 .bslisttable .hits {
 	white-space: nowrap;
 	}
-
 .bslisttable .studynumber {
 	white-space: nowrap;
 	}
-
 .bslisttable .filesize {
 	white-space: nowrap;
 	}
@@ -398,16 +367,13 @@ div.listingfooter ul li {
 	font-size: 2em;
 	font-weight: bold;
 }
-
 .bslisttable .thumbnail {
 	white-space: nowrap;
 }
-
 .bslisttable .mediatable td {
 	border: none;
 	padding: 0 6px 0 0;
 }
-
 .bslisttable .mediatable span.bsfilesize {
 	font-size: 0.6em;
 	position: relative;
@@ -433,36 +399,30 @@ div.listingfooter ul li {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #bsmsdetailstable th, #bsmsdetailstable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
 	border: none;
 	}
-
 #bsmsdetailstable .row1col1,
 #bsmsdetailstable .row2col1,
 #bsmsdetailstable .row3col1,
 #bsmsdetailstable .row4col1 {
 	border-left: grey 2px solid;
 	}
-
 #bsmsdetailstable .lastcol {
 	border-right: grey 2px solid;
 	}
-
 #bsmsdetailstable .lastrow td {
 	border-bottom: 2px solid grey;
 	padding-bottom: 7px;
 	}
-
 #bsmsdetailstable th {
 	background-color: #707070;
 	font-weight: bold;
 	color: white;
 
 	}
-
 #bsmsdetailstable th.row1col1,
 #bsmsdetailstable th.row1col2,
 #bsmsdetailstable th.row1col3,
@@ -470,20 +430,16 @@ div.listingfooter ul li {
 	border-top: grey 2px solid;
 	padding-top: 3px;
 	}
-
 #bsmsdetailstable tr.lastrow th {
 	border-bottom: 2px solid grey;
 	padding-bottom: 3px;
 	}
-
 #bsmsdetailstable th.firstrow {
 	border-bottom: grey 2px solid;
 	}
-
 #bsmsdetailstable tr.bsodd td {
 	background-color: #ffffff;
 	}
-
 #bsmsdetailstable tr.bseven td {
 	background-color: #fffff0;
 	}
@@ -494,7 +450,6 @@ div.listingfooter ul li {
 	color: grey;
 	font-weight: bold;
 }
-
 #bsmsdetailstable .scripture1 {
 	white-space: nowrap;
 	color: #c02121;
@@ -518,72 +473,55 @@ div.listingfooter ul li {
 	white-space: nowrap;
 	font-style: italic;
 }
-
 #bsmsdetailstable .studyintro {
 
 	}
-
 #bsmsdetailstable .teacher {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .location_text {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .topic_text {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .message_type {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .jbsmedia {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .store {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .details-text {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .details-pdf {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .details-text-pdf {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .detailstable td {
 	border: none;
 	padding: 0 2px 0 0;
 	}
-
 #bsmsdetailstable .secondary_reference {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .teacher-title-name {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .submitted {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .hits {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .studynumber {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .filesize {
 	white-space: nowrap;
 	}
@@ -594,11 +532,9 @@ div.listingfooter ul li {
 	font-size: 2em;
 	font-weight: bold;
 }
-
 #bsmsdetailstable .thumbnail {
 	white-space: nowrap;
 	}
-
 #bsmsdetailstable .mediatable td {
 	border: none;
 	padding: 0 6px 0 0;
@@ -608,13 +544,11 @@ div.listingfooter ul li {
 	position: relative;
 	bottom: 7px;
 }
-
 #bsdetailstable th, #bsdetailstable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
 	border: none;
 	}
-
 #bsdetailstable .studydetailstext td {
 	font-size: 1.2em;
 	color: #707070;
@@ -624,7 +558,6 @@ div.listingfooter ul li {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #titletable th, #titletable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
@@ -642,43 +575,36 @@ div.listingfooter ul li {
 #recaptcha_widget_div {
 	position: static !important;
 }
-
 /* Module Style Settings */
 
 #bsmsmoduletable {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #bsmsmoduletable th, #bsmsmoduletable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
 	border: none;
 	}
-
 #bsmsmoduletable .row1col1,
 #bsmsmoduletable .row2col1,
 #bsmsmoduletable .row3col1,
 #bsmsmoduletable .row4col1 {
 	border-left: grey 2px solid;
 	}
-
 #bsmsmoduletable .lastcol {
 	border-right: grey 2px solid;
 	}
-
 #bsmsmoduletable .lastrow td {
 	border-bottom: 2px solid grey;
 	padding-bottom: 7px;
 	}
-
 #bsmsmoduletable th {
 	background-color: #707070;
 	font-weight: bold;
 	color: white;
 
 	}
-
 #bsmsmoduletable th.row1col1,
 #bsmsmoduletable th.row1col2,
 #bsmsmoduletable th.row1col3,
@@ -686,11 +612,9 @@ div.listingfooter ul li {
 	border-top: grey 2px solid;
 	padding-top: 3px;
 	}
-
 #bsmsmoduletable th.firstrow {
 	border-bottom: grey 2px solid;
 	}
-
 #bsmsmoduletable tr.lastrow th {
 	border-bottom: 2px solid grey;
 	padding-bottom: 3px;
@@ -699,7 +623,6 @@ div.listingfooter ul li {
 #bsmsmoduletable tr.bsodd td {
 	background-color: #ffffff;
 	}
-
 #bsmsmoduletable tr.bseven td {
 	background-color: #fffff0;
 	}
@@ -710,7 +633,6 @@ div.listingfooter ul li {
 	color: grey;
 	font-weight: bold;
 }
-
 #bsmsmoduletable .scripture1 {
 	white-space: nowrap;
 	color: #c02121;
@@ -734,76 +656,58 @@ div.listingfooter ul li {
 	white-space: nowrap;
 	font-style: italic;
 }
-
 #bsmsmoduletable .studyintro {
 
 }
-
 #bsmsmoduletable .teacher {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .location_text {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .topic_text {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .message_type {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .jbsmedia {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .store {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .details-text {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .details-pdf {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .details-text-pdf {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .detailstable td {
 	border: none;
 	padding: 0 2px 0 0;
 	}
-
 #bsmsmoduletable .secondary_reference {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .teacher-title-name {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .submitted {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .hits {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .studynumber {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .filesize {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .custom {
 	white-space: nowrap;
 	}
@@ -811,11 +715,9 @@ div.listingfooter ul li {
 	font-size: 2em;
 	font-weight: bold;
 }
-
 #bsmsmoduletable .thumbnail {
 	white-space: nowrap;
 	}
-
 #bsmsmoduletable .mediatable td {
 	border: none;
 	padding: 0 6px 0 0;
@@ -825,51 +727,41 @@ div.listingfooter ul li {
 	position: relative;
 	bottom: 7px;
 }
-
 /* Series List-Details Items */
 #seriestable {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #seriestable th, #seriestable td {
 	text-align: left;
 	padding: 3px 3px 3px 3px;
 	border: none;
 }
-
 #seriestable .firstrow td {
 	border-top: grey 2px solid;
 }
-
 #seriestable .firstcol {
 	border-left: grey 2px solid;
 	}
-
 #seriestable .lastcol {
 	border-right: grey 2px solid;
 	}
-
 #seriestable .lastrow td {
 	border-bottom: 2px solid grey;
 	border-left: 2px solid grey;
 	border-right: 2px solid grey;
 	padding-bottom: 3px;
 	}
-
 #seriesttable tr.bsodd td {
 	background-color: #ffffff;
 	}
-
 #seriestable tr.bseven td {
 	background-color: #fffff0;
 	}
-
 #seriestable tr.onlyrow td {
 	border-bottom: 2px solid grey;
 	border-top: grey 2px solid;
 	}
-
 #seriestable .thumbnail img {
 	border: 1px solid grey;
 	}
@@ -888,46 +780,38 @@ div.listingfooter ul li {
 #seriestable .description p {
 	width: 500px;
 	}
-
 #seriestable .teacher {
 	font-weight: bold;
 	}
-
 /* Series Detail Study Links Items */
 #seriesstudytable {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #seriesstudytable th, #seriesstudytable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
 	border: none;
 	}
-
 #seriesstudytable .row1col1,
 #seriesstudytable .row2col1,
 #seriesstudytable .row3col1,
 #seriesstudytable .row4col1 {
 	border-left: grey 2px solid;
 	}
-
 #seriesstudytable .lastcol {
 	border-right: grey 2px solid;
 	}
-
 #seriesstudytable .lastrow td {
 	border-bottom: 2px solid grey;
 	padding-bottom: 7px;
 	}
-
 #seriesstudytable th {
 	background-color: #707070;
 	font-weight: bold;
 	color: white;
 
 	}
-
 #seriesstudytable th.row1col1,
 #seriesstudytable th.row1col2,
 #seriesstudytable th.row1col3,
@@ -935,11 +819,9 @@ div.listingfooter ul li {
 	border-top: grey 2px solid;
 	padding-top: 3px;
 	}
-
 #seriesstudytable th.firstrow {
 	border-bottom: grey 2px solid;
 	}
-
 #seriesstudytable tr.lastrow th {
 	border-bottom: 2px solid grey;
 	padding-bottom: 3px;
@@ -948,7 +830,6 @@ div.listingfooter ul li {
 #seriesstudytable tr.bsodd td {
 	background-color: #ffffff;
 	}
-
 #seriesstudytable tr.bseven td {
 	background-color: #fffff0;
 	}
@@ -959,7 +840,6 @@ div.listingfooter ul li {
 	color: grey;
 	font-weight: bold;
 }
-
 #seriesstudytable .scripture1 {
 	white-space: nowrap;
 	color: #c02121;
@@ -984,72 +864,55 @@ div.listingfooter ul li {
 	white-space: nowrap;
 	font-style: italic;
 }
-
 #seriesstudytable .studyintro {
 
 	}
-
 #seriesstudytable .teacher {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .location_text {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .topic_text {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .message_type {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .jbsmedia {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .store {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .details-text {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .details-pdf {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .details-text-pdf {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .detailstable td {
 	border: none;
 	padding: 0 2px 0 0;
 	}
-
 #seriesstudytable .secondary_reference {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .teacher-title-name {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .submitted {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .hits {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .studynumber {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .filesize {
 	white-space: nowrap;
 	}
@@ -1060,11 +923,9 @@ div.listingfooter ul li {
 	font-size: 2em;
 	font-weight: bold;
 }
-
 #seriesstudytable .thumbnail {
 	white-space: nowrap;
 	}
-
 #seriesstudytable .mediatable td {
 	border: none;
 	padding: 0 6px 0 0;
@@ -1074,7 +935,6 @@ div.listingfooter ul li {
 	position: relative;
 	bottom: 7px;
 }
-
 #seriesstudytable .studyrow {
 
 	}
@@ -1083,7 +943,6 @@ div.listingfooter ul li {
 	width: 300px;
 	z-index: 13000;
 }
-
 /* Tooltip Styles */
 /* @todo need to find these files */
 .tool-title {
@@ -1122,13 +981,11 @@ div.listingfooter ul li {
 	padding: 4px 8px 8px;
 	background: #999999;
 }
-
 /* Teacher List Styles */
 #bsm_teachertable {
 	margin: 0;
 	border-collapse: separate;
 }
-
 #bsm_teachertable td {
 	text-align: left;
 	padding: 0 5px 0 5px;
@@ -1180,7 +1037,6 @@ div.listingfooter ul li {
 #bsm_teachertable .bsm_short {
 	padding: 8px 4px 4px;
 	}
-
 #bsm_teachertable .bsm_studiestitlerow {
 	background-color: #666;
 	}
@@ -1204,12 +1060,10 @@ div.listingfooter ul li {
 	padding: 8px 4px 4px;
 	border-bottom: 1px solid #999999;
 	}
-
 #bsm_teachertable tr.bsodd {
 	background-color: #ffffff;
 	border-bottom: 1px solid #999999;
 	}
-
 #bsm_teachertable tr.bseven {
 	background-color: #fffff0;
 	border-bottom: 1px solid #999999;
@@ -1225,14 +1079,12 @@ div.listingfooter ul li {
 	border-top: 1px solid #999999;
 	padding: 4px 1px 1px 4px;
 	}
-
 /*Study Edit CSS */
 
 .bsmbutton {
 	background-color: white;
 
 	}
-
 #toolbar td.white {
 	background-color: #ffffff;
 	}
@@ -1249,27 +1101,22 @@ div.listingfooter ul li {
 	border: 1px solid #cfcfcf;
 	background-color: #f5f5f5;
 }
-
 #bsmsshare th, #bsmsshare td {
 	text-align: center;
 	padding: 0 0 0 0;
 	border: none;
 	}
-
 #bsmsshare th {
 	color: #0b55c4;
 	font-weight: bold;
 	}
-
 /* Landing Page Items */
 .landinglist {
 
 	}
-
 #landing_label {
 
 	}
-
 .landing_item {
 
 	}
@@ -1279,7 +1126,6 @@ div.listingfooter ul li {
 	font-weight: bold;
 
 }
-
 #biblestudy_landing {
 
 	}
@@ -1305,7 +1151,6 @@ div.listingfooter ul li {
 .landing_separator {
 	height: 15px;
 }
-
 /* Popup Window Items */
 .popupwindow {
 	margin: 5px;
