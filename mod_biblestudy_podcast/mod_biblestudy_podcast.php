@@ -11,36 +11,36 @@
 // No direct access
 defined('_JEXEC') or die;
 
-// Include the syndicate functions only once
-require_once dirname(__FILE__) . '/helper.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+if (version_compare(JVERSION, '3.0', 'ge'))
+{
+	$versionName = true;
+}
+else
+{
+	$versionName = false;
+}
+if (!defined('BIBLESTUDY_CHECKREL'))
+{
+	define('BIBLESTUDY_CHECKREL', $versionName);
+}
 
-$go             = modBibleStudyPodcast::checkforcombiblestudy($params);
 $templateparams = null;
 
-if (!$go)
+if (!JComponentHelper::isEnabled('com_biblestudy'))
 {
 	throw new Exception("Extension Bible Study not present or enabled");
 }
 else
 {
-	$templateparams = modBibleStudyPodcast::getTemplateParams($params);
+	$templateparams = JBSMParams::getTemplateParams($params);
 }
 
-// Load the css
-$document = JFactory::getDocument();
-$css      = $templateparams->get('css');
-
-if (!$css || $css == "-1")
-{
-	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-}
-else
-{
-	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-}
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-
-// Run the podcast subscription
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $params);
 $podcast   = new JBSMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 

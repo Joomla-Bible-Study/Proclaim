@@ -11,6 +11,10 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
 // Need for inline player
@@ -18,11 +22,12 @@ $document = JFactory::getDocument();
 
 /** @var $params JRegistry */
 $templatemenuid = $params->get('t');
-$template       = ModJBSMHelper::getTemplate($params);
+$template = JBSMParams::getTemplateparams();
+$pagebuilder = new JBSMPagebuilder;
 
-$admin        = ModJBSMHelper::getAdmin();
+$admin = JBSMParams::getAdmin();
 $admin_params = new JRegistry($admin[0]->params);
-$items        = ModJBSMHelper::getLatest($params);
+$items = $pagebuilder->studyBuilder(null, null, $params);
 
 // Attempt to change mysql for error in large select
 $db = JFactory::getDBO();
@@ -45,14 +50,9 @@ for ($i = 0; $i < $count; $i++)
 		}
 	}
 }
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 
 if ($params->get('useexpert_module') > 0)
 {
-	$pagebuilder = new JBSMPagebuilder;
 
 	foreach ($items AS $item)
 	{
@@ -113,23 +113,16 @@ if (!$templatemenuid)
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
 $document = JFactory::getDocument();
-$css      = $params->get('css', 'biblestudy.css');
 
-if (!$css || $css == '-1')
-{
-	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-}
-else
-{
-	$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-}
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $params);
 
 $language = JFactory::getLanguage();
-$language->load('com_biblestudy', JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy');
+$language->load('com_biblestudy', JPATH_ROOT . '/components/com_biblestudy');
 $config = JComponentHelper::getParams('com_biblestudy');
 
 // We need to load the path to the helper files
-$path1 = JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
+$path1 = JPATH_BASE . '/components/com_biblestudy/helpers/';
 $url   = $params->get('stylesheet');
 
 if ($url)

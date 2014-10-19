@@ -371,9 +371,11 @@ class JBSMPodcast
                         </rss>';
 					$input       = new JInput;
 					$client      = JApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
-					$file        = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
+					$file_path = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
-					$filewritten = $this->writeFile($file, $filecontent);
+					$filewritten = $this->writeFile($file_path, $filecontent);
+
+					$file = JUri::root() . '/' . $podinfo->filename;
 
 					if (!$filewritten)
 					{
@@ -386,7 +388,7 @@ class JBSMPodcast
 				} // End if $checkresult if positive
 				else
 				{
-					$msg[] = $file . ' - ' . JText::_('JBS_CMN_NO_MEDIA_FILES');
+					$msg[] = JText::_('JBS_CMN_NO_MEDIA_FILES');
 				}
 			}
 			// End foreach podids as podinfo
