@@ -7,11 +7,6 @@
   font-size: 14px;
   color: #000000;
 }
-#bsm_teachertable_list td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
 #bsm_teachertable_list .titlerow {
   border-bottom: thick;
 }
@@ -19,7 +14,7 @@
   font-size: 18px;
   font-weight: bold;
   border-bottom: 3px solid #999999;
-  padding: 4px 0px 4px 4px;
+	padding: 4px 0 4px 4px;
 }
 #bsm_teachertable_list .bsm_separator {
   border-bottom: 1px solid #999999;
@@ -55,19 +50,6 @@
   padding: 8px 4px 4px;
   border-bottom: 1px solid #999999;
 }
-#bsm_teachertable_list tr.bsodd {
-  background-color: #ffffff;
-  border-bottom: 1px solid #999999;
-}
-#bsm_teachertable_list tr.bseven {
-  background-color: #FFFFF0;
-  border-bottom: 1px solid #999999;
-}
-#bsm_teachertable_list .lastrow td {
-  border-bottom: 1px solid grey;
-  padding-bottom: 7px;
-  padding-top: 7px;
-}
 #bsm_teachertable_list .bsm_teacherfooter {
   border-top: 1px solid #999999;
   padding: 4px 1px 1px 4px;
@@ -79,28 +61,14 @@
 #bsm_teachertable .bsm_studiestitlerow {
   background-color: #666;
 }
-#bsm_teachertable .teacheraddress {
-  text-align: left;
-}
-#bsm_teachertable .teacherwebsite {
-  text-align: left;
-}
-#bsm_teachertable .teacherfacebook {
-  text-align: left;
-}
-#bsm_teachertable .bsm_teachertwitter {
-  text-align: left;
-}
-#bsm_teachertable .bsm_teacherblog {
-  text-align: left;
-}
+
+#bsm_teachertable .teacheraddress,
+#bsm_teachertable .teacherwebsite,
+#bsm_teachertable .teacherfacebook,
+#bsm_teachertable .bsm_teachertwitter,
+#bsm_teachertable .bsm_teacherblog,
 #bsm_teachertable .bsm_teacherlink1 {
   text-align: left;
-}
-#bsm_teachertable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
 }
 #bsm_teachertable .titlerow {
   border-bottom: thick;
@@ -109,7 +77,7 @@
   font-size: 18px;
   font-weight: bold;
   border-bottom: 3px solid #999999;
-  padding: 4px 0px 4px 4px;
+	padding: 4px 0 4px 4px;
 }
 #bsm_teachertable .bsm_separator {
   border-bottom: 1px solid #999999;
@@ -120,14 +88,9 @@
   color: #000000;
   white-space: nowrap;
 }
-#bsm_teachertable .bsm_teacheremail {
-  font-weight: normal;
-  font-size: 11px;
-}
-#bsm_teachertable .bsm_teacherwebsite {
-  font-weight: normal;
-  font-size: 11px;
-}
+
+#bsm_teachertable .bsm_teacheremail,
+#bsm_teachertable .bsm_teacherwebsite,
 #bsm_teachertable .bsm_teacherphone {
   font-weight: normal;
   font-size: 11px;
@@ -150,19 +113,6 @@
 #bsm_teachertable .bsm_teacherlong {
   padding: 8px 4px 4px;
   border-bottom: 1px solid #999999;
-}
-#bsm_teachertable tr.bsodd {
-  background-color: #ffffff;
-  border-bottom: 1px solid #999999;
-}
-#bsm_teachertable tr.bseven {
-  background-color: #FFFFF0;
-  border-bottom: 1px solid #999999;
-}
-#bsm_teachertable .lastrow td {
-  border-bottom: 1px solid grey;
-  padding-bottom: 7px;
-  padding-top: 7px;
 }
 #bsm_teachertable .bsm_teacherfooter {
   border-top: 1px solid #999999;
@@ -221,7 +171,7 @@
   font-weight: bold;
 }
 .podcastheader h3 {
-  display: table-header;
+	display: table-header-group;
   text-align: center;
 }
 .podcastlinks {
@@ -233,12 +183,6 @@
 }
 div.listingfooter ul li {
   list-style: none outside none;
-}
-#listintro p,
-#listintro td {
-  margin: 0;
-  font-weight: bold;
-  color: black;
 }
 #listingfooter li,
 #listingfooter ul {
@@ -254,31 +198,6 @@ div.listingfooter ul li {
 .bslisttable {
   margin: 0;
   border-collapse: separate;
-}
-.bslisttable .lastcol {
-  border-right: grey 2px solid;
-}
-.bslisttable .lastrow td {
-  border-bottom: 2px solid grey;
-  padding-bottom: 7px;
-}
-.bslisttable th {
-  background-color: #707070;
-  font-weight: bold;
-  color: white;
-}
-.bslisttable th.firstrow {
-  border-bottom: grey 2px solid;
-}
-.bslisttable tr.lastrow th {
-  border-bottom: 2px solid grey;
-  padding-bottom: 3px;
-}
-.bslisttable tr.bsodd td {
-  background-color: #ffffff;
-}
-.bslisttable tr.bseven td {
-  background-color: #ffffff;
 }
 .bslisttable .date {
   white-space: nowrap;
@@ -309,92 +228,29 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-.bslisttable .teacher {
-  white-space: nowrap;
-}
-.bslisttable .location_text {
-  white-space: nowrap;
-}
-.bslisttable .topic_text {
-  white-space: nowrap;
-}
-.bslisttable .message_type {
-  white-space: nowrap;
-}
-.bslisttable .jbsmedia {
-  white-space: nowrap;
-}
-.bslisttable .store {
-  white-space: nowrap;
-}
-.bslisttable .details-text {
-  white-space: nowrap;
-}
-.bslisttable .details-pdf {
-  white-space: nowrap;
-}
-.bslisttable .details-text-pdf {
-  white-space: nowrap;
-}
-.bslisttable .detailstable td {
-  border: none;
-  padding: 0 2px 0 0;
-}
-.bslisttable .secondary_reference {
-  white-space: nowrap;
-}
-.bslisttable .teacher-title-name {
-  white-space: nowrap;
-}
-.bslisttable .submitted {
-  white-space: nowrap;
-}
-.bslisttable .hits {
-  white-space: nowrap;
-}
-.bslisttable .studynumber {
-  white-space: nowrap;
-}
-.bslisttable .filesize {
-  white-space: nowrap;
-}
+
+.bslisttable .teacher,
+.bslisttable .location_text,
+.bslisttable .topic_text,
+.bslisttable .message_type,
+.bslisttable .jbsmedia,
+.bslisttable .store,
+.bslisttable .details-text,
+.bslisttable .details-pdf,
+.bslisttable .details-text-pdf,
+.bslisttable .secondary_reference,
+.bslisttable .teacher-title-name,
+.bslisttable .submitted,
+.bslisttable .hits,
+.bslisttable .studynumber,
+.bslisttable .filesize,
+.bslisttable .thumbnail,
 .bslisttable .custom {
   white-space: nowrap;
 }
 .bslisttable .commentshead {
   font-size: 2em;
   font-weight: bold;
-}
-.bslisttable .thumbnail {
-  white-space: nowrap;
-}
-.bslisttable .mediatable td {
-  border: none;
-  padding: 0 6px 0 0;
-}
-.bslisttable .mediatable span.bsfilesize {
-  font-size: 0.6em;
-  position: relative;
-  bottom: 7px;
-}
-.bslisttable th,
-.bslisttable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-.bslisttable .row1col1,
-.bslisttable .row2col1,
-.bslisttable .row3col1,
-.bslisttable .row4col1 {
-  border-left: grey 2px solid;
-}
-.bslisttable th.row1col1,
-.bslisttable th.row1col2,
-.bslisttable th.row1col3,
-.bslisttable th.row1col4 {
-  border-top: grey 2px solid;
-  padding-top: 3px;
 }
 .component-content ul {
   text-align: center;
@@ -410,42 +266,14 @@ div.listingfooter ul li {
   margin: 0;
   border-collapse: separate;
 }
-#bsmsdetailstable .lastcol {
-  border-right: grey 2px solid;
-}
-#bsmsdetailstable .lastrow td {
-  border-bottom: 2px solid grey;
-  padding-bottom: 7px;
-}
-#bsmsdetailstable th {
-  background-color: #707070;
-  font-weight: bold;
-  color: white;
-}
-#bsmsdetailstable tr.lastrow th {
-  border-bottom: 2px solid grey;
-  padding-bottom: 3px;
-}
-#bsmsdetailstable th.firstrow {
-  border-bottom: grey 2px solid;
-}
-#bsmsdetailstable tr.bsodd td {
-  background-color: #ffffff;
-}
-#bsmsdetailstable tr.bseven td {
-  background-color: #FFFFF0;
-}
 #bsmsdetailstable .date {
   white-space: nowrap;
   font-size: 1.2em;
   color: grey;
   font-weight: bold;
 }
-#bsmsdetailstable .scripture1 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
+
+#bsmsdetailstable .scripture1,
 #bsmsdetailstable .scripture2 {
   white-space: nowrap;
   color: #c02121;
@@ -464,55 +292,23 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-#bsmsdetailstable .teacher {
-  white-space: nowrap;
-}
-#bsmsdetailstable .location_text {
-  white-space: nowrap;
-}
-#bsmsdetailstable .topic_text {
-  white-space: nowrap;
-}
-#bsmsdetailstable .message_type {
-  white-space: nowrap;
-}
-#bsmsdetailstable .jbsmedia {
-  white-space: nowrap;
-}
-#bsmsdetailstable .store {
-  white-space: nowrap;
-}
-#bsmsdetailstable .details-text {
-  white-space: nowrap;
-}
-#bsmsdetailstable .details-pdf {
-  white-space: nowrap;
-}
-#bsmsdetailstable .details-text-pdf {
-  white-space: nowrap;
-}
-#bsmsdetailstable .detailstable td {
-  border: none;
-  padding: 0 2px 0 0;
-}
-#bsmsdetailstable .secondary_reference {
-  white-space: nowrap;
-}
-#bsmsdetailstable .teacher-title-name {
-  white-space: nowrap;
-}
-#bsmsdetailstable .submitted {
-  white-space: nowrap;
-}
-#bsmsdetailstable .hits {
-  white-space: nowrap;
-}
-#bsmsdetailstable .studynumber {
-  white-space: nowrap;
-}
-#bsmsdetailstable .filesize {
-  white-space: nowrap;
-}
+
+#bsmsdetailstable .teacher,
+#bsmsdetailstable .location_text,
+#bsmsdetailstable .topic_text,
+#bsmsdetailstable .message_type,
+#bsmsdetailstable .jbsmedia,
+#bsmsdetailstable .store,
+#bsmsdetailstable .details-text,
+#bsmsdetailstable .details-pdf,
+#bsmsdetailstable .details-text-pdf,
+#bsmsdetailstable .secondary_reference,
+#bsmsdetailstable .teacher-title-name,
+#bsmsdetailstable .submitted,
+#bsmsdetailstable .hits,
+#bsmsdetailstable .studynumber,
+#bsmsdetailstable .filesize,
+#bsmsdetailstable .thumbnail,
 #bsmsdetailstable .custom {
   white-space: nowrap;
 }
@@ -520,47 +316,10 @@ div.listingfooter ul li {
   font-size: 2em;
   font-weight: bold;
 }
-#bsmsdetailstable .thumbnail {
-  white-space: nowrap;
-}
-#bsmsdetailstable .mediatable td {
-  border: none;
-  padding: 0 6px 0 0;
-}
 #bsmsdetailstable .mediatable span.bsfilesize {
   font-size: 0.6em;
   position: relative;
   bottom: 7px;
-}
-#bsmsdetailstable th,
-#bsmsdetailstable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-#bsmsdetailstable .row1col1,
-#bsmsdetailstable .row2col1,
-#bsmsdetailstable .row3col1,
-#bsmsdetailstable .row4col1 {
-  border-left: grey 2px solid;
-}
-#bsmsdetailstable th.row1col1,
-#bsmsdetailstable th.row1col2,
-#bsmsdetailstable th.row1col3,
-#bsmsdetailstable th.row1col4 {
-  border-top: grey 2px solid;
-  padding-top: 3px;
-}
-#bsdetailstable th,
-#bsdetailstable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-#bsdetailstable .studydetailstext td {
-  font-size: 1.2em;
-  color: #707070;
-  font-family: Verdana, Geneva, sans-serif;
 }
 #titletable {
   margin: 0;
@@ -573,12 +332,6 @@ div.listingfooter ul li {
   font-size: 20px;
   font-weight: bold;
 }
-#titletable th,
-#titletable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
 #recaptcha_widget_div {
   position: static !important;
 }
@@ -586,42 +339,14 @@ div.listingfooter ul li {
   margin: 0;
   border-collapse: separate;
 }
-#bsmsmoduletable .lastcol {
-  border-right: grey 2px solid;
-}
-#bsmsmoduletable .lastrow td {
-  border-bottom: 2px solid grey;
-  padding-bottom: 7px;
-}
-#bsmsmoduletable th {
-  background-color: #707070;
-  font-weight: bold;
-  color: white;
-}
-#bsmsmoduletable th.firstrow {
-  border-bottom: grey 2px solid;
-}
-#bsmsmoduletable tr.lastrow th {
-  border-bottom: 2px solid grey;
-  padding-bottom: 3px;
-}
-#bsmsmoduletable tr.bsodd td {
-  background-color: #ffffff;
-}
-#bsmsmoduletable tr.bseven td {
-  background-color: #FFFFF0;
-}
 #bsmsmoduletable .date {
   white-space: nowrap;
   font-size: 1.2em;
   color: grey;
   font-weight: bold;
 }
-#bsmsmoduletable .scripture1 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
+
+#bsmsmoduletable .scripture1,
 #bsmsmoduletable .scripture2 {
   white-space: nowrap;
   color: #c02121;
@@ -640,118 +365,38 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-#bsmsmoduletable .teacher {
-  white-space: nowrap;
-}
-#bsmsmoduletable .location_text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .topic_text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .message_type {
-  white-space: nowrap;
-}
-#bsmsmoduletable .jbsmedia {
-  white-space: nowrap;
-}
-#bsmsmoduletable .store {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-pdf {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-text-pdf {
-  white-space: nowrap;
-}
-#bsmsmoduletable .detailstable td {
-  border: none;
-  padding: 0 2px 0 0;
-}
-#bsmsmoduletable .secondary_reference {
-  white-space: nowrap;
-}
-#bsmsmoduletable .teacher-title-name {
-  white-space: nowrap;
-}
-#bsmsmoduletable .submitted {
-  white-space: nowrap;
-}
-#bsmsmoduletable .hits {
-  white-space: nowrap;
-}
-#bsmsmoduletable .studynumber {
-  white-space: nowrap;
-}
-#bsmsmoduletable .filesize {
-  white-space: nowrap;
-}
-#bsmsmoduletable .custom {
+
+#bsmsmoduletable .teacher,
+#bsmsmoduletable .location_text,
+#bsmsmoduletable .topic_text,
+#bsmsmoduletable .message_type,
+#bsmsmoduletable .jbsmedia,
+#bsmsmoduletable .store,
+#bsmsmoduletable .details-text,
+#bsmsmoduletable .details-pdf,
+#bsmsmoduletable .details-text-pdf,
+#bsmsmoduletable .secondary_reference,
+#bsmsmoduletable .teacher-title-name,
+#bsmsmoduletable .submitted,
+#bsmsmoduletable .hits,
+#bsmsmoduletable .studynumber,
+#bsmsmoduletable .filesize,
+#bsmsmoduletable .custom,
+#bsmsmoduletable .thumbnail {
   white-space: nowrap;
 }
 #bsmsmoduletable .commentshead {
   font-size: 2em;
   font-weight: bold;
 }
-#bsmsmoduletable .thumbnail {
-  white-space: nowrap;
-}
-#bsmsmoduletable .mediatable td {
-  border: none;
-  padding: 0 6px 0 0;
-}
 #bsmsmoduletable .mediatable span.bsfilesize {
   font-size: 0.6em;
   position: relative;
   bottom: 7px;
 }
-#bsmsmoduletable th,
-#bsmsmoduletable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-#bsmsmoduletable .row1col1,
-#bsmsmoduletable .row2col1,
-#bsmsmoduletable .row3col1,
-#bsmsmoduletable .row4col1 {
-  border-left: grey 2px solid;
-}
-#bsmsmoduletable th.row1col1,
-#bsmsmoduletable th.row1col2,
-#bsmsmoduletable th.row1col3,
-#bsmsmoduletable th.row1col4 {
-  border-top: grey 2px solid;
-  padding-top: 3px;
-}
 #seriestable {
   margin: 0;
   border-collapse: separate;
-}
-#seriestable .firstrow td {
-  border-top: grey 2px solid;
-}
-#seriestable .firstcol {
-  border-left: grey 2px solid;
-}
-#seriestable .lastcol {
-  border-right: grey 2px solid;
-}
-#seriestable .lastrow td {
-  border-bottom: 2px solid grey;
-  border-left: 2px solid grey;
-  border-right: 2px solid grey;
-  padding-bottom: 3px;
-}
-#seriestable tr.bseven td {
-  background-color: #FFFFF0;
-}
-#seriestable tr.onlyrow td {
-  border-bottom: 2px solid grey;
-  border-top: grey 2px solid;
 }
 #seriestable .thumbnail img {
   border: 1px solid grey;
@@ -766,49 +411,12 @@ div.listingfooter ul li {
   font-weight: bold;
   font-size: larger;
 }
-#seriestable tr.noborder td {
-  border: none;
-}
 #seriestable .description p {
   width: 500px;
-}
-#seriestable th,
-#seriestable td {
-  text-align: left;
-  padding: 3px 3px 3px 3px;
-  border: none;
-}
-#seriesttable tr.bsodd td {
-  background-color: #ffffff;
 }
 #seriesstudytable {
   margin: 0;
   border-collapse: separate;
-}
-#seriesstudytable .lastcol {
-  border-right: grey 2px solid;
-}
-#seriesstudytable .lastrow td {
-  border-bottom: 2px solid grey;
-  padding-bottom: 7px;
-}
-#seriesstudytable th {
-  background-color: #707070;
-  font-weight: bold;
-  color: white;
-}
-#seriesstudytable th.firstrow {
-  border-bottom: grey 2px solid;
-}
-#seriesstudytable tr.lastrow th {
-  border-bottom: 2px solid grey;
-  padding-bottom: 3px;
-}
-#seriesstudytable tr.bsodd td {
-  background-color: #ffffff;
-}
-#seriesstudytable tr.bseven td {
-  background-color: #FFFFF0;
 }
 #seriesstudytable .date {
   white-space: nowrap;
@@ -816,11 +424,8 @@ div.listingfooter ul li {
   color: grey;
   font-weight: bold;
 }
-#seriesstudytable .scripture1 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
+
+#seriesstudytable .scripture1,
 #seriesstudytable .scripture2 {
   white-space: nowrap;
   color: #c02121;
@@ -840,55 +445,23 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-#seriesstudytable .teacher {
-  white-space: nowrap;
-}
-#seriesstudytable .location_text {
-  white-space: nowrap;
-}
-#seriesstudytable .topic_text {
-  white-space: nowrap;
-}
-#seriesstudytable .message_type {
-  white-space: nowrap;
-}
-#seriesstudytable .jbsmedia {
-  white-space: nowrap;
-}
-#seriesstudytable .store {
-  white-space: nowrap;
-}
-#seriesstudytable .details-text {
-  white-space: nowrap;
-}
-#seriesstudytable .details-pdf {
-  white-space: nowrap;
-}
-#seriesstudytable .details-text-pdf {
-  white-space: nowrap;
-}
-#seriesstudytable .detailstable td {
-  border: none;
-  padding: 0 2px 0 0;
-}
-#seriesstudytable .secondary_reference {
-  white-space: nowrap;
-}
-#seriesstudytable .teacher-title-name {
-  white-space: nowrap;
-}
-#seriesstudytable .submitted {
-  white-space: nowrap;
-}
-#seriesstudytable .hits {
-  white-space: nowrap;
-}
-#seriesstudytable .studynumber {
-  white-space: nowrap;
-}
-#seriesstudytable .filesize {
-  white-space: nowrap;
-}
+
+#seriesstudytable .teacher,
+#seriesstudytable .location_text,
+#seriesstudytable .topic_text,
+#seriesstudytable .message_type,
+#seriesstudytable .jbsmedia,
+#seriesstudytable .store,
+#seriesstudytable .details-text,
+#seriesstudytable .details-pdf,
+#seriesstudytable .details-text-pdf,
+#seriesstudytable .secondary_reference,
+#seriesstudytable .teacher-title-name,
+#seriesstudytable .submitted,
+#seriesstudytable .hits,
+#seriesstudytable .studynumber,
+#seriesstudytable .filesize,
+#seriesstudytable .thumbnail,
 #seriesstudytable .custom {
   white-space: nowrap;
 }
@@ -896,36 +469,10 @@ div.listingfooter ul li {
   font-size: 2em;
   font-weight: bold;
 }
-#seriesstudytable .thumbnail {
-  white-space: nowrap;
-}
-#seriesstudytable .mediatable td {
-  border: none;
-  padding: 0 6px 0 0;
-}
 #seriesstudytable .mediatable span.bsfilesize {
   font-size: 0.6em;
   position: relative;
   bottom: 7px;
-}
-#seriesstudytable th,
-#seriesstudytable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-#seriesstudytable .row1col1,
-#seriesstudytable .row2col1,
-#seriesstudytable .row3col1,
-#seriesstudytable .row4col1 {
-  border-left: grey 2px solid;
-}
-#seriesstudytable th.row1col1,
-#seriesstudytable th.row1col2,
-#seriesstudytable th.row1col3,
-#seriesstudytable th.row1col4 {
-  border-top: grey 2px solid;
-  padding-top: 3px;
 }
 .tool-tip {
   color: #fff;
@@ -969,10 +516,8 @@ div.listingfooter ul li {
 .bsmbutton {
   background-color: white;
 }
-#toolbar td.white {
-  background-color: #ffffff;
-}
-#toolbar a hover visited {
+
+#toolbar a:hover a:visited {
   color: #0B55C4;
 }
 #bsmsshare {
@@ -982,32 +527,19 @@ div.listingfooter ul li {
   border: 1px solid #CFCFCF;
   background-color: #F5F5F5;
 }
-#bsmsshare th {
-  color: #0b55c4;
-  font-weight: bold;
-}
-#bsmsshare th,
-#bsmsshare td {
-  text-align: center;
-  padding: 0 0 0 0;
-  border: none;
-}
 .landing_title {
-  font-family: arial;
+	font-family: "Times New Roman", arial, serif;
   font-size: 16px;
   font-weight: bold;
 }
 #showhide {
-  font-family: arial;
+	font-family: "Times New Roman", arial, serif;
   font-size: 12px;
   font-weight: bold;
   text-decoration: none;
 }
 #showhide .showhideheadingbutton img {
   vertical-align: bottom;
-}
-#landing_td {
-  width: 33%;
 }
 .landing_separator {
   height: 15px;
