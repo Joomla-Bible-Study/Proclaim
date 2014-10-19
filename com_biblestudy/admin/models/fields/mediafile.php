@@ -41,9 +41,8 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
-			$query->select('a.id, a.filename, b.mimetext');
-			$query->from('#__bsms_mediafiles as a');
-			$query->join('LEFT', '#__bsms_mimetype as b on a.mime_type = b.id');
+			$query->select('a.id');
+			$query->from('#__bsms_mediafiles as a');;
 			$query->where('study_id = ' . $this->form->getValue('id'));
 			$db->setQuery((string) $query);
 			$messages = $db->loadObjectList();
