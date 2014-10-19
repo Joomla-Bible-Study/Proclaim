@@ -26,10 +26,10 @@ class JBSMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object         $items     Items
-	 * @param   JRegistry      $params    Page Params
-	 * @param   TableTemplate  $template  Template name
-	 * @param   String         $type      Type of Listing
+	 * @param   Object        $items    Items
+	 * @param   JRegistry     $params   Page Params
+	 * @param   TableTemplate $template Template name
+	 * @param   String        $type     Type of Listing
 	 *
 	 * @return string
 	 */
@@ -438,7 +438,7 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Id's
 	 *
-	 * @param   Object  $item  Items info
+	 * @param   Object $item Items info
 	 *
 	 * @return array
 	 */
@@ -457,7 +457,7 @@ class JBSMListing
 	/**
 	 * Get Media Files
 	 *
-	 * @param   Array  $medias  Media files
+	 * @param   Array $medias Media files
 	 *
 	 * @return mixed
 	 */
@@ -502,7 +502,7 @@ class JBSMListing
 	/**
 	 * Get list Params Array
 	 *
-	 * @param   string  $paramtext  Param Text
+	 * @param   string $paramtext Param Text
 	 *
 	 * @return stdClass
 	 */
@@ -553,8 +553,14 @@ class JBSMListing
 				// second: objects with "bigger" property $property
 				do
 				{
-					while ($array[$i]->{$property} < $tmp->{$property}) $i++;
-					while ($tmp->{$property} < $array[$j]->{$property}) $j--;
+					while ($array[$i]->{$property} < $tmp->{$property})
+					{
+						$i++;
+					}
+					while ($tmp->{$property} < $array[$j]->{$property})
+					{
+						$j--;
+					}
 
 					// Swap elements of two parts if necesary
 					if ($i <= $j)
@@ -593,14 +599,14 @@ class JBSMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   Array          $listrows   ?
-	 * @param   Array          $listsorts  ?
-	 * @param   Object         $item       ?
-	 * @param   JRegistry      $params     Item Params
-	 * @param   TableTemplate  $template   Template info
-	 * @param   string         $oddeven    ?
-	 * @param   string         $header     ?
-	 * @param   string         $type       ?
+	 * @param   Array         $listrows  ?
+	 * @param   Array         $listsorts ?
+	 * @param   Object        $item      ?
+	 * @param   JRegistry     $params    Item Params
+	 * @param   TableTemplate $template  Template info
+	 * @param   string        $oddeven   ?
+	 * @param   string        $header    ?
+	 * @param   string        $type      ?
 	 *
 	 * @return string
 	 */
@@ -870,12 +876,12 @@ class JBSMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object         $item      ?
-	 * @param   Object         $row       ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   string         $header    ?
-	 * @param   string         $type      ?
+	 * @param   Object        $item     ?
+	 * @param   Object        $row      ?
+	 * @param   JRegistry     $params   ?
+	 * @param   TableTemplate $template ?
+	 * @param   string        $header   ?
+	 * @param   string        $type     ?
 	 *
 	 * @return string
 	 */
@@ -884,7 +890,7 @@ class JBSMListing
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
 		/** @var string $data */
-		$data  = '';
+		$data = '';
 
 		// Match the data in $item to a row/col in $row->name
 		$extra = '';
@@ -1645,11 +1651,11 @@ class JBSMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String $custom ?
-	 * @param   Object $row    ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   String $type   ?
+	 * @param   String        $custom   ?
+	 * @param   Object        $row      ?
+	 * @param   JRegistry     $params   ?
+	 * @param   TableTemplate $template ?
+	 * @param   String        $type     ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -2217,14 +2223,14 @@ class JBSMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool           $islink      ?
-	 * @param   string         $id3         ?
-	 * @param   int            $tid         ?
-	 * @param   object         $smenu       ?
-	 * @param   object         $tmenu       ?
-	 * @param   JRegistry      $params      ?
-	 * @param   object         $row         ?
-	 * @param   TableTemplate  $templateid  ?
+	 * @param   bool          $islink     ?
+	 * @param   string        $id3        ?
+	 * @param   int           $tid        ?
+	 * @param   object        $smenu      ?
+	 * @param   object        $tmenu      ?
+	 * @param   JRegistry     $params     ?
+	 * @param   object        $row        ?
+	 * @param   TableTemplate $templateid ?
 	 *
 	 * @return string
 	 */
@@ -2902,6 +2908,7 @@ class JBSMListing
 	public function getTitle($params, $row, $template)
 	{
 		JFactory::getApplication()->enqueueMessage('must remove fuction getTitle');
+
 		return false;
 	}
 
@@ -2918,6 +2925,7 @@ class JBSMListing
 	private function getCustomhead($rowcolid, $params)
 	{
 		JFactory::getApplication()->enqueueMessage('must remove fuction getCustomhead');
+
 		return false;
 	}
 
