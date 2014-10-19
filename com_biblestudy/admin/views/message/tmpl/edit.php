@@ -281,15 +281,6 @@ $input = $app->input;
 <div class="tab-pane" id="publish">
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('created_by'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('created_by', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id); ?>
-		</div>
-	</div>
-
-	<div class="control-group">
-		<div class="control-label">
 			<?php echo $this->form->getLabel('user_id'); ?>
 		</div>
 		<div class="controls">
@@ -298,18 +289,26 @@ $input = $app->input;
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('created_by_alias'); ?>
+			<?php echo $this->form->getLabel('user_name'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('created_by_alias'); ?>
+			<?php echo $this->form->getInput('user_name'); ?>
 		</div>
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('created'); ?>
+			<?php echo $this->form->getLabel('modified'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('created'); ?>
+			<?php echo $this->form->getInput('modified'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('modified_by'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('modified_by'); ?>
 		</div>
 	</div>
 	<div class="control-group">
