@@ -61,7 +61,6 @@
 #bsm_teachertable .bsm_studiestitlerow {
   background-color: #666;
 }
-
 #bsm_teachertable .teacheraddress,
 #bsm_teachertable .teacherwebsite,
 #bsm_teachertable .teacherfacebook,
@@ -88,7 +87,6 @@
   color: #000000;
   white-space: nowrap;
 }
-
 #bsm_teachertable .bsm_teacheremail,
 #bsm_teachertable .bsm_teacherwebsite,
 #bsm_teachertable .bsm_teacherphone {
@@ -228,7 +226,6 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-
 .bslisttable .teacher,
 .bslisttable .location_text,
 .bslisttable .topic_text,
@@ -272,7 +269,6 @@ div.listingfooter ul li {
   color: grey;
   font-weight: bold;
 }
-
 #bsmsdetailstable .scripture1,
 #bsmsdetailstable .scripture2 {
   white-space: nowrap;
@@ -292,7 +288,6 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-
 #bsmsdetailstable .teacher,
 #bsmsdetailstable .location_text,
 #bsmsdetailstable .topic_text,
@@ -345,7 +340,6 @@ div.listingfooter ul li {
   color: grey;
   font-weight: bold;
 }
-
 #bsmsmoduletable .scripture1,
 #bsmsmoduletable .scripture2 {
   white-space: nowrap;
@@ -365,7 +359,6 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-
 #bsmsmoduletable .teacher,
 #bsmsmoduletable .location_text,
 #bsmsmoduletable .topic_text,
@@ -424,7 +417,6 @@ div.listingfooter ul li {
   color: grey;
   font-weight: bold;
 }
-
 #seriesstudytable .scripture1,
 #seriesstudytable .scripture2 {
   white-space: nowrap;
@@ -445,7 +437,6 @@ div.listingfooter ul li {
   white-space: nowrap;
   font-style: italic;
 }
-
 #seriesstudytable .teacher,
 #seriesstudytable .location_text,
 #seriesstudytable .topic_text,
@@ -516,9 +507,8 @@ div.listingfooter ul li {
 .bsmbutton {
   background-color: white;
 }
-
 #toolbar a:hover a:visited {
-  color: #0B55C4;
+	color: #0b55c4;
 }
 #bsmsshare {
   margin: 0;
