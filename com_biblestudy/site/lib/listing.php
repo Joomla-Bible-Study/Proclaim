@@ -2302,10 +2302,11 @@ class JBSMListing
 
 			case 5 :
 				// Case 5 is a file link with Tooltip
-				$filepath = $this->getFilepath($id3, 'study_id', $mime);
-				$link     = JRoute::_($filepath);
-				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
-				$column .= '<a href="' . $link . '">';
+				JFactory::getApplication()->enqueueMessage('Need to update this ASAP Listing->getLink->case5', 'error');
+//				$filepath = $this->getFilepath($id3, 'study_id', $mime);
+//				$link     = JRoute::_($filepath);
+//				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
+//				$column .= '<a href="' . $link . '">';
 
 				break;
 
@@ -2592,7 +2593,7 @@ class JBSMListing
 	 *
 	 * @return null|string
 	 *
-	 * FIXME Look like this is missing the $template var and rebuld with new
+	 * FIXME Look like this is missing the $template var and rebuild with new
 	 */
 	public function getShare($link, $row, $params)
 	{
@@ -2821,7 +2822,7 @@ class JBSMListing
 		return $short;
 	}
 
-	/* @todo I believe all of the functions below can be removed TF */
+	// @todo I believe all of the functions below can be removed TF
 
 	/**
 	 * Run Content Plugins on content
