@@ -810,11 +810,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias  = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias  = JApplication::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
+			$table->alias = JApplication::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))
