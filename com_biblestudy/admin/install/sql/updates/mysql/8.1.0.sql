@@ -1,7 +1,7 @@
 -- Servers
 ALTER TABLE `#__bsms_servers` ADD COLUMN `params` TEXT NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `media` TEXT NOT NULL;
-ALTER TABLE `#__bsms_servers` MODIFY `type` CHAR(255) NOT NULL;
+ALTER TABLE `#__bsms_servers` MODIFY COLUMN `type` CHAR(255) NOT NULL;
 
 -- -- MediaFiles
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `server_id` INT(5) NULL AFTER `study_id`;
