@@ -2,10 +2,10 @@
 /**
  * Form
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -26,8 +26,8 @@ if (BIBLESTUDY_CHECKREL)
 JHtml::_('behavior.framework');
 
 $params = $this->form->getFieldsets('params');
-$app = JFactory::getApplication();
-$input = $app->input;
+$app    = JFactory::getApplication();
+$input  = $app->input;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -327,36 +327,6 @@ $input = $app->input;
 			<?php echo $this->form->getInput('publish_down'); ?>
 		</div>
 	</div>
-
-	<?php if (@$this->item->modified_by) : ?>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('modified_by'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('modified_by'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('modified'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('modified'); ?>
-			</div>
-		</div>
-	<?php endif; ?>
-
-	<?php if ($this->item->hits) : ?>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('hits'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('hits'); ?>
-			</div>
-		</div>
-		<?php endif; ?>
 </div>
 <?php if ($this->canDo->get('core.admin')): ?>
 	<div class="tab-pane" id="permissions">
