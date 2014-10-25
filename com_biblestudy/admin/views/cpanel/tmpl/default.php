@@ -154,13 +154,6 @@ if ($msg)
 							border="0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a></div>
 			</div>
 			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=folders"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_FOLDERS'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-folder.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_FOLDERS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=podcasts"
 				                     style="text-decoration:none;"
 				                     title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>"> <img
@@ -181,20 +174,6 @@ if ($msg)
 				                     title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-templates.png" alt="" align="middle"
 							border="0"/> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mediaimages"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MEDIAIMAGES'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-mediaimages.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MEDIAIMAGES'); ?> </a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mimetypes"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MIMETYPES'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-mimetype.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MIMETYPES'); ?> </span></a></div>
 			</div>
 			<div style="float:left;">
 				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=styles"

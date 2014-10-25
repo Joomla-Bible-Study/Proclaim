@@ -127,14 +127,12 @@ $input = $app->input;
 
 <!-- Begin Tabs -->
 <div class="tab-pane active" id="cpanl">
-	<div id="cpanel" style="padding-left: 20px">
-		<div style="float:left;">
-			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
-			                     style="text-decoration:none;"
-			                     title="Assets Check"> <img
+	<div id="cpanel" class="btn-group">
+		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
+			                     style="text-decoration:none; margin: 5px"
+			                     title="Assets Check" class="btn cpanl-img"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Assets Check </span></a></div>
-		</div>
+						border="0"/> <span> Assets Check </span></a>
 <!--        Disabled until we figure out a better way to do this.-->
 
 <!--		<div style="float:left;">-->
@@ -144,20 +142,16 @@ $input = $app->input;
 <!--						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"-->
 <!--						border="0"/> <span> Database Check </span></a></div>-->
 <!--		</div>-->
-		<div style="float:left;">
-			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
-			                     style="text-decoration:none;"
-			                     title="Migrate"> <img
+		<<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+			                     style="text-decoration:none; margin: 5px"
+			                     title="Migrate" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Migrate </span></a></div>
-		</div>
-		<div style="float:left;">
-			<div class="icon"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
-			                     style="text-decoration:none;"
-			                     title="Backup / Restor"> <img
+						border="0"/> <span> Migrate </span></a>
+		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
+			                     style="text-decoration:none; margin: 5px"
+			                     title="Backup / Restor" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Backup / Restor </span></a></div>
-		</div>
+						border="0"/> <span> Backup / Restor </span></a>
 	</div>
 </div>
 <div class="tab-pane" id="admin">
