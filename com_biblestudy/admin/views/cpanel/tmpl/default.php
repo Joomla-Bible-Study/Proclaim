@@ -45,7 +45,7 @@ if ($msg)
 	<div id="fbmenu">
 		<strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
 
-		<div class="fbmainmenu"><?php echo $this->version . ' (' . $this->versiondate . ')'; ?></div>
+		<div class="fbmainmenu"><?php echo $this->data->version . ' (' . $this->data->versiondate . ')'; ?></div>
 	</div>
 	<div id="jbspaypal">
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
