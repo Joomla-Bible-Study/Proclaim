@@ -125,7 +125,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		jimport('joomla.installer.installer');
 		$db                    = JFactory::getDBO();
-		$this->status = new stdClass;
+		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
 
