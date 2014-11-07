@@ -90,7 +90,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine in order to implode the podcast_id
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean True on successfully save
 	 *
@@ -174,8 +174,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return boolean|object
 	 *
@@ -654,6 +654,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		$app   = JFactory::getApplication('administrator');
 		$input = $app->input;
+
+		// Load the Admin settings
+		$admin = JBSMParams::getAdmin();
+		$registry    = new JRegistry;
+		$registry->loadString($admin->params);
+		$this->setState('admin', $registry);
 
 		$pk = $input->get('id', null, 'INTEGER');
 		$this->setState('mediafile.id', $pk);
