@@ -125,7 +125,6 @@ class JBSMPodcast
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
 					$registry        = new JRegistry;
-					$podinfo->params = '{"show_verses":"1"}';
 					$registry->loadString($podinfo->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
@@ -150,6 +149,7 @@ class JBSMPodcast
 						if (!$episode->media_minutes && !$episode->media_seconds)
 						{
 							$episode->media_minutes = 35;
+							$episode->media_seconds = 00;
 						}
 						$esv          = 0;
 						$scripturerow = 1;
@@ -216,13 +216,13 @@ class JBSMPodcast
 								}
 								break;
 							case 5:
+								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
 									$rowid = 'row1col1',
 									$podinfo->custom,
 									$episode,
 									$params,
-									$admin_params,
-									$detailstemplateid
+									$template
 								);
 
 								$title = $element->element;
@@ -238,6 +238,7 @@ class JBSMPodcast
 								$title    = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
+						$subtitle = null;
 						switch ($pod_subtitle)
 						{
 							case 0:
@@ -276,13 +277,14 @@ class JBSMPodcast
 								}
 								break;
 							case 5:
+								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
 									$rowid = 'row1col1',
 									$podinfo->custom,
 									$episode,
 									$params,
 									$admin_params,
-									$detailstemplateid
+									$template
 								);
 
 								$subtitle = $element->element;
@@ -304,9 +306,9 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>
-                        		<link>http://' . $podinfo->website . '/index.php?'. 'option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</link>
-                        		<comments>http://' . $podinfo->website . '/index.php?' . 'option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
@@ -371,7 +373,7 @@ class JBSMPodcast
                         </rss>';
 					$input       = new JInput;
 					$client      = JApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
-					$file_path = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
+					$file_path = $client->path . '/' . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
 					$filewritten = $this->writeFile($file_path, $filecontent);
 
@@ -410,7 +412,7 @@ class JBSMPodcast
 	/**
 	 * Escape Html to XML
 	 *
-	 * @param $html
+	 * @param   string  $html  HTML string to make safe
 	 *
 	 * @return mixed|string
 	 */
@@ -433,7 +435,7 @@ class JBSMPodcast
 	/**
 	 * JImage
 	 *
-	 * @param   string $path ?
+	 * @param   string  $path  Path of Image
 	 *
 	 * @return array|bool
 	 */
@@ -479,6 +481,7 @@ class JBSMPodcast
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
+			// todo not sure we need servers here.
 			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')

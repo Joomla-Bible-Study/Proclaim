@@ -22,7 +22,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  object Item */
 	protected $item;
 
-	/** @var  String Contact */
+	/** @var  object Contact */
 	protected $contact;
 
 	/** @var  JRegistry Admin */
@@ -31,7 +31,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  JRegistry Params */
 	protected $params;
 
-	/** @var  JObject Template Info */
+	/** @var  TableTemplate Template Info */
 	protected $template;
 
 	/** @var  JObject Template Studies */
@@ -46,7 +46,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */

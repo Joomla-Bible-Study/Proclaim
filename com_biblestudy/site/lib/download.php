@@ -197,7 +197,6 @@ class JBSMDownload
 	 */
 	protected function hitDownloads($mid)
 	{
-		// @todo need to find out how we plan on doing this Eugen
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')->set('downloads = downloads + 1 ')->where('id = ' . $mid);
