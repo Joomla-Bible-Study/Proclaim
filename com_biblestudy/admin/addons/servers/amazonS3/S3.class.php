@@ -708,7 +708,7 @@ class S3
 			if (is_resource($saveTo))
 				$rest->fp =& $saveTo;
 			else
-				if (($rest->fp = @fopen($saveTo, 'wb')) !== false)
+				if (($rest->fp  = @fopen($saveTo, 'wb')) !== false)
 					$rest->file = realpath($saveTo);
 				else
 					$rest->response->error = array('code' => 0, 'message' => 'Unable to open save file for writing: '.$saveTo);

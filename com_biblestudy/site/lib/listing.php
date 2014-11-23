@@ -469,6 +469,7 @@ class JBSMListing
 			. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
 			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
 		$query->from('#__bsms_mediafiles');
+		// todo not shure we need servers any more now.
 		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
 		$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
 		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
@@ -2369,7 +2370,7 @@ class JBSMListing
 			->where('study_id = ' . $db->q($id3))
 			->where('#__bsms_mediafiles.published = 1');
 		$db->setQuery($query);
-		$db->execut();
+		$db->execute();
 		$num_rows = $db->getNumRows();
 
 		if ($num_rows > 0)
@@ -2424,26 +2425,26 @@ class JBSMListing
 		$Media  = new JBSMMedia;
 		$images = new JBSMImages;
 		$image  = $images->getStudyThumbnail($row->thumbnailm);
-		$label = $params->get('templatecode');
+		$label  = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
 		$label  = str_replace('{{date}}', $this->getStudydate($params, $row->studydate), $label);
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
 		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
 			. $image->height . '" id="bsms_studyThumbnail" />', $label
 		);
-		$label = str_replace('{{seriestext}}', $row->series_text, $label);
+		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
-		$label = str_replace('{{bookname}}', $row->bookname, $label);
-		$label = str_replace('{{topics}}', $row->topic_text, $label);
+		$label  = str_replace('{{bookname}}', $row->bookname, $label);
+		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{hits}}', $row->hits, $label);
 		$label  = str_replace('{{location}}', $row->location_text, $label);
-		$label = str_replace('{{plays}}', $row->totalplays, $label);
-		$label = str_replace('{{downloads}}', $row->totaldownloads, $label);
+		$label  = str_replace('{{plays}}', $row->totalplays, $label);
+		$label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
 		// @todo need to replace this with a new fuction.
 		// For now we need to use the existing mediatable function to get all the media
@@ -2489,7 +2490,7 @@ class JBSMListing
 		$label  = str_replace('{{location}}', $row->location_text, $label);
 
 		// Passage
-		$link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
+		$link  = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$link .= '<div id="bsms_scripture" style="display:none;"></strong>';
 		$response = $this->getPassage($params, $row);
 		$link .= $response;
@@ -2592,8 +2593,6 @@ class JBSMListing
 	 * @param   JRegistry $params Item Params
 	 *
 	 * @return null|string
-	 *
-	 * FIXME Look like this is missing the $template var and rebuild with new
 	 */
 	public function getShare($link, $row, $params)
 	{
@@ -2762,7 +2761,7 @@ class JBSMListing
 
 					if ($sharelength > $share_params->get('totalcharacters'))
 					{
-						$linkstartposition  = strpos($sharelink, 'http://', 0);
+						$linkstartposition  = strpos($sharelink, '//', 0);
 						$linkendposition    = strpos($sharelink, ' ', $linkstartposition);
 						$linkextract        = substr($sharelink, $linkstartposition, $linkendposition);
 						$linklength         = strlen($linkextract);
@@ -2833,66 +2832,13 @@ class JBSMListing
 	 *
 	 * @return bool|string
 	 *
-	 * @todo this doesn't work yet. TF
+	 * @deprecated 8.1.0
 	 */
 	public function runContentPlugins($item, $params, $type)
 	{
-		if (!$item)
-		{
-			return false;
-		}
-		// We don't need offset but it is a required argument for the plugin dispatcher
-		$offset = '';
-		JPluginHelper::importPlugin('content');
+		JFactory::getApplication()->enqueueMessage('must remove fuction runContentPlugins');
 
-		// Run content plugins
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
-		$dispatcher->trigger('onContentPrepare', array(
-				'com_biblestudy.' . $type,
-				& $item,
-				& $params,
-				$offset
-			)
-		);
-
-		$event = new stdClass;
-
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->afterDisplayTitle = trim(implode("\n", $results));
-
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->beforeDisplayContent = trim(implode("\n", $results));
-
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
-				'com_biblestudy.' . $type,
-				&$item,
-				&$params,
-				$offset
-			)
-		);
-		$event->text->afterDisplayContent = trim(implode("\n", $results));
-		$result                           = implode('', $event->text);
-
-		return $result;
+		return false;
 	}
 
 	/**

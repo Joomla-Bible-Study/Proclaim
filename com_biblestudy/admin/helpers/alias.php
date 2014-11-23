@@ -59,7 +59,7 @@ class JBSMAlias
 						->set('alias=' . $db->q($alias))
 						->where('id=' . $db->q($r['id']));
 					$db->setQuery($query);
-					$db->query();
+					$db->execute();
 					$done++;
 				}
 			}

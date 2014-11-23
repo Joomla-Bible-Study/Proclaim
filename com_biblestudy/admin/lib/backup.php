@@ -115,7 +115,10 @@ class JBSMBackup
 		$prefix = $db->getPrefix();
 
 		// Used for Checking file is from the correct version of biblestudy component
-		$export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+		if (die('need to find way to search for admin table'))//todo need to find code.
+		{
+			$export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+		}
 
 		// Start of Tables
 		$export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";

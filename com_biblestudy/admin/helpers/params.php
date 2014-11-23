@@ -30,7 +30,7 @@ class JBSMParams
 	/**
 	 * Gets the settings from Admin
 	 *
-	 * @return object Return Admin table
+	 * @return TableAdmin Return Admin table
 	 */
 	public static function getAdmin()
 	{
@@ -60,12 +60,17 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @return object Return active template info
+	 * @param   int  $pk  Id of Template to look for
+	 *
+	 * @return TableTemplate Return active template info
 	 */
-	public static function getTemplateparams()
+	public static function getTemplateparams($pk = null)
 	{
 		$db = JFactory::getDbo();
-		$pk = JFactory::getApplication()->input->getInt('t', '1');
+		if (!$pk)
+		{
+			$pk = JFactory::getApplication()->input->getInt('t', '1');
+		}
 
 		$query = $db->getQuery(true);
 		$query->select('*')

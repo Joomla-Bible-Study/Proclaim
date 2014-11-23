@@ -89,10 +89,13 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  JRegistry Extra Params */
 	protected $extraparams;
 
+	/** @var  TableTemplate Template */
+	protected $template;
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */

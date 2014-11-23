@@ -15,6 +15,8 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    7.0.1
+ *
+ * todo not sure this is in the right place
  */
 class JBSMTemplate extends JObject
 {
