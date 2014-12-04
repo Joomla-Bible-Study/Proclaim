@@ -34,6 +34,7 @@ class JBSMCustom extends JBSMElements
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
 	{
+		$isCustom = ($rowid == 24) ? true : false;
 		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
 
@@ -43,7 +44,7 @@ class JBSMCustom extends JBSMElements
 			$braceend   = strpos($custom, '}');
 			$subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 
-			if (!$rowid || $rowid == 24)
+			if (!$rowid || $isCustom)
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
