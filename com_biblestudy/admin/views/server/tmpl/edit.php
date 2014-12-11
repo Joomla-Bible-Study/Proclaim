@@ -24,7 +24,9 @@ $input = $app->input;
         if(task == 'server.setType') {
             document.id('item-form').elements['jform[type]'].value = type;
             Joomla.submitform(task, document.id('item-form'));
-        } else if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        } else if (task == 'server.cancel' ) {
+            Joomla.submitform(task, document.getElementById('item-form'));
+        } else if (task == 'server.apply' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
