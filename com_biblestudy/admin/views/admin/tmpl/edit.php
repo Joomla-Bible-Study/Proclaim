@@ -149,7 +149,7 @@ $input = $app->input;
 						border="0"/> <span> Migrate </span></a>
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
 			                     style="text-decoration:none; margin: 5px"
-			                     title="Backup / Restor" class="btn"> <img
+			                     title="Backup / Restore" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
 						border="0"/> <span> Backup / Restor </span></a>
 	</div>
