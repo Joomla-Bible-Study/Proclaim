@@ -12,14 +12,25 @@ class JBSMAddonLegacy extends JBSMAddon
 
     public function upload($data)
     {
-        $path = $data->get('path', null, 'PATH');
-        $fileName = $_FILES["file"]["name"];
-        if (!move_uploaded_file($_FILES["file"]["tmp_name"], JPATH_ROOT . '/' . $path . '/' . $fileName))
+        // Convert back slashes to forward slashes
+        $file = str_replace('\\', '/', $data->get('path', null, 'PATH'));
+        $slash = strrpos($file, '/');
+
+        $path = substr($file, 0, $slash + 1);
+
+        // Remove domain from path
+        preg_match('/\/+.+/', $path, $matches);
+
+        // Make filename safe and move it to correct folder
+        $destFile = JApplication::stringURLSafe($_FILES["file"]["name"]);
+        if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT.$matches[0].$destFile))
             die('false');
 
         return array(
-            'filename' => $_FILES['file']['name'],
-            'size' => $_FILES['file']['size']
-        );
+            'data' =>array(
+                'filename' => $path.$destFile,
+                'size' => $_FILES['file']['size']
+                )
+            );
     }
 }

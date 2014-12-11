@@ -59,9 +59,9 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		if (method_exists($addon, $handler))
 		{
-			echo new JResponseJson($addon->upload($input));
+            echo json_encode($addon->$handler($input));
 
-			$app = JApplicationCms::getInstance();
+			$app = JFactory::getApplication();
 			$app->close();
 		}
 		else
