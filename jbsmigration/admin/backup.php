@@ -48,14 +48,14 @@ class JBSExport
 	/**
 	 * Creates Backup File.
 	 *
-	 * @param   string $localfilename  File Name on local server
+	 * @param   string  $localfilename  File Name on local server
 	 *
 	 * @return boolean
 	 */
 	public function createBackup($localfilename)
 	{
 		$objects    = $this->getObjects();
-		$serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
+		$serverfile = JPATH_SITE . '/tmp/' . $localfilename;
 		$tables     = '';
 
 		foreach ($objects as $object)
@@ -101,7 +101,7 @@ class JBSExport
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string $table  Table Name exp: #__bsms_admin
+	 * @param   string  $table  Table Name exp: #__bsms_admin
 	 *
 	 * @return boolean
 	 */
@@ -148,9 +148,8 @@ class JBSExport
 		$export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
 
 		// Get the table rows and create insert statements from them
-		//$query = $db->getQuery(true);
-		//$query->select('*')->from($table);
-        $query = 'SELECT * FROM '.$table;
+		$query = $db->getQuery(true);
+		$query->select('*')->from($table);
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
@@ -184,9 +183,9 @@ class JBSExport
 	/**
 	 * File output
 	 *
-	 * @param   string $file       ?
-	 * @param   string $name       ?
-	 * @param   string $mime_type  ?
+	 * @param   string  $file       ?
+	 * @param   string  $name       ?
+	 * @param   string  $mime_type  ?
 	 *
 	 * @return boolean
 	 */
@@ -259,7 +258,7 @@ class JBSExport
 		header('Accept-Ranges: bytes');
 
 		/* The three lines below basically make the
-		  download non-cacheable */
+		  download non-catchable */
 		header("Cache-control: private");
 		header('Pragma: private');
 		header("Expires: Mon, 26 Jul 2014 05:00:00 GMT");
@@ -296,8 +295,9 @@ class JBSExport
 		// You may want to change this
 		$chunksize  = 1 * (1024 * 1024);
 		$bytes_send = 0;
+		$file       = fopen($file, 'r');
 
-		if ($file = fopen($file, 'r'))
+		if ($file)
 		{
 			if (isset($_SERVER['HTTP_RANGE']))
 			{
