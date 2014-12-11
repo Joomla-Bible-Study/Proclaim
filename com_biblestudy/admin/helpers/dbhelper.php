@@ -27,7 +27,7 @@ class JBSMDbHelper
 	/**
 	 * System to Check if Table Exists
 	 *
-	 * @param   string $cktable Table to check for exp:"#__bsms_admin
+	 * @param   string  $cktable  Table to check for exp:"#__bsms_admin
 	 *
 	 * @return bool  If table is there True else False if not.
 	 */
@@ -56,13 +56,14 @@ class JBSMDbHelper
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
-	 * @param   array  $tables Tables is an array of tables, fields, type of query and optional command line
-	 * @param   string $from   Where the query is coming from for msg
+	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
+	 * @param   string  $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
 	 */
 	public static function alterDB($tables, $from = null)
 	{
+		$db = JFactory::getDbo();
 		foreach ($tables as $t)
 		{
 			$type    = strtolower($t['type']);
@@ -81,7 +82,7 @@ class JBSMDbHelper
 					// Check the field to see if it exists first
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
+						$query = 'ALTER TABLE ' . $db->q($table) . ' DROP ' . $db->q($field);
 
 						if (!self::performDB($query, $from))
 						{
@@ -97,7 +98,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) !== true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` ADD `' . $field . '` ' . $command;
+						$query = 'ALTER TABLE ' . $db->q($table) . ' ADD ' . $db->q($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -113,7 +114,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
+						$query = 'ALTER TABLE ' . $db->q($table) . ' MODIFY ' . $db->q($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -129,7 +130,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` CHANGE `' . $field . '`' . $command;
+						$query = 'ALTER TABLE ' . $db->q($table) . ' CHANGE ' . $db->q($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -145,8 +146,8 @@ class JBSMDbHelper
 	/**
 	 * Discover the fields in a table
 	 *
-	 * @param   string $table Is the table you are checking
-	 * @param   string $field Checking against.
+	 * @param   string  $table  Is the table you are checking
+	 * @param   string  $field  Checking against.
 	 *
 	 * @return boolean false equals field does not exist
 	 */
@@ -169,8 +170,8 @@ class JBSMDbHelper
 	/**
 	 * performs a database query
 	 *
-	 * @param   string $query Is a Joomla ready query
-	 * @param   string $from  Where the source of the query comes from
+	 * @param   string  $query  Is a Joomla ready query
+	 * @param   string  $from   Where the source of the query comes from
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
@@ -198,8 +199,8 @@ class JBSMDbHelper
 	/**
 	 * Checks a table for the existence of a field, if it does not find it, runs the Admin model fix()
 	 *
-	 * @param   string $table table is the table you are checking
-	 * @param   string $field field you are checking
+	 * @param   string  $table  table is the table you are checking
+	 * @param   string  $field  field you are checking
 	 *
 	 * @return boolean
 	 */
@@ -305,10 +306,10 @@ class JBSMDbHelper
 	/**
 	 * Fixupcss.
 	 *
-	 * @param   string  $filename Name of css file
-	 * @param   boolean $parent   if coming form the update script
-	 * @param   string  $newcss   New css style
-	 * @param   int     $id       this is the id of record to be fixed
+	 * @param   string   $filename  Name of css file
+	 * @param   boolean  $parent    if coming form the update script
+	 * @param   string   $newcss    New css style
+	 * @param   int      $id        this is the id of record to be fixed
 	 *
 	 * @return boolean
 	 *
@@ -389,8 +390,8 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object $result Objectlist that we will get the id from.
-	 * @param   string $table  Table to be reloaded.
+	 * @param   object  $result  Objectlist that we will get the id from.
+	 * @param   string  $table   Table to be reloaded.
 	 *
 	 * @return boolean
 	 *
