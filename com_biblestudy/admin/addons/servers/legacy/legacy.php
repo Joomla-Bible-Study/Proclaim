@@ -20,7 +20,7 @@ class JBSMAddonLegacy extends JBSMAddon
 
         // Remove domain from path
         preg_match('/\/+.+/', $path, $matches);
-
+        $svr = JURI::getInstance();
         // Make filename safe and move it to correct folder
         $destFile = JApplication::stringURLSafe($_FILES["file"]["name"]);
         if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT.$matches[0].$destFile))
@@ -28,7 +28,7 @@ class JBSMAddonLegacy extends JBSMAddon
 
         return array(
             'data' =>array(
-                'filename' => $path.$destFile,
+                'filename' => $matches[0].$destFile,
                 'size' => $_FILES['file']['size']
                 )
             );
