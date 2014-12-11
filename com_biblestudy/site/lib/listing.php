@@ -2412,9 +2412,9 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object        $row      Item Info
-	 * @param   JRegistry     $params   Item Params
-	 * @param   TableTemplate $template Template
+	 * @param   object         $row       Item Info
+	 * @param   JRegistry      $params    Item Params
+	 * @param   TableTemplate  $template  Template
 	 *
 	 * @return object
 	 *
@@ -2459,8 +2459,8 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object    $row    Item Info
-	 * @param   JRegistry $params Item Params
+	 * @param   object     $row     Item Info
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return object
 	 *
