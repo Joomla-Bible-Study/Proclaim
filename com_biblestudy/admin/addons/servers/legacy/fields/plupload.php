@@ -24,7 +24,7 @@ class JFormFieldPlupload extends JFormField
                 uploader.bind("BeforeUpload", function() {
                     uploader.setOption("multipart_params", {
                         handler: "'.$this->element["handler"].'",
-                        path: "'.$this->value.'"
+                        path: jQuery("#jform_params_filename").val()
                     });
                 });
                 uploader.init();
