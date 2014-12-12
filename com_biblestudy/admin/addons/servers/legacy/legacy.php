@@ -13,7 +13,7 @@ class JBSMAddonLegacy extends JBSMAddon
     public function upload($data)
     {
         // Convert back slashes to forward slashes
-        $file = str_replace('\\', '/', $data->get('path', null, 'PATH'));
+        $file = str_replace('\\', '/', $data->get('path', null, 'STRING'));
         $slash = strrpos($file, '/');
 
         $path = substr($file, 0, $slash + 1);
