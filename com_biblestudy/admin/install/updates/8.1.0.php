@@ -126,7 +126,7 @@ class Migration810
 				$params['media_text']    = $mediaImage->media_alttext;
 				$params['mime_type']     = $mimtype->mimetype;
 				$params['special']       = $mediaFile->special;
-				$params['filename']      = $server->server_path . $path->folderpath . $mediaFile->filename;
+				$params['filename']      = $path->folderpath . $mediaFile->filename;
 				$params['size']          = $mediaFile->size;
 				$params['mediacode']     = $mediaFile->mediacode;
 				$params['link_type']     = $mediaFile->link_type;
