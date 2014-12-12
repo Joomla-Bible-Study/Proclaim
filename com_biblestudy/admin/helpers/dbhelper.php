@@ -82,7 +82,7 @@ class JBSMDbHelper
 					// Check the field to see if it exists first
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE ' . $db->q($table) . ' DROP ' . $db->q($field);
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' DROP ' . $db->qn($field);
 
 						if (!self::performDB($query, $from))
 						{
@@ -98,7 +98,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) !== true)
 					{
-						$query = 'ALTER TABLE ' . $db->q($table) . ' ADD ' . $db->q($field) . ' ' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -114,7 +114,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE ' . $db->q($table) . ' MODIFY ' . $db->q($field) . ' ' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' MODIFY ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -130,7 +130,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE ' . $db->q($table) . ' CHANGE ' . $db->q($field) . ' ' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' CHANGE ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
