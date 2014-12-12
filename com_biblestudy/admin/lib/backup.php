@@ -14,8 +14,6 @@ defined('_JEXEC') or die;
  *
  * @package  BibleStudy.Admin
  * @since    7.1.0
- *
- * @todo     Look like we are duplicating the Class
  */
 class JBSMBackup
 {
@@ -30,17 +28,20 @@ class JBSMBackup
 
 	/** @var string Data cache, used to cache data before being written to disk */
 	protected $data_cache = '';
+
 	/** @var string Absolute path to the temp file */
 	protected $tempFile = '';
+
 	/** @var string Relative path of how the file should be saved in the archive */
 	protected $saveAsName = '';
+
 	/** @var resource Filepointer to the current dump part */
 	private $_fp = null;
 
 	/**
 	 * Export DB//
 	 *
-	 * @param   int $run  ID
+	 * @param   int  $run  ID
 	 *
 	 * @return boolean
 	 */
@@ -91,7 +92,7 @@ class JBSMBackup
 	/**
 	 * Get Export Table
 	 *
-	 * @param   string $table  Table name
+	 * @param   string  $table  Table name
 	 *
 	 * @return boolean|string
 	 */
@@ -113,11 +114,12 @@ class JBSMBackup
 
 		// Get the prefix
 		$prefix = $db->getPrefix();
+		$export = '';
 
 		// Used for Checking file is from the correct version of biblestudy component
-		if (die('need to find way to search for admin table'))//todo need to find code.
+		if (strpos($table, 'bsms_admin'))
 		{
-			$export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+			$export .= "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
 		}
 
 		// Start of Tables
@@ -181,7 +183,7 @@ class JBSMBackup
 	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
 	 * failed, return value is FALSE.
 	 *
-	 * @param   string $fileData  Data to write. Set to null to close the file handle.
+	 * @param   string  &$fileData  Data to write. Set to null to close the file handle.
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
 	 */
@@ -203,7 +205,10 @@ class JBSMBackup
 
 		if (is_null($fileData))
 		{
-			if (is_resource($this->_fp)) @fclose($this->_fp);
+			if (is_resource($this->_fp))
+			{
+				@fclose($this->_fp);
+			}
 			$this->_fp = null;
 
 			return true;
@@ -228,9 +233,9 @@ class JBSMBackup
 	/**
 	 * File output
 	 *
-	 * @param   string $file       File Name
-	 * @param   string $name       Name output
-	 * @param   string $mime_type  Meme_Type
+	 * @param   string  $file       File Name
+	 * @param   string  $name       Name output
+	 * @param   string  $mime_type  Meme_Type
 	 *
 	 * @return void
 	 */
@@ -294,14 +299,36 @@ class JBSMBackup
 
 		$name = rawurldecode($name);
 
-		// File specific headers
-		header('Accept-Ranges: bytes');
-		header("Content-Description: File Transfer");
-		header("Content-Type: $mime_type");
-		header('Content-Disposition: attachment; filename="' . $name . '"');
-		header("Content-Transfer-Encoding: binary");
+		// Test for protocol and set the appropriate headers
+		jimport('joomla.environment.uri');
+		$_tmp_uri      = JURI::getInstance(JURI::current());
+		$_tmp_protocol = $_tmp_uri->getScheme();
+
+		if ($_tmp_protocol == "https")
+		{
+			// SSL Support
+			header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
+		}
+		else
+		{
+			header("Cache-Control: public, must-revalidate");
+			header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+			header('Pragma: no-cache');
+			header("Expires: 0");
+		} /* end if protocol https */
+		header('Content-Transfer-Encoding: none');
+		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+		header("Accept-Ranges:  bytes");
 
 		$size = filesize($file);
+
+		// Modified by Rene
+		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
+		$newFileSize = $size - 1;
+
+		// Default values! Will be overridden if a valid range header field was detected!
+		$resultLenght = (string) $size;
+		$resultRange  = "0-" . $newFileSize;
 
 		// Workaround for int overflow
 		if ($size < 0)
@@ -309,67 +336,72 @@ class JBSMBackup
 			$size = exec('ls -al "' . $file . '" | awk \'BEGIN {FS=" "}{print $5}\'');
 		}
 
-		// Multipart-download and download resuming support
-		if (isset($_SERVER['HTTP_RANGE']))
+		/* We support requests for a single range only.
+				 * So we check if we have a range field. If yes ensure that it is a valid one.
+				 * If it is not valid we ignore it and sending the whole file.
+				 * */
+		if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE']))
 		{
-			list($a, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
-			list($range) = explode(",", $range, 2);
-			list($range, $range_end) = explode("=", $range);
-			$range = round(floatval($range), 0);
+			// Let's take the right side
+			list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
 
-			if (!$range_end)
-			{
-				$range_end = $size - 1;
-			}
-			else
-			{
-				$range_end = round(floatval($range_end), 0);
-			}
+			// And get the two values (as strings!)
+			$httpRange = explode('-', $httpRange);
 
-			$partial_length = $range_end - $range + 1;
-			header("HTTP/1.1 206 Partial Content");
-			header("Content-Length: $partial_length");
-			header("Content-Range: bytes $range-$range_end/$size");
+			// Check if we have values! If not we have nothing to do!
+			if (!empty($httpRange[0]) || !empty($httpRange[1]))
+			{
+				// We need the new content length ...
+				$resultLenght = $size - $httpRange[0] - $httpRange[1];
+
+				// ... and we can add the 206 Status.
+				header("HTTP/1.1 206 Partial Content");
+
+				// Now we need the content-range, so we have to build it depending on the given range!
+				// ex.: -500 -> the last 500 bytes
+				if (empty($httpRange[0]))
+				{
+					$resultRange = $resultLenght . '-' . $size;
+				}
+
+				// Ex.: 500- -> from 500 bytes to file size
+				elseif (empty($httpRange[1]))
+				{
+					$resultRange = $httpRange[0] . '-' . $size;
+				}
+
+				// Ex.: 500-1000 -> from 500 to 1000 bytes
+				else
+				{
+					$resultRange = $httpRange[0] . '-' . $httpRange[1];
+				}
+			}
 		}
-		else
+		header('Content-Length: ' . $resultLenght);
+		header('Content-Range: bytes ' . $resultRange . '/' . $size);
+
+		header('Content-Type: ' . $mime_type);
+		header('Content-Disposition: attachment; filename="' . $name . '"');
+		header('Content-Transfer-Encoding: binary\n');
+
+		// Try to deliver in chunks
+		@set_time_limit(0);
+		$fp = @fopen($file, 'rb');
+
+		if ($fp !== false)
 		{
-			$partial_length = $size;
-			header("Content-Length: $partial_length");
-		}
-
-		/* output the file itself */
-		// You may want to change this
-		$chunksize  = 1 * (1024 * 1024);
-		$bytes_sent = 0;
-		$fp         = fopen($file, 'r');
-
-		if ($fp)
-		{
-			// Fast forward within file, if requested
-			if (isset($_SERVER['HTTP_RANGE']))
+			while (!feof($fp))
 			{
-				fseek($fp, $range);
-			}
-
-			// Read and output the file in chunks
-			while (!feof($fp) AND (!connection_aborted()) AND ($bytes_sent < $partial_length))
-			{
-				$buffer = fread($fp, $chunksize);
-
-				// Is also possible
-				print($buffer);
-				flush();
-				$bytes_sent += strlen($buffer);
+				echo fread($fp, 8192);
 			}
 			fclose($fp);
 		}
 		else
 		{
-			die('Unable to open file.');
+			@readfile($file);
 		}
-
-		// Must have die() in to return proper file.
-		die();
+		flush();
+		exit;
 	}
 
 }

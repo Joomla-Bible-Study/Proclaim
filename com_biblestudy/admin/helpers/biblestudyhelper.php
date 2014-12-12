@@ -29,8 +29,8 @@ class JBSMBibleStudyHelper
 	/**
 	 * Get Actions
 	 *
-	 * @param   int    $Itemid  ID
-	 * @param   string $type    Type
+	 * @param   int     $Itemid  ID
+	 * @param   string  $type    Type
 	 *
 	 * @return JObject
 	 */
@@ -141,7 +141,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName  The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return void
 	 *
@@ -202,9 +202,9 @@ class JBSMBibleStudyHelper
 	/**
 	 *  Rendering Menu based on Joomla! Version.
 	 *
-	 * @param   string $text   ?
-	 * @param   string $url    ?
-	 * @param   string $vName  ?
+	 * @param   string  $text   Label
+	 * @param   string  $url    Url of link
+	 * @param   string  $vName  Name of view
 	 *
 	 * @return void
 	 */
@@ -223,7 +223,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Applies the content tag filters to arbitrary text as per settings for current user group
 	 *
-	 * @param   string $text  The string to filter
+	 * @param   string  $text  The string to filter
 	 *
 	 * @return string The filtered string
 	 */
