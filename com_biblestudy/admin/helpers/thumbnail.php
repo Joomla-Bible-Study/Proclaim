@@ -1,11 +1,12 @@
-<?php/**
+<?php
+/**
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * */
+ */
 defined('_JEXEC') or die;
 
 /**
@@ -46,7 +47,7 @@ class JBSMThumbnail
 		// Create thumbnail
 		$image     = new JImage($original);
 		$thumbnail = $image->resize($size, $size);
-		$thumbnail->toFile($thumb, IMAGETYPE_PNG);
+		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
 	}
 
 	/**
