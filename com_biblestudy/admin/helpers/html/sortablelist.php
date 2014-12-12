@@ -29,18 +29,18 @@ abstract class JHtmlSortablelist
 	/**
 	 * Method to load the Sortable script and make table sortable
 	 *
-	 * @param   string  $tableId                 DOM id of the table
-	 * @param   string  $formId                  DOM id of the form
-	 * @param   string  $sortDir                 Sort direction
-	 * @param   string  $saveOrderingUrl         Save ordering url, ajax-load after an item dropped
-	 * @param   boolean $proceedSaveOrderButton  Set whether a save order button is displayed
-	 * @param   boolean $nestedList              Set whether the list is a nested list
+	 * @param   string   $tableId                 DOM id of the table
+	 * @param   string   $formId                  DOM id of the form
+	 * @param   string   $sortDir                 Sort direction
+	 * @param   string   $saveOrderingUrl         Save ordering url, ajax-load after an item dropped
+	 * @param   boolean  $proceedSaveOrderButton  Set whether a save order button is displayed
+	 * @param   boolean  $nestedList              Set whether the list is a nested list
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function sortable($tableId, $formId, $sortDir = 'asc', $saveOrderingUrl, $proceedSaveOrderButton = true, $nestedList = false)
+	public static function sortable($tableId, $formId, $sortDir = 'asc', $saveOrderingUrl = '', $proceedSaveOrderButton = true, $nestedList = false)
 	{
 		// Only load once
 		if (isset(self::$loaded[__METHOD__]))
@@ -57,7 +57,8 @@ abstract class JHtmlSortablelist
 		JFactory::getDocument()->addScriptDeclaration("
 			(function ($){
 				$(document).ready(function (){
-					var sortableList = new $.JSortableList('#" . $tableId . " tbody','" . $formId . "','" . $sortDir . "' , '" . $saveOrderingUrl . "','','" . $nestedList . "');
+					var sortableList = new $.JSortableList('#" . $tableId . " tbody','" . $formId . "','" . $sortDir
+			. "' , '" . $saveOrderingUrl . "','','" . $nestedList . "');
 				});
 			})(jQuery);
 			"

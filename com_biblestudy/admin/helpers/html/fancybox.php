@@ -27,8 +27,8 @@ abstract class JHtmlFancybox
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   boolean $option    Optional looks [optional]
-	 * @param   boolean $mouseweel To add mouse Well to display [optional]
+	 * @param   boolean  $option     Optional looks [optional]
+	 * @param   boolean  $mouseweel  To add mouse Well to display [optional]
 	 *
 	 * @return  void
 	 *
@@ -69,7 +69,7 @@ abstract class JHtmlFancybox
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   boolean $option  Optional add helpers - button, thumbnail and/or media
+	 * @param   boolean  $option  Optional add helpers - button, thumbnail and/or media
 	 *
 	 * @return  void
 	 *

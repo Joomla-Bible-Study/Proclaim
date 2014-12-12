@@ -27,8 +27,8 @@ abstract class JHtmlbsMedia
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   boolean $noConflict  True to load jQuery in noConflict mode [optional]
-	 * @param   mixed   $debug       Is debugging mode on? [optional]
+	 * @param   boolean  $noConflict  True to load jQuery in noConflict mode [optional]
+	 * @param   mixed    $debug       Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
@@ -83,8 +83,7 @@ abstract class JHtmlbsMedia
 			$options = JHtml::getJSObject($opt);
 
 			// Attach the carousel to document
-			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false, $debug);
-
+			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false);
 
 			// Set static array
 			self::$loaded[__METHOD__][$sig] = true;
