@@ -447,20 +447,24 @@ class JBSMStats
 		$db                    = JFactory::getDBO();
 		$query                 = $db->getQuery(true);
 		$query
-			->select('player')
+			->select('params')
 			->from('#__bsms_mediafiles')
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
-		$plays         = $db->loadObjectList();
+		$params         = $db->loadObjectList();
+
+		$registry = new JRegistry;
 		$media_players = null;
 
-		if ($plays)
+		if ($params)
 		{
-			$total_players = count($plays);
+			$total_players = count($params);
 
-			foreach ($plays as $player)
+			foreach ($params as $param)
 			{
-				switch ($player->player)
+				$registry->loadString($param->params);
+
+				switch ($registry->toObject()->player)
 				{
 					case 0:
 						$count_no_player++;
