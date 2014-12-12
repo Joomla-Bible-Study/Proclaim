@@ -103,8 +103,8 @@ class JBSMMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   JRegistry $params Params
-	 * @param   object    $media  Media info
+	 * @param   JRegistry  $params  Params
+	 * @param   object     $media   Media info
 	 *
 	 * @return object
 	 */
@@ -210,10 +210,10 @@ class JBSMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   JRegistry $params Params are the merged of system and items.
-	 * @param   object    $player Player code
-	 * @param   String    $image  Image info
-	 * @param   object    $media  Media
+	 * @param   JRegistry  $params  Params are the merged of system and items.
+	 * @param   object     $player  Player code
+	 * @param   String     $image   Image info
+	 * @param   object     $media   Media
 	 *
 	 * @return string
 	 */
@@ -227,6 +227,7 @@ class JBSMMedia
 		$lightcolor  = $params->get('lightcolor', '0x000000');
 		$screencolor = $params->get('screencolor', '0xFFFFFF');
 		$template    = $input->get('t', '1', 'int');
+		$server      = $this->getServerPath($media->server_id);
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
@@ -239,8 +240,8 @@ class JBSMMedia
 		}
 		if (!substr_count($path, '://') && !substr_count($path, '//'))
 		{
-			$protocol = $params->get('protocol', 'http://');
-			$path     = $protocol . $path;
+			$protocol = $params->get('protocol', '//');
+			$path     = $protocol . $server . $path;
 		}
 
 		switch ($player->player)
@@ -380,7 +381,7 @@ class JBSMMedia
 	/**
 	 * return $table
 	 *
-	 * @param   Object $media Media info
+	 * @param   Object     $media   Media info
 	 * @param   JRegistry  $params  Params
 	 *
 	 * @return null|string
@@ -446,8 +447,8 @@ class JBSMMedia
 	/**
 	 * Get duration
 	 *
-	 * @param   Object    $row    Table Row info
-	 * @param   JRegistry $params Params
+	 * @param   Object     $row     Table Row info
+	 * @param   JRegistry  $params  Params
 	 *
 	 * @return null|string
 	 */
@@ -499,8 +500,8 @@ class JBSMMedia
 	/**
 	 * Return AVMedia Code.
 	 *
-	 * @param   string $mediacode Media string
-	 * @param   object $media     Media info
+	 * @param   string  $mediacode  Media string
+	 * @param   object  $media      Media info
 	 *
 	 * @return string
 	 */
@@ -548,8 +549,8 @@ class JBSMMedia
 	/**
 	 * Return Articles.
 	 *
-	 * @param   object $media Media
-	 * @param   string $image Image
+	 * @param   object  $media  Media
+	 * @param   string  $image  Image
 	 *
 	 * @return string
 	 */
@@ -564,9 +565,9 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object   $media  Media
-	 * @param   JRegitry $params Item Params
-	 * @param   string   $image  Image
+	 * @param   object     $media   Media
+	 * @param   JRegistry  $params  Item Params
+	 * @param   string     $image   Image
 	 *
 	 * @return string
 	 */
@@ -581,10 +582,10 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object        $media      Media
-	 * @param   JRegistry     $params     Params
-	 * @param   TableTemplate $template   Template ID
-	 * @param   string        $playercode Player Code
+	 * @param   Object         $media       Media
+	 * @param   JRegistry      $params      Params
+	 * @param   TableTemplate  $template    Template ID
+	 * @param   string         $playercode  Player Code
 	 *
 	 * @return string
 	 */
@@ -756,6 +757,39 @@ class JBSMMedia
 		{
 			return false;
 		}
+	}
+
+
+	/**
+	 * Get File Path
+	 *
+	 * @param   string  $id  ID of server
+	 *
+	 * @return string
+	 */
+	public function getServerPath($id)
+	{
+		$db = JFactory::getDBO();
+		$query    = $db->getQuery(true);
+		$query->select('#__bsms_servers.params')
+			->from('#__bsms_servers')
+			->where('id = ' . $id)
+			->where('#__bsms_servers.published = 1 ');
+		$db->setQuery($query);
+		$server = $db->loadObject();
+		if ($server)
+		{
+			$reg = new JRegistry;
+			$reg->loadString($server->params);
+			$params = $reg->toObject();
+
+			$path = $params->path;
+		}
+		else
+		{
+			$path = '';
+		}
+		return $path;
 	}
 
 	/**
