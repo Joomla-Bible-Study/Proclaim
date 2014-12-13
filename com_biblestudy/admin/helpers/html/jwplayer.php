@@ -76,7 +76,6 @@ abstract class JHtmlJwplayer
 	 */
 	public static function render($media, $id, $params, $popup = false, $player = false)
 	{
-		dump($media, 'media');
 		if (!isset($params->popupimage))
 		{
 			$params->popupimage = "media/com_biblestudy/images/speaker24.png";
