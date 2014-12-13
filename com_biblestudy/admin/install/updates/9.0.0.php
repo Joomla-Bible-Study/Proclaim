@@ -26,6 +26,7 @@ class Migration900
 	 */
 	public function up ($db)
 	{
+		$registry = new JRegistry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Migrate servers
@@ -122,26 +123,30 @@ class Migration900
 						$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
 					}
 				}
-				$params['media_image']   = $mimage;
-				$params['media_text']    = $mediaImage->media_alttext;
-				$params['mime_type']     = $mimtype->mimetype;
-				$params['special']       = $mediaFile->special;
-				$params['filename']      = $path->folderpath . $mediaFile->filename;
-				$params['size']          = $mediaFile->size;
-				$params['mediacode']     = $mediaFile->mediacode;
-				$params['link_type']     = $mediaFile->link_type;
-				$params['docMan_id']     = $mediaFile->docMan_id;
-				$params['article_id']    = $mediaFile->article_id;
-				$params['virtueMart_id'] = $mediaFile->virtueMart_id;
-				$params['player']        = $mediaFile->player;
-				$params['popup']         = $mediaFile->popup;
+				$registry->loadString($mediaFile->params);
+				$params = $registry->toObject();
+
+				$params->media_image   	= $mimage;
+				$params->media_text    	= $mediaImage->media_alttext;
+				$params->mime_type     	= $mimtype->mimetype;
+				$params->special      	= $mediaFile->special;
+				$params->filename      	= $path->folderpath . $mediaFile->filename;
+				$params->size          	= $mediaFile->size;
+				$params->mediacode     	= $mediaFile->mediacode;
+				$params->link_type     	= $mediaFile->link_type;
+				$params->docMan_id     	= $mediaFile->docMan_id;
+				$params->article_id    	= $mediaFile->article_id;
+				$params->virtueMart_id 	= $mediaFile->virtueMart_id;
+				$params->popup	        = $mediaFile->popup;
+
+				$registry->loadObject($params);
 
 				// @todo I don't thing we want to add both hits and plays to gather. I'm under hits a as the one but will need to verify this with tom
 				$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
 				$metadata['downloads'] = $mediaFile->downloads;
 
 				$newMediaFile->server_id = $newServer->id;
-				$newMediaFile->params    = json_encode($params);
+				$newMediaFile->params    = $registry->toString();
 				$newMediaFile->metadata  = json_encode($metadata);
 				$newMediaFile->id        = null;
 				$newMediaFile->store();
