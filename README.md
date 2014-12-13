@@ -26,7 +26,7 @@ Status
     </tr>
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=8.x"/></a></td>
-        <td>Master</td>
+        <td>8.x for Joomla 2.5</td>
         <td>8.0.8</td>
         <td>Sep 13, 2014</td>
         <td align="center">2.5.x</td>
