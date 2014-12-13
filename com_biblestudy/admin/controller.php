@@ -35,8 +35,8 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Core Display
 	 *
-	 * @param   boolean $cachable  Cachable system
-	 * @param   boolean $urlparams Url params
+	 * @param   boolean  $cachable   Cachable system
+	 * @param   boolean  $urlparams  Url params
 	 *
 	 * @return  JController        This object to support chaining.
 	 */
@@ -126,6 +126,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Change Players
 	 *
 	 * @return string
+	 *
+	 * @todo need to update this to new JBSM
 	 */
 	public function changePlayers()
 	{
@@ -168,9 +170,11 @@ class BiblestudyController extends JControllerLegacy
 	}
 
 	/**
-	 * Change Pupup
+	 * Change Popup
 	 *
 	 * @return string
+	 *
+	 * @todo need to update this for new JBSM
 	 */
 	public function changePopup()
 	{
