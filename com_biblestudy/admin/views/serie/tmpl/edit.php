@@ -17,8 +17,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-if (BIBLESTUDY_CHECKREL)
-	JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
@@ -72,18 +71,6 @@ $input = $app->input;
 									<?php echo $this->form->getInput('alias'); ?>
 								</div>
 							</div>
-							<?php if (!BIBLESTUDY_CHECKREL)
-							{
-								?>
-								<div class="control-group">
-									<div class="control-label">
-										<?php echo $this->form->getLabel('ordering'); ?>
-									</div>
-									<div class="controls">
-										<?php echo $this->form->getInput('ordering'); ?>
-									</div>
-								</div>
-							<?php } ?>
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('teacher'); ?>

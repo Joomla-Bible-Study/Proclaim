@@ -23,9 +23,6 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
 }
 
-// @todo need to find all usages of this.
-define('BIBLESTUDY_CHECKREL', false);
-
 // Component debugging
 define("COM_BIBLESTUDY_DEBUG", false);
 

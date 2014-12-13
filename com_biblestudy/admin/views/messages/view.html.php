@@ -141,10 +141,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -202,10 +199,8 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($user->authorise('core.edit'))
 		{
 			JToolBarHelper::divider();
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -213,50 +208,47 @@ class BiblestudyViewMessages extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_TEACHER'),
-				'filter_teacher',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getTeachers(), 'value', 'text', $this->state->get('filter.teacher'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_TEACHER'),
+			'filter_teacher',
+			JHtml::_('select.options', JBSMBibleStudyHelper::getTeachers(), 'value', 'text', $this->state->get('filter.teacher'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_YEAR'),
-				'filter_year',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_YEAR'),
+			'filter_year',
+			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_BOOK'),
-				'filter_book',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_BOOK'),
+			'filter_book',
+			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_MESSAGETYPE'),
-				'filter_messagetype',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_MESSAGETYPE'),
+			'filter_messagetype',
+			JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_LOCATION'),
-				'filter_location',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_LOCATION'),
+			'filter_location',
+			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
+		);
 	}
 
 	/**

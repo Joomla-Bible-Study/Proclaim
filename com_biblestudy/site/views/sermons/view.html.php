@@ -463,14 +463,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtml::_('behavior.framework');
-		}
-		else
-		{
-			JHTML::_('behavior.mootools');
-		}
+		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');

@@ -109,10 +109,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -170,10 +167,8 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		if ($user->authorise('core.edit'))
 		{
 			JToolBarHelper::divider();
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -181,34 +176,31 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
+		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
 
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediafiles');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediafiles');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_YEAR'),
-				'filter_mediaYears',
-				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_CMN_SELECT_YEAR'),
+			'filter_mediaYears',
+			JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_FILTER_DOWNLOAD'),
-				'filter_download',
-				JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JBS_MED_FILTER_DOWNLOAD'),
+			'filter_download',
+			JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
+		);
 	}
 
 	/**

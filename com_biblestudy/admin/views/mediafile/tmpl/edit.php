@@ -14,10 +14,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
+JHtml::_('formbehavior.chosen', 'select');
+
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function (task, server) {

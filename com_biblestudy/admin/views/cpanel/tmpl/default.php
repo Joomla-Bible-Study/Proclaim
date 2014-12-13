@@ -11,17 +11,9 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-	JHtml::_('behavior.modal');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $msg = '';
@@ -74,9 +66,6 @@ if ($msg)
 			JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">' .
 			JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 </div>
-<?php if (!BIBLESTUDY_CHECKREL)
-{
-	?>
 	<div style="border:1px solid #ddd; background:#FBFBFB;">
 		<h3 style="text-align: center">
 			<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
@@ -185,7 +174,6 @@ if ($msg)
 		</div>
 		<div style="clear: both;"></div>
 	</div>
-<?php } ?>
 <div style="clear: both;"></div>
 <!-- BEGIN: STATS -->
 <div class="fbstatscover">

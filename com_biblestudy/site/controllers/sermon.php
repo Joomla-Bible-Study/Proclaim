@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (!BIBLESTUDY_CHECKREL)
-{
-	jimport('joomla.application.component.controllerform');
-}
-
 /**
  * Class for Sermon
  *

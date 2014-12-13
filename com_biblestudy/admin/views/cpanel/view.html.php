@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (!BIBLESTUDY_CHECKREL)
-{
-	JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-}
-
 /**
  * JView class for Cpanel
  *
@@ -71,10 +66,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 
 		$this->addToolbar();
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+		$this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);

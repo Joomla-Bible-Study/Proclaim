@@ -48,7 +48,6 @@ abstract class JHtmlBiblestudy
 			$config = JFactory::getConfig();
 			$debug  = (boolean) $config->get('debug');
 		}
-		JHtml::_('jquery.framework');
 		JHtml::_('bootstrap.framework', $debug);
 		JHtml::_('bootstrap.loadCss');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');

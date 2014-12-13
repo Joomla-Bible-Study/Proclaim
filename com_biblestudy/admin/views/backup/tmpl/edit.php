@@ -11,11 +11,8 @@
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
+JHtml::_('formbehavior.chosen', 'select');
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>

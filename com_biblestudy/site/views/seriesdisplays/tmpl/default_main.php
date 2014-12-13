@@ -9,10 +9,9 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.framework');
-}
+
+JHtml::_('bootstrap.framework');
+
 $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');

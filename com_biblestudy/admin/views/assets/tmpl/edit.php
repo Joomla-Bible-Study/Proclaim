@@ -14,11 +14,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
+JHtml::_('formbehavior.chosen', 'select');
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
 ?>
 <form action="index.php" method="post" name="adminForm" id="item-assets">
 	<div class="row-fluid">

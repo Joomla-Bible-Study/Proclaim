@@ -10,14 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.formvalidation');
 ?>
 <script type="text/javascript">
