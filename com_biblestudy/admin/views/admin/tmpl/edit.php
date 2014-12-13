@@ -139,7 +139,7 @@ $input = $app->input;
 <!--						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"-->
 <!--						border="0"/> <span> Database Check </span></a></div>-->
 <!--		</div>-->
-		<<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
 			                     style="text-decoration:none; margin: 5px"
 			                     title="Migrate" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
