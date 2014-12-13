@@ -210,14 +210,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function rendermenu($text, $url, $vName)
 	{
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			JHtmlSidebar::addEntry($text, $url, $vName);
-		}
-		else
-		{
-			JSubMenuHelper::addEntry($text, $url, $vName);
-		}
+		JHtmlSidebar::addEntry($text, $url, $vName);
 	}
 
 	/**

@@ -47,7 +47,7 @@ abstract class JHtmlJwplayer
 		/** @var  $params JRegistry */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
-		$cdn = $params->get('jwplayer_cdn', '//jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
+		$cdn = $params->get('jwplayer_cdn', 'https://jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
 		if ($cdn)
 		{
 			JHtml::script($cdn);
@@ -76,6 +76,7 @@ abstract class JHtmlJwplayer
 	 */
 	public static function render($media, $id, $params, $popup = false, $player = false)
 	{
+		dump($media, 'media');
 		if (!isset($params->popupimage))
 		{
 			$params->popupimage = "media/com_biblestudy/images/speaker24.png";

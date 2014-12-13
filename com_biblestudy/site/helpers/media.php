@@ -227,7 +227,6 @@ class JBSMMedia
 		$lightcolor  = $params->get('lightcolor', '0x000000');
 		$screencolor = $params->get('screencolor', '0xFFFFFF');
 		$template    = $input->get('t', '1', 'int');
-		$server      = $this->getServerPath($media->server_id);
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
@@ -241,7 +240,7 @@ class JBSMMedia
 		if (!substr_count($path, '://') && !substr_count($path, '//'))
 		{
 			$protocol = $params->get('protocol', '//');
-			$path     = $protocol . $server . $path;
+			$path     = $protocol . $media->sparams->get('path') . $path;
 		}
 
 		switch ($player->player)
@@ -724,17 +723,13 @@ class JBSMMedia
 	 * @param   int  $id  ID of Row
 	 *
 	 * @return object|boolean
-	 *
-	 * @todo Need to redo for new table system, Eugen
 	 */
 	public function getMediaRows2($id)
 	{
-		JFactory::getApplication()->enqueueMessage('Function Needs to be rebuilt Eugen getMediaRows2');
-
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid,'
+		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
 			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
 			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
@@ -751,45 +746,17 @@ class JBSMMedia
 
 		if ($media)
 		{
+			$reg = new JRegistry;
+			$reg->loadString($media->sparams);
+			$params = $reg->toObject();
+
+			$media->spath = $params->path;
 			return $media;
 		}
 		else
 		{
 			return false;
 		}
-	}
-
-
-	/**
-	 * Get File Path
-	 *
-	 * @param   string  $id  ID of server
-	 *
-	 * @return string
-	 */
-	public function getServerPath($id)
-	{
-		$db = JFactory::getDBO();
-		$query    = $db->getQuery(true);
-		$query->select('#__bsms_servers.params')
-			->from('#__bsms_servers')
-			->where('id = ' . $id)
-			->where('#__bsms_servers.published = 1 ');
-		$db->setQuery($query);
-		$server = $db->loadObject();
-		if ($server)
-		{
-			$reg = new JRegistry;
-			$reg->loadString($server->params);
-			$params = $reg->toObject();
-
-			$path = $params->path;
-		}
-		else
-		{
-			$path = '';
-		}
-		return $path;
 	}
 
 	/**

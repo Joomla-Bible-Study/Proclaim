@@ -11,15 +11,8 @@
 // Protect from unauthorized access
 defined('_JEXEC') or die();
 
-if (version_compare(JVERSION, '3.0', 'ge'))
-{
-	JHTML::_('behavior.framework');
-	JHtml::_('behavior.modal');
-}
-else
-{
-	JHTML::_('behavior.mootools');
-}
+JHTML::_('behavior.framework');
+JHtml::_('behavior.modal');
 ?>
 <?php if ($this->more): ?>
 	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>

@@ -227,8 +227,8 @@ class JBSMPageBuilder
 		$query = $db->getQuery(true);
 		$query->select('media.*');
 		$query->from('#__bsms_mediafiles as media');
-		$query->select('server.id as serverid, server.server_path as spath');
-		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server');
+		$query->select('server.id as serverid, server.params as sparams');
+		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server_id');
 		$query->select('study.media_hours, study.media_minutes, study.media_seconds');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
 		$query->where('media.id IN (' . $mediaids . ')');
@@ -313,8 +313,8 @@ class JBSMPageBuilder
 	/**
 	 * Run Content Plugins
 	 *
-	 * @param   object $item   Item info
-	 * @param   object $params Item params
+	 * @param   object  $item    Item info
+	 * @param   object  $params  Item params
 	 *
 	 * @return object
 	 */
@@ -325,14 +325,7 @@ class JBSMPageBuilder
 		JPluginHelper::importPlugin('content');
 
 		// Run content plugins
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
+		$dispatcher = JEventDispatcher::getInstance();
 		$dispatcher->trigger('onContentPrepare', array(
 				'com_biblestudy.sermon',
 				& $item,
@@ -373,11 +366,11 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string    $whereitem  ?
-	 * @param   string    $wherefield ?
-	 * @param   JRegistry $params     Item params
-	 * @param   int       $limit      Limit of Records
-	 * @param   string    $order      DESC or ASC
+	 * @param   string     $whereitem   ?
+	 * @param   string     $wherefield  ?
+	 * @param   JRegistry  $params      Item params
+	 * @param   int        $limit       Limit of Records
+	 * @param   string     $order       DESC or ASC
 	 *
 	 * @return object
 	 */
@@ -481,7 +474,6 @@ class JBSMPageBuilder
 			->select("users.email AS author_email")
 			->join('LEFT', '#__users AS users ON study.user_id = users.id')
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
-
 
 		// Filter over teachers
 		$filters = $teacher;
