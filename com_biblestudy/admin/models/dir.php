@@ -19,7 +19,7 @@ jimport('joomla.filesystem.file');
  * Description of dir
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class BiblestudyModelDir extends JModelItem
 {

@@ -12,13 +12,13 @@ defined('JPATH_PLATFORM') or die;
  * Utility class for Fancybox JavaScript behaviors
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 abstract class JHtmlFancybox
 {
 	/**
 	 * @var    array  Array containing information for loaded files
-	 * @since  8.1.0
+	 * @since  9.0.0
 	 */
 	protected static $loaded = array();
 
@@ -32,7 +32,7 @@ abstract class JHtmlFancybox
 	 *
 	 * @return  void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public static function framework ($option = false, $mouseweel = false)
 	{

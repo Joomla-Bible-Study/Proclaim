@@ -399,7 +399,7 @@ class JBSMBibleStudyHelper
 	 * Media Types
 	 *
 	 * @since 8.0.0
-	 * @depreciated 8.1.0
+	 * @depreciated 9.0.0
 	 *
 	 * @throws Exception For bad function
 	 * @return void

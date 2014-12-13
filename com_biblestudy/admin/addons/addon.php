@@ -8,7 +8,7 @@ jimport('joomla.filesystem.folder');
 /**
  * Abstract Server class
  *
- * @since   8.1.0
+ * @since   9.0.0
  */
 abstract class JBSMAddon
 {
@@ -17,7 +17,7 @@ abstract class JBSMAddon
      * Addon configuration
      *
      * @var     object
-     * @since   8.1.0
+     * @since   9.0.0
      */
     protected $_xml = null;
 
@@ -31,7 +31,7 @@ abstract class JBSMAddon
      * The type of server
      *
      * @var     string
-     * @since   8.1.0
+     * @since   9.0.0
      */
     protected $type;
 
@@ -61,7 +61,7 @@ abstract class JBSMAddon
      *
      * @return  string
      * @throws  Exception
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function getType()
     {
@@ -82,7 +82,7 @@ abstract class JBSMAddon
      *
      * @return  bool|SimpleXMLElement
      * @throws  Exception
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function getXml()
     {
@@ -105,7 +105,7 @@ abstract class JBSMAddon
      * @param $type
      * @param array $config
      * @return bool
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public static function getInstance($type, $config = array())
     {

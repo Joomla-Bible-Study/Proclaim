@@ -105,7 +105,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @return bool
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function save($data)
 	{

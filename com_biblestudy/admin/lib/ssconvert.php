@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
  * Class script to convert SermonSpeaker 5.2 to Joomla Bible Study
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class JBSMSSConvert
 {

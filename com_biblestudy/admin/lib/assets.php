@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -202,8 +202,8 @@ class JBSMAssets
 	/**
 	 * Set Asset
 	 *
-	 * @param   object $data      Data
-	 * @param   string $assetname Asset Name
+	 * @param   object  $data       Data
+	 * @param   string  $assetname  Asset Name
 	 *
 	 * @return boolean
 	 */
@@ -242,7 +242,7 @@ class JBSMAssets
 	/**
 	 * Delete assets
 	 *
-	 * @param   object $data Data
+	 * @param   object  $data  Data
 	 *
 	 * @return boolean
 	 */

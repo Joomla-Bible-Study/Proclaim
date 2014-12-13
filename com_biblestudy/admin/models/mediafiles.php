@@ -53,7 +53,7 @@ class BiblestudyModelMediafiles extends JModelList
      * Manually joins items and returns and nested object array
      *
      * @return mixed Array Media files array
-     * @since 8.1.0
+     * @since 9.0.0
      */
     public function getItems() {
         $serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');

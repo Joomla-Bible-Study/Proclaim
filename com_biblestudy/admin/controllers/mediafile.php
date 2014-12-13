@@ -44,7 +44,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * Handles XHR requests (i.e. File uploads)
 	 *
 	 * @throws  Exception
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function xhr()
 	{
@@ -96,7 +96,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * Sets the server for this media record
 	 *
 	 * @return  void
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function setServer()
 	{

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.1.0
  *
- * @deprecate 8.1.0 No longer used.
+ * @deprecate 9.0.0 No longer used.
  */
 class JBSMUpload
 {

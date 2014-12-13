@@ -22,7 +22,7 @@ class JBSMStats
 	/**
 	 * Total plays of media files per study
 	 *
-	 * @param   int $id Id number of study
+	 * @param   int  $id  Id number of study
 	 *
 	 * @return int Total plays form the media
 	 */
@@ -43,8 +43,8 @@ class JBSMStats
 	/**
 	 * Total messages in Bible Study
 	 *
-	 * @param   string $start ?
-	 * @param   string $end   ?
+	 * @param   string  $start  ?
+	 * @param   string  $end    ?
 	 *
 	 * @return int Total Messages
 	 */
@@ -80,8 +80,8 @@ class JBSMStats
 	/**
 	 * Total topics in Bible Study
 	 *
-	 * @param   string $start ?
-	 * @param   string $end   ?
+	 * @param   string  $start  ?
+	 * @param   string  $end    ?
 	 *
 	 * @return int  Total Topics
 	 */

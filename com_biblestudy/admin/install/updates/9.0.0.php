@@ -10,15 +10,15 @@ defined('_JEXEC') or die;
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
- * Update for 8.1.0 class
+ * Update for 9.0.0 class
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
-class Migration810
+class Migration900
 {
 	/**
-	 * Call Script for Updates of 8.1.0
+	 * Call Script for Updates of 9.0.0
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
@@ -204,7 +204,7 @@ class Migration810
 	}
 
 	/**
-	 * Update Templates to work with 8.1.0 that cannot be don doing normal sql file.
+	 * Update Templates to work with 9.0.0 that cannot be don doing normal sql file.
 	 *
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
@@ -240,11 +240,13 @@ class Migration810
 	}
 
 	/**
-	 * Update CSS for 8.1.0
+	 * Update CSS for 9.0.0
 	 *
 	 * @return boolean
+	 *
+	 * @todo may not be needed.
 	 */
-	public function css810 ()
+	public function css900 ()
 	{
 		$csscheck = 'display:table-header';
 

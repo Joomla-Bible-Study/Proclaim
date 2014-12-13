@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  *
  * @see         \Joomla\Registry\Registry
- * @since       8.1.0
+ * @since       9.0.0
  * @deprecated  4.0  Use \Joomla\Registry\Registry instead
  **/
 class JRegistry extends \Joomla\Registry\Registry

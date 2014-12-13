@@ -14,7 +14,7 @@ defined("_JEXEC") or die();
  * Class UploadScript
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class UploadScript
 {

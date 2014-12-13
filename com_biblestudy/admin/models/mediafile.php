@@ -38,7 +38,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * Data
 	 *
 	 * @var
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	private $data;
 
@@ -134,7 +134,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @return bool|mixed
 	 * @throws Exception
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function getMediaForm()
 	{
@@ -240,7 +240,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  mixed|void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -648,7 +648,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	protected function populateState()
 	{

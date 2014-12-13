@@ -75,7 +75,7 @@ class JBSMMedia
 	 *
 	 * @return bool|string
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function useJImage($path, $alt = 'link')
 	{
@@ -680,7 +680,7 @@ class JBSMMedia
 	 *
 	 * @return null|string
 	 *
-	 * @deprecated 8.1.0 Removed for fluid.
+	 * @deprecated 9.0.0 Removed for fluid.
 	 */
 	public function getMediaTable($row, $params)
 	{
@@ -695,7 +695,7 @@ class JBSMMedia
 	 *
 	 * @return object
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getMediaid($id)
 	{
@@ -710,7 +710,7 @@ class JBSMMedia
 	 *
 	 * @return object|boolean
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getMediaRows($id)
 	{
@@ -799,7 +799,7 @@ class JBSMMedia
 	 *
 	 * @return null|string
 	 *
-	 * @deprecate 8.1.0 This is replace by getFluidFilesize
+	 * @deprecate 9.0.0 This is replace by getFluidFilesize
 	 */
 	public function getFilesize($file_size)
 	{

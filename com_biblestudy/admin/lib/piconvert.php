@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
@@ -195,24 +195,6 @@ class JBSMPIconvert
 				$datafolders->foldername = $pi->name;
 				$datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
 				$datafolders->published  = $pi->published;
-				// @todo need ot update this to work with the new file system.
-//				if (!$db->insertObject('#__bsms_folders', $datafolders, 'id'))
-//				{
-//					$fnoadd++;
-//				}
-//				else
-//				{
-//					$fadd++;
-//
-//					// Get the new folderid so we can later connect it to a study
-//					$query = $db->getQuery(true);
-//					$query->select('id')->from('#__bsms_folders')->order('id desc');
-//					$db->setQuery($query, 0, 1);
-//					$db->execute();
-//					$newid              = $db->loadResult();
-//					$oldid              = $pi->id;
-//					$this->foldersids[] = array('newid' => $newid, 'oldid' => $oldid);
-//				}
 			}
 		}
 
@@ -765,10 +747,10 @@ class JBSMPIconvert
 	/**
 	 * Insert Media into BibleStudy
 	 *
-	 * @param   object $pi    ?
-	 * @param   string $type  Type of Media
-	 * @param   int    $newid New ID
-	 * @param   int    $oldid Old ID
+	 * @param   object  $pi     ?
+	 * @param   string  $type   Type of Media
+	 * @param   int     $newid  New ID
+	 * @param   int     $oldid  Old ID
 	 *
 	 * @return boolean
 	 *
@@ -1012,8 +994,8 @@ class JBSMPIconvert
 	/**
 	 * Insert Comments
 	 *
-	 * @param   int $oldid ?
-	 * @param   int $newid ?
+	 * @param   int  $oldid  ?
+	 * @param   int  $newid  ?
 	 *
 	 * @return boolean
 	 */
