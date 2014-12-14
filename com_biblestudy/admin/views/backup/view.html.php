@@ -18,138 +18,28 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewBackup extends JViewLegacy
 {
-
-	/**
-	 * Version
-	 *
-	 * @var string
-	 */
-	public $version;
-	/**
-	 * Can Do
-	 *
-	 * @var string
-	 */
+	/** @var string CanDo function */
 	public $canDo;
-	/**
-	 * Change Set
-	 *
-	 * @var string
-	 */
-	public $changeSet;
-	/**
-	 * Errors
-	 *
-	 * @var string
-	 */
-	public $errors;
-	/**
-	 * Results
-	 *
-	 * @var string
-	 */
-	public $results;
-	/**
-	 * Schema Version
-	 *
-	 * @var string
-	 */
-	public $schemaVersion;
-	/**
-	 * Update Version
-	 *
-	 * @var string
-	 */
-	public $updateVersion;
-	/**
-	 * Filter Params
-	 *
-	 * @var JRegistry
-	 */
-	public $filterParams;
-	/**
-	 * Pagination
-	 *
-	 * @var string
-	 */
-	public $pagination;
-	/**
-	 * Error Count
-	 *
-	 * @var string
-	 */
-	public $errorCount;
-	/**
-	 * Joomla BibleStudy Version
-	 *
-	 * @var string
-	 */
-	public $jversion;
-	/**
-	 * Temp Destination
-	 *
-	 * @var string
-	 */
+
+	/** @var string Temp Destination */
 	public $tmp_dest;
-	/**
-	 * Player Stats
-	 *
-	 * @var string
-	 */
-	public $playerstats;
-	/**
-	 * Assets
-	 *
-	 * @var string
-	 */
-	public $assets;
-	/**
-	 * Popups
-	 *
-	 * @var string
-	 */
-	public $popups;
-	/**
-	 * SS
-	 *
-	 * @var string
-	 */
-	public $ss;
-	/**
-	 * Lists
-	 *
-	 * @var string
-	 */
+
+	/** @var string Lists */
 	public $lists;
-	/**
-	 * PI
-	 *
-	 * @var string
-	 */
-	public $pi;
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
+
+	/** @var array Form */
 	protected $form;
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
+
+	/** @var array Item */
 	protected $item;
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
+
+	/** @var array State */
 	protected $state;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -161,37 +51,11 @@ class BiblestudyViewBackup extends JViewLegacy
 		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
-		$language = JFactory::getLanguage();
-		$language->load('com_installer');
-
 		// Get data from the model
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
-
-		// Get data from the model for database
-		$this->changeSet     = $this->get('Items');
-		$this->errors        = $this->changeSet->check();
-		$this->results       = $this->changeSet->getStatus();
-		$this->schemaVersion = $this->get('SchemaVersion');
-		$this->updateVersion = $this->get('UpdateVersion');
-		$this->filterParams  = $this->get('DefaultTextFilters');
-		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-		$this->pagination    = $this->get('Pagination');
-		$this->errorCount    = count($this->errors);
-		$this->jversion      = $this->get('CompVersion');
-
-		// End for database
-		$config         = JFactory::getApplication();
-		$this->tmp_dest = $config->get('tmp_path');
-
-		$stats             = new JBSMStats;
-		$this->playerstats = $stats->players();
-		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
-		$popups            = $stats->popups();
-		$this->popups      = $popups;
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
@@ -222,47 +86,6 @@ class BiblestudyViewBackup extends JViewLegacy
 		else
 		{
 			$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
-		}
-
-		// Check for SermonSpeaker and PreachIt
-		$extensions = $this->get('SSorPI');
-
-		foreach ($extensions as $extension)
-		{
-			if ($extension->element == 'com_sermonspeaker')
-			{
-				$this->ss = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertSermonSpeaker">'
-					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
-			}
-			else
-			{
-				$this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
-			}
-			if ($extension->element == 'com_preachit')
-			{
-				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'
-					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
-			}
-			else
-			{
-				$this->pi = JText::_('JBS_IBM_NO_PREACHIT_FOUND');
-			}
-		}
-
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
-		$this->version = $jbsversion['version'];
-
-		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
-		{
-			$this->errorCount++;
-		}
-		if (!$this->filterParams)
-		{
-			$this->errorCount++;
-		}
-		if (($this->updateVersion != $this->version))
-		{
-			$this->errorCount++;
 		}
 
 		$this->setLayout('edit');
@@ -310,7 +133,7 @@ class BiblestudyViewBackup extends JViewLegacy
 	/**
 	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string $component Component it is coming from
+	 * @param   string  $component  Component it is coming from
 	 *
 	 * @return boolean
 	 *
