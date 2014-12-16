@@ -183,28 +183,28 @@
             <field name="jwplayer_autostart" type="radio"
                    label="JBS_ADM_JWPLAYER_AUTOSTART"
                    description="JBS_ADM_JWPLAYER_AUTOSTART_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_fallback" type="radio"
                    label="JBS_ADM_JWPLAYER_FALLBACK"
                    description="JBS_ADM_JWPLAYER_FALLBACK_DESC"
-                   default="true">
+                   class="btn-group" default="true">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_mute" type="radio"
                    label="JBS_ADM_JWPLAYER_MUTE"
                    description="JBS_ADM_JWPLAYER_MUTE_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_stagevideo" type="radio"
                    label="JBS_ADM_JWPLAYER_STAGE_VIDEO"
                    description="JBS_ADM_JWPLAYER_STAGE_VIDEO_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -219,12 +219,13 @@
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
             <field name="playlist" type="radio"
                    label="JBS_ADM_JWPLAYER_PLAYLIST" description="JBS_ADM_JWPLAYER_PLAYLIST_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_listbar" type="radio"
-                   label="JBS_ADM_JWPLAYER_LISTBAR" description="JBS_ADM_JWPLAYER_LISTBAR_DESC">
+                   label="JBS_ADM_JWPLAYER_LISTBAR" description="JBS_ADM_JWPLAYER_LISTBAR_DESC"
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -232,13 +233,13 @@
                    label="JBS_ADM_JWPLAYER_LOGO" description="JBS_ADM_JWPLAYER_LOGO_DESC"/>
             <field name="sharing" type="radio"
                    label="JBS_ADM_JWPLAYER_SHARING" description="JBS_ADM_JWPLAYER_SHARING_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_related" type="radio"
                    label="JBS_ADM_JWPLAYER_RELATED" description="JBS_ADM_JWPLAYER_RELATED_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -255,7 +256,7 @@
                    class="readonly" default="Comming Soon"/>
             <field name="captions" type="radio"
                    label="JBS_ADM_JWPLAYER_CAPTIONS" description="JBS_ADM_JWPLAYER_CAPTIONS_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
