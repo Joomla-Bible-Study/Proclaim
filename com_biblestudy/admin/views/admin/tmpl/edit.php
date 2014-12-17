@@ -107,7 +107,7 @@ $input = $app->input;
 
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int)$this->item->id); ?>"
-    method="post" name="adminForm" id="item-admin" class="form-validate">
+    method="post" name="adminForm" id="item-admin" class="form-validate form-horizontal">
 <div class="row-fluid">
     <!-- Begin Sidebar -->
 <div class="span12">
