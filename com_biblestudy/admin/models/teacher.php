@@ -84,6 +84,51 @@ class BiblestudyModelTeacher extends JModelAdmin
 		return $form;
 	}
 
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 *
+	 * @since   12.2
+	 */
+	protected function canEditState($record)
+	{
+		$tmp        = (array) $record;
+		$db         = JFactory::getDbo();
+		$user       = JFactory::getUser();
+		$canDoState = $user->authorise('core.edit.state', $this->option);
+		$text       = '';
+
+		if (!empty($tmp))
+		{
+			$query = $db->getQuery(true);
+			$query->select('id, studytitle')
+				->from('#__bsms_studies')
+				->where('teacher_id = ' . $record->id)
+				->where('published != ' . $db->q('-2'));
+			$db->setQuery($query);
+			$studies = $db->loadObjectList();
+			if (!$studies && $canDoState)
+			{
+				return true;
+			}
+
+			foreach ($studies as $studie)
+			{
+				$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+			}
+
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+
+			return false;
+		}
+		else
+		{
+			return $canDoState;
+		}
+	}
 
 
 	/**
