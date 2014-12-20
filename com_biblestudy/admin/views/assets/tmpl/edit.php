@@ -16,8 +16,20 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
+JText::script('ERROR');
+
+JFactory::getDocument()->addScriptDeclaration("
+		Joomla.submitbutton = function(task)
+		{
+			var form = document.getElementById('item-assets');
+			if (task == 'admin.back' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+		};
+");
 ?>
-<form action="index.php" method="post" name="adminForm" id="item-assets">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets') ?>" method="post" name="adminForm" id="item-assets" class="form-horizontal">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
