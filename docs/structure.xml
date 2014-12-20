@@ -10006,7 +10006,7 @@ ordering requirements.</long-description>
           <tag name="return" description="" line="30" type="object">
             <type>object</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="30"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="30"/>
         </docblock>
         <argument line="0">
           <name>$id</name>
@@ -10032,7 +10032,7 @@ ordering requirements.</long-description>
           <tag name="return" description="" line="48" type="string">
             <type>string</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="48"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="48"/>
         </docblock>
         <argument line="0">
           <name>$media</name>
@@ -10069,7 +10069,7 @@ ordering requirements.</long-description>
             <type>string</type>
             <type>boolean</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="66"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="66"/>
         </docblock>
         <argument line="0">
           <name>$media</name>
@@ -10105,7 +10105,7 @@ ordering requirements.</long-description>
           <tag name="return" description="" line="84" type="string">
             <type>string</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="84"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="84"/>
         </docblock>
         <argument line="0">
           <name>$media</name>
@@ -10141,7 +10141,7 @@ ordering requirements.</long-description>
           <tag name="return" description="" line="102" type="string">
             <type>string</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="102"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="102"/>
         </docblock>
         <argument line="0">
           <name>$media</name>
@@ -10177,7 +10177,7 @@ ordering requirements.</long-description>
           <tag name="return" description="" line="120" type="string">
             <type>string</type>
           </tag>
-          <tag name="deprecated" description="since version 8.1.0  Not used in 2.5.x or 3.0.x.  This is do to Joomla dropping PDF support nativity." line="120"/>
+          <tag name="deprecated" description="since version 9.0.0  Not used in 2.5.x or 3.0.x.  This is do to Joomla dropping PDF support nativity." line="120"/>
         </docblock>
         <argument line="0">
           <name>$row</name>
@@ -10243,7 +10243,7 @@ ordering requirements.</long-description>
           <tag name="return" description="List of Media Associated with a Study" line="298" type="object">
             <type>object</type>
           </tag>
-          <tag name="deprecated" description="Since version 8.1.0" line="298"/>
+          <tag name="deprecated" description="Since version 9.0.0" line="298"/>
         </docblock>
         <argument line="0">
           <name>$id</name>

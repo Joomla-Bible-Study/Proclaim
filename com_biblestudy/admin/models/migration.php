@@ -31,16 +31,22 @@ class BibleStudyModelMigration extends JModelLegacy
 
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
+
 	/** @var int Id of Extinction Table */
 	public $subrun = null;
+
 	/** @var string Path to Mysql files */
 	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
 	/** @var float The time the process started */
 	private $_startTime = null;
+
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
+
 	/** @var string Version of BibleStudy */
 	private $_versionSwitch = null;
+
 	/** @var int Id of Extinction Table */
 	private $_biblestudyEid = 0;
 
@@ -366,8 +372,8 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Set the schema version for an extension by looking at its latest update
 	 *
-	 * @param   string  $version Version number
-	 * @param   integer $eid     Extension ID
+	 * @param   string   $version  Version number
+	 * @param   integer  $eid      Extension ID
 	 *
 	 * @return  void
 	 *

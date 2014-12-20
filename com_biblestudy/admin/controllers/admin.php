@@ -32,7 +32,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    1.6
 	 */
@@ -309,7 +309,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Fix Assets
 	 *
-	 * @param   bool $dbReset To check if this is coming from dbReset
+	 * @param   bool  $dbReset  To check if this is coming from dbReset
 	 *
 	 * @return void
 	 */
@@ -341,7 +341,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Do the import
 	 *
-	 * @param   boolean $parent Source of info
+	 * @param   boolean  $parent  Source of info
 	 *
 	 * @return void
 	 */

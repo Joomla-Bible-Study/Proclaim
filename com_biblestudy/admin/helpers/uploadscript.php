@@ -14,7 +14,7 @@ defined("_JEXEC") or die();
  * Class UploadScript
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class UploadScript
 {
@@ -31,15 +31,18 @@ class UploadScript
 
 	private $_chunkUnit;
 
-	private $_rename; // Bool
+	/** @var  bool */
+	private $_rename;
 
-	private $_uniqueNames; // Bool
+	/** @var  bool */
+	private $_uniqueNames;
 
 	private $_imageFilter;
 
 	private $_otherFilesFilter;
 
-	private $_resize; // Bool
+	/** @var  bool */
+	private $_resize;
 
 	private $_resizeWidth;
 
@@ -106,7 +109,7 @@ class UploadScript
 	/**
 	 * Clean Comma Separated Option
 	 *
-	 * @param string $string Option to be cleaned
+	 * @param   string  $string  Option to be cleaned
 	 *
 	 * @return string
 	 */
@@ -470,6 +473,11 @@ class UploadScript
 		return $this->_SCRIPT;
 	}
 
+	/**
+	 * UI Script
+	 *
+	 * @return string
+	 */
 	public function UIScript()
 	{
 		ob_start();

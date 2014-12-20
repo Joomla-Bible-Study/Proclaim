@@ -16,7 +16,7 @@ jimport('joomla.form.field');
  * Field class for Server
  *
  * @package BibleStudy.Admin
- * @since   8.1.0
+ * @since   9.0.0
  */
 class JFormFieldServer extends JFormField {
     protected $type = 'Server';

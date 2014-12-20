@@ -71,7 +71,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -100,12 +100,7 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtml::_('jquery.framework');
-		}
-
-		JHtml::script('media/com_biblestudy/js/biblestudy.js');
+		JHtml::_('biblestudy.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",

@@ -91,23 +91,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		);
 		$this->upload_server = $ref1;
 
-		// Get folders for upload dropdown
-		$query = $db->getQuery(true);
-		$query->select('id as value, foldername as text')->from('#__bsms_folders')->where('published=1')->order('foldername asc');
-		$db->setQuery($query);
-		$folder              = array(
-			array(
-				'value' => '',
-				'text'  => JText::_('JBS_MED_SELECT_FOLDER')
-			),
-		);
-		$folderlist          = array_merge($folder, $db->loadObjectList());
-		$idsel               = "'SWFUpload_0'";
-		$ref2                = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"'
-			. '', 'value', 'text', ''
-		);
-		$this->upload_folder = $ref2;
-
 		$this->setLayout('edit');
 
 		parent::display($tpl);

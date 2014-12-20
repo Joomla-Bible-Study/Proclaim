@@ -84,10 +84,8 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		$this->f_levels = $options;
 
 		$this->addToolbar();
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+		$this->sidebar = JHtmlSidebar::render();
+
 		// Display the template
 		parent::display($tpl);
 
@@ -140,25 +138,22 @@ class BiblestudyViewPodcasts extends JViewLegacy
 			JToolBarHelper::custom('writeXMLFile', 'xml.png', 'JBS_PDC_WRITE_XML_FILES', 'JBS_PDC_WRITE_XML_FILES', false, false);
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=series');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=series');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
+			JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
+		);
 	}
 
 	/**

@@ -9,10 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.framework');
-}
+
+JHtml::_('bootstrap.framework');
 
 $JBSMTeacher = new JBSMTeacher;
 $teachers = $JBSMTeacher->getTeachersFluid($this->params);

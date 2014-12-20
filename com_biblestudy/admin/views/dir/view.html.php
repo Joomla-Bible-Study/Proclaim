@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  * Directory View
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class BiblestudyViewDir extends JViewLegacy
 {

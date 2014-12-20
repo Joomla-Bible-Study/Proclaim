@@ -18,7 +18,7 @@ jimport('joomla.filesystem.file');
  * Class BiblestudyControllerUpload
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class BiblestudyControllerUpload extends JControllerLegacy
 {

@@ -11,11 +11,8 @@
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
+JHtml::_('formbehavior.chosen', 'select');
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
@@ -84,7 +81,7 @@ defined('_JEXEC') or die;
 				</div>
 			</div>
 			<div class="control-group">
-				<input type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
+				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
 				<a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
 					<button type="button" class="btn btn-default">Back</button>
 				</a>

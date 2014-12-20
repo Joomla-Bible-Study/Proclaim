@@ -5,8 +5,8 @@
     <author>Joomla Bible Study Team</author>
     <copyright>(C) 2007 - 2014 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>8.1.0-dev140412</version>
-    <creationDate>June 25, 2013</creationDate>
+    <version>9.0.0-dev140412</version>
+    <creationDate>Dec 23, 2014</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <description>JBS_INS_XML_DESCRIPTION</description>
@@ -50,7 +50,6 @@
         <folder>images</folder>
         <folder>js</folder>
         <folder>jui</folder>
-        <folder>legacyplayer</folder>
         <folder>player</folder>
         <filename>index.html</filename>
     </media>

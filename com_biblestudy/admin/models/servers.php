@@ -26,7 +26,7 @@ class BiblestudyModelServers extends JModelList
      * A reverse lookup of the Endpoint id to Endpoint name
      *
      * @var     array
-     * @since   8.1.0
+     * @since   9.0.0
      */
     protected $rlu_id = array();
 
@@ -34,7 +34,7 @@ class BiblestudyModelServers extends JModelList
      * A reverse lookup of the Endpoint type to Endpoint name
      *
      * @var     array
-     * @sine    8.1.0
+     * @sine    9.0.0
      */
     protected $rlu_type = array();
 
@@ -42,7 +42,7 @@ class BiblestudyModelServers extends JModelList
      * Method to get the reverse lookup of the server_id to server_name
      *
      * @return  array
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function getIdToNameReverseLookup() {
         if(empty($this->rlu_id)) {
@@ -63,7 +63,7 @@ class BiblestudyModelServers extends JModelList
      * Method to get the reverse lookup of the Endpoint type to Endpoint name
      *
      * @return  array   Array of reverse lookup
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function getTypeReverseLookup() {
         if(empty($this->rlu_type)) {
@@ -76,7 +76,7 @@ class BiblestudyModelServers extends JModelList
      * Get a list of available endpoints
      *
      * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
-     * @since   8.1.0
+     * @since   9.0.0
      */
 	public function getServerOptions()
 	{

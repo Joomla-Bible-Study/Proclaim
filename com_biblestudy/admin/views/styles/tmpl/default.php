@@ -11,12 +11,9 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $user      = JFactory::getUser();
@@ -62,17 +59,6 @@ $listDirn  = $this->state->get('list.direction');
                 <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
             </select>
         </div>
-		<?php if (!BIBLESTUDY_CHECKREL)
-	{
-		?>
-        <div class="filter-select fltrt">
-
-            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-            </select>
-        </div>
-		<?php } ?>
     </div>
     <div class="clearfix"></div>
 

@@ -14,10 +14,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
-
-if (BIBLESTUDY_CHECKREL) {
-    JHtml::_('formbehavior.chosen', 'select');
-}
+JHtml::_('formbehavior.chosen', 'select');
 
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -110,12 +107,12 @@ $input = $app->input;
 
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int)$this->item->id); ?>"
-    method="post" name="adminForm" id="item-admin" class="form-validate">
+    method="post" name="adminForm" id="item-admin" class="form-validate form-horizontal">
 <div class="row-fluid">
-<!-- Begin Content -->
-<div class="span12 form-horizontal">
-<ul class="nav nav-tabs">
-	<li class="active"><a href="#cpanl" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_CPANL'); ?></a></li>
+    <!-- Begin Sidebar -->
+<div class="span12">
+<ul class="nav nav-tabs" id="configTabs">
+	<li><a href="#cpanl" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_CPANL'); ?></a></li>
 	<li><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
 	<li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
 	<li><a href="#playersettings" data-toggle="tab"><?php echo JText::_('JBS_ADM_PLAYER_SETTINGS'); ?></a></li>
@@ -126,7 +123,7 @@ $input = $app->input;
 <div class="tab-content">
 
 <!-- Begin Tabs -->
-<div class="tab-pane active" id="cpanl">
+<div class="tab-pane" id="cpanl">
 	<div id="cpanel" class="btn-group">
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
 			                     style="text-decoration:none; margin: 5px"
@@ -142,20 +139,20 @@ $input = $app->input;
 <!--						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"-->
 <!--						border="0"/> <span> Database Check </span></a></div>-->
 <!--		</div>-->
-		<<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
 			                     style="text-decoration:none; margin: 5px"
 			                     title="Migrate" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
 						border="0"/> <span> Migrate </span></a>
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
 			                     style="text-decoration:none; margin: 5px"
-			                     title="Backup / Restor" class="btn"> <img
+			                     title="Backup / Restore" class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
 						border="0"/> <span> Backup / Restor </span></a>
 	</div>
 </div>
 <div class="tab-pane" id="admin">
-	<h4><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h4>
+    <p class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></p>
 
     <div class="control-group">
         <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
@@ -241,7 +238,7 @@ $input = $app->input;
 <div class="tab-pane" id="defaults">
     <div class="row-fluid">
         <div class="span6">
-            <h4><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h4>
+            <p class="tab-description"><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></p>
 
             <div class="control-group">
                 <?php echo $this->form->getLabel('location_id', 'params'); ?>
@@ -281,7 +278,7 @@ $input = $app->input;
             </div>
         </div>
         <div class="span6">
-            <h4><?php echo JText::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h4>
+            <p class="tab-description"><?php echo JText::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></p>
 
             <div class="control-group">
                 <?php echo $this->form->getLabel('download', 'params'); ?>
@@ -311,7 +308,7 @@ $input = $app->input;
     </div>
     <div class="row-fluid">
         <div class="span6">
-            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h4>
+            <p class="tab-description"><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></p>
 
             <div class="control-group">
                 <?php echo $this->form->getLabel('default_main_image', 'params'); ?>
@@ -345,7 +342,7 @@ $input = $app->input;
             </div>
         </div>
         <div class="span6">
-            <h4><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h4>
+            <p class="tab-description"><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></p>
 
             <div class="control-group">
                 <?php echo $this->form->getLabel('thumbnail_teacher_size', 'params'); ?>
@@ -370,7 +367,7 @@ $input = $app->input;
 </div>
 <div class="tab-pane" id="playersettings">
     <div class="span6">
-        <h4><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></h4>
+        <p class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></p>
 
         <div class="control-group">
             <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
@@ -398,7 +395,7 @@ $input = $app->input;
         </div>
     </div>
     <div class="span6">
-        <h4><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></h4>
+        <p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p>
 
         <div class="control-group">
             <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
@@ -451,3 +448,6 @@ $input = $app->input;
     <?php echo JHtml::_('form.token'); ?>
 </div>
 </form>
+<script type="text/javascript">
+    jQuery('#configTabs a:first').tab('show'); // Select first tab
+</script>

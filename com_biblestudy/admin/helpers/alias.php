@@ -88,8 +88,8 @@ class JBSMAlias
 	/**
 	 * Get Table fields for updating.
 	 *
-	 * @param   string $table  Table
-	 * @param   string $title  Title
+	 * @param   string  $table  Table
+	 * @param   string  $title  Title
 	 *
 	 * @return boolean|array
 	 */

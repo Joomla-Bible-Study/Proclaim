@@ -29,8 +29,8 @@ class JBSMBibleStudyHelper
 	/**
 	 * Get Actions
 	 *
-	 * @param   int    $Itemid  ID
-	 * @param   string $type    Type
+	 * @param   int     $Itemid  ID
+	 * @param   string  $type    Type
 	 *
 	 * @return JObject
 	 */
@@ -141,7 +141,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName  The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return void
 	 *
@@ -202,28 +202,21 @@ class JBSMBibleStudyHelper
 	/**
 	 *  Rendering Menu based on Joomla! Version.
 	 *
-	 * @param   string $text   ?
-	 * @param   string $url    ?
-	 * @param   string $vName  ?
+	 * @param   string  $text   Label
+	 * @param   string  $url    Url of link
+	 * @param   string  $vName  Name of view
 	 *
 	 * @return void
 	 */
 	public static function rendermenu($text, $url, $vName)
 	{
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			JHtmlSidebar::addEntry($text, $url, $vName);
-		}
-		else
-		{
-			JSubMenuHelper::addEntry($text, $url, $vName);
-		}
+		JHtmlSidebar::addEntry($text, $url, $vName);
 	}
 
 	/**
 	 * Applies the content tag filters to arbitrary text as per settings for current user group
 	 *
-	 * @param   string $text  The string to filter
+	 * @param   string  $text  The string to filter
 	 *
 	 * @return string The filtered string
 	 */
@@ -399,7 +392,7 @@ class JBSMBibleStudyHelper
 	 * Media Types
 	 *
 	 * @since 8.0.0
-	 * @depreciated 8.1.0
+	 * @depreciated 9.0.0
 	 *
 	 * @throws Exception For bad function
 	 * @return void

@@ -19,7 +19,7 @@ abstract class JHtmlBiblestudy
 {
 	/**
 	 * @var    array  Array containing information for loaded files
-	 * @since  8.1.0
+	 * @since  9.0.0
 	 */
 	protected static $loaded = array();
 
@@ -32,7 +32,7 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return  void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public static function framework($debug = null)
 	{
@@ -48,44 +48,11 @@ abstract class JHtmlBiblestudy
 			$config = JFactory::getConfig();
 			$debug  = (boolean) $config->get('debug');
 		}
-		JHtml::_('jquery.framework');
-		self::bootstrap($debug);
+		JHtml::_('bootstrap.framework', $debug);
+		JHtml::_('bootstrap.loadCss');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 
 		self::$loaded[__METHOD__] = true;
-
-		return;
-	}
-
-	/**
-	 * Method to load the bPopup JavaScript framework into the document head
-	 *
-	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
-	 *
-	 * @param   mixed  $debug  Is debugging mode on? [optional]
-	 *
-	 * @return  void
-	 *
-	 * @since   8.1.0
-	 */
-	public static function bootstrap($debug = null)
-	{
-		if (!version_compare(JVERSION, '3.0', 'ge'))
-		{
-
-			// If no debugging value is set, use the configuration setting
-			if ($debug === null)
-			{
-				$config = JFactory::getConfig();
-				$debug  = (boolean) $config->get('debug');
-			}
-
-			JHtml::_('script', 'media/com_biblestudy/jui/js/plugins/bootstrap.min.js', false, false, false, false, $debug);
-			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.min.css');
-			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-extended.css');
-			JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap-responsive.min.css');
-
-		}
 
 		return;
 	}
@@ -118,11 +85,6 @@ abstract class JHtmlBiblestudy
 		if ($url)
 		{
 			JHtml::stylesheet($url);
-		}
-
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			JHTML::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
 		}
 	}
 

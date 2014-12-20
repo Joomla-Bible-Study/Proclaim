@@ -13,10 +13,7 @@ $published = $this->state->get('filter.published');
 ?>
 <div class="modal hide fade" id="collapseModal">
 	<div class="modal-header">
-		<?php if (BIBLESTUDY_CHECKREL)
-		{
-			?>
-			<button type="button" role="presentation" class="close" data-dismiss="modal">x</button><?php } ?>
+			<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
 		<h3><?php echo JText::_('JBS_CMN_BATCH_OPTIONS'); ?></h3>
 	</div>
 	<div class="modal-body">

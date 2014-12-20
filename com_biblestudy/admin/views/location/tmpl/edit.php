@@ -14,8 +14,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-if (BIBLESTUDY_CHECKREL)
-	JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');

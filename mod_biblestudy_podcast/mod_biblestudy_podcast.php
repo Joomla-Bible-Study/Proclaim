@@ -15,18 +15,6 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
-if (version_compare(JVERSION, '3.0', 'ge'))
-{
-	$versionName = true;
-}
-else
-{
-	$versionName = false;
-}
-if (!defined('BIBLESTUDY_CHECKREL'))
-{
-	define('BIBLESTUDY_CHECKREL', $versionName);
-}
 
 $templateparams = null;
 

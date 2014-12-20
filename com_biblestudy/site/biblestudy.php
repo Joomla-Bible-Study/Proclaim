@@ -28,15 +28,6 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
 }
 
-if (version_compare(JVERSION, '3.0', 'ge'))
-{
-	$versionName = true;
-}
-else
-{
-	$versionName = false;
-}
-define('BIBLESTUDY_CHECKREL', $versionName);
 $controller = JControllerLegacy::getInstance('Biblestudy');
 $controller->execute(JFactory::getApplication()->input->get('task', '', 'cmd'));
 $controller->redirect();

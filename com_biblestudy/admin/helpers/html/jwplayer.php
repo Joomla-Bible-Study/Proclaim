@@ -47,7 +47,7 @@ abstract class JHtmlJwplayer
 		/** @var  $params JRegistry */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
-		$cdn = $params->get('jwplayer_cdn', '//jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
+		$cdn = $params->get('jwplayer_cdn', 'https://jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
 		if ($cdn)
 		{
 			JHtml::script($cdn);

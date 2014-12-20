@@ -44,7 +44,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * Handles XHR requests (i.e. File uploads)
 	 *
 	 * @throws  Exception
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function xhr()
 	{
@@ -59,9 +59,9 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		if (method_exists($addon, $handler))
 		{
-			echo new JResponseJson($addon->upload($input));
+            echo json_encode($addon->$handler($input));
 
-			$app = JApplicationCms::getInstance();
+			$app = JFactory::getApplication();
 			$app->close();
 		}
 		else
@@ -96,7 +96,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * Sets the server for this media record
 	 *
 	 * @return  void
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function setServer()
 	{

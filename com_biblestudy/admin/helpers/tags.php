@@ -28,13 +28,14 @@ class JBSMTags
 	/**
 	 * Check to see if Duplicate
 	 *
-	 * @param   int $study_id  ?
-	 * @param   int $topic_id  ?
+	 * @param   int  $study_id  ?
+	 * @param   int  $topic_id  ?
 	 *
 	 * @return boolean
 	 */
 	public static function isDuplicate($study_id, $topic_id)
 	{
+		JFactory::getApplication()->enqueueMessage('Need to update this function', 'error');
 		return true;
 	}
 }

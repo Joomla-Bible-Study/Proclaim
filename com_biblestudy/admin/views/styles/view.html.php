@@ -94,10 +94,7 @@ class BiblestudyViewStyles extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -152,20 +149,17 @@ class BiblestudyViewStyles extends JViewLegacy
 			JToolBarHelper::custom('styles.fixcss', 'refresh', 'refresh', 'JBS_STYLE_CSS_FIX', true);
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=styles');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=styles');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_MAX_LEVELS'), 'filter_level',
-				JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_MAX_LEVELS'), 'filter_level',
+			JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
+		);
 	}
 
 	/**

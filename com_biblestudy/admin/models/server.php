@@ -24,7 +24,7 @@ class BiblestudyModelServer extends JModelAdmin
      * Data
      *
      * @var
-     * @since   8.1.0
+     * @since   9.0.0
      */
     private $data;
 
@@ -59,7 +59,7 @@ class BiblestudyModelServer extends JModelAdmin
      *
      * @return mixed Server Server data object, false on failure
      *
-     * @since 8.1.0
+     * @since 9.0.0
      */
 	public function getItem($pk = null)
     {
@@ -92,7 +92,7 @@ class BiblestudyModelServer extends JModelAdmin
      * @param $addon Type of server
      *
      * @return SimpleXMLElement
-     * @since   8.1.0
+     * @since   9.0.0
      */
 	public function getConfig($addon)
 	{
@@ -108,7 +108,7 @@ class BiblestudyModelServer extends JModelAdmin
      * @return bool|mixed
      * @throws Exception
      *
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function getServerForm()
     {
@@ -212,7 +212,7 @@ class BiblestudyModelServer extends JModelAdmin
      *
      * @return  array    The default data is an empty array.
      *
-     * @since   8.1.0
+     * @since   9.0.0
      * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
      *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
      *          figure out a way to iterate over only the relevant data)
@@ -248,7 +248,7 @@ class BiblestudyModelServer extends JModelAdmin
      *
      * @return  void
      *
-     * @since   8.1.0
+     * @since   9.0.0
      */
     protected function populateState()
     {

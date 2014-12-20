@@ -12,13 +12,13 @@ defined('JPATH_PLATFORM') or die;
  * Utility class for Fancybox JavaScript behaviors
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 abstract class JHtmlFancybox
 {
 	/**
 	 * @var    array  Array containing information for loaded files
-	 * @since  8.1.0
+	 * @since  9.0.0
 	 */
 	protected static $loaded = array();
 
@@ -27,12 +27,12 @@ abstract class JHtmlFancybox
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   boolean $option    Optional looks [optional]
-	 * @param   boolean $mouseweel To add mouse Well to display [optional]
+	 * @param   boolean  $option     Optional looks [optional]
+	 * @param   boolean  $mouseweel  To add mouse Well to display [optional]
 	 *
 	 * @return  void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public static function framework ($option = false, $mouseweel = false)
 	{
@@ -69,7 +69,7 @@ abstract class JHtmlFancybox
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   boolean $option  Optional add helpers - button, thumbnail and/or media
+	 * @param   boolean  $option  Optional add helpers - button, thumbnail and/or media
 	 *
 	 * @return  void
 	 *

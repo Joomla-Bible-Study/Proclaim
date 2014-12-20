@@ -106,10 +106,7 @@ class BiblestudyViewTopics extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -149,24 +146,21 @@ class BiblestudyViewTopics extends JViewLegacy
 			JToolBarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('topics.trash');
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');
 
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 	}
 
 	/**

@@ -2122,7 +2122,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function getFluidMediaFiles($item, $params, $template)
 	{
@@ -2202,7 +2202,7 @@ class JBSMListing
 	 *
 	 * @return bool|stdClass
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function useJImage($path, $alt = null)
 	{
@@ -2412,9 +2412,9 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object        $row      Item Info
-	 * @param   JRegistry     $params   Item Params
-	 * @param   TableTemplate $template Template
+	 * @param   object         $row       Item Info
+	 * @param   JRegistry      $params    Item Params
+	 * @param   TableTemplate  $template  Template
 	 *
 	 * @return object
 	 *
@@ -2459,12 +2459,12 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object    $row    Item Info
-	 * @param   JRegistry $params Item Params
+	 * @param   object     $row     Item Info
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return object
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getStudyExp($row, $params)
 	{
@@ -2832,7 +2832,7 @@ class JBSMListing
 	 *
 	 * @return bool|string
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function runContentPlugins($item, $params, $type)
 	{
@@ -2850,7 +2850,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getTitle($params, $row, $template)
 	{
@@ -2867,7 +2867,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	private function getCustomhead($rowcolid, $params)
 	{

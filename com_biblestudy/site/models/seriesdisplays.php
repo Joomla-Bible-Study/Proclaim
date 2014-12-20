@@ -225,7 +225,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	/**
 	 * Get a list of teachers associated with series
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 * @return mixed
 	 */
 	public function getTeachers()
@@ -248,7 +248,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	/**
 	 * Get a list of teachers associated with series
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 * @return mixed
 	 */
 	public function getYears()

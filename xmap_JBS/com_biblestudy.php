@@ -287,7 +287,6 @@ class Xmap_Com_Biblestudy
 				. ' f.id AS fid, f.folderpath, mime.id as mimeid, mime.mimetext')
 				->from('#__bsms_mediafiles AS m')
 				->leftJoin('#__bsms_servers AS sr ON (sr.id = m.server)')
-				->leftJoin('#__bsms_folders AS f ON (f.id = m.path)')
 				->leftJoin('#__bsms_mimetype as mime on (mime.id = m.mime_type)')
 				->where('m.published = 1')->where('m.study_id = ' . $id)->order('createdate ' . $order);
 			$db->setQuery($query, 0, $limit);
@@ -311,7 +310,7 @@ class Xmap_Com_Biblestudy
 
 					if ($params['filelink'] == 1)
 					{
-						$node->link = $media->folderpath . $media->filename;
+						$node->link = $media->filename;
 					}
 					else
 					{

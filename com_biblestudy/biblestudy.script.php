@@ -34,7 +34,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_release = '8.1.0';
+	private $_release = '9.0.0';
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -318,7 +318,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Function to do using the version number
 	 *
-	 * @param   string $value The File to run sql query.
+	 * @param   string  $value  The File to run sql query.
 	 *
 	 * @return boolean
 	 *
@@ -397,8 +397,8 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string         $type   Type of install
-	 * @param   JInstallerFile $parent Where it is coming from
+	 * @param   string          $type    Type of install
+	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return   void
 	 */
@@ -493,7 +493,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Get a variable from the manifest file (actually, from the manifest cache).
 	 *
-	 * @param   string $name Name of param
+	 * @param   string  $name  Name of param
 	 *
 	 * @return string
 	 */

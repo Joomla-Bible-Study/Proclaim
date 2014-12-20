@@ -10,16 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $app        = JFactory::getApplication();
@@ -93,18 +86,6 @@ $sortFields = $this->getSortFields();
 				<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
             </select>
         </div>
-		<?php if (!BIBLESTUDY_CHECKREL): ?>
-		<div class="clearfix"></div>
-        <div class="btn-group pull-right">
-            <label for="filter_published" id="filter_published"
-                   class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-            <select name="filter_published" class="input-medium" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-            </select>
-        </div>
-
-		<?php endif; ?>
     </div>
     <div class="clearfix"></div>
 
@@ -161,8 +142,6 @@ $sortFields = $this->getSortFields();
 					<?php endif; ?>
                     <div class="pull-left">
 						<?php
-						if (BIBLESTUDY_CHECKREL)
-						{
 							// Create dropdown items
 							JHtml::_('dropdown.edit', $item->id, 'message.');
 							JHtml::_('dropdown.divider');
@@ -188,7 +167,6 @@ $sortFields = $this->getSortFields();
 
 							// Render dropdown list
 							echo JHtml::_('dropdown.render');
-						}
 						?>
                     </div>
 

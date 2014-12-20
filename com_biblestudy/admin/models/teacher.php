@@ -32,9 +32,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   string $name    The table name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $options Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 *
@@ -48,8 +48,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -85,9 +85,56 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 *
+	 * @since   12.2
+	 */
+	protected function canEditState($record)
+	{
+		$tmp        = (array) $record;
+		$db         = JFactory::getDbo();
+		$user       = JFactory::getUser();
+		$canDoState = $user->authorise('core.edit.state', $this->option);
+		$text       = '';
+
+		if (!empty($tmp))
+		{
+			$query = $db->getQuery(true);
+			$query->select('id, studytitle')
+				->from('#__bsms_studies')
+				->where('teacher_id = ' . $record->id)
+				->where('published != ' . $db->q('-2'));
+			$db->setQuery($query);
+			$studies = $db->loadObjectList();
+			if (!$studies && $canDoState)
+			{
+				return true;
+			}
+
+			foreach ($studies as $studie)
+			{
+				$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+			}
+
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+
+			return false;
+		}
+		else
+		{
+			return $canDoState;
+		}
+	}
+
+
+	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -101,11 +148,11 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Saves data creating image thumbnails
 	 *
-	 * @param array $data
+	 * @param   array  $data  Data
 	 *
 	 * @return bool
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function save($data)
 	{
@@ -153,7 +200,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   int $pk The id of the primary key.
+	 * @param   int  $pk  The id of the primary key.
 	 *
 	 * @return    mixed    Object on success, false on failure.
 	 *
@@ -174,7 +221,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable $table A reference to a JTable object.
+	 * @param   TableTeacher  $table  A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -187,11 +234,11 @@ class BiblestudyModelTeacher extends JModelAdmin
 		$user = JFactory::getUser();
 
 		$table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
-		$table->alias       = JApplication::stringURLSafe($table->alias);
+		$table->alias       = JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplication::stringURLSafe($table->teachername);
+			$table->alias = JApplicationHelper::stringURLSafe($table->teachername);
 		}
 
 		if (empty($table->id))
@@ -214,8 +261,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *

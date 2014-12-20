@@ -19,15 +19,7 @@ JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
 
 // Load the tooltip behavior.
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
-
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->params);
 

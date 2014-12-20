@@ -137,15 +137,15 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$JBSMElements    = new JBSMListing;
-		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
+		$JBSMListing   = new JBSMListing;
+		$this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
-		$this->date      = $JBSMElements->getstudyDate($this->params, $this->media->studydate);
+		$this->date      = $JBSMListing->getstudyDate($this->params, $this->media->studydate);
 		/*
 		 *  The popup window call the counter function
 		 */
 		$this->getMedia->hitPlay($mediaid);
-		$this->lenght = $JBSMElements->getDuration($this->params, $this->media);
+		$this->lenght = $JBSMListing->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
@@ -155,7 +155,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
-		$this->path1 = $this->params->get('filename');
+		$this->path1 = $this->media->spath . $this->params->get('filename');
 
 		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
 		{

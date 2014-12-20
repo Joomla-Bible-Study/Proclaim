@@ -75,7 +75,7 @@ class JBSMMedia
 	 *
 	 * @return bool|string
 	 *
-	 * @since 8.1.0
+	 * @since 9.0.0
 	 */
 	public function useJImage($path, $alt = 'link')
 	{
@@ -103,8 +103,8 @@ class JBSMMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   JRegistry $params Params
-	 * @param   object    $media  Media info
+	 * @param   JRegistry  $params  Params
+	 * @param   object     $media   Media info
 	 *
 	 * @return object
 	 */
@@ -210,10 +210,10 @@ class JBSMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   JRegistry $params Params are the merged of system and items.
-	 * @param   object    $player Player code
-	 * @param   String    $image  Image info
-	 * @param   object    $media  Media
+	 * @param   JRegistry  $params  Params are the merged of system and items.
+	 * @param   object     $player  Player code
+	 * @param   String     $image   Image info
+	 * @param   object     $media   Media
 	 *
 	 * @return string
 	 */
@@ -239,8 +239,8 @@ class JBSMMedia
 		}
 		if (!substr_count($path, '://') && !substr_count($path, '//'))
 		{
-			$protocol = $params->get('protocol', 'http://');
-			$path     = $protocol . $path;
+			$protocol = $params->get('protocol', '//');
+			$path     = $protocol . $media->sparams->get('path') . $path;
 		}
 
 		switch ($player->player)
@@ -380,7 +380,7 @@ class JBSMMedia
 	/**
 	 * return $table
 	 *
-	 * @param   Object $media Media info
+	 * @param   Object     $media   Media info
 	 * @param   JRegistry  $params  Params
 	 *
 	 * @return null|string
@@ -446,8 +446,8 @@ class JBSMMedia
 	/**
 	 * Get duration
 	 *
-	 * @param   Object    $row    Table Row info
-	 * @param   JRegistry $params Params
+	 * @param   Object     $row     Table Row info
+	 * @param   JRegistry  $params  Params
 	 *
 	 * @return null|string
 	 */
@@ -499,8 +499,8 @@ class JBSMMedia
 	/**
 	 * Return AVMedia Code.
 	 *
-	 * @param   string $mediacode Media string
-	 * @param   object $media     Media info
+	 * @param   string  $mediacode  Media string
+	 * @param   object  $media      Media info
 	 *
 	 * @return string
 	 */
@@ -548,8 +548,8 @@ class JBSMMedia
 	/**
 	 * Return Articles.
 	 *
-	 * @param   object $media Media
-	 * @param   string $image Image
+	 * @param   object  $media  Media
+	 * @param   string  $image  Image
 	 *
 	 * @return string
 	 */
@@ -564,9 +564,9 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object   $media  Media
-	 * @param   JRegitry $params Item Params
-	 * @param   string   $image  Image
+	 * @param   object     $media   Media
+	 * @param   JRegistry  $params  Item Params
+	 * @param   string     $image   Image
 	 *
 	 * @return string
 	 */
@@ -581,10 +581,10 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object        $media      Media
-	 * @param   JRegistry     $params     Params
-	 * @param   TableTemplate $template   Template ID
-	 * @param   string        $playercode Player Code
+	 * @param   Object         $media       Media
+	 * @param   JRegistry      $params      Params
+	 * @param   TableTemplate  $template    Template ID
+	 * @param   string         $playercode  Player Code
 	 *
 	 * @return string
 	 */
@@ -679,7 +679,7 @@ class JBSMMedia
 	 *
 	 * @return null|string
 	 *
-	 * @deprecated 8.1.0 Removed for fluid.
+	 * @deprecated 9.0.0 Removed for fluid.
 	 */
 	public function getMediaTable($row, $params)
 	{
@@ -694,7 +694,7 @@ class JBSMMedia
 	 *
 	 * @return object
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getMediaid($id)
 	{
@@ -709,7 +709,7 @@ class JBSMMedia
 	 *
 	 * @return object|boolean
 	 *
-	 * @deprecated 8.1.0
+	 * @deprecated 9.0.0
 	 */
 	public function getMediaRows($id)
 	{
@@ -723,17 +723,13 @@ class JBSMMedia
 	 * @param   int  $id  ID of Row
 	 *
 	 * @return object|boolean
-	 *
-	 * @todo Need to redo for new table system, Eugen
 	 */
 	public function getMediaRows2($id)
 	{
-		JFactory::getApplication()->enqueueMessage('Function Needs to be rebuilt Eugen getMediaRows2');
-
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid,'
+		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
 			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
 			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
@@ -750,6 +746,11 @@ class JBSMMedia
 
 		if ($media)
 		{
+			$reg = new JRegistry;
+			$reg->loadString($media->sparams);
+			$params = $reg->toObject();
+
+			$media->spath = $params->path;
 			return $media;
 		}
 		else
@@ -765,7 +766,7 @@ class JBSMMedia
 	 *
 	 * @return null|string
 	 *
-	 * @deprecate 8.1.0 This is replace by getFluidFilesize
+	 * @deprecate 9.0.0 This is replace by getFluidFilesize
 	 */
 	public function getFilesize($file_size)
 	{

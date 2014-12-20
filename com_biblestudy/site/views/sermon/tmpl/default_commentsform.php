@@ -207,6 +207,7 @@ if ($allow > 9)
 						// You got this from the signup page
 						$publickey = $this->item->params->get('public_key');
 
+// @todo move to core captcha no ares.
 						if ($this->item->params->get('public_key'))
 						{
 							echo recaptcha_get_html($publickey);

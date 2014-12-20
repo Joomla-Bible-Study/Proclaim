@@ -11,16 +11,9 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();
@@ -155,8 +148,6 @@ $sortFields = $this->getSortFields();
 							</div>
 							<div class="pull-left">
 								<?php
-								if (BIBLESTUDY_CHECKREL)
-								{
 									// Create dropdown items
 									JHtml::_('dropdown.edit', $item->id, 'server.');
 									JHtml::_('dropdown.divider');
@@ -182,7 +173,6 @@ $sortFields = $this->getSortFields();
 
 									// Render dropdown list
 									echo JHtml::_('dropdown.render');
-								}
 								?>
 							</div>
 						</td>

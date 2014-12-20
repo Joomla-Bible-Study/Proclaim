@@ -103,10 +103,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -155,19 +152,17 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('messagetypes.trash');
-        }
+		elseif ($this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::trash('messagetypes.trash');
+		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
 			JToolBarHelper::divider();
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -175,25 +170,22 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messagetypes');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messagetypes');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
+			JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
+		);
 	}
 
 	/**
