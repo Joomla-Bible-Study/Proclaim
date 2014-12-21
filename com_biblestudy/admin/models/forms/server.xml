@@ -3,11 +3,9 @@
     <field name="id" type="text" default="0"/>
     <field name="published"
            type="list"
-           class="span12 small"
            id="published"
            label="JSTATUS"
            description="JFIELD_PUBLISHED_DESC"
-           size="1"
            default="1"
            filter="integer">
         <option value="1">
