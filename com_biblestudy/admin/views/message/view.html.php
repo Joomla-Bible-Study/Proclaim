@@ -121,7 +121,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-		JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
 
 		// Set the toolbar
 		$this->addToolbar();
