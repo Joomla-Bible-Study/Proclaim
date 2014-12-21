@@ -38,17 +38,15 @@ JHtml::_('behavior.modal');
 
 <?php if (!$this->more): ?>
 	<div id="j-main-container" class="span10">
-		<div id="cpanel" style="padding-left: 20px">
+		<div id="cpanel" class="btn-group">
 			<div class="pull-left">
-				<div class="icon">
-					<a href="index.php?option=com_biblestudy&view=cpanel">
-						<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
-						     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
-					<span>
-						<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
-					</span>
-					</a>
-				</div>
+				<a href="index.php?option=com_biblestudy&view=cpanel" class="btn cpanl-img">
+					<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+					     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
+				<span>
+					<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
+				</span>
+				</a>
 			</div>
 		</div>
 	</div>
