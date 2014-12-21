@@ -159,12 +159,12 @@
 		<field name="checked_out_time" type="hidden" filter="unset"/>
 
 		<field name="publish_up" type="calendar"
-		       label="PUBLISH_UP" description="COM_CONTENT_FIELD_PUBLISH_UP_DESC"
+		       label="JBS_CMN_PUBLISH_UP" description="JBS_CMN_FIELD_PUBLISH_UP_DESC"
 		       class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
 		       filter="user_utc"/>
 
 		<field name="publish_down" type="calendar"
-		       label="PUBLISH_DOWN" description="COM_CONTENT_FIELD_PUBLISH_DOWN_DESC"
+		       label="JBS_CMN_PUBLISH_DOWN" description="JBS_CMN_FIELD_PUBLISH_DOWN_DESC"
 		       class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
 		       filter="user_utc"/>
 
