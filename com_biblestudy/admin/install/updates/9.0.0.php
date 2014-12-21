@@ -61,7 +61,7 @@ class Migration900
 			else
 			{
 				$newServer->type = "legacy";
-				$params['path']  = $server->path;
+				$params['path']  = $server->server_path;
 			}
 
 			$newServer->params = json_encode($params);
@@ -109,8 +109,9 @@ class Migration900
 				// Some people do not have logos set to there media so we have this.
 				if (!$mediaImage)
 				{
-					$mediaImage         = new stdClass;
-					$mediaImage->mimage = null;
+					$mediaImage                = new stdClass;
+					$mediaImage->mimage        = null;
+					$mediaImage->media_alttext = '';
 				}
 				else
 				{
