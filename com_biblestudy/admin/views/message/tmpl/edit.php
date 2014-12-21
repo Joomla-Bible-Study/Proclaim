@@ -2,10 +2,10 @@
 /**
  * Form
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -104,7 +104,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('booknumber'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber); ?>
+							<?php echo $this->form->getInput(
+								'booknumber',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber
+							); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -227,7 +231,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('teacher_id'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id) ?>
+							<?php echo $this->form->getInput(
+								'teacher_id',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id
+							); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -235,7 +243,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('location_id'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin_params->get('location_id') : $this->item->location_id) ?>
+							<?php echo $this->form->getInput(
+								'location_id',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('location_id') : $this->item->location_id
+							); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -243,7 +255,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('series_id'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin_params->get('series_id') : $this->item->series_id) ?>
+							<?php echo $this->form->getInput(
+								'series_id',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('series_id') : $this->item->series_id
+							); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -260,7 +276,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('messagetype'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin_params->get('messagetype') : $this->item->messagetype) ?>
+							<?php echo $this->form->getInput(
+								'messagetype',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('messagetype') : $this->item->messagetype
+							) ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -268,7 +288,11 @@ $input  = $app->input;
 							<?php echo $this->form->getLabel('thumbnailm'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm) ?>
+							<?php echo $this->form->getInput(
+								'thumbnailm',
+								null,
+								empty($this->item->studytitle) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm
+							); ?>
 						</div>
 					</div>
 				</div>
@@ -370,7 +394,8 @@ $input  = $app->input;
 								?>
 								<tr class="row<?php echo $i % 2; ?>">
 									<td class="center">
-										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
+											. (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
 										<a class="btn btn-primary"
 										   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
@@ -395,7 +420,8 @@ $input  = $app->input;
 						<tfoot>
 						<tr>
 							<td colspan="4">
-								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid=' . $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid='
+									. $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
 								<?php
 								if (empty($this->item->id))
 								{
