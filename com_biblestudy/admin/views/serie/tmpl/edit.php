@@ -90,10 +90,9 @@ $input = $app->input;
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('image'); ?>
-									<?php echo $this->form->getInput('image'); ?>
 								</div>
 								<div class="controls">
-									<img src="<?php echo JURI::root() . $this->item->series_thumbnail; ?>"/>
+									<?php echo $this->form->getInput('image'); ?>
 								</div>
 							</div>
 						</div>
