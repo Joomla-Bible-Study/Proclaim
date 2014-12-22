@@ -29,7 +29,7 @@ class JBSMImage
 	/**
 	 * Get Image
 	 *
-	 * @param   string $path  Path to file
+	 * @param   string  $path  Path to file
 	 *
 	 * @return object
 	 */

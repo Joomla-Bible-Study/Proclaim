@@ -53,13 +53,9 @@ class JBSMDownload
 		$protocol = $params->get('protocol', 'http://');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetype')
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
-			->leftJoin('#__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)')
-			->leftJoin('#__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)')
 			->where('#__bsms_mediafiles.id = ' . $mid);
 		$db->setQuery($query, 0, 1);
 
@@ -67,12 +63,14 @@ class JBSMDownload
 		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
-		$server        = $media->spath;
-		$path          = $media->fpath;
+		$registry      = new JRegistry;
+		$registry->loadString($media->params);
+		$params->merge($registry);
+
 		$filename      = $media->filename;
 		$size          = $media->size;
-		$download_file = $protocol . $server . $path . $filename;
-		$mimeType      = $media->mimetype;
+		$download_file = $protocol . $filename;
+		$mimeType      = $params->get('mimetype');
 		/** @var $download_file object */
 		$getsize = $this->getRemoteFileSize($download_file);
 

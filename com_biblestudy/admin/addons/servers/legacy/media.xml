@@ -44,42 +44,34 @@
                    filter="raw"/>
         </fieldset>
         <fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES">
-            <field name="serverFolders"
-                type="folders"
-                label="JBS_MED_PATH_OR_FOLDER"
-                description="JBS_MED_PATH_OR_FOLDER_DESC"
-                class="inputbox"
-                override="true">
-                <option value="0">JOPTION_USE_DEFAULT</option>
-            </field>
-            <field name="filename" type="text" label="JBS_MED_FILENAME"
-                   description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26" required="true"/>
+            <!--<field name="serverFolders"-->
+	        <!--type="folders"-->
+	        <!--label="JBS_MED_PATH_OR_FOLDER"-->
+	        <!--description="JBS_MED_PATH_OR_FOLDER_DESC"-->
+	        <!--class="inputbox"-->
+	        <!--override="true">-->
+	        <!--<option value="0">JOPTION_USE_DEFAULT</option>-->
+	        <!--</field>-->
+            <field name="filename"
+                   type="plupload"
+                   handler="upload"
+                   label="JBS_MED_FILENAME"
+                   description="JBS_MED_USE_FILENAME_AS_PATH"
+                   class="inputbox span10"/>
             <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
                    description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
             <field name="special" type="text" label="JBS_MED_TARGET"
                    description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15"/>
         </fieldset>
-        <fieldset name="upload" label="JBS_ADDON_LEGACY_UPLOAD">
-            <field name="localFolder"
-                type="plupload"
-                handler="upload"
-                label="JBS_MED_PATH_OR_FOLDER"
-                description="JBS_MED_PATH_OR_FOLDER_DESC"
-                class="inputbox"/>
-        </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
-            <field name="media_image" type="sql" extension="com_biblestudy"
+            <field name="media_image" type="text" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-                   class="inputbox"
-                   query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-                   key_field="id" value_field="media_image_name" default="">
+                   class="inputbox span6" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
-            <field name="mime_type" type="sql" extension="com_biblestudy"
+            <field name="mime_type" type="text" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-                   class="inputbox"
-                   query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-                   key_field="id" value_field="mimetext" default="">
+                   class="inputbox" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
         </fieldset>

@@ -31,6 +31,7 @@ class JBSMCustom
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
+		$isCustom = ($rowid == 24) ? true : false;
 		$countbraces = substr_count($custom, '{');
 		$JBSMElements = new JBSMListing;
 		while ($countbraces > 0)
@@ -39,7 +40,7 @@ class JBSMCustom
 			$braceend   = strpos($custom, '}');
 			$subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 
-			if (!$rowid)
+			if (!$rowid || $isCustom)
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}

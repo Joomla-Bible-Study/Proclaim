@@ -1,7 +1,7 @@
 INSERT INTO `#__bsms_update` (id, version) VALUES (4, '7.0.2')
 ON DUPLICATE KEY UPDATE version= '7.0.2';
 --
--- Old Talbes No longer used.
+-- Old Tales No longer used.
 --
 DROP TABLE IF EXISTS `#__bsms_install`;
 DROP TABLE IF EXISTS `#__bsms_version`;

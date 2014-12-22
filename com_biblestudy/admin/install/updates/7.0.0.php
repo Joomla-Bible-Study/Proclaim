@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Update for 7.0.0 class
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class Migration700
 {
@@ -483,9 +483,18 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				$registry = new JRegistry;
-				$registry->loadString($result->params);
+				// Fix incorrect params string literal
+
+				$params = array();
+				foreach(explode(' ', $result->params) as $param) {
+					$param = explode('=',  str_replace('\n', '', trim($param)));
+					$params[$param[0]] = $param[1];
+				}
+
+				$registry->loadArray($params);
 				$params   = $registry;
 				$player   = $params->get('player');
+
 				$popup    = $params->get('internal_popup');
 				$podcasts = $params->get('podcasts');
 
@@ -506,7 +515,7 @@ class Migration700
 				if ($popup)
 				{
 					$query = "UPDATE #__bsms_mediafiles SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
-						(int) $db->quote($result->id) . " LIMIT 1";
+						$db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -517,7 +526,7 @@ class Migration700
 				{
 					$podcasts = str_replace('|', ',', $podcasts);
 					$query    = "UPDATE #__bsms_mediafiles SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
-						(int) $db->quote($result->id) . " LIMIT 1";
+						$db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
 					{
@@ -525,14 +534,10 @@ class Migration700
 					}
 				}
 				// Update the params to json
-				$registry = new JRegistry;
-				$registry->loadString($result->params);
-				$params  = $registry;
-				$params2 = $params->toObject();
-				$params2 = json_encode($params2);
+				$params2 = json_encode($params->toObject());
 
 				$query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
+					$db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{

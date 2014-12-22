@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Update for 6.2.3 class
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class Migration623
 {

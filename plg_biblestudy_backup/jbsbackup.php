@@ -25,8 +25,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -82,7 +82,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry $params  ?
+	 * @param   JRegistry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -113,7 +113,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   JRegistry $params  ?
+	 * @param   JRegistry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -222,8 +222,7 @@ class PlgSystemjbsbackup extends JPlugin
 	 */
 	public function doBackup()
 	{
-		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
-		include_once $path1 . 'biblestudy.backup.php';
+		JLoader::register('JBSExport', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/');
 		$dbbackup = new JBSExport;
 		$backup   = $dbbackup->exportdb($run = 2);
 
@@ -239,7 +238,8 @@ class PlgSystemjbsbackup extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
+		$query = $db->getQuery(true);
+		$query->update('#__jbsbackup_timeset')->set($db->qn('backup') . ' = ' . $db->q($time));
 		$db->setQuery($query);
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
@@ -257,8 +257,8 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   JRegistry $params    Component Paramas
-	 * @param   string    $dobackup  File of Backup
+	 * @param   JRegistry  $params    Component Params
+	 * @param   string     $dobackup  File of Backup
 	 *
 	 * @return void
 	 */
@@ -324,7 +324,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Update files
 	 *
-	 * @param   JRegistry $params  ?
+	 * @param   JRegistry  $params  JBSM Params
 	 *
 	 * @return void
 	 */
@@ -333,7 +333,7 @@ class PlgSystemjbsbackup extends JPlugin
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
-		$exclude       = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);

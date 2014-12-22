@@ -25,7 +25,7 @@ $doc->addStyleDeclaration($style);
 		$mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
 		echo JHTML::_('content.prepare', $mediacode);
 	}
-	// Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWplayer.
+	// Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWPlayer.
 	if ($this->params->get('player') == 1 || $this->player == 1 || $this->player == 7)
 	{
 		$player = ($this->player == '7' ? true : false);
@@ -39,7 +39,7 @@ $doc->addStyleDeclaration($style);
 	}
 	if ($this->player == 0)
 	{
-		echo '<a href="' . JRoute::_('http://' . $this->media->spath . $this->media->fpath . $this->media->filename) . '"> Link to: ' .
+		echo '<a href="' . JRoute::_($this->params->get('filename')) . '"> Link to: ' .
 			$this->media->studytitle . '</a>';
 	}
 	?>

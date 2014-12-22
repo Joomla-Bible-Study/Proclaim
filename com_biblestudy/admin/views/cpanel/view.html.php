@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (!BIBLESTUDY_CHECKREL)
-{
-	JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-}
-
 /**
  * JView class for Cpanel
  *
@@ -24,29 +19,26 @@ if (!BIBLESTUDY_CHECKREL)
 class BiblestudyViewCpanel extends JViewLegacy
 {
 	/**
-	 * Version
+	 * Data from Model
 	 *
 	 * @var string
 	 */
-	public $version;
-	/**
-	 * Version date
-	 *
-	 * @var string
-	 */
-	public $versiondate;
+	public $data;
+
 	/**
 	 * Total Messages
 	 *
 	 * @var string
 	 */
 	public $total_messages;
+
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+
 	/**
 	 * State
 	 *
@@ -57,7 +49,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	/**
 	 * Display
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */
@@ -65,36 +57,16 @@ class BiblestudyViewCpanel extends JViewLegacy
 	{
 
 		$this->state = $this->get('State');
+		$this->data  = $this->get('Data');
 
 		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
 
-		// Get version information
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__extensions');
-		$query->where('element = "com_biblestudy" and type = "component"');
-		$db->setQuery($query);
-		$data = $db->loadObject();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($data->manifest_cache);
-
-		if ($data)
-		{
-			$this->version     = $registry->get('version');
-			$this->versiondate = $registry->get('creationDate');
-		}
 
 		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+		$this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);

@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Update for 6.2.2 class
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class Migration622
 {
@@ -37,7 +37,7 @@ class Migration622
 			{
 				$old_params = $result->params;
 				$new_params = str_replace('podcast1', 'podcasts', $old_params);
-				$query      = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($new_params) . " WHERE `id` = " .
+				$query = "UPDATE `#__bsms_mediafiles` SET `params` = " . $db->quote($new_params) . " WHERE `id` = " .
 					(int) $db->quote($result->id);
 
 				if (!JBSMDbHelper::performdb($query, "Build 622: "))
@@ -46,7 +46,22 @@ class Migration622
 				}
 			}
 		}
-		$query = "INSERT INTO #__bsms_version SET `version` = '6.2.2', `installdate`='2010-10-25', `build`='622', " .
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
+
+		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		{
+			return false;
+		}
+
+		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.2.2', `installdate`='2010-10-25', `build`='622', " .
 			"`versionname`='Judges', `versiondate`='2010-10-25'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 622: "))

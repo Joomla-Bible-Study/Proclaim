@@ -21,7 +21,7 @@ a[title]:hover:after {
     color: #000;
     font-size: 0.85em;
     margin: 0 0 20px;
-    font-weight: bold
+	font-weight: bold;
 }
 
 .bsmallitalic {
@@ -29,13 +29,13 @@ a[title]:hover:after {
     color: #000;
     font-size: 0.85em;
     margin: 0 0 20px;
-    font-style: italic
+	font-style: italic;
 }
 
 small.bold {
-    font-weight: bold
+	font-weight: bold;
 }
 
 .italic {
-    font-style: italic
+	font-style: italic;
 }

@@ -28,7 +28,7 @@ class JBSMTranslated
 	/**
 	 * Translate a list of topicItems to clear text each
 	 *
-	 * @param   array $topicItems array of stdClass containing topic_text and topic_params
+	 * @param   array  $topicItems  array of stdClass containing topic_text and topic_params
 	 *
 	 * @return  array  list of topicItems containing translated strings in topic_text
 	 */

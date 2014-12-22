@@ -50,7 +50,7 @@ class BiblestudyControllerServer extends JControllerForm
      * @param   null $urlVar
      * @return  bool
      *
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public function edit($key = null, $urlVar = null) {
         $app = JFactory::getApplication();
@@ -67,7 +67,7 @@ class BiblestudyControllerServer extends JControllerForm
      * Sets the type of endpoint currently being configured.
      *
      * @return  void
-     * @since   8.1.0
+     * @since   9.0.0
      */
     function setType() {
         $app = JFactory::getApplication();

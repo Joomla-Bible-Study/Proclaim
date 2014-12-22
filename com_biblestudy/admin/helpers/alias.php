@@ -59,7 +59,7 @@ class JBSMAlias
 						->set('alias=' . $db->q($alias))
 						->where('id=' . $db->q($r['id']));
 					$db->setQuery($query);
-					$db->query();
+					$db->execute();
 					$done++;
 				}
 			}
@@ -88,8 +88,8 @@ class JBSMAlias
 	/**
 	 * Get Table fields for updating.
 	 *
-	 * @param   string $table  Table
-	 * @param   string $title  Title
+	 * @param   string  $table  Table
+	 * @param   string  $title  Title
 	 *
 	 * @return boolean|array
 	 */

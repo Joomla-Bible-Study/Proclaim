@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -144,14 +144,14 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetHits()
 	{
-		$db     = JFactory::getDBO();
-		$msg    = null;
-		$post   = $_POST['jform'];
-		$reg = new JRegistry;
+		$db   = JFactory::getDBO();
+		$msg  = null;
+		$post = $_POST['jform'];
+		$reg  = new JRegistry;
 		$reg->loadArray($post['params']);
-		$from   = $reg->get(';from');
-		$to     = $reg->get(';to');
-		$query  = $db->getQuery(true);
+		$from  = $reg->get(';from');
+		$to    = $reg->get(';to');
+		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('popup = ' . $db->q($to))
 			->where('popup = ' . $db->q($from));
@@ -221,6 +221,16 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
+	 * Return back to c-panel
+	 *
+	 * @return void
+	 */
+	public function back()
+	{
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
+	}
+
+	/**
 	 * Check Assets
 	 *
 	 * @return void
@@ -231,18 +241,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$checkassets = $asset->checkAssets();
 		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
 		parent::display();
-	}
-
-	/**
-	 * Fix Assets
-	 *
-	 * @return void
-	 */
-	public function fixAssets()
-	{
-		$asset = new JBSMAssets;
-		$asset->fixAssets();
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.checkassets');
 	}
 
 	/**
@@ -280,7 +278,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$model = $this->getModel('admin');
 		$model->fix();
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
 	}
 
 	/**
@@ -297,6 +295,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
+			self::fixAssets();
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 		else
@@ -305,6 +304,23 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 
+	}
+
+	/**
+	 * Fix Assets
+	 *
+	 * @param   bool  $dbReset  To check if this is coming from dbReset
+	 *
+	 * @return void
+	 */
+	public function fixAssets($dbReset = false)
+	{
+		$asset = new JBSMAssets;
+		$asset->fixAssets();
+		if (!$dbReset)
+		{
+			$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
+		}
 	}
 
 	/**
@@ -325,7 +341,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Do the import
 	 *
-	 * @param   boolean $parent  Source of info
+	 * @param   boolean  $parent  Source of info
 	 *
 	 * @return void
 	 */
@@ -365,14 +381,14 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migrate');
 		}
 	}
 
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string $oldprefix  Old table Prefix
+	 * @param   string $oldprefix Old table Prefix
 	 *
 	 * @return boolean
 	 */
@@ -443,7 +459,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$application->enqueueMessage('' . $result . '');
 		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
+		$this->setRedirect('index.php?option=com_biblestudy&view=database');
 	}
 
 	/**
@@ -460,7 +476,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (!$result = $export->exportdb($run))
 		{
 			$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-			$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
 		}
 		elseif ($run == 2)
 		{
@@ -472,8 +488,60 @@ class BiblestudyControllerAdmin extends JControllerForm
 			{
 				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 			}
-			$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
 		}
 	}
 
+	/**
+	 * Get Thumbnail List XHR
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
+	public function getThumbnailListXHR()
+	{
+		JSession::checkToken('get') or die('Invalid Token');
+		$document = JFactory::getDocument();
+		$input    = JFactory::getApplication()->input;
+
+		$document->setMimeEncoding('application/json');
+
+		$image_types = $input->get('images', null, 'array');
+		$count       = 0;
+		foreach ($image_types as $image_type)
+		{
+			$images = JFolder::files(JPATH_ROOT . '/' . 'images/BibleStudy/' . $image_type, 'original_', true, true);
+			$count += count($images);
+
+			$images_paths[] = array(array('type' => $image_type, 'images' => $images));
+		}
+
+		echo json_encode(array('total' => $count, 'paths' => $images_paths));
+
+		JFactory::getApplication()->close();
+	}
+
+	/**
+	 * Create Thumbnail XHR
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
+	public function createThumbnailXHR()
+	{
+		JSession::checkToken('get') or die('Invalid Token');
+		$document = JFactory::getDocument();
+		$input    = JFactory::getApplication()->input;
+
+		$document->setMimeEncoding('application/json');
+
+		$image_path = $input->get('image_path', null, 'string');
+		$new_size   = $input->get('new_size', null, 'integer');
+
+		JBSMThumbnail::resize($image_path, $new_size);
+
+		JFactory::getApplication()->close();
+	}
 }

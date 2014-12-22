@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Update for 6.1.1 class
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 class Migration611
 {
@@ -46,6 +46,20 @@ class Migration611
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN location_id INT(3) NULL AFTER show_level";
+
+		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		{
+			return false;
+		}
+
+		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_version`
+								(`id` INTEGER NOT NULL AUTO_INCREMENT,
+								`version` VARCHAR(20) NOT NULL,
+								`versiondate` DATE NOT NULL,
+								`installdate` DATE NOT NULL,
+								`build` VARCHAR(20) NOT NULL,
+								`versionname` VARCHAR(40) NULL,
+								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 
 		if (!JBSMDbHelper::performdb($query, "Build 611: "))
 		{

@@ -167,19 +167,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
-		// Get data from the model for database
-		$this->changeSet     = $this->get('Items');
-		$this->errors        = $this->changeSet->check();
-		$this->results       = $this->changeSet->getStatus();
-		$this->schemaVersion = $this->get('SchemaVersion');
-		$this->updateVersion = $this->get('UpdateVersion');
-		$this->filterParams  = $this->get('DefaultTextFilters');
-		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
-		$this->pagination    = $this->get('Pagination');
-		$this->errorCount    = count($this->errors);
-		$this->jversion      = $this->get('CompVersion');
-
 		// End for database
 		$config         = JFactory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');
@@ -295,8 +282,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 		JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
 		JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
 		JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
 	}

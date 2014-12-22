@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC')
@@ -34,18 +34,18 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	private $_admin;
 
-    /**
-     * Data
-     *
-     * @var
-     * @since   8.1.0
-     */
-    private $data;
+	/**
+	 * Data
+	 *
+	 * @var
+	 * @since   9.0.0
+	 */
+	private $data;
 
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   string $direction  ?
+	 * @param   string $direction ?
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -76,11 +76,11 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Returns a Table object, always creating it.
 	 *
-	 * @param   string $type    The table type to instantiate
-	 * @param   string $prefix  A prefix for the table class name. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
 	 *
-	 * @return    JTable    A database object
+	 * @return    TableMediafile    A database object
 	 */
 	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
 	{
@@ -90,7 +90,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Overrides the JModelAdmin save routine in order to implode the podcast_id
 	 *
-	 * @param   array $data  The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean True on successfully save
 	 *
@@ -117,7 +117,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk  The numeric id of the primary key.
+	 * @param   integer $pk The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -128,49 +128,54 @@ class BiblestudyModelMediafile extends JModelAdmin
 		return $pk;
 	}
 
-    /**
-     * Get the media form
-     *
-     * @return bool|mixed
-     * @throws Exception
-     *
-     * @since   8.1.0
-     */
-    public function getMediaForm() {
-        // If user hasn't selected a server yet, just return an empty form
-        $server_id = $this->data->server_id;
-        if(empty($server_id)) {
-            //@TODO This may not be optimal, seems like a hack
-            return new JForm("No-op");
-        }
-        // Reverse lookup server_id to server type
-        $model = JModelLegacy::getInstance('server', 'BibleStudyModel');
-        $server_type = $model->getType($server_id);
+	/**
+	 * Get the media form
+	 *
+	 * @return bool|mixed
+	 * @throws Exception
+	 *
+	 * @since   9.0.0
+	 */
+	public function getMediaForm()
+	{
+		// If user hasn't selected a server yet, just return an empty form
+		$server_id = $this->data->server_id;
+		if (empty($server_id))
+		{
+			//@TODO This may not be optimal, seems like a hack
+			return new JForm("No-op");
+		}
+		// Reverse lookup server_id to server type
+		$model       = JModelLegacy::getInstance('server', 'BibleStudyModel');
+		$server_type = $model->getType($server_id);
 
-        $path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/'.$server_type);
+		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
 
-        JForm::addFormPath($path);
-        JForm::addFieldPath($path.'/fields');
+		JForm::addFormPath($path);
+		JForm::addFieldPath($path . '/fields');
 
-        // Add language files
-        $lang = JFactory::getLanguage();
-        if(!$lang->load('jbs_addon_'.$server_type, JPATH_ADMINISTRATOR.'/components/com_biblestudy/addons/servers/'.$server_type))
-            throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
+		// Add language files
+		$lang = JFactory::getLanguage();
+		if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type))
+		{
+			throw new Exception(JText::_('JBS_ERR_ADDON_LANGUAGE_NOT_LOADED'));
+		}
 
-        $form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
+		$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
 
-        if (empty($form)) {
-            return false;
-        }
+		if (empty($form))
+		{
+			return false;
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
 	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return boolean|object
 	 *
@@ -178,20 +183,21 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-        if (empty($data)) {
-            $this->getItem();
-        }
+		if (empty($data))
+		{
+			$this->getItem();
+		}
 
 		// Get the form.
-        // @TODO Rename the form to "media" instead of mediafile
-		$form  = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
+		// @TODO Rename the form to "media" instead of mediafile
+		$form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
 			return false;
 		}
 
-        // @TODO Maybe this needs to be removed from here? (Separation of concerns)
+		// @TODO Maybe this needs to be removed from here? (Separation of concerns)
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
@@ -234,12 +240,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  mixed|void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public function getItem($pk = null)
 	{
 		if (!empty($this->data))
+		{
 			return $this->data;
+		}
 
 		$this->data = parent::getItem($pk);
 
@@ -261,9 +269,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
-	 * @param   array $commands  An array of commands to perform.
-	 * @param   array $pks       An array of item ids.
-	 * @param   array $contexts  An array of item contexts.
+	 * @param   array $commands An array of commands to perform.
+	 * @param   array $pks      An array of item ids.
+	 * @param   array $contexts An array of item contexts.
 	 *
 	 * @return    boolean     Returns true on success, false on failure.
 	 *
@@ -353,9 +361,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch Player changes for a group of mediafiles.
 	 *
-	 * @param   string $value     The new value matching a player.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a player.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -399,8 +407,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
 	 *
 	 * @return  void
 	 */
@@ -413,9 +421,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a client.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -459,9 +467,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a client.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -505,9 +513,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a client.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -551,9 +559,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value     The new value matching a client.
-	 * @param   array  $pks       An array of row IDs.
-	 * @param   array  $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a client.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -597,7 +605,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -613,11 +621,11 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			$user = JFactory::getUser();
 
-            return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
-        }
+			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 * Load Form Data
@@ -630,34 +638,41 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		$session = JFactory::getApplication()->getUserState('com_biblestudy.mediafile.edit.data', array());
 
-        $data = empty($session) ? $this->data : $session;
+		$data = empty($session) ? $this->data : $session;
 
 		return $data;
 	}
 
-    /**
-     * Auto-populate the model state
-     *
-     * @return  void
-     *
-     * @since   8.1.0
-     */
-    protected function populateState() {
-        $app = JFactory::getApplication('administrator');
-        $input = $app->input;
+	/**
+	 * Auto-populate the model state
+	 *
+	 * @return  void
+	 *
+	 * @since   9.0.0
+	 */
+	protected function populateState()
+	{
+		$app   = JFactory::getApplication('administrator');
+		$input = $app->input;
 
-        $pk = $input->get('id', null, 'INTEGER');
-        $this->setState('mediafile.id', $pk);
+		// Load the Admin settings
+		$admin = JBSMParams::getAdmin();
+		$registry    = new JRegistry;
+		$registry->loadString($admin->params);
+		$this->setState('admin', $registry);
 
-        $server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$pk = $input->get('id', null, 'INTEGER');
+		$this->setState('mediafile.id', $pk);
 
-        $this->setState('mediafile.server_id', $server_id);
-    }
+		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+
+		$this->setState('mediafile.server_id', $server_id);
+	}
 
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   object $table  A record object.
+	 * @param   object $table A record object.
 	 *
 	 * @return    array    An array of conditions to add to add to ordering queries.
 	 *

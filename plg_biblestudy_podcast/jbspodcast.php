@@ -91,7 +91,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object $params  ?
+	 * @param   object $params Plugin params
 	 *
 	 * @return boolean
 	 */
@@ -122,7 +122,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object $params  ?
+	 * @param   object $params Plugin params
 	 *
 	 * @return boolean
 	 */
@@ -264,7 +264,7 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Do Email
 	 *
-	 * @param   JRegistry $params     ?
+	 * @param   JRegistry $params Plugin params
 	 * @param   object    $dopodcast  ?
 	 *
 	 * @return void

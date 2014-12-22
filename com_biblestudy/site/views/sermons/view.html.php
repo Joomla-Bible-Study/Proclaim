@@ -73,7 +73,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -108,8 +108,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		/** @var  $params JRegistry */
 		$params = $this->state->template->params;
 
-		$images             = new JBSMImages;
-		$this->main         = $images->mainStudyImage();
+		$images     = new JBSMImages;
+		$this->main = $images->mainStudyImage();
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0 && !$params->get('sermonstemplate'))
@@ -119,7 +119,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			for ($i = 0, $n = count($items); $i < $n; $i++)
 			{
 
-				$item = & $items[$i];
+				$item = &$items[$i];
 
 				if ($item->access > 1 && !in_array($item->access, $groups))
 				{
@@ -402,9 +402,9 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
-		$menus   = $app->getMenu();
-		$title   = null;
+		$app   = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$title = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
@@ -423,15 +423,15 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 
@@ -463,14 +463,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtml::_('behavior.framework');
-		}
-		else
-		{
-			JHTML::_('behavior.mootools');
-		}
+		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');

@@ -26,6 +26,13 @@ class TableMediafile extends JTable
 	public $id = null;
 
 	/**
+	 * Study id
+	 *
+	 * @var int
+	 */
+	public $study_id = null;
+
+	/**
      * Server id
      *
      * @var int
@@ -81,6 +88,15 @@ class TableMediafile extends JTable
      */
 	public $metadata = null;
 
+	/** @var null string */
+	public $filename = null;
+
+	public $plays = 0;
+
+	public $downloads = 0;
+
+	public $hits = 0;
+
 	/**
 	 * Constructor
 	 *
@@ -118,7 +134,7 @@ class TableMediafile extends JTable
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new JRules($array['rules']);
+			$rules = new JAccessRules($array['rules']);
 			$this->setRules($rules);
 		}
 

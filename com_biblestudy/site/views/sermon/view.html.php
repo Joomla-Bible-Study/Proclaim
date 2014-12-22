@@ -75,15 +75,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$app         = JFactory::getApplication();
 		$user        = JFactory::getUser();
 		$JBSMListing = new JBSMListing;
-
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
+		$dispatcher  = JEventDispatcher::getInstance();
 
 		$this->item     = $this->get('Item');
 		$this->print    = $app->input->getBool('print');

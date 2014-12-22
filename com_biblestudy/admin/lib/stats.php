@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package    BibleStudy.Admin
+ * @package        BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -22,7 +22,7 @@ class JBSMStats
 	/**
 	 * Total plays of media files per study
 	 *
-	 * @param   int $id  Id number of study
+	 * @param   int  $id  Id number of study
 	 *
 	 * @return int Total plays form the media
 	 */
@@ -43,8 +43,8 @@ class JBSMStats
 	/**
 	 * Total messages in Bible Study
 	 *
-	 * @param   string $start  ?
-	 * @param   string $end    ?
+	 * @param   string  $start  ?
+	 * @param   string  $end    ?
 	 *
 	 * @return int Total Messages
 	 */
@@ -80,8 +80,8 @@ class JBSMStats
 	/**
 	 * Total topics in Bible Study
 	 *
-	 * @param   string $start  ?
-	 * @param   string $end    ?
+	 * @param   string  $start  ?
+	 * @param   string  $end    ?
 	 *
 	 * @return int  Total Topics
 	 */
@@ -388,16 +388,16 @@ class JBSMStats
 			->from('#__bsms_mediafiles')
 			->where('published = ' . 1)
 			->group('study_id')
-            ->order('added DESC');
+			->order('added DESC');
 		$db->setQuery($query);
 		$results = $db->loadAssocList();
-        array_splice($results, 5);
-		foreach ($results as $key=>$result)
+		array_splice($results, 5);
+		foreach ($results as $key => $result)
 		{
 			$query = $db->getQuery(true);
 			$query
 				->select('#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits,' .
-				'#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies')
+					'#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies')
 				->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result['study_id']);
 			$db->setQuery($query);
@@ -447,20 +447,24 @@ class JBSMStats
 		$db                    = JFactory::getDBO();
 		$query                 = $db->getQuery(true);
 		$query
-			->select('player')
+			->select('params')
 			->from('#__bsms_mediafiles')
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
-		$plays         = $db->loadObjectList();
+		$params         = $db->loadObjectList();
+
+		$registry = new JRegistry;
 		$media_players = null;
 
-		if ($plays)
+		if ($params)
 		{
-			$total_players = count($plays);
+			$total_players = count($params);
 
-			foreach ($plays as $player)
+			foreach ($params as $param)
 			{
-				switch ($player->player)
+				$registry->loadString($param->params);
+
+				switch ($registry->toObject()->player)
 				{
 					case 0:
 						$count_no_player++;
@@ -503,50 +507,50 @@ class JBSMStats
 	 */
 	public static function popups()
 	{
-		$no_player    = 0;
-		$pop_count    = 0;
-		$inline_count = 0;
-		$global_count = 0;
-		$db           = JFactory::getDBO();
-		$query        = $db->getQuery(true);
-		$query
-			->select('popup')
-			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'));
-		$db->setQuery($query);
-		$popups            = $db->loadObjectList();
+//		$no_player    = 0;
+//		$pop_count    = 0;
+//		$inline_count = 0;
+//		$global_count = 0;
+//		$db           = JFactory::getDBO();
+//		$query        = $db->getQuery(true);
+//		$query
+//			->select('popup')
+//			->from('#__bsms_mediafiles')
+//			->where('published = ' . $db->q('1'));
+//		$db->setQuery($query);
+//		$popups            = $db->loadObjectList();
+//
+//		if ($popups)
+//		{
+//			$total_media_files = count($popups);
+//
+//			foreach ($popups as $popup)
+//			{
+//				switch ($popup->popup)
+//				{
+//					case 0:
+//						$no_player++;
+//						break;
+//					case 1:
+//						$pop_count++;
+//						break;
+//					case 2:
+//						$inline_count++;
+//						break;
+//					case 3:
+//						$global_count++;
+//						break;
+//				}
+//			}
+//
+//			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+//				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+//				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+//		}
 
-		if ($popups)
-		{
-			$total_media_files = count($popups);
-
-			foreach ($popups as $popup)
-			{
-				switch ($popup->popup)
-				{
-					case 0:
-						$no_player++;
-						break;
-					case 1:
-						$pop_count++;
-						break;
-					case 2:
-						$inline_count++;
-						break;
-					case 3:
-						$global_count++;
-						break;
-				}
-			}
-
-			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
-				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
-		}
-
-		return $popups;
+		return 'need to redo';
 	}
 
 	/**
@@ -603,7 +607,10 @@ class JBSMStats
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
-            if (!$hits){return false;}
+			if (!$hits)
+			{
+				return false;
+			}
 			if (!$hits->studytitle)
 			{
 				$name = $hits->id;

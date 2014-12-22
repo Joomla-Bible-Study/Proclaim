@@ -8,7 +8,7 @@ jimport('joomla.filesystem.folder');
 /**
  * Abstract Server class
  *
- * @since   8.1.0
+ * @since   9.0.0
  */
 abstract class JBSServer {
 
@@ -16,13 +16,13 @@ abstract class JBSServer {
      * The type of server
      *
      * @var     string
-     * @since   8.1.0
+     * @since   9.0.0
      */
     public $type;
 
     /**
      * @var     resource    The server connection resource
-     * @since   8.1.0
+     * @since   9.0.0
      */
     protected $connection;
 
@@ -35,7 +35,7 @@ abstract class JBSServer {
      *
      * @return      array   An Array of available servers
      *
-     * @since       8.1.0
+     * @since       9.0.0
      */
     public static function getServers() {
         $servers = array();

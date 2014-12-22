@@ -10,11 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (version_compare(JVERSION, '2.5', 'ge'))
-{
-	jimport('joomla.application.component.modellist');
-}
-
 /**
  * Message model class
  *
@@ -40,7 +35,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -72,14 +67,14 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @param   int $id  ID to get Downloads
+	 * @param   int  $id  ID to get Downloads
 	 *
 	 * @return string
 	 */
 	public function getDownloads($id)
 	{
 		$query  = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
-//		$result = $this->_getList($query);
+		$result = $this->_getList($query);
 
 		if (!$result)
 		{
@@ -108,12 +103,9 @@ class BiblestudyModelMessages extends JModelList
 			$i++;
 			$sermon_id = $sermon->id;
 			$query     = $db->getQuery(true);
-			$query->select('study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path')
+			$query->select('study_id, filename')
 				->from('#__bsms_mediafiles')
-				->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
-				->leftJoin('#__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)')
 				->where('study_id = ' . $sermon_id);
-//			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
 		$this->_files = $mediaFiles;
@@ -124,20 +116,16 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array $items Items for entries
+	 * @param   array  $items  Items for entries
 	 *
 	 * @since 7.0
 	 * @return object
 	 */
 	public function getTranslated($items = array())
 	{
-		$translate = new JBSMTranslated;
-
 		foreach ($items as $item)
 		{
 			$item->bookname = JText::_($item->bookname);
-
-			// $item->topic_text = $translate->getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -258,7 +246,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int $id ID for plays
+	 * @param   int  $id  ID for plays
 	 *
 	 * @since 7.0
 	 * @return array
@@ -276,7 +264,7 @@ class BiblestudyModelMessages extends JModelList
 		$query->where('study_id = ' . $id);
 
 		// Setup the query
-//		$db->setQuery($query->__toString());
+		$db->setQuery($query->__toString());
 
 		// Return the result
 		return $db->loadResult();
@@ -320,7 +308,7 @@ class BiblestudyModelMessages extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -348,8 +336,8 @@ class BiblestudyModelMessages extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return    void
 	 *
@@ -464,11 +452,11 @@ class BiblestudyModelMessages extends JModelList
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-//		$query->select(
-//			'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
-//		);
-//		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
-//		$query->group('study.id');
+		$query->select(
+			'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+		);
+		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+		$query->group('study.id');
 
 		// Implement View Level Access
 		if (!$user->authorise('core.admin'))

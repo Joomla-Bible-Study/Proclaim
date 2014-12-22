@@ -100,10 +100,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Display the template

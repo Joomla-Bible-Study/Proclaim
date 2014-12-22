@@ -19,7 +19,7 @@ assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
  * Class JBSMDebug
  *
  * @package  BibleStudy
- * @since    8.1.0
+ * @since    9.0.0
  */
 Class JBSMDebug
 {

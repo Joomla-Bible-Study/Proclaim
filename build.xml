@@ -25,7 +25,6 @@
 	<!-- List of all files that are packaged and distributed -->
 	<fileset dir="${basedir}" id="distributed_files">
 		<include name="com_biblestudy/**/*.php"/>
-		<include name="jbsmigration/**/*.php"/>
 		<include name="joomSEF_extension/**/*.php"/>
 		<include name="mod_biblestudy/**/*.php"/>
 		<include name="mod_biblestudy_podcast/**/*.php"/>
@@ -104,7 +103,7 @@
 
 	<!-- Build distributable package -->
 	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">
-		
+
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
 		<copy todir="${basedir}/build/packages/_tmp/packages">
@@ -149,10 +148,9 @@
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
     </target>
 
-	<!-- Create plg_xmap_jbs.zip, com_jbsmigration.zip, and joomsef_com_biblestudy.zip -->
+	<!-- Create plg_xmap_jbs.zip, and joomsef_com_biblestudy.zip -->
     <target name="package.addons" depends="init" description="Builds addons, including third party integrations">
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
-        <zip destfile="${basedir}/build/packages/addons/com_jbsmigration.zip" basedir="${basedir}/jbsmigration"/>
         <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
 
@@ -226,10 +224,10 @@
         <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
 
         <!-- Link Joomla to the webserver's root directory  -->
-        <symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>
+        <!--<symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>-->
 
 		<echo message="Linking component to Joomla!"/>
-		
+
     	<!-- Create symbolic links for component in the Joomla directory -->
         <symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
         <symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
@@ -256,7 +254,7 @@
             <!--<fileset dir="${src.test}" includes="**"/>-->
         <!--</copy>-->
 	</target>
-	
+
 	<!-- Clean up symbolic links from the development state -->
     <target name="dev.clean">
     	<echo message="Cleaning up development state"/>
@@ -297,7 +295,7 @@
                 <echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
                 <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
                 <!-- Switch to the Joomla version that we want to test on -->
-                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/> 
+                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</then>
             <else>
            		<echo message="Joomla ${joomla.version} is already staged" />

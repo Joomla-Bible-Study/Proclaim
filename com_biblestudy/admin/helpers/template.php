@@ -10,11 +10,14 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JFactory::getApplication()->enqueueMessage('Use of old function replace ASAP', 'error');
 /**
  * Template helper class
  *
  * @package  BibleStudy.Admin
  * @since    7.0.1
+ *
+ * @deprecate 8.0.1
  */
 class JBSMTemplate extends JObject
 {
@@ -24,6 +27,7 @@ class JBSMTemplate extends JObject
 	 * @var string
 	 */
 	public static $extension = 'com_biblestudy';
+
 	/**
 	 * Template types
 	 *
@@ -33,12 +37,14 @@ class JBSMTemplate extends JObject
 		'tmplList'       => 'List', 'tmplListItem' => 'List Item', 'tmplSingleItem' => 'Single Item',
 		'tmplModuleList' => 'Module List', 'tmplModuleItem' => 'Module List Item', 'tmplPopup' => 'Popup Media Player'
 	);
+
 	/**
 	 * Tags
 	 *
 	 * @var string
 	 */
 	private $_tags;
+
 	/**
 	 *  DBO
 	 *
@@ -117,9 +123,9 @@ class JBSMTemplate extends JObject
 	/**
 	 * Generates a list of tags that are being used in the input template.
 	 *
-	 * @param   string  $itemTmpl    String    Raw Html template
-	 * @param   int     $id          Int  An Id of a template to load. This replaces the contents of the $itemTmpl
-	 * @param   boolean $fieldNames  Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
+	 * @param   string   $itemTmpl    String    Raw Html template
+	 * @param   int      $id          Int  An Id of a template to load. This replaces the contents of the $itemTmpl
+	 * @param   boolean  $fieldNames  Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
 	 *
 	 * @return Array
 	 */
@@ -165,7 +171,7 @@ class JBSMTemplate extends JObject
 	/**
 	 * Returns the template object from the database
 	 *
-	 * @param   int $id The id of the template to query
+	 * @param   int  $id  The id of the template to query
 	 *
 	 * @return Object  Row Object list
 	 */
@@ -184,7 +190,7 @@ class JBSMTemplate extends JObject
 	 * Generates a drop down list of all the template types. Used in TemplateEdit View to
 	 * generate the dropdown box of template types.
 	 *
-	 * @param   string $DefaultSelected  Defines the default item
+	 * @param   string  $DefaultSelected  Defines the default item
 	 *
 	 * @return  string  HTML Dropdown box
 	 */
@@ -205,7 +211,7 @@ class JBSMTemplate extends JObject
 	 * Builds list of fields to be used in the SELECT statement, so only the fields required
 	 * by the template are selected
 	 *
-	 * @param   array $fields  The fields to include in the SELECT
+	 * @param   array  $fields  The fields to include in the SELECT
 	 *
 	 * @return String
 	 */

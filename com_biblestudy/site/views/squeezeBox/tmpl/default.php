@@ -10,15 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (version_compare(JVERSION, '3.0', 'ge'))
-{
-	JHTML::_('behavior.framework');
-	JHtml::_('behavior.modal');
-}
-else
-{
-	JHTML::_('behavior.mootools');
-}
+JHTML::_('behavior.framework');
+JHtml::_('behavior.modal');
 ?>
 
 <form action="index.php" name="adminForm" id="adminForm">

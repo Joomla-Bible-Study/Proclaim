@@ -10,18 +10,10 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
-
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->params);
 JHtml::_('behavior.multiselect');
@@ -155,10 +147,7 @@ $saveOrder = $listOrder == 'ordering';
 						</div>
 						<div class="pull-left">
 							<?php
-							if (BIBLESTUDY_CHECKREL)
-							{
 								// Create dropdown items
-
 								if ($item->published) :
 									JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
 								else :
@@ -181,7 +170,6 @@ $saveOrder = $listOrder == 'ordering';
 
 								// Render dropdown list
 								echo JHtml::_('dropdown.render');
-							}
 							?>
 						</div>
 					</td>

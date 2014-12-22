@@ -10,17 +10,10 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->state->params);
@@ -73,9 +66,6 @@ $sortFields = $this->getSortFields();
 				        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
 			</div>
 			<div class="clearfix"></div>
-			<?php if (BIBLESTUDY_CHECKREL)
-			{
-				?>
 				<div class="btn-group pull-right hidden-phone">
 					<label for="limit"
 					       class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
@@ -97,7 +87,6 @@ $sortFields = $this->getSortFields();
 						} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
 					</select>
 				</div>
-			<?php } ?>
 			<div class="btn-group pull-right">
 				<label for="sortTable" class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 				<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
@@ -105,20 +94,7 @@ $sortFields = $this->getSortFields();
 					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
 				</select>
 			</div>
-			<?php if (!BIBLESTUDY_CHECKREL): ?>
-				<div class="btn-group pull-right">
-					<label for="filter_published" id="filter_published"
-					       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-					<select name="filter_published" class="input-medium" onchange="this.form.submit()">
-						<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-						<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-					</select>
-				</div>
-
-			<?php endif; ?>
 		</div>
-
-
 		<table id="articleList" class="table table-striped">
 			<thead>
 			<tr>
@@ -180,8 +156,6 @@ $sortFields = $this->getSortFields();
 						</div>
 						<div class="pull-left">
 							<?php
-							if (BIBLESTUDY_CHECKREL)
-							{
 								// Create dropdown items
 								JHtml::_('dropdown.edit', $item->id, 'comment.');
 								JHtml::_('dropdown.divider');
@@ -207,7 +181,6 @@ $sortFields = $this->getSortFields();
 
 								// Render dropdown list
 								echo JHtml::_('dropdown.render');
-							}
 							?>
 						</div>
 					</td>

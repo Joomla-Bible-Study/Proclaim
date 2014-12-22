@@ -76,9 +76,9 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$images->getShowhide();
 
 		// Get the main study list image
-		$this->main              = $images->mainStudyImage();
+		$this->main  = $images->mainStudyImage();
 
-		$uri                = new JUri;
+		$uri               = new JUri;
 		$Uri_toString      = $uri->toString();
 		$this->request_url = $Uri_toString;
 

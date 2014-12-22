@@ -52,9 +52,9 @@
         </field>
 
 	    <!--Thumbnail sizes-->
-	    <field name="thumbnail_teacher_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
-        <field name="thumbnail_series_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
-        <field name="thumbnail_study_size" type="text" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
+	    <field name="thumbnail_teacher_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
+        <field name="thumbnail_series_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
+        <field name="thumbnail_study_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
 
         <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
                description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
@@ -113,34 +113,12 @@
                value_field="server_name" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
-        <field name="path" type="sql" class="inputbox" label="JBS_CMN_FOLDERS"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, foldername FROM #__bsms_folders WHERE published = 1 ORDER BY id ASC"
-               key_field="id"
-               value_field="foldername" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_FOLDER</option>
-        </field>
         <field name="podcast" type="sql" class="inputbox" multiple="true" label="JBS_CMN_PODCAST"
                description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
                query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
                key_field="id"
                value_field="title" labelclass="control-label">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
-        </field>
-        <field name="media_image" type="sql" class="inputbox"
-               label="JBS_CMN_MEDIA_IMAGE" description="JBS_CMN_MEDIA_IMAGE_DESC"
-               default="-1"
-               query="SELECT id, media_text FROM #__bsms_media WHERE published = 1 ORDER BY media_text ASC"
-               key_field="id"
-               value_field="media_text" labelclass="control-label">
-            <option value="-1">JBS_ADM_NO_MEDIA_IMAGE</option>
-               </field>
-        <field name="mime" type="sql" class="inputbox" label="JBS_CMN_MIMETYPE"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-               key_field="id"
-               value_field="mimetext" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
         </field>
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
@@ -205,28 +183,28 @@
             <field name="jwplayer_autostart" type="radio"
                    label="JBS_ADM_JWPLAYER_AUTOSTART"
                    description="JBS_ADM_JWPLAYER_AUTOSTART_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_fallback" type="radio"
                    label="JBS_ADM_JWPLAYER_FALLBACK"
                    description="JBS_ADM_JWPLAYER_FALLBACK_DESC"
-                   default="true">
+                   class="btn-group" default="true">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_mute" type="radio"
                    label="JBS_ADM_JWPLAYER_MUTE"
                    description="JBS_ADM_JWPLAYER_MUTE_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_stagevideo" type="radio"
                    label="JBS_ADM_JWPLAYER_STAGE_VIDEO"
                    description="JBS_ADM_JWPLAYER_STAGE_VIDEO_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -241,12 +219,13 @@
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
             <field name="playlist" type="radio"
                    label="JBS_ADM_JWPLAYER_PLAYLIST" description="JBS_ADM_JWPLAYER_PLAYLIST_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_listbar" type="radio"
-                   label="JBS_ADM_JWPLAYER_LISTBAR" description="JBS_ADM_JWPLAYER_LISTBAR_DESC">
+                   label="JBS_ADM_JWPLAYER_LISTBAR" description="JBS_ADM_JWPLAYER_LISTBAR_DESC"
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -254,13 +233,13 @@
                    label="JBS_ADM_JWPLAYER_LOGO" description="JBS_ADM_JWPLAYER_LOGO_DESC"/>
             <field name="sharing" type="radio"
                    label="JBS_ADM_JWPLAYER_SHARING" description="JBS_ADM_JWPLAYER_SHARING_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
             <field name="jwplayer_related" type="radio"
                    label="JBS_ADM_JWPLAYER_RELATED" description="JBS_ADM_JWPLAYER_RELATED_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>
@@ -277,7 +256,7 @@
                    class="readonly" default="Comming Soon"/>
             <field name="captions" type="radio"
                    label="JBS_ADM_JWPLAYER_CAPTIONS" description="JBS_ADM_JWPLAYER_CAPTIONS_DESC"
-                   default="false">
+                   class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>
                 <option value="true">JBS_CMN_YES</option>
             </field>

@@ -53,7 +53,7 @@ class BiblestudyModelMediafiles extends JModelList
      * Manually joins items and returns and nested object array
      *
      * @return mixed Array Media files array
-     * @since 8.1.0
+     * @since 9.0.0
      */
     public function getItems() {
         $serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');
@@ -92,29 +92,6 @@ class BiblestudyModelMediafiles extends JModelList
 		}
 
 		return $this->_deletes;
-	}
-
-	/**
-	 * Builds a list of mediatypes (Used for the filter combo box)
-	 *
-	 * @return array Array of Objects
-	 *
-	 * @since 7.0
-	 */
-	public function getMediatypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('media.id AS value, media.media_text AS text');
-		$query->from('#__bsms_media AS media');
-		$query->join('INNER', '#__bsms_mediafiles AS mediafile ON mediafile.media_image = media.id');
-		$query->group('media.id');
-		$query->order('media.media_text');
-
-		$db->setQuery($query->__toString());
-
-		//return $db->loadObjectList();
 	}
 
 	/**
@@ -164,9 +141,6 @@ class BiblestudyModelMediafiles extends JModelList
 		$study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
 		$this->setState('filter.study_id', $study);
 
-		$mediaType = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
-		$this->setState('filter.mediaType', $mediaType);
-
 		$mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
 		$this->setState('filter.mediaYears', $mediaYears);
 
@@ -178,9 +152,6 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player', '');
 		$this->setState('filter.player', $player);
-
-		$popup = $this->getUserStateFromRequest($this->context . '.filter.popup', 'filter_popup', '');
-		$this->setState('filter.popup', $popup);
 
 		parent::populateState('mediafile.createdate', 'DESC');
 	}
@@ -202,7 +173,6 @@ class BiblestudyModelMediafiles extends JModelList
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.study_id');
-		$id .= ':' . $this->getState('filter.mediaType');
 		$id .= ':' . $this->getState('filter.language');
 
 		return parent::getStoreId($id);

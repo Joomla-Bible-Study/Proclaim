@@ -12,13 +12,13 @@ defined('JPATH_PLATFORM') or die;
  * Utility class for bPopup JavaScript behaviors
  *
  * @package  BibleStudy.Admin
- * @since    8.1.0
+ * @since    9.0.0
  */
 abstract class JHtmlbsMedia
 {
 	/**
 	 * @var    array  Array containing information for loaded files
-	 * @since  8.1.0
+	 * @since  9.0.0
 	 */
 	protected static $loaded = array();
 
@@ -27,12 +27,12 @@ abstract class JHtmlbsMedia
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   boolean $noConflict  True to load jQuery in noConflict mode [optional]
-	 * @param   mixed   $debug       Is debugging mode on? [optional]
+	 * @param   boolean  $noConflict  True to load jQuery in noConflict mode [optional]
+	 * @param   mixed    $debug       Is debugging mode on? [optional]
 	 *
 	 * @return  void
 	 *
-	 * @since   8.1.0
+	 * @since   9.0.0
 	 */
 	public static function framework($noConflict = true, $debug = null)
 	{
@@ -83,8 +83,7 @@ abstract class JHtmlbsMedia
 			$options = JHtml::getJSObject($opt);
 
 			// Attach the carousel to document
-			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false, $debug);
-
+			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false);
 
 			// Set static array
 			self::$loaded[__METHOD__][$sig] = true;

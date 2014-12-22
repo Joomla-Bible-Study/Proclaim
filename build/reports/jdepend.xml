@@ -119,7 +119,7 @@
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/install/updates/702update.php">JBSM702Update</Class>
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/install/updates/710update.php">JBSM710Update</Class>
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/install/updates/8.0.0.php">JBSM800Update</Class>
-        <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/install/updates/8.1.0.php">JBSM810Update</Class>
+        <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/install/updates/9.0.0.php">JBSM810Update</Class>
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/lib/assets.php">JBSMAssets</Class>
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/lib/backup.php">JBSMBackup</Class>
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/lib/piconvert.php">JBSMPIconvert</Class>

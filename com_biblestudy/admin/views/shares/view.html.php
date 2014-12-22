@@ -103,10 +103,7 @@ class BiblestudyViewShares extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -148,24 +145,21 @@ class BiblestudyViewShares extends JViewLegacy
 			JToolBarHelper::archiveList('shares.archive');
 		}
 
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+		JToolBarHelper::deleteList('', 'shares.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('shares.trash');
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=shares');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=shares');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 	}
 
 	/**

@@ -11,17 +11,9 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-	JHtml::_('behavior.modal');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $msg = '';
@@ -34,8 +26,7 @@ if ($msg)
 }
 ?>
 <!-- Header -->
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=cpanel'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="row-fluid">
 <div id="j-sidebar-container" class="span2">
 	<div id="fbheader">
@@ -46,7 +37,7 @@ if ($msg)
 	<div id="fbmenu">
 		<strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
 
-		<div class="fbmainmenu"><?php echo $this->version . ' (' . $this->versiondate . ')'; ?></div>
+		<div class="fbmainmenu"><?php echo $this->data->version . ' (' . $this->data->versiondate . ')'; ?></div>
 	</div>
 	<div id="jbspaypal">
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -75,139 +66,85 @@ if ($msg)
 			JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">' .
 			JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 </div>
-<?php if (!BIBLESTUDY_CHECKREL)
-{
-	?>
 	<div style="border:1px solid #ddd; background:#FBFBFB;">
 		<h3 style="text-align: center">
 			<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
 		</h3>
 
-		<div id="cpanel" style="padding-left: 20px">
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
+		<div id="cpanel" class="btn-group">
+			<a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=messages"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=messages"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-studies.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mediafiles"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=mediafiles"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-mp3.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=teachers"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=teachers"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-teachers.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=series"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=series"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_SERIES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-series.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=messagetypes"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-messagetype.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=locations"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=locations"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-locations.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=topics"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=topics"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-topics.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=comments"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=comments"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-comments.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=servers"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=servers"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-servers.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=folders"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=podcasts"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_FOLDERS'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-folder.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_FOLDERS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=podcasts"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-podcast.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=shares"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=shares"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-social.png" alt="" align="middle"
 							border="0"/> <span> <?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?> </span></a>
-				</div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=templates"
+			<a href="index.php?option=com_biblestudy&amp;view=templates"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-templates.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mediaimages"
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
+			<a href="index.php?option=com_biblestudy&amp;view=styles"
 				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MEDIAIMAGES'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-mediaimages.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MEDIAIMAGES'); ?> </a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=mimetypes"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_MIMETYPES'); ?>"> <img
-							src="../media/com_biblestudy/images/icons/icon-48-mimetype.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_MIMETYPES'); ?> </span></a></div>
-			</div>
-			<div style="float:left;">
-				<div class="icon"><a href="index.php?option=com_biblestudy&amp;view=styles"
-				                     style="text-decoration:none;"
-				                     title="<?php echo JText::_('JBS_CMN_STYLES'); ?>"> <img
+				                     title="<?php echo JText::_('JBS_CMN_STYLES'); ?>" class="btn cpanl-img"> <img
 							src="../media/com_biblestudy/images/icons/icon-48-css.png" alt="" align="middle"
-							border="0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a></div>
-			</div>
+							border="0"/> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a>
 		</div>
 		<div style="clear: both;"></div>
 	</div>
-<?php } ?>
 <div style="clear: both;"></div>
 <!-- BEGIN: STATS -->
 <div class="fbstatscover">

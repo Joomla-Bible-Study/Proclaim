@@ -6,4 +6,3 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 
 INSERT INTO `#__bsms_update` (id, version) VALUES (1, '6.2.3')
 ON DUPLICATE KEY UPDATE version= '6.2.3';
-

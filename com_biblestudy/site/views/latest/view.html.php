@@ -31,10 +31,10 @@ class BiblestudyViewLatest extends JViewLegacy
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
-		$query->select('id');
-		$query->from('#__bsms_studies');
-		$query->where('published = 1');
-		$query->order('studydate DESC LIMIT 1');
+		$query->select('id')
+				->from('#__bsms_studies')
+				->where('published = 1')
+				->order('studydate DESC LIMIT 1');
 		$db->setQuery($query);
 		$id    = $db->loadResult();
 		$input = new JInput;

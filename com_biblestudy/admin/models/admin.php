@@ -126,7 +126,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$installer = new Com_BiblestudyInstallerScript;
 		$installer->deleteUnexistingFiles();
 		$installer->fixMenus();
-		$installer->fixImagePaths();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
 		$this->fixDefaultTextFilters();

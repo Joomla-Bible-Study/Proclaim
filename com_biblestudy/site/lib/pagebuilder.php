@@ -28,8 +28,8 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object     $item    Item info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object    $item   Item info
+	 * @param   JRegistry $params Item Params
 	 *
 	 * @return object
 	 */
@@ -210,8 +210,8 @@ class JBSMPageBuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array      $mediaids  ID of Media
-	 * @param   JRegistry  $params    Item Params
+	 * @param   array     $mediaids ID of Media
+	 * @param   JRegistry $params   Item Params
 	 *
 	 * @return string
 	 *
@@ -227,16 +227,10 @@ class JBSMPageBuilder
 		$query = $db->getQuery(true);
 		$query->select('media.*');
 		$query->from('#__bsms_mediafiles as media');
-		$query->select('server.id as serverid, server.server_path as spath');
-		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server');
-		$query->select('folder.folderpath as fpath');
-		$query->join('LEFT', '#__bsms_folders as folder ON folder.id = media.path');
-		$query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
-		$query->join('LEFT', '#__bsms_media as image ON image.id = media.media_image');
+		$query->select('server.id as serverid, server.params as sparams');
+		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server_id');
 		$query->select('study.media_hours, study.media_minutes, study.media_seconds');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
-		$query->select('mime.mimetext');
-		$query->join('LEFT', '#__bsms_mimetype as mime ON mime.id = media.mime_type');
 		$query->where('media.id IN (' . $mediaids . ')');
 		$query->where('media.published = 1');
 		$query->order('media.ordering, image.media_image_name ASC');
@@ -250,6 +244,12 @@ class JBSMPageBuilder
 			$registry  = new JRegistry;
 			$registry->loadString($media->params);
 			$params->merge($registry);
+			$registry = new JRegistry;
+			$registry->loadString($media->smedia);
+			$media->smedia = $registry;
+			$registry      = new JRegistry;
+			$registry->loadString($media->sparams);
+			$media->sparams = $registry;
 			$mediaid        = $media->id;
 			if ($media->impath)
 			{
@@ -263,7 +263,7 @@ class JBSMPageBuilder
 			{
 				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 			}
-			$image          = $mediaelements->useJImage($mediaimage, $media->mimetext);
+			$image = $mediaelements->useJImage($mediaimage, $media->params->get('mimetext'));
 			$player         = $mediaelements->getPlayerAttributes($params, $media);
 			$playercode     = $mediaelements->getPlayerCode($params, $player, $image, $media);
 			$d_image        = ($params->get('default_download_image') ? $params->get('default_download_image') : 'download.png');
@@ -285,7 +285,7 @@ class JBSMPageBuilder
 				else
 				{
 					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-						$media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
+						$media->params->get('filename') . '&size=' . $media->params->get('size') . '">';
 				}
 				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
 					$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
@@ -313,8 +313,8 @@ class JBSMPageBuilder
 	/**
 	 * Run Content Plugins
 	 *
-	 * @param   object $item   Item info
-	 * @param   object $params Item params
+	 * @param   object  $item    Item info
+	 * @param   object  $params  Item params
 	 *
 	 * @return object
 	 */
@@ -325,14 +325,7 @@ class JBSMPageBuilder
 		JPluginHelper::importPlugin('content');
 
 		// Run content plugins
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
+		$dispatcher = JEventDispatcher::getInstance();
 		$dispatcher->trigger('onContentPrepare', array(
 				'com_biblestudy.sermon',
 				& $item,
@@ -381,16 +374,44 @@ class JBSMPageBuilder
 	 *
 	 * @return object
 	 */
-	public function studyBuilder($whereitem, $wherefield, $params, $limit, $order)
+	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC')
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDBO();
 		$menu = $app->getMenu();
 		$item = $menu->getActive();
 
-		if ($item)
+		$teacher          = $params->get('teacher_id');
+		$topic            = $params->get('topic_id');
+		$book             = $params->get('booknumber');
+		$series           = $params->get('series_id');
+		$locations        = $params->get('locations');
+		$condition        = $params->get('condition');
+		$messagetype_menu = $params->get('messagetype');
+		$year             = $params->get('year');
+		$orderparam       = $params->get('order', '1');
+		$language         = $params->get('language', $item->language);
+
+		if ($orderparam == 2)
 		{
-			$language = $db->quote($item->language) . ',' . $db->quote('*');
+			$order = "ASC";
+		}
+		else
+		{
+			$order = "DESC";
+		}
+		if ($condition > 0)
+		{
+			$condition = ' AND ';
+		}
+		else
+		{
+			$condition = ' OR ';
+		}
+
+		if ($language)
+		{
+			$language = $db->quote($language) . ',' . $db->quote('*');
 		}
 		else
 		{
@@ -402,13 +423,19 @@ class JBSMPageBuilder
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = $db->getQuery(true);
-		$query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		        study.teacher_id, study.secondary_reference, study.booknumber2, study.chapter_begin2, study.verse_begin2, study.chapter_end2,
-                        study.verse_end2, study.location_id, study.media_hours, study.media_minutes, study.media_seconds, study.series_id,
-                        study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
-                        study.user_id, study.studynumber, CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\',
-                        study.id, study.alias) ELSE study.id END as slug ');
+		$query->select('list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
+			// Use created if modified is 0
+			'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END as modified, ' .
+			'study.modified_by, uam.name as modified_by_name,' .
+			// Use created if publish_up is 0
+			'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
+			'study.publish_down,
+		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
+		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
+		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore' . ','
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -428,45 +455,236 @@ class JBSMPageBuilder
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
-		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,
+		SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
 		$query->select('locations.location_text');
 		$query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
 
-		// Join over topics
+		// Join over studytopics
 		$query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
 		$query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
 		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text, GROUP_CONCAT(DISTINCT t.params) as topic_params');
 		$query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
-		// Join over users
-		$query->select('users.name as submitted');
-		$query->join('LEFT', '#__users as users on study.user_id = users.id');
+		// Join over the users for the author and modified_by names.
+		$query->select("CASE WHEN study.user_name > ' ' THEN study.user_name ELSE users.name END AS submitted")
+			->select("users.email AS author_email")
+			->join('LEFT', '#__users AS users ON study.user_id = users.id')
+			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
-		// @todo Need eugen to redo this sql may be off loaded?
-		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
+		// Filter over teachers
+		$filters = $teacher;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.teacher_id = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters as $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.teacher_id = ' . (int) $filter, $condition);
+				}
+			}
+		}
+
+		// Filter locations
+		$filters = $locations;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.location_id = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.location_id = ' . (int) $filter, $condition);
+				}
+			}
+		}
+
+		// Filter over books
+		$filters = $book;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.booknumber = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.booknumber = ' . (int) $filter, $condition);
+				}
+			}
+		}
+		$filters = $series;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.series_id = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.series_id = ' . (int) $filter, $condition);
+				}
+			}
+		}
+		$filters = $topic;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.topics_id = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.topics_id = ' . (int) $filter, $condition);
+				}
+			}
+		}
+
+		// Filter by language
+		$lang = JFactory::getLanguage();
+
+		if ($lang || $language != '*')
+		{
+			$query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+		}
+		else
+		{
+			$query->where('study.language in (' . $language . ')');
+		}
+
+		$filters = $messagetype_menu;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'study.messagetype = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1)
+				{
+					$query->where('study.messagetype = ' . (int) $filter, $condition);
+				}
+			}
+		}
+		$filters = $year;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
+			}
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+
+			$query->where($subquery);
+		}
+		else
+		{
+			if ($filters !== null)
+			{
+				foreach ($filters AS $filter)
+				{
+					if ($filter != -1)
+					{
+						$query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
+					}
+				}
+			}
+		}
 
 		$query->group('study.id');
-
-		$query->select('GROUP_CONCAT(DISTINCT media.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as media ON study.id = media.study_id');
 		$query->where('study.published = 1');
+		$query->where('series.published =1 OR study.series_id <= 0');
 		$query->where($wherefield . ' = ' . $whereitem);
-		$query->where('study.language in (' . $language . ')');
 
-		if (!$order)
-		{
-			$order = 'DESC';
-		}
 		$query->order('studydate ' . $order);
-
-		if (!$limit)
-		{
-			$limit = 10;
-		}
 
 		// Filter only for authorized view
 		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');

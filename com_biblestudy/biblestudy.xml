@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
-    <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
-    if it is a new install or an actual upgrade; Normal installs will
-    behave like an install but upgrades will be treated appropriately even
-    if the interface doesn't support it properly -->
     <!-- Generic Metadata -->
     <name>COM_BIBLESTUDY</name>
     <author>Joomla Bible Study Team</author>
     <copyright>(C) 2007 - 2014 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>8.1.0-dev140411</version>
-    <creationDate>June 25, 2013</creationDate>
+    <version>9.0.0-dev140412</version>
+    <creationDate>Dec 23, 2014</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <description>JBS_INS_XML_DESCRIPTION</description>
@@ -29,11 +25,6 @@
             <file driver="mysql" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
         </sql>
     </uninstall>
-   <!--  <update> Runs on update; New in 1.6
-        <schemas>
-            <schemapath type="mysql">install/sql/updates/mysql</schemapath>
-        </schemas>
-    </update> -->
 
     <files folder="site">
         <filename>biblestudy.php</filename>
@@ -59,7 +50,6 @@
         <folder>images</folder>
         <folder>js</folder>
         <folder>jui</folder>
-        <folder>legacyplayer</folder>
         <folder>player</folder>
         <filename>index.html</filename>
     </media>
@@ -79,13 +69,10 @@
             <menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
             <menu link="option=com_biblestudy&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
             <menu link="option=com_biblestudy&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
-            <menu link="option=com_biblestudy&amp;view=folders" img="../media/com_biblestudy/images/menu/icon-16-folder.png">JBS_MNU_SERVER_FOLDERS</menu>
             <menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
             <menu link="option=com_biblestudy&amp;view=shares" img="../media/com_biblestudy/images/menu/icon-16-social.png">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
             <menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
             <menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=mediaimages" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png">JBS_MNU_MEDIA_IMAGES</menu>
-            <menu link="option=com_biblestudy&amp;view=mimetypes" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png">JBS_MNU_MIMETYPES</menu>
             <menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
             <!-- Instead of link you can specify individual link attributes -->
         </submenu>
@@ -121,6 +108,24 @@
     <!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
     <tables>
         <table>#__bsms_admin</table>
+        <table>#__bsms_studies</table>
+        <table>#__bsms_teachers</table>
+        <table>#__bsms_topics</table>
+        <table>#__bsms_servers</table>
+        <table>#__bsms_series</table>
+        <table>#__bsms_message_type</table>
+        <table>#__bsms_media</table>
+        <table>#__bsms_books</table>
+        <table>#__bsms_podcast</table>
+        <table>#__bsms_mediafiles</table>
+        <table>#__bsms_templates</table>
+        <table>#__bsms_templatecode</table>
+        <table>#__bsms_comments</table>
+        <table>#__bsms_studytopics</table>
+        <table>#__bsms_share</table>
+        <table>#__bsms_locations</table>
+        <table>#__bsms_styles</table>
+        <table>#__bsms_timeset</table>
         <table type="optional">#__bsms_update</table>
     </tables>
 

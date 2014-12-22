@@ -102,10 +102,7 @@ class BiblestudyViewServers extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -154,19 +151,17 @@ class BiblestudyViewServers extends JViewLegacy
 		{
 			JToolBarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('servers.trash');
-        }
+		elseif ($this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::trash('servers.trash');
+		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
 			JToolBarHelper::divider();
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
@@ -174,16 +169,12 @@ class BiblestudyViewServers extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 	}
 
 	/**
