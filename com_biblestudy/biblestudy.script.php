@@ -27,7 +27,7 @@ class Com_BiblestudyInstallerScript
 	protected $biblestudy_extension = 'com_biblestudy';
 
 	/** @var string Path to Mysql files */
-	protected $filePath = '/administrator/components/com_biblestudy/install/sql/updates/mysql';
+	protected $filePath = 'components/com_biblestudy/install/sql/updates/mysql';
 
 	/**
 	 * The release value to be displayed and check against throughout this file.
