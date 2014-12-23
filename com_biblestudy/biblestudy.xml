@@ -49,7 +49,6 @@
         <folder>database</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>jui</folder>
         <folder>player</folder>
         <filename>index.html</filename>
     </media>
@@ -91,7 +90,6 @@
             <folder>install</folder>
             <folder>language</folder>
             <folder>lib</folder>
-            <folder>migration</folder>
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
