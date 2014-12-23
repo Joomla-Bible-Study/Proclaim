@@ -268,7 +268,7 @@ class Com_BiblestudyInstallerScript
 		{
 			$db         = JFactory::getDbo();
 
-			$files = str_replace('.sql', '', JFolder::files($this->filePath, '\.sql$'));
+			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 			if (!count($files))
 			{
 				return;
