@@ -91,7 +91,7 @@
             <folder>install</folder>
             <folder>language</folder>
             <folder>lib</folder>
-            <folder>migration</folder>
+        <!--    <folder>migration</folder> -->
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
