@@ -26,6 +26,11 @@
         </sql>
     </uninstall>
 
+    <update>
+        <schemas>
+            <schemapath type="mysql">install/sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
     <files folder="site">
         <filename>biblestudy.php</filename>
         <filename>controller.php</filename>
