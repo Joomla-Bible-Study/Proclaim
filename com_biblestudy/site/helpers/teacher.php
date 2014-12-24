@@ -225,13 +225,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object         $row       Table Row
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   object     $row     Table Row
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return object
 	 */
-	public function getTeacherDetailsExp($row, $params, $template)
+	public function getTeacherDetailsExp($row, $params)
 	{
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
@@ -264,13 +263,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int            $id        Item ID
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   int        $id      Item ID
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return string
 	 */
-	public function getTeacherStudiesExp($id, $params, $template)
+	public function getTeacherStudiesExp($id, $params)
 	{
 		$limit   = '';
 		$input   = new JInput;
