@@ -115,7 +115,7 @@ class JBSMImages
 	/**
 	 * Get Study Thumbnail
 	 *
-	 * @param   string $image ?
+	 * @param   string  $image  ?
 	 *
 	 * @return object
 	 */

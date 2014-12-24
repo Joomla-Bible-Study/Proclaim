@@ -121,7 +121,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Standard Podcast
 	 *
-	 * @param   object $podcast Podcast Info
+	 * @param   object  $podcast  Podcast Info
 	 *
 	 * @return string
 	 */
@@ -175,7 +175,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Alternate Podcast
 	 *
-	 * @param   object $podcast Podcast info
+	 * @param   object  $podcast  Podcast info
 	 *
 	 * @return string
 	 */
