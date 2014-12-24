@@ -27,7 +27,9 @@ class Com_BiblestudyInstallerScript
 	protected $biblestudy_extension = 'com_biblestudy';
 
 	/** @var string Path to Mysql files */
-	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
+	protected $update_count = 0;
 
 	/**
 	 * The release value to be displayed and check against throughout this file.
@@ -103,16 +105,6 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		if ($type == 'install')
-		{
-			// Copy the css file over to another location
-			$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
-
-			if (JFile::exists($src))
-			{
-				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
-			}
-		}
 		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
 
 		if (!$install_good)
@@ -277,24 +269,33 @@ class Com_BiblestudyInstallerScript
 			usort($files, 'version_compare');
 
 			// Load currently installed version
-			$query = $db->getQuery(true)->select('version_id')->from('#__schemas')->where('extension_id = ' . $eid);
+			$query = $db->getQuery(true)
+				->select('version_id')
+				->from('#__schemas')
+				->where('extension_id = ' . $eid);
 			$db->setQuery($query);
 			$version = $db->loadResult();
 
-			if ($version)
+			// No version - use initial version.
+			if (!$version)
 			{
-				// We have a version!
-				foreach ($files as $file)
+				$version = '0.0.0';
+			}
+
+			// We have a version!
+			foreach ($files as $file)
+			{
+				if (version_compare($file, $version) > 0)
 				{
-					if (version_compare($file, $version) > 0)
-					{
-						$this->allUpdate($file);
-					}
+					$this->update_count = 0;
+					$this->allUpdate($file);
 				}
 			}
 
 			// Update the database with new version
-			$query = $db->getQuery(true)->delete('#__schemas')->where('extension_id = ' . $eid);
+			$query = $db->getQuery(true)
+				->delete('#__schemas')
+				->where('extension_id = ' . $eid);
 			$db->setQuery($query);
 
 			if ($db->execute())
@@ -308,11 +309,6 @@ class Com_BiblestudyInstallerScript
 		}
 
 		return;
-
-		// $this->fixMenus();
-		// $this->fixImagePaths();
-		// $this->fixemptyaccess();
-		// $this->fixemptylanguage();
 	}
 
 	/**
@@ -327,13 +323,7 @@ class Com_BiblestudyInstallerScript
 	public function allUpdate($value)
 	{
 		$db      = JFactory::getDbo();
-
-		$db->setQuery('CREATE TABLE IF NOT EXISTS `#__bsms_update` (
-						  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-						  version VARCHAR(255) DEFAULT NULL,
-						  PRIMARY KEY (id)
-						) DEFAULT CHARSET=utf8;');
-		$db->execute();
+		$dbDriver = 'mysql';
 
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
@@ -346,7 +336,7 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Create an array of queries from the sql file
-		$queries = $db->splitSql($buffer);
+		$queries = JDatabaseDriver::splitSql($buffer);
 
 		if (count($queries) == 0)
 		{
@@ -375,6 +365,8 @@ class Com_BiblestudyInstallerScript
 					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
 					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $value, $queryString), JLog::INFO, 'Update');
 				}
+
+				$this->update_count++;
 			}
 		}
 
@@ -391,7 +383,7 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		return true;
+		return $this->update_count;
 	}
 
 	/**
@@ -404,6 +396,17 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
+
+		if ($type == 'install')
+		{
+			// Copy the css file over to another location
+			$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
+
+			if (JFile::exists($src))
+			{
+				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
+			}
+		}
 		// Set the #__schemas version_id to the correct number for error from 7.0.0
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
