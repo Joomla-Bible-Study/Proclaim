@@ -30,7 +30,6 @@
         <filename>biblestudy.php</filename>
         <filename>controller.php</filename>
         <filename>convert1.htm</filename>
-        <filename>index.html</filename>
         <filename>router.php</filename>
         <folder>sef_ext</folder>
         <folder>views</folder>
@@ -49,9 +48,7 @@
         <folder>database</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>jui</folder>
         <folder>player</folder>
-        <filename>index.html</filename>
     </media>
 
     <administration>
@@ -91,7 +88,6 @@
             <folder>install</folder>
             <folder>language</folder>
             <folder>lib</folder>
-        <!--    <folder>migration</folder> -->
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
@@ -131,6 +127,6 @@
 
     <!--  Dependencies -->
     <dependencies>
-        <dependency type="platform" name="joomla" operator="=" version="2.5"/>
+        <dependency type="platform" name="joomla" operator="=" version="3.2"/>
     </dependencies>
 </extension>
