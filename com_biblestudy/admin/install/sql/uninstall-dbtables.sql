@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS `#__bsms_message_type`;
 DROP TABLE IF EXISTS `#__bsms_folders`;
 DROP TABLE IF EXISTS `#__bsms_media`;
 DROP TABLE IF EXISTS `#__bsms_books`;
+DROP TABLE IF EXISTS `#__bsms_order`;
 DROP TABLE IF EXISTS `#__bsms_podcast`;
 DROP TABLE IF EXISTS `#__bsms_mimetype`;
 DROP TABLE IF EXISTS `#__bsms_mediafiles`;

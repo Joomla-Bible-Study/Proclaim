@@ -73,12 +73,12 @@ else
 	?>
 	<table class="table table-striped bslisttable">
 		<?php
-		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template);
+		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params);
 		echo $listing;
 
 		if ($this->params->get('show_teacher_studies') > 0)
 		{
-			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $this->template);
+			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params);
 			echo $studies;
 		}
 

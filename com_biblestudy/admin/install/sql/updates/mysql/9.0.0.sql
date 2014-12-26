@@ -12,8 +12,7 @@ ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_checkout` (`checked_out`);
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_createdby` (`created_by`);
 
 -- -- Remove Bad topic_text save
-DELETE FROM `#__bsms_topics`
-WHERE `topic_text` = 'A';
+DELETE FROM `#__bsms_topics` WHERE `topic_text` = 'A';
 
 -- -- Locations
 ALTER TABLE `#__bsms_locations` ADD COLUMN `contact_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact' AFTER `location_text`;

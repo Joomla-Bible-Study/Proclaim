@@ -11,7 +11,6 @@
     <description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
     <files>
         <filename plugin="biblestudysearch">biblestudysearch.php</filename>
-        <filename>index.html</filename>
         <folder>language</folder>
     </files>
     <config>
