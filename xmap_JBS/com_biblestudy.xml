@@ -11,7 +11,6 @@
     <description>Xmap plugin for Bible Study component.</description>
     <files>
         <filename plugin="com_biblestudy">com_biblestudy.php</filename>
-        <filename>index.html</filename>
     </files>
     <languages folder="language">
         <!--
