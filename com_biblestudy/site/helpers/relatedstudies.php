@@ -24,8 +24,8 @@ class JBSMRelatedStudies
 	/**
 	 * Get Related
 	 *
-	 * @param   object    $row     JTable
-	 * @param   JRegitry  $params  Item Params
+	 * @param   object     $row     JTable
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return boolean
 	 *

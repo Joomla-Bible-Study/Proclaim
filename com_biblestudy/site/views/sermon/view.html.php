@@ -370,7 +370,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string $tpl ?
+	 * @param   string  $tpl  ?
 	 *
 	 * @return void
 	 */
