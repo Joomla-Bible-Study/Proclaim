@@ -388,7 +388,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string $oldprefix Old table Prefix
+	 * @param   string  $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */

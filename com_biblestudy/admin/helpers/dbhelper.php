@@ -238,7 +238,7 @@ class JBSMDbHelper
 		foreach ($tables as $table)
 		{
 
-			if (strpos($table, $prefix) && strpos($table, $bsms))
+			if (strstr($table, $prefix) && strstr($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);
