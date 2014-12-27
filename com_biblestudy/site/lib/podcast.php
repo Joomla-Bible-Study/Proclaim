@@ -11,6 +11,14 @@
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
+/* Put in do to this file is used in a plugin. */
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
+JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/listing.php');
+
 /**
  * BibleStudy Podcast Class
  *
@@ -381,11 +389,11 @@ class JBSMPodcast
 
 					if (!$filewritten)
 					{
-						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_FAILURE');
+						$msg[] = $file . ' - ' . JText::_('JBS_PDC_XML_FILES_ERROR');
 					}
 					else
 					{
-						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
+						$msg[] = $file . ' - ' . JText::_('JBS_PDC_XML_FILES_WRITTEN');
 					}
 				} // End if $checkresult if positive
 				else
