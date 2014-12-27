@@ -36,6 +36,7 @@ JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 // if phrase is not found in specific language file, load english language file:
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
 
 addCSS();
 
