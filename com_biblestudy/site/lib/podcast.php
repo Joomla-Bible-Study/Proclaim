@@ -360,13 +360,13 @@ class JBSMPodcast
 								'<enclosure url="http://' . str_replace(
 									' ',
 									"%20",
-									$episode->filename
+									$episode->params->get('filename')
 								) . '" length="' . $episode->params->get('size') . '" type="'
 								. $episode->mimetype . '" />
                         			<guid>http://' . str_replace(
 									' ',
 									"%20",
-									$episode->filename
+									$episode->params->get('filename')
 								) . '</guid>';
 						}
 						$episodedetailtemp .= '
@@ -476,7 +476,7 @@ class JBSMPodcast
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
-			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.path, mf.filename, mf.podcast_id,'
+			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
 		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
@@ -484,12 +484,11 @@ class JBSMPodcast
 		. ' se.series_text,'
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
-		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-		. ' mt.id AS mtid, mt.mimetype')
+		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname')
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
-			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
+			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server_id)')
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
