@@ -335,22 +335,22 @@ class JBSMPodcast
 						if ($episode->params->get('article_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
 						}
 						if ($episode->params->get('docMan_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '</guid>';
 						}
@@ -482,14 +482,13 @@ class JBSMPodcast
 		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
 		. ' s.media_hours, s.media_minutes, s.media_seconds,'
 		. ' se.series_text,'
-		. ' sr.id AS srid, sr.server_path,'
+		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
 		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
 		. ' mt.id AS mtid, mt.mimetype')
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
-			// todo not sure we need servers here.
 			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
@@ -506,6 +505,10 @@ class JBSMPodcast
 			$registry = new JRegistry;
 			$registry->loadString($e->params);
 			$e->params = $registry;
+
+			$registry = new JRegistry;
+			$registry->loadString($e->srparams);
+			$e->srparams = $registry;
 
 			$e->podcast_id = str_replace('-1', '', $e->podcast_id);
 			if (substr_count($e->podcast_id, $id))
