@@ -139,7 +139,7 @@ class JBSMMedia
 		 * In 6.2.3 we changed inline = 2
 		 */
 		$player->player   = 0;
-		$item_mediaplayer = $media->player;
+		$item_mediaplayer = $media->params->get('player');
 
 		// Check to see if the item player is set to 100 - that means use global settings which comes from $params
 		if ($item_mediaplayer == 100)
@@ -153,7 +153,7 @@ class JBSMMedia
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
 
-			$player->player = ($media->player) ? $media->player : "0";
+			$player->player = ($media->params->get('player')) ? $media->params->get('player') : "0";
 		}
 		if ($player->player == 3)
 		{
