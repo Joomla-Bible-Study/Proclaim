@@ -172,17 +172,18 @@ class JBSMDbHelper
 	 *
 	 * @param   string  $query  Is a Joomla ready query
 	 * @param   string  $from   Where the source of the query comes from
+	 * @param   int     $limit  Set the Limit of the query
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
-	public static function performDB($query, $from = null)
+	public static function performDB($query, $from = null, $limit = null)
 	{
 		if (!$query)
 		{
 			return false;
 		}
 		$db = JFactory::getDbo();
-		$db->setQuery($query);
+		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
 		{

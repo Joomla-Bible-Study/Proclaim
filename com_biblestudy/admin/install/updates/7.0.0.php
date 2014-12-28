@@ -483,10 +483,11 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				$registry = new JRegistry;
-				// Fix incorrect params string literal
 
+				// Fix incorrect params string literal
 				$params = array();
-				foreach(explode(' ', $result->params) as $param) {
+				foreach (explode('\n', $result->params) as $param)
+				{
 					$param = explode('=',  str_replace('\n', '', trim($param)));
 					$params[$param[0]] = $param[1];
 				}
@@ -504,7 +505,11 @@ class Migration700
 					{
 						$player = 3;
 					}
-					$query = "UPDATE #__bsms_mediafiles SET `player` = " . $db->quote($player) . " WHERE `id` = " .
+					elseif ($player == 100)
+					{
+						$player = 1;
+					}
+					$query = "UPDATE `#__bsms_mediafiles` SET `player` = " . $db->quote($player) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -514,7 +519,7 @@ class Migration700
 				}
 				if ($popup)
 				{
-					$query = "UPDATE #__bsms_mediafiles SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
+					$query = "UPDATE `#__bsms_mediafiles` SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -525,7 +530,7 @@ class Migration700
 				if ($podcasts)
 				{
 					$podcasts = str_replace('|', ',', $podcasts);
-					$query    = "UPDATE #__bsms_mediafiles SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
+					$query    = "UPDATE `#__bsms_mediafiles` SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
 					if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -536,7 +541,7 @@ class Migration700
 				// Update the params to json
 				$params2 = json_encode($params->toObject());
 
-				$query = "UPDATE #__bsms_mediafiles SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
+				$query = "UPDATE `#__bsms_mediafiles` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					$db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -671,11 +676,10 @@ class Migration700
 				// Update the params to json
 				$registry = new JRegistry;
 				$registry->loadString($result->params);
-				$params = $registry;
 
-				$params2 = $params->toObject();
+				$params2 = $registry->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_studies SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
+				$query   = "UPDATE `#__bsms_studies` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -698,7 +702,7 @@ class Migration700
 
 				// Replace all non a-Z 0-9 by '_'
 				$topic = 'JBS_TOP_' . strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));
-				$query = "UPDATE #__bsms_topics SET `topic_text` = " . $db->quote($topic) . " WHERE `id` = " .
+				$query = "UPDATE `#__bsms_topics` SET `topic_text` = " . $db->quote($topic) . " WHERE `id` = " .
 					(int) $db->quote($result->id);
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -719,12 +723,22 @@ class Migration700
 			{
 				// Update the params to json
 				$registry = new JRegistry;
-				$registry->loadString($result->params);
-				$params = $registry;
 
-				$params2 = $params->toObject();
+				if ($result->params)
+				{
+					// Fix incorrect params string literal
+					$params = array();
+					foreach (explode('\n', $result->params) as $param)
+					{
+						$param             = explode('=', str_replace('\n', '', trim($param)));
+						$params[$param[0]] = $param[1];
+					}
+
+					$registry->loadArray($params);
+				}
+				$params2 = $registry->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_share SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
+				$query   = "UPDATE `#__bsms_share` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
@@ -745,12 +759,60 @@ class Migration700
 			{
 				// Update the params to json
 				$registry = new JRegistry;
-				$registry->loadString($result->params);
-				$params = $registry;
 
-				$params2 = $params->toObject();
+				if ($result->params)
+				{
+					// Fix incorrect params string literal
+					$params = array();
+					foreach (explode('\n', $result->params) as $param)
+					{
+						$param             = explode('=', str_replace('\n', '', trim($param)));
+						$params[$param[0]] = $param[1];
+					}
+
+					$registry->loadArray($params);
+				}
+
+				$params2 = $registry->toObject();
 				$params2 = json_encode($params2);
-				$query   = "UPDATE #__bsms_templates SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
+				$query   = "UPDATE `#__bsms_templates` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
+					(int) $db->quote($result->id) . " LIMIT 1";
+
+				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				{
+					return false;
+				}
+			}
+		}
+
+		// Fix Admin params
+		$query = "SELECT `id`, `params` FROM `#__bsms_admin`";
+		$db->setQuery($query);
+		$results = $db->loadObjectList();
+
+		if ($results)
+		{
+			foreach ($results AS $result)
+			{
+				// Update the params to json
+				$registry = new JRegistry;
+
+				if ($result->params)
+				{
+					// Fix incorrect params string literal
+					$params = array();
+					foreach (explode('\n', $result->params) as $param)
+					{
+						$param             = explode('=', str_replace('\n', '', trim($param)));
+						$params[$param[0]] = $param[1];
+					}
+
+					$registry->loadArray($params);
+				}
+
+				$params2 = $registry->toObject();
+				$params2 = json_encode($params2);
+				$query   = "UPDATE `#__bsms_admin` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))

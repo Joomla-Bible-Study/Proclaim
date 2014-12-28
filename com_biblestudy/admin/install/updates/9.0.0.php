@@ -132,6 +132,7 @@ class Migration900
 				$params->mime_type     	= $mimtype->mimetype;
 				$params->special      	= $mediaFile->special;
 				$params->filename      	= $path->folderpath . $mediaFile->filename;
+				$params->player         = $mediaFile->player;
 				$params->size          	= $mediaFile->size;
 				$params->mediacode     	= $mediaFile->mediacode;
 				$params->link_type     	= $mediaFile->link_type;

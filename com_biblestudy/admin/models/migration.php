@@ -532,6 +532,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		if (!empty($this->_versionStack))
 		{
+			krsort($this->_versionStack);
 			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
 				$version = array_pop($this->_versionStack);

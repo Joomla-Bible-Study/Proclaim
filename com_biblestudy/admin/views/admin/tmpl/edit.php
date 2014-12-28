@@ -153,13 +153,6 @@ $input = $app->input;
 </div>
 <div class="tab-pane" id="admin">
     <p class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></p>
-
-    <div class="control-group">
-        <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
-        <div class="controls">
-            <?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
-        </div>
-    </div>
     <div class="control-group">
         <label style="max-width: 100%; padding: 0 5px 0 0;">
             <!--suppress HtmlUnknownTarget -->

@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -507,50 +507,55 @@ class JBSMStats
 	 */
 	public static function popups()
 	{
-//		$no_player    = 0;
-//		$pop_count    = 0;
-//		$inline_count = 0;
-//		$global_count = 0;
-//		$db           = JFactory::getDBO();
-//		$query        = $db->getQuery(true);
-//		$query
-//			->select('popup')
-//			->from('#__bsms_mediafiles')
-//			->where('published = ' . $db->q('1'));
-//		$db->setQuery($query);
-//		$popups            = $db->loadObjectList();
-//
-//		if ($popups)
-//		{
-//			$total_media_files = count($popups);
-//
-//			foreach ($popups as $popup)
-//			{
-//				switch ($popup->popup)
-//				{
-//					case 0:
-//						$no_player++;
-//						break;
-//					case 1:
-//						$pop_count++;
-//						break;
-//					case 2:
-//						$inline_count++;
-//						break;
-//					case 3:
-//						$global_count++;
-//						break;
-//				}
-//			}
-//
-//			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-//				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
-//		}
+		$no_player    = 0;
+		$pop_count    = 0;
+		$inline_count = 0;
+		$global_count = 0;
+		$db           = JFactory::getDBO();
+		$query        = $db->getQuery(true);
+		$query
+			->select('params')
+			->from('#__bsms_mediafiles')
+			->where('published = ' . $db->q('1'));
+		$db->setQuery($query);
+		$popups = $db->loadObjectList();
 
-		return 'need to redo';
+		if ($popups)
+		{
+			$total_media_files = count($popups);
+
+			foreach ($popups as $popup)
+			{
+				$registry = new JRegistry;
+				$registry->loadString($popup->params);
+				$popup = $registry->toObject()->popup;
+
+				switch ($popup)
+				{
+					case null:
+					case 0:
+						$no_player++;
+						break;
+					case 1:
+						$pop_count++;
+						break;
+					case 2:
+						$inline_count++;
+						break;
+					case 3:
+						$global_count++;
+						break;
+				}
+			}
+
+			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
+				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
+				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+		}
+
+		return $popups;
 	}
 
 	/**
@@ -564,6 +569,7 @@ class JBSMStats
 		$t     = $input->get('t', 1, 'int');
 
 		$admin        = JBSMParams::getAdmin();
+		/** @var JRegistry $admin_params */
 		$admin_params = $admin->params;
 		$limit        = $admin_params->get('popular_limit', '25');
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
