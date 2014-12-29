@@ -32,7 +32,6 @@ class PlgSearchBiblestudysearch extends JPlugin
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
 	}
 
 	/**
@@ -43,7 +42,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 	public function onContentSearchAreas()
 	{
 		static $areas = array(
-			'biblestudies' => 'PLG_SEARCH_BIBLESTUDYSEARCH_BIBLESTUDYSEARCH'
+			'biblestudies' => 'JBS_PLG_SEARCH_BIBLESTUDYSEARCH'
 		);
 
 		return $areas;
@@ -98,7 +97,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 		{
 			return array();
 		}
-		$section = JText::_('PLG_SEARCH_BIBLESTUDYSEARCH');
+		$section = JText::_('JBS_PLG_SEARCH_BIBLESTUDYSEARCH');
 
 		$wheres = array();
 
@@ -153,6 +152,11 @@ class PlgSearchBiblestudysearch extends JPlugin
 		}
 		if (!empty($state))
 		{
+			// load language files (english language file as fallback)
+			$language = JFactory::getLanguage();
+			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
+
 			$query     = $db->getQuery(true);
 			$set_title = $this->params->get('set_title');
 			$template  = $jinput->getInt('t', '1', 'get');
