@@ -9,7 +9,6 @@
 defined('_JEXEC') or die;
 
 /* Import library dependencies */
-
 jimport('joomla.plugin.plugin');
 
 /**
@@ -19,14 +18,14 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemjbsbackup extends JPlugin
+class PlgSystemJBSBackup extends JPlugin
 {
 
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -36,7 +35,6 @@ class PlgSystemjbsbackup extends JPlugin
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
 	}
 
 	/**
@@ -67,8 +65,7 @@ class PlgSystemjbsbackup extends JPlugin
 			$dobackup = $this->doBackup();
 
 			// If we have run the backup check and it returned no errors then the last thing we do is reset the time we did it to current
-
-			$updatetime = $this->updatetime();
+			$this->updatetime();
 
 			// Check to see if we need to email anything
 			if ($check && $params->get('email') > 0)
@@ -230,7 +227,7 @@ class PlgSystemjbsbackup extends JPlugin
 	}
 
 	/**
-	 * Update the time
+	 * Update Time
 	 *
 	 * @return boolean
 	 */
@@ -275,11 +272,11 @@ class PlgSystemjbsbackup extends JPlugin
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_ERROR');
+			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_SUCCESS');
+			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
 		}
 		if ($params->def('fromname', $fromname))
 		{

@@ -42,6 +42,10 @@ class JBSMPodcast
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
+		// get english language file as fallback
+		$language = JFactory::getLanguage();
+		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
@@ -59,12 +63,15 @@ class JBSMPodcast
 				// Work Around all language
 				if ($podinfo->language == '*')
 				{
-					$language = JFactory::getConfig()->get('language');
+					$podlanguage = JFactory::getConfig()->get('language');
 				}
 				else
 				{
-					$language = $podinfo->language;
+					$podlanguage = $podinfo->language;
 				}
+
+				// load language file
+				$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
@@ -104,7 +111,7 @@ class JBSMPodcast
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
-                	<language>' . $language . '</language>
+                	<language>' . $podlanguage . '</language>
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
