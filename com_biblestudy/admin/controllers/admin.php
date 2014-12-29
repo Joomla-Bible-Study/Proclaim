@@ -388,7 +388,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string $oldprefix Old table Prefix
+	 * @param   string  $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */
@@ -459,7 +459,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$application->enqueueMessage('' . $result . '');
 		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=database');
+		$this->setRedirect('index.php?option=com_biblestudy&view=backup');
 	}
 
 	/**
@@ -476,7 +476,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (!$result = $export->exportdb($run))
 		{
 			$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
 		}
 		elseif ($run == 2)
 		{
@@ -488,7 +488,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 			{
 				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 			}
-			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
 		}
 	}
 

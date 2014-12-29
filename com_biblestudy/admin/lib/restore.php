@@ -220,7 +220,7 @@ class JBSMRestore
 		{
 			set_time_limit(300);
 		}
-		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/database/' . $backuprestore);
+		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/backup/' . $backuprestore);
 
 		// Check to see if this is a backup from an old db and not a migration
 		$isold   = substr_count($query, '#__bsms_admin_genesis');

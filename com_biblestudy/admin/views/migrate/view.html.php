@@ -175,7 +175,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/database';
+		$path = JPATH_SITE . '/media/com_biblestudy/backup';
 
 		if (JFolder::exists($path))
 		{
