@@ -11,13 +11,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Script file of JBSBackup component
+ * Script file of JBSBACKUP component
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemJBSBackupInstallerScript
+class plgSystemjbsbackupInstallerScript
 {
 	/** @var  string If it is 7.0.0 code */
 	public $is700;
@@ -43,7 +43,6 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		// $parent is the class calling this method
 		echo '<p>' . JText::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
@@ -56,8 +55,6 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function update($parent)
 	{
-		// $parent is the class calling this method
-		// check to see if we are dealing with version 7.0.0 and create the update table if needed
 		$db = JFactory::getDBO();
 
 		// First see if there is an update table
