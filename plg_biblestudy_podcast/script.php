@@ -11,13 +11,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Script file of jbspodcast component
+ * Script file of JBSPodcast component
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.4
  */
-class PlgSystemjbspodcastInstallerScript
+class PlgSystemJBSPodcastInstallerScript
 {
 
 	/**
@@ -76,8 +76,8 @@ class PlgSystemjbspodcastInstallerScript
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
-					`timeset` VARCHAR(14) NOT NULL DEFAULT '',
-					`backup` VARCHAR(14) DEFAULT NULL,
+					`timeset` varchar(14) NOT NULL DEFAULT '',
+					`backup` varchar(14) DEFAULT NULL,
 					PRIMARY KEY (`timeset`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
@@ -110,7 +110,7 @@ class PlgSystemjbspodcastInstallerScript
 	 *
 	 * @return void
 	 */
-	public function  postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
 	}
 
