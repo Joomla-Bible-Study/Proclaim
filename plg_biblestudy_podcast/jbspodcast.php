@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 /**
- * Podcast plugin class
+ * JBSPodcast jPlugin class
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.0
  */
-class PlgSystemJbspodcast extends JPlugin
+class PlgSystemJBSPodcast extends JPlugin
 {
 
 	/**
@@ -35,11 +35,10 @@ class PlgSystemJbspodcast extends JPlugin
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
 	}
 
 	/**
-	 * Initialise
+	 * After Initialise system
 	 *
 	 * @return void
 	 */
@@ -60,6 +59,7 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			$check = $this->checkdays($params);
 		}
+
 		if ($check)
 		{
 			// Perform the podcast and email and update time
@@ -68,7 +68,7 @@ class PlgSystemJbspodcast extends JPlugin
 			// Update the database to show a new time
 			$this->updatetime();
 
-			// Last we check to see if we need to email anything
+			// Check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
 				if ($params->get('email') > 1)
@@ -263,7 +263,7 @@ class PlgSystemJbspodcast extends JPlugin
 	}
 
 	/**
-	 * Do Email
+	 * Send the Email
 	 *
 	 * @param   JRegistry $params Plugin params
 	 * @param   object    $dopodcast  ?
