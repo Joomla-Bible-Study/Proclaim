@@ -26,10 +26,10 @@ class JBSMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object        $items    Items
-	 * @param   JRegistry     $params   Page Params
-	 * @param   TableTemplate $template Template name
-	 * @param   String        $type     Type of Listing
+	 * @param   Object         $items     Items
+	 * @param   JRegistry      $params    Page Params
+	 * @param   TableTemplate  $template  Template name
+	 * @param   String         $type      Type of Listing
 	 *
 	 * @return string
 	 */
@@ -438,7 +438,7 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Id's
 	 *
-	 * @param   Object $item Items info
+	 * @param   Object  $item  Items info
 	 *
 	 * @return array
 	 */
@@ -457,7 +457,7 @@ class JBSMListing
 	/**
 	 * Get Media Files
 	 *
-	 * @param   Array $medias Media files
+	 * @param   Array  $medias  Media files
 	 *
 	 * @return mixed
 	 */
@@ -469,7 +469,6 @@ class JBSMListing
 			. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
 			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
 		$query->from('#__bsms_mediafiles');
-		// todo not shure we need servers any more now.
 		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
 		$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
 		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
@@ -493,17 +492,17 @@ class JBSMListing
 		$subquery .= ')';
 		$query->where($subquery);
 		$query->where('#__bsms_mediafiles.published = 1');
+		$query->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
 		$query->order('ordering ASC');
 		$db->setQuery($query);
-		$mediafiles = $db->loadObjectList();
 
-		return $mediafiles;
+		return $db->loadObjectList();
 	}
 
 	/**
 	 * Get list Params Array
 	 *
-	 * @param   string $paramtext Param Text
+	 * @param   string  $paramtext  Param Text
 	 *
 	 * @return stdClass
 	 */
@@ -525,9 +524,9 @@ class JBSMListing
 	/**
 	 * Sort Array of Object by Property
 	 *
-	 * @param   array  $array    ?
-	 * @param   string $property ?
-	 * @param   string $order    ?
+	 * @param   array   $array     ?
+	 * @param   string  $property  ?
+	 * @param   string  $order     ?
 	 *
 	 * @return array
 	 */
@@ -600,14 +599,14 @@ class JBSMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   Array         $listrows  ?
-	 * @param   Array         $listsorts ?
-	 * @param   Object        $item      ?
-	 * @param   JRegistry     $params    Item Params
-	 * @param   TableTemplate $template  Template info
-	 * @param   string        $oddeven   ?
-	 * @param   string        $header    ?
-	 * @param   string        $type      ?
+	 * @param   Array          $listrows   ?
+	 * @param   Array          $listsorts  ?
+	 * @param   Object         $item       ?
+	 * @param   JRegistry      $params     Item Params
+	 * @param   TableTemplate  $template   Template info
+	 * @param   string         $oddeven    ?
+	 * @param   string         $header     ?
+	 * @param   string         $type       ?
 	 *
 	 * @return string
 	 */
@@ -877,12 +876,12 @@ class JBSMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object        $item     ?
-	 * @param   Object        $row      ?
-	 * @param   JRegistry     $params   ?
-	 * @param   TableTemplate $template ?
-	 * @param   string        $header   ?
-	 * @param   string        $type     ?
+	 * @param   Object         $item      ?
+	 * @param   Object         $row       ?
+	 * @param   JRegistry      $params    ?
+	 * @param   TableTemplate  $template  ?
+	 * @param   string         $header    ?
+	 * @param   string         $type      ?
 	 *
 	 * @return string
 	 */
@@ -1623,11 +1622,11 @@ class JBSMListing
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String        $custom   ?
-	 * @param   Object        $item     ?
-	 * @param   JRegistry     $params   ?
-	 * @param   TableTemplate $template ?
-	 * @param   String        $type     ?
+	 * @param   String         $custom    ?
+	 * @param   Object         $item      ?
+	 * @param   JRegistry      $params    ?
+	 * @param   TableTemplate  $template  ?
+	 * @param   String         $type      ?
 	 *
 	 * @return mixed
 	 */
@@ -1652,11 +1651,11 @@ class JBSMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String        $custom   ?
-	 * @param   Object        $row      ?
-	 * @param   JRegistry     $params   ?
-	 * @param   TableTemplate $template ?
-	 * @param   String        $type     ?
+	 * @param   String         $custom    ?
+	 * @param   Object         $row       ?
+	 * @param   JRegistry      $params    ?
+	 * @param   TableTemplate  $template  ?
+	 * @param   String         $type      ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -1890,10 +1889,10 @@ class JBSMListing
 	/**
 	 * Get Scripture
 	 *
-	 * @param   object $params       Item Params
-	 * @param   object $row          Row Info
-	 * @param   string $esv          ESV String
-	 * @param   string $scripturerow Scripture Row
+	 * @param   object  $params        Item Params
+	 * @param   object  $row           Row Info
+	 * @param   string  $esv           ESV String
+	 * @param   string  $scripturerow  Scripture Row
 	 *
 	 * @return string
 	 */
@@ -2061,8 +2060,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   JRegistry $params Item Params
-	 * @param   Object    $row    Row info
+	 * @param   JRegistry  $params  Item Params
+	 * @param   Object     $row     Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2116,9 +2115,9 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object        $item     ?
-	 * @param   JRegistry     $params   ?
-	 * @param   TableTemplate $template ?
+	 * @param   Object         $item      ?
+	 * @param   JRegistry      $params    ?
+	 * @param   TableTemplate  $template  ?
 	 *
 	 * @return string
 	 *
@@ -2140,8 +2139,8 @@ class JBSMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   JRegistry $params    Item Params
-	 * @param   string    $studydate Study Date
+	 * @param   JRegistry  $params     Item Params
+	 * @param   string     $studydate  Study Date
 	 *
 	 * @return string
 	 */
@@ -2197,8 +2196,8 @@ class JBSMListing
 	/**
 	 * Use JImage Class
 	 *
-	 * @param   String $path Path to File
-	 * @param   String $alt  Alternate Text
+	 * @param   String  $path  Path to File
+	 * @param   String  $alt   Alternate Text
 	 *
 	 * @return bool|stdClass
 	 *
@@ -2224,14 +2223,14 @@ class JBSMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool          $islink     ?
-	 * @param   string        $id3        ?
-	 * @param   int           $tid        ?
-	 * @param   object        $smenu      ?
-	 * @param   object        $tmenu      ?
-	 * @param   JRegistry     $params     ?
-	 * @param   object        $row        ?
-	 * @param   TableTemplate $templateid ?
+	 * @param   bool           $islink      ?
+	 * @param   string         $id3         ?
+	 * @param   int            $tid         ?
+	 * @param   object         $smenu       ?
+	 * @param   object         $tmenu       ?
+	 * @param   JRegistry      $params      ?
+	 * @param   object         $row         ?
+	 * @param   TableTemplate  $templateid  ?
 	 *
 	 * @return string
 	 */
@@ -2338,9 +2337,9 @@ class JBSMListing
 	/**
 	 * Get File Path
 	 *
-	 * @param   string $id3     ID
-	 * @param   string $idfield ID Filed
-	 * @param   string $mime    MimeType ID
+	 * @param   string  $id3      ID
+	 * @param   string  $idfield  ID Filed
+	 * @param   string  $mime     MimeType ID
 	 *
 	 * @return string
 	 */
@@ -2354,9 +2353,9 @@ class JBSMListing
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int       $id3    Study ID ID
-	 * @param   string    $islink Is a Link
-	 * @param   JRegistry $params Item Params
+	 * @param   int        $id3     Study ID ID
+	 * @param   string     $islink  Is a Link
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -2539,8 +2538,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   JRegistry $params Item Params
-	 * @param   object    $row    Item Info
+	 * @param   JRegistry  $params  Item Params
+	 * @param   object     $row     Item Info
 	 *
 	 * @return string
 	 */
@@ -2588,9 +2587,9 @@ class JBSMListing
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string    $link   Link
-	 * @param   object    $row    Item Info
-	 * @param   JRegistry $params Item Params
+	 * @param   string     $link    Link
+	 * @param   object     $row     Item Info
+	 * @param   JRegistry  $params  Item Params
 	 *
 	 * @return null|string
 	 */
@@ -2788,11 +2787,11 @@ class JBSMListing
 	/**
 	 * make a URL small
 	 *
-	 * @param   string $url     Url
-	 * @param   string $login   Login
-	 * @param   string $appkey  AppKey
-	 * @param   string $format  Format
-	 * @param   string $version Version
+	 * @param   string  $url      Url
+	 * @param   string  $login    Login
+	 * @param   string  $appkey   AppKey
+	 * @param   string  $format   Format
+	 * @param   string  $version  Version
 	 *
 	 * @return string
 	 */
@@ -2826,9 +2825,9 @@ class JBSMListing
 	/**
 	 * Run Content Plugins on content
 	 *
-	 * @param   object    $item   ?
-	 * @param   JRegistry $params ?
-	 * @param   string    $type   ?
+	 * @param   object     $item    ?
+	 * @param   JRegistry  $params  ?
+	 * @param   string     $type    ?
 	 *
 	 * @return bool|string
 	 *
@@ -2844,9 +2843,9 @@ class JBSMListing
 	/**
 	 * Get Title
 	 *
-	 * @param   JRegistry $params   System Params
-	 * @param   object    $row      Item info
-	 * @param   int       $template Template
+	 * @param   JRegistry  $params    System Params
+	 * @param   object     $row       Item info
+	 * @param   int        $template  Template
 	 *
 	 * @return string
 	 *
@@ -2862,8 +2861,8 @@ class JBSMListing
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int       $rowcolid Row ID Column
-	 * @param   JRegistry $params   Item Params
+	 * @param   int        $rowcolid  Row ID Column
+	 * @param   JRegistry  $params    Item Params
 	 *
 	 * @return string
 	 *
