@@ -29216,8 +29216,8 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
     </docblock>
     <class final="false" abstract="true" namespace="" line="22" package="BibleStudy.Site">
       <extends/>
-      <name>JBSMRoute</name>
-      <full_name>\JBSMRoute</full_name>
+      <name>JBSMHelperRoute</name>
+      <full_name>\JBSMHelperRoute</full_name>
       <docblock line="22">
         <description>Biblestudy Component Route Helper</description>
         <long-description></long-description>
@@ -29238,7 +29238,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
       </property>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="40" package="BibleStudy.Site">
         <name>getArticleRoute</name>
-        <full_name>\JBSMRoute::getArticleRoute()</full_name>
+        <full_name>\JBSMHelperRoute::getArticleRoute()</full_name>
         <docblock line="40">
           <description>Get Article Rout</description>
           <long-description></long-description>
@@ -29265,7 +29265,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
       </method>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="89" package="BibleStudy.Site">
         <name>getTeacherRoute</name>
-        <full_name>\JBSMRoute::getTeacherRoute()</full_name>
+        <full_name>\JBSMHelperRoute::getTeacherRoute()</full_name>
         <docblock line="89">
           <description>Get Teacher Route</description>
           <long-description></long-description>
@@ -29284,7 +29284,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
       </method>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="104" package="BibleStudy.Site">
         <name>getSeriesRoute</name>
-        <full_name>\JBSMRoute::getSeriesRoute()</full_name>
+        <full_name>\JBSMHelperRoute::getSeriesRoute()</full_name>
         <docblock line="104">
           <description>Get Series Route</description>
           <long-description></long-description>
@@ -29303,7 +29303,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
       </method>
       <method final="false" abstract="false" static="true" visibility="protected" namespace="" line="119" package="BibleStudy.Site">
         <name>_findItem</name>
-        <full_name>\JBSMRoute::_findItem()</full_name>
+        <full_name>\JBSMHelperRoute::_findItem()</full_name>
         <docblock line="119">
           <description>Find Item</description>
           <long-description></long-description>
@@ -29322,7 +29322,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
       </method>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="185" package="BibleStudy.Site">
         <name>addScheme</name>
-        <full_name>\JBSMRoute::addScheme()</full_name>
+        <full_name>\JBSMHelperRoute::addScheme()</full_name>
         <docblock line="185">
           <description></description>
           <long-description></long-description>

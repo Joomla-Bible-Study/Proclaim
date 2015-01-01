@@ -112,7 +112,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		$item->readmore_link = JRoute::_(JBSMRoute::getArticleRoute($item->slug, ''));
+		$item->readmore_link = JRoute::_(JBSMHelperRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params

@@ -2290,11 +2290,11 @@ class JBSMListing
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				$column = JBSMHelper::getTooltip($row, $params, $templateid);
 				$column .= '<a href="' . $link . '">';
