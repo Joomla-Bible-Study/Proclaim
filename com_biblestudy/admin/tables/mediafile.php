@@ -88,9 +88,6 @@ class TableMediafile extends JTable
      */
 	public $metadata = null;
 
-	/** @var null string */
-	public $filename = null;
-
 	public $plays = 0;
 
 	public $downloads = 0;
@@ -100,7 +97,7 @@ class TableMediafile extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function Tablemediafile(& $db)
 	{
@@ -112,8 +109,8 @@ class TableMediafile extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array  An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 */
@@ -166,7 +163,7 @@ class TableMediafile extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Media File: ' . $this->filename . '-' . $this->id;
+		$title = 'JBS Media File: ' . $this->id;
 
 		return $title;
 	}
@@ -177,8 +174,8 @@ class TableMediafile extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table A JTable object for the asset parent.
-	 * @param   integer $id    Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *

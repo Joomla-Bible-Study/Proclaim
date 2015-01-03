@@ -20,7 +20,7 @@ JHtml::_('behavior.modal');
 	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
 <div class="migration-status">
-	<div class="status"><?php echo JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+	<div class="status"><?php echo $this->totalVersions . ' - ' . $this->doneVersions . ' ' .  JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
 

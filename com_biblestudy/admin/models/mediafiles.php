@@ -30,7 +30,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -52,7 +52,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Manually joins items and returns and nested object array
 	 *
-	 * @return mixed Array Media files array
+	 * @return mixed  Array  Media files array
 	 * @since 9.0.0
 	 */
 	public function getItems()
@@ -105,8 +105,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -161,7 +161,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Get Stored ID
 	 *
-	 * @param   string $id An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *

@@ -107,7 +107,7 @@ class JBSMBackup
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 
 		$db = JFactory::getDBO();

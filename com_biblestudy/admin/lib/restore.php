@@ -153,7 +153,7 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 		$input         = new JInput;
 		$installtype   = $input->get('install_directory');
@@ -205,7 +205,7 @@ class JBSMRestore
 	/**
 	 * Restore DB for exerting Joomla Bible Study
 	 *
-	 * @param   string $backuprestore ?
+	 * @param   string  $backuprestore  ?
 	 *
 	 * @return boolean See if the restore worked.
 	 */
@@ -218,7 +218,7 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/backup/' . $backuprestore);
 
@@ -247,12 +247,17 @@ class JBSMRestore
 		}
 		else
 		{
-			$queries = $db->splitSql($query);
+			$queries = JDatabaseDriver::splitSql($query);
 
-			foreach ($queries as $querie)
+			foreach ($queries as $query)
 			{
-				$db->setQuery($querie);
-				$db->execute();
+				$query = trim($query);
+
+				if ($query != '' && $query{0} != '#')
+				{
+					$db->setQuery($query);
+					$db->execute();
+				}
 			}
 		}
 
@@ -356,13 +361,12 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDBO();
 
 		$query  = file_get_contents($tmp_src);
-		$exists = JFile::exists($tmp_src);
 
 		// Graceful exit and rollback if read not successful
 		if ($query === false)
@@ -413,12 +417,12 @@ class JBSMRestore
 			}
 
 			// Create an array of queries from the sql file
-			$queries = $db->splitSql($query);
+			$queries = JDatabaseDriver::splitSql($query);
 
 			if (count($queries) == 0)
 			{
 				// No queries to process
-				return 0;
+				return false;
 			}
 
 			// Process each query in the $queries array (split out of sql file).

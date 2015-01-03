@@ -7,8 +7,6 @@
  */
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-
 /**
  * Update for 9.0.0 class
  *
@@ -82,25 +80,25 @@ class Migration900
 			foreach ($db->loadObjectList() as $mediaFile)
 			{
 
+				/** @var TableMediafile $newMediaFile */
 				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
 				$newMediaFile->load($mediaFile->id);
-				$params   = array();
 				$metadata = array();
 
 				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_media')->where('id = ' . (int) $mediaFile->media_image);
+				$query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
 				$db->setQuery($query);
 
 				$mediaImage = $db->loadObject();
 
 				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_mimetype')->where('id = ' . (int) $mediaFile->mime_type);
+				$query->select('*')->from('#__bsms_mimetype')->where('id = ' . $mediaFile->mime_type);
 				$db->setQuery($query);
 
 				$mimtype = $db->loadObject();
 
 				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_folders')->where('id = ' . (int) $mediaFile->path);
+				$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
 				$db->setQuery($query);
 
 				$path   = $db->loadObject();
@@ -110,7 +108,6 @@ class Migration900
 				if (!$mediaImage)
 				{
 					$mediaImage                = new stdClass;
-					$mediaImage->mimage        = null;
 					$mediaImage->media_alttext = '';
 				}
 				else
@@ -129,9 +126,20 @@ class Migration900
 
 				$params->media_image   	= $mimage;
 				$params->media_text    	= $mediaImage->media_alttext;
-				$params->mime_type     	= $mimtype->mimetype;
+				if (!empty($mimtype))
+				{
+					$params->mime_type = $mimtype->mimetype;
+				}
 				$params->special      	= $mediaFile->special;
-				$params->filename      	= $path->folderpath . $mediaFile->filename;
+				if (!empty($path))
+				{
+					$path = new stdClass;
+					$path->folderpath = null;
+				}
+				if (!empty($mediaFile->filename))
+				{
+					$params->filename = $path->folderpath . $mediaFile->filename;
+				}
 				$params->player         = $mediaFile->player;
 				$params->size          	= $mediaFile->size;
 				$params->mediacode     	= $mediaFile->mediacode;
@@ -143,7 +151,7 @@ class Migration900
 
 				$registry->loadObject($params);
 
-				// @todo I don't thing we want to add both hits and plays to gather. I'm under hits a as the one but will need to verify this with tom
+				// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
 				$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
 				$metadata['downloads'] = $mediaFile->downloads;
 
@@ -175,11 +183,25 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
+		$message = new stdClass;
+		$message->title_key          = 'JBS_POSTINSTALL_TITLE_9.0.0';
+		$message->description_key    = 'JBS_POSTINSTALL_BODY_9.0.0';
+		$message->action_key         = 'JBS_POSTINSTALL_ACTION_9.0.0';
+		$message->language_extension = 'com_biblestudy';
+		$message->language_client_id = 1;
+		$message->type = 'action';
+		$message->action_file = 'admin://components/com_biblestudy/postinstall/actions.php';
+		$message->action = 'com_biblestudy_postinstall_condition';
+		$message->condition_file = "admin://components/com_biblestudy/postinstall/actions.php";
+		$message->condition_method = 'com_biblestudy_postinstall_condition';
+		$message->version_introduced = '9.0.0';
+		$message->enabled = 1;
+
 		return true;
 	}
 
 	/**
-	 * Set del colums
+	 * Set del columns
 	 *
 	 * @param   string           $table    Table
 	 * @param   array            $columns  Column to drop
@@ -220,30 +242,22 @@ class Migration900
 	public function updatetemplates ($db)
 	{
 		$query = $db->getQuery(true);
-		$query->select('id, title, prarams')
+		$query->select('id, title, params')
 				->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
 		foreach ($data as $d)
 		{
+			/** @var TableTemplate $table */
 			// Load Table Data.
 			JTable::addIncludePath(JPATH_COMPONENT . '/tables');
 			$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-
-			try
-			{
-				$table->load($d->id);
-			}
-			catch (Exception $e)
-			{
-				echo 'Caught exception: ', $e->getMessage(), "\n";
-			}
-
-			// Store the table to invoke defaults of new params
-			// Todo need ot add change from page_title to page_headline to not conflict with menu.
+			$table->load($d->id);
 
 			$table->store();
+
 		}
+		return;
 	}
 
 	/**

@@ -29,8 +29,6 @@ class Com_BiblestudyInstallerScript
 	/** @var string Path to Mysql files */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	protected $update_count = 0;
-
 	/**
 	 * The release value to be displayed and check against throughout this file.
 	 *
@@ -173,11 +171,11 @@ class Com_BiblestudyInstallerScript
 		// Need to load JBSMDbHelper for script
 		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$dbhelper    = new JBSMDbHelper;
+		$db    = JFactory::getDBO();
 		$drop_result = '';
 
 		if ($dbhelper->checkIfTable('#__bsms_admin'))
 		{
-			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
@@ -190,7 +188,6 @@ class Com_BiblestudyInstallerScript
 			if ($drop_tables > 0)
 			{
 				// We must remove the assets manually each time
-				$db    = JFactory::getDBO();
 				$query = $db->getQuery(true);
 				$query->select('id')
 					->from('#__assets')
@@ -241,6 +238,13 @@ class Com_BiblestudyInstallerScript
 		{
 			$drop_result = '<h3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
 		}
+
+		// Post Install Messages Cleanup for Component
+		$query = ' DELETE FROM ' . $db->quoteName('#__postinstall_messages') .
+			' WHERE ' . $db->quoteName('language_extension') . ' = ' . $db->quote('com_biblestudy');
+		$db->setQuery($query);
+		$db->execute();
+
 		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
 	}
 
@@ -288,7 +292,8 @@ class Com_BiblestudyInstallerScript
 				if (version_compare($file, $version) > 0)
 				{
 					$this->update_count = 0;
-					$this->allUpdate($file);
+					$this->allUpdate($file, $db);
+					$this->updatePHP($file, $db);
 				}
 			}
 
@@ -312,18 +317,17 @@ class Com_BiblestudyInstallerScript
 	}
 
 	/**
-	 * Function to do using the version number
+	 * Function to update using the version number for sql files
 	 *
-	 * @param   string  $value  The File to run sql query.
+	 * @param   string           $value  The File name.
+	 * @param   JDatabaseDriver  $db     DB helper.
 	 *
 	 * @return boolean
 	 *
 	 * @since 7.0.4
 	 */
-	public function allUpdate($value)
+	public function allUpdate($value, $db)
 	{
-		$db      = JFactory::getDbo();
-		$dbDriver = 'mysql';
 
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
@@ -365,11 +369,24 @@ class Com_BiblestudyInstallerScript
 					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
 					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $value, $queryString), JLog::INFO, 'Update');
 				}
-
-				$this->update_count++;
 			}
 		}
 
+		return true;
+	}
+
+	/**
+	 * Function to update db using the version number on php files.
+	 *
+	 * @param   string           $value  The File name.
+	 * @param   JDatabaseDriver  $db     DB helper.
+	 *
+	 * @return boolean
+	 *
+	 * @since 9.0.0
+	 */
+	public function updatePHP($value, $db)
+	{
 		// Check for corresponding PHP file and run migration
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
 		if (JFile::exists($migration_file))
@@ -380,10 +397,11 @@ class Com_BiblestudyInstallerScript
 			if (!$migration->up($db))
 			{
 				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
+				return false;
 			}
+			return true;
 		}
-
-		return $this->update_count;
+		return false;
 	}
 
 	/**
