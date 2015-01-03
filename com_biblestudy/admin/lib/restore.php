@@ -187,9 +187,9 @@ class JBSMRestore
 			$inputfiles = new JInputFiles;
 			$userfile   = $inputfiles->get('importdb');
 
-			if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']))
+			if (JFile::exists(JPATH_SITE . '/tmp/' . $userfile['name']))
 			{
-				unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+				unlink(JPATH_SITE . '/tmp/' . $userfile['name']);
 			}
 			if (($parent !== true) && $result)
 			{
@@ -205,7 +205,7 @@ class JBSMRestore
 	/**
 	 * Restore DB for exerting Joomla Bible Study
 	 *
-	 * @param   string  $backuprestore  ?
+	 * @param   string  $backuprestore  file name to restore
 	 *
 	 * @return boolean See if the restore worked.
 	 */
@@ -314,7 +314,7 @@ class JBSMRestore
 			return false;
 		}
 		// Build the appropriate paths
-		$tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
+		$tmp_dest = JPATH_SITE . '/tmp/' . $userfile['name'];
 
 		$tmp_src = $userfile['tmp_name'];
 

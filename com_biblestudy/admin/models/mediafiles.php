@@ -53,6 +53,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 * Manually joins items and returns and nested object array
 	 *
 	 * @return mixed  Array  Media files array
+	 *
 	 * @since 9.0.0
 	 */
 	public function getItems()
@@ -65,6 +66,11 @@ class BiblestudyModelMediafiles extends JModelList
 
 		foreach ($items as $item)
 		{
+
+			if (empty($item->serverType))
+			{
+				$item->serverType = 'legacy';
+			}
 			$item->serverConfig = $serverModel->getConfig($item->serverType);
 
 			// Convert all JSON strings to Arrays

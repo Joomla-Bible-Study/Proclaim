@@ -24,6 +24,13 @@ class Migration900
 	 */
 	public function up ($db)
 	{
+		/**
+		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+		 */
+		if (!ini_get('safe_mode'))
+		{
+			set_time_limit(3000);
+		}
 		$registry = new JRegistry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
@@ -131,11 +138,6 @@ class Migration900
 					$params->mime_type = $mimtype->mimetype;
 				}
 				$params->special      	= $mediaFile->special;
-				if (!empty($path))
-				{
-					$path = new stdClass;
-					$path->folderpath = null;
-				}
 				if (!empty($mediaFile->filename))
 				{
 					$params->filename = $path->folderpath . $mediaFile->filename;

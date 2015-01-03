@@ -295,7 +295,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
-			self::fixAssets();
+			self::fixAssets(true);
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 		else
@@ -502,8 +502,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function getThumbnailListXHR()
 	{
 		JSession::checkToken('get') or die('Invalid Token');
-		$document = JFactory::getDocument();
-		$input    = JFactory::getApplication()->input;
+		$document     = JFactory::getDocument();
+		$input        = JFactory::getApplication()->input;
+		$images_paths = array();
 
 		$document->setMimeEncoding('application/json');
 

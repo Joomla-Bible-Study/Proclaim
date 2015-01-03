@@ -548,13 +548,6 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function RealRun()
 	{
-		/**
-		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(3000);
-		}
 		$db  = JFactory::getDbo();
 		$app = JFactory::getApplication();
 		$run = true;
@@ -591,13 +584,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			// Just finished
 			$this->resetStack();
-			/**
-			 * Reset time limit
-			 */
-			if (!ini_get('safe_mode'))
-			{
-				set_time_limit(0);
-			}
 
 			return false;
 		}
