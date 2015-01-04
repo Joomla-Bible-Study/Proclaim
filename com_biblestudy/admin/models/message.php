@@ -295,10 +295,14 @@ class BiblestudyModelMessage extends JModelAdmin
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('mediafile.id, mediafile.createdate, mediafile.params');
-		$query->from('#__bsms_mediafiles AS mediafile');
-		$query->where('mediafile.study_id = ' . (int) $this->getItem()->id);
-		$query->order('mediafile.createdate DESC');
+		$query->select('m.id, m.language, m.createdate, m.params');
+		$query->from('#__bsms_mediafiles AS m');
+		$query->where('m.study_id = ' . (int) $this->getItem()->id);
+		$query->order('m.createdate DESC');
+
+		// Join over the asset groups.
+		$query->select('ag.title AS access_level');
+		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = m.access');
 
 		$db->setQuery($query->__toString());
 		$mediafiles = $db->loadObjectList();

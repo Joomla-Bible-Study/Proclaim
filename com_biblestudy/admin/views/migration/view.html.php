@@ -44,10 +44,13 @@ class BiblestudyViewMigration extends JViewLegacy
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
 
+	/** @var array Array of Finish Task */
+	private $_finish = array();
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -66,7 +69,7 @@ class BiblestudyViewMigration extends JViewLegacy
 		{
 			if ($this->totalVersions > 0)
 			{
-				$percent = min(max(round(100 * $this->doneVersions / $this->totalVersions), 1), 100);
+				$percent = round($this->doneVersions / $this->totalVersions * 100);
 			}
 
 			$more = true;
@@ -105,14 +108,14 @@ class BiblestudyViewMigration extends JViewLegacy
 	{
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
-		$subrun = $session->get('migration', '', 'biblestudy');
 
 		if (empty($stack))
 		{
 			$this->_versionStack = array();
+			$this->_finish       = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
-			$this->running = null;
+			$this->running       = null;
 
 			return;
 		}
@@ -133,10 +136,10 @@ class BiblestudyViewMigration extends JViewLegacy
 		$stack = json_decode($stack, true);
 
 		$this->_versionStack = $stack['version'];
+		$this->_finish       = $stack['finish'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
-		$this->running = $stack['run'];
-		$this->subrun = $subrun;
+		$this->running       = $stack['run'];
 
 	}
 }

@@ -32,11 +32,11 @@ class BibleStudyModelMigration extends JModelLegacy
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
-	/** @var int Id of Extinction Table */
-	public $subrun = null;
-
 	/** @var string Path to Mysql files */
 	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+
+	/** @var string Path to PHP Version files */
+	protected $phpPath = '/components/com_biblestudy/install/updates/';
 
 	/** @var float The time the process started */
 	private $_startTime = null;
@@ -50,6 +50,9 @@ class BibleStudyModelMigration extends JModelLegacy
 	/** @var int Id of Extinction Table */
 	private $_biblestudyEid = 0;
 
+	/** @var array Array of Finish Task */
+	private $_finish = array();
+
 	/**
 	 * Start Looking though the Versions
 	 *
@@ -60,6 +63,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->resetStack();
 		$this->resetTimer();
 		$this->getVersions();
+		$this->_finish = array('1');
 
 		if (empty($this->_versionStack))
 		{
@@ -69,7 +73,14 @@ class BibleStudyModelMigration extends JModelLegacy
 
 		$this->saveStack();
 
-		return true;
+		if (!$this->haveEnoughTime())
+		{
+			return true;
+		}
+		else
+		{
+			return $this->run(false);
+		}
 	}
 
 	/**
@@ -81,8 +92,8 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'biblestudy');
-		$session->set('migration', '', 'biblestudy');
 		$this->_versionStack = array();
+		$this->_finish       = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
 		$this->running = JText::_('Starting');
@@ -283,7 +294,9 @@ class BibleStudyModelMigration extends JModelLegacy
 			jimport('joomla.filesystem.file');
 
 			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
+			$php   = str_replace('.php', '', JFolder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
 			usort($files, 'version_compare');
+			usort($php, 'version_compare');
 
 			/* Find Extension ID of component */
 			$query = $db->getQuery(true);
@@ -316,7 +329,6 @@ class BibleStudyModelMigration extends JModelLegacy
 				elseif ($files)
 				{
 					$this->totalVersions = count($files);
-					$files               = array_reverse($files);
 					$this->_versionStack = $files;
 				}
 				else
@@ -326,8 +338,17 @@ class BibleStudyModelMigration extends JModelLegacy
 					return false;
 				}
 			}
-		}
 
+			foreach ($php as $i => $value)
+			{
+				if (version_compare($value, $this->_versionSwitch) <= 0)
+				{
+					unset($php[$i]);
+				}
+			}
+
+			$this->totalVersions += count($php);
+		}
 		return true;
 	}
 
@@ -421,6 +442,7 @@ class BibleStudyModelMigration extends JModelLegacy
 	{
 		$stack = array(
 			'version' => $this->_versionStack,
+			'finish'  => $this->_finish,
 			'total'   => $this->totalVersions,
 			'done'    => $this->doneVersions,
 			'run'     => $this->running,
@@ -437,7 +459,6 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 		$session = JFactory::getSession();
 		$session->set('migration_stack', $stack, 'biblestudy');
-		$session->set('migration', $this->subrun, 'biblestudy');
 	}
 
 	/**
@@ -477,16 +498,13 @@ class BibleStudyModelMigration extends JModelLegacy
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
 
-		// Load sub values
-		$subrun       = $session->get('migration', '', 'biblestudy');
-
 		if (empty($stack))
 		{
 			$this->_versionStack = array();
+			$this->_finish       = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
 			$this->running = JText::_('Starting');
-			$this->subrun  = null;
 
 			return;
 		}
@@ -503,10 +521,10 @@ class BibleStudyModelMigration extends JModelLegacy
 		$stack = json_decode($stack, true);
 
 		$this->_versionStack = $stack['version'];
+		$this->_finish       = $stack['finish'];
 		$this->totalVersions = $stack['total'];
 		$this->doneVersions  = $stack['done'];
 		$this->running       = $stack['run'];
-		$this->subrun = $subrun;
 
 	}
 
@@ -530,6 +548,9 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function RealRun()
 	{
+		$db  = JFactory::getDbo();
+		$app = JFactory::getApplication();
+		$run = true;
 		if (!empty($this->_versionStack))
 		{
 			krsort($this->_versionStack);
@@ -538,29 +559,42 @@ class BibleStudyModelMigration extends JModelLegacy
 				$version = array_pop($this->_versionStack);
 				$this->running .= ', ' . $version;
 				$this->doneVersions++;
-				$this->subrun = $version;
 				$script = new Com_BiblestudyInstallerScript;
-				$ps           = $script->allUpdate($version);
-				if (!$ps)
+				$run = $script->allUpdate($version, $db);
+				if ($run)
 				{
-					$this->subrun = $ps;
-
-					return false;
+					$this->doneVersions++;
+					$run = $script->updatePHP($version, $db);
 				}
 			}
 		}
 
-		if (empty($this->_versionStack))
+		if (!empty($this->_finish))
+		{
+			while (!empty($this->_finish) && $this->haveEnoughTime())
+			{
+				array_pop($this->_finish);
+				$this->running = JText::_('JBS_MIG_FINISHED');
+				$this->doneVersions++;
+				$this->finish(true);
+			}
+		}
+
+		if (empty($this->_versionStack) && empty($this->_finish))
 		{
 			// Just finished
 			$this->resetStack();
-			$this->running = JText::_('JBS_MIG_FINISHED');
-			$this->subrun = null;
-			$this->finish();
 
 			return false;
 		}
 
+		if ($run == false)
+		{
+			JBSMDbHelper::resetdb();
+			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+
+			return true;
+		}
 		// If we have more Versions or SQL files, continue in the next step
 		return true;
 	}
@@ -575,29 +609,42 @@ class BibleStudyModelMigration extends JModelLegacy
 		$app    = JFactory::getApplication();
 		$update = $this->getUpdateVersion();
 
-		if ($update)
-		{
-			/* Set new Schema Version */
-			$this->setSchemaVersion($update, $this->_biblestudyEid);
-			$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
+		/* Set new Schema Version */
+		$this->setSchemaVersion($update, $this->_biblestudyEid);
+		$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 
-			// Final step is to fix assets
-			$assets = new JBSMAssets;
-			$assets->fixAssets();
-			$installer = new Com_BiblestudyInstallerScript;
-			$installer->fixMenus();
-			$installer->fixemptyaccess();
-			$installer->fixemptylanguage();
+		// Final step is to fix assets
+		$assets = new JBSMAssets;
+		$assets->fixAssets();
+		$installer = new Com_BiblestudyInstallerScript;
+		$installer->fixMenus();
+		$installer->fixemptyaccess();
+		$installer->fixemptylanguage();
 
-			return true;
-		}
-		else
-		{
-			JBSMDbHelper::resetdb();
-			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+		return true;
+	}
 
-			return false;
-		}
+	/**
+	 * Update messages
+	 *
+	 * @param   object           $message  Install object
+	 * @param   JDatabaseDriver  $db       DB Driver
+	 *
+	 * @return void
+	 */
+	public function postinstall_messages($message, $db)
+	{
+	/* Find Extension ID of component */
+		$query = $db->getQuery(true);
+		$query
+			->select('extension_id')
+			->from('#__extensions')
+			->where('`name` = "com_biblestudy"');
+		$db->setQuery($query);
+		$eid                  = $db->loadResult();
+		$this->_biblestudyEid = $eid;
+		$message->extension_id = $this->_biblestudyEid;
+		$this->_db->insertObject('#__postinstall_messages', $message);
 	}
 
 	/**

@@ -25,7 +25,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -37,7 +37,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   string $task  An optional associative array of configuration settings.
+	 * @param   string  $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
 	 */
@@ -58,21 +58,11 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	public function browse()
 	{
 		$app = JFactory::getApplication();
+		$model = $this->getModel('migration');
+		$state = $model->startScanning();
+		$app->input->set('scanstate', $state);
 
-		if ($app->input->getInt('jbsimport') == 0)
-		{
-			JBSMDbHelper::resetdb();
-			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
-			$this->setRedirect('index.php?option=com_biblestudy&view=migrate');
-		}
-		else
-		{
-			$model = $this->getModel('migration');
-			$state = $model->startScanning();
-			$app->input->set('scanstate', $state);
-
-			$this->display(false);
-		}
+		$this->display(false);
 	}
 
 	/**

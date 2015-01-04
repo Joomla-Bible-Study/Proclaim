@@ -453,7 +453,7 @@
         <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/views/terms/view.html.php">BiblestudyViewTerms</Class>
       </ConcreteClasses>
       <AbstractClasses>
-        <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/helpers/route.php">JBSMRoute</Class>
+        <Class sourceFile="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/helpers/route.php">JBSMHelperRoute</Class>
       </AbstractClasses>
       <DependsUpon>
         <Package>+core</Package>

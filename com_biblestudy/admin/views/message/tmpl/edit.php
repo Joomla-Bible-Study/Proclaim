@@ -379,11 +379,14 @@ $input  = $app->input;
 					<?php endforeach; ?>
 				</div>
 				<div class="tab-pane" id="media">
-					<table class="adminlist">
+					<table class="adminlist table table-striped">
 						<thead>
 						<tr>
 							<th class="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
 							<th class="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
+							<th class="center hidden-phone">Language</th>
+							<th class="center hidden-phone">Access</th>
+							<th class="center hidden-phone">ID</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -393,7 +396,7 @@ $input  = $app->input;
 							foreach ($this->mediafiles as $i => $item) :
 								?>
 								<tr class="row<?php echo $i % 2; ?>">
-									<td class="center">
+									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
 											. (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
 										<a class="btn btn-primary"
@@ -405,6 +408,15 @@ $input  = $app->input;
 									<td class="center">
 										<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
 									</td>
+									<td class="center hidden-phone">
+										<?php echo $item->language; ?>
+									</td>
+									<td class="center hidden-phone">
+										<?php echo $item->access_level; ?>
+									</td>
+									<td class="center hidden-phone">
+										<?php echo $item->id; ?>
+									</td>
 
 								</tr>
 							<?php
@@ -412,14 +424,14 @@ $input  = $app->input;
 						else:
 							?>
 							<tr>
-								<td colspan="4" class="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
+								<td colspan="5" class="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
 							</tr>
 						<?php endif; ?>
 
 						</tbody>
 						<tfoot>
 						<tr>
-							<td colspan="4">
+							<td colspan="5">
 								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid='
 									. $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
 								<?php

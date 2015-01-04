@@ -365,6 +365,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$ord[]             = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
 		$ord               = array_merge($ord, $ordervalues);
 		$this->page->order = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
+		$dropdowns         = array();
 		if ($params->get('show_order_search') > 0)
 		{
 			$dropdowns[] = array('order' => $params->get('ddorder'), 'item' => $this->page->order);

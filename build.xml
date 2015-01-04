@@ -33,6 +33,7 @@
 		<include name="plg_biblestudy_podcast/**/*.php"/>
 		<include name="plg_biblestudhy_search/**/*.php"/>
 		<include name="xmap_JBS/**/*.php"/>
+		<exclude name=".git" />
 	</fileset>
 
 	<!-- Validate syntax -->

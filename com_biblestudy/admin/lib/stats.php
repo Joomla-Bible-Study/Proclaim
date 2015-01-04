@@ -464,7 +464,7 @@ class JBSMStats
 			{
 				$registry->loadString($param->params);
 
-				switch ($registry->toObject()->player)
+				switch ($registry->get('player', 0))
 				{
 					case 0:
 						$count_no_player++;
@@ -516,7 +516,7 @@ class JBSMStats
 		$query
 			->select('params')
 			->from('#__bsms_mediafiles')
-			->where('published = ' . $db->q('1'));
+			->where('published = ' . 1);
 		$db->setQuery($query);
 		$popups = $db->loadObjectList();
 
@@ -528,7 +528,7 @@ class JBSMStats
 			{
 				$registry = new JRegistry;
 				$registry->loadString($popup->params);
-				$popup = $registry->toObject()->popup;
+				$popup = $registry->get('popup', null);
 
 				switch ($popup)
 				{

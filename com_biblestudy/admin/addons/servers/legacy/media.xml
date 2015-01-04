@@ -64,7 +64,7 @@
                    description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
-            <field name="media_image" type="text" extension="com_biblestudy"
+            <field name="media_image" type="media" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox span6" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>

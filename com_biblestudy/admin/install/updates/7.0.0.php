@@ -32,7 +32,7 @@ class Migration700
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 
 		$dbhelper = new JBSMDbHelper;

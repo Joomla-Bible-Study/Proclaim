@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Include dependencies
-JLoader::register('JBSMRoute', JPATH_COMPONENT . '/helpers/route.php');
+JLoader::register('JBSMHelperRoute', JPATH_COMPONENT . '/helpers/route.php');
 /**
  * Bible Study Core Defines
  */
