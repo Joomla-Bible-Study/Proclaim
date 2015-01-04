@@ -181,7 +181,7 @@
                    description="JBS_ADM_JWPLAYER_SKIN_DESC"
                    default=""/>
             <field name="jwplayer_autostart" type="radio"
-                   label="JBS_ADM_JWPLAYER_AUTOSTART"
+                   label="JBS_CMN_MEDIA_AUTOSTART"
                    description="JBS_ADM_JWPLAYER_AUTOSTART_DESC"
                    class="btn-group" default="false">
                 <option value="false">JBS_CMN_NO</option>

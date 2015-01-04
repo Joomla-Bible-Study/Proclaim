@@ -195,7 +195,7 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
             <field name="autostart" type="list" default="1"
-                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
+                   label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC">
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
             </field>
@@ -1353,7 +1353,7 @@
         </fieldset>
         <fieldset name="TOOLTIP">
             <field name="tip_title" type="text" default="Sermon Information"
-                   size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE"/>
+                   size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE" description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC"/>
             <field name="tooltip" type="list" default="1"
                    label="JBS_TPL_FP_IMAGES_TOOLTIP" description="JBS_TPL_FP_IMAGES_TOOLTIP_DESC">
                 <option value="0">JBS_CMN_HIDE</option>

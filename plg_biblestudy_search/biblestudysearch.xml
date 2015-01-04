@@ -15,7 +15,9 @@
     </files>
     <config>
         <fields name="params">
-            <fieldset name="basic">
+            <fieldset name="basic"
+                      addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
                 <field name="search_limit" type="text" size="5" default="50"
                        label="JBS_PLG_SEARCH_LIMIT" description="JBS_PLG_SEARCH_LIMIT_DESC"/>
                 <field name="show_description" type="radio" default="1"
