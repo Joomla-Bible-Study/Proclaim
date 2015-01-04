@@ -140,7 +140,19 @@ class Migration900
 				$params->special      	= $mediaFile->special;
 				if (!empty($mediaFile->filename))
 				{
-					$params->filename = $path->folderpath . $mediaFile->filename;
+					if (@empty($path->folderpath))
+					{
+						$folderpath = null;
+					}
+					else
+					{
+						$folderpath = $path->folderpath;
+					}
+					$params->filename = $folderpath . $mediaFile->filename;
+				}
+				else
+				{
+					$params->filename = '';
 				}
 				$params->player         = $mediaFile->player;
 				$params->size          	= $mediaFile->size;
@@ -186,18 +198,21 @@ class Migration900
 		$this->deleteTable('#__bsms_mimetype', $db);
 
 		$message = new stdClass;
-		$message->title_key          = 'JBS_POSTINSTALL_TITLE_9.0.0';
-		$message->description_key    = 'JBS_POSTINSTALL_BODY_9.0.0';
-		$message->action_key         = 'JBS_POSTINSTALL_ACTION_9.0.0';
+		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
+		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
+		$message->action_key         = 'JBS_POSTINSTALL_ACTION_TEMPLATE';
 		$message->language_extension = 'com_biblestudy';
 		$message->language_client_id = 1;
-		$message->type = 'action';
-		$message->action_file = 'admin://components/com_biblestudy/postinstall/actions.php';
-		$message->action = 'com_biblestudy_postinstall_condition';
-		$message->condition_file = "admin://components/com_biblestudy/postinstall/actions.php";
-		$message->condition_method = 'com_biblestudy_postinstall_condition';
+		$message->type               = 'action';
+		$message->action_file        = 'admin://components/com_biblestudy/postinstall/template.php';
+		$message->action             = 'admin_postinstall_template_action';
+		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
+		$message->condition_method   = 'admin_postinstall_template_condition';
 		$message->version_introduced = '9.0.0';
 		$message->enabled = 1;
+
+		$script = new BibleStudyModelMigration;
+		$script->postinstall_messages($message, $db);
 
 		return true;
 	}

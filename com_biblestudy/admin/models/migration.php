@@ -627,14 +627,24 @@ class BibleStudyModelMigration extends JModelLegacy
 	/**
 	 * Update messages
 	 *
-	 * @param   object  $message  ?
+	 * @param   object           $message  Install object
+	 * @param   JDatabaseDriver  $db       DB Driver
 	 *
 	 * @return void
 	 */
-	public function newpostinstall_messages($message)
+	public function postinstall_messages($message, $db)
 	{
+	/* Find Extension ID of component */
+		$query = $db->getQuery(true);
+		$query
+			->select('extension_id')
+			->from('#__extensions')
+			->where('`name` = "com_biblestudy"');
+		$db->setQuery($query);
+		$eid                  = $db->loadResult();
+		$this->_biblestudyEid = $eid;
 		$message->extension_id = $this->_biblestudyEid;
-		$this->_db->insertObject($this->_db->quoteName('#__postinstall_messages'), $message);
+		$this->_db->insertObject('#__postinstall_messages', $message);
 	}
 
 	/**

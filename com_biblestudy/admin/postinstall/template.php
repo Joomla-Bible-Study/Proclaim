@@ -15,7 +15,7 @@ use Joomla\Registry\Registry;
 /**
  * Checks if the template is setup right.
  *
- * This check returns true Template is not setup yet, meaning
+ * This check returns true Templates is not setup yet, meaning
  * that the message concerning it should be displayed.
  *
  * @return  integer
@@ -24,11 +24,11 @@ use Joomla\Registry\Registry;
  */
 function admin_postinstall_template_condition()
 {
-
+	return 1;
 }
 
 /**
- * Redirect the view to the tamplates view
+ * Redirect the view to the Templates view
  *
  * @return  void
  *
@@ -36,5 +36,6 @@ function admin_postinstall_template_condition()
  */
 function admin_postinstall_template_action()
 {
-
+	$url = 'index.php?option=com_biblestudy&view=templates';
+	JFactory::getApplication()->redirect($url);
 }
