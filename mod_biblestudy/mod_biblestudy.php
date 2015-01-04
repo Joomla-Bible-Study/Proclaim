@@ -17,6 +17,13 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
+/* Load language file out of administrator folder
+ * if phrase is not found in specific language file, load english language file:
+ */
+$language = JFactory::getLanguage();
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
+
 // Need for inline player
 $document = JFactory::getDocument();
 

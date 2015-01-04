@@ -17,15 +17,16 @@
     </files>
     <config>
         <fields name="params">
-            <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
+            <fieldset name="basic"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file --> 
                 <field name="t" type="sql" default="1"
-                       label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                        key_field="id" value_field="title" required="true"/>
 
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
-                       label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
+                       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
             </fieldset>
             <fieldset name="advanced">
                 <field
