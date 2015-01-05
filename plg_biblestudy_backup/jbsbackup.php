@@ -24,8 +24,8 @@ class PlgSystemJBSBackup extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -219,8 +219,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function doBackup()
 	{
-		JLoader::register('JBSExport', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/');
-		$dbbackup = new JBSExport;
+		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/');
+		$dbbackup = new JBSMBackup;
 		$backup   = $dbbackup->exportdb($run = 2);
 
 		return $backup;
@@ -329,7 +329,7 @@ class PlgSystemJBSBackup extends JPlugin
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+		$path          = JPATH_SITE . '/media/com_biblestudy/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
