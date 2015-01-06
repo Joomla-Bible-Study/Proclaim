@@ -65,7 +65,7 @@ defined('_JEXEC') or die;
 				<td>
 					<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
 					<a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
-						<button type="button" class="btn btn-default">Back</button>
+						<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
 					</a>
 				</td>
 			</tr>

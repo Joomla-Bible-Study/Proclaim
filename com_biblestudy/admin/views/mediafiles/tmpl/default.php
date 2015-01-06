@@ -72,7 +72,7 @@ $sortFields = $this->getSortFields();
 	</div>
 	<div class="btn-group pull-right hidden-phone">
 		<label for="limit"
-		       class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+		       class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 		<?php echo $this->pagination->getLimitBox(); ?>
 	</div>
 	<div class="btn-group pull-right hidden-phone">
@@ -119,7 +119,7 @@ $sortFields = $this->getSortFields();
 			<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediafile.params', $listDirn, $listOrder); ?>
 		</th>
 		<th>
-			<?php echo JHtml::_('grid.sort', 'JBS_CMN_CREATED', 'mediafile.createdate', $listDirn, $listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'JBS_MED_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
 		</th>
 		<th>
 			<?php echo JHtml::_('grid.sort', 'JBS_CMN_MODIFIED', 'mediafile.modified', $listDirn, $listOrder); ?>

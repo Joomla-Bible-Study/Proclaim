@@ -47,7 +47,7 @@ $listDirn  = $this->state->get('list.direction');
         </div>
         <div class="btn-group pull-right hidden-phone">
             <label for="limit"
-                   class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+                   class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 		    <?php echo $this->pagination->getLimitBox(); ?>
         </div>
         <div class="btn-group pull-right hidden-phone">
