@@ -92,8 +92,6 @@ abstract class JBSMAddon
         } else {
             //@TODO Need to properly translate this string
             throw new Exception(JText::sprintf('COULD NOT LOAD ADDON CONFIGURATION'), 404);
-
-            return false;
         }
 
         return $xml;

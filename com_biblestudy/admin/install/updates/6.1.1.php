@@ -66,7 +66,7 @@ class Migration611
 			return false;
 		}
 
-		$query = "INSERT INTO #__bsms_version SET `version` = '6.0.11', `installdate`='2008-10-22', `build`='611'," .
+		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.0.11', `installdate`='2008-10-22', `build`='611'," .
 			"`versionname`='Leviticus', `versiondate`='2008-10-22'";
 
 		if (!JBSMDbHelper::performdb($query, "Build 611: "))

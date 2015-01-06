@@ -54,7 +54,7 @@ jQuery(document).ready(function () {
 
         //Determine the type of template, and route to that function
     jQuery('#type').change(function () {
-        eval(jQuery('#type option:selected').attr('value') + '()');
+        eval(jQuery('#type').find('option:selected').attr('value') + '()');
     });
 
 

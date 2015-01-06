@@ -100,7 +100,7 @@ $input = $app->input;
     </div>
     <div class="modal-body">
         <div class="progress">
-            <div class="bar" style="width: 0%;"></div>
+            <div class="bar" style="width: 0;"></div>
         </div>
     </div>
 </div>
@@ -442,5 +442,5 @@ $input = $app->input;
 </div>
 </form>
 <script type="text/javascript">
-    jQuery('#configTabs a:first').tab('show'); // Select first tab
+    jQuery('#configTabs ').find('a:first'.tab('show'); // Select first tab
 </script>
