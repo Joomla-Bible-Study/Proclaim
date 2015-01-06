@@ -9,6 +9,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * BibleStudy Install Script
@@ -169,7 +170,6 @@ class Com_BiblestudyInstallerScript
 	public function uninstall($parent)
 	{
 		// Need to load JBSMDbHelper for script
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$dbhelper    = new JBSMDbHelper;
 		$db    = JFactory::getDBO();
 		$drop_result = '';

@@ -60,7 +60,7 @@ $j(document).ready(function () {
                         $j('#virtueMartItems').removeOption(/./);
                         $j('#virtueMartCategories').val('');
 
-                    })
+                    });
                     refreshArticleItems();
                 }
             });

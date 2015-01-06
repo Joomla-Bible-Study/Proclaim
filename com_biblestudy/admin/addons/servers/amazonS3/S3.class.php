@@ -1382,7 +1382,6 @@ class S3
 			$dist['hash'] = $rest->headers['hash'];
 			return $dist;
 		}
-		return false;
 	}
 
 
