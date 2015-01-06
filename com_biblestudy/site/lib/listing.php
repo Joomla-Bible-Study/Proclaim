@@ -1322,7 +1322,7 @@ class JBSMListing
 			case $extra . 'studyintro':
 				if ($header == 1)
 				{
-					$data = JText::_('JBS_CMN_INTRODUCTION');
+					$data = JText::_('JBS_CMN_STUDY_INTRO');
 				}
 				else
 				{
