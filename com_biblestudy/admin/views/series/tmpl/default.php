@@ -71,7 +71,7 @@ $sortFields = $this->getSortFields();
 	</div>
 	<div class="btn-group pull-right hidden-phone">
 		<label for="limit" class="element-invisible"
-		       id="limit"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+		       id="limit"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 		<?php echo $this->pagination->getLimitBox(); ?>
 	</div>
 	<div class="btn-group pull-right hidden-phone">

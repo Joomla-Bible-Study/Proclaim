@@ -270,7 +270,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			);
 			$lang[]   = $langtemp;
 		}
-		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JBS_SELECT_LANGUAGE'));
+		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JOPTION_SELECT_LANGUAGE'));
 		$langdropdown          = array_merge($langdropdown, $lang);
 		$this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_languages"

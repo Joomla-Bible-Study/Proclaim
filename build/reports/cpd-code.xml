@@ -1142,7 +1142,7 @@
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -1295,7 +1295,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -1469,7 +1469,7 @@ if (BIBLESTUDY_CHECKREL)
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -1568,7 +1568,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -1634,7 +1634,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -1998,7 +1998,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -2129,7 +2129,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
 </codefragment>
   </duplication>
   <duplication lines="14" tokens="22">
@@ -2215,7 +2215,7 @@ if (BIBLESTUDY_CHECKREL)
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -2383,7 +2383,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
 </codefragment>
   </duplication>
   <duplication lines="23" tokens="33">
@@ -2563,7 +2563,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
 </codefragment>
   </duplication>
   <duplication lines="24" tokens="28">
@@ -2743,7 +2743,7 @@ if (BIBLESTUDY_CHECKREL)
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -2938,7 +2938,7 @@ $app = JFactory::getApplication();
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
@@ -3044,7 +3044,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
 </codefragment>
   </duplication>
   <duplication lines="23" tokens="28">
@@ -3147,7 +3147,7 @@ JHtml::_('behavior.multiselect');
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
                     &lt;label for="limit"
-                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
 </codefragment>
   </duplication>
   <duplication lines="24" tokens="28">
@@ -5594,7 +5594,7 @@ class JFormFieldVirtuemart extends JFormFieldList
   <duplication lines="24" tokens="53">
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/views/comments/tmpl/default.php" line="78"/>
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/views/commentlist/tmpl/default.php" line="86"/>
-    <codefragment>                           class="element-invisible"&gt;&lt;?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?&gt;&lt;/label&gt;
+    <codefragment>                           class="element-invisible"&gt;&lt;?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?&gt;&lt;/label&gt;
                     &lt;?php echo $this-&gt;pagination-&gt;getLimitBox(); ?&gt;
                 &lt;/div&gt;
                 &lt;div class="btn-group pull-right hidden-phone"&gt;
