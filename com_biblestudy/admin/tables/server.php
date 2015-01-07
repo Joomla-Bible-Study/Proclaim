@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Table class for Server
  *
@@ -89,7 +91,7 @@ class TableServer extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
-        // Bind the server params
+		// Bind the server params
 		if (isset($array['params']) && is_array($array['params']))
 		{
 			$registry = new Registry;
@@ -108,7 +110,7 @@ class TableServer extends JTable
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new JRules($array['rules']);
+			$rules = new JAccessRules($array['rules']);
 			$this->setRules($rules);
 		}
 

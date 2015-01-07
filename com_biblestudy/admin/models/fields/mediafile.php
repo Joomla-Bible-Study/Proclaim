@@ -10,8 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
+use Joomla\Registry\Registry;
+
 JFormHelper::loadFieldClass('list');
 
 /**
