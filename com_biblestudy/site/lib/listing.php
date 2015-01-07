@@ -877,12 +877,12 @@ class JBSMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object         $item      ?
-	 * @param   Object         $row       ?
-	 * @param   Joomla\Registry\Registry       $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   string         $header    ?
-	 * @param   string         $type      ?
+	 * @param   Object                    $item      ?
+	 * @param   Object                    $row       ?
+	 * @param   Joomla\Registry\Registry  $params    ?
+	 * @param   TableTemplate             $template  ?
+	 * @param   string                    $header    ?
+	 * @param   string                    $type      ?
 	 *
 	 * @return string
 	 */
@@ -2141,7 +2141,7 @@ class JBSMListing
 	 * Get StudyDate
 	 *
 	 * @param   Joomla\Registry\Registry  $params     Item Params
-	 * @param   string    $studydate  Study Date
+	 * @param   string                    $studydate  Study Date
 	 *
 	 * @return string
 	 */
