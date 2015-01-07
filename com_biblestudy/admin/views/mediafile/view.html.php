@@ -22,7 +22,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	/** @var object */
 	public $canDo;
 
-	/** @var JRegistry */
+	/** @var Registry */
 	public $admin_params;
 
 	/** @var object */
@@ -34,7 +34,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	/** @var object */
 	protected $item;
 
-	/** @var JRegistry */
+	/** @var Registry */
 	protected $state;
 
 	/** @var object */

@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
+use \Joomla\Registry\Registry;
 
 /**
  * Controller for Admin
@@ -73,7 +73,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDBO();
 		$msg  = JText::_('JBS_ADM_ERROR_OCCURED');
 		$post = $_POST['jform'];
-		$reg  = new JRegistry;
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
 		$from = $reg->get('from');
 		$to   = $reg->get('to');
@@ -147,7 +147,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDBO();
 		$msg  = null;
 		$post = $_POST['jform'];
-		$reg  = new JRegistry;
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
 		$from  = $reg->get(';from');
 		$to    = $reg->get(';to');

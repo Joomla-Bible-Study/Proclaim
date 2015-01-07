@@ -22,24 +22,34 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 	/** @var  string Media Files */
 	public $mediafiles;
+
 	/** @var  string Can Do */
 	public $canDo;
-	/** @var  JRegistry Params */
+
+	/** @var  Registry Params */
 	public $params;
+
 	/** @var  string User */
 	public $user;
+
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
+
 	/**  Form @var array */
 	protected $form;
+
 	/** Item @var array */
 	protected $item;
+
 	/** Return Page @var string */
 	protected $return_page;
+
 	/** Return Page Item @var string */
 	protected $return_page_item;
+
 	/** State @var array */
 	protected $state;
+
 	/** Admin @var array */
 	protected $admin;
 

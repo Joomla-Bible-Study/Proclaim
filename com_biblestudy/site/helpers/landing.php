@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Class for JBSMLanding
  *
@@ -21,8 +23,8 @@ class JBSMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
@@ -43,7 +45,7 @@ class JBSMLanding
 		$locationuselimit = $params->get('landinglocationsuselimit', 0);
 		$menu             = $mainframe->getMenu();
 		$item             = $menu->getActive();
-		$registry         = new JRegistry;
+		$registry         = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -239,8 +241,8 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
@@ -259,7 +261,7 @@ class JBSMLanding
 		$teacheruselimit = $params->get('landingteachersuselimit', 0);
 		$menu            = $mainframe->getMenu();
 		$item            = $menu->getActive();
-		$registry        = new JRegistry;
+		$registry        = new Registry;
 
 		if (isset($item->params))
 		{
@@ -478,8 +480,8 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
@@ -505,7 +507,7 @@ class JBSMLanding
 		$seriesuselimit = $params->get('landingseriesuselimit', 0);
 		$menu           = $mainframe->getMenu();
 		$item           = $menu->getActive();
-		$registry       = new JRegistry;
+		$registry       = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -717,8 +719,8 @@ class JBSMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
@@ -740,7 +742,7 @@ class JBSMLanding
 		}
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->params))
 		{
@@ -874,8 +876,8 @@ class JBSMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 */
@@ -898,7 +900,7 @@ class JBSMLanding
 		$t        = $input->get('t', 1, 'int');
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -1031,8 +1033,8 @@ class JBSMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 */
@@ -1057,7 +1059,7 @@ class JBSMLanding
 		$messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
 		$menu                = $mainframe->getMenu();
 		$item                = $menu->getActive();
-		$registry            = new JRegistry;
+		$registry            = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -1248,7 +1250,7 @@ class JBSMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   JRegistry  $params  Item Params
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -1268,7 +1270,7 @@ class JBSMLanding
 		$app      = JFactory::getApplication();
 		$menu     = $app->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->prams))
 		{

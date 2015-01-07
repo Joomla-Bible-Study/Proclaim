@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * helper to get related studies to the current one
@@ -24,8 +25,8 @@ class JBSMRelatedStudies
 	/**
 	 * Get Related
 	 *
-	 * @param   object     $row     JTable
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object                    $row     JTable
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return boolean
 	 *
@@ -67,7 +68,7 @@ class JBSMRelatedStudies
 
 		foreach ($studies as $study)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($study->params);
 			$sparams = $registry;
 			$compare = $sparams->get('metakey');
@@ -846,9 +847,9 @@ class JBSMRelatedStudies
 	/**
 	 * Parse keys
 	 *
-	 * @param   string $source  ?
-	 * @param   string $compare ?
-	 * @param   int    $id      ?
+	 * @param   string  $source   ?
+	 * @param   string  $compare  ?
+	 * @param   int     $id       ?
 	 *
 	 * @return boolean
 	 */

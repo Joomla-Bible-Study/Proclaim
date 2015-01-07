@@ -60,7 +60,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');
 
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		$items = parent::getItems();
 

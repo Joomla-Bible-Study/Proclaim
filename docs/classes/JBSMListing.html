@@ -109,7 +109,7 @@
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a id="method_getHeader"></a><div class="element clickable method public method_getHeader" data-toggle="collapse" data-target=".method_getHeader .collapse">
 <h2>Get Header</h2>
-<pre>getHeader(object $row, \JRegistry $params, \JRegistry $admin_params, int $template, int $showheader, int $ismodule) : string</pre>
+<pre>getHeader(object $row, \Registry $params, \Registry $admin_params, int $template, int $showheader, int $ismodule) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -119,10 +119,10 @@
 <code>object</code><p>JTable</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template ID</p></div>
@@ -139,7 +139,7 @@
 </div>
 <a id="method_getListing"></a><div class="element clickable method public method_getListing" data-toggle="collapse" data-target=".method_getListing .collapse">
 <h2>Get listing</h2>
-<pre>getListing(\JTable $row, \JRegistry $params, string $oddeven, \JRegistry $admin_params, int $template, string $ismodule) : string</pre>
+<pre>getListing(\JTable $row, \Registry $params, string $oddeven, \Registry $admin_params, int $template, string $ismodule) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -149,14 +149,14 @@
 <code>\JTable</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$oddeven</h4>
 <code>string</code><p>?Number patten?</p>
 </div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin info</p></div>
+<code>\Registry</code><p>Admin info</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template ID</p></div>
@@ -169,7 +169,7 @@
 </div>
 <a id="method_getListingExp"></a><div class="element clickable method public method_getListingExp" data-toggle="collapse" data-target=".method_getListingExp .collapse">
 <h2>Get Listing Exp</h2>
-<pre>getListingExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
+<pre>getListingExp(object $row, \Registry $params, \Registry $admin_params, object $template) : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -179,10 +179,10 @@
 <code>object</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>object</code><p>Template</p></div>
@@ -229,7 +229,7 @@
 </div>
 <a id="method_getShare"></a><div class="element clickable method public method_getShare" data-toggle="collapse" data-target=".method_getShare .collapse">
 <h2>Share Helper file</h2>
-<pre>getShare(string $link, \JTable $row, \JRegistry $params, \JRegistry $admin_params) : null | string</pre>
+<pre>getShare(string $link, \JTable $row, \Registry $params, \Registry $admin_params) : null | string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -242,10 +242,10 @@
 <code>\JTable</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>null</code><code>string</code>FIXME Look like this is missing the $template var</div>
@@ -253,7 +253,7 @@
 </div>
 <a id="method_getStudyExp"></a><div class="element clickable method public method_getStudyExp" data-toggle="collapse" data-target=".method_getStudyExp .collapse">
 <h2>Get Study Exp</h2>
-<pre>getStudyExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
+<pre>getStudyExp(object $row, \Registry $params, \Registry $admin_params, object $template) : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -263,10 +263,10 @@
 <code>object</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>object</code><p>Template</p></div>
@@ -276,20 +276,20 @@
 </div>
 <a id="method_getTitle"></a><div class="element clickable method public method_getTitle" data-toggle="collapse" data-target=".method_getTitle .collapse">
 <h2>Get Title</h2>
-<pre>getTitle(\JRegistry $params, object $row, \JRegistry $admin_params, int $template) : string</pre>
+<pre>getTitle(\Registry $params, object $row, \Registry $admin_params, int $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>System Params</p></div>
+<code>\Registry</code><p>System Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>Item info</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template</p></div>
@@ -299,7 +299,7 @@
 </div>
 <a id="method_getCell"></a><div class="element clickable method private method_getCell" data-toggle="collapse" data-target=".method_getCell .collapse">
 <h2>Get Cell</h2>
-<pre>getCell(string $elementid, string $element, int $rowcolid, string $colspan, string $rowspan, string $lastcol, string $islink, string $id3, int $tid, string $smenu, string $tmenu, string $entry_access, string $allow_entry, \JRegistry $params, \JRegistry $admin_params, \JTable $row, int $template) : string</pre>
+<pre>getCell(string $elementid, string $element, int $rowcolid, string $colspan, string $rowspan, string $lastcol, string $islink, string $id3, int $tid, string $smenu, string $tmenu, string $entry_access, string $allow_entry, \Registry $params, \Registry $admin_params, \JTable $row, int $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -345,10 +345,10 @@
 <code>string</code><p>Allow Entry</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>\JTable</code><p>Row info</p></div>
@@ -361,7 +361,7 @@
 </div>
 <a id="method_getCustomhead"></a><div class="element clickable method private method_getCustomhead" data-toggle="collapse" data-target=".method_getCustomhead .collapse">
 <h2>Get CustomHead</h2>
-<pre>getCustomhead(int $rowcolid, \JRegistry $params) : string</pre>
+<pre>getCustomhead(int $rowcolid, \Registry $params) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -371,14 +371,14 @@
 <code>int</code><p>Row ID Column</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_getHeadercell"></a><div class="element clickable method private method_getHeadercell" data-toggle="collapse" data-target=".method_getHeadercell .collapse">
 <h2>Get Header Cell</h2>
-<pre>getHeadercell(int $rowid, \JTable $row, \JRegistry $params, int $lastcol, int $colspan, int $rowspan, int $rowcolid, string $nh, \JRegistry $admin_params, int $template) : string</pre>
+<pre>getHeadercell(int $rowid, \JTable $row, \Registry $params, int $lastcol, int $colspan, int $rowspan, int $rowcolid, string $nh, \Registry $admin_params, int $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -391,7 +391,7 @@
 <code>\JTable</code><p>Item info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$lastcol</h4>
 <code>int</code><p>Last Column</p></div>
@@ -410,7 +410,7 @@
 </div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template ID</p></div>
@@ -420,7 +420,7 @@
 </div>
 <a id="method_getLink"></a><div class="element clickable method private method_getLink" data-toggle="collapse" data-target=".method_getLink .collapse">
 <h2>Get Link</h2>
-<pre>getLink(string $islink, string $id3, int $tid, string $smenu, string $tmenu, \JRegistry $params, \JRegistry $admin_params, object $row, int $template) : string</pre>
+<pre>getLink(string $islink, string $id3, int $tid, string $smenu, string $tmenu, \Registry $params, \Registry $admin_params, object $row, int $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -442,10 +442,10 @@
 <code>string</code><p>Teacher Menu</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Registry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>Item Info</p></div>

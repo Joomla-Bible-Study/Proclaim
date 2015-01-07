@@ -50,7 +50,7 @@ class TableTemplate extends JTable
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	public $params = null;
 
@@ -102,7 +102,7 @@ class TableTemplate extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}

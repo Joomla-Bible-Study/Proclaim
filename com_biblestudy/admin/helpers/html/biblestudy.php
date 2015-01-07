@@ -60,7 +60,7 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   JRegistry  $params  Params for css
+	 * @param   Joomla\Registry\Registry  $params  Params for css
 	 * @param   string     $url     Url of a css file to load
 	 *
 	 * @return  void

@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * class for Translated Helper
  *
@@ -59,7 +61,7 @@ class JBSMTranslated
 		if ($topicItem)
 		{
 			// First choice: evaluate language strings
-			$itemparams = new JRegistry;
+			$itemparams = new Registry;
 			$itemparams->loadString($topicItem->topic_params);
 			$currentLanguage = JFactory::getLanguage()->getTag();
 

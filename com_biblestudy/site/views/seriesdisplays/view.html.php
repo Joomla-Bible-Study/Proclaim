@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * View class for SeriesDisplays
  *
@@ -33,13 +35,13 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 	/** @var  string Request Url */
 	protected $request_url;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
 	/** @var  String Page */
 	protected $page;
 
-	/** @var JRegistry State */
+	/** @var Registry State */
 	protected $state;
 
 	/**
@@ -58,13 +60,13 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
 		$this->state = $this->get('state');
-		/** @var  $params JRegistry */
+		/** @var  $params Registry */
 		$params = $this->state->template->params;
 		$this->template = $this->state->get('tepmlate');
 
 		$document = JFactory::getDocument();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 
 		// Prepare meta information (under development)

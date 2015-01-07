@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  *  Class for Series List
  *
@@ -24,12 +26,12 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string     $r              ?
-	 * @param   object     $row            JTable
-	 * @param   object     $customelement  ?
-	 * @param   string     $custom         ?
-	 * @param   string     $islink         Is a Link
-	 * @param   JRegistry  $params         Item Params
+	 * @param   string                    $r              ?
+	 * @param   object                    $row            JTable
+	 * @param   object                    $customelement  ?
+	 * @param   string                    $custom         ?
+	 * @param   string                    $islink         Is a Link
+	 * @param   Joomla\Registry\Registry  $params         Item Params
 	 *
 	 * @return string
 	 */
@@ -97,13 +99,12 @@ class JBSMSerieslist extends JBSMListing
 		return $customelement;
 	}
 
-
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object     $row       JTable
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   object                    $row       JTable
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return object
 	 */
@@ -127,9 +128,9 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object     $row       JTable
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   object                    $row       JTable
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return object
 	 */
@@ -152,15 +153,16 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int        $id        ID
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   int                       $id        ID
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return string
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
 
+		// @todo need to fix this.!!!
 		$input   = new JInput;
 		$limit   = '';
 		$nolimit = $input->get('nolimit', '', 'int');
@@ -235,6 +237,5 @@ class JBSMSerieslist extends JBSMListing
 
 		return $studies;
 	}
-
 
 }

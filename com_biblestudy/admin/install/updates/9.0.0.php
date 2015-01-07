@@ -7,6 +7,8 @@
  */
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Update for 9.0.0 class
  *
@@ -31,7 +33,7 @@ class Migration900
 		{
 			set_time_limit(3000);
 		}
-		$registry = new JRegistry;
+		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Migrate servers

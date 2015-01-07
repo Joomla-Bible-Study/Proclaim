@@ -8,9 +8,6 @@
  * */
 defined('_JEXEC') or die;
 
-/* Import library dependencies */
-jimport('joomla.plugin.plugin');
-
 /**
  * JBSBackup jPlugin class
  *
@@ -79,7 +76,7 @@ class PlgSystemJBSBackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -110,7 +107,7 @@ class PlgSystemJBSBackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -254,8 +251,8 @@ class PlgSystemJBSBackup extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   JRegistry  $params    Component Params
-	 * @param   string     $dobackup  File of Backup
+	 * @param   Joomla\Registry\Registry  $params    Component Params
+	 * @param   string                    $dobackup  File of Backup
 	 *
 	 * @return void
 	 */
@@ -321,7 +318,7 @@ class PlgSystemJBSBackup extends JPlugin
 	/**
 	 * Update files
 	 *
-	 * @param   JRegistry  $params  JBSM Params
+	 * @param   Joomla\Registry\Registry  $params  JBSM Params
 	 *
 	 * @return void
 	 */

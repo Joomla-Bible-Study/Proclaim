@@ -8,10 +8,10 @@
  * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
-defined('_JEXEC')
-or die;
+defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modeladmin');
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFile model class
@@ -27,6 +27,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
+
 	/**
 	 * Admin
 	 *
@@ -45,7 +46,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to move a mediafile listing
 	 *
-	 * @param   string $direction ?
+	 * @param   string  $direction  ?
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -76,9 +77,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Returns a Table object, always creating it.
 	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    TableMediafile    A database object
 	 */
@@ -117,7 +118,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -132,6 +133,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * Get the media form
 	 *
 	 * @return bool|mixed
+	 *
 	 * @throws Exception
 	 *
 	 * @since   9.0.0
@@ -236,7 +238,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to get media item
 	 *
-	 * @param   null $pk
+	 * @param   int  $pk  int
 	 *
 	 * @return  mixed|void
 	 *
@@ -254,7 +256,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if (!empty($this->data))
 		{
 			// Convert metadata field to array
-			$registry             = new JRegistry($this->data->metadata);
+			$registry             = new Registry($this->data->metadata);
 			$this->data->metadata = $registry->toArray();
 
 			// Set the server_id from session if available or fall back on the db value
@@ -269,9 +271,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
-	 * @param   array $commands An array of commands to perform.
-	 * @param   array $pks      An array of item ids.
-	 * @param   array $contexts An array of item contexts.
+	 * @param   array  $commands  An array of commands to perform.
+	 * @param   array  $pks       An array of item ids.
+	 * @param   array  $contexts  An array of item contexts.
 	 *
 	 * @return    boolean     Returns true on success, false on failure.
 	 *
@@ -281,7 +283,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))
@@ -361,9 +363,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch Player changes for a group of mediafiles.
 	 *
-	 * @param   string $value    The new value matching a player.
-	 * @param   array  $pks      An array of row IDs.
-	 * @param   array  $contexts An array of item contexts.
+	 * @param   string  $value     The new value matching a player.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -407,8 +409,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 */
@@ -421,9 +423,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value    The new value matching a client.
-	 * @param   array  $pks      An array of row IDs.
-	 * @param   array  $contexts An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -467,9 +469,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value    The new value matching a client.
-	 * @param   array  $pks      An array of row IDs.
-	 * @param   array  $contexts An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -513,9 +515,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value    The new value matching a client.
-	 * @param   array  $pks      An array of row IDs.
-	 * @param   array  $contexts An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -559,9 +561,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Batch popup changes for a group of media files.
 	 *
-	 * @param   string $value    The new value matching a client.
-	 * @param   array  $pks      An array of row IDs.
-	 * @param   array  $contexts An array of item contexts.
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -605,7 +607,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object $record A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -657,7 +659,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Load the Admin settings
 		$admin = JBSMParams::getAdmin();
-		$registry    = new JRegistry;
+		$registry    = new Registry;
 		$registry->loadString($admin->params);
 		$this->setState('admin', $registry);
 
@@ -672,7 +674,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   object $table A record object.
+	 * @param   object  $table  A record object.
 	 *
 	 * @return    array    An array of conditions to add to add to ordering queries.
 	 *

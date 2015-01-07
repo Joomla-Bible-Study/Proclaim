@@ -527,8 +527,8 @@
         <docblock line="29">
           <description>Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="29" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="29" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -538,8 +538,8 @@
         <docblock line="36">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="36" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="36" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -678,8 +678,8 @@
         <docblock line="55">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Teachers&lt;/p&gt;" line="55" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Teachers&lt;/p&gt;" line="55" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -722,8 +722,8 @@
         <docblock line="67">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="67" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="67" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -851,8 +851,8 @@
         <docblock line="41">
           <description>State</description>
           <long-description></long-description>
-          <tag name="var" description="" line="41" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="41" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -895,8 +895,8 @@
         <docblock line="69">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="69" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="69" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -1601,8 +1601,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="65">
           <description>Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="65" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="65" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -1828,11 +1828,11 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
           <tag name="param" description="&lt;p&gt;Table info&lt;/p&gt;" line="40" type="\JTable" variable="$row">
             <type>\JTable</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Component / System Params&lt;/p&gt;&#10;" line="40" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Component / System Params&lt;/p&gt;&#10;" line="40" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Settings&lt;/p&gt;" line="40" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Settings&lt;/p&gt;" line="40" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="40" type="int" variable="$template">
             <type>int</type>
@@ -1855,12 +1855,12 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -2011,8 +2011,8 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="794">
           <description>Get Textlink</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="794" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="794" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="794" type="object" variable="$row">
             <type>object</type>
@@ -2020,8 +2020,8 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
           <tag name="param" description="&lt;p&gt;Text Or PDF location&lt;/p&gt;" line="794" type="string" variable="$textorpdf">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin info&lt;/p&gt;" line="794" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin info&lt;/p&gt;" line="794" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="794" type="int" variable="$template">
             <type>int</type>
@@ -2033,7 +2033,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$row</name>
@@ -2048,7 +2048,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -2783,8 +2783,8 @@ asset does not exist it will be created.</long-description>
           <tag name="param" description="&lt;p&gt;Article&lt;/p&gt;" line="34" type="object" variable="$article">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="34" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="34" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Array of Attributes&lt;/p&gt;" line="34" type="array" variable="$attribs">
             <type>array</type>
@@ -2801,7 +2801,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$attribs</name>
@@ -2818,8 +2818,8 @@ asset does not exist it will be created.</long-description>
           <tag name="param" description="&lt;p&gt;Category id&lt;/p&gt;" line="66" type="int" variable="$category">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="66" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="66" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="66" type="string">
             <type>string</type>
@@ -2833,7 +2833,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="97" package="BibleStudy.Site">
@@ -2845,8 +2845,8 @@ asset does not exist it will be created.</long-description>
           <tag name="param" description="&lt;p&gt;Article&lt;/p&gt;" line="97" type="object" variable="$article">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="97" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="97" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Array of Attributes&lt;/p&gt;" line="97" type="array" variable="$attribs">
             <type>array</type>
@@ -2863,7 +2863,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$attribs</name>
@@ -2881,8 +2881,8 @@ Edit access checks must be performed in the calling code.</long-description>
           <tag name="param" description="&lt;p&gt;The article in question.&lt;/p&gt;" line="139" type="object" variable="$article">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;The article parameters&lt;/p&gt;" line="139" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;The article parameters&lt;/p&gt;" line="139" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Not used??&lt;/p&gt;&#10;" line="139" type="array" variable="$attribs">
             <type>array</type>
@@ -2900,7 +2900,7 @@ Edit access checks must be performed in the calling code.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$attribs</name>
@@ -2917,8 +2917,8 @@ Edit access checks must be performed in the calling code.</long-description>
           <tag name="param" description="&lt;p&gt;Article&lt;/p&gt;" line="188" type="object" variable="$article">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="188" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Params&lt;/p&gt;" line="188" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Array of Attributes&lt;/p&gt;" line="188" type="array" variable="$attribs">
             <type>array</type>
@@ -2935,7 +2935,7 @@ Edit access checks must be performed in the calling code.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$attribs</name>
@@ -4463,8 +4463,8 @@ path            string    The absolute path to the directory where the update da
         <docblock line="62">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="62" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="62" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -4622,13 +4622,13 @@ path            string    The absolute path to the directory where the update da
         <name>$template-&gt;params</name>
         <default/>
         <docblock>
-          <description>JRegistry</description>
+          <description>Registry</description>
           <long-description/>
-          <tag name="var" description="&lt;p&gt;JRegistry&lt;/p&gt;" type="" line="21">
+          <tag name="var" description="&lt;p&gt;Registry&lt;/p&gt;" type="" line="21">
             <type by_reference="false"/>
           </tag>
           <tag name="magic" line="21"/>
-          <tag name="property" description="JRegistry" line="21" type="" variable="$template-&gt;params"/>
+          <tag name="property" description="Registry" line="21" type="" variable="$template-&gt;params"/>
         </docblock>
       </property>
     </class>
@@ -5835,8 +5835,8 @@ PreachIT Converter system</description>
           <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="70" type="object" variable="$params">
             <type>object</type>
           </tag>
-          <tag name="return" description="" line="70" type="\JRegistry">
-            <type>\JRegistry</type>
+          <tag name="return" description="" line="70" type="\Registry">
+            <type>\Registry</type>
           </tag>
         </docblock>
         <argument line="0">
@@ -5913,11 +5913,11 @@ PreachIT Converter system</description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="39" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="39" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="39" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="39" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="39" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="39" type="int" variable="$template">
             <type>int</type>
@@ -5939,12 +5939,12 @@ PreachIT Converter system</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -6832,14 +6832,14 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Item Info&lt;/p&gt;" line="33" type="\JTable" variable="$row">
             <type>\JTable</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="33" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="33" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;?Number patten?&lt;/p&gt;&#10;" line="33" type="string" variable="$oddeven">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin info&lt;/p&gt;" line="33" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin info&lt;/p&gt;" line="33" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="33" type="int" variable="$template">
             <type>int</type>
@@ -6859,7 +6859,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$oddeven</name>
@@ -6869,7 +6869,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -6927,11 +6927,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Allow Entry&lt;/p&gt;" line="828" type="string" variable="$allow_entry">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="828" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="828" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="828" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="828" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Row info&lt;/p&gt;" line="828" type="\JTable" variable="$row">
             <type>\JTable</type>
@@ -7011,12 +7011,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$row</name>
@@ -7050,11 +7050,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Teacher Menu&lt;/p&gt;" line="923" type="string" variable="$tmenu">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="923" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="923" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="923" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="923" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Item Info&lt;/p&gt;" line="923" type="object" variable="$row">
             <type>object</type>
@@ -7094,12 +7094,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$row</name>
@@ -7121,11 +7121,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Item Info&lt;/p&gt;" line="1022" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1022" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1022" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1022" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1022" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="1022" type="object" variable="$template">
             <type>object</type>
@@ -7142,12 +7142,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -7164,11 +7164,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Item Info&lt;/p&gt;" line="1067" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1067" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1067" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1067" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1067" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="1067" type="object" variable="$template">
             <type>object</type>
@@ -7185,12 +7185,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -7210,11 +7210,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Item Info&lt;/p&gt;" line="1151" type="\JTable" variable="$row">
             <type>\JTable</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1151" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1151" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1151" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1151" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="FIXME Look like this is missing the $template var" line="1151" type="null|string">
             <type>null</type>
@@ -7234,12 +7234,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1356" package="BibleStudy.Site">
@@ -7361,14 +7361,14 @@ ordering requirements.</long-description>
         <docblock line="1499">
           <description>Get Title</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;System Params&lt;/p&gt;" line="1499" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;System Params&lt;/p&gt;" line="1499" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Item info&lt;/p&gt;" line="1499" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1499" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1499" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="1499" type="int" variable="$template">
             <type>int</type>
@@ -7380,7 +7380,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$row</name>
@@ -7390,7 +7390,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -7407,11 +7407,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="1596" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1596" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1596" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1596" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1596" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="1596" type="int" variable="$template">
             <type>int</type>
@@ -7434,12 +7434,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -7469,8 +7469,8 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Item info&lt;/p&gt;" line="2097" type="\JTable" variable="$row">
             <type>\JTable</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="2097" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="2097" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Last Column&lt;/p&gt;" line="2097" type="int" variable="$lastcol">
             <type>int</type>
@@ -7487,8 +7487,8 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="2097" type="string" variable="$nh">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="2097" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="2097" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="2097" type="int" variable="$template">
             <type>int</type>
@@ -7510,7 +7510,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$lastcol</name>
@@ -7540,7 +7540,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -7557,8 +7557,8 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Row ID Column&lt;/p&gt;" line="2158" type="int" variable="$rowcolid">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="2158" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="2158" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="2158" type="string">
             <type>string</type>
@@ -7572,7 +7572,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
     </class>
@@ -8103,8 +8103,8 @@ ordering requirements.</long-description>
         <docblock line="28">
           <description>The update data registry</description>
           <long-description></long-description>
-          <tag name="var" description="" line="28" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="28" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -8141,8 +8141,8 @@ ordering requirements.</long-description>
         <docblock line="63">
           <description>Returns the internally used registry</description>
           <long-description></long-description>
-          <tag name="return" description="" line="63" type="\JRegistry">
-            <type>\JRegistry</type>
+          <tag name="return" description="" line="63" type="\Registry">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </method>
@@ -8152,8 +8152,8 @@ ordering requirements.</long-description>
         <docblock line="75">
           <description>Replaces the internally used registry with the one supplied</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="75" type="\JRegistry" variable="$registry">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="75" type="\Registry" variable="$registry">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="75" type="void">
             <type>void</type>
@@ -8162,7 +8162,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$registry</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="true" abstract="false" static="false" visibility="public" namespace="" line="88" package="LiveUpdate">
@@ -9448,8 +9448,8 @@ JTable instance.</long-description>
         <docblock line="334">
           <description>Get Template Setting</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item params&lt;/p&gt;" line="334" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item params&lt;/p&gt;" line="334" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="334" type="object">
             <type>object</type>
@@ -9458,7 +9458,7 @@ JTable instance.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="true" visibility="public" namespace="" line="351" package="BibleStudy\Model.BibleStudy">
@@ -10023,11 +10023,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Media Info&lt;/p&gt;" line="48" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="48" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="48" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="48" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="48" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="48" type="string">
             <type>string</type>
@@ -10042,12 +10042,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="66" package="BibleStudy.Site">
@@ -10059,11 +10059,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Media Info&lt;/p&gt;" line="66" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="66" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="66" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Prams&lt;/p&gt;" line="66" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Prams&lt;/p&gt;" line="66" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="66" type="string|boolean">
             <type>string</type>
@@ -10079,12 +10079,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="84" package="BibleStudy.Site">
@@ -10096,11 +10096,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Media info&lt;/p&gt;" line="84" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="84" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="84" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="84" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="84" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="84" type="string">
             <type>string</type>
@@ -10115,12 +10115,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="102" package="BibleStudy.Site">
@@ -10132,11 +10132,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="102" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="102" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="102" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="102" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="102" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="102" type="string">
             <type>string</type>
@@ -10151,12 +10151,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="120" package="BibleStudy.Site">
@@ -10168,11 +10168,11 @@ ordering requirements.</long-description>
           <tag name="param" description="&lt;p&gt;Media Info&lt;/p&gt;" line="120" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="120" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="120" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="120" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="120" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="120" type="string">
             <type>string</type>
@@ -10187,12 +10187,12 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="136" package="BibleStudy.Site">
@@ -12422,14 +12422,14 @@ or returns them as a string (if $fp is null)</description>
           <tag name="param" description="&lt;p&gt;Table Row&lt;/p&gt;" line="150" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="150" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="150" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="150" type="int" variable="$template">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="150" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="150" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="150" type="object">
             <type>object</type>
@@ -12443,7 +12443,7 @@ or returns them as a string (if $fp is null)</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -12453,7 +12453,7 @@ or returns them as a string (if $fp is null)</description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="190" package="BibleStudy.Site">
@@ -12465,11 +12465,11 @@ or returns them as a string (if $fp is null)</description>
           <tag name="param" description="&lt;p&gt;Item ID&lt;/p&gt;" line="190" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="190" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="190" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="190" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="190" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="190" type="int" variable="$template">
             <type>int</type>
@@ -12486,12 +12486,12 @@ or returns them as a string (if $fp is null)</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -16727,11 +16727,11 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
           <tag name="param" description="&lt;p&gt;Row info&lt;/p&gt;" line="33" type="\JTable" variable="$row">
             <type>\JTable</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Params for intro&lt;/p&gt;" line="33" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Params for intro&lt;/p&gt;" line="33" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="33" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="33" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="33" type="int" variable="$template">
             <type>int</type>
@@ -16758,12 +16758,12 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -18436,8 +18436,8 @@ command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE t
         <docblock line="258">
           <description>Get State of install for Main Admin Controller</description>
           <long-description></long-description>
-          <tag name="return" description="" line="258" type="\JRegistry">
-            <type>\JRegistry</type>
+          <tag name="return" description="" line="258" type="\Registry">
+            <type>\Registry</type>
           </tag>
           <tag name="since" description="" line="258"/>
         </docblock>
@@ -18448,8 +18448,8 @@ command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE t
         <docblock line="288">
           <description>Get State of install for Main Admin Controller</description>
           <long-description></long-description>
-          <tag name="return" description="" line="288" type="\JRegistry">
-            <type>\JRegistry</type>
+          <tag name="return" description="" line="288" type="\Registry">
+            <type>\Registry</type>
           </tag>
           <tag name="since" description="" line="288"/>
         </docblock>
@@ -21319,8 +21319,8 @@ when changing value of ordering input boxes</description>
         <docblock line="72">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="72" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="72" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -22362,8 +22362,8 @@ Displays a topics list of ALL published topics</description>
         <docblock line="28">
           <description>Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="28" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="28" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -23470,8 +23470,8 @@ the parse_ini_file page on http://gr.php.net/parse_ini_file</long-description>
         <docblock line="26">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="26" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="26" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -23492,8 +23492,8 @@ the parse_ini_file page on http://gr.php.net/parse_ini_file</long-description>
         <docblock line="32">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;State&lt;/p&gt;" line="32" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;State&lt;/p&gt;" line="32" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -24618,8 +24618,8 @@ the parse_ini_file page on http://gr.php.net/parse_ini_file</long-description>
         <docblock line="41">
           <description>State</description>
           <long-description></long-description>
-          <tag name="var" description="" line="41" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="41" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -24662,8 +24662,8 @@ the parse_ini_file page on http://gr.php.net/parse_ini_file</long-description>
         <docblock line="69">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="69" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="69" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -24673,8 +24673,8 @@ the parse_ini_file page on http://gr.php.net/parse_ini_file</long-description>
         <docblock line="76">
           <description>Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="76" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="76" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -25082,8 +25082,8 @@ update information and perform the live updates</description>
         <docblock line="59">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="59" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="59" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -25115,8 +25115,8 @@ update information and perform the live updates</description>
         <docblock line="68">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="68" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="68" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -26027,8 +26027,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="27">
           <description>Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="27" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="27" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -26357,8 +26357,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="97">
           <description>Filter Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="97" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="97" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -27377,14 +27377,14 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="30">
           <description>Get Locations for Landing Page</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="30" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="30" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Item ID&lt;/p&gt;" line="30" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="30" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="30" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="30" type="string">
             <type>string</type>
@@ -27393,7 +27393,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$id</name>
@@ -27403,7 +27403,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="252" package="BibleStudy.Site">
@@ -27483,14 +27483,14 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="733">
           <description>Get Years for Landing Page</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="733" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="733" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Item ID&lt;/p&gt;" line="733" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="733" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="733" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="733" type="string">
             <type>string</type>
@@ -27499,7 +27499,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$id</name>
@@ -27509,7 +27509,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="891" package="BibleStudy.Site">
@@ -27518,14 +27518,14 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="891">
           <description>Get Topics for LandingPage</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="891" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="891" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="891" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="891" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="891" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="891" type="string">
             <type>string</type>
@@ -27534,7 +27534,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$id</name>
@@ -27544,7 +27544,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="1049" package="BibleStudy.Site">
@@ -27553,14 +27553,14 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="1049">
           <description>Get MessageType for Landing Page</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1049" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1049" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="1049" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1049" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="1049" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="1049" type="string">
             <type>string</type>
@@ -27569,7 +27569,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$id</name>
@@ -27579,7 +27579,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="1265" package="BibleStudy.Site">
@@ -27588,8 +27588,8 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="1265">
           <description>Get Books for Landing Page.</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1265" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="1265" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="1265" type="string">
             <type>string</type>
@@ -27598,7 +27598,7 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
     </class>
@@ -27906,8 +27906,8 @@ uninstall runs before any other action is taken (file removal or database proces
         <docblock line="26">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="26" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="26" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -27961,8 +27961,8 @@ uninstall runs before any other action is taken (file removal or database proces
         <docblock line="41">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="41" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="41" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -29397,8 +29397,8 @@ Note. Calling getState in this method will result in recursion.</long-descriptio
         <docblock line="43">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="43" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="43" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -35509,8 +35509,8 @@ uses URL fopen() wrappers.</description>
         <docblock line="33">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="33" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="33" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -35608,8 +35608,8 @@ uses URL fopen() wrappers.</description>
         <docblock line="60">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Extra Params&lt;/p&gt;" line="60" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Extra Params&lt;/p&gt;" line="60" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -35814,14 +35814,14 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="35" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="35" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="35" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Odd Even&lt;/p&gt;" line="35" type="string" variable="$oddeven">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="35" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="35" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="35" type="object" variable="$template">
             <type>object</type>
@@ -35841,7 +35841,7 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$oddeven</name>
@@ -35851,7 +35851,7 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -35879,11 +35879,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;Element&lt;/p&gt;" line="139" type="string" variable="$element">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="139" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="139" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="139" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="139" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="139" type="string">
             <type>string</type>
@@ -35907,12 +35907,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="167" package="BibleStudy.Site">
@@ -35930,11 +35930,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;Element&lt;/p&gt;" line="167" type="object" variable="$element">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="167" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="167" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="167" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="167" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="167" type="string">
             <type>string</type>
@@ -35958,12 +35958,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="189" package="BibleStudy.Site">
@@ -35987,11 +35987,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;Is a Link&lt;/p&gt;" line="189" type="string" variable="$islink">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="189" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="189" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="189" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="189" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;View&lt;/p&gt;" line="189" type="string" variable="$view">
             <type>string</type>
@@ -36028,12 +36028,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$view</name>
@@ -36062,11 +36062,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;Is a Link&lt;/p&gt;" line="311" type="string" variable="$islink">
             <type>string</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="311" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="311" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="311" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="311" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="311" type="string">
             <type>string</type>
@@ -36100,12 +36100,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="337" package="BibleStudy.Site">
@@ -36136,8 +36136,8 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="384" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="384" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="384" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Limit of Records&lt;/p&gt;" line="384" type="string" variable="$limit">
             <type>string</type>
@@ -36154,7 +36154,7 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$limit</name>
@@ -36171,11 +36171,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="456" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="456" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="456" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="456" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="456" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template ID&lt;/p&gt;" line="456" type="int" variable="$template">
             <type>int</type>
@@ -36192,12 +36192,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -36214,11 +36214,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="554" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="554" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="554" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="554" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="554" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="554" type="object" variable="$template">
             <type>object</type>
@@ -36235,12 +36235,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -36257,11 +36257,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;JTable&lt;/p&gt;" line="581" type="object" variable="$row">
             <type>object</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="581" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="581" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="581" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="581" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="581" type="object" variable="$template">
             <type>object</type>
@@ -36278,12 +36278,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -36300,11 +36300,11 @@ uses URL fopen() wrappers.</description>
           <tag name="param" description="&lt;p&gt;ID&lt;/p&gt;" line="607" type="int" variable="$id">
             <type>int</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="607" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Item Params&lt;/p&gt;" line="607" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
-          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="607" type="\JRegistry" variable="$admin_params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="607" type="\Registry" variable="$admin_params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;Template&lt;/p&gt;" line="607" type="object" variable="$template">
             <type>object</type>
@@ -36321,12 +36321,12 @@ uses URL fopen() wrappers.</description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$admin_params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$template</name>
@@ -36647,8 +36647,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="56">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="56" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="56" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -36691,8 +36691,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="68">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="68" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="68" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -36956,8 +36956,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="92">
           <description>Check Time</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="92" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="92" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="92" type="boolean">
             <type>boolean</type>
@@ -36966,7 +36966,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="123" package="BibleStudy\Plugin.JBSBackup">
@@ -36975,8 +36975,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="123">
           <description>Check Days</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="123" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="123" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="123" type="boolean">
             <type>boolean</type>
@@ -36985,7 +36985,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="226" package="BibleStudy\Plugin.JBSBackup">
@@ -37016,8 +37016,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="268">
           <description>Send the Email</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;Component Paramas&lt;/p&gt;" line="268" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;Component Paramas&lt;/p&gt;" line="268" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;File of Backup&lt;/p&gt;" line="268" type="string" variable="$dobackup">
             <type>string</type>
@@ -37029,7 +37029,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$dobackup</name>
@@ -37043,8 +37043,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="334">
           <description>Update files</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="334" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="334" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="return" description="" line="334" type="void">
             <type>void</type>
@@ -37053,7 +37053,7 @@ asset does not exist it will be created.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
       </method>
     </class>
@@ -38567,8 +38567,8 @@ ordering requirements.</long-description>
         <docblock line="274">
           <description>Do Email</description>
           <long-description></long-description>
-          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="274" type="\JRegistry" variable="$params">
-            <type>\JRegistry</type>
+          <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="274" type="\Registry" variable="$params">
+            <type>\Registry</type>
           </tag>
           <tag name="param" description="&lt;p&gt;?&lt;/p&gt;&#10;" line="274" type="object" variable="$dopodcast">
             <type>object</type>
@@ -38580,7 +38580,7 @@ ordering requirements.</long-description>
         <argument line="0">
           <name>$params</name>
           <default></default>
-          <type>\JRegistry</type>
+          <type>\Registry</type>
         </argument>
         <argument line="0">
           <name>$dopodcast</name>
@@ -39722,8 +39722,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="29">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="29" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Admin Params&lt;/p&gt;" line="29" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -39744,8 +39744,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="35">
           <description></description>
           <long-description></long-description>
-          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="35" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="&lt;p&gt;Params&lt;/p&gt;" line="35" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>
@@ -40445,8 +40445,8 @@ asset does not exist it will be created.</long-description>
         <docblock line="69">
           <description>Admin Params</description>
           <long-description></long-description>
-          <tag name="var" description="" line="69" type="\JRegistry" variable="">
-            <type>\JRegistry</type>
+          <tag name="var" description="" line="69" type="\Registry" variable="">
+            <type>\Registry</type>
           </tag>
         </docblock>
       </property>

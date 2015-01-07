@@ -3955,7 +3955,7 @@ class Com_BiblestudyInstallerScript
         foreach ($datas as $data)
         {
             // Need to adjust the params and write back
-            $registry = new JRegistry;
+            $registry = new Registry;
             $registry-&gt;loadString($data-&gt;params);
             $params     = $registry;
             $shareimage = $params-&gt;get('shareimage');
@@ -4218,7 +4218,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
     $app = JFactory::getApplication();&#13;
     $menu = $app-&gt;getMenu();&#13;
     $item = $menu-&gt;getActive();&#13;
-    $registry = new JRegistry;&#13;
+    $registry = new Registry;&#13;
 </codefragment>
   </duplication>
   <duplication lines="18" tokens="42">
@@ -4471,7 +4471,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
      * Get duration
      *
      * @param   Object     $row     Table Row info
-     * @param   JRegistry  $params  Params
+     * @param   Joomla\Registry\Registry$params  Params
      *
      * @return null|string
      */
@@ -4604,8 +4604,8 @@ class BiblestudyControllerTeachers extends JControllerLegacy
      * Return Media Table
      *
      * @param   object     $row           Table info
-     * @param   JRegistry  $params        Item Params
-     * @param   JRegistry  $admin_params  Admin Params
+     * @param   Joomla\Registry\Registry$params        Item Params
+     * @param   Joomla\Registry\Registry$admin_params  Admin Params
      *
      * @return null|string
      *
@@ -4626,7 +4626,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
         $query-&gt;select('*')-&gt;from('#__bsms_admin');
         $db-&gt;setQuery($query);
         $admin    = $db-&gt;loadObject();
-        $registry = new JRegistry;
+        $registry = new Registry;
         $registry-&gt;loadString($admin-&gt;params);
         $admin-&gt;params = $registry-&gt;toArray();
 
@@ -5505,7 +5505,7 @@ class JFormFieldVirtuemart extends JFormFieldList
         if (parent::load($pk, $reset))
         {
             // Convert the params field to a registry.
-            $params = new JRegistry;
+            $params = new Registry;
             $params-&gt;loadString($this-&gt;params);
             $this-&gt;params = $params;
 

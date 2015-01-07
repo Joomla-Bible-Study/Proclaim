@@ -24,14 +24,14 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	public $params;
 
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	public $state;
 

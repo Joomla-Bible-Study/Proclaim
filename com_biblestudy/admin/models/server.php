@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Server admin model
  *
@@ -81,7 +83,7 @@ class BiblestudyModelServer extends JModelAdmin
 		if ($this->data)
 		{
 			// Convert media field to array
-			$registry          = new JRegistry($this->data->media);
+			$registry          = new Registry($this->data->media);
 			$this->data->media = $registry->toArray();
 
 			// Set the type from session if available or fall back on the db value

@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 
 /**
  * Model class for Sermon
@@ -30,7 +31,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -42,7 +43,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int $pk ID
+	 * @param   int  $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -65,7 +66,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int $pk The id of the study.
+	 * @param   int  $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -172,14 +173,14 @@ class BiblestudyModelSermon extends JModelItem
 				$data->topic_text = $topic_text;
 				$data->bookname   = JText::_($data->bookname);
 
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($data->params);
 				$data->params = $registry;
 				$template     = JBSMParams::getTemplateparams();
 
 				$data->params->merge($template->params);
 				$mparams = clone $this->getState('params');
-				$mj      = new JRegistry;
+				$mj      = new Registry;
 				$mj->loadString($mparams);
 				$data->params->merge($mj);
 
@@ -347,7 +348,4 @@ class BiblestudyModelSermon extends JModelItem
 			$this->setState('filter.archived', 2);
 		}
 	}
-
-
-// End class
 }

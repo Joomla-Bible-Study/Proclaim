@@ -64,7 +64,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	/**
 	 * Filter Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	public $filterParams;
 	/**

@@ -39,7 +39,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config   An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
@@ -158,7 +158,7 @@ class BiblestudyController extends JControllerLegacy
 		$this->input->set('t', $t);
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($model->_template[0]->params);
 		$params = $registry;
 		$cap    = 1;

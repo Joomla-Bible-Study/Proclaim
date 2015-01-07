@@ -9,6 +9,8 @@
  * */
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Database Helper class for version 7.1.0
  *
@@ -252,7 +254,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry
 	 *
 	 * @since 7.1.0
 	 */
@@ -269,7 +271,7 @@ class JBSMDbHelper
 			if (!empty($results[0]->installstate))
 			{
 				// Convert parameter fields to objects.
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($results{0}->installstate);
 
 				return $registry;
@@ -282,7 +284,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry
 	 *
 	 * @since 7.1.0
 	 */
@@ -468,7 +470,7 @@ class JBSMDbHelper
 				{
 					$db->setQuery($query);
 
-					if (!$db->query())
+					if (!$db->execute())
 					{
 						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 

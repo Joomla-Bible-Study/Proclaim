@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Class custom helper
  *
@@ -24,7 +26,7 @@ class JBSMCustom
 	 * @param   int            $rowid     ID of Row
 	 * @param   string         $custom    Custom String
 	 * @param   object         $row       Row info
-	 * @param   JRegistry      $params    Params for intro
+	 * @param   Joomla\Registry\Registry       $params    Params for intro
 	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object

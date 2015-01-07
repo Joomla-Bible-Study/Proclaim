@@ -10,9 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.helper');
-jimport('joomla.html.toolbar');
-
 /**
  * View class for MediaFilelist
  *
@@ -25,19 +22,26 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 
 	/** @var  string Can Do */
 	public $canDo;
+
 	/** @var  string Media Types */
 	public $mediatypes;
+
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
+
 	/** @var  string New Link */
 	public $newlink;
+
 	/** Items @var JObject */
 	protected $items;
+
 	/** Pagination @var array */
 	protected $pagination;
+
 	/** State @var object */
 	protected $state;
-	/** @var  JRegistry */
+
+	/** @var  Registry */
 	protected $params;
 
 	/**

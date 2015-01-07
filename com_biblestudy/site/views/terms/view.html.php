@@ -28,7 +28,7 @@ class BiblestudyViewTerms extends JViewLegacy
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $params;
 	/**

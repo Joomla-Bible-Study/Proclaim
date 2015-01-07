@@ -10,13 +10,15 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * This is for Retrieving Admin and Template db
  *
  * @package  BibleStudy.Admin
  * @since    7.0.0
  *
- * @property $template->params JRegistry
+ * @property $template->params Registry
  */
 class JBSMParams
 {
@@ -30,7 +32,7 @@ class JBSMParams
 	/**
 	 * Gets the settings from Admin
 	 *
-	 * @return TableAdmin Return Admin table
+	 * @return mixed Return Admin table
 	 */
 	public static function getAdmin()
 	{
@@ -43,7 +45,7 @@ class JBSMParams
 				->where($db->qn('id') . ' = ' . (int) 1);
 			$db->setQuery($query);
 			$admin    = $db->loadObject();
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($admin->params);
 			$admin->params = $registry;
 
@@ -82,7 +84,7 @@ class JBSMParams
 
 		if ($template)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($template->params);
 			$template->params = $registry;
 		}
