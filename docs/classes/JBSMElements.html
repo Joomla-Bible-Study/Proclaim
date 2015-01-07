@@ -216,7 +216,7 @@
 </div>
 <a id="method_getElementid"></a><div class="element clickable method public method_getElementid" data-toggle="collapse" data-target=".method_getElementid .collapse">
 <h2>Get Elementid</h2>
-<pre>getElementid(int $rowid, \JTable $row, \JRegistry $params, \JRegistry $admin_params, int $template) : object</pre>
+<pre>getElementid(int $rowid, \JTable $row, \Registry $params, \Registry $admin_params, int $template) : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -233,11 +233,11 @@
 <code>\JTable</code><p>Table info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Component / System Params</p>
+<code>\Registry</code><p>Component / System Params</p>
 </div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Settings</p></div>
+<code>\Registry</code><p>Admin Settings</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template ID</p></div>
@@ -346,14 +346,14 @@
 </div>
 <a id="method_getTextlink"></a><div class="element clickable method public method_getTextlink" data-toggle="collapse" data-target=".method_getTextlink .collapse">
 <h2>Get Textlink</h2>
-<pre>getTextlink(\JRegistry $params, object $row, string $textorpdf, \JRegistry $admin_params, int $template) : string</pre>
+<pre>getTextlink(\Registry $params, object $row, string $textorpdf, \Registry $admin_params, int $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>JTable</p></div>
@@ -362,7 +362,7 @@
 <code>string</code><p>Text Or PDF location</p></div>
 <div class="subelement argument">
 <h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin info</p></div>
+<code>\Registry</code><p>Admin info</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>int</code><p>Template ID</p></div>

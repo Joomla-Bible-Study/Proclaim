@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * View class for Sermon
  *
@@ -24,13 +26,13 @@ class BiblestudyViewSermon extends JViewLegacy
 	/** @var object Item */
 	protected $item;
 
-	/** @var JRegistry Params */
+	/** @var Registry Params */
 	protected $params;
 
 	/** @var  string Print */
 	protected $print;
 
-	/** @var JRegistry State */
+	/** @var Registry State */
 	protected $state;
 
 	/** @var  string User */
@@ -288,7 +290,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
 
 			// Convert parameter fields to objects.
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($plugin->params);
 			$st_params  = $registry;
 			$version    = $st_params->get('bible_version');

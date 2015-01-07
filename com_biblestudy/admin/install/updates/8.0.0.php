@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Update for 8.0.0 class
  *
@@ -43,7 +45,7 @@ class Migration800
 	 */
 	private function migrate_topics($db)
 	{
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$query    = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_topics');
@@ -167,7 +169,7 @@ class Migration800
 
 		foreach ($results as $result)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($result->params);
 			$old_params = $registry->toObject();
 

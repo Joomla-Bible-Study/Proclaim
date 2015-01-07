@@ -22,21 +22,29 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 	/** @var  string Upload Folder */
 	public $upload_folder;
+
 	/** @var  string Upload Folder */
 	public $upload_server;
+
 	/** @var array Form */
 	protected $form;
+
 	/** @var array Item */
 	protected $item;
+
 	/** @var string Return Page */
 	protected $return_page;
+
 	/** @var array State */
 	protected $state;
+
 	/** @var array Admin */
 	protected $admin;
-	/** @var  JRegistry Params */
+
+	/** @var  Registry Params */
 	protected $params;
-	/** @var  JRegistry Admin Params */
+
+	/** @var  Registry Admin Params */
 	protected $admin_params;
 
 	/** @var  string Can Do */

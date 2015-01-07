@@ -25,7 +25,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	protected $items;
 	/** @var object */
 	protected $pagination;
-	/** @var JRegistry */
+	/** @var Registry */
 	protected $state;
 	/** @var string */
 	protected $pagelinks;
@@ -33,7 +33,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	protected $limitbox;
 	/** @var JObject */
 	protected $admin;
-	/** @var JRegistry */
+	/** @var Registry */
 	protected $params;
 	/** @var object */
 	protected $study;
@@ -105,7 +105,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
-		/** @var  $params JRegistry */
+		/** @var  $params Registry */
 		$params = $this->state->template->params;
 
 		$images     = new JBSMImages;

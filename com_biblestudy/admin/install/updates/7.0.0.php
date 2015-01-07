@@ -10,6 +10,8 @@
 
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Update for 7.0.0 class
  *
@@ -482,7 +484,7 @@ class Migration700
 			// Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
 			foreach ($results AS $result)
 			{
-				$registry = new JRegistry;
+				$registry = new Registry;
 
 				// Fix incorrect params string literal
 				$params = array();
@@ -674,7 +676,7 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				// Update the params to json
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($result->params);
 
 				$params2 = $registry->toObject();
@@ -722,7 +724,7 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				// Update the params to json
-				$registry = new JRegistry;
+				$registry = new Registry;
 
 				if ($result->params)
 				{
@@ -758,7 +760,7 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				// Update the params to json
-				$registry = new JRegistry;
+				$registry = new Registry;
 
 				if ($result->params)
 				{
@@ -795,7 +797,7 @@ class Migration700
 			foreach ($results AS $result)
 			{
 				// Update the params to json
-				$registry = new JRegistry;
+				$registry = new Registry;
 
 				if ($result->params)
 				{

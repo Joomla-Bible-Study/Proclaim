@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Bible Study stats support class
  *
@@ -453,7 +455,7 @@ class JBSMStats
 		$db->setQuery($query);
 		$params         = $db->loadObjectList();
 
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$media_players = null;
 
 		if ($params)
@@ -526,7 +528,7 @@ class JBSMStats
 
 			foreach ($popups as $popup)
 			{
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($popup->params);
 				$popup = $registry->get('popup', null);
 
@@ -569,7 +571,7 @@ class JBSMStats
 		$t     = $input->get('t', 1, 'int');
 
 		$admin        = JBSMParams::getAdmin();
-		/** @var JRegistry $admin_params */
+		/** @var Registry $admin_params */
 		$admin_params = $admin->params;
 		$limit        = $admin_params->get('popular_limit', '25');
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .

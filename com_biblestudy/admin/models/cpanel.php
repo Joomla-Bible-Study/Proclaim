@@ -6,6 +6,8 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 
+use \Joomla\Registry\Registry;
+
 /**
  * JModel class for Cpanel
  *
@@ -33,7 +35,7 @@ class BibleStudyModelCpanel extends JModelLegacy
 		$data = $db->loadObject();
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($data->manifest_cache);
 
 		if ($data)

@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Admin table class
  *
@@ -99,7 +101,7 @@ class TableAdmin extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function TableAdmin(& $db)
 	{
@@ -111,8 +113,8 @@ class TableAdmin extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -124,7 +126,7 @@ class TableAdmin extends JTable
 		if (isset($array['params']) && is_array($array['params']))
 		{
 			// Convert the params field to a string.
-			$parameter = new JRegistry;
+			$parameter = new Registry;
 			$parameter->loadArray($array['params']);
 			$array['params'] = (string) $parameter;
 		}
@@ -136,9 +138,9 @@ class TableAdmin extends JTable
 	 * Method to load a row from the database by primary key and bind the fields
 	 * to the JTable instance properties.
 	 *
-	 * @param   mixed   $keys          An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                                 set the instance property value is used.
-	 * @param   boolean $reset         True to reset the default values before loading the new row.
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                           et the instance property value is used.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *
@@ -150,7 +152,7 @@ class TableAdmin extends JTable
 		if (parent::load($keys, $reset))
 		{
 			// Convert the params field to a registry.
-			$params = new JRegistry;
+			$params = new Registry;
 			$params->loadString($this->params);
 			$this->params = $params;
 
@@ -198,8 +200,8 @@ class TableAdmin extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *

@@ -11,6 +11,8 @@
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
+use Joomla\Registry\Registry;
+
 /* Put in do to this file is used in a plugin. */
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
@@ -42,7 +44,7 @@ class JBSMPodcast
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
-		// get english language file as fallback
+		// Get english language file as fallback
 		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
 
@@ -70,7 +72,7 @@ class JBSMPodcast
 					$podlanguage = $podinfo->language;
 				}
 
-				// load language file
+				// Load language file
 				$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
@@ -139,7 +141,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
-					$registry        = new JRegistry;
+					$registry        = new Registry;
 					$registry->loadString($podinfo->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
@@ -508,11 +510,11 @@ class JBSMPodcast
 		$epis = array();
 		foreach ($episodes as $e)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($e->params);
 			$e->params = $registry;
 
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($e->srparams);
 			$e->srparams = $registry;
 

@@ -8,9 +8,6 @@
  * */
 defined('_JEXEC') or die;
 
-/* Import library dependencies */
-jimport('joomla.plugin.plugin');
-
 /**
  * JBSPodcast jPlugin class
  *
@@ -24,8 +21,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -44,8 +41,6 @@ class PlgSystemJBSPodcast extends JPlugin
 	 */
 	public function onAfterInitialise()
 	{
-
-		$plugin = JPluginHelper::getPlugin('system', 'jbspodcast');
 		$params = $this->params;
 
 		// First check to see what method of updating the podcast we are using
@@ -91,7 +86,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object $params Plugin params
+	 * @param   object  $params  Plugin params
 	 *
 	 * @return boolean
 	 */
@@ -122,7 +117,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object $params Plugin params
+	 * @param   Joomla\Registry\Registry  $params  Plugin params
 	 *
 	 * @return boolean
 	 */
@@ -247,7 +242,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' . $time;
+		$query = $db->getQuery(true);
+		$query->update('#__jbspodcast_timeset')->set('timeset = ' . $time);
 		$db->setQuery($query);
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
@@ -265,8 +261,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   JRegistry $params Plugin params
-	 * @param   object    $dopodcast  ?
+	 * @param   Joomla\Registry\Registry  $params     Plugin params
+	 * @param   object                    $dopodcast  ?
 	 *
 	 * @return void
 	 */

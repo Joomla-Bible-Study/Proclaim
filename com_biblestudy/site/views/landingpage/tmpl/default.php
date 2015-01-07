@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 JHTML::_('behavior.tooltip');
 
 $JBSMLanding = new JBSMLanding;
-/** @var  $params JRegistry */
+/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 ?>
 

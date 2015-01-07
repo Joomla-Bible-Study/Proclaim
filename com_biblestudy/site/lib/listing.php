@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+use Joomla\Registry\Registry;
 
 /**
  * BibleStudy listing class
@@ -20,16 +21,16 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
  */
 class JBSMListing
 {
-	/** @var  JRegistry */
+	/** @var  Registry */
 	public $params;
 
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object         $items     Items
-	 * @param   JRegistry      $params    Page Params
-	 * @param   TableTemplate  $template  Template name
-	 * @param   String         $type      Type of Listing
+	 * @param   Object                    $items     Items
+	 * @param   Joomla\Registry\Registry  $params    Page Params
+	 * @param   TableTemplate             $template  Template name
+	 * @param   String                    $type      Type of Listing
 	 *
 	 * @return string
 	 */
@@ -599,14 +600,14 @@ class JBSMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   Array          $listrows   ?
-	 * @param   Array          $listsorts  ?
-	 * @param   Object         $item       ?
-	 * @param   JRegistry      $params     Item Params
-	 * @param   TableTemplate  $template   Template info
-	 * @param   string         $oddeven    ?
-	 * @param   string         $header     ?
-	 * @param   string         $type       ?
+	 * @param   Array                     $listrows   ?
+	 * @param   Array                     $listsorts  ?
+	 * @param   Object                    $item       ?
+	 * @param   Joomla\Registry\Registry  $params     Item Params
+	 * @param   TableTemplate             $template   Template info
+	 * @param   string                    $oddeven    ?
+	 * @param   string                    $header     ?
+	 * @param   string                    $type       ?
 	 *
 	 * @return string
 	 */
@@ -878,7 +879,7 @@ class JBSMListing
 	 *
 	 * @param   Object         $item      ?
 	 * @param   Object         $row       ?
-	 * @param   JRegistry      $params    ?
+	 * @param   Joomla\Registry\Registry       $params    ?
 	 * @param   TableTemplate  $template  ?
 	 * @param   string         $header    ?
 	 * @param   string         $type      ?
@@ -1622,11 +1623,11 @@ class JBSMListing
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String         $custom    ?
-	 * @param   Object         $item      ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   String         $type      ?
+	 * @param   String                    $custom    ?
+	 * @param   Object                    $item      ?
+	 * @param   Joomla\Registry\Registry  $params    ?
+	 * @param   TableTemplate             $template  ?
+	 * @param   String                    $type      ?
 	 *
 	 * @return mixed
 	 */
@@ -1651,11 +1652,11 @@ class JBSMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String         $custom    ?
-	 * @param   Object         $row       ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
-	 * @param   String         $type      ?
+	 * @param   String                    $custom    ?
+	 * @param   Object                    $row       ?
+	 * @param   Joomla\Registry\Registry  $params    ?
+	 * @param   TableTemplate             $template  ?
+	 * @param   String                    $type      ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -2060,8 +2061,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   Object     $row     Row info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Object                    $row     Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2115,9 +2116,9 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object         $item      ?
-	 * @param   JRegistry      $params    ?
-	 * @param   TableTemplate  $template  ?
+	 * @param   Object                    $item      ?
+	 * @param   Joomla\Registry\Registry  $params    ?
+	 * @param   TableTemplate             $template  ?
 	 *
 	 * @return string
 	 *
@@ -2139,8 +2140,8 @@ class JBSMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   JRegistry  $params     Item Params
-	 * @param   string     $studydate  Study Date
+	 * @param   Joomla\Registry\Registry  $params     Item Params
+	 * @param   string    $studydate  Study Date
 	 *
 	 * @return string
 	 */
@@ -2223,14 +2224,14 @@ class JBSMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool           $islink      ?
-	 * @param   string         $id3         ?
-	 * @param   int            $tid         ?
-	 * @param   object         $smenu       ?
-	 * @param   object         $tmenu       ?
-	 * @param   JRegistry      $params      ?
-	 * @param   object         $row         ?
-	 * @param   TableTemplate  $templateid  ?
+	 * @param   bool                      $islink      ?
+	 * @param   string                    $id3         ?
+	 * @param   int                       $tid         ?
+	 * @param   object                    $smenu       ?
+	 * @param   object                    $tmenu       ?
+	 * @param   Joomla\Registry\Registry  $params      ?
+	 * @param   object                    $row         ?
+	 * @param   TableTemplate             $templateid  ?
 	 *
 	 * @return string
 	 */
@@ -2353,9 +2354,9 @@ class JBSMListing
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int        $id3     Study ID ID
-	 * @param   string     $islink  Is a Link
-	 * @param   JRegistry  $params  Item Params
+	 * @param   int                       $id3     Study ID ID
+	 * @param   string                    $islink  Is a Link
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */
@@ -2411,9 +2412,9 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object         $row       Item Info
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   object                    $row       Item Info
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   TableTemplate             $template  Template
 	 *
 	 * @return object
 	 *
@@ -2458,8 +2459,8 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object     $row     Item Info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object                    $row     Item Info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
 	 *
@@ -2538,8 +2539,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   object     $row     Item Info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   object                    $row     Item Info
 	 *
 	 * @return string
 	 */
@@ -2587,9 +2588,9 @@ class JBSMListing
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string     $link    Link
-	 * @param   object     $row     Item Info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   string                    $link    Link
+	 * @param   object                    $row     Item Info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return null|string
 	 */
@@ -2643,7 +2644,7 @@ class JBSMListing
 			{
 
 				// Convert parameter fields to objects.
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($sharerow->params);
 				$share_params = $registry;
 				$custom       = new JBSMCustom;
@@ -2825,9 +2826,9 @@ class JBSMListing
 	/**
 	 * Run Content Plugins on content
 	 *
-	 * @param   object     $item    ?
-	 * @param   JRegistry  $params  ?
-	 * @param   string     $type    ?
+	 * @param   object                    $item    ?
+	 * @param   Joomla\Registry\Registry  $params  ?
+	 * @param   string                    $type    ?
 	 *
 	 * @return bool|string
 	 *
@@ -2843,9 +2844,9 @@ class JBSMListing
 	/**
 	 * Get Title
 	 *
-	 * @param   JRegistry  $params    System Params
-	 * @param   object     $row       Item info
-	 * @param   int        $template  Template
+	 * @param   Joomla\Registry\Registry  $params    System Params
+	 * @param   object                    $row       Item info
+	 * @param   int                       $template  Template
 	 *
 	 * @return string
 	 *
@@ -2861,8 +2862,8 @@ class JBSMListing
 	/**
 	 * Get CustomHead
 	 *
-	 * @param   int        $rowcolid  Row ID Column
-	 * @param   JRegistry  $params    Item Params
+	 * @param   int                       $rowcolid  Row ID Column
+	 * @param   Joomla\Registry\Registry  $params    Item Params
 	 *
 	 * @return string
 	 *

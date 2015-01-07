@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for SeriesDisplays
@@ -116,7 +116,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$t_params        = $template_params->params;
 		$app             = JFactory::getApplication('site');
 		$params          = JComponentHelper::getParams('com_biblestudy');
-		$menuparams      = new JRegistry;
+		$menuparams      = new Registry;
 		$menu            = $app->getMenu()->getActive();
 
 		if ($menu)

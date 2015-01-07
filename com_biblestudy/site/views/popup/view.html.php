@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 // This is the popup window for the teachings.  We could put anything in this window.
 
 /**
@@ -80,13 +82,13 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Footer Text */
 	public $footertext;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $state;
 
-	/** @var  JRegistry Extra Params */
+	/** @var  Registry Extra Params */
 	protected $extraparams;
 
 	/** @var  TableTemplate Template */
@@ -121,14 +123,14 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
 
-		/** @var JRegistry params */
+		/** @var Registry params */
 		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		/*
 		 *  Convert parameter fields to objects.
 		 */
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 

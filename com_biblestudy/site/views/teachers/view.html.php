@@ -46,13 +46,13 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * State
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $state = null;
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $params = null;
 	/**
@@ -87,7 +87,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$state  = $this->get('State');
 		$items  = $this->get('Items');
 
-		/** @var $params JRegistry */
+		/** @var $params Registry */
 		$params	= $state->template->params;
 
 		$this->template        = $state->get('template');
@@ -165,7 +165,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
 		$title      = null;
 

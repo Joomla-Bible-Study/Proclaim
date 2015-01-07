@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Update for 7.1.0 class
  *
@@ -36,10 +38,8 @@ class Migration710
 		$src = JPATH_SITE . '/tmp/biblestudy.css';
 
 		// There is no existing css so let us check for a backup
-		$backup  = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
-			DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-		$default = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' .
-			DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+		$backup  = JPATH_SITE . '/media/com_biblestudy/backup/biblestudy.css';
+		$default = JPATH_SITE . 'media/com_biblestudy/css/biblestudy.css';
 
 		// If there is no new css file in the media folder, check to see if there is one in the old assets or in the backup folder
 
@@ -213,7 +213,7 @@ div.listingfooter ul li {
 
 				if (!$db->execute())
 				{
-                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+					JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
 					return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
 				}
@@ -258,7 +258,7 @@ div.listingfooter ul li {
 				// @todo this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 				@$table->store();
 				$table->load($result->id);
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($table->params);
 				$css = $registry->get('css');
 				$registry->set('css', 'biblestudy.css');

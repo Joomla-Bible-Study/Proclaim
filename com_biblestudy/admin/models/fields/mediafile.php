@@ -58,7 +58,7 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$reg = new JRegistry;
+				$reg = new Registry;
 				$reg->loadString($message->params);
 				$message->params = $reg;
 				$options[]       = JHtml::_('select.option', $message->id, $message->params->get('filename') ? $message->id . ' - ' .

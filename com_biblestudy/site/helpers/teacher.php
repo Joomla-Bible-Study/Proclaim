@@ -22,7 +22,7 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher for Fluid layout
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return array
 	 */
@@ -99,8 +99,8 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 *
@@ -225,8 +225,8 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object     $row     Table Row
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object                    $row     Table Row
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
 	 */
@@ -263,8 +263,8 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int        $id      Item ID
-	 * @param   JRegistry  $params  Item Params
+	 * @param   int                       $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */

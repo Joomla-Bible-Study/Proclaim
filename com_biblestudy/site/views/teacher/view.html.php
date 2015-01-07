@@ -25,10 +25,10 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  object Contact */
 	protected $contact;
 
-	/** @var  JRegistry Admin */
+	/** @var  Registry Admin */
 	protected $state;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
 	/** @var  TableTemplate Template Info */
@@ -109,7 +109,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
 			$item->information = $this->contact->misc;
 			$item->phone       = $this->contact->telephone;
-			$cregistry         = new JRegistry;
+			$cregistry         = new Registry;
 			$cregistry->loadString($this->contact->params);
 			$contact_params     = $cregistry;
 			$item->facebooklink = $contact_params->get('linka');
@@ -221,7 +221,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
 		$title      = null;
 

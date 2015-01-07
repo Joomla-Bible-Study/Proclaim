@@ -28,9 +28,9 @@ class JBSMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   object         $row       JTable
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  ID
+	 * @param   object                    $row       JTable
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   TableTemplate             $template  ID
 	 *
 	 * @return string
 	 */

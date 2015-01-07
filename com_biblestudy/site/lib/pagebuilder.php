@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Class to build page elements in use by custom template files
  *
@@ -28,8 +30,8 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object    $item   Item info
-	 * @param   JRegistry $params Item Params
+	 * @param   object                    $item    Item info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
 	 */
@@ -210,8 +212,8 @@ class JBSMPageBuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array     $mediaids ID of Media
-	 * @param   JRegistry $params   Item Params
+	 * @param   array                     $mediaids  ID of Media
+	 * @param   Joomla\Registry\Registry  $params    Item Params
 	 *
 	 * @return string
 	 *
@@ -241,13 +243,13 @@ class JBSMPageBuilder
 		foreach ($medias as $media)
 		{
 			$link_type = $media->link_type;
-			$registry  = new JRegistry;
+			$registry  = new Registry;
 			$registry->loadString($media->params);
 			$params->merge($registry);
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($media->smedia);
 			$media->smedia = $registry;
-			$registry      = new JRegistry;
+			$registry      = new Registry;
 			$registry->loadString($media->sparams);
 			$media->sparams = $registry;
 			$mediaid        = $media->id;
@@ -366,13 +368,13 @@ class JBSMPageBuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string     $whereitem   ?
-	 * @param   string     $wherefield  ?
-	 * @param   JRegistry  $params      Item params
-	 * @param   int        $limit       Limit of Records
-	 * @param   string     $order       DESC or ASC
+	 * @param   string                    $whereitem   ?
+	 * @param   string                    $wherefield  ?
+	 * @param   Joomla\Registry\Registry  $params      Item params
+	 * @param   int                       $limit       Limit of Records
+	 * @param   string                    $order       DESC or ASC
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC')
 	{

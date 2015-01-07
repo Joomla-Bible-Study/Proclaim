@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * BibleStudy images class
  *
@@ -35,7 +37,7 @@ class JBSMImages
 		$admin = $database->loadObject();
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($admin->params);
 		$admin_params = $registry;
 

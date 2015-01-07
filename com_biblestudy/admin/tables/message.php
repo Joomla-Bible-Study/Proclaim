@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Table class for Message
  *
@@ -325,7 +327,7 @@ class TableMessage extends JTable
 	{
 		if (array_key_exists('params', $array) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = $registry->toString();
 		}
@@ -333,7 +335,7 @@ class TableMessage extends JTable
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new JRules($array['rules']);
+			$rules = new JAccessRules($array['rules']);
 			$this->setRules($rules);
 		}
 

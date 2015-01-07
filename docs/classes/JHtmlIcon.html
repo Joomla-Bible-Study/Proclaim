@@ -103,7 +103,7 @@
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a id="method_create"></a><div class="element clickable method public method_create" data-toggle="collapse" data-target=".method_create .collapse">
 <h2>Create Button</h2>
-<pre>create(int $category, \JRegistry $params) : string</pre>
+<pre>create(int $category, \Registry $params) : string</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -113,14 +113,14 @@
 <code>int</code><p>Category id</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Params</p></div>
+<code>\Registry</code><p>Params</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_edit"></a><div class="element clickable method public method_edit" data-toggle="collapse" data-target=".method_edit .collapse">
 <h2>Display an edit icon for the article.</h2>
-<pre>edit(object $article, \JRegistry $params, array $attribs) : string</pre>
+<pre>edit(object $article, \Registry $params, array $attribs) : string</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description">This icon will not display in a popup window, nor if the article is trashed.
@@ -135,7 +135,7 @@ Edit access checks must be performed in the calling code.</div>
 <code>object</code><p>The article in question.</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>The article parameters</p></div>
+<code>\Registry</code><p>The article parameters</p></div>
 <div class="subelement argument">
 <h4>$attribs</h4>
 <code>array</code><p>Not used??</p>
@@ -147,7 +147,7 @@ Edit access checks must be performed in the calling code.</div>
 </div>
 <a id="method_email"></a><div class="element clickable method public method_email" data-toggle="collapse" data-target=".method_email .collapse">
 <h2>Email button</h2>
-<pre>email(object $article, \JRegistry $params, array $attribs) : mixed</pre>
+<pre>email(object $article, \Registry $params, array $attribs) : mixed</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -157,7 +157,7 @@ Edit access checks must be performed in the calling code.</div>
 <code>object</code><p>Article</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Params</p></div>
+<code>\Registry</code><p>Params</p></div>
 <div class="subelement argument">
 <h4>$attribs</h4>
 <code>array</code><p>Array of Attributes</p></div>
@@ -167,7 +167,7 @@ Edit access checks must be performed in the calling code.</div>
 </div>
 <a id="method_print_popup"></a><div class="element clickable method public method_print_popup" data-toggle="collapse" data-target=".method_print_popup .collapse">
 <h2>Print popup button</h2>
-<pre>print_popup(object $article, \JRegistry $params, array $attribs) : mixed</pre>
+<pre>print_popup(object $article, \Registry $params, array $attribs) : mixed</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -177,7 +177,7 @@ Edit access checks must be performed in the calling code.</div>
 <code>object</code><p>Article</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Params</p></div>
+<code>\Registry</code><p>Params</p></div>
 <div class="subelement argument">
 <h4>$attribs</h4>
 <code>array</code><p>Array of Attributes</p></div>
@@ -187,7 +187,7 @@ Edit access checks must be performed in the calling code.</div>
 </div>
 <a id="method_print_screen"></a><div class="element clickable method public method_print_screen" data-toggle="collapse" data-target=".method_print_screen .collapse">
 <h2>Print Screen button</h2>
-<pre>print_screen(object $article, \JRegistry $params, array $attribs) : string</pre>
+<pre>print_screen(object $article, \Registry $params, array $attribs) : string</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -197,7 +197,7 @@ Edit access checks must be performed in the calling code.</div>
 <code>object</code><p>Article</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Params</p></div>
+<code>\Registry</code><p>Params</p></div>
 <div class="subelement argument">
 <h4>$attribs</h4>
 <code>array</code><p>Array of Attributes</p></div>

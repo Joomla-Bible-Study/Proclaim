@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for LandingPage
@@ -24,7 +24,7 @@ class BiblestudyModelLandingpage extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see        JController
 	 * @since      1.6
@@ -102,7 +102,7 @@ class BiblestudyModelLandingpage extends JModelList
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$template_params = JBSMParams::getTemplateparams();
-		$registry        = new JRegistry;
+		$registry        = new Registry;
 		$registry->loadString($template_params->params);
 		$t_params = $registry;
 
@@ -110,7 +110,7 @@ class BiblestudyModelLandingpage extends JModelList
 		$app        = JFactory::getApplication('site');
 		$params     = $app->getParams();
 		$this->setState('params', $params);
-		$menuparams = new JRegistry;
+		$menuparams = new Registry;
 		$menu       = $app->getMenu()->getActive();
 
 		if ($menu)

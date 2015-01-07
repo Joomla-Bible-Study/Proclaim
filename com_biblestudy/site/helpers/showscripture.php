@@ -24,8 +24,8 @@ class JBSMShowScripture
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object     $row     Item Info
-	 * @param   JRegistry  $params  Item Params
+	 * @param   object                    $row     Item Info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return boolean
 	 */

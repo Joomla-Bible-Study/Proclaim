@@ -10,6 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
+
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafile.php');
 
@@ -24,7 +27,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -37,7 +40,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	/**
 	 * Method to get article data.
 	 *
-	 * @param   integer $pk  The id of the article.
+	 * @param   integer  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */
@@ -59,12 +62,12 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value      = ArrayHelper::toObject($properties, 'JObject');
 
 		// Convert attrib field to Registry.
 
 		// Convert params field to Registry.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($value->params);
 		$value->params = $registry->toArray();
 
