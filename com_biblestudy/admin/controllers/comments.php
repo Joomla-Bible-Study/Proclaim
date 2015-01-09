@@ -11,8 +11,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
 /**
  * Controller for Comments
  *
@@ -29,7 +27,7 @@ class BiblestudyControllerComments extends JControllerAdmin
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return BiblestudyModelComment
 	 *
 	 * @since 7.0
 	 */

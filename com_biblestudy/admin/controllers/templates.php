@@ -9,7 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/backup.php';
 
 use \Joomla\Registry\Registry;
 

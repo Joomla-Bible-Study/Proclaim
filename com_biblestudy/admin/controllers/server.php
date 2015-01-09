@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
-
 /**
  * Controller for Server
  *
@@ -24,7 +22,7 @@ class BiblestudyControllerServer extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -33,54 +31,70 @@ class BiblestudyControllerServer extends JControllerForm
 		parent::__construct($config);
 	}
 
-    public function add() {
-        $app = JFactory::getApplication();
+	/**
+	 * Method to add a new record.
+	 *
+	 * @return  mixed  True if the record can be added, a error object if not.
+	 *
+	 * @since   12.2
+	 */
+	public function add()
+	{
+		$app = JFactory::getApplication();
 
-        if(parent::add()) {
-            $app->setUserState('com_biblestudy.edit.server.type', null);
-            return true;
-        }
+		if (parent::add())
+		{
+			$app->setUserState('com_biblestudy.edit.server.type', null);
 
-        return false;
-    }
-    /**
-     * Resets the User state for the server type. Needed to allow the value from the DB to be used
-     *
-     * @param   null $key
-     * @param   null $urlVar
-     * @return  bool
-     *
-     * @since   9.0.0
-     */
-    public function edit($key = null, $urlVar = null) {
-        $app = JFactory::getApplication();
-        $result = parent::edit();
+			return true;
+		}
 
-        if($result) {
-            $app->setUserState('com_biblestudy.edit.server.type', null);
-        }
+		return false;
+	}
 
-        return true;
-    }
+	/**
+	 * Resets the User state for the server type. Needed to allow the value from the DB to be used
+	 *
+	 * @param   int     $key     ?
+	 * @param   string  $urlVar  ?
+	 *
+	 * @return  bool
+	 *
+	 * @since   9.0.0
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		$app    = JFactory::getApplication();
+		$result = parent::edit();
 
-    /**
-     * Sets the type of endpoint currently being configured.
-     *
-     * @return  void
-     * @since   9.0.0
-     */
-    function setType() {
-        $app = JFactory::getApplication();
-        $input = $app->input;
+		if ($result)
+		{
+			$app->setUserState('com_biblestudy.edit.server.type', null);
+		}
 
-        $data = $input->get('jform', array(), 'post', 'array');
-        $type = json_decode(base64_decode($data['type']));
+		return true;
+	}
 
-        $recordId = isset($type->id) ? $type->id : 0;
+	/**
+	 * Sets the type of endpoint currently being configured.
+	 *
+	 * @return  void
+	 *
+	 * @since   9.0.0
+	 */
+	public function setType()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 
-        // Save the endpoint in the session
-        $app->setUserState('com_biblestudy.edit.server.type', $type->name);
+		$data = $input->get('jform', array(), 'post', 'array');
+		$type = json_decode(base64_decode($data['type']));
 
-        $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.$this->getRedirectToItemAppend($recordId), false));
-    }
+		$recordId = isset($type->id) ? $type->id : 0;
+
+		// Save the endpoint in the session
+		$app->setUserState('com_biblestudy.edit.server.type', $type->name);
+
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId), false));
+	}
 }

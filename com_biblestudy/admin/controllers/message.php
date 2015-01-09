@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
-
 /**
  * Controller for Message
  *
@@ -31,7 +29,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -73,7 +71,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object $model The model.
+	 * @param   JModelLegacy  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -93,10 +91,26 @@ class BiblestudyControllerMessage extends JControllerForm
 	}
 
 	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  BibleStudyModelMessage
+	 *
+	 * @since   12.2
+	 */
+	public function getModel($name = 'Message', $prefix = 'BibleStudyModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
+	}
+
+	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 */

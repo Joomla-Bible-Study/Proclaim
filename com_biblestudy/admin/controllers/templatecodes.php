@@ -10,8 +10,6 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
 /**
  * TemplateCodes list controller class.
  *
@@ -24,18 +22,15 @@ class BiblestudyControllerTemplatecodes extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return BiblestudyModelTemplatecode
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel(
-		$name = 'Templatecode',
-		$prefix = 'BiblestudyModel',
-		$config = array('ignore_request' => true))
+	public function getModel($name = 'Templatecode', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

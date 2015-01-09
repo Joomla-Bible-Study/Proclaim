@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
 /**
  * Servers list controller class.
  *
@@ -24,11 +22,11 @@ class BiblestudyControllerServers extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name    The model name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $config  Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return BiblestudyModelServer
 	 *
 	 * @since 7.0.0
 	 */

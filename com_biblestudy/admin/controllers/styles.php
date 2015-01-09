@@ -10,8 +10,6 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
 /**
  * Styles list controller class.
  *
@@ -72,11 +70,11 @@ class BiblestudyControllerStyles extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return BiblestudyModelStyle
 	 *
 	 * @since 7.1.0
 	 */

@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Messages list controller class.
@@ -24,7 +24,7 @@ class BiblestudyControllerMessages extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see        JController
 	 * @since      1.6
@@ -48,10 +48,9 @@ class BiblestudyControllerMessages extends JControllerAdmin
 		$order = $this->input->post->get('order', array(), 'array');
 
 		// Sanitize the input
-		JArrayHelper::toInteger($pks);
-		JArrayHelper::toInteger($order);
+		ArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($order);
 
-		// Get the model
 		$model = $this->getModel();
 
 		// Save the ordering
@@ -69,11 +68,11 @@ class BiblestudyControllerMessages extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return BiblestudyModelMessage
 	 *
 	 * @since 7.0
 	 */

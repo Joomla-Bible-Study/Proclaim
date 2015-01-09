@@ -9,8 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.backup.php';
-jimport('joomla.application.component.controllerform');
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Template controller class
@@ -24,7 +24,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -42,7 +42,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	{
 		$input = new JInput;
 		$cid   = $input->get('cid', '', 'array');
-		JArrayHelper::toInteger($cid);
+		ArrayHelper::toInteger($cid);
 
 		$model = & $this->getModel('template');
 
@@ -86,7 +86,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   string $template  ?
+	 * @param   string  $template  filename
 	 *
 	 * @return boolean|string
 	 *
@@ -106,11 +106,10 @@ class BiblestudyControllerTemplate extends JControllerForm
 			return false;
 		}
 		$templatereturn = '
-                        INSERT INTO #__bsms_templatecode SET `type` = "' . $db->q($object->type) . '",
-                        `templatecode` = "' . $db->q($object->templatecode) . '",
-                        `filename`="' . $db->q($template) . '",
-                        `published` = "1";
-                        ';
+                        INSERT INTO `#__bsms_templatecode` SET `type` = ' . $db->q($object->type) . ',
+                        `templatecode` = ' . $db->q($object->templatecode) . ',
+                        `filename` = ' . $db->q($template) . ',
+                        `published` = ' . $db->q('1');
 
 		return $templatereturn;
 	}

@@ -2,15 +2,13 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller For MediaFile
@@ -31,7 +29,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -42,6 +40,8 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 	/**
 	 * Handles XHR requests (i.e. File uploads)
+	 *
+	 * @return void
 	 *
 	 * @throws  Exception
 	 * @since   9.0.0
@@ -59,7 +59,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		if (method_exists($addon, $handler))
 		{
-            echo json_encode($addon->$handler($input));
+			echo json_encode($addon->$handler($input));
 
 			$app = JFactory::getApplication();
 			$app->close();
@@ -73,7 +73,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object $model The model.
+	 * @param   object  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -83,7 +83,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Set the model
+		/** @var JModelLegacy $model */
 		$model = $this->getModel('Mediafile', '', array());
 
 		// Preset the redirect
@@ -96,6 +96,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * Sets the server for this media record
 	 *
 	 * @return  void
+	 *
 	 * @since   9.0.0
 	 */
 	public function setServer()

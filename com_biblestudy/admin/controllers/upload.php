@@ -10,7 +10,6 @@
 // No direct access
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.controller');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
@@ -61,7 +60,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		// Get parameters
 		$chunk  = $input->getInt('chunk', 0);
 		$chunks = $input->getInt('chunks', 0);
-
 
 		// Current file name
 		$fileNameFromReq = $input->getString('name', '');
@@ -146,7 +144,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		{
 			$contentType = $_SERVER["HTTP_CONTENT_TYPE"];
 		}
-
 
 		if (isset($_SERVER["CONTENT_TYPE"]))
 		{
@@ -236,9 +233,9 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	/**
 	 * Set the JSON response and exists script
 	 *
-	 * @param   int    $code  Error Code
-	 * @param   string $msg   Error Message
-	 * @param   bool   $error ?
+	 * @param   int     $code   Error Code
+	 * @param   string  $msg    Error Message
+	 * @param   bool    $error  ?
 	 *
 	 * @return void
 	 */
