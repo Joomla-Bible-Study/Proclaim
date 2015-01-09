@@ -183,13 +183,11 @@ class Migration900
 		}
 
 		/** @var TableServer $newServer2 */
-		$newServer2 = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-		$newServer2->server_name = 'Defualt';
-		$newServer2->type        = "legacy";
-		$newServer2->id          = null;
-		$newServer2->store();
-
-		$insertid = $db->insertid();
+		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+		$newServer->server_name = 'Defualt';
+		$newServer->type        = "legacy";
+		$newServer->id          = null;
+		$newServer->store();
 
 		// Migrate media files
 		$query = $db->getQuery(true)->select('*')
@@ -218,11 +216,6 @@ class Migration900
 
 			$mimtype = $db->loadObject();
 
-			$query = $db->getQuery(true);
-			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
-			$db->setQuery($query);
-
-			$path   = $db->loadObject();
 			$mimage = null;
 
 			// Some people do not have logos set to there media so we have this.
@@ -254,15 +247,7 @@ class Migration900
 			$params->special      	= $mediaFile->special;
 			if (!empty($mediaFile->filename))
 			{
-				if (@empty($path->folderpath))
-				{
-					$folderpath = null;
-				}
-				else
-				{
-					$folderpath = $path->folderpath;
-				}
-				$params->filename = $folderpath . $mediaFile->filename;
+				$params->filename = $mediaFile->filename;
 			}
 			else
 			{
@@ -283,7 +268,7 @@ class Migration900
 			$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
 			$metadata['downloads'] = $mediaFile->downloads;
 
-			$newMediaFile->server_id = $insertid;
+			$newMediaFile->server_id = $newServer->id;
 			$newMediaFile->params    = $registry->toString();
 			$newMediaFile->metadata  = json_encode($metadata);
 			$newMediaFile->id        = null;
