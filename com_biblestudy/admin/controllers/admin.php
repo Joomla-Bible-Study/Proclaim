@@ -239,7 +239,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
-		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
+		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
 		parent::display();
 	}
 
