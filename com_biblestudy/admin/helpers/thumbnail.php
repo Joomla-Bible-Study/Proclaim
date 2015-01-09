@@ -22,7 +22,7 @@ class JBSMThumbnail
 	 * Creates a thumbnail for an uploaded image
 	 *
 	 * @param   string  $file  File name
-	 * @param   string  $path  Path to file
+	 * @param   array   $path  Path to file
 	 * @param   int     $size  Size of image with default of 100
 	 *
 	 * @return null
@@ -42,7 +42,7 @@ class JBSMThumbnail
 
 		// Move uploaded image to destination
 		JFolder::create(JPATH_ROOT . '/' . $path);
-		JFile::move($file[tmp_name], $original);
+		JFile::move($file['tmp_name'], $original);
 
 		// Create thumbnail
 		$image     = new JImage($original);

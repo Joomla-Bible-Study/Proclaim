@@ -307,7 +307,7 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Fixupcss.
+	 * Fix up css.
 	 *
 	 * @param   string   $filename  Name of css file
 	 * @param   boolean  $parent    if coming form the update script
@@ -393,7 +393,7 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object  $result  Objectlist that we will get the id from.
+	 * @param   object  $result  Object list that we will get the id from.
 	 * @param   string  $table   Table to be reloaded.
 	 *
 	 * @return boolean

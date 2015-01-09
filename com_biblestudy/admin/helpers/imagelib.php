@@ -49,7 +49,7 @@ class ImageMagickLib extends ImageLib
 	/**
 	 * Resize Image
 	 *
-	 * @param   string $image  Image Path
+	 * @param   string  $image  Image Path
 	 *
 	 * @return void
 	 *

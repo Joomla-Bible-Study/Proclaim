@@ -11,6 +11,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Utility class for JW Player behaviors
  *
@@ -44,7 +46,7 @@ abstract class JHtmlJwplayer
 		}
 
 		$doc = JFactory::getDocument();
-		/** @var  $params Registry */
+		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
 		$cdn = $params->get('jwplayer_cdn', 'https://jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');

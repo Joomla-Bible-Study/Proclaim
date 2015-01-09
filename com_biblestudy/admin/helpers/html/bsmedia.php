@@ -5,7 +5,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  */
-
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -42,16 +41,8 @@ abstract class JHtmlbsMedia
 			return;
 		}
 
-
 		// Load jQuery
 		JHtml::_('jquery.framework');
-
-		// If no debugging value is set, use the configuration setting
-		if ($debug === null)
-		{
-			$config = JFactory::getConfig();
-			$debug  = (boolean) $config->get('debug');
-		}
 
 		self::$loaded[__METHOD__] = true;
 
@@ -75,13 +66,6 @@ abstract class JHtmlbsMedia
 
 		if (!isset(self::$loaded[__METHOD__][$sig]))
 		{
-
-			// Setup options object
-			$opt['interval'] = (isset($params['interval']) && ($params['interval'])) ? (int) $params['interval'] : 5000;
-			$opt['pause']    = (isset($params['pause']) && ($params['pause'])) ? $params['pause'] : 'hover';
-
-			$options = JHtml::getJSObject($opt);
-
 			// Attach the carousel to document
 			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false);
 
