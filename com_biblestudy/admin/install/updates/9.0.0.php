@@ -182,6 +182,117 @@ class Migration900
 			}
 		}
 
+		/** @var TableServer $newServer2 */
+		$newServer2 = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+		$newServer2->server_name = 'Defualt';
+		$newServer2->type        = "legacy";
+		$newServer2->id          = null;
+		$newServer2->store();
+
+		$insertid = $db->insertid();
+
+		// Migrate media files
+		$query = $db->getQuery(true)->select('*')
+			->from('#__bsms_mediafiles')
+			->where('server <= ' . 0, 'OR')
+			->where('server IS NULL');
+		$db->setQuery($query);
+
+		foreach ($db->loadObjectList() as $mediaFile)
+		{
+
+			/** @var TableMediafile $newMediaFile */
+			$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
+			$newMediaFile->load($mediaFile->id);
+			$metadata = array();
+
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
+			$db->setQuery($query);
+
+			$mediaImage = $db->loadObject();
+
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_mimetype')->where('id = ' . $mediaFile->mime_type);
+			$db->setQuery($query);
+
+			$mimtype = $db->loadObject();
+
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
+			$db->setQuery($query);
+
+			$path   = $db->loadObject();
+			$mimage = null;
+
+			// Some people do not have logos set to there media so we have this.
+			if (!$mediaImage)
+			{
+				$mediaImage                = new stdClass;
+				$mediaImage->media_alttext = '';
+			}
+			else
+			{
+				if ($mediaImage->media_image_path)
+				{
+					$mimage = $mediaImage->media_image_path;
+				}
+				else
+				{
+					$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+				}
+			}
+			$registry->loadString($mediaFile->params);
+			$params = $registry->toObject();
+
+			$params->media_image   	= $mimage;
+			$params->media_text    	= $mediaImage->media_alttext;
+			if (!empty($mimtype))
+			{
+				$params->mime_type = $mimtype->mimetype;
+			}
+			$params->special      	= $mediaFile->special;
+			if (!empty($mediaFile->filename))
+			{
+				if (@empty($path->folderpath))
+				{
+					$folderpath = null;
+				}
+				else
+				{
+					$folderpath = $path->folderpath;
+				}
+				$params->filename = $folderpath . $mediaFile->filename;
+			}
+			else
+			{
+				$params->filename = '';
+			}
+			$params->player         = $mediaFile->player;
+			$params->size          	= $mediaFile->size;
+			$params->mediacode     	= $mediaFile->mediacode;
+			$params->link_type     	= $mediaFile->link_type;
+			$params->docMan_id     	= $mediaFile->docMan_id;
+			$params->article_id    	= $mediaFile->article_id;
+			$params->virtueMart_id 	= $mediaFile->virtueMart_id;
+			$params->popup	        = $mediaFile->popup;
+
+			$registry->loadObject($params);
+
+			// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
+			$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
+			$metadata['downloads'] = $mediaFile->downloads;
+
+			$newMediaFile->server_id = $insertid;
+			$newMediaFile->params    = $registry->toString();
+			$newMediaFile->metadata  = json_encode($metadata);
+			$newMediaFile->id        = null;
+			$newMediaFile->store();
+
+			// Delete old mediafile
+			JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
+		}
+
 		// Delete unused columns
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 				'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
