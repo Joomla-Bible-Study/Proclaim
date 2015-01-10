@@ -173,7 +173,12 @@ class Migration900
 
 				$newMediaFile->server_id = $newServer->id;
 				$newMediaFile->params    = $registry->toString();
-				$newMediaFile->metadata  = json_encode($metadata);
+
+				// Properly encode the metadata.
+				// @todo Not sure if we are still needing to do this Eugen
+				$registry = new Registry;
+				$registry->loadArray($metadata);
+				$newMediaFile->metadata  = $registry->toString();
 				$newMediaFile->id        = null;
 				$newMediaFile->store();
 

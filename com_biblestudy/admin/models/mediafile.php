@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -140,6 +140,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getMediaForm()
 	{
+		// Needed for site view
+		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
+
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 		if (empty($server_id))
@@ -148,7 +151,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			return new JForm("No-op");
 		}
 		// Reverse lookup server_id to server type
-		$model       = JModelLegacy::getInstance('server', 'BibleStudyModel');
+		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 		$server_type = $model->getType($server_id);
 
 		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
