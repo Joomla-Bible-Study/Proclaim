@@ -32,7 +32,8 @@ $input = $app->input;
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id=' . (int) $this->item->id); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
-<div class="btn-toolbar">
+	<div class="row-fluid">
+	<div class="btn-toolbar">
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('sermon.save')">
 			<i class="icon-ok"></i> <?php echo JText::_('JSAVE') ?>
@@ -44,7 +45,7 @@ $input = $app->input;
 		</button>
 	</div>
 </div>
-<fieldset>
+	<div class="span12 form-horizontal">
 <ul class="nav nav-tabs">
 	<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_STY_DETAILS'); ?></a></li>
 	<li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></a></li>
@@ -324,10 +325,42 @@ $input = $app->input;
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('access'); ?>
+			<?php echo $this->form->getLabel('user_name'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('access'); ?>
+			<?php echo $this->form->getInput('user_name'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('modified'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('modified'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('modified_by'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('modified_by'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_up'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_up'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_down'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_down'); ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -400,8 +433,8 @@ $input = $app->input;
 							(int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 						<a class="btn btn-primary"
 						   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
-						   title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
-							<?php echo($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
+						   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
+							<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 						</a>
 					</td>
 					<td class="center">
@@ -449,6 +482,7 @@ $input = $app->input;
 </div>
 <?php echo JHtml::_('form.token'); ?>
 <!-- End Sidebar -->
-</fieldset>
-</form>
+		</div>
 </div>
+</form>
+	</div>
