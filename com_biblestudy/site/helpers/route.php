@@ -149,7 +149,7 @@ abstract class JBSMHelperRoute
 	/**
 	 * Get Teacher Route
 	 *
-	 * @param   int $id The route of the teacher item
+	 * @param   int  $id  The route of the teacher item
 	 *
 	 * @return string
 	 */
@@ -164,7 +164,7 @@ abstract class JBSMHelperRoute
 	/**
 	 * Get Series Route
 	 *
-	 * @param   int $id ID
+	 * @param   int  $id  ID
 	 *
 	 * @return string
 	 */

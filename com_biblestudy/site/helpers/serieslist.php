@@ -26,12 +26,12 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string                    $r              ?
-	 * @param   object                    $row            JTable
-	 * @param   object                    $customelement  ?
-	 * @param   string                    $custom         ?
-	 * @param   string                    $islink         Is a Link
-	 * @param   Joomla\Registry\Registry  $params         Item Params
+	 * @param   string    $r              ?
+	 * @param   object    $row            JTable
+	 * @param   object    $customelement  ?
+	 * @param   string    $custom         ?
+	 * @param   string    $islink         Is a Link
+	 * @param   Registry  $params         Item Params
 	 *
 	 * @return string
 	 */
@@ -46,6 +46,8 @@ class JBSMSerieslist extends JBSMListing
 			$braceend      = strpos($custom, '}');
 			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 			$customelement = $this->getseriesElementnumber($subcustom);
+
+			// @Fixme Need to find working replacement for this function.
 			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $params, $view = null);
 			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
@@ -161,8 +163,6 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
-
-		// @todo need to fix this.!!!
 		$input   = new JInput;
 		$limit   = '';
 		$nolimit = $input->get('nolimit', '', 'int');
@@ -175,7 +175,7 @@ class JBSMSerieslist extends JBSMListing
 		{
 			$limit = '';
 		}
-
+		// Fixme Need to find working replacement for this function.
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
 		$numrows = count($items);
 

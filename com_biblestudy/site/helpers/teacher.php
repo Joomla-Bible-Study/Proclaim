@@ -71,7 +71,6 @@ class JBSMTeacher extends JBSMListing
 				// Substitute contact info from com_contacts for duplicate fields
 				$result->title       = $this->contact->con_position;
 				$result->teachername = $this->contact->name;
-				$image               = $this->contact->image;
 			}
 			if ($result->teacher_thumbnail)
 			{

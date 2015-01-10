@@ -26,7 +26,7 @@ class JBSMCustom
 	 * @param   int            $rowid     ID of Row
 	 * @param   string         $custom    Custom String
 	 * @param   object         $row       Row info
-	 * @param   Joomla\Registry\Registry       $params    Params for intro
+	 * @param   Registry       $params    Params for intro
 	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object
