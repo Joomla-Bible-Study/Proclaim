@@ -9,7 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.application.component.controller');
 
 /**
  * Controller class for Sermons
@@ -69,7 +68,6 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
-			//echo $mediacode;
 		}
 	}
 

@@ -141,10 +141,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
 		$model     = $this->getModel('sermon');
-		$menu      = $mainframe->getMenu();
-		$item      = $menu->getActive();
 		$t         = '';
 
 		if (!$t)
@@ -178,8 +175,6 @@ class BiblestudyControllerSermon extends JControllerForm
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
-
-				$cap = 0;
 
 				return null;
 			}
@@ -243,26 +238,14 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function commentsEmail($params)
 	{
-		$mainframe  = JFactory::getApplication();
 		$input      = new JInput;
-		$menuitemid = $input->get('Itemid', '', 'int');
 
-		if ($menuitemid)
-		{
-			$menu       = $mainframe->getMenu();
-			$menuparams = $menu->getParams($menuitemid);
-		}
 		$comment_author    = $input->get('full_name', 'Anonymous', 'string');
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
-		$comment_email     = $input->get('user_email', 'No Email', 'string');
-		$comment_text      = $input->get('comment_text', 'None', 'string');
 		$comment_published = $input->get('published', 0, 'int');
-		$comment_date      = $input->get('comment_date', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
-		$comment_abspath   = JPATH_SITE;
 		$comment_mailfrom  = $config->get('mailfrom');
-		$comment_fromname  = $config->get('fromname');
 
 		$comment_livesite = JURI::root();
 		$db               = JFactory::getDBO();
@@ -275,7 +258,6 @@ class BiblestudyControllerSermon extends JControllerForm
 		$mail               = JFactory::getMailer();
 		$ToEmail            = $params->get('recipient', '');
 		$Subject            = $params->get('subject', 'Comments');
-		$FromName           = $params->get('fromname', $comment_fromname);
 
 		if (empty($ToEmail))
 		{
@@ -330,12 +312,11 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		$user  = JFactory::getUser();
 		$allow = null;
 
 		if ($allow === null)
 		{
-			// In the absense of better information, revert to the component permissions.
+			// In the absence of better information, revert to the component permissions.
 			return parent::allowAdd();
 		}
 		else
@@ -375,7 +356,6 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit');
 		$append = '';
 
 		// Setup redirect info.

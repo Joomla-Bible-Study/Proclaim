@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Controller MediaFile
  *
@@ -10,8 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller class for MediaFile
@@ -159,8 +156,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
 	 *
@@ -182,7 +179,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -190,15 +187,15 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// In the absense of better information, revert to the component permissions.
+		// In the absence of better information, revert to the component permissions.
 		return parent::allowAdd();
 	}
 
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
