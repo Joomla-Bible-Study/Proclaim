@@ -1,5 +1,7 @@
 Joomla-Bible-Study
 ==================
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Joomla-Bible-Study/Joomla-Bible-Study?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Status
 -----------
 <table>
