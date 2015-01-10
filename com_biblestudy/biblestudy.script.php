@@ -7,7 +7,6 @@
  * */
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
@@ -21,21 +20,13 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
 class Com_BiblestudyInstallerScript
 {
 
-	/**
-	 * The component's name
-	 *
-	 * @var string
-	 * */
+	/** @var string The component's name */
 	protected $biblestudy_extension = 'com_biblestudy';
 
 	/** @var string Path to Mysql files */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	/**
-	 * The release value to be displayed and check against throughout this file.
-	 *
-	 * @var string
-	 */
+	/** @var string The release value to be displayed and check against throughout this file. */
 	private $_release = '9.0.0';
 
 	/**
@@ -292,7 +283,6 @@ class Com_BiblestudyInstallerScript
 			{
 				if (version_compare($file, $version) > 0)
 				{
-					$this->update_count = 0;
 					$this->allUpdate($file, $db);
 					$this->updatePHP($file, $db);
 				}

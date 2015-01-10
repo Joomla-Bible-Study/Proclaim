@@ -12,6 +12,9 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
+
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Comment model class
  *
@@ -24,7 +27,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed    Object on success, false on failure.
 	 */
@@ -46,7 +49,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value      = ArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
 	}

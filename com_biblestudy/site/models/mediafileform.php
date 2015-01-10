@@ -64,8 +64,6 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$properties = $table->getProperties(1);
 		$value      = ArrayHelper::toObject($properties, 'JObject');
 
-		// Convert attrib field to Registry.
-
 		// Convert params field to Registry.
 		$registry = new Registry;
 		$registry->loadString($value->params);

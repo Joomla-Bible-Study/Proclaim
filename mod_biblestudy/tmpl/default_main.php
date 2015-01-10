@@ -4,7 +4,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -17,30 +17,34 @@ JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 $JBSMListing = new JBSMListing;
 ?>
 <div class="container-fluid">
-    <?php if (($params->get('pageheader'))){ ?>
-    <div class="row-fluid">
-        <div class="span12">
-            <?php echo JHtml::_('content.prepare',$params->get('pageheader'),'','com_biblestudy.module');?>
-        </div>
-    </div>
-  <?php } ?>
-    <div class="row-fluid">
-        <div class="span12">
-            <?php
-            $list = $JBSMListing->getFluidListing($items, $params, $admin_params, $template, $type="sermons");
-            echo $list;
-            ?>
-        </div>
-    </div>
+	<?php if (($params->get('pageheader')))
+	{ ?>
+		<div class="row-fluid">
+			<div class="span12">
+				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_biblestudy.module'); ?>
+			</div>
+		</div>
+	<?php
+}
+	?>
+	<div class="row-fluid">
+		<div class="span12">
+			<?php
+			$list = $JBSMListing->getFluidListing($items, $params, $admin_params, $template, $type = "sermons");
+			echo $list;
+			?>
+		</div>
+	</div>
 
-    <div class="row-fluid">
-        <div class="span12">
-            <?php
-            if ($params->get('show_link') > 0)
-            {
-                echo $link;
-            }
-            ?>
-        </div>
-    </div><!--end of footer div-->
+	<div class="row-fluid">
+		<div class="span12">
+			<?php
+			if ($params->get('show_link') > 0)
+			{
+				echo $link;
+			}
+			?>
+		</div>
+	</div>
+	<!--end of footer div-->
 </div> <!--end container -->

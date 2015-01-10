@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
+use Joomla\Utilities\ArrayHelper;
+use Joomla\Registry\Registry;
 
 /**
  * Model class for Message
@@ -25,7 +27,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	/**
 	 * Method to get article data.
 	 *
-	 * @param   int $pk The id of the article.
+	 * @param   int  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */
@@ -47,7 +49,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value      = ArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
 	}
@@ -85,6 +87,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters.
+		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();

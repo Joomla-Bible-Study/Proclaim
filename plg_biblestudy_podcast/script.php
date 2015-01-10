@@ -20,10 +20,12 @@ defined('_JEXEC') or die;
 class PlgSystemJBSPodcastInstallerScript
 {
 
+	private $is700;
+
 	/**
 	 * method to install the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -35,7 +37,7 @@ class PlgSystemJBSPodcastInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -48,7 +50,7 @@ class PlgSystemJBSPodcastInstallerScript
 	/**
 	 * method to update the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -93,8 +95,8 @@ class PlgSystemJBSPodcastInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -105,8 +107,8 @@ class PlgSystemJBSPodcastInstallerScript
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */

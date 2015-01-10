@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 /**
  * View for Sermons class
  *
@@ -21,59 +22,83 @@ class BiblestudyViewSermons extends JViewLegacy
 
 	/** @var object */
 	public $document;
+
 	/** @var object */
 	protected $items;
+
 	/** @var object */
 	protected $pagination;
+
 	/** @var Registry */
 	protected $state;
+
 	/** @var string */
 	protected $pagelinks;
+
 	/** @var string */
 	protected $limitbox;
+
 	/** @var JObject */
 	protected $admin;
+
 	/** @var Registry */
 	protected $params;
+
 	/** @var object */
 	protected $study;
+
 	/** @var string */
 	protected $subscribe;
+
 	/** @var string */
 	protected $series;
+
 	/** @var string */
 	protected $teachers;
+
 	/** @var string */
 	protected $messageTypes;
+
 	/** @var string */
 	protected $years;
+
 	/** @var string */
 	protected $locations;
+
 	/** @var string */
 	protected $topics;
+
 	/** @var string */
 	protected $orders;
+
 	/** @var string */
 	protected $books;
+
 	/** @var object */
 	protected $template;
+
 	/** @var string */
 	protected $order;
+
 	/** @var array */
 	protected $topic;
+
 	/** @var object */
 	protected $main;
+
 	/** @var object */
 	protected $page;
+
 	/** @var string */
 	protected $request_url;
+
 	/** @var int */
 	protected $limitstart;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

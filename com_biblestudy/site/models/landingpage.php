@@ -108,6 +108,7 @@ class BiblestudyModelLandingpage extends JModelList
 
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$app        = JFactory::getApplication('site');
+		/** @var Registry $params */
 		$params     = $app->getParams();
 		$this->setState('params', $params);
 		$menuparams = new Registry;

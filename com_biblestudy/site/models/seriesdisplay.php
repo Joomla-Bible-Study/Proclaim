@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modelitem');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for SeriesDisplay
@@ -153,6 +153,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$app = JFactory::getApplication('site');
 		$sid = $app->getUserState('sid');
 
+		/** @var Registry $params */
 		$params          = $app->getParams();
 		$user            = JFactory::getUser();
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
