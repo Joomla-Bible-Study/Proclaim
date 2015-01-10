@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -236,7 +236,6 @@ class JBSMBibleStudyHelper
 		$whiteListTags       = array();
 		$whiteListAttributes = array();
 
-		$noHtml     = false;
 		$whiteList  = false;
 		$blackList  = false;
 		$unfiltered = false;
@@ -258,7 +257,6 @@ class JBSMBibleStudyHelper
 			if ($filterType == 'NH')
 			{
 				// Maximum HTML filtering.
-				$noHtml = true;
 			}
 			else
 			{
@@ -270,7 +268,7 @@ class JBSMBibleStudyHelper
 				else
 				{
 					// Black or white list.
-					// Preprocess the tags and attributes.
+					// Prepossess the tags and attributes.
 					$tags           = explode(',', $filterData->filter_tags);
 					$attributes     = explode(',', $filterData->filter_attributes);
 					$tempTags       = array();
@@ -297,7 +295,7 @@ class JBSMBibleStudyHelper
 					}
 
 					// Collect the black or white list tags and attributes.
-					// Each list is cummulative.
+					// Each list is cumulative.
 					if ($filterType == 'BL')
 					{
 						$blackList           = true;
@@ -647,4 +645,3 @@ class JBSMBibleStudyHelper
 		return $options;
 	}
 }
-

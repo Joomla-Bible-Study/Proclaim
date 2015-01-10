@@ -57,17 +57,15 @@
            key_field="id" value_field="server_name">
         <option value="-1">JBS_CMN_SELECT_SERVER</option>
     </field>
-    <field name="media_image" type="sql" extension="com_biblestudy"
+    <field name="media_image" type="test" extension="com_biblestudy"
            label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC" required="true"
            class="inputbox"
-           query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
            key_field="id" value_field="media_image_name">
         <option value="-1">JBS_MED_SELECT_MEDIA_TYPE</option>
     </field>
-    <field name="mime_type" type="sql" extension="com_biblestudy"
+    <field name="mime_type" type="test" extension="com_biblestudy"
            label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
            class="inputbox"
-           query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
            key_field="id" value_field="mimetext">
         <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
     </field>

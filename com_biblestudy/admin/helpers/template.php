@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,7 +19,7 @@ JFactory::getApplication()->enqueueMessage('Use of old function replace ASAP', '
  *
  * @deprecate 8.0.1
  */
-class JBSMTemplate extends JObject
+class JBSMTemplate
 {
 	/**
 	 * Extension Deceleration
@@ -57,7 +57,7 @@ class JBSMTemplate extends JObject
 	 */
 	public function __construct()
 	{
-		include JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'tagDefinitions.helper.php';
+		include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'tagDefinitions.helper.php';
 
 		// Creates array of all the tags and their associated field names
 		$tagsStudy       = array(

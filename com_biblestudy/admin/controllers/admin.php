@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -239,7 +239,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
-		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
+		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
 		parent::display();
 	}
 

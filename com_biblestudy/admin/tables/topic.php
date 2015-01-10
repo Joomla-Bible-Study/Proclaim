@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
 
 /**
  * Topic table class
@@ -50,7 +52,7 @@ class TableTopic extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function Tabletopic(& $db)
 	{
@@ -62,8 +64,8 @@ class TableTopic extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -74,7 +76,9 @@ class TableTopic extends JTable
 	public function bind($array, $ignore = '')
 	{
 		if (is_object($array))
+		{
 			return parent::bind($array, $ignore);
+		}
 
 		if (isset($array['params']) && is_array($array['params']))
 		{
@@ -96,9 +100,9 @@ class TableTopic extends JTable
 	/**
 	 * Overloaded load function
 	 *
-	 * @param   mixed   $keys          An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                                 set the instance property value is used.
-	 * @param   boolean $reset         True to reset the default values before loading the new row.
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                           set the instance property value is used.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *
@@ -124,14 +128,14 @@ class TableTopic extends JTable
 	/**
 	 * check and (re-)construct the alias before storing the topic
 	 *
-	 * @param   array $data      Data of record
-	 * @param   int   $recordId  id
+	 * @param   array  $data      Data of record
+	 * @param   int    $recordId  id
 	 *
 	 * @return      boolean true on success
 	 *
 	 * @todo this look like it is not used. (Neither Tom nor Brent wrote this one)
 	 */
-	public function checkAlias($data = array(), $recordId)
+	public function checkAlias($data = array(), $recordId = null)
 	{
 		$topic = $data['topic_text'];
 
@@ -206,8 +210,8 @@ class TableTopic extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table A JTable object for the asset parent.
-	 * @param   integer $id    Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *

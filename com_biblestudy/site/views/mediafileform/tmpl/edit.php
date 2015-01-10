@@ -3,7 +3,7 @@
  * Edit
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -317,10 +317,10 @@ elseif (empty($this->item->study_id))
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<?php echo $this->form->getLabel('comment'); ?>
+			<?php echo $this->form->getLabel('comments'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('comment'); ?>
+			<?php echo $this->form->getInput('comments'); ?>
 		</div>
 	</div>
 
@@ -358,8 +358,6 @@ elseif (empty($this->item->study_id))
 	</div>
 </div>
 <div class="tab-pane" id="player">
-
-
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('player'); ?>
@@ -388,8 +386,6 @@ elseif (empty($this->item->study_id))
 
 </div>
 <div class="tab-pane" id="file">
-
-
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('plays'); ?>
@@ -483,7 +479,6 @@ elseif (empty($this->item->study_id))
 </div>
 <div class="tab-pane" id="mediatype">
 
-
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('media_image'); ?>
@@ -520,6 +515,56 @@ elseif (empty($this->item->study_id))
 			</div>
 		<?php endforeach; ?>
 	<?php endforeach; ?>
+</div>
+<div class="tab-pane" id="publish">
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('user_id'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('user_name'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('user_name'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('modified'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('modified'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('modified_by'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('modified_by'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_up'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_up'); ?>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('publish_down'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('publish_down'); ?>
+		</div>
+	</div>
 </div>
 <div class="tab-pane" id="state">
 	<fieldset>

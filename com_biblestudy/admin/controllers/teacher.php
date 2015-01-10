@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller for Teacher
@@ -51,5 +49,23 @@ class BiblestudyControllerTeacher extends JControllerForm
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=teachers' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return BiblestudyModelTeacher
+	 *
+	 * @since 7.0
+	 */
+	public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }

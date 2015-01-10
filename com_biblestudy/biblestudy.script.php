@@ -5,8 +5,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
@@ -958,13 +959,8 @@ class Com_BiblestudyInstallerScript
 		);
 
 		// Get Public id
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__viewlevels')
-			->where('title = ' . $db->q('Public'));
-		$db->setQuery($query);
-		$id = $db->loadResult();
+		$db = JFactory::getDbo();
+		$id = JFactory::getConfig()->get('access', 1);
 
 		// Correct blank or not set records
 		foreach ($tables as $table)
@@ -972,7 +968,7 @@ class Com_BiblestudyInstallerScript
 			$query = $db->getQuery(true);
 			$query->update($table['table'])
 				->set('access = ' . $id)
-				->where("(access = " . $db->q('0') . " or access = " . $db->q('') . ")");
+				->where("access = " . $db->q('0'), 'OR')->where("access = " . $db->q(' '));
 			$db->setQuery($query);
 			$db->execute();
 		}

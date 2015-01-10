@@ -85,15 +85,11 @@ Class JBSMDebug
 	 * @param   int     $back  ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated 9.0.0
 	 */
 	public function Check_Db_error($text = '', $back = 0)
 	{
-		$db = JFactory::getDBO();
-
-		if ($db->getErrorNum() != 0)
-		{
-			self::Trigger_Db_error($text, $back + 1);
-		}
 	}
 
 	/**
@@ -102,15 +98,11 @@ Class JBSMDebug
 	 * @param   string  $text  ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated 9.0.0
 	 */
 	public function Check_Db_warning($text = '')
 	{
-		$db = JFactory::getDBO();
-
-		if ($db->getErrorNum() != 0)
-		{
-			self::Trigger_Db_warning($text);
-		}
 	}
 
 	/**
@@ -119,11 +111,11 @@ Class JBSMDebug
 	 * @param   string  $text  ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated 9.0.0
 	 */
 	public function Trigger_Db_warning($text = '')
 	{
-		$db = JFactory::getDBO();
-		self::biblestudy_error($text . '<br />' . $db->stderr(true), E_USER_WARNING);
 	}
 
 	/**

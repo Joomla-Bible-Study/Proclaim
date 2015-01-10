@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * MediaFiles model class
@@ -58,9 +58,10 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	public function getItems()
 	{
-		$serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');
+		// Needed for site view
+		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
 
-		$registry = new Registry;
+		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 
 		$items = parent::getItems();
 
@@ -74,11 +75,13 @@ class BiblestudyModelMediafiles extends JModelList
 			$item->serverConfig = $serverModel->getConfig($item->serverType);
 
 			// Convert all JSON strings to Arrays
+			$registry = new Registry;
 			$registry->loadString($item->params);
-			$item->params = $registry->toArray();
+			$item->params = $registry;
 
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();
+			$registry2 = new Registry;
+			$registry2->loadString($item->metadata);
+			$item->metadata = $registry2;
 		}
 
 		return $items;
@@ -93,7 +96,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		if (empty($this->_deletes))
 		{
-			$query          = 'SELECT allow_deletes'
+			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
 			$this->_deletes = $this->_getList($query);

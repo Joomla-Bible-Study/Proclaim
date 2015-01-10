@@ -3,19 +3,19 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Bible Study Core Difines
  */
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-
-jimport('joomla.application.component.controller');
 
 /**
  * Controller for Core BibleStudy
@@ -68,8 +68,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean $cachable   If true, the view output will be cached
-	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -218,7 +218,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string $params  To pass to the email
+	 * @param   string  $params  To pass to the email
 	 *
 	 * @return void
 	 */

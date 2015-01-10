@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -37,6 +37,7 @@ class JBSMLanding
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
 		$limit       = $params->get('landinglocationslimit');
+		$order       = 'ASC';
 
 		if (!$limit)
 		{
@@ -190,7 +191,7 @@ class JBSMLanding
 
 				case 1:
 
-					$location = '<div class="landingtable" style="display:inline;">';
+					$location = '<div class="landingtable" style="display:inline-block;">';
 
 					foreach ($tresult as $b)
 					{
@@ -248,11 +249,11 @@ class JBSMLanding
 	 */
 	public function getTeacherLandingPage($params, $id)
 	{
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
-		$user        = JFactory::getUser();
-		$langlink = JLanguageMultilang::isEnabled();
-
+		$mainframe = JFactory::getApplication();
+		$db        = JFactory::getDBO();
+		$user      = JFactory::getUser();
+		$langlink  = JLanguageMultilang::isEnabled();
+		$order     = null;
 		$teacher   = null;
 		$teacherid = null;
 
@@ -489,13 +490,13 @@ class JBSMLanding
 	 */
 	public function getSeriesLandingPage($params, $id)
 	{
-		$mainframe   = JFactory::getApplication();
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$input       = new JInput;
-		$series   = null;
-		$seriesid = null;
-		$numRows  = null;
+		$mainframe = JFactory::getApplication();
+		$user      = JFactory::getUser();
+		$db        = JFactory::getDBO();
+		$order     = 'ASC';
+		$series    = null;
+		$seriesid  = null;
+		$numRows   = null;
 
 		$template = $params->get('serieslisttemplateid', 1);
 		$limit    = $params->get('landingserieslimit');
@@ -730,7 +731,7 @@ class JBSMLanding
 		$db        = JFactory::getDBO();
 		$user      = JFactory::getUser();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -887,7 +888,7 @@ class JBSMLanding
 		$user      = JFactory::getUser();
 		$db        = JFactory::getDBO();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+		$order     = 'ASC';
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -1044,10 +1045,9 @@ class JBSMLanding
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
 		$input       = new JInput;
-		$addItemid   = $input->get('Itemid', '', 'int');
 		$messagetype = null;
+		$order       = 'ASC';
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
 		$limit       = $params->get('landingmessagetypeslimit');
@@ -1256,9 +1256,9 @@ class JBSMLanding
 	 */
 	public function getBooksLandingPage($params)
 	{
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$JViewLegacy = new JViewLegacy;
+		$user     = JFactory::getUser();
+		$db       = JFactory::getDBO();
+		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');
 		$limit    = $params->get('landingbookslimit');
