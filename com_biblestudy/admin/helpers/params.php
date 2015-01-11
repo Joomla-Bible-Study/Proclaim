@@ -29,6 +29,15 @@ class JBSMParams
 	 */
 	public static $extension = 'com_biblestudy';
 
+	/** @var  Object Admin Table */
+	public static $admin;
+
+	/** @var  Object Template Table */
+	public static $template_table;
+
+	/** @var int Default template id and used to check if changed form from last query */
+	public static $t_id = 1;
+
 	/**
 	 * Gets the settings from Admin
 	 *
@@ -36,7 +45,7 @@ class JBSMParams
 	 */
 	public static function getAdmin()
 	{
-		if (JBSMDbHelper::checkIfTable('#__bsms_admin'))
+		if (JBSMDbHelper::checkIfTable('#__bsms_admin') && !self::$admin)
 		{
 			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
@@ -53,10 +62,14 @@ class JBSMParams
 			$user           = JFactory::getUser();
 			$admin->user_id = $user->id;
 
-			return $admin;
+			self::$admin = $admin;
+		}
+		elseif (!self::$admin)
+		{
+			return false;
 		}
 
-		return false;
+		return self::$admin;
 	}
 
 	/**
@@ -73,23 +86,27 @@ class JBSMParams
 		{
 			$pk = JFactory::getApplication()->input->getInt('t', '1');
 		}
-
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_templates')
-			->where('published = ' . (int) 1)
-			->where('id = ' . (int) $pk);
-		$db->setQuery($query);
-		$template = $db->loadObject();
-
-		if ($template)
+		if (self::$t_id != $pk || !self::$template_table)
 		{
-			$registry = new Registry;
-			$registry->loadString($template->params);
-			$template->params = $registry;
+			self::$t_id = $pk;
+			$query = $db->getQuery(true);
+			$query->select('*')
+				->from('#__bsms_templates')
+				->where('published = ' . (int) 1)
+				->where('id = ' . (int) self::$t_id);
+			$db->setQuery($query);
+			$template = $db->loadObject();
+
+			if ($template)
+			{
+				$registry = new Registry;
+				$registry->loadString($template->params);
+				$template->params = $registry;
+			}
+			self::$template_table = $template;
 		}
 
-		return $template;
+		return self::$template_table;
 	}
 
 }
