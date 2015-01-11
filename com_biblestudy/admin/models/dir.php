@@ -1,5 +1,4 @@
-<?php
-/**
+<?php/**
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
