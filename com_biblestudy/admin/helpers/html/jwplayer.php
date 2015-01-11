@@ -94,6 +94,16 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerheight = 30;
 		}
+
+		// Check to see if file name is for youtube and helps with old converted file names.
+		if (strpos($media->path1, 'youtube.com') !== false)
+		{
+			$media->path1 = 'https://' . strstr($media->path1, 'youtube.com');
+		}
+		elseif (strpos($media->path1, 'youtu.be') !== false)
+		{
+			$media->path1 = 'https://' . strstr($media->path1, 'youtu.be');
+		}
 		$render = "";
 		if ($popup)
 		{

@@ -302,7 +302,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	/**
 	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string $component  Component it is coming from
+	 * @param   string  $component  Component it is coming from
 	 *
 	 * @return boolean
 	 *

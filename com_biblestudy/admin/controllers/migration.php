@@ -55,6 +55,7 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	public function browse()
 	{
 		$app = JFactory::getApplication();
+		/** @var BibleStudyModelMigration $model */
 		$model = $this->getModel('migration');
 		$state = $model->startScanning();
 		$app->input->set('scanstate', $state);

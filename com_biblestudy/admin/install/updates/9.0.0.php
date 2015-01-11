@@ -156,6 +156,10 @@ class Migration900
 				{
 					$params->filename = '';
 				}
+				if ($mediaFile->player == '100')
+				{
+					$mediaFile->player = '';
+				}
 				$params->player         = $mediaFile->player;
 				$params->size          	= $mediaFile->size;
 				$params->mediacode     	= $mediaFile->mediacode;
@@ -258,6 +262,10 @@ class Migration900
 			{
 				$params->filename = '';
 			}
+			if ($mediaFile->player == '100')
+			{
+				$mediaFile->player = '';
+			}
 			$params->player         = $mediaFile->player;
 			$params->size          	= $mediaFile->size;
 			$params->mediacode     	= $mediaFile->mediacode;
@@ -299,6 +307,9 @@ class Migration900
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
+
+		$this->updatetemplates($db);
+		$this->css900();
 
 		$message = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
@@ -359,23 +370,20 @@ class Migration900
 	 *
 	 * @return void
 	 */
-	public function updatetemplates ($db)
+	private function updatetemplates ($db)
 	{
 		$query = $db->getQuery(true);
-		$query->select('id, title, params')
+		$query->select('*')
 				->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
 		foreach ($data as $d)
 		{
-			/** @var TableTemplate $table */
-			// Load Table Data.
-			JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-			$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
-			$table->load($d->id);
-
-			$table->store();
-
+			$registry = new Registry;
+			$registry->loadString($d->params);
+			$registry->def('player', $registry->get('media_player'));
+			$d->params = $registry->toString();
+			$db->updateObject('#__bsms_templates', $d, 'id');
 		}
 		return;
 	}
@@ -384,8 +392,6 @@ class Migration900
 	 * Update CSS for 9.0.0
 	 *
 	 * @return boolean
-	 *
-	 * @todo may not be needed.
 	 */
 	public function css900 ()
 	{
