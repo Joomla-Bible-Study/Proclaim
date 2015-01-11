@@ -45,7 +45,7 @@ class TableStudyTopics extends JTable
 	 * be overridden by child classes to explicitly set the table and key fields
 	 * for a particular database table.
 	 *
-	 * @param   JDatabaseDriver &$db  JDatabase connector object.
+	 * @param   JDatabaseDriver  &$db  JDatabase connector object.
 	 *
 	 * @since   11.1
 	 */
@@ -90,8 +90,8 @@ class TableStudyTopics extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *

@@ -7,11 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
+// TODO Need to finish this file
 /**
  * Checks if the template is setup right.
  *

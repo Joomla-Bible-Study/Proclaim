@@ -1,14 +1,19 @@
 <?php
-/* Add proper header */
-
+/**
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
+// No Direct Access
 defined('_JEXEC') or die;
-
-use Joomla\Registry\Registry;
 
 /**
  * Abstract Server class
  *
- * @since   9.0.0
+ * @since  9.0.0
  */
 abstract class JBSMAddon
 {
@@ -35,6 +40,13 @@ abstract class JBSMAddon
 	 */
 	protected $type;
 
+	/**
+	 * Construct
+	 *
+	 * @param   array  $config  Array of Obtains
+	 *
+	 * @throws \Exception
+	 */
 	public function __construct($config = array())
 	{
 
@@ -66,6 +78,7 @@ abstract class JBSMAddon
 	 * Gets the type of addon loaded based on the class name
 	 *
 	 * @return  string
+	 *
 	 * @throws  Exception
 	 * @since   9.0.0
 	 */
@@ -89,19 +102,20 @@ abstract class JBSMAddon
 	 * Loads the addon configuration from the xml file
 	 *
 	 * @return  bool|SimpleXMLElement
+	 *
 	 * @throws  Exception
 	 * @since   9.0.0
 	 */
 	public function getXml()
 	{
-		$path = JPath::find(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . 'servers' . DIRECTORY_SEPARATOR . $this->type, $this->type . '.xml');
+		$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $this->type, $this->type . '.xml');
 		if ($path)
 		{
 			$xml = simplexml_load_file($path);
 		}
 		else
 		{
-			//@TODO Need to properly translate this string
+			// @TODO Need to properly translate this string
 			throw new Exception(JText::sprintf('COULD NOT LOAD ADDON CONFIGURATION'), 404);
 		}
 
@@ -111,10 +125,11 @@ abstract class JBSMAddon
 	/**
 	 * Returns a Addon object, always creating it
 	 *
-	 * @param       $type
-	 * @param array $config
+	 * @param   string  $type    ?
+	 * @param   array   $config  ?
 	 *
 	 * @return bool
+	 *
 	 * @since   9.0.0
 	 */
 	public static function getInstance($type, $config = array())
@@ -125,14 +140,14 @@ abstract class JBSMAddon
 		if (!class_exists($addonClass))
 		{
 			jimport('joomla.filesystem.path');
-			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . 'servers' . DIRECTORY_SEPARATOR . $type, $type . '.php');
+			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $type, $type . '.php');
 			if ($path)
 			{
 				require_once $path;
 
 				if (!class_exists($addonClass))
 				{
-					//@TODO Need to properly translate this string
+					// @TODO Need to properly translate this string
 					JLog::add(JText::sprintf('COULD NOT LOAD ADDON CLASS', $addonClass), JLog::WARNING, 'jerror');
 
 					return false;
@@ -147,6 +162,13 @@ abstract class JBSMAddon
 		return new $addonClass($config);
 	}
 
+	/**
+	 * Upload
+	 *
+	 * @param   JInput  $target  URL
+	 *
+	 * @return mixed
+	 */
 	abstract protected function upload($target);
 
 }

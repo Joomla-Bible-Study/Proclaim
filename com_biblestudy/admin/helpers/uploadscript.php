@@ -127,8 +127,6 @@ class UploadScript
 	{
 		$l_resize          = ""; /* Script resize line */
 		$l_chunk           = ""; /* Script chuk_size line */
-		//$l_flash_swf_url   = "flash_swf_url : '" . $this->mediaRoot . "js/plupload.flash.swf',"; /* Script flash swf url line */
-		//$l_silverlight_xap = "silverlight_xap_url: '" . $this->mediaRoot . "js/plupload.silverlight.xap',"; /* Script silverlight xap line */
 
 		if ($this->_resize)
 		{
@@ -274,10 +272,6 @@ class UploadScript
 		rename : <?php echo $this->_rename ?>,
 		unique_names : <?php echo $this->_uniqueNames ?>,
 		<?php echo $l_resize ?>
-		// Flash settings
-		<?php //echo $l_flash_swf_url ?>
-		// Silverlight settings
-		<?php //echo $l_silverlight_xap ?>
         flash_swf_url : '<?php echo $this->mediaRoot; ?>js/Moxie.swf',
         silverlight_xap_url : '<?php echo $this->mediaRoot; ?>js/Moxie.xap'
 		filters : [

@@ -42,7 +42,7 @@ class TableTemplatecode extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function __construct(&$db)
 	{
@@ -54,8 +54,8 @@ class TableTemplatecode extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -68,7 +68,7 @@ class TableTemplatecode extends JTable
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new JRules($array['rules']);
+			$rules = new JAccessRules($array['rules']);
 			$this->setRules($rules);
 		}
 
@@ -78,7 +78,7 @@ class TableTemplatecode extends JTable
 	/**
 	 * Overriden JTable::store to set modified data and user id.
 	 *
-	 * @param   boolean $updateNulls  True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return    boolean    True on success.
 	 *
@@ -159,7 +159,7 @@ class TableTemplatecode extends JTable
 	/**
 	 * Method to delete a row from the database table by primary key value.
 	 *
-	 * @param   mixed $pk  An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -257,8 +257,8 @@ class TableTemplatecode extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table A JTable object for the asset parent.
-	 * @param   integer $id    Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *

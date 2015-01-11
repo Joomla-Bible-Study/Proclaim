@@ -27,17 +27,6 @@ class JBSMSSConvert
 	public function convertSS()
 	{
 		$db = JFactory::getDBO();
-
-		// Get all of the sermons from Sermon Speaker
-//		$query = 'SELECT COUNT(*) FROM #__sermon_sermons';
-//		$db->setQuery($query);
-//		$oldstudies = $db->loadResult();
-//		$query      = 'SELECT COUNT(*) FROM #__sermon_series';
-//		$db->setQuery($query);
-//		$oldseries = $db->loadResult();
-//		$query     = 'SELECT COUNT(*) FROM #__sermon_speakers';
-//		$db->setQuery($query);
-//		$oldteachers = $db->loadResult();
 		$query       = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_sermons');
