@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modeladmin');
-
 /**
  * Comment model class
  *
@@ -26,17 +24,11 @@ class BiblestudyModelComment extends JModelAdmin
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
-	/**
-	 * Admin
-	 *
-	 * @var string
-	 */
-	private $_admin;
 
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success, False on error.
 	 *
@@ -55,7 +47,7 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -69,8 +61,8 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -103,8 +95,7 @@ class BiblestudyModelComment extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -123,9 +114,9 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Batch copy items to a new category or current.
 	 *
-	 * @param   integer $value     The new category.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   integer  $value     The new category.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
 	 *
 	 * @return  mixed  An array of new IDs on success, boolean false on failure.
 	 *
@@ -134,6 +125,7 @@ class BiblestudyModelComment extends JModelAdmin
 	protected function batchCopy($value, $pks, $contexts)
 	{
 		$categoryId = (int) '';
+		$newIds     = array();
 
 		$table = $this->getTable();
 		$i     = 0;
@@ -216,9 +208,9 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   string $name    The table name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $options Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 */
@@ -230,8 +222,8 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Clean the cache
 	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -246,7 +238,7 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object $record  A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -271,7 +263,7 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to test whether a record can have its state edited.
 	 *
-	 * @param   object $record  A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
 	 *
@@ -294,7 +286,7 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable $table  A reference to a JTable object.
+	 * @param   JTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -326,9 +318,9 @@ class BiblestudyModelComment extends JModelAdmin
 	/**
 	 * Method to allow derived classes to prepossess the form.
 	 *
-	 * @param   JForm  $form   A JForm object.
-	 * @param   mixed  $data   The data expected for the form.
-	 * @param   string $group  The name of the plugin group to import (defaults to "content").
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
 	 *
 	 * @return  void
 	 *

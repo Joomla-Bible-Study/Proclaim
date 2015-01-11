@@ -22,7 +22,7 @@
 
 
 </head>
-<body style="font: 13px Verdana; background: #eee; color: #333">
+<body style="font: 13px Verdana; background: #eee; color: #333;">
 
 <form method="post" action="dump.php">
     <div id="uploader">

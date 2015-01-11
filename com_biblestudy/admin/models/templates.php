@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Templates model class
  *
@@ -69,8 +67,8 @@ class BiblestudyModelTemplates extends JModelList
 	/**
 	 * Populate State
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

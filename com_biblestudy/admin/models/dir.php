@@ -11,7 +11,6 @@
 defined('_JEXEC') or die();
 
 // Import the Joomla modellist library
-jimport('joomla.application.component.modelitem');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
@@ -79,7 +78,7 @@ class BiblestudyModelDir extends JModelItem
 		}
 
 		// Prepend home dir
-		$firstBC       = new JObject;
+		$firstBC       = new stdClass;
 		$firstBC->name = BIBLESTUDY_MEDIA_PATH;
 		$firstBC->link = '';
 		array_unshift($bc, $firstBC);
@@ -232,7 +231,6 @@ class BiblestudyModelDir extends JModelItem
 		return $OFiles;
 	}
 
-
 	/**
 	 * Sets the info and path for each folder
 	 *
@@ -271,6 +269,4 @@ class BiblestudyModelDir extends JModelItem
 		return $OFolders;
 
 	}
-
-
 }

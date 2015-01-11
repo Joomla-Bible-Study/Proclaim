@@ -10,9 +10,6 @@
 // No direct access
 defined('_JEXEC') or die();
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
-
 /**
  * Directory View
  *

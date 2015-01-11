@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.form.formfield');
-
 /**
  * This is a dummy form element to load the components language file
  *
@@ -34,8 +32,14 @@ class JFormFieldLoadLanguageFile extends JFormField
 	 */
 	protected $hidden = true;
 
-	public function getLabel() {
-        // return an empty string; nothing to display
+	/**
+	 * Get Lable
+	 *
+	 * @return null;
+	 */
+	public function getLabel()
+	{
+		// Return an empty string; nothing to display
 		return '';
 	}
 
@@ -46,12 +50,12 @@ class JFormFieldLoadLanguageFile extends JFormField
 	 */
 	protected function getInput()
 	{
-		// get language file; english language as fallback
+		// Get language file; english language as fallback
 		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
 
-        // return an empty string; nothing to display
+		// Return an empty string; nothing to display
 		return '';
 	}
 }

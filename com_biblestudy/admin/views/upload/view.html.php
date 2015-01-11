@@ -13,9 +13,6 @@ defined('_JEXEC') or die();
 // Include dependencies
 JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/uploadscript.php');
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
-
 /**
  * Mediamu View
  *

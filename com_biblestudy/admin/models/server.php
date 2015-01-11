@@ -175,10 +175,6 @@ class BiblestudyModelServer extends JModelAdmin
 		{
 			$this->getItem();
 		}
-		else
-		{
-			//$this->setState('server.type', JArrayHelper::getValue($data, 'server_type'));
-		}
 
 		// Get the forms.
 		$form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
@@ -225,7 +221,7 @@ class BiblestudyModelServer extends JModelAdmin
 		if (!empty($record->id))
 		{
 			return $user->authorise('core.edit.state', 'com_biblestudy.server.' . (int) $record->id);
-		} // Default to component settings if neither article nor category known.
+		} /* Default to component settings if neither article nor category known. */
 		else
 		{
 			return parent::canEditState($record);

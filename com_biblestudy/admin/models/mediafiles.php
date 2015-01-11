@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -123,11 +123,6 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
-		// Initialise variables.
-		$app     = JFactory::getApplication();
-		$session = JFactory::getSession();
-
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');

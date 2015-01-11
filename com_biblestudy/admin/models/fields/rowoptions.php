@@ -23,30 +23,30 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldRowOptions extends JFormFieldList
 {
 
-    /**
-     * The field type.
-     *
-     * @var         string
-     */
-    protected $type = 'Rowoptions';
+	/**
+	 * The field type.
+	 *
+	 * @var         string
+	 */
+	protected $type = 'Rowoptions';
 
-    /**
-     * Method to get a list of options for a list input.
-     *
-     * @return      array           An array of JHtml options.
-     */
-    protected function getOptions()
-    {
-        $options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_HIDE'));
-        $options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_ROW1'));
-        $options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_ROW2'));
-        $options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_ROW3'));
-        $options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_ROW4'));
-        $options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_ROW5'));
-        $options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_ROW6'));
-        $options   = array_merge(parent::getOptions(), $options);
+	/**
+	 * Method to get a list of options for a list input.
+	 *
+	 * @return      array           An array of JHtml options.
+	 */
+	protected function getOptions()
+	{
+		$options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_HIDE'));
+		$options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_ROW1'));
+		$options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_ROW2'));
+		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_ROW3'));
+		$options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_ROW4'));
+		$options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_ROW5'));
+		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_ROW6'));
+		$options   = array_merge(parent::getOptions(), $options);
 
-        return $options;
-    }
+		return $options;
+	}
 
 }
