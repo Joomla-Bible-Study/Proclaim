@@ -31,7 +31,7 @@ class BiblestudyViewCommentform extends JViewLegacy
 	/**
 	 * Item
 	 *
-	 * @var array
+	 * @var Object
 	 */
 	protected $item;
 

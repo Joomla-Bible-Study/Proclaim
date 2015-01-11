@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * View class for Message
  *
@@ -35,10 +37,10 @@ class BiblestudyViewMessageform extends JViewLegacy
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
 
-	/**  Form @var array */
+	/**  Form @var JForm */
 	protected $form;
 
-	/** Item @var array */
+	/** Item @var object */
 	protected $item;
 
 	/** Return Page @var string */

@@ -42,6 +42,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  JObject Print */
 	protected $print;
 
+	/** @var  JDocument Print */
+	protected $document;
+
 	/** @var  JObject Studies */
 	protected $studies;
 
@@ -60,6 +63,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
 
+		/** @var Registry $params */
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');

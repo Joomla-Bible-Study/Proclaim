@@ -233,11 +233,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string $text      Text info
-	 * @param   object $media     Media info
-	 * @param   string $scripture scripture
-	 * @param   string $date      Date
-	 * @param   string $length    Length of Title
+	 * @param   string  $text       Text info
+	 * @param   object  $media      Media info
+	 * @param   string  $scripture  scripture
+	 * @param   string  $date       Date
+	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 */

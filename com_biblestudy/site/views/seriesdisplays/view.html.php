@@ -44,6 +44,9 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 	/** @var Registry State */
 	protected $state;
 
+	/** @var string State */
+	protected $go;
+
 	/**
 	 * Execute and display a template script.
 	 *

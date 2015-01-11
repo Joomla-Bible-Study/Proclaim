@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Landing page list view class
  *

@@ -207,7 +207,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
@@ -347,7 +346,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$detailslink       = htmlspecialchars($u->toString());
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
-
 
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);

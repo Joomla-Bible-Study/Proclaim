@@ -49,19 +49,19 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 */
 	protected $pagination = null;
 
-	/** @var  JObject Admin */
+	/** @var  object Admin */
 	protected $admin;
 
 	/** @var  Registry Admin Params */
 	protected $admin_params;
 
-	/** @var  JObject Page */
+	/** @var  object Page */
 	protected $page;
 
-	/** @var  JObject Series Studies */
+	/** @var  object Series Studies */
 	protected $seriesstudies;
 
-	/** @var  JObject Template */
+	/** @var  object Template */
 	protected $template;
 
 	/** @var  Registry Params */
@@ -73,7 +73,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  string Passage Link */
 	protected $passage_link;
 
-	/** @var  JObject Studies */
+	/** @var  object Studies */
 	protected $studies;
 
 	/** @var  string Request URL */
