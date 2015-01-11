@@ -235,7 +235,7 @@ class JBSMPodcast
 							case 5:
 								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
-									$rowid = 'row1col1',
+									$rowid = '24',
 									$podinfo->custom,
 									$episode,
 									$params,
@@ -293,11 +293,11 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
-							case 5:
+							case 7:
 								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
-									$rowid = 'row1col1',
-									$podinfo->custom,
+									$rowid = '24',
+									$podinfo->episodesubtitle,
 									$episode,
 									$params,
 									$admin_params,
