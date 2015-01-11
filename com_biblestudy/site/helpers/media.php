@@ -680,7 +680,6 @@ class JBSMMedia
 	 */
 	public function getMediaRows2($id)
 	{
-		dump($id, 'id');
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);

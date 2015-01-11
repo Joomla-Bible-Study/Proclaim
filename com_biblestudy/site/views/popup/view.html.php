@@ -117,8 +117,6 @@ class BiblestudyViewPopup extends JViewLegacy
 			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
 
-		jimport('joomla.application.component.helper');
-
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');

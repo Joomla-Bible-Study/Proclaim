@@ -216,8 +216,6 @@ class JBSMPageBuilder
 	 * @param   Joomla\Registry\Registry  $params    Item Params
 	 *
 	 * @return string
-	 *
-	 * @todo Eugen will need to redo this sql
 	 */
 	private function mediaBuilder($mediaids, $params)
 	{

@@ -131,7 +131,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		/** @var  $params Registry */
-		$params = $this->state->template->params;
+		$params = $this->state->params;
 
 		$images     = new JBSMImages;
 		$this->main = $images->mainStudyImage();
@@ -492,7 +492,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
-		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');
 	}
 
 }
