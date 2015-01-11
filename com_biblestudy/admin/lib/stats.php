@@ -20,7 +20,6 @@ use \Joomla\Registry\Registry;
  */
 class JBSMStats
 {
-
 	/**
 	 * Total plays of media files per study
 	 *
@@ -376,7 +375,9 @@ class JBSMStats
 	/**
 	 * Top Score ???
 	 *
-	 * @return int number of scors
+	 * @var   Registry  $admin_params  Admin Prams
+	 *
+	 * @return int number of scores
 	 */
 	public static function top_score()
 	{
@@ -570,10 +571,8 @@ class JBSMStats
 		$input = new JInput;
 		$t     = $input->get('t', 1, 'int');
 
-		$admin        = JBSMParams::getAdmin();
-		/** @var Registry $admin_params */
-		$admin_params = $admin->params;
-		$limit        = $admin_params->get('popular_limit', '25');
+		$admin = JBSMParams::getAdmin();
+		$limit        = $admin->params->get('popular_limit', '25');
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
 			JText::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final        = array();
@@ -585,7 +584,7 @@ class JBSMStats
 			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
 			->where('m.published = 1 GROUP BY m.study_id');
 		$db->setQuery($query);
-		$format = $admin_params->get('format_popular', '0');
+		$format = $admin->params->get('format_popular', '0');
 
 		$items = $db->loadObjectList();
 
