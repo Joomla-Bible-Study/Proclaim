@@ -9,6 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+JHtml::_('behavior.keepalive');
 ?>
 <script type="text/javascript" language="JavaScript">
     function HideContent(d) {
@@ -29,6 +30,10 @@ defined('_JEXEC') or die;
 <?php
 $commentjava = "javascript:ReverseDisplay('JBScomments')";
 
+//php code
+JPluginHelper::importPlugin('captcha');
+$dispatcher = JEventDispatcher::getInstance();
+$dispatcher->trigger('onInit', 'dynamic_recaptcha_1');
 
 switch ($this->item->params->get('link_comments', 0))
 {
@@ -194,23 +199,9 @@ if ($allow > 9)
 					<?php
 					if ($this->item->params->get('use_captcha') > 0)
 					{
-						// Begin captcha
-						?>
-                        <script language="javascript" type="text/javascript">
-                            var RecaptchaOptions = {
-                                theme:'white'
-                            };
-                        </script>
-						<?php
-						require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/captcha/recaptchalib.php';
-
-						// You got this from the signup page
-						$publickey = $this->item->params->get('public_key');
-
-// @todo move to core captcha no ares.
 						if ($this->item->params->get('public_key'))
 						{
-							echo recaptcha_get_html($publickey);
+							echo '<div id="dynamic_recaptcha_1"></div>';
 						}
 						else
 						{
