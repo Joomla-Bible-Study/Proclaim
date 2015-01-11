@@ -21,14 +21,14 @@ JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/uplo
  */
 class BiblestudyViewUpload extends JViewLegacy
 {
-    /**
-     * Form
-     *
-     * @var object
-     */
-    protected $form;
+	/**
+	 * Form
+	 *
+	 * @var object
+	 */
+	protected $form;
 
-    /**
+	/**
 	 * View display method
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -37,8 +37,8 @@ class BiblestudyViewUpload extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-        $this->form  = $this->get("Form");
-        JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
+		$this->form = $this->get("Form");
+		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
 		JHtml::_('behavior.tooltip');
 		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
@@ -55,39 +55,43 @@ class BiblestudyViewUpload extends JViewLegacy
 		$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
 		$document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
-
-		//$document->addScriptDeclaration( $UploadScript->getScript() );
-		//$document->addScriptDeclaration( $UploadScript->newScript() );
 		$document->addScriptDeclaration($UploadScript->UIScript());
 
-		//print_r($UploadScript->newScript());
 		// Set variables for the template
 		$this->enableLog  = 1;
 		$this->runtime    = $runtime;
 		$this->currentDir = '/media';
 
-        // Set the document
-        $this->setDocument();
-        // Set the toolbar
-        $this->addToolbar();
+		// Set the document
+		$this->setDocument();
+
+		// Set the toolbar
+		$this->addToolbar();
+
 		// Display the template
 		parent::display($tpl);
 	}
 
-    /**
-     * Add the page title to browser.
-     *
-     * @return void
-     *
-     * @since    7.1.0
-     */
-    protected function setDocument()
-    {
-        $document = JFactory::getDocument();
-        $document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
-    }
-    protected function addToolbar()
-    {
-        JToolBarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
-    }
+	/**
+	 * Add the page title to browser.
+	 *
+	 * @return void
+	 *
+	 * @since    7.1.0
+	 */
+	protected function setDocument()
+	{
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
+	}
+
+	/**
+	 * Add Toolbar
+	 *
+	 * @return void
+	 */
+	protected function addToolbar()
+	{
+		JToolBarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
+	}
 }

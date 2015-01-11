@@ -27,36 +27,42 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * @var string
 	 */
 	public $mediatypes;
+
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * Filter Levers
 	 *
 	 * @var string
 	 */
 	public $f_levels;
+
 	/**
 	 * Side Bare
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *

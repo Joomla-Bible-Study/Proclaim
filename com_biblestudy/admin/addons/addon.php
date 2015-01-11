@@ -89,7 +89,7 @@ abstract class JBSMAddon
 			$r = null;
 			if (!preg_match('/JBSMAddon(.*)/i', get_class($this), $r))
 			{
-				//@TODO Changed to a localized exception
+				// @TODO Changed to a localized exception
 				throw new Exception(JText::sprintf('CANT ADDON CLASS NAME'), 500);
 			}
 			$this->type = strtolower($r[1]);

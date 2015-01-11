@@ -10,6 +10,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * View class for Admin
  *
@@ -25,120 +27,140 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 */
 	public $version;
+
 	/**
 	 * Can Do
 	 *
 	 * @var string
 	 */
 	public $canDo;
+
 	/**
 	 * Change Set
 	 *
 	 * @var string
 	 */
 	public $changeSet;
+
 	/**
 	 * Errors
 	 *
 	 * @var string
 	 */
 	public $errors;
+
 	/**
 	 * Results
 	 *
 	 * @var string
 	 */
 	public $results;
+
 	/**
 	 * Schema Version
 	 *
 	 * @var string
 	 */
 	public $schemaVersion;
+
 	/**
 	 * Update Version
 	 *
 	 * @var string
 	 */
 	public $updateVersion;
+
 	/**
 	 * Filter Params
 	 *
 	 * @var Registry
 	 */
 	public $filterParams;
+
 	/**
 	 * Pagination
 	 *
 	 * @var string
 	 */
 	public $pagination;
+
 	/**
 	 * Error Count
 	 *
 	 * @var string
 	 */
 	public $errorCount;
+
 	/**
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
 	 */
 	public $jversion;
+
 	/**
 	 * Temp Destination
 	 *
 	 * @var string
 	 */
 	public $tmp_dest;
+
 	/**
 	 * Player Stats
 	 *
 	 * @var string
 	 */
 	public $playerstats;
+
 	/**
 	 * Assets
 	 *
 	 * @var string
 	 */
 	public $assets;
+
 	/**
 	 * Popups
 	 *
 	 * @var string
 	 */
 	public $popups;
+
 	/**
 	 * SS
 	 *
 	 * @var string
 	 */
 	public $ss;
+
 	/**
 	 * Lists
 	 *
 	 * @var string
 	 */
 	public $lists;
+
 	/**
 	 * PI
 	 *
 	 * @var string
 	 */
 	public $pi;
+
 	/**
 	 * Form
 	 *
 	 * @var array
 	 */
 	protected $form;
+
 	/**
 	 * Item
 	 *
 	 * @var array
 	 */
 	protected $item;
+
 	/**
 	 * State
 	 *
@@ -149,7 +171,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -290,7 +312,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	/**
 	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string $component Component it is coming from
+	 * @param   string  $component  Component it is coming from
 	 *
 	 * @return boolean
 	 *
