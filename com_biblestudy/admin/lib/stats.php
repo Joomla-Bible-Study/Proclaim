@@ -20,6 +20,15 @@ use \Joomla\Registry\Registry;
  */
 class JBSMStats
 {
+	/** @var null used to store query of messages */
+	private static $total_messages = null;
+
+	/** @var string Start Date */
+	private static $total_messages_start = '';
+
+	/** @var string End Date */
+	private static $total_messages_end   = '';
+
 	/**
 	 * Total plays of media files per study
 	 *
@@ -51,31 +60,37 @@ class JBSMStats
 	 */
 	public static function get_total_messages($start = '', $end = '')
 	{
-		$db    = JFactory::getDBO();
-		$where = array();
-
-		if (!empty($start))
+		if ($start != self::$total_messages_start || $end != self::$total_messages_end || self::$total_messages != null)
 		{
-			$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
-		}
-		if (!empty($end))
-		{
-			$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
-		}
-		$query = $db->getQuery(true);
-		$query
-			->select('COUNT(*)')
-			->from('#__bsms_studies')
-			->where('published =' . $db->q('1'));
+			self::$total_messages_start = $start;
+			self::$total_messages_end   = $end;
 
-		if (count($where) > 0)
-		{
-			$query->where(implode(' AND ', $where));
-		}
-		$db->setQuery($query);
-		$results = $db->loadResult();
+			$db    = JFactory::getDBO();
+			$where = array();
 
-		return intval($results);
+			if (!empty($start))
+			{
+				$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
+			}
+			if (!empty($end))
+			{
+				$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
+			}
+			$query = $db->getQuery(true);
+			$query
+				->select('COUNT(*)')
+				->from('#__bsms_studies')
+				->where('published =' . $db->q('1'));
+
+			if (count($where) > 0)
+			{
+				$query->where(implode(' AND ', $where));
+			}
+			$db->setQuery($query);
+			self::$total_messages = $db->loadResult();
+		}
+
+		return intval(self::$total_messages);
 	}
 
 	/**
