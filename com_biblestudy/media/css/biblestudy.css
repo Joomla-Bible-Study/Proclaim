@@ -1,1 +1,527 @@
-/* New Teacher Codes */\n#bsm_teachertable_list .bsm_teachername\n{\n    font-weight: bold;\n    font-size: 14px;\n    color: #000000;\n}\n#bsm_teachertable_list\n{\n    margin: 0;\n    border-collapse:separate;\n}\n#bsm_teachertable_list td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsm_teachertable_list .titlerow\n{\n    border-bottom: thick;\n}\n#bsm_teachertable_list .title\n{\n    font-size:18px;\n    font-weight:bold;\n    border-bottom: 3px solid #999999;\n    padding: 4px 0px 4px 4px;\n}\n#bsm_teachertable_list .bsm_separator\n{\n    border-bottom: 1px solid #999999;\n}\n\n.bsm_teacherthumbnail_list\n{\n\n}\n#bsm_teachertable_list .bsm_teacheremail\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable_list .bsm_teacherwebsite\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable_list .bsm_teacherphone\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable_list .bsm_short\n{\n    padding: 8px 4px 4px;\n}\n#bsm_teachertable .bsm_studiestitlerow {\n    background-color: #666;\n}\n#bsm_teachertable_list .bsm_titletitle\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable_list .bsm_titlescripture\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable_list .bsm_titledate\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable_list .bsm_teacherlong\n{\n    padding: 8px 4px 4px;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable_list tr.bsodd {\n    background-color:#FFFFFF;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable_list tr.bseven {\n    background-color:#FFFFF0;\n    border-bottom: 1px solid #999999;\n}\n\n#bsm_teachertable_list .lastrow td {\n    border-bottom:1px solid grey;\n    padding-bottom:7px;\n    padding-top:7px;\n}\n#bsm_teachertable_list .bsm_teacherfooter\n{\n    border-top: 1px solid #999999;\n    padding: 4px 1px 1px 4px;\n}\n/* New Teacher Details Codes */\n\n#bsm_teachertable .teacheraddress{\n    text-align:left;\n}\n\n#bsm_teachertable .teacherwebsite{\n    text-align:left;}\n\n#bsm_teachertable .teacherfacebook{\n    text-align:left;\n}\n\n#bsm_teachertable .bsm_teachertwitter{\n    text-align:left;\n}\n\n#bsm_teachertable .bsm_teacherblog{\n    text-align:left;\n}\n\n#bsm_teachertable .bsm_teacherlink1{\n    text-align:left;\n}\n\n\n/* New Landing Page CSS */\n\n.landingtable {\n    clear:both;\n    width:auto;\n    display:table;\n\n}\n\n.landingrow {\n    display:inline;\n    padding: 1em;\n}\n.landingcell {\n    display:table-cell;\n}\n\n.landinglink a{\n    display:inline;\n}\n\n/* Terms of use or donate display settings */\n.termstext {\n}\n\n.termslink{\n}\n/* Podcast Subscription Display Settings */\n\n.podcastsubscribe{\n    clear:both;\n    display:table;\n    width:100%;\n    background-color:#eee;\n    border-radius: 15px 15px 15px 15px;\n    border: 1px solid grey;\n    padding: 1em;\n}\n.podcastsubscribe .image {\n    float: left;\n    padding-right: 5px;\n    display: inline;\n}\n.podcastsubscribe .image .text {\n    display:inline;\n    position:relative;\n    right:50px;\n    bottom:-10px;\n}\n.podcastsubscribe .prow {\n    display: table-row;\n    width:auto;\n    clear:both;\n}\n.podcastsubscribe .pcell {\n    display: table-cell;\n    float:left;\n    background-color:#e3e2e2;\n    border-radius: 15px 15px 15px 15px;\n    border: 1px solid grey;\n    padding: 1em;\n    margin-right: 5px;\n}\n.podcastheader h3{\n    display:table-header;\n    text-align:center;\n}\n\n.podcastheader{\n    font-weight: bold;\n}\n\n.podcastlinks{\n    display: inline;\n\n}\n\n.fltlft {\n    float:left;\n    padding-right: 5px;\n}\n\n/* Listing Page Items */\n#subscribelinks {\n\n}\n\ndiv.listingfooter ul li {\n    list-style: none outside none;\n}\n\n/* Listing Page Items */\n#listintro p, #listintro td {\n    margin: 0;\n    font-weight: bold;\n    color: black;\n}\n\n#listingfooter li, #listingfooter ul\n{\n    display: inline;\n}\n#main ul, #main li\n{\n    display: inline;\n}\n#bsdropdownmenu {\n    margin-bottom: 10px;\n}\n.bslisttable {\n    margin: 0;\n    border-collapse:separate;\n}\n.bslisttable th, .bslisttable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n.bslisttable .row1col1,\n.bslisttable .row2col1,\n.bslisttable .row3col1,\n.bslisttable .row4col1 {\n    border-left: grey 2px solid;\n}\n.bslisttable .lastcol {\n    border-right: grey 2px solid;\n}\n.bslisttable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n.bslisttable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n\n}\n.bslisttable th.row1col1,\n.bslisttable th.row1col2,\n.bslisttable th.row1col3,\n.bslisttable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n.bslisttable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n.bslisttable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n\n.bslisttable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n.bslisttable tr.bseven td {\n    background-color:#FFFFF0;\n}\n\n.bslisttable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n.bslisttable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n.bslisttable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n.bslisttable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n}\n.bslisttable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n.bslisttable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n.bslisttable .studyintro {\n\n}\n.bslisttable .teacher {\n    white-space:nowrap;\n}\n.bslisttable .location_text {\n    white-space:nowrap;\n}\n.bslisttable .topic_text {\n    white-space:nowrap;\n}\n.bslisttable .message_type {\n    white-space:nowrap;\n}\n.bslisttable .jbsmedia {\n    white-space:nowrap;\n}\n.bslisttable .store {\n    white-space:nowrap;\n}\n.bslisttable .details-text {\n    white-space:nowrap;\n}\n.bslisttable .details-pdf {\n    white-space:nowrap;\n}\n.bslisttable .details-text-pdf {\n    white-space:nowrap;\n}\n.bslisttable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n.bslisttable .secondary_reference {\n    white-space:nowrap;\n}\n.bslisttable .teacher-title-name {\n    white-space:nowrap;\n}\n.bslisttable .submitted {\n    white-space:nowrap;\n}\n.bslisttable .hits {\n    white-space:nowrap;\n}\n.bslisttable .studynumber {\n    white-space:nowrap;\n}\n.bslisttable .filesize {\n    white-space:nowrap;\n}\n.bslisttable .custom {\n    white-space:nowrap;\n}\n.bslisttable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n.bslisttable .thumbnail {\n    white-space:nowrap;\n}\n.bslisttable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n.bslisttable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n\n.component-content ul\n{\n    text-align: center;\n}\n\n.component-content li\n{\n    display: inline;\n}\n\n.pagenav\n{\n    margin-left: 10px;\n    margin-right: 10px;\n}\n\n/* Study Details CSS */\n\n#bsmsdetailstable {\n    margin: 0;\n    border-collapse:separate;\n}\n#bsmsdetailstable th, #bsmsdetailstable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsmsdetailstable .row1col1,\n#bsmsdetailstable .row2col1,\n#bsmsdetailstable .row3col1,\n#bsmsdetailstable .row4col1 {\n    border-left: grey 2px solid;\n}\n#bsmsdetailstable .lastcol {\n    border-right: grey 2px solid;\n}\n#bsmsdetailstable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n#bsmsdetailstable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n\n}\n#bsmsdetailstable th.row1col1,\n#bsmsdetailstable th.row1col2,\n#bsmsdetailstable th.row1col3,\n#bsmsdetailstable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n#bsmsdetailstable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n#bsmsdetailstable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n#bsmsdetailstable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n#bsmsdetailstable tr.bseven td {\n    background-color:#FFFFF0;\n}\n\n#bsmsdetailstable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n#bsmsdetailstable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsdetailstable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsdetailstable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n}\n#bsmsdetailstable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n#bsmsdetailstable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n#bsmsdetailstable .studyintro {\n\n}\n#bsmsdetailstable .teacher {\n    white-space:nowrap;\n}\n#bsmsdetailstable .location_text {\n    white-space:nowrap;\n}\n#bsmsdetailstable .topic_text {\n    white-space:nowrap;\n}\n#bsmsdetailstable .message_type {\n    white-space:nowrap;\n}\n#bsmsdetailstable .jbsmedia {\n    white-space:nowrap;\n}\n#bsmsdetailstable .store {\n    white-space:nowrap;\n}\n#bsmsdetailstable .details-text {\n    white-space:nowrap;\n}\n#bsmsdetailstable .details-pdf {\n    white-space:nowrap;\n}\n#bsmsdetailstable .details-text-pdf {\n    white-space:nowrap;\n}\n#bsmsdetailstable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n#bsmsdetailstable .secondary_reference {\n    white-space:nowrap;\n}\n#bsmsdetailstable .teacher-title-name {\n    white-space:nowrap;\n}\n#bsmsdetailstable .submitted {\n    white-space:nowrap;\n}\n#bsmsdetailstable .hits {\n    white-space:nowrap;\n}\n#bsmsdetailstable .studynumber {\n    white-space:nowrap;\n}\n#bsmsdetailstable .filesize {\n    white-space:nowrap;\n}\n#bsmsdetailstable .custom {\n    white-space:nowrap;\n}\n#bsmsdetailstable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n#bsmsdetailstable .thumbnail {\n    white-space:nowrap;\n}\n#bsmsdetailstable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n#bsmsdetailstable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n#bsdetailstable th, #bsdetailstable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsdetailstable .studydetailstext td {\n    font-size:1.2em;\n    color:#707070;\n    font-family:Verdana, Geneva, sans-serif;\n}\n#titletable {\n    margin: 0;\n    border-collapse:separate;\n}\n#titletable th, #titletable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n\n#titletable .titlesecondline {\n    font-weight: bold;\n}\n#titletable .titlefirstline {\n    font-size:20px;\n    font-weight:bold;\n}\n\n#recaptcha_widget_div {\n    position:static !important;\n}\n/* Module Style Settings */\n\n#bsmsmoduletable {\n    margin: 0;\n    border-collapse:separate;\n}\n#bsmsmoduletable th, #bsmsmoduletable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsmsmoduletable .row1col1,\n#bsmsmoduletable .row2col1,\n#bsmsmoduletable .row3col1,\n#bsmsmoduletable .row4col1 {\n    border-left: grey 2px solid;\n}\n#bsmsmoduletable .lastcol {\n    border-right: grey 2px solid;\n}\n#bsmsmoduletable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n#bsmsmoduletable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n\n}\n#bsmsmoduletable th.row1col1,\n#bsmsmoduletable th.row1col2,\n#bsmsmoduletable th.row1col3,\n#bsmsmoduletable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n#bsmsmoduletable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n#bsmsmoduletable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n\n#bsmsmoduletable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n#bsmsmoduletable tr.bseven td {\n    background-color:#FFFFF0;\n}\n\n#bsmsmoduletable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n#bsmsmoduletable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsmoduletable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsmoduletable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n}\n#bsmsmoduletable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n#bsmsmoduletable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n#bsmsmoduletable .studyintro {\n\n}\n#bsmsmoduletable .teacher {\n    white-space:nowrap;\n}\n#bsmsmoduletable .location_text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .topic_text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .message_type {\n    white-space:nowrap;\n}\n#bsmsmoduletable .jbsmedia {\n    white-space:nowrap;\n}\n#bsmsmoduletable .store {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-pdf {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-text-pdf {\n    white-space:nowrap;\n}\n#bsmsmoduletable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n#bsmsmoduletable .secondary_reference {\n    white-space:nowrap;\n}\n#bsmsmoduletable .teacher-title-name {\n    white-space:nowrap;\n}\n#bsmsmoduletable .submitted {\n    white-space:nowrap;\n}\n#bsmsmoduletable .hits {\n    white-space:nowrap;\n}\n#bsmsmoduletable .studynumber {\n    white-space:nowrap;\n}\n#bsmsmoduletable .filesize {\n    white-space:nowrap;\n}\n#bsmsmoduletable .custom {\n    white-space:nowrap;\n}\n#bsmsmoduletable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n#bsmsmoduletable .thumbnail {\n    white-space:nowrap;\n}\n#bsmsmoduletable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n#bsmsmoduletable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n/* Series List-Details Items */\n#seriestable {\n    margin: 0;\n    border-collapse:separate;\n}\n#seriestable th, #seriestable td {\n    text-align:left;\n    padding: 3px 3px 3px 3px;\n    border:none;\n}\n#seriestable .firstrow td {\n    border-top: grey 2px solid;\n}\n#seriestable .firstcol {\n    border-left: grey 2px solid;\n}\n#seriestable .lastcol {\n    border-right: grey 2px solid;\n}\n#seriestable .lastrow td {\n    border-bottom:2px solid grey;\n    border-left: 2px solid grey;\n    border-right: 2px solid grey;\n    padding-bottom:3px;\n}\n#seriesttable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n#seriestable tr.bseven td {\n    background-color:#FFFFF0;\n}\n#seriestable tr.onlyrow td {\n    border-bottom: 2px solid grey;\n    border-top:  grey 2px solid;\n}\n#seriestable .thumbnail img {\n    border: 1px solid grey;\n}\n#seriestable .teacher img {\n    border: 1px solid grey;\n}\n#seriestable .title {\n    font-weight: bold;\n    font-size: larger;\n}\n#seriestable tr.noborder td{\n    border: none;\n}\n#seriestable .description p{\n    width:500px;\n}\n#seriestable .teacher {\n    font-weight: bold;\n}\n/* Series Detail Study Links Items */\n#seriesstudytable {\n    margin: 0;\n    border-collapse:separate;\n}\n#seriesstudytable th, #seriesstudytable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#seriesstudytable .row1col1,\n#seriesstudytable .row2col1,\n#seriesstudytable .row3col1,\n#seriesstudytable .row4col1 {\n    border-left: grey 2px solid;\n}\n#seriesstudytable .lastcol {\n    border-right: grey 2px solid;\n}\n#seriesstudytable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n#seriesstudytable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n\n}\n#seriesstudytable th.row1col1,\n#seriesstudytable th.row1col2,\n#seriesstudytable th.row1col3,\n#seriesstudytable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n#seriesstudytable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n#seriesstudytable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n\n#seriesstudytable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n#seriesstudytable tr.bseven td {\n    background-color:#FFFFF0;\n}\n\n#seriesstudytable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n#seriesstudytable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#seriesstudytable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#seriesstudytable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n    font-style:italic;\n}\n#seriesstudytable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n#seriesstudytable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n#seriesstudytable .studyintro {\n\n}\n#seriesstudytable .teacher {\n    white-space:nowrap;\n}\n#seriesstudytable .location_text {\n    white-space:nowrap;\n}\n#seriesstudytable .topic_text {\n    white-space:nowrap;\n}\n#seriesstudytable .message_type {\n    white-space:nowrap;\n}\n#seriesstudytable .jbsmedia {\n    white-space:nowrap;\n}\n#seriesstudytable .store {\n    white-space:nowrap;\n}\n#seriesstudytable .details-text {\n    white-space:nowrap;\n}\n#seriesstudytable .details-pdf {\n    white-space:nowrap;\n}\n#seriesstudytable .details-text-pdf {\n    white-space:nowrap;\n}\n#seriesstudytable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n#seriesstudytable .secondary_reference {\n    white-space:nowrap;\n}\n#seriesstudytable .teacher-title-name {\n    white-space:nowrap;\n}\n#seriesstudytable .submitted {\n    white-space:nowrap;\n}\n#seriesstudytable .hits {\n    white-space:nowrap;\n}\n#seriesstudytable .studynumber {\n    white-space:nowrap;\n}\n#seriesstudytable .filesize {\n    white-space:nowrap;\n}\n#seriesstudytable .custom {\n    white-space:nowrap;\n}\n#seriesstudytable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n#seriesstudytable .thumbnail {\n    white-space:nowrap;\n}\n#seriesstudytable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n#seriesstudytable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n#seriesstudytable .studyrow {\n\n}\n.tool-tip {\n    color: #fff;\n    width: 300px;\n    z-index: 13000;\n}\n/* Tooltip Styles */\n/* @todo need to find these files */\n.tool-title {\n    font-weight: bold;\n    font-size: 11px;\n    margin: 0;\n    color: #9FD4FF;\n    padding: 8px 8px 4px;\n    background: url(/images/tooltip/bubble.gif) top left;\n}\n.tool-text {\n    font-size: 11px;\n    padding: 4px 8px 8px;\n    background: url(/images/tooltip/bubble_filler.gif) bottom right;\n}\n.custom-tip {\n    color: #000;\n    width: 300px;\n    z-index: 13000;\n    border: 2px solid #666666;\n    background-color: white;\n}\n\n.custom-title {\n    font-weight: bold;\n    font-size: 11px;\n    margin: 0;\n    color: #000000;\n    padding: 8px 8px 4px;\n    background: #666666;\n    border-bottom: 1px solid #999999;\n}\n\n.custom-text {\n    font-size: 11px;\n    padding: 4px 8px 8px;\n    background: #999999;\n}\n/* Teacher List Styles */\n#bsm_teachertable\n{\n    margin: 0;\n    border-collapse:separate;\n}\n#bsm_teachertable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsm_teachertable .titlerow\n{\n    border-bottom: thick;\n}\n#bsm_teachertable .title\n{\n    font-size:18px;\n    font-weight:bold;\n    border-bottom: 3px solid #999999;\n    padding: 4px 0px 4px 4px;\n}\n#bsm_teachertable .bsm_separator\n{\n    border-bottom: 1px solid #999999;\n}\n\n.bsm_teacherthumbnail\n{\n\n}\n#bsm_teachertable .bsm_teachername\n{\n    font-weight: bold;\n    font-size: 14px;\n    color: #000000;\n    white-space:nowrap;\n\n}\n#bsm_teachertable .bsm_teacheremail\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_teacherwebsite\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_teacherphone\n{\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_short\n{\n    padding: 8px 4px 4px;\n}\n#bsm_teachertable .bsm_studiestitlerow {\n    background-color: #666;\n}\n#bsm_teachertable .bsm_titletitle\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_titlescripture\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_titledate\n{\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_teacherlong\n{\n    padding: 8px 4px 4px;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable tr.bsodd {\n    background-color:#FFFFFF;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable tr.bseven {\n    background-color:#FFFFF0;\n    border-bottom: 1px solid #999999;\n}\n\n#bsm_teachertable .lastrow td {\n    border-bottom:1px solid grey;\n    padding-bottom:7px;\n    padding-top:7px;\n}\n#bsm_teachertable .bsm_teacherfooter\n{\n    border-top: 1px solid #999999;\n    padding: 4px 1px 1px 4px;\n}\n/*Study Edit CSS */\n\n.bsmbutton\n{\n    background-color:white;\n\n}\n#toolbar td.white {\n    background-color:#FFFFFF;\n}\n#toolbar a hover visited{\n    color:#0B55C4;\n}\n\n/*Social Networking Items */\n#bsmsshare {\n    margin: 0;\n    border-collapse:separate;\n    float:right;\n    border: 1px solid #CFCFCF;\n    background-color: #F5F5F5;\n}\n#bsmsshare th, #bsmsshare td {\n    text-align:center;\n    padding:0 0 0 0;\n    border:none;\n}\n#bsmsshare th {\n    color:#0b55c4;\n    font-weight:bold;\n}\n/* Landing Page Items */\n.landinglist {\n\n}\n#landing_label {\n\n}\n.landing_item {\n\n}\n.landing_title {\n    font-family:arial;\n    font-size:16px;\n    font-weight:bold;\n\n}\n#biblestudy_landing {\n\n}\n#showhide {\n    font-family:arial;\n    font-size:12px;\n    font-weight:bold;\n    text-decoration:none;\n}\n\n#showhide .showhideheadingbutton img {\n    vertical-align:bottom;\n}\n\n.landing_table {\n\n}\n\n#landing_td {\n    width: 33%;\n}\n\n.landing_separator {\n    height:15px;\n}\n/* Popup Window Items */\n.popupwindow\n{\n    margin: 5px;\n    text-align:center;\n}\np.popuptitle {\n    font-weight: bold;\n    color: black;\n}\n\n.popupfooter\n{\n    margin: 5px;\n    text-align:center;\n}\np.popupfooter {\n    font-weight: bold;\n    color: grey;\n}\n#main ul, #main li\n{\n    display: inline;\n}\n\n.component-content ul\n{\n    text-align: center;\n}\n\n.component-content li\n{\n    display: inline;\n}\n\n.pagenav\n{\n    margin-left: 10px;\n    margin-right: 10px;\n}\n\n#recaptcha_widget_div {\n    position:static !important;\n}
+#bsm_teachertable_list {
+  margin: 0;
+  border-collapse: separate;
+}
+#bsm_teachertable_list .bsm_teachername {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+}
+#bsm_teachertable_list .titlerow {
+  border-bottom: thick;
+}
+#bsm_teachertable_list .title {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid #999999;
+  padding: 4px 0 4px 4px;
+}
+#bsm_teachertable_list .bsm_separator {
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable_list .bsm_teacheremail,
+#bsm_teachertable_list .bsm_teacherwebsite,
+#bsm_teachertable_list .bsm_teacherphone {
+  font-weight: normal;
+  font-size: 11px;
+}
+#bsm_teachertable_list .bsm_short {
+  padding: 8px 4px 4px;
+}
+#bsm_teachertable_list .bsm_titletitle,
+#bsm_teachertable_list .bsm_titlescripture,
+#bsm_teachertable_list .bsm_titledate {
+  font-weight: bold;
+  color: #ffffff;
+}
+#bsm_teachertable_list .bsm_teacherlong {
+  padding: 8px 4px 4px;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable_list .bsm_teacherfooter {
+  border-top: 1px solid #999999;
+  padding: 4px 1px 1px 4px;
+}
+#bsm_teachertable {
+  margin: 0;
+  border-collapse: separate;
+}
+#bsm_teachertable .bsm_studiestitlerow {
+  background-color: #666;
+}
+#bsm_teachertable .teacheraddress,
+#bsm_teachertable .teacherwebsite,
+#bsm_teachertable .teacherfacebook,
+#bsm_teachertable .bsm_teachertwitter,
+#bsm_teachertable .bsm_teacherblog,
+#bsm_teachertable .bsm_teacherlink1 {
+  text-align: left;
+}
+#bsm_teachertable .titlerow {
+  border-bottom: thick;
+}
+#bsm_teachertable .title {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid #999999;
+  padding: 4px 0 4px 4px;
+}
+#bsm_teachertable .bsm_separator {
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable .bsm_teachername {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+  white-space: nowrap;
+}
+#bsm_teachertable .bsm_teacheremail,
+#bsm_teachertable .bsm_teacherwebsite,
+#bsm_teachertable .bsm_teacherphone {
+  font-weight: normal;
+  font-size: 11px;
+}
+#bsm_teachertable .bsm_short {
+  padding: 8px 4px 4px;
+}
+#bsm_teachertable .bsm_titletitle,
+#bsm_teachertable .bsm_titlescripture,
+#bsm_teachertable .bsm_titledate {
+  font-weight: bold;
+  color: #ffffff;
+}
+#bsm_teachertable .bsm_teacherlong {
+  padding: 8px 4px 4px;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable .bsm_teacherfooter {
+  border-top: 1px solid #999999;
+  padding: 4px 1px 1px 4px;
+}
+.landingtable {
+  clear: both;
+  width: auto;
+  display: table;
+}
+.landingrow {
+  display: inline;
+  padding: 1em;
+}
+.landingcell {
+  display: table-cell;
+}
+.landinglink a {
+  display: inline;
+}
+.podcastsubscribe {
+  clear: both;
+  background-color: #eee;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
+}
+.podcastsubscribe .image {
+  float: left;
+  padding-right: 5px;
+  display: inline;
+}
+.podcastsubscribe .image .text {
+  display: inline;
+  position: relative;
+  right: 50px;
+  bottom: -10px;
+}
+.podcastsubscribe .prow {
+  display: table-row;
+  width: auto;
+  clear: both;
+}
+.podcastsubscribe .pcell {
+  display: table-cell;
+  float: left;
+  background-color: #e3e2e2;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
+}
+.podcastheader {
+  font-weight: bold;
+}
+.podcastheader h3 {
+  display: table-header-group;
+  text-align: center;
+}
+.podcastlinks {
+  display: inline;
+}
+.fltlft {
+  float: left;
+  padding-right: 5px;
+}
+div.listingfooter ul li {
+  list-style: none outside none;
+}
+#listingfooter li,
+#listingfooter ul {
+  display: inline;
+}
+#main ul,
+#main li {
+  display: inline;
+}
+#bsdropdownmenu {
+  margin-bottom: 10px;
+}
+.bslisttable {
+  margin: 0;
+  border-collapse: separate;
+}
+.bslisttable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+.bslisttable .scripture1,
+.bslisttable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+.bslisttable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+.bslisttable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+.bslisttable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+.bslisttable .teacher,
+.bslisttable .location_text,
+.bslisttable .topic_text,
+.bslisttable .message_type,
+.bslisttable .jbsmedia,
+.bslisttable .store,
+.bslisttable .details-text,
+.bslisttable .details-pdf,
+.bslisttable .details-text-pdf,
+.bslisttable .secondary_reference,
+.bslisttable .teacher-title-name,
+.bslisttable .submitted,
+.bslisttable .hits,
+.bslisttable .studynumber,
+.bslisttable .filesize,
+.bslisttable .thumbnail,
+.bslisttable .custom {
+  white-space: nowrap;
+}
+.bslisttable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+.component-content ul {
+  text-align: center;
+}
+.component-content li {
+  display: inline;
+}
+.pagenav {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+#bsmsdetailstable {
+  margin: 0;
+  border-collapse: separate;
+}
+#bsmsdetailstable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+#bsmsdetailstable .scripture1,
+#bsmsdetailstable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsdetailstable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+#bsmsdetailstable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+#bsmsdetailstable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+#bsmsdetailstable .teacher,
+#bsmsdetailstable .location_text,
+#bsmsdetailstable .topic_text,
+#bsmsdetailstable .message_type,
+#bsmsdetailstable .jbsmedia,
+#bsmsdetailstable .store,
+#bsmsdetailstable .details-text,
+#bsmsdetailstable .details-pdf,
+#bsmsdetailstable .details-text-pdf,
+#bsmsdetailstable .secondary_reference,
+#bsmsdetailstable .teacher-title-name,
+#bsmsdetailstable .submitted,
+#bsmsdetailstable .hits,
+#bsmsdetailstable .studynumber,
+#bsmsdetailstable .filesize,
+#bsmsdetailstable .thumbnail,
+#bsmsdetailstable .custom {
+  white-space: nowrap;
+}
+#bsmsdetailstable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+#bsmsdetailstable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+#titletable {
+  margin: 0;
+  border-collapse: separate;
+}
+#titletable .titlesecondline {
+  font-weight: bold;
+}
+#titletable .titlefirstline {
+  font-size: 20px;
+  font-weight: bold;
+}
+#recaptcha_widget_div {
+  position: static !important;
+}
+#bsmsmoduletable {
+  margin: 0;
+  border-collapse: separate;
+}
+#bsmsmoduletable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+#bsmsmoduletable .scripture1,
+#bsmsmoduletable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsmoduletable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+#bsmsmoduletable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+#bsmsmoduletable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+#bsmsmoduletable .teacher,
+#bsmsmoduletable .location_text,
+#bsmsmoduletable .topic_text,
+#bsmsmoduletable .message_type,
+#bsmsmoduletable .jbsmedia,
+#bsmsmoduletable .store,
+#bsmsmoduletable .details-text,
+#bsmsmoduletable .details-pdf,
+#bsmsmoduletable .details-text-pdf,
+#bsmsmoduletable .secondary_reference,
+#bsmsmoduletable .teacher-title-name,
+#bsmsmoduletable .submitted,
+#bsmsmoduletable .hits,
+#bsmsmoduletable .studynumber,
+#bsmsmoduletable .filesize,
+#bsmsmoduletable .custom,
+#bsmsmoduletable .thumbnail {
+  white-space: nowrap;
+}
+#bsmsmoduletable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+#bsmsmoduletable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+#seriestable {
+  margin: 0;
+  border-collapse: separate;
+}
+#seriestable .thumbnail img {
+  border: 1px solid grey;
+}
+#seriestable .teacher {
+  font-weight: bold;
+}
+#seriestable .teacher img {
+  border: 1px solid grey;
+}
+#seriestable .title {
+  font-weight: bold;
+  font-size: larger;
+}
+#seriestable .description p {
+  width: 500px;
+}
+#seriesstudytable {
+  margin: 0;
+  border-collapse: separate;
+}
+#seriesstudytable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+#seriesstudytable .scripture1,
+#seriesstudytable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#seriesstudytable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+  font-style: italic;
+}
+#seriesstudytable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+#seriesstudytable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+#seriesstudytable .teacher,
+#seriesstudytable .location_text,
+#seriesstudytable .topic_text,
+#seriesstudytable .message_type,
+#seriesstudytable .jbsmedia,
+#seriesstudytable .store,
+#seriesstudytable .details-text,
+#seriesstudytable .details-pdf,
+#seriesstudytable .details-text-pdf,
+#seriesstudytable .secondary_reference,
+#seriesstudytable .teacher-title-name,
+#seriesstudytable .submitted,
+#seriesstudytable .hits,
+#seriesstudytable .studynumber,
+#seriesstudytable .filesize,
+#seriesstudytable .thumbnail,
+#seriesstudytable .custom {
+  white-space: nowrap;
+}
+#seriesstudytable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+#seriesstudytable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+.tool-tip {
+  color: #fff;
+  width: 300px;
+  z-index: 13000;
+}
+.tool-title {
+  font-weight: bold;
+  font-size: 11px;
+  margin: 0;
+  color: #9FD4FF;
+  padding: 8px 8px 4px;
+  background: url(../images/tooltip/bubble.gif) top left;
+}
+.tool-text {
+  font-size: 11px;
+  padding: 4px 8px 8px;
+  background: url(../images/tooltip/bubble_filler.gif) bottom right;
+}
+.custom-tip {
+  color: #000;
+  width: 300px;
+  z-index: 13000;
+  border: 2px solid #666666;
+  background-color: white;
+}
+.custom-title {
+  font-weight: bold;
+  font-size: 11px;
+  margin: 0;
+  color: #000000;
+  padding: 8px 8px 4px;
+  background: #666666;
+  border-bottom: 1px solid #999999;
+}
+.custom-text {
+  font-size: 11px;
+  padding: 4px 8px 8px;
+  background: #999999;
+}
+.bsmbutton {
+  background-color: white;
+}
+#toolbar a:hover a:visited {
+  color: #0b55c4;
+}
+#bsmsshare {
+  margin: 0;
+  border-collapse: separate;
+  float: right;
+  border: 1px solid #CFCFCF;
+  background-color: #F5F5F5;
+}
+.landing_title {
+  font-family: "Times New Roman", arial, serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+#showhide {
+  font-family: "Times New Roman", arial, serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+#showhide .showhideheadingbutton img {
+  vertical-align: bottom;
+}
+.landing_separator {
+  height: 15px;
+}
+.popupwindow {
+  margin: 5px;
+  text-align: center;
+}
+p.popuptitle {
+  font-weight: bold;
+  color: black;
+}
+.popupfooter {
+  margin: 5px;
+  text-align: center;
+}
+p.popupfooter {
+  font-weight: bold;
+  color: grey;
+}
