@@ -61,7 +61,6 @@ class BiblestudyViewCpanel extends JViewLegacy
 
 		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
 
-
 		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();

@@ -17,7 +17,8 @@ defined('_JEXEC') or die;
 
     <title>Plupload - Queue widget example</title>
 
-    <link rel="stylesheet" href="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css"
+          type="text/css" media="screen" />
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 

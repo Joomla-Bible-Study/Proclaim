@@ -1,11 +1,11 @@
 <?php
 /**
- * View html
+ * DataBase html
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -171,7 +171,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -204,9 +204,6 @@ class BiblestudyViewDataBase extends JViewLegacy
 		$this->pagination    = $this->get('Pagination');
 		$this->errorCount    = count($this->errors);
 		$this->jversion      = $this->get('CompVersion');
-
-		// End for database
-		$config = JFactory::getApplication();
 
 		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
