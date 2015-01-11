@@ -218,7 +218,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string  $params  To pass to the email
+	 * @param   Registry  $params  To pass to the email
 	 *
 	 * @return void
 	 */
@@ -241,8 +241,8 @@ class BiblestudyController extends JControllerLegacy
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
 		$comment_abspath   = JPATH_SITE;
-		$comment_mailfrom  = $config->getValue('config.mailfrom');
-		$comment_fromname  = $config->getValue('config.fromname');
+		$comment_mailfrom  = $config->get('config.mailfrom');
+		$comment_fromname  = $config->get('config.fromname');
 		$comment_livesite  = JURI::root();
 		$db                = JFactory::getDBO();
 		$query             = $db->getQuery(true);
@@ -260,7 +260,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$ToEmail = $comment_mailfrom;
 		}
-		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title . ' - ' . $comment_study_date . ' '
+		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
+			' - ' . $comment_study_date . ' '
 			. JText::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
@@ -386,7 +387,6 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
-
 			// Process file
 			$uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
 
@@ -401,11 +401,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
 		}
-		//  $podmsg = PIHelperadmin::setpods($row);
-		// delete temp file
 
 		JBSMUpload::deletetempfile($tempfile);
-		$mediafileid = $this->input->get('id', '', 'int');
 
 		if ($layout == 'modal')
 		{
@@ -416,82 +413,6 @@ class BiblestudyController extends JControllerLegacy
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
-
-	/*
-	 * Upload Flash System
-	 * @return text
-	 */
-	/*    function upflash() {
-		   jimport('joomla.filesystem.file');
-			jimport('joomla.filesystem.folder');
-			$serverid = JRequest::getInt('upload_server', '', 'post');
-			$folderid = JRequest::getInt('upload_folder', '', 'post');
-			//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
-			//so if the ftp layer is on, joomla will write with that, not the apache user, which might
-			//not have the correct permissions
-			$abspath = JPATH_SITE;
-			//this is the name of the field in the html form, filedata is the default name for swfupload
-			//so we will leave it as that
-			$fieldName = 'Filedata';
-			//any errors the server registered on uploading
-			$fileError = $_FILES[$fieldName]['error'];
-			if ($fileError > 0) {
-				switch ($fileError) {
-				   case 1:
-						echo JText::_('JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS');
-						return;
-
-				   case 2:
-						echo JText::_('JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS');
-						return;
-
-					case 3:
-						echo JText::_('JBS_MED_ERROR_PARTIAL_UPLOAD');
-						return;
-
-					case 4:
-						echo JText::_('JBS_MED_ERROR_NO_FILE');
-						return;
-				}
-			}
-
-			// Check for filesize
-			$fileSize = $_FILES[$fieldName]['size'];
-			if ($fileSize > 500000000) {
-				echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
-			}
-
-			// Check the file extension is ok
-			$fileName = $_FILES[$fieldName]['name'];
-			$extOk = JBSMUpload::checkfile($fileName);
-			$app = JFactory::getApplication();
-			$option = JRequest::getCmd('option');
-			$app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
-			$app->setUserState($option.'size', $_FILES[$fieldName]['size']);
-			$app->setUserState($option.'serverid', $serverid);
-			$app->setUserState($option.'folderid', $folderid);
-			if ($extOk == false) {
-				echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
-				return;
-			}
-
-			// The name of the file in PHP's temp directory that we are going to move to our folder
-			$fileTemp = $_FILES[$fieldName]['tmp_name'];
-
-			// Always use constants when making file paths, to avoid the possibilty of remote file inclusion
-
-			$uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
-
-
-			if (!JFile::upload($fileTemp, $uploadPath)) {
-				echo JText::_('JBS_MED_ERROR_MOVING_FILE');
-				return;
-			} else {
-
-				// success, exit with code 0 for Mac users, otherwise they receive an IO Error
-				exit(0);
-			}
-		} */
 
 	/**
 	 * Upload function

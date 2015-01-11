@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * BibleStudy Build Route
  *
- * @param   array  &$query  Info to Query
+ * @param   array &$query Info to Query
  *
  * @return string
  */
@@ -60,7 +60,7 @@ function biblestudyBuildRoute(&$query)
 /**
  * BibleStudy Parse Route
  *
- * @param   array  $segments  Parse Route Info
+ * @param   array $segments Parse Route Info
  *
  * @return object
  */
@@ -70,7 +70,6 @@ function biblestudyParseRoute($segments)
 
 	// Count route segments
 	$count = count($segments);
-
 
 	if ($count == 3)
 	{
