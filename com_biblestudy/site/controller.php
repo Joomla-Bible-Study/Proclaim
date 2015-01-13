@@ -165,14 +165,10 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($params->get('use_captcha') > 0)
 		{
-			// Begin reCaptcha
-			require_once JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php';
-			$privatekey = $params->get('private_key');
-			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
-			$response   = $this->input->get('recaptcha_response_field', '', 'string');
-			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
-			if (!$resp->is_valid)
+			JPluginHelper::importPlugin('captcha');
+			$dispatcher = JEventDispatcher::getInstance();
+			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
