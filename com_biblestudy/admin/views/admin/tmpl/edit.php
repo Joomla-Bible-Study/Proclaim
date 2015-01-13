@@ -123,7 +123,7 @@ $input = $app->input;
 <div class="tab-content">
 
 <!-- Begin Tabs -->
-<div class="tab-pane" id="cpanl">
+<div class="tab-pane active" id="cpanl">
 	<div id="cpanel" class="btn-group">
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
 			                     style="text-decoration:none; margin: 5px"
@@ -441,6 +441,3 @@ $input = $app->input;
     <?php echo JHtml::_('form.token'); ?>
 </div>
 </form>
-<script type="text/javascript">
-    jQuery('#configTabs ').find('a:first'.tab('show'); // Select first tab
-</script>
