@@ -20,8 +20,8 @@ use \Joomla\Registry\Registry;
  */
 class JBSMStats
 {
-	/** @var null used to store query of messages */
-	private static $total_messages = null;
+	/** @var int used to store query of messages */
+	private static $total_messages = 0;
 
 	/** @var string Start Date */
 	private static $total_messages_start = '';
@@ -60,7 +60,7 @@ class JBSMStats
 	 */
 	public static function get_total_messages($start = '', $end = '')
 	{
-		if ($start != self::$total_messages_start || $end != self::$total_messages_end || self::$total_messages != null)
+		if ($start != self::$total_messages_start || $end != self::$total_messages_end || !self::$total_messages)
 		{
 			self::$total_messages_start = $start;
 			self::$total_messages_end   = $end;
@@ -87,10 +87,10 @@ class JBSMStats
 				$query->where(implode(' AND ', $where));
 			}
 			$db->setQuery($query);
-			self::$total_messages = $db->loadResult();
+			self::$total_messages = intval($db->loadResult());
 		}
 
-		return intval(self::$total_messages);
+		return self::$total_messages;
 	}
 
 	/**
