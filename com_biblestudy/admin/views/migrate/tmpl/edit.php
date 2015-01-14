@@ -16,8 +16,7 @@ JHtml::_('jquery.framework');
 
 defined('_JEXEC') or die;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" enctype="multipart/form-data"
-      method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<table class="row-fluid">
 			<tr>

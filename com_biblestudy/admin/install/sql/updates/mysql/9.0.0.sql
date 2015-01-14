@@ -1,3 +1,6 @@
+INSERT INTO `#__bsms_update` (id, version) VALUES (19, '9.0.0')
+ON DUPLICATE KEY UPDATE version = '9.0.0';
+
 -- Servers
 ALTER TABLE `#__bsms_servers` ADD COLUMN `params` TEXT NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `media` TEXT NOT NULL;
