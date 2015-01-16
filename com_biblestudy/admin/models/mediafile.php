@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * MediaFile model class
@@ -278,7 +278,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		ArrayHelper::toInteger($pks);
+		JArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))

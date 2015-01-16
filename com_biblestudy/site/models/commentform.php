@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
 
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * Comment model class
@@ -49,7 +49,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = ArrayHelper::toObject($properties, 'JObject');
+		$value      = JArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
 	}

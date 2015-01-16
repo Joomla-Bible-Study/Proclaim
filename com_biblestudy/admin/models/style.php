@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\Utilities\ArrayHelper;
+
 /**
  * Style Model class
  *
@@ -75,7 +75,7 @@ class BiblestudyModelStyle extends JModelAdmin
 	{
 		// Sanitize the ids.
 		$pks = (array) $pks;
-		ArrayHelper::toInteger($pks);
+		JArrayHelper::toInteger($pks);
 
 		if (empty($pks))
 		{

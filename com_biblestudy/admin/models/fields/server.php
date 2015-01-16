@@ -11,7 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * Field class for Server
@@ -38,7 +38,7 @@ class JFormFieldServer extends JFormField
 		// Get a reverse lookup of the server id to server name
 		$model  = JModelLegacy::getInstance('servers', 'BibleStudyModel');
 		$rlu    = $model->getIdToNameReverseLookup();
-		$server = ArrayHelper::getValue($rlu, $this->value);
+		$server = JArrayHelper::getValue($rlu, $this->value);
 
 		JHtml::_('behavior.framework');
 		JHtml::_('behavior.modal');

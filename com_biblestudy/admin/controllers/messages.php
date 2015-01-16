@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * Messages list controller class.
@@ -48,8 +48,8 @@ class BiblestudyControllerMessages extends JControllerAdmin
 		$order = $this->input->post->get('order', array(), 'array');
 
 		// Sanitize the input
-		ArrayHelper::toInteger($pks);
-		ArrayHelper::toInteger($order);
+		JArrayHelper::toInteger($pks);
+		JArrayHelper::toInteger($order);
 
 		$model = $this->getModel();
 

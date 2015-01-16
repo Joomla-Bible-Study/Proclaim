@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
-use Joomla\Utilities\ArrayHelper;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -49,7 +49,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = ArrayHelper::toObject($properties, 'JObject');
+		$value      = JArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
 	}
