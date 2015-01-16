@@ -7,6 +7,7 @@
  */
 defined('_JEXEC') or die;
 
+JLoader::register('BibleStudyModelMigration', BIBLESTUDY_PATH_ADMIN_MODELS . '/migration.php');
 use \Joomla\Registry\Registry;
 
 /**
