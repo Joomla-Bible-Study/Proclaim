@@ -278,6 +278,9 @@ class Com_BiblestudyInstallerScript
 				$version = '0.0.0';
 			}
 
+			// Used for php files updates.
+			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
 			// We have a version!
 			foreach ($files as $file)
 			{
