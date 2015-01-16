@@ -6,6 +6,8 @@
     },
     "require-dev": {
         "phing/phing": "2.8.2",
+        "pear/versioncontrol_git": "dev-master",
+        "pear/pear_exception": "dev-master",
         "phpunit/phpunit": "4.0.17",
         "sebastian/phpcpd": "2.0.0",
         "phploc/phploc": "2.0.4",
