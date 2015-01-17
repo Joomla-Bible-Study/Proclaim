@@ -298,7 +298,7 @@ class Migration900
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
-		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'aws_key', 'aws_secret');
+		$columns = array('ftphost', 'ftpuser', 'ftp_username', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret');
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters

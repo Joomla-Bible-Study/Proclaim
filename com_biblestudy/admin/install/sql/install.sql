@@ -11,19 +11,19 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
   DEFAULT CHARSET =utf8;
 
 INSERT INTO `#__bsms_update` (id, version) VALUES
-  (1, '7.0.0'),
-  (2, '7.0.1'),
-  (3, '7.0.1.1'),
-  (4, '7.0.2'),
-  (5, '7.0.3'),
-  (6, '7.0.4'),
-  (7, '7.1.0'),
-  (8, '7.1.1'),
-  (9, '7.1.2'),
-  (10, '7.1.3'),
-  (11, '8.0.0'),
-  (16, '8.0.8'),
-  (17, '9.0.0');
+  (7, '7.0.0'),
+  (8, '7.0.1'),
+  (9, '7.0.1.1'),
+  (10, '7.0.2'),
+  (11, '7.0.3'),
+  (12, '7.0.4'),
+  (13, '7.1.0'),
+  (14, '7.1.1'),
+  (15, '7.1.2'),
+  (16, '7.1.3'),
+  (17, '8.0.0'),
+  (18, '8.0.8'),
+  (19, '9.0.0');
 
 -- --------------------------------------------------------
 
@@ -160,11 +160,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `server_id`        INT(5)                    DEFAULT NULL,
   `podcast_id`       VARCHAR(50)               DEFAULT NULL,
   `params`           TEXT,
-  `metadata`         TEXT,
+  `metadata`         TEXT             NOT NULL,
   `downloads`        INT(10)                   DEFAULT '0',
   `plays`            INT(10)                   DEFAULT '0',
   `hits`             INT(10)                   DEFAULT '0',
-  `player`           INT(2)                    DEFAULT NULL,
   `ordering`         INT(11)          NOT NULL DEFAULT '0',
   `createdate`       DATETIME                  DEFAULT NULL,
   `published`        TINYINT(3)       NOT NULL DEFAULT '1',
@@ -176,10 +175,14 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
   `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+  `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_study_id` (`study_id`),
-  KEY `idx_access` (`access`)
+  KEY `idx_access` (`access`),
+  KEY `idx_checkout` (`checked_out`),
+  KEY `idx_createdby` (`created_by`)
 )
   ENGINE =InnoDB
   DEFAULT CHARSET =utf8;
@@ -297,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `asset_id`    INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`      INT(10) UNSIGNED NOT NULL DEFAULT '1',
   `params`      TEXT             NOT NULL,
-  `media`       TEXT,
+  `media`       TEXT             NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
