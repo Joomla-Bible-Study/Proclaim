@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
-// TODO Need to finish this file
 /**
  * Checks if the template is setup right.
  *
@@ -24,7 +23,46 @@ use Joomla\Registry\Registry;
  */
 function admin_postinstall_template_condition()
 {
-	return 1;
+	$results = null;
+
+	/* Load language file out of administrator folder
+	 * if phrase is not found in specific language file, load english language file:
+	 */
+	require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+	$language = JFactory::getLanguage();
+	$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+	$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+
+	$db = JFactory::getDbo();
+	$qurey = $db->getQuery(true);
+	$qurey->select('*')->from('#__bsms_templates');
+	$db->setQuery($qurey);
+
+	try
+	{
+		$tables = $db->loadObjectList();
+
+		foreach ($tables as $table)
+		{
+			$registry = new Registry;
+			$registry->loadString($table->params);
+
+			if ($registry->get('playerresposive', false) != false)
+			{
+				$results = false;
+			}
+			else
+			{
+				$results = true;
+			}
+		}
+	}
+	catch (\Exception $e)
+	{
+		$results = null;
+	}
+
+	return $results;
 }
 
 /**

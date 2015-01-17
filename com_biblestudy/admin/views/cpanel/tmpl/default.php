@@ -59,6 +59,35 @@ if ($msg)
 	<?php endif; ?>
 </div>
 <div id="j-main-container" class="span10">
+	<?php if ($this->hasPostInstallationMessages): ?>
+		<div class="alert alert-info">
+			<h3>
+				<?php echo JText::_('JBS_CPL_PIM_TITLE'); ?>
+			</h3>
+
+			<p>
+				<?php echo JText::_('JBS_CPL_PIM_DESC'); ?>
+			</p>
+			<a href="index.php?option=com_postinstall&eid=<?php echo $this->extension_id ?>"
+			   class="btn btn-primary btn-large">
+				<?php echo JText::_('JBS_CPL_PIM_BUTTON'); ?>
+			</a>
+		</div>
+	<?php elseif (is_null($this->hasPostInstallationMessages)): ?>
+		<div class="alert alert-error">
+			<h3>
+				<?php echo JText::_('JBS_CPL_PIM_ERROR_TITLE'); ?>
+			</h3>
+
+			<p>
+				<?php echo JText::_('JBS_CPL_PIM_ERROR_DESC'); ?>
+			</p>
+			<a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
+			   class="btn btn-primary btn-large">
+				<?php echo JText::_('JBS_CPL_PIM_ERROR_BUTTON'); ?>
+			</a>
+		</div>
+	<?php endif; ?>
 <div class="fbwelcome">
 	<h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
