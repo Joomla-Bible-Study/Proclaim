@@ -3,15 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.backup.php';
 
-jimport('joomla.application.component.controlleradmin');
+use \Joomla\Registry\Registry;
 
 /**
  * Controller for Templates
@@ -25,8 +24,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name    The name of the model
-	 * @param   string $prefix  The prefix for the PHP class name
+	 * @param   string  $name    The name of the model
+	 * @param   string  $prefix  The prefix for the PHP class name
 	 *
 	 * @return JModel
 	 *
@@ -278,7 +277,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		// Need to adjust the params and write back
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($table->params);
 		$params = $registry;
 		$params->set('css', $css);
@@ -303,7 +302,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Perform DB Query
 	 *
-	 * @param   string $query Query
+	 * @param   string  $query  Query
 	 *
 	 * @return boolean
 	 */
@@ -312,7 +311,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$db = JFactory::getDBO();
 		$db->setQuery($query);
 
-		if (!$db->query())
+		if (!$db->execute())
 		{
 			return false;
 		}
@@ -353,7 +352,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		{
 			return false;
 		}
-		$xport = new JBSExport;
+		$xport = new JBSMRestore;
+
+		// @todo need to find replacement bcc
 		$xport->output_file($filepath, $filename, 'text/x-sql');
 		JFile::delete($filepath);
 		$message = JText::_('JBS_TPL_EXPORT_SUCCESS');
@@ -364,14 +365,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Exported Template Settings
 	 *
-	 * @param   object $result  ?
+	 * @param   object  $result  ?
 	 *
 	 * @return string
 	 */
 	private function getExportSetting($result)
 	{
 		// Export must be in this order: css, template files, template.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
 		$db      = JFactory::getDBO();
@@ -387,7 +388,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$query2->from('#__bsms_styles AS style');
 			$query2->where('style.filename = "' . $css . '"');
 			$db->setQuery($query2);
-			$db->query();
+			$db->execute();
 			$cssresult = $db->loadObject();
 			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->escape($cssresult->filename)
 				. "',\n`stylecode` = '" . $db->escape($cssresult->stylecode) . "';\n";
@@ -453,7 +454,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   array $template  ?
+	 * @param   array  $template  ?
 	 *
 	 * @return boolean|string
 	 */

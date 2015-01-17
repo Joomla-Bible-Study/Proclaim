@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * MediaFiles model class
@@ -30,7 +30,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -49,32 +49,43 @@ class BiblestudyModelMediafiles extends JModelList
 		parent::__construct($config);
 	}
 
-    /**
-     * Manually joins items and returns and nested object array
-     *
-     * @return mixed Array Media files array
-     * @since 9.0.0
-     */
-    public function getItems() {
-        $serverModel = JModelLegacy::getInstance('server', 'BibleStudyModel');
+	/**
+	 * Manually joins items and returns and nested object array
+	 *
+	 * @return mixed  Array  Media files array
+	 *
+	 * @since 9.0.0
+	 */
+	public function getItems()
+	{
+		// Needed for site view
+		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
 
-        $registry = new JRegistry;
+		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 
-        $items = parent::getItems();
+		$items = parent::getItems();
 
-        foreach($items as $item) {
-            $item->serverConfig   = $serverModel->getConfig($item->serverType);
+		foreach ($items as $item)
+		{
 
-            // Convert all JSON strings to Arrays
-            $registry->loadString($item->params);
-            $item->params = $registry->toArray();
+			if (empty($item->serverType))
+			{
+				$item->serverType = 'legacy';
+			}
+			$item->serverConfig = $serverModel->getConfig($item->serverType);
 
-            $registry->loadString($item->metadata);
-            $item->metadata = $registry->toArray();
-        }
+			// Convert all JSON strings to Arrays
+			$registry = new Registry;
+			$registry->loadString($item->params);
+			$item->params = $registry;
 
-        return $items;
-    }
+			$registry2 = new Registry;
+			$registry2->loadString($item->metadata);
+			$item->metadata = $registry2;
+		}
+
+		return $items;
+	}
 
 	/**
 	 * Get Deletes
@@ -85,7 +96,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		if (empty($this->_deletes))
 		{
-			$query          = 'SELECT allow_deletes'
+			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
 			$this->_deletes = $this->_getList($query);
@@ -103,8 +114,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -112,11 +123,6 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
-		// Initialise variables.
-		$app     = JFactory::getApplication();
-		$session = JFactory::getSession();
-
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -159,7 +165,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Get Stored ID
 	 *
-	 * @param   string $id  An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -205,9 +211,9 @@ class BiblestudyModelMediafiles extends JModelList
 		$query->select('study.studytitle AS studytitle');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
 
-        // Join over servers
-        $query->select('server.type as serverType');
-        $query->join('LEFT', '#__bsms_servers as server ON server.id = mediafile.server_id');
+		// Join over servers
+		$query->select('server.type as serverType');
+		$query->join('LEFT', '#__bsms_servers as server ON server.id = mediafile.server_id');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');

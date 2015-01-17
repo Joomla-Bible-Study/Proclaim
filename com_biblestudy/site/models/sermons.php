@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
 
 /**
  * Model class for Sermons
@@ -29,7 +27,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -66,7 +64,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array $items Books
+	 * @param   array  $items  Books
 	 *
 	 * @return object
 	 *
@@ -260,7 +258,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get the number of plays of this study
 	 *
-	 * @param   int $id ID
+	 * @param   int  $id  ID
 	 *
 	 * @return array
 	 *
@@ -317,7 +315,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Get Downloads
 	 *
-	 * @param   int $id ID of Download
+	 * @param   int  $id  ID of Download
 	 *
 	 * @return string
 	 *
@@ -395,8 +393,8 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -480,7 +478,7 @@ class BiblestudyModelSermons extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -946,13 +944,7 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		// Order by order filter
-		$orderparam = $params->get('default_order');
-		$order = 'ASC';
-
-		if (empty($orderparam))
-		{
-			$order = "DESC";
-		}
+		$order = $params->get('default_order', 'DESC');
 
 		$secondaryorderstate = $this->getState('secondaryorderstate');
 		if (!empty($secondaryorderstate))
@@ -965,7 +957,6 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$order = $orderstate;
 		}
-
 		$query->order('studydate ' . $order);
 
 		return $query;

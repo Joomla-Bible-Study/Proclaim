@@ -2,14 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 /**
  * View for Sermons class
  *
@@ -21,59 +22,83 @@ class BiblestudyViewSermons extends JViewLegacy
 
 	/** @var object */
 	public $document;
+
 	/** @var object */
 	protected $items;
+
 	/** @var object */
 	protected $pagination;
-	/** @var JRegistry */
+
+	/** @var Registry */
 	protected $state;
+
 	/** @var string */
 	protected $pagelinks;
+
 	/** @var string */
 	protected $limitbox;
+
 	/** @var JObject */
 	protected $admin;
-	/** @var JRegistry */
+
+	/** @var Registry */
 	protected $params;
+
 	/** @var object */
 	protected $study;
+
 	/** @var string */
 	protected $subscribe;
+
 	/** @var string */
 	protected $series;
+
 	/** @var string */
 	protected $teachers;
+
 	/** @var string */
 	protected $messageTypes;
+
 	/** @var string */
 	protected $years;
+
 	/** @var string */
 	protected $locations;
+
 	/** @var string */
 	protected $topics;
+
 	/** @var string */
 	protected $orders;
+
 	/** @var string */
 	protected $books;
+
 	/** @var object */
 	protected $template;
+
 	/** @var string */
 	protected $order;
+
 	/** @var array */
 	protected $topic;
+
 	/** @var object */
 	protected $main;
+
 	/** @var object */
 	protected $page;
+
 	/** @var string */
 	protected $request_url;
+
 	/** @var int */
 	protected $limitstart;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -105,8 +130,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
-		/** @var  $params JRegistry */
-		$params = $this->state->template->params;
+		/** @var  $params Registry */
+		$params = $this->state->params;
 
 		$images     = new JBSMImages;
 		$this->main = $images->mainStudyImage();
@@ -270,7 +295,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			);
 			$lang[]   = $langtemp;
 		}
-		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JBS_SELECT_LANGUAGE'));
+		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JOPTION_SELECT_LANGUAGE'));
 		$langdropdown          = array_merge($langdropdown, $lang);
 		$this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_languages"
@@ -365,6 +390,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$ord[]             = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
 		$ord               = array_merge($ord, $ordervalues);
 		$this->page->order = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
+		$dropdowns         = array();
 		if ($params->get('show_order_search') > 0)
 		{
 			$dropdowns[] = array('order' => $params->get('ddorder'), 'item' => $this->page->order);
@@ -466,7 +492,6 @@ class BiblestudyViewSermons extends JViewLegacy
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
-		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');
 	}
 
 }

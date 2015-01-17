@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -90,10 +90,9 @@ $input = $app->input;
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('image'); ?>
-									<?php echo $this->form->getInput('image'); ?>
 								</div>
 								<div class="controls">
-									<img src="<?php echo JURI::root() . $this->item->series_thumbnail; ?>"/>
+									<?php echo $this->form->getInput('image'); ?>
 								</div>
 							</div>
 						</div>

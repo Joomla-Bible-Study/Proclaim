@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Joomla! Bible Study Media class.
  *
@@ -22,25 +24,23 @@ class JBSMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object         $media     Media info
-	 * @param   JRegistry      $params    Params
-	 * @param   TableTemplate  $template  Template Table
+	 * @param   Object                    $media     Media info
+	 * @param   Joomla\Registry\Registry  $params    Params
+	 * @param   TableTemplate             $template  Template Table
 	 *
 	 * @return string
 	 */
 	public function getFluidMedia($media, $params, $template)
 	{
-		$mediaimage = '';
-
-		$registory = new JRegistry;
+		$registory = new Registry;
 		$registory->loadString($media->smedia);
 		$media->smedia = $registory;
 
-		$registory = new JRegistry;
+		$registory = new Registry;
 		$registory->loadString($media->params);
 		$media->params = $registory;
 
-		$registory = new JRegistry;
+		$registory = new Registry;
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
@@ -52,7 +52,7 @@ class JBSMMedia
 		{
 			$mediaimage = 'media/com_biblestudy/images/speaker24.png';
 		}
-		$image = $this->useJImage($mediaimage, $media->params->get('media_text'));
+		$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$mediafile  = self::getFluidDownloadLink($media, $params, $template, $playercode);
@@ -103,8 +103,8 @@ class JBSMMedia
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   JRegistry  $params  Params
-	 * @param   object     $media   Media info
+	 * @param   Joomla\Registry\Registry  $params  Params
+	 * @param   object                    $media   Media info
 	 *
 	 * @return object
 	 */
@@ -139,7 +139,7 @@ class JBSMMedia
 		 * In 6.2.3 we changed inline = 2
 		 */
 		$player->player   = 0;
-		$item_mediaplayer = $media->player;
+		$item_mediaplayer = $media->params->get('player');
 
 		// Check to see if the item player is set to 100 - that means use global settings which comes from $params
 		if ($item_mediaplayer == 100)
@@ -153,7 +153,7 @@ class JBSMMedia
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
 
-			$player->player = ($media->player) ? $media->player : "0";
+			$player->player = ($media->params->get('player')) ? $media->params->get('player') : "0";
 		}
 		if ($player->player == 3)
 		{
@@ -210,10 +210,10 @@ class JBSMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   JRegistry  $params  Params are the merged of system and items.
-	 * @param   object     $player  Player code
-	 * @param   String     $image   Image info
-	 * @param   object     $media   Media
+	 * @param   Joomla\Registry\Registry  $params  Params are the merged of system and items.
+	 * @param   object                    $player  Player code
+	 * @param   String                    $image   Image info
+	 * @param   object                    $media   Media
 	 *
 	 * @return string
 	 */
@@ -380,8 +380,8 @@ class JBSMMedia
 	/**
 	 * return $table
 	 *
-	 * @param   Object     $media   Media info
-	 * @param   JRegistry  $params  Params
+	 * @param   Object                    $media   Media info
+	 * @param   Joomla\Registry\Registry  $params  Params
 	 *
 	 * @return null|string
 	 */
@@ -446,8 +446,8 @@ class JBSMMedia
 	/**
 	 * Get duration
 	 *
-	 * @param   Object     $row     Table Row info
-	 * @param   JRegistry  $params  Params
+	 * @param   Object                    $row     Table Row info
+	 * @param   Joomla\Registry\Registry  $params  Params
 	 *
 	 * @return null|string
 	 */
@@ -564,9 +564,9 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object     $media   Media
-	 * @param   JRegistry  $params  Item Params
-	 * @param   string     $image   Image
+	 * @param   object                    $media   Media
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   string                    $image   Image
 	 *
 	 * @return string
 	 */
@@ -581,10 +581,10 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object         $media       Media
-	 * @param   JRegistry      $params      Params
-	 * @param   TableTemplate  $template    Template ID
-	 * @param   string         $playercode  Player Code
+	 * @param   Object                    $media       Media
+	 * @param   Joomla\Registry\Registry  $params      Params
+	 * @param   TableTemplate             $template    Template ID
+	 * @param   string                    $playercode  Player Code
 	 *
 	 * @return string
 	 */
@@ -672,52 +672,6 @@ class JBSMMedia
 	}
 
 	/**
-	 * Return Media Table
-	 *
-	 * @param   object     $row     Table info
-	 * @param   JRegistry  $params  Item Params
-	 *
-	 * @return null|string
-	 *
-	 * @deprecated 9.0.0 Removed for fluid.
-	 */
-	public function getMediaTable($row, $params)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaTable');
-		return false;
-	}
-
-	/**
-	 * Get Media ID
-	 *
-	 * @param   int  $id  ID of media
-	 *
-	 * @return object
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function getMediaid($id)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaid');
-		return false;
-	}
-
-	/**
-	 * Get Media info Row1
-	 *
-	 * @param   int  $id  ID of media Row
-	 *
-	 * @return object|boolean
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function getMediaRows($id)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaRows');
-		return false;
-	}
-
-	/**
 	 * Get Media info Row2
 	 *
 	 * @param   int  $id  ID of Row
@@ -739,14 +693,16 @@ class JBSMMedia
 			->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
-			->where('#__bsms_mediafiles.id = ' . (int) $id)->where('#__bsms_mediafiles.published = ' . 1)
+			->where('#__bsms_mediafiles.id = ' . (int) $id)
+			->where('#__bsms_mediafiles.published = ' . 1)
+			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')')
 			->order('ordering asc');
 		$db->setQuery($query);
 		$media = $db->loadObject();
 
 		if ($media)
 		{
-			$reg = new JRegistry;
+			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
 

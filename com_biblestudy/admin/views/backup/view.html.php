@@ -1,11 +1,11 @@
 <?php
 /**
- * View html
+ * Backup html
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -59,7 +59,7 @@ class BiblestudyViewBackup extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/database';
+		$path = JPATH_SITE . '/media/com_biblestudy/backup';
 
 		if (JFolder::exists($path))
 		{

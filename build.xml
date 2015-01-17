@@ -25,7 +25,6 @@
 	<!-- List of all files that are packaged and distributed -->
 	<fileset dir="${basedir}" id="distributed_files">
 		<include name="com_biblestudy/**/*.php"/>
-		<include name="joomSEF_extension/**/*.php"/>
 		<include name="mod_biblestudy/**/*.php"/>
 		<include name="mod_biblestudy_podcast/**/*.php"/>
 		<include name="plg_biblestudy_backup/**/*.php"/>
@@ -33,6 +32,7 @@
 		<include name="plg_biblestudy_podcast/**/*.php"/>
 		<include name="plg_biblestudhy_search/**/*.php"/>
 		<include name="xmap_JBS/**/*.php"/>
+		<exclude name=".git" />
 	</fileset>
 
 	<!-- Validate syntax -->
@@ -121,6 +121,7 @@
 		</copy>
 
 	<!-- Create the archive -->
+		<delete file="${basedir}/build/packages/pkg_biblestudy.zip"/>
         <zip destfile="${basedir}/build/packages/pkg_biblestudy.zip" basedir="${basedir}/build/packages/_tmp"/>
 
 	<!-- Remove the staged packages -->
@@ -129,6 +130,7 @@
 
 	<!-- Create com_biblestudy.zip -->
 	<target name="package.component" depends="init,dev.clean" description="Builds the component">
+    	<delete file="${basedir}/build/packages/component/com_biblestudy.zip"/>
 		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
         <!--Reset back to a development state-->
         <phingcall target="dev.init"/>
@@ -136,12 +138,18 @@
 
 	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
 	<target name="package.modules" depends="init" description="Builds the modules">
+    	<delete file="${basedir}/build/packages/modules/mod_biblestudy.zip"/>
+    	<delete file="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip"/>
 		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
         <zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
     </target>
 
 	<!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
     <target name="package.plugins" depends="init" description="Builds the plugins">
+    	<delete file="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip"/>
+    	<delete file="${basedir}/build/packages/plugins/plg_biblestudy_search.zip"/>
+    	<delete file="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip"/>
+    	<delete file="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip"/>
     	<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
         <zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
@@ -150,8 +158,8 @@
 
 	<!-- Create plg_xmap_jbs.zip, and joomsef_com_biblestudy.zip -->
     <target name="package.addons" depends="init" description="Builds addons, including third party integrations">
+    	<delete file="${basedir}/build/packages/addons/plg_xmap_jbs.zip"/>
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
-        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->

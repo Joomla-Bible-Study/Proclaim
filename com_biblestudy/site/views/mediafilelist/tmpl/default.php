@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -95,21 +95,6 @@ $saveOrder = $listOrder == 'ordering';
 				<th width="20%">
 					<?php echo JHtml::_('grid.sort', 'JBS_MED_FILENAME', 'mediafile.filename', $listDirn, $listOrder); ?>
 				</th>
-				<th>
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
-				</th>
-				<th width="20%">
-					<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediaType.media_text', $listDirn, $listOrder); ?>
-				</th>
-				<th width="15%">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
-				</th>
-				<th width="10%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
-				</th>
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'mediafile.id', $listDirn, $listOrder); ?>
 				</th>
@@ -137,12 +122,20 @@ $saveOrder = $listOrder == 'ordering';
 					<td class="nowrap has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
-									<?php echo($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
-								</a>
-							<?php else : ?>
-								<?php echo($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
-							<?php endif; ?>
+							<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&id=' . (int) $item->id); ?>">
+								<?php endif; ?>
+								<span class="label">
+										<?php
+										$label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
+										$label .= $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])
+											? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
+										?>
+										<?php echo $label; ?>
+				                    </span>
+								<?php echo '...' . substr($this->escape($item->params[$item->serverConfig->config->media_resource->__toString()]), -25); ?>
+								<?php if ($canEdit || $canEditOwn) : ?>
+							</a>
+						<?php endif; ?>
 						</div>
 						<div class="pull-left">
 							<?php
@@ -170,27 +163,6 @@ $saveOrder = $listOrder == 'ordering';
 								// Render dropdown list
 								echo JHtml::_('dropdown.render');
 							?>
-						</div>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->studytitle); ?>
-						</div>
-					</td>
-					<td class="small hidden-phone">
-						<?php echo $this->escape($item->mediaType); ?>
-					</td>
-					<td class="small hidden-phone">
-						<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->plays); ?>
-						</div>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->downloads); ?>
 						</div>
 					</td>
 					<td class="center hidden-phone">

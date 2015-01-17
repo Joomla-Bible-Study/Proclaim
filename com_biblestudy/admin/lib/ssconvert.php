@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die();
 
@@ -18,6 +18,7 @@ defined('_JEXEC') or die();
 class JBSMSSConvert
 {
 
+	private $serverid;
 	/**
 	 * function to convert SermonSpeaker
 	 *
@@ -26,31 +27,21 @@ class JBSMSSConvert
 	public function convertSS()
 	{
 		$db = JFactory::getDBO();
-		//get all of the sermons from Sermon Speaker
-		$query = 'SELECT COUNT(*) FROM #__sermon_sermons';
-		$db->setQuery($query);
-		$oldstudies = $db->loadResult();
-		$query      = 'SELECT COUNT(*) FROM #__sermon_series';
-		$db->setQuery($query);
-		$oldseries = $db->loadResult();
-		$query     = 'SELECT COUNT(*) FROM #__sermon_speakers';
-		$db->setQuery($query);
-		$oldteachers = $db->loadResult();
 		$query       = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_sermons');
 		$db->setQuery($query);
 		$sermons = $db->loadObjectList();
 
-		//get the old sermons, teachers, series
+		// Get the old sermons, teachers, series
 
-		//get a unique list of teacher ids
-		$query = 'SELECT speaker_id, id, series_id FROM #__sermon_sermons GROUP BY series_id';
+		// Get a unique list of teacher ids
+		$query = $db->getQuery(true);
+		$query->select('speaker_id, id, series_id')->from('#__sermon_sermons')->group('series_id');
 		$db->setQuery($query);
 		$seriesspeakers = $db->loadObjectList();
 
 		$result_table = '<table><tr><td><strong>' . JText::_('JBS_IBM_NOTE_ERRORS') . '</strong></td></tr>';
-
 
 		// Make a server record
 		$base              = JURI::base();
@@ -76,9 +67,7 @@ class JBSMSSConvert
 		$server         = $db->loadAssoc();
 		$this->serverid = $server['id'];
 
-		//Make the teachers
-
-
+		// Make the teachers
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_speakers');
@@ -87,14 +76,13 @@ class JBSMSSConvert
 		$teachers = $db->loadObjectList();
 		if (!$teachers)
 		{
-			$result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_IBM_NO_TEACHERS_FOUND_SS') . '</span></td></tr>';
+			$result_table .= '<tr><td><span style="color: red;">' . JText::_('JBS_IBM_NO_TEACHERS_FOUND_SS') . '</span></td></tr>';
 		}
 
 		foreach ($teachers AS $teacher)
 		{
 
 			$data = new stdClass;
-			//$data->id          = $teacher->id;
 			$teachername       = $teacher->name;
 			$data->teachername = $teachername;
 			$data->website     = $teacher->website;
@@ -111,11 +99,14 @@ class JBSMSSConvert
 			{
 				$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_CREATING_TEACHERS') . '</td></tr>';
 			}
-			//Get the last teacherid
-			$query = 'SELECT id FROM #__bsms_teachers ORDER BY id DESC LIMIT 1';
-			$db->setQuery($query);
+
+			// Get the last teacherid
+			$query = $db->getQuery(true);
+			$query->select('id')->from('#__bsms_teachers')->order('id');
+			$db->setQuery($query, 0, 1);
 			$lastteacher = $db->loadResult();
-			//Add the new teacher id to the object for cross walk of series and teachers
+
+			// Add the new teacher id to the object for cross walk of series and teachers
 			foreach ($seriesspeakers as $speakers)
 			{
 				if ($speakers->speaker_id == $teacher->id)
@@ -124,19 +115,17 @@ class JBSMSSConvert
 				}
 			}
 
-
-		} //end teachers foreach
+		} // End teachers foreach
 
 		// Series Records
-		$serieslist = array();
-		$query      = $db->getQuery(true);
+		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_series');
 		$db->setQuery($query);
 		$series = $db->loadObjectList();
 		if (!$series)
 		{
-			$result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_IBM_NO_SERIES_FOUND_SS') . '</span>';
+			$result_table .= '<tr><td><span style="color: red;">' . JText::_('JBS_IBM_NO_SERIES_FOUND_SS') . '</span>';
 		}
 		else
 		{
@@ -180,10 +169,12 @@ class JBSMSSConvert
 				}
 				else
 				{
-					$query = 'SELECT id FROM #__bsms_series ORDER BY id DESC LIMIT 1';
-					$db->setQuery($query);
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_studies')->order('id DESC');
+					$db->setQuery($query, 0, 1);
 					$lastseries = $db->loadResult();
-					//Add the new teacher id to the object for cross walk of series and teachers
+
+					// Add the new teacher id to the object for cross walk of series and teachers
 					foreach ($seriesspeakers as $speakers)
 					{
 						if ($speakers->series_id == $single->id)
@@ -196,30 +187,33 @@ class JBSMSSConvert
 			} // End foreach $series as $single
 
 		}
-		//Get all the sermons and loop through them, creating new ones in JBS
+		// Get all the sermons and loop through them, creating new ones in JBS
 
 		foreach ($sermons as $sermon)
 		{
 			$this->newStudies($sermon, $seriesspeakers);
 		}
 
-		//Count the new numbers and report
-		$query = 'SELECT COUNT(*) FROM #__bsms_studies';
+		// Count the new numbers and report
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')->from('#__bsms_studies');
 		$db->setQuery($query);
 		$newstudies = $db->loadResult();
 
-		$query = 'SELECT COUNT(*) FROM #__bsms_teachers';
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')->from('#__bsms_teachers');
 		$db->setQuery($query);
 		$newteachers = $db->loadResult();
 
-		$query = 'SELECT COUNT(*) FROM #__bsms_series';
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')->from('#__bsms_series');
 		$db->setQuery($query);
 		$newseries = $db->loadResult();
 
-		$query = 'SELECT COUNT(*) FROM #__bsms_mediafiles';
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')->from('#__bsms_mediafiles');
 		$db->setQuery($query);
 		$newmediafiles = $db->loadResult();
-
 
 		$result_table .= '<tr><td>' . $newteachers . ' ' . JText::_('JBS_IBM_TEACHERS_CREATED') . '</td></tr>';
 		$result_table .= '<tr><td>' . $newstudies . ' ' . JText::_('JBS_IBM_SERMONS_CREATED_FOR') . '</td></tr>';
@@ -232,8 +226,12 @@ class JBSMSSConvert
 	}
 
 	/**
-	 * @param $sermon
-	 * @param $seriesspeakers
+	 * New Studies Carnation
+	 *
+	 * @param   Object  $sermon          Test of Sermons
+	 * @param   Array   $seriesspeakers  Array of Series
+	 *
+	 * @return void
 	 */
 	public function newStudies($sermon, $seriesspeakers)
 	{
@@ -279,20 +277,20 @@ class JBSMSSConvert
 		$data->alias     = $sermon->alias;
 
 		$db->insertObject('#__bsms_studies', $data);
-		$query = 'SELECT id FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
+		$query = $db->getQuery(true);
+		$query->select('id')->from('#__bsms_studies')->order('id DESC');
 
-		$db->setQuery($query);
+		$db->setQuery($query, 0, 1);
 		$study              = $db->loadAssoc();
 		$data1              = new stdClass;
 		$data1->study_id    = $study['id'];
-		$data1->server      = $this->serverid;
+		$data1->server_id   = $this->serverid;
 		$data1->filename    = $sermon->audiofile;
 		$data1->published   = 1;
 		$data1->createdate  = $data->studydate;
 		$data1->media_image = 1;
 		$data1->downloads   = 1;
 		$data1->plays       = 0;
-
 
 		$db->insertObject('#__bsms_mediafiles', $data1, 'id');
 
@@ -314,11 +312,10 @@ class JBSMSSConvert
 
 	}
 
-
 	/**
-	 * Get Version of Booknumber
+	 * Get Version of Book Number
 	 *
-	 * @param   string $sermon Book of the Bible.
+	 * @param   string  $sermon  Book of the Bible.
 	 *
 	 * @return object Version of the Books
 	 */
@@ -772,7 +769,7 @@ class JBSMSSConvert
 	/**
 	 * Get Time
 	 *
-	 * @param   string $time ?
+	 * @param   string  $time  Time to be formatted out.
 	 *
 	 * @return object
 	 */

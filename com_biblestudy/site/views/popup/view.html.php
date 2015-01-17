@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
 
@@ -80,13 +82,13 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Footer Text */
 	public $footertext;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $state;
 
-	/** @var  JRegistry Extra Params */
+	/** @var  Registry Extra Params */
 	protected $extraparams;
 
 	/** @var  TableTemplate Template */
@@ -115,20 +117,18 @@ class BiblestudyViewPopup extends JViewLegacy
 			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
 
-		jimport('joomla.application.component.helper');
-
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
 
-		/** @var JRegistry params */
+		/** @var Registry params */
 		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		/*
 		 *  Convert parameter fields to objects.
 		 */
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
@@ -233,11 +233,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string $text      Text info
-	 * @param   object $media     Media info
-	 * @param   string $scripture scripture
-	 * @param   string $date      Date
-	 * @param   string $length    Length of Title
+	 * @param   string  $text       Text info
+	 * @param   object  $media      Media info
+	 * @param   string  $scripture  scripture
+	 * @param   string  $date       Date
+	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 */

@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller for a Comment
@@ -118,18 +116,15 @@ class BiblestudyControllerCommentform extends JControllerForm
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    object    The model.
 	 *
 	 * @since    1.5
 	 */
-	public function getModel(
-		$name = 'CommentForm',
-		$prefix = 'BiblestudyModel',
-		$config = array('ignore_request' => true))
+	public function getModel($name = 'CommentForm', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
@@ -173,8 +168,8 @@ class BiblestudyControllerCommentform extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
 	 *
@@ -196,7 +191,7 @@ class BiblestudyControllerCommentform extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -204,15 +199,15 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		// In the absense of better information, revert to the component permissions.
+		// In the absence of better information, revert to the component permissions.
 		return parent::allowAdd();
 	}
 
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *

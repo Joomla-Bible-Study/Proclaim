@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
+
+use Joomla\Registry\Registry;
 
 /**
  * Model class for Message
@@ -25,7 +27,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	/**
 	 * Method to get article data.
 	 *
-	 * @param   int $pk The id of the article.
+	 * @param   int  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
 	 */
@@ -85,6 +87,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters.
+		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();

@@ -5,6 +5,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Xmap.BibleStudy
+ * @copyright   2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  * @description Xmap plugin for Bible Study Component
  *              adapted for Bible Study by TOm Fuller

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -440,7 +440,7 @@ class JBSMUpload
 	/**
 	 * BinSha1
 	 *
-	 * @param   string  $d  ?
+	 * @param   string  $d  String to hash
 	 *
 	 * @return string
 	 */
@@ -510,8 +510,8 @@ class JBSMUpload
 	/**
 	 * Method to process flash uploaded file
 	 *
-	 * @param   array  $file     tempfile location
-	 * @param   object $filename File info
+	 * @param   array   $file      Temp file location
+	 * @param   object  $filename  File info
 	 *
 	 * @return    string
 	 */
@@ -584,8 +584,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file for ftp upload
 	 *
-	 * @param   string $filename Destination file details.
-	 * @param   array  $file     Source File details.
+	 * @param   string  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -605,8 +605,8 @@ class JBSMUpload
 	/**
 	 * Method to upload the file
 	 *
-	 * @param   object $filename Destination file details.
-	 * @param   array  $file     Source File details.
+	 * @param   object  $filename  Destination file details.
+	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
 	 */
@@ -626,12 +626,12 @@ class JBSMUpload
 	/**
 	 * Method to build filepath
 	 *
-	 * @param   array  $file     File details.
-	 * @param   string $type     Type
-	 * @param   int    $serverid Server ID
-	 * @param   int    $folderid Folder Id
-	 * @param   int    $path     The path id.
-	 * @param   int    $flash    Sets whether this is a flash upload or normal php upload and chooses right path through function.
+	 * @param   array   $file      File details.
+	 * @param   string  $type      Type
+	 * @param   int     $serverid  Server ID
+	 * @param   int     $folderid  Folder Id
+	 * @param   int     $path      The path id.
+	 * @param   int     $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
 	 *
 	 * @return    object
 	 */
@@ -730,8 +730,8 @@ class JBSMUpload
 	/**
 	 * Method to load javascript for squeezebox modal
 	 *
-	 * @param   string $host  the site base url
-	 * @param   string $admin ?
+	 * @param   string  $host   the site base url
+	 * @param   string  $admin  String to add to url
 	 *
 	 * @return    string
 	 */

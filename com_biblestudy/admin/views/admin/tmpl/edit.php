@@ -3,7 +3,7 @@
  * Admin Form
  *
  * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           http://www.JoomlaBibleStudy.org
  * */
@@ -48,46 +48,46 @@ $input = $app->input;
                 if (jQuery('#thumbnail_study_size_old').val() !== jQuery('#jform_params_thumbnail_study_size').val()) {
                     thumbnail_changes.push('studies');
                 }
-                if (thumbnail_changes.length > 0) {
-                    var resize_thumbnails = confirm("You modified the default thumbnail size(s). Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
-                    if (resize_thumbnails) {
-                        jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1', {images: thumbnail_changes}, function (response) {
-                                jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
-                                var total_paths = response.total, counter = 0;
-                                var progress = 0;
-                                jQuery.each(response.paths, function () {
-                                    var type = this[0].type;
-                                    jQuery.each(this[0].images, function () {
-                                            var new_size;
-                                            switch (type) {
-                                                case 'teachers':
-                                                    new_size = jQuery('#jform_params_thumbnail_teacher_size').val();
-                                                    break;
-                                                case 'studies':
-                                                    new_size = jQuery('#jform_params_thumbnail_study_size').val();
-                                                    break;
-                                                case 'series':
-                                                    new_size = jQuery('#jform_params_thumbnail_series_size').val();
-                                                    break;
-                                            }
-                                            jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1', {image_path: this, new_size: new_size}, function (response) {
-                                                counter++;
-                                                progress += 100 / total_paths;
-                                                jQuery('#dialog_thumbnail_resize .bar').width(progress + '%');
-                                                if (counter === total_paths) {
-                                                    // Continue and save the rest of the form now.
-                                                    Joomla.submitform(task, document.getElementById('item-admin'));
-                                                }
-                                            })
-                                        }
-                                    )
-                                });
-                            }
-                        )
-                    }
-                } else {
+//                if (thumbnail_changes.length > 0) {
+//                    var resize_thumbnails = confirm("You modified the default thumbnail size(s). Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
+//                    if (resize_thumbnails) {
+//                        jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php //echo JSession::getFormToken(); ?>//=1', {images: thumbnail_changes}, function (response) {
+//                                jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
+//                                var total_paths = response.total, counter = 0;
+//                                var progress = 0;
+//                                jQuery.each(response.paths, function () {
+//                                    var type = this[0].type;
+//                                    jQuery.each(this[0].images, function () {
+//                                            var new_size;
+//                                            switch (type) {
+//                                                case 'teachers':
+//                                                    new_size = jQuery('#jform_params_thumbnail_teacher_size').val();
+//                                                    break;
+//                                                case 'studies':
+//                                                    new_size = jQuery('#jform_params_thumbnail_study_size').val();
+//                                                    break;
+//                                                case 'series':
+//                                                    new_size = jQuery('#jform_params_thumbnail_series_size').val();
+//                                                    break;
+//                                            }
+//                                            jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php //echo JSession::getFormToken(); ?>//=1', {image_path: this, new_size: new_size}, function (response) {
+//                                                counter++;
+//                                                progress += 100 / total_paths;
+//                                                jQuery('#dialog_thumbnail_resize .bar').width(progress + '%');
+//                                                if (counter === total_paths) {
+//                                                    // Continue and save the rest of the form now.
+//                                                    Joomla.submitform(task, document.getElementById('item-admin'));
+//                                                }
+//                                            })
+//                                        }
+//                                    )
+//                                });
+//                            }
+//                        )
+//                    }
+//                } else {
                     Joomla.submitform(task, document.getElementById('item-admin'));
-                }
+//                }
             }
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
@@ -100,7 +100,7 @@ $input = $app->input;
     </div>
     <div class="modal-body">
         <div class="progress">
-            <div class="bar" style="width: 0%;"></div>
+            <div class="bar" style="width: 0;"></div>
         </div>
     </div>
 </div>
@@ -123,7 +123,7 @@ $input = $app->input;
 <div class="tab-content">
 
 <!-- Begin Tabs -->
-<div class="tab-pane" id="cpanl">
+<div class="tab-pane active" id="cpanl">
 	<div id="cpanel" class="btn-group">
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
 			                     style="text-decoration:none; margin: 5px"
@@ -153,13 +153,6 @@ $input = $app->input;
 </div>
 <div class="tab-pane" id="admin">
     <p class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></p>
-
-    <div class="control-group">
-        <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
-        <div class="controls">
-            <?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
-        </div>
-    </div>
     <div class="control-group">
         <label style="max-width: 100%; padding: 0 5px 0 0;">
             <!--suppress HtmlUnknownTarget -->
@@ -448,6 +441,3 @@ $input = $app->input;
     <?php echo JHtml::_('form.token'); ?>
 </div>
 </form>
-<script type="text/javascript">
-    jQuery('#configTabs a:first').tab('show'); // Select first tab
-</script>

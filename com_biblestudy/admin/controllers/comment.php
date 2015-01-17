@@ -3,14 +3,12 @@
  * Controller for a Comment
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller for a Comment
@@ -24,7 +22,7 @@ class BiblestudyControllerComment extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config  A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since    7.0.0
 	 */
@@ -36,7 +34,7 @@ class BiblestudyControllerComment extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   JModelLegacy $model The model.
+	 * @param   JModelLegacy  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -58,7 +56,7 @@ class BiblestudyControllerComment extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data  An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -73,8 +71,8 @@ class BiblestudyControllerComment extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data  An array of input data.
-	 * @param   string $key   The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -84,7 +82,6 @@ class BiblestudyControllerComment extends JControllerForm
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 		$user     = JFactory::getUser();
-		$userId   = $user->get('id');
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_biblestudy.comment.' . $recordId))
@@ -94,6 +91,24 @@ class BiblestudyControllerComment extends JControllerForm
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return BiblestudyModelComment
+	 *
+	 * @since 7.1.0
+	 */
+	public function getModel($name = 'Comment', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+
+		return $model;
 	}
 
 }

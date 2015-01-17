@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for MediaFile
@@ -22,7 +24,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	/** @var object */
 	public $canDo;
 
-	/** @var JRegistry */
+	/** @var Registry */
 	public $admin_params;
 
 	/** @var object */
@@ -34,7 +36,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	/** @var object */
 	protected $item;
 
-	/** @var JRegistry */
+	/** @var Registry */
 	protected $state;
 
 	/** @var object */
@@ -137,7 +139,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_MEDIA_FILES_CREATING') : JText::sprintf('JBS_TITLE_MEDIA_FILES_EDITING', $this->item->filename));
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_MEDIA_FILES_CREATING') : JText::_('JBS_TITLE_MEDIA_FILES_EDITING'));
 
 	}
 

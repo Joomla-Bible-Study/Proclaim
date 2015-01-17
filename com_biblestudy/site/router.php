@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * BibleStudy Build Route
  *
- * @param   array &$query  Info to Query
+ * @param   array  &$query  Info to Query
  *
  * @return string
  */
@@ -60,7 +60,7 @@ function biblestudyBuildRoute(&$query)
 /**
  * BibleStudy Parse Route
  *
- * @param   array $segments  Parse Route Info
+ * @param   array  $segments  Parse Route Info
  *
  * @return object
  */
@@ -70,7 +70,6 @@ function biblestudyParseRoute($segments)
 
 	// Count route segments
 	$count = count($segments);
-
 
 	if ($count == 3)
 	{

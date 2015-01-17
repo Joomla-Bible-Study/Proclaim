@@ -3,13 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 /**
  * Comment model class
  *
@@ -33,6 +34,7 @@ class BiblestudyModelPopup extends JModelLegacy
 		$app = JFactory::getApplication('site');
 
 		// Load the parameters.
+		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();

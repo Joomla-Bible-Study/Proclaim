@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for Messages
@@ -21,43 +23,55 @@ class BiblestudyViewMessagelist extends JViewLegacy
 
 	/** @var  string Can Do */
 	public $canDo;
+
 	/** @var  string Books */
 	public $books;
-	/** @var  JRegistry Teachers */
+
+	/** @var  Registry Teachers */
 	public $teachers;
+
 	/** @var  string Series */
 	public $series;
+
 	/** @var  string Message Types */
 	public $messageTypes;
+
 	/** @var  string Years */
 	public $years;
+
 	/** @var  string New Link */
 	public $newlink;
+
 	/** @var  JDocument Document */
 	public $document;
+
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
 	 * @var array
 	 */
 	protected $state;
+
 	/**
 	 * @var object
 	 */
 	protected $admin;
-	/** @var JRegistry Params */
+
+	/** @var Registry Params */
 	protected $params;
 
 	/**

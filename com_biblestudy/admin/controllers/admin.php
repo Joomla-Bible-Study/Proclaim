@@ -2,15 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
+use \Joomla\Registry\Registry;
 
 /**
  * Controller for Admin
@@ -73,7 +73,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDBO();
 		$msg  = JText::_('JBS_ADM_ERROR_OCCURED');
 		$post = $_POST['jform'];
-		$reg  = new JRegistry;
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
 		$from = $reg->get('from');
 		$to   = $reg->get('to');
@@ -147,7 +147,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDBO();
 		$msg  = null;
 		$post = $_POST['jform'];
-		$reg  = new JRegistry;
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
 		$from  = $reg->get(';from');
 		$to    = $reg->get(';to');
@@ -239,7 +239,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
-		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', JREQUEST_ALLOWRAW);
+		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
 		parent::display();
 	}
 
@@ -295,7 +295,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
-			self::fixAssets();
+			self::fixAssets(true);
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 		else
@@ -349,6 +349,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$copysuccess = false;
 		$result      = null;
+		$alt         = '';
 
 		// This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
 		$app   = JFactory::getApplication();
@@ -374,10 +375,11 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$import = new JBSMRestore;
 			$result = $import->importdb($parent);
+			$alt    = '&jbsmalt=1';
 		}
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1' . $alt);
 		}
 		else
 		{
@@ -388,7 +390,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Copy Old Tables to new Joomla! Tables
 	 *
-	 * @param   string $oldprefix Old table Prefix
+	 * @param   string  $oldprefix  Old table Prefix
 	 *
 	 * @return boolean
 	 */
@@ -459,7 +461,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$application->enqueueMessage('' . $result . '');
 		}
-		$this->setRedirect('index.php?option=com_biblestudy&view=database');
+		$this->setRedirect('index.php?option=com_biblestudy&view=backup');
 	}
 
 	/**
@@ -476,7 +478,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (!$result = $export->exportdb($run))
 		{
 			$msg = JText::_('JBS_CMN_OPERATION_FAILED');
-			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
 		}
 		elseif ($run == 2)
 		{
@@ -488,7 +490,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 			{
 				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 			}
-			$this->setRedirect('index.php?option=com_biblestudy&view=database', $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
 		}
 	}
 
@@ -502,8 +504,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function getThumbnailListXHR()
 	{
 		JSession::checkToken('get') or die('Invalid Token');
-		$document = JFactory::getDocument();
-		$input    = JFactory::getApplication()->input;
+		$document     = JFactory::getDocument();
+		$input        = JFactory::getApplication()->input;
+		$images_paths = array();
 
 		$document->setMimeEncoding('application/json');
 

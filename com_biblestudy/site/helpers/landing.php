@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * Class for JBSMLanding
@@ -21,8 +23,8 @@ class JBSMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
@@ -35,6 +37,7 @@ class JBSMLanding
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
 		$limit       = $params->get('landinglocationslimit');
+		$order       = 'ASC';
 
 		if (!$limit)
 		{
@@ -43,7 +46,7 @@ class JBSMLanding
 		$locationuselimit = $params->get('landinglocationsuselimit', 0);
 		$menu             = $mainframe->getMenu();
 		$item             = $menu->getActive();
-		$registry         = new JRegistry;
+		$registry         = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -188,7 +191,7 @@ class JBSMLanding
 
 				case 1:
 
-					$location = '<div class="landingtable" style="display:inline;">';
+					$location = '<div class="landingtable" style="display:inline-block;">';
 
 					foreach ($tresult as $b)
 					{
@@ -239,18 +242,18 @@ class JBSMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
 	public function getTeacherLandingPage($params, $id)
 	{
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
-		$user        = JFactory::getUser();
-		$langlink = JLanguageMultilang::isEnabled();
-
+		$mainframe = JFactory::getApplication();
+		$db        = JFactory::getDBO();
+		$user      = JFactory::getUser();
+		$langlink  = JLanguageMultilang::isEnabled();
+		$order     = null;
 		$teacher   = null;
 		$teacherid = null;
 
@@ -259,7 +262,7 @@ class JBSMLanding
 		$teacheruselimit = $params->get('landingteachersuselimit', 0);
 		$menu            = $mainframe->getMenu();
 		$item            = $menu->getActive();
-		$registry        = new JRegistry;
+		$registry        = new Registry;
 
 		if (isset($item->params))
 		{
@@ -478,8 +481,8 @@ class JBSMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
@@ -487,13 +490,13 @@ class JBSMLanding
 	 */
 	public function getSeriesLandingPage($params, $id)
 	{
-		$mainframe   = JFactory::getApplication();
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$input       = new JInput;
-		$series   = null;
-		$seriesid = null;
-		$numRows  = null;
+		$mainframe = JFactory::getApplication();
+		$user      = JFactory::getUser();
+		$db        = JFactory::getDBO();
+		$order     = 'ASC';
+		$series    = null;
+		$seriesid  = null;
+		$numRows   = null;
 
 		$template = $params->get('serieslisttemplateid', 1);
 		$limit    = $params->get('landingserieslimit');
@@ -505,7 +508,7 @@ class JBSMLanding
 		$seriesuselimit = $params->get('landingseriesuselimit', 0);
 		$menu           = $mainframe->getMenu();
 		$item           = $menu->getActive();
-		$registry       = new JRegistry;
+		$registry       = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -717,8 +720,8 @@ class JBSMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 */
@@ -728,7 +731,7 @@ class JBSMLanding
 		$db        = JFactory::getDBO();
 		$user      = JFactory::getUser();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -740,7 +743,7 @@ class JBSMLanding
 		}
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->params))
 		{
@@ -874,8 +877,8 @@ class JBSMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 */
@@ -885,7 +888,7 @@ class JBSMLanding
 		$user      = JFactory::getUser();
 		$db        = JFactory::getDBO();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
+		$order     = 'ASC';
 		$topic     = null;
 		$teacherid = null;
 		$template  = $params->get('studieslisttemplateid');
@@ -898,7 +901,7 @@ class JBSMLanding
 		$t        = $input->get('t', 1, 'int');
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -1031,8 +1034,8 @@ class JBSMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 */
@@ -1042,10 +1045,9 @@ class JBSMLanding
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
 		$input       = new JInput;
-		$option      = $input->get('option', '', 'cmd');
 		$input       = new JInput;
-		$addItemid   = $input->get('Itemid', '', 'int');
 		$messagetype = null;
+		$order       = 'ASC';
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
 		$limit       = $params->get('landingmessagetypeslimit');
@@ -1057,7 +1059,7 @@ class JBSMLanding
 		$messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
 		$menu                = $mainframe->getMenu();
 		$item                = $menu->getActive();
-		$registry            = new JRegistry;
+		$registry            = new Registry;
 
 		if (isset($item->prams))
 		{
@@ -1248,15 +1250,15 @@ class JBSMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   JRegistry  $params  Item Params
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */
 	public function getBooksLandingPage($params)
 	{
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
-		$JViewLegacy = new JViewLegacy;
+		$user     = JFactory::getUser();
+		$db       = JFactory::getDBO();
+		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');
 		$limit    = $params->get('landingbookslimit');
@@ -1268,7 +1270,7 @@ class JBSMLanding
 		$app      = JFactory::getApplication();
 		$menu     = $app->getMenu();
 		$item     = $menu->getActive();
-		$registry = new JRegistry;
+		$registry = new Registry;
 
 		if (isset($item->prams))
 		{

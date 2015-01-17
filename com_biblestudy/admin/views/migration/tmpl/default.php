@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -13,6 +13,15 @@ defined('_JEXEC') or die();
 
 JHTML::_('behavior.framework');
 JHtml::_('behavior.modal');
+
+if ($this->totalVersions != '0')
+{
+	$pre = $this->doneVersions . ' of ' . $this->totalVersions;
+}
+else
+{
+	$pre = '';
+}
 ?>
 <?php if ($this->more): ?>
 	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>
@@ -20,7 +29,7 @@ JHtml::_('behavior.modal');
 	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
 <div class="migration-status">
-	<div class="status"><?php echo JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+	<div class="status"><?php echo $pre . ' ' .  JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
 
@@ -38,17 +47,15 @@ JHtml::_('behavior.modal');
 
 <?php if (!$this->more): ?>
 	<div id="j-main-container" class="span10">
-		<div id="cpanel" style="padding-left: 20px">
+		<div id="cpanel" class="btn-group">
 			<div class="pull-left">
-				<div class="icon">
-					<a href="index.php?option=com_biblestudy&view=cpanel">
-						<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
-						     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
-					<span>
-						<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
-					</span>
-					</a>
-				</div>
+				<a href="index.php?option=com_biblestudy&view=cpanel" class="btn cpanl-img">
+					<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+					     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
+				<span>
+					<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
+				</span>
+				</a>
 			</div>
 		</div>
 	</div>

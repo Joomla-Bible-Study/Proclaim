@@ -3,19 +3,19 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use \Joomla\Registry\Registry;
+
 /**
  * Bible Study Core Difines
  */
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-
-jimport('joomla.application.component.controller');
 
 /**
  * Controller for Core BibleStudy
@@ -39,7 +39,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config   An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
@@ -68,8 +68,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean $cachable   If true, the view output will be cached
-	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -158,21 +158,17 @@ class BiblestudyController extends JControllerLegacy
 		$this->input->set('t', $t);
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($model->_template[0]->params);
 		$params = $registry;
 		$cap    = 1;
 
 		if ($params->get('use_captcha') > 0)
 		{
-			// Begin reCaptcha
-			require_once JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php';
-			$privatekey = $params->get('private_key');
-			$challenge  = $this->input->get('recaptcha_challenge_field', '', 'post');
-			$response   = $this->input->get('recaptcha_response_field', '', 'string');
-			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
-			if (!$resp->is_valid)
+			JPluginHelper::importPlugin('captcha');
+			$dispatcher = JEventDispatcher::getInstance();
+			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
@@ -218,7 +214,7 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string $params  To pass to the email
+	 * @param   Registry  $params  To pass to the email
 	 *
 	 * @return void
 	 */
@@ -241,8 +237,8 @@ class BiblestudyController extends JControllerLegacy
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
 		$comment_abspath   = JPATH_SITE;
-		$comment_mailfrom  = $config->getValue('config.mailfrom');
-		$comment_fromname  = $config->getValue('config.fromname');
+		$comment_mailfrom  = $config->get('config.mailfrom');
+		$comment_fromname  = $config->get('config.fromname');
 		$comment_livesite  = JURI::root();
 		$db                = JFactory::getDBO();
 		$query             = $db->getQuery(true);
@@ -260,7 +256,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$ToEmail = $comment_mailfrom;
 		}
-		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title . ' - ' . $comment_study_date . ' '
+		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
+			' - ' . $comment_study_date . ' '
 			. JText::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
@@ -386,7 +383,6 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
 
-
 			// Process file
 			$uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
 
@@ -401,11 +397,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
 		}
-		//  $podmsg = PIHelperadmin::setpods($row);
-		// delete temp file
 
 		JBSMUpload::deletetempfile($tempfile);
-		$mediafileid = $this->input->get('id', '', 'int');
 
 		if ($layout == 'modal')
 		{
@@ -416,82 +409,6 @@ class BiblestudyController extends JControllerLegacy
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
-
-	/*
-	 * Upload Flash System
-	 * @return text
-	 */
-	/*    function upflash() {
-		   jimport('joomla.filesystem.file');
-			jimport('joomla.filesystem.folder');
-			$serverid = JRequest::getInt('upload_server', '', 'post');
-			$folderid = JRequest::getInt('upload_folder', '', 'post');
-			//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
-			//so if the ftp layer is on, joomla will write with that, not the apache user, which might
-			//not have the correct permissions
-			$abspath = JPATH_SITE;
-			//this is the name of the field in the html form, filedata is the default name for swfupload
-			//so we will leave it as that
-			$fieldName = 'Filedata';
-			//any errors the server registered on uploading
-			$fileError = $_FILES[$fieldName]['error'];
-			if ($fileError > 0) {
-				switch ($fileError) {
-				   case 1:
-						echo JText::_('JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS');
-						return;
-
-				   case 2:
-						echo JText::_('JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS');
-						return;
-
-					case 3:
-						echo JText::_('JBS_MED_ERROR_PARTIAL_UPLOAD');
-						return;
-
-					case 4:
-						echo JText::_('JBS_MED_ERROR_NO_FILE');
-						return;
-				}
-			}
-
-			// Check for filesize
-			$fileSize = $_FILES[$fieldName]['size'];
-			if ($fileSize > 500000000) {
-				echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
-			}
-
-			// Check the file extension is ok
-			$fileName = $_FILES[$fieldName]['name'];
-			$extOk = JBSMUpload::checkfile($fileName);
-			$app = JFactory::getApplication();
-			$option = JRequest::getCmd('option');
-			$app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
-			$app->setUserState($option.'size', $_FILES[$fieldName]['size']);
-			$app->setUserState($option.'serverid', $serverid);
-			$app->setUserState($option.'folderid', $folderid);
-			if ($extOk == false) {
-				echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
-				return;
-			}
-
-			// The name of the file in PHP's temp directory that we are going to move to our folder
-			$fileTemp = $_FILES[$fieldName]['tmp_name'];
-
-			// Always use constants when making file paths, to avoid the possibilty of remote file inclusion
-
-			$uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
-
-
-			if (!JFile::upload($fileTemp, $uploadPath)) {
-				echo JText::_('JBS_MED_ERROR_MOVING_FILE');
-				return;
-			} else {
-
-				// success, exit with code 0 for Mac users, otherwise they receive an IO Error
-				exit(0);
-			}
-		} */
 
 	/**
 	 * Upload function

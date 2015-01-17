@@ -3,13 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 
 /**
  * View class for Mediafiles
@@ -26,36 +27,42 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * @var string
 	 */
 	public $mediatypes;
+
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * Filter Levers
 	 *
 	 * @var string
 	 */
 	public $f_levels;
+
 	/**
 	 * Side Bare
 	 *
 	 * @var string
 	 */
 	public $sidebar;
+
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
@@ -66,7 +73,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

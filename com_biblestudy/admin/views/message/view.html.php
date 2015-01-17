@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for Message
@@ -64,7 +66,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	/**
 	 * Admin Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $admin_params;
 
@@ -92,7 +94,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$this->admin = JBSMParams::getAdmin();
-		$registry    = new JRegistry;
+		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
 		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
@@ -121,7 +123,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-		JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
 
 		// Set the toolbar
 		$this->addToolbar();

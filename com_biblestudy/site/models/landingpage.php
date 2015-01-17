@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for LandingPage
@@ -24,7 +24,7 @@ class BiblestudyModelLandingpage extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see        JController
 	 * @since      1.6
@@ -102,15 +102,16 @@ class BiblestudyModelLandingpage extends JModelList
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$template_params = JBSMParams::getTemplateparams();
-		$registry        = new JRegistry;
+		$registry        = new Registry;
 		$registry->loadString($template_params->params);
 		$t_params = $registry;
 
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$app        = JFactory::getApplication('site');
+		/** @var Registry $params */
 		$params     = $app->getParams();
 		$this->setState('params', $params);
-		$menuparams = new JRegistry;
+		$menuparams = new Registry;
 		$menu       = $app->getMenu()->getActive();
 
 		if ($menu)

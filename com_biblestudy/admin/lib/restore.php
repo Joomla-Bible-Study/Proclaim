@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -153,7 +153,7 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 		$input         = new JInput;
 		$installtype   = $input->get('install_directory');
@@ -187,9 +187,9 @@ class JBSMRestore
 			$inputfiles = new JInputFiles;
 			$userfile   = $inputfiles->get('importdb');
 
-			if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']))
+			if (JFile::exists(JPATH_SITE . '/tmp/' . $userfile['name']))
 			{
-				unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+				unlink(JPATH_SITE . '/tmp/' . $userfile['name']);
 			}
 			if (($parent !== true) && $result)
 			{
@@ -205,7 +205,7 @@ class JBSMRestore
 	/**
 	 * Restore DB for exerting Joomla Bible Study
 	 *
-	 * @param   string $backuprestore ?
+	 * @param   string  $backuprestore  file name to restore
 	 *
 	 * @return boolean See if the restore worked.
 	 */
@@ -218,9 +218,9 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
-		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/database/' . $backuprestore);
+		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/backup/' . $backuprestore);
 
 		// Check to see if this is a backup from an old db and not a migration
 		$isold   = substr_count($query, '#__bsms_admin_genesis');
@@ -247,12 +247,17 @@ class JBSMRestore
 		}
 		else
 		{
-			$queries = $db->splitSql($query);
+			$queries = JDatabaseDriver::splitSql($query);
 
-			foreach ($queries as $querie)
+			foreach ($queries as $query)
 			{
-				$db->setQuery($querie);
-				$db->execute();
+				$query = trim($query);
+
+				if ($query != '' && $query{0} != '#')
+				{
+					$db->setQuery($query);
+					$db->execute();
+				}
 			}
 		}
 
@@ -309,7 +314,7 @@ class JBSMRestore
 			return false;
 		}
 		// Build the appropriate paths
-		$tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
+		$tmp_dest = JPATH_SITE . '/tmp/' . $userfile['name'];
 
 		$tmp_src = $userfile['tmp_name'];
 
@@ -356,13 +361,12 @@ class JBSMRestore
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDBO();
 
 		$query  = file_get_contents($tmp_src);
-		$exists = JFile::exists($tmp_src);
 
 		// Graceful exit and rollback if read not successful
 		if ($query === false)
@@ -388,12 +392,6 @@ class JBSMRestore
 
 			return false;
 		}
-		elseif (($iscernt !== 0) && ($parent === true))
-		{
-			$app->enqueueMessage(JText::_('JBS_IBM_MIGRATE_NOT_OLD_DB'), 'warning');
-
-			return false;
-		}
 		elseif (($iscernt === 0) && ($parent !== true))
 		{ // Way to check to see if file came from restore and is current.
 			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'waring');
@@ -413,12 +411,12 @@ class JBSMRestore
 			}
 
 			// Create an array of queries from the sql file
-			$queries = $db->splitSql($query);
+			$queries = JDatabaseDriver::splitSql($query);
 
 			if (count($queries) == 0)
 			{
 				// No queries to process
-				return 0;
+				return false;
 			}
 
 			// Process each query in the $queries array (split out of sql file).

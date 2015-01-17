@@ -3,11 +3,13 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
 
 /**
  * Database Helper class for version 7.1.0
@@ -172,17 +174,18 @@ class JBSMDbHelper
 	 *
 	 * @param   string  $query  Is a Joomla ready query
 	 * @param   string  $from   Where the source of the query comes from
+	 * @param   int     $limit  Set the Limit of the query
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
-	public static function performDB($query, $from = null)
+	public static function performDB($query, $from = null, $limit = null)
 	{
 		if (!$query)
 		{
 			return false;
 		}
 		$db = JFactory::getDbo();
-		$db->setQuery($query);
+		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
 		{
@@ -238,7 +241,7 @@ class JBSMDbHelper
 		foreach ($tables as $table)
 		{
 
-			if (strpos($table, $prefix) && strpos($table, $bsms))
+			if (strstr($table, $prefix) && strstr($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);
@@ -251,7 +254,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry
 	 *
 	 * @since 7.1.0
 	 */
@@ -268,7 +271,7 @@ class JBSMDbHelper
 			if (!empty($results[0]->installstate))
 			{
 				// Convert parameter fields to objects.
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($results{0}->installstate);
 
 				return $registry;
@@ -281,7 +284,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry
 	 *
 	 * @since 7.1.0
 	 */
@@ -304,7 +307,7 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Fixupcss.
+	 * Fix up css.
 	 *
 	 * @param   string   $filename  Name of css file
 	 * @param   boolean  $parent    if coming form the update script
@@ -390,7 +393,7 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object  $result  Objectlist that we will get the id from.
+	 * @param   object  $result  Object list that we will get the id from.
 	 * @param   string  $table   Table to be reloaded.
 	 *
 	 * @return boolean
@@ -467,7 +470,7 @@ class JBSMDbHelper
 				{
 					$db->setQuery($query);
 
-					if (!$db->query())
+					if (!$db->execute())
 					{
 						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 

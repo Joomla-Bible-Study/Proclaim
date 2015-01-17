@@ -30,12 +30,10 @@
         <filename>biblestudy.php</filename>
         <filename>controller.php</filename>
         <filename>convert1.htm</filename>
-        <filename>index.html</filename>
         <filename>router.php</filename>
         <folder>sef_ext</folder>
         <folder>views</folder>
         <folder>models</folder>
-        <folder>language</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
         <folder>lib</folder>
@@ -44,14 +42,13 @@
     <!-- Media files -->
     <media destination="com_biblestudy" folder="media">
         <folder>backup</folder>
-        <folder>captcha</folder>
         <folder>css</folder>
-        <folder>database</folder>
+        <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>jui</folder>
+        <folder>less</folder>
         <folder>player</folder>
-        <filename>index.html</filename>
+        <folder>plupload</folder>
     </media>
 
     <administration>
@@ -84,14 +81,12 @@
             <filename>config.xml</filename>
             <filename>controller.php</filename>
             <filename>convert1.htm</filename>
-            <filename>index.html</filename>
             <folder>controllers</folder>
             <folder>help</folder>
             <folder>helpers</folder>
             <folder>install</folder>
             <folder>language</folder>
             <folder>lib</folder>
-            <folder>migration</folder>
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
@@ -131,6 +126,6 @@
 
     <!--  Dependencies -->
     <dependencies>
-        <dependency type="platform" name="joomla" operator="=" version="2.5"/>
+        <dependency type="platform" name="joomla" operator="=" version="3.2"/>
     </dependencies>
 </extension>

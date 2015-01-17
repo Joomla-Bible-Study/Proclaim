@@ -22,7 +22,7 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher for Fluid layout
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return array
 	 */
@@ -71,7 +71,6 @@ class JBSMTeacher extends JBSMListing
 				// Substitute contact info from com_contacts for duplicate fields
 				$result->title       = $this->contact->con_position;
 				$result->teachername = $this->contact->name;
-				$image               = $this->contact->image;
 			}
 			if ($result->teacher_thumbnail)
 			{
@@ -99,8 +98,8 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher
 	 *
-	 * @param   JRegistry  $params  Item Params
-	 * @param   int        $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 *
@@ -225,13 +224,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object         $row       Table Row
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   object                    $row     Table Row
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
 	 */
-	public function getTeacherDetailsExp($row, $params, $template)
+	public function getTeacherDetailsExp($row, $params)
 	{
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
@@ -264,13 +262,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int            $id        Item ID
-	 * @param   JRegistry      $params    Item Params
-	 * @param   TableTemplate  $template  Template
+	 * @param   int                       $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */
-	public function getTeacherStudiesExp($id, $params, $template)
+	public function getTeacherStudiesExp($id, $params)
 	{
 		$limit   = '';
 		$input   = new JInput;

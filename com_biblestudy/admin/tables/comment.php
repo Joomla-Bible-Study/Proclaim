@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -85,7 +85,7 @@ class TableComment extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
 	public function TableComment(& $db)
 	{
@@ -128,8 +128,8 @@ class TableComment extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -142,6 +142,5 @@ class TableComment extends JTable
 
 		return $asset->id;
 	}
-
 
 }

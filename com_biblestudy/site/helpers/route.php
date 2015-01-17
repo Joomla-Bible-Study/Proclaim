@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.helper');
 
 /**
  * Biblestudy Component Route Helper
@@ -19,7 +17,7 @@ jimport('joomla.application.component.helper');
  * @package  BibleStudy.Site
  * @since    7.2
  */
-abstract class JBSMRoute
+abstract class JBSMHelperRoute
 {
 
 	/**
@@ -149,7 +147,7 @@ abstract class JBSMRoute
 	/**
 	 * Get Teacher Route
 	 *
-	 * @param   int $id The route of the teacher item
+	 * @param   int  $id  The route of the teacher item
 	 *
 	 * @return string
 	 */
@@ -164,7 +162,7 @@ abstract class JBSMRoute
 	/**
 	 * Get Series Route
 	 *
-	 * @param   int $id ID
+	 * @param   int  $id  ID
 	 *
 	 * @return string
 	 */

@@ -5,8 +5,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-
 defined('_JEXEC') or die;
+
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
@@ -19,21 +19,13 @@ jimport('joomla.filesystem.file');
 class Com_BiblestudyInstallerScript
 {
 
-	/**
-	 * The component's name
-	 *
-	 * @var string
-	 * */
+	/** @var string The component's name */
 	protected $biblestudy_extension = 'com_biblestudy';
 
 	/** @var string Path to Mysql files */
-	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	/**
-	 * The release value to be displayed and check against throughout this file.
-	 *
-	 * @var string
-	 */
+	/** @var string The release value to be displayed and check against throughout this file. */
 	private $_release = '9.0.0';
 
 	/**
@@ -103,16 +95,6 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		if ($type == 'install')
-		{
-			// Copy the css file over to another location
-			$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
-
-			if (JFile::exists($src))
-			{
-				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
-			}
-		}
 		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
 
 		if (!$install_good)
@@ -178,14 +160,15 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		// Need to load JBSMDbHelper for script
 		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
+		// Need to load JBSMDbHelper for script
 		$dbhelper    = new JBSMDbHelper;
+		$db    = JFactory::getDBO();
 		$drop_result = '';
 
 		if ($dbhelper->checkIfTable('#__bsms_admin'))
 		{
-			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
@@ -198,7 +181,6 @@ class Com_BiblestudyInstallerScript
 			if ($drop_tables > 0)
 			{
 				// We must remove the assets manually each time
-				$db    = JFactory::getDBO();
 				$query = $db->getQuery(true);
 				$query->select('id')
 					->from('#__assets')
@@ -249,6 +231,14 @@ class Com_BiblestudyInstallerScript
 		{
 			$drop_result = '<h3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
 		}
+
+		// Post Install Messages Cleanup for Component
+		$query = $db->getQuery(true);
+		$query->delete('#__postinstall_messages')
+			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query);
+		$db->execute();
+
 		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
 	}
 
@@ -261,6 +251,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$row = JTable::getInstance('extension');
 		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
 
@@ -268,7 +259,7 @@ class Com_BiblestudyInstallerScript
 		{
 			$db         = JFactory::getDbo();
 
-			$files = str_replace('.sql', '', JFolder::files($this->filePath, '\.sql$'));
+			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 			if (!count($files))
 			{
 				return;
@@ -277,24 +268,36 @@ class Com_BiblestudyInstallerScript
 			usort($files, 'version_compare');
 
 			// Load currently installed version
-			$query = $db->getQuery(true)->select('version_id')->from('#__schemas')->where('extension_id = ' . $eid);
+			$query = $db->getQuery(true)
+				->select('version_id')
+				->from('#__schemas')
+				->where('extension_id = ' . $eid);
 			$db->setQuery($query);
 			$version = $db->loadResult();
 
-			if ($version)
+			// No version - use initial version.
+			if (!$version)
 			{
-				// We have a version!
-				foreach ($files as $file)
+				$version = '0.0.0';
+			}
+
+			// Used for php files updates.
+			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+			// We have a version!
+			foreach ($files as $file)
+			{
+				if (version_compare($file, $version) > 0)
 				{
-					if (version_compare($file, $version) > 0)
-					{
-						$this->allUpdate($file);
-					}
+					$this->allUpdate($file, $db);
+					$this->updatePHP($file, $db);
 				}
 			}
 
 			// Update the database with new version
-			$query = $db->getQuery(true)->delete('#__schemas')->where('extension_id = ' . $eid);
+			$query = $db->getQuery(true)
+				->delete('#__schemas')
+				->where('extension_id = ' . $eid);
 			$db->setQuery($query);
 
 			if ($db->execute())
@@ -308,32 +311,20 @@ class Com_BiblestudyInstallerScript
 		}
 
 		return;
-
-		// $this->fixMenus();
-		// $this->fixImagePaths();
-		// $this->fixemptyaccess();
-		// $this->fixemptylanguage();
 	}
 
 	/**
-	 * Function to do using the version number
+	 * Function to update using the version number for sql files
 	 *
-	 * @param   string  $value  The File to run sql query.
+	 * @param   string           $value  The File name.
+	 * @param   JDatabaseDriver  $db     DB helper.
 	 *
 	 * @return boolean
 	 *
 	 * @since 7.0.4
 	 */
-	public function allUpdate($value)
+	public function allUpdate($value, $db)
 	{
-		$db      = JFactory::getDbo();
-
-		$db->setQuery('CREATE TABLE IF NOT EXISTS `#__bsms_update` (
-						  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-						  version VARCHAR(255) DEFAULT NULL,
-						  PRIMARY KEY (id)
-						) DEFAULT CHARSET=utf8;');
-		$db->execute();
 
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
@@ -346,7 +337,7 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Create an array of queries from the sql file
-		$queries = $db->splitSql($buffer);
+		$queries = JDatabaseDriver::splitSql($buffer);
 
 		if (count($queries) == 0)
 		{
@@ -378,6 +369,21 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
+		return true;
+	}
+
+	/**
+	 * Function to update db using the version number on php files.
+	 *
+	 * @param   string           $value  The File name.
+	 * @param   JDatabaseDriver  $db     DB helper.
+	 *
+	 * @return boolean
+	 *
+	 * @since 9.0.0
+	 */
+	public function updatePHP($value, $db)
+	{
 		// Check for corresponding PHP file and run migration
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
 		if (JFile::exists($migration_file))
@@ -388,10 +394,11 @@ class Com_BiblestudyInstallerScript
 			if (!$migration->up($db))
 			{
 				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
+				return false;
 			}
+			return true;
 		}
-
-		return true;
+		return false;
 	}
 
 	/**
@@ -404,6 +411,17 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
+
+		if ($type == 'install')
+		{
+			// Copy the css file over to another location
+			$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
+
+			if (JFile::exists($src))
+			{
+				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
+			}
+		}
 		// Set the #__schemas version_id to the correct number for error from 7.0.0
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -937,13 +955,8 @@ class Com_BiblestudyInstallerScript
 		);
 
 		// Get Public id
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__viewlevels')
-			->where('title = ' . $db->q('Public'));
-		$db->setQuery($query);
-		$id = $db->loadResult();
+		$db = JFactory::getDbo();
+		$id = JFactory::getConfig()->get('access', 1);
 
 		// Correct blank or not set records
 		foreach ($tables as $table)
@@ -951,7 +964,7 @@ class Com_BiblestudyInstallerScript
 			$query = $db->getQuery(true);
 			$query->update($table['table'])
 				->set('access = ' . $id)
-				->where("(access = " . $db->q('0') . " or access = " . $db->q('') . ")");
+				->where("access = " . $db->q('0'), 'OR')->where("access = " . $db->q(' '));
 			$db->setQuery($query);
 			$db->execute();
 		}

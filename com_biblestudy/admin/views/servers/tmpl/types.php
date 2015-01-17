@@ -24,7 +24,7 @@ $this->recordId = $app->input->get('recordId');
                     <div>
                         <img class="pull-left" style="padding: 5px;" src="<?php echo $server->image_url; ?>"/>
                         <a href="#" title="<?php echo $server->title; ?>"
-                           onclick="javascript: setServer('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'name' => $server->name))); ?>')">
+                           onclick="setServer('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'name' => $server->name))); ?>')">
                             <?php echo $server->title; ?>
                         </a>
                         <div>

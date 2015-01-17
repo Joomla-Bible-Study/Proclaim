@@ -3,7 +3,7 @@
  * Default Custom
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -73,12 +73,12 @@ else
 	?>
 	<table class="table table-striped bslisttable">
 		<?php
-		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template);
+		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params);
 		echo $listing;
 
 		if ($this->params->get('show_teacher_studies') > 0)
 		{
-			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $this->template);
+			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params);
 			echo $studies;
 		}
 

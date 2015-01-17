@@ -50,7 +50,7 @@ $input = JFactory::getApplication()->input;
         <?php foreach($this->items as $i => $item): ?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td class="center">
-                    <a href="#" onclick="javascript: setServer('<?php echo base64_encode(json_encode(array('media_id' => $input->get('media_id', 0, 'get'), 'server_id' => $item->id))); ?>')">
+                    <a href="#" onclick="setServer('<?php echo base64_encode(json_encode(array('media_id' => $input->get('media_id', 0, 'get'), 'server_id' => $item->id))); ?>')">
                         <?php echo $this->escape($item->server_name); ?>
                     </a>
                 </td>

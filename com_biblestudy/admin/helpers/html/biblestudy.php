@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -60,8 +60,8 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   JRegistry  $params  Params for css
-	 * @param   string     $url     Url of a css file to load
+	 * @param   Joomla\Registry\Registry  $params  Params for css
+	 * @param   string                    $url     Url of a css file to load
 	 *
 	 * @return  void
 	 *
@@ -243,7 +243,6 @@ abstract class JHtmlBiblestudy
 			JText::_('JBS_MED_SELECT_MEDIA_TYPE'), '</label>',
 			'<select name="batch[mediatype]" class="inputbox" id="batch-mediatype">',
 			'<option value="">' . JText::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
-			//JHtml::_('select.options', self::Mediatypelist(), 'value', 'text'),
 			'</select>'
 		);
 
@@ -293,7 +292,8 @@ abstract class JHtmlBiblestudy
 	{
 		// Create the batch selector to change the mime type on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' .
+			JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
 			JText::_('JBS_CMN_MIMETYPE'), '</label>',
 			'<select name="batch[mimetype]" class="inputbox" id="batch-mimetype">',
 			'<option value="">' . JText::_('JBS_BAT_MIMETYPE_NOCHANGE') . '</option>',
@@ -346,7 +346,8 @@ abstract class JHtmlBiblestudy
 	{
 		// Create the batch selector to change the teacher on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_TEACHER') . '::' . JText::_('JBS_BAT_TEACHER_DESC') . '">',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' .
+			JText::_('JBS_CMN_TEACHER') . '::' . JText::_('JBS_BAT_TEACHER_DESC') . '">',
 			JText::_('JBS_CMN_TEACHER'), '</label>',
 			'<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
 			'<option value="">' . JText::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
@@ -399,7 +400,8 @@ abstract class JHtmlBiblestudy
 	{
 		// Create the batch selector to change the message type on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_MESSAGETYPE') . '::' . JText::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' .
+			JText::_('JBS_CMN_MESSAGETYPE') . '::' . JText::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
 			JText::_('JBS_CMN_MESSAGETYPE'), '</label>',
 			'<select name="batch[messagetype]" class="inputbox" id="batch-messagetype">',
 			'<option value="">' . JText::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
@@ -452,7 +454,8 @@ abstract class JHtmlBiblestudy
 	{
 		// Create the batch selector to change the series on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' . JText::_('JBS_CMN_SERIES') . '::' . JText::_('JBS_BAT_SERIES_DESC') . '">',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' .
+			JText::_('JBS_CMN_SERIES') . '::' . JText::_('JBS_BAT_SERIES_DESC') . '">',
 			JText::_('JBS_CMN_SERIES'), '</label>',
 			'<select name="batch[series]" class="inputbox" id="batch-series">',
 			'<option value="">' . JText::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',

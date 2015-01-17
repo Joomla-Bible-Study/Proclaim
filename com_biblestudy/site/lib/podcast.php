@@ -3,13 +3,23 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
+
+use Joomla\Registry\Registry;
+
+/* Put in do to this file is used in a plugin. */
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
+JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/listing.php');
 
 /**
  * BibleStudy Podcast Class
@@ -34,6 +44,10 @@ class JBSMPodcast
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
+		// Get english language file as fallback
+		$language = JFactory::getLanguage();
+		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
@@ -51,12 +65,15 @@ class JBSMPodcast
 				// Work Around all language
 				if ($podinfo->language == '*')
 				{
-					$language = JFactory::getConfig()->get('language');
+					$podlanguage = JFactory::getConfig()->get('language');
 				}
 				else
 				{
-					$language = $podinfo->language;
+					$podlanguage = $podinfo->language;
 				}
+
+				// Load language file
+				$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
@@ -96,7 +113,7 @@ class JBSMPodcast
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
-                	<language>' . $language . '</language>
+                	<language>' . $podlanguage . '</language>
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
@@ -124,7 +141,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
-					$registry        = new JRegistry;
+					$registry        = new Registry;
 					$registry->loadString($podinfo->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
@@ -218,7 +235,7 @@ class JBSMPodcast
 							case 5:
 								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
-									$rowid = 'row1col1',
+									$rowid = '24',
 									$podinfo->custom,
 									$episode,
 									$params,
@@ -276,11 +293,11 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
-							case 5:
+							case 7:
 								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
-									$rowid = 'row1col1',
-									$podinfo->custom,
+									$rowid = '24',
+									$podinfo->episodesubtitle,
 									$episode,
 									$params,
 									$admin_params,
@@ -327,22 +344,22 @@ class JBSMPodcast
 						if ($episode->params->get('article_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
 						}
 						if ($episode->params->get('docMan_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->server_path .
+								'<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
-                        			<guid>http://' . $episode->server_path .
+                        			<guid>http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '</guid>';
 						}
@@ -352,13 +369,13 @@ class JBSMPodcast
 								'<enclosure url="http://' . str_replace(
 									' ',
 									"%20",
-									$episode->filename
+									$episode->params->get('filename')
 								) . '" length="' . $episode->params->get('size') . '" type="'
 								. $episode->mimetype . '" />
                         			<guid>http://' . str_replace(
 									' ',
 									"%20",
-									$episode->filename
+									$episode->params->get('filename')
 								) . '</guid>';
 						}
 						$episodedetailtemp .= '
@@ -381,11 +398,11 @@ class JBSMPodcast
 
 					if (!$filewritten)
 					{
-						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_FAILURE');
+						$msg[] = $file . ' - ' . JText::_('JBS_PDC_XML_FILES_ERROR');
 					}
 					else
 					{
-						$msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
+						$msg[] = $file . ' - ' . JText::_('JBS_PDC_XML_FILES_WRITTEN');
 					}
 				} // End if $checkresult if positive
 				else
@@ -468,21 +485,19 @@ class JBSMPodcast
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
-			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.path, mf.filename, mf.podcast_id,'
+			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
 		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
 		. ' s.media_hours, s.media_minutes, s.media_seconds,'
 		. ' se.series_text,'
-		. ' sr.id AS srid, sr.server_path,'
+		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
-		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-		. ' mt.id AS mtid, mt.mimetype')
+		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname')
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
-			// todo not sure we need servers here.
-			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server)')
+			->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server_id)')
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
@@ -495,9 +510,13 @@ class JBSMPodcast
 		$epis = array();
 		foreach ($episodes as $e)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($e->params);
 			$e->params = $registry;
+
+			$registry = new Registry;
+			$registry->loadString($e->srparams);
+			$e->srparams = $registry;
 
 			$e->podcast_id = str_replace('-1', '', $e->podcast_id);
 			if (substr_count($e->podcast_id, $id))

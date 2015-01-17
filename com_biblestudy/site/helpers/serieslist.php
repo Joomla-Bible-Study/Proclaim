@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  *  Class for Series List
@@ -24,12 +26,12 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Series Get Custom
 	 *
-	 * @param   string     $r              ?
-	 * @param   object     $row            JTable
-	 * @param   object     $customelement  ?
-	 * @param   string     $custom         ?
-	 * @param   string     $islink         Is a Link
-	 * @param   JRegistry  $params         Item Params
+	 * @param   string    $r              ?
+	 * @param   object    $row            JTable
+	 * @param   object    $customelement  ?
+	 * @param   string    $custom         ?
+	 * @param   string    $islink         Is a Link
+	 * @param   Registry  $params         Item Params
 	 *
 	 * @return string
 	 */
@@ -44,6 +46,8 @@ class JBSMSerieslist extends JBSMListing
 			$braceend      = strpos($custom, '}');
 			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 			$customelement = $this->getseriesElementnumber($subcustom);
+
+			// @Fixme Need to find working replacement for this function.
 			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $params, $view = null);
 			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
@@ -97,13 +101,12 @@ class JBSMSerieslist extends JBSMListing
 		return $customelement;
 	}
 
-
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object     $row       JTable
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   object                    $row       JTable
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return object
 	 */
@@ -127,9 +130,9 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object     $row       JTable
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   object                    $row       JTable
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return object
 	 */
@@ -152,15 +155,14 @@ class JBSMSerieslist extends JBSMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int        $id        ID
-	 * @param   JRegistry  $params    Item Params
-	 * @param   object     $template  Template
+	 * @param   int                       $id        ID
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template
 	 *
 	 * @return string
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
-
 		$input   = new JInput;
 		$limit   = '';
 		$nolimit = $input->get('nolimit', '', 'int');
@@ -173,7 +175,7 @@ class JBSMSerieslist extends JBSMListing
 		{
 			$limit = '';
 		}
-
+		// Fixme Need to find working replacement for this function.
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
 		$numrows = count($items);
 
@@ -235,6 +237,5 @@ class JBSMSerieslist extends JBSMListing
 
 		return $studies;
 	}
-
 
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * View html
+ * Assets html
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
@@ -24,24 +24,28 @@ class BiblestudyViewAssets extends JViewLegacy
 	 * @var string
 	 */
 	public $canDo;
+
 	/**
 	 * Assets
 	 *
 	 * @var string
 	 */
 	public $assets;
+
 	/**
 	 * Form
 	 *
 	 * @var array
 	 */
 	protected $form;
+
 	/**
 	 * Item
 	 *
 	 * @var array
 	 */
 	protected $item;
+
 	/**
 	 * State
 	 *
@@ -52,7 +56,7 @@ class BiblestudyViewAssets extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -100,7 +104,7 @@ class BiblestudyViewAssets extends JViewLegacy
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.back', 'back', 'back', 'Back', false);
+		JToolBarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
 	}

@@ -1,29 +1,48 @@
 <?php
-
+/**
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
+// No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
+/**
+ * Class JFormFieldPlupload
+ *
+ * @package  BibleStudy.Admin
+ * @since    9.0.0
+ */
 class JFormFieldPlupload extends JFormField
 {
 
-    public $type = 'Plupload';
+	public $type = 'Plupload';
 
-    protected function getInput()
-    {
-        // Include Plupload libraries
-        $document = JFactory::getDocument();
-        $document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
+	/**
+	 * Get Input
+	 *
+	 * @return string
+	 */
+	protected function getInput()
+	{
+		// Include Plupload libraries
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
 
-        $document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
 
-        $document->addScriptDeclaration('
+		$document->addScriptDeclaration('
             jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_biblestudy&task=mediafile.xhr&'.JSession::getFormToken().'=1");
+                uploader.setOption("url", "index.php?option=com_biblestudy&task=mediafile.xhr&' . JSession::getFormToken() . '=1");
                 uploader.bind("BeforeUpload", function() {
                     uploader.setOption("multipart_params", {
-                        handler: "'.$this->element["handler"].'",
+                        handler: "' . $this->element["handler"] . '",
                         path: jQuery("#jform_params_filename").val()
                     });
                 });
@@ -31,12 +50,14 @@ class JFormFieldPlupload extends JFormField
             });
         ');
 
-        $class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 
-        $html = '<div class="control-group">
+		$html = '<div class="control-group">
                         <div class="input-append">
-                        <input type="text" placeholder="Enter a filename" '.$class.' name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
-                          <input id="uploader-file" placeholder="Choose a media file" style="border-left: 0px; border-radius: 0; class="span7" type="text" disabled>
+                        <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
+			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
+                          <input id="uploader-file" placeholder="Choose a media file"
+                          style="border-left: 0; border-radius: 0; class="span7" type="text" disabled>
                           <a id="btn-add-file"class="btn btn-default">
                              <i class="icon-plus"></i>
                              Add File
@@ -46,11 +67,12 @@ class JFormFieldPlupload extends JFormField
                              Upload
                           </a>
                         </div>
-                        <div id="upload-progress" style="display: none; margin-top: 5px;" class="progress progress-striped active"><div class="bar" style="width: 0%;"></div></div>
+                        <div id="upload-progress" style="display: none; margin-top: 5px;" class="progress progress-striped active">
+                        <div class="bar" style="width: 0;"></div></div>
                     </div>';
-        $html .= '
+		$html .= '
             ';
 
-        return $html;
-    }
+		return $html;
+	}
 }

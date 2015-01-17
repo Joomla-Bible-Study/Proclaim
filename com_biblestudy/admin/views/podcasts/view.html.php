@@ -1,16 +1,14 @@
 <?php
-
 /**
- * JView html
+ * Podcasts html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Podcasts
@@ -27,22 +25,27 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 * @var object
 	 */
 	public $canDo;
+
 	/** @var  array Filter Levels */
 	public $f_levels;
+
 	/** @var  array Side Bar */
 	public $sidebar;
+
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
@@ -53,7 +56,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -66,7 +69,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'podcast');
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'podcast');
 
 		// Levels filter.
 		$options   = array();
@@ -123,10 +126,10 @@ class BiblestudyViewPodcasts extends JViewLegacy
 			JToolBarHelper::archiveList('podcasts.archive');
 		}
 
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('podcasts.trash');

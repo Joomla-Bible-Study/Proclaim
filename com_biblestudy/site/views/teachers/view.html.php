@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,51 +22,59 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Document
 	 *
-	 * @var object
+	 * @var JDocument
 	 */
 	public $document;
+
 	/**
 	 * Template Table
 	 *
 	 * @var TableTemplate
 	 */
 	public $template;
+
 	/**
 	 * Items
 	 *
 	 * @var object
 	 */
 	protected $items = null;
+
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
-	 * @var JRegistry
+	 * @var Joomla\Registry\Registry
 	 */
 	protected $state = null;
+
 	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Joomla\Registry\Registry
 	 */
 	protected $params = null;
+
 	/**
 	 * Admin
 	 *
 	 * @var object
 	 */
 	protected $admin;
+
 	/**
 	 * Page
 	 *
 	 * @var object
 	 */
 	protected $page;
+
 	/**
 	 * Request Url
 	 *
@@ -87,7 +95,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$state  = $this->get('State');
 		$items  = $this->get('Items');
 
-		/** @var $params JRegistry */
+		/** @var $params Joomla\Registry\Registry */
 		$params	= $state->template->params;
 
 		$this->template        = $state->get('template');
@@ -165,7 +173,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 
-		/** @var $itemparams JRegistry */
+		/** @var Joomla\Registry\Registry $itemparams */
 		$itemparams = $app->getParams();
 		$title      = null;
 

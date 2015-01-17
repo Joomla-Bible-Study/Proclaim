@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for SeriesDisplay
@@ -47,22 +49,22 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 */
 	protected $pagination = null;
 
-	/** @var  JObject Admin */
+	/** @var  object Admin */
 	protected $admin;
 
-	/** @var  JRegistry Admin Params */
+	/** @var  Registry Admin Params */
 	protected $admin_params;
 
-	/** @var  JObject Page */
+	/** @var  object Page */
 	protected $page;
 
-	/** @var  JObject Series Studies */
+	/** @var  object Series Studies */
 	protected $seriesstudies;
 
-	/** @var  JObject Template */
+	/** @var  object Template */
 	protected $template;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
 	/** @var  string Article */
@@ -71,7 +73,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  string Passage Link */
 	protected $passage_link;
 
-	/** @var  JObject Studies */
+	/** @var  object Studies */
 	protected $studies;
 
 	/** @var  string Request URL */
@@ -96,7 +98,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items              = $this->get('Item');
 		$this->state        = $this->get('State');
 
-		/** @var JRegistry $params */
+		/** @var Registry $params */
 		$params             = $this->state->template->params;
 		$this->template     = $this->state->get('template');
 
@@ -224,7 +226,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		if ($plugin)
 		{
 			// Convert parameter fields to objects.
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($plugin->params);
 			$st_params = $registry;
 			$version   = $st_params->get('bible_version');

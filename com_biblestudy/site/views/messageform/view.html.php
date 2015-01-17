@@ -3,12 +3,14 @@
  * Message JViewLegacy
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for Message
@@ -22,24 +24,34 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 	/** @var  string Media Files */
 	public $mediafiles;
+
 	/** @var  string Can Do */
 	public $canDo;
-	/** @var  JRegistry Params */
+
+	/** @var  Registry Params */
 	public $params;
+
 	/** @var  string User */
 	public $user;
+
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
-	/**  Form @var array */
+
+	/**  Form @var JForm */
 	protected $form;
-	/** Item @var array */
+
+	/** Item @var object */
 	protected $item;
+
 	/** Return Page @var string */
 	protected $return_page;
+
 	/** Return Page Item @var string */
 	protected $return_page_item;
+
 	/** State @var array */
 	protected $state;
+
 	/** Admin @var array */
 	protected $admin;
 

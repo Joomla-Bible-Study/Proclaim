@@ -3,13 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 
 /**
  * Model class for Sermon
@@ -30,7 +31,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -42,7 +43,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int $pk ID
+	 * @param   int  $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -65,7 +66,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int $pk The id of the study.
+	 * @param   int  $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -163,7 +164,8 @@ class BiblestudyModelSermon extends JModelItem
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived)))
 				{
-					return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
+					JFactory::getApplication()->enqueueMessage(JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'), 'error');
+					return false;
 				}
 
 				// Concat topic_text and concat topic_params do not fit, so translate individually
@@ -172,14 +174,14 @@ class BiblestudyModelSermon extends JModelItem
 				$data->topic_text = $topic_text;
 				$data->bookname   = JText::_($data->bookname);
 
-				$registry = new JRegistry;
+				$registry = new Registry;
 				$registry->loadString($data->params);
 				$data->params = $registry;
 				$template     = JBSMParams::getTemplateparams();
 
 				$data->params->merge($template->params);
 				$mparams = clone $this->getState('params');
-				$mj      = new JRegistry;
+				$mj      = new Registry;
 				$mj->loadString($mparams);
 				$data->params->merge($mj);
 
@@ -231,12 +233,12 @@ class BiblestudyModelSermon extends JModelItem
 			{
 				if ($e->getCode() == 404)
 				{
-					// Need to go thru the error handler to allow Redirect to work.
-					JError::raiseError(404, $e->getMessage());
+					// Need to go through the error handler to allow Redirect to work.
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 				}
 				else
 				{
-					$this->setError($e);
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 					$this->_item[$pk] = false;
 				}
 			}
@@ -347,7 +349,4 @@ class BiblestudyModelSermon extends JModelItem
 			$this->setState('filter.archived', 2);
 		}
 	}
-
-
-// End class
 }

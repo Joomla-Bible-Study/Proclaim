@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -121,7 +121,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Standard Podcast
 	 *
-	 * @param   object $podcast Podcast Info
+	 * @param   object  $podcast  Podcast Info
 	 *
 	 * @return string
 	 */
@@ -175,7 +175,7 @@ class JBSMPodcastSubscribe
 	/**
 	 * Build Alternate Podcast
 	 *
-	 * @param   object $podcast Podcast info
+	 * @param   object  $podcast  Podcast info
 	 *
 	 * @return string
 	 */

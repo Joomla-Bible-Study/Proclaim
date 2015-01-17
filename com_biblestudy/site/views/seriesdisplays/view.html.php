@@ -10,12 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * View class for SeriesDisplays
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
- * @todo     finish titles
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
@@ -34,14 +35,17 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 	/** @var  string Request Url */
 	protected $request_url;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
 	/** @var  String Page */
 	protected $page;
 
-	/** @var JRegistry State */
+	/** @var Registry State */
 	protected $state;
+
+	/** @var string State */
+	protected $go;
 
 	/**
 	 * Execute and display a template script.
@@ -59,13 +63,13 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
 		$this->state = $this->get('state');
-		/** @var  $params JRegistry */
+		/** @var  $params Registry */
 		$params = $this->state->template->params;
 		$this->template = $this->state->get('tepmlate');
 
 		$document = JFactory::getDocument();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 
 		// Prepare meta information (under development)
@@ -119,30 +123,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			}
 		}
 
-		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
-		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
-
-		// @todo need to redo this. bcc Why? TF
-
-		/** There is a better way to do this under the query and we
-		 * should be able to work this out. this will speed up rendering.
-		 */
-		if ($count > 0)
-		{
-			for ($i = 0; $i < $count; $i++)
-			{
-
-				if ($items[$i]->access > 1)
-				{
-					if (!in_array($items[$i]->access, $groups))
-					{
-						unset($items[$i]);
-					}
-				}
-			}
-		}
 		$this->items           = $items;
 		$pagination            = $this->get('Pagination');
 		$this->page            = new stdClass;

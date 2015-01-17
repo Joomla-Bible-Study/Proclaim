@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for Sermon
@@ -24,13 +26,13 @@ class BiblestudyViewSermon extends JViewLegacy
 	/** @var object Item */
 	protected $item;
 
-	/** @var JRegistry Params */
+	/** @var Registry Params */
 	protected $params;
 
 	/** @var  string Print */
 	protected $print;
 
-	/** @var JRegistry State */
+	/** @var Registry State */
 	protected $state;
 
 	/** @var  string User */
@@ -112,7 +114,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		$item->readmore_link = JRoute::_(JBSMRoute::getArticleRoute($item->slug, ''));
+		$item->readmore_link = JRoute::_(JBSMHelperRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
@@ -205,7 +207,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
@@ -288,7 +289,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
 
 			// Convert parameter fields to objects.
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($plugin->params);
 			$st_params  = $registry;
 			$version    = $st_params->get('bible_version');
@@ -302,7 +303,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
-
 
 		if ($this->getLayout() == 'pagebreak')
 		{
@@ -346,7 +346,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
 
-
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);
 		JHTML::_('behavior.tooltip');
@@ -370,7 +369,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	/**
 	 * Display PageBrack
 	 *
-	 * @param   string $tpl ?
+	 * @param   string  $tpl  ?
 	 *
 	 * @return void
 	 */

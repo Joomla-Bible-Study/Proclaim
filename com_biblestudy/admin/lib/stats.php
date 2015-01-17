@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
 
 /**
  * Bible Study stats support class
@@ -18,6 +20,14 @@ defined('_JEXEC') or die;
  */
 class JBSMStats
 {
+	/** @var int used to store query of messages */
+	private static $total_messages = 0;
+
+	/** @var string Start Date */
+	private static $total_messages_start = '';
+
+	/** @var string End Date */
+	private static $total_messages_end   = '';
 
 	/**
 	 * Total plays of media files per study
@@ -50,31 +60,37 @@ class JBSMStats
 	 */
 	public static function get_total_messages($start = '', $end = '')
 	{
-		$db    = JFactory::getDBO();
-		$where = array();
-
-		if (!empty($start))
+		if ($start != self::$total_messages_start || $end != self::$total_messages_end || !self::$total_messages)
 		{
-			$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
-		}
-		if (!empty($end))
-		{
-			$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
-		}
-		$query = $db->getQuery(true);
-		$query
-			->select('COUNT(*)')
-			->from('#__bsms_studies')
-			->where('published =' . $db->q('1'));
+			self::$total_messages_start = $start;
+			self::$total_messages_end   = $end;
 
-		if (count($where) > 0)
-		{
-			$query->where(implode(' AND ', $where));
-		}
-		$db->setQuery($query);
-		$results = $db->loadResult();
+			$db    = JFactory::getDBO();
+			$where = array();
 
-		return intval($results);
+			if (!empty($start))
+			{
+				$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
+			}
+			if (!empty($end))
+			{
+				$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
+			}
+			$query = $db->getQuery(true);
+			$query
+				->select('COUNT(*)')
+				->from('#__bsms_studies')
+				->where('published =' . $db->q('1'));
+
+			if (count($where) > 0)
+			{
+				$query->where(implode(' AND ', $where));
+			}
+			$db->setQuery($query);
+			self::$total_messages = intval($db->loadResult());
+		}
+
+		return self::$total_messages;
 	}
 
 	/**
@@ -374,7 +390,9 @@ class JBSMStats
 	/**
 	 * Top Score ???
 	 *
-	 * @return int number of scors
+	 * @var   Registry  $admin_params  Admin Prams
+	 *
+	 * @return int number of scores
 	 */
 	public static function top_score()
 	{
@@ -453,7 +471,7 @@ class JBSMStats
 		$db->setQuery($query);
 		$params         = $db->loadObjectList();
 
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$media_players = null;
 
 		if ($params)
@@ -464,7 +482,7 @@ class JBSMStats
 			{
 				$registry->loadString($param->params);
 
-				switch ($registry->toObject()->player)
+				switch ($registry->get('player', 0))
 				{
 					case 0:
 						$count_no_player++;
@@ -507,50 +525,55 @@ class JBSMStats
 	 */
 	public static function popups()
 	{
-//		$no_player    = 0;
-//		$pop_count    = 0;
-//		$inline_count = 0;
-//		$global_count = 0;
-//		$db           = JFactory::getDBO();
-//		$query        = $db->getQuery(true);
-//		$query
-//			->select('popup')
-//			->from('#__bsms_mediafiles')
-//			->where('published = ' . $db->q('1'));
-//		$db->setQuery($query);
-//		$popups            = $db->loadObjectList();
-//
-//		if ($popups)
-//		{
-//			$total_media_files = count($popups);
-//
-//			foreach ($popups as $popup)
-//			{
-//				switch ($popup->popup)
-//				{
-//					case 0:
-//						$no_player++;
-//						break;
-//					case 1:
-//						$pop_count++;
-//						break;
-//					case 2:
-//						$inline_count++;
-//						break;
-//					case 3:
-//						$global_count++;
-//						break;
-//				}
-//			}
-//
-//			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-//				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
-//				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
-//		}
+		$no_player    = 0;
+		$pop_count    = 0;
+		$inline_count = 0;
+		$global_count = 0;
+		$db           = JFactory::getDBO();
+		$query        = $db->getQuery(true);
+		$query
+			->select('params')
+			->from('#__bsms_mediafiles')
+			->where('published = ' . 1);
+		$db->setQuery($query);
+		$popups = $db->loadObjectList();
 
-		return 'need to redo';
+		if ($popups)
+		{
+			$total_media_files = count($popups);
+
+			foreach ($popups as $popup)
+			{
+				$registry = new Registry;
+				$registry->loadString($popup->params);
+				$popup = $registry->get('popup', null);
+
+				switch ($popup)
+				{
+					case null:
+					case 0:
+						$no_player++;
+						break;
+					case 1:
+						$pop_count++;
+						break;
+					case 2:
+						$inline_count++;
+						break;
+					case 3:
+						$global_count++;
+						break;
+				}
+			}
+
+			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
+				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
+				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+		}
+
+		return $popups;
 	}
 
 	/**
@@ -563,9 +586,8 @@ class JBSMStats
 		$input = new JInput;
 		$t     = $input->get('t', 1, 'int');
 
-		$admin        = JBSMParams::getAdmin();
-		$admin_params = $admin->params;
-		$limit        = $admin_params->get('popular_limit', '25');
+		$admin = JBSMParams::getAdmin();
+		$limit        = $admin->params->get('popular_limit', '25');
 		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
 			JText::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final        = array();
@@ -577,7 +599,7 @@ class JBSMStats
 			->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
 			->where('m.published = 1 GROUP BY m.study_id');
 		$db->setQuery($query);
-		$format = $admin_params->get('format_popular', '0');
+		$format = $admin->params->get('format_popular', '0');
 
 		$items = $db->loadObjectList();
 

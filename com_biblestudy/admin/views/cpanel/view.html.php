@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -58,15 +58,19 @@ class BiblestudyViewCpanel extends JViewLegacy
 
 		$this->state = $this->get('State');
 		$this->data  = $this->get('Data');
+		$model       = $this->getModel();
 
 		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
-
 
 		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();
 
 		$this->sidebar = JHtmlSidebar::render();
+
+		// Post-installation messages information
+		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
+		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
 		// Display the template
 		parent::display($tpl);

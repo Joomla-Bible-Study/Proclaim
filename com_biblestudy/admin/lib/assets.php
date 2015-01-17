@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -35,7 +35,7 @@ class JBSMAssets
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 
 		// First get the new parent_id
@@ -313,7 +313,7 @@ class JBSMAssets
 				{
 					$nullrows++;
 				}
-				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+				// If there is a jasset_id but no match to the parent_id then a mismatch has occurred
 				if (self::$parent_id != $result->parent_id && $result->jasset_id)
 				{
 					$nomatchrows++;

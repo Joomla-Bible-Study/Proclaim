@@ -3,14 +3,14 @@
  * BibleStudy Download Class
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.environment.response');
+use Joomla\Registry\Registry;
 
 /**
  * BibleStudy Download Class
@@ -46,7 +46,7 @@ class JBSMDownload
 		$template = $db->loadObject();
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($template->params);
 		$params = $registry;
 
@@ -63,7 +63,7 @@ class JBSMDownload
 		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
-		$registry      = new JRegistry;
+		$registry      = new Registry;
 		$registry->loadString($media->params);
 		$params->merge($registry);
 

@@ -33,7 +33,7 @@ $input  = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
 <div class="row-fluid">
 <!-- Begin Content -->
 <div class="span10 form-horizontal">
@@ -45,7 +45,7 @@ $input  = $app->input;
         <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
 		<?php endif ?>
     </ul>
-    <div class="tab-content form-horizontal">
+    <div class="tab-content">
         <!-- Begin Tabs -->
         <div class="tab-pane active" id="general">
             <div class="control-group">

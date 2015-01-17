@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -44,7 +44,7 @@ class JFormFieldListoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_SECONDARY_REFERENCES_BRACE'));
 		$options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_DURATION_BRACE'));
 		$options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_TITLE_BRACE'));
-		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_INTRODUCTION_BRACE'));
+		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_STUDY_INTRO_BRACE'));
 		$options[] = JHtml::_('select.option', '7', JText::_('JBS_TPL_TEACHER_BRACE'));
 		$options[] = JHtml::_('select.option', '8', JText::_('JBS_TPL_TITLE_TEACHER_BRACE'));
 		$options[] = JHtml::_('select.option', '30', JText::_('JBS_TPL_TITLE_TEACHER_THUMBNAIL'));

@@ -3,12 +3,14 @@
  * Core Admin BibleStudy file
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
@@ -32,6 +34,11 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON);
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+
+// If phrase is not found in specific language file, load english language file:
+$language = JFactory::getLanguage();
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
 
 addCSS();
 

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,8 +24,8 @@ class JBSMShowScripture
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object    $row     Item Info
-	 * @param   JRegitry  $params  Item Params
+	 * @param   object                    $row     Item Info
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return boolean
 	 */
@@ -77,7 +77,7 @@ class JBSMShowScripture
 	/**
 	 * Create Form of Reference
 	 *
-	 * @param   object $row ?
+	 * @param   object  $row  ?
 	 *
 	 * @return string
 	 */
@@ -107,8 +107,8 @@ class JBSMShowScripture
 	/**
 	 * Get Bible Gateway References
 	 *
-	 * @param   string $reference ?
-	 * @param   string $version   ?
+	 * @param   string  $reference  Search string
+	 * @param   string  $version    Bible Version
 	 *
 	 * @return string
 	 */
@@ -122,12 +122,9 @@ class JBSMShowScripture
 	/**
 	 * Get HideShow
 	 *
-	 * @param   object  $row        ?
-	 * @param   string  $reference  ?
-	 *
 	 * @return string
 	 */
-	public function getHideShow($row, $reference)
+	public function getHideShow()
 	{
 		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
@@ -143,7 +140,7 @@ class JBSMShowScripture
 	/**
 	 * Only Return the Body of a html doc.
 	 *
-	 * @param   string $html Html document
+	 * @param   string  $html  Html document
 	 *
 	 * @return string
 	 *
@@ -157,12 +154,9 @@ class JBSMShowScripture
 	/**
 	 * Get Show
 	 *
-	 * @param   string  $row        ?
-	 * @param   string  $reference  ?
-	 *
 	 * @return string
 	 */
-	public function getShow($row, $reference)
+	public function getShow()
 	{
 		$contents = $this->body_only(file_get_contents($this->link));
 		$passage  = '<div class = "passage">' . $contents . '</div>';
@@ -173,12 +167,9 @@ class JBSMShowScripture
 	/**
 	 * Get Link
 	 *
-	 * @param   object  $row        ?
-	 * @param   string  $reference  ?
-	 *
 	 * @return string
 	 */
-	public function getLink($row, $reference)
+	public function getLink()
 	{
 		$passage = '<div class = passage>';
 

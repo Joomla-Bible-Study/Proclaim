@@ -1,7 +1,6 @@
 ul.token-input-list-jbs {
     overflow: hidden;
     height: auto !important;
-    height: 1%;
     width: 100%;
     border: 1px solid #AAA;
     cursor: text;
@@ -29,7 +28,6 @@ ul.token-input-list-jbs li input {
 li.token-input-token-jbs {
     overflow: hidden;
     height: auto !important;
-    height: 1%;
     margin: 3px;
     padding: 1px 3px;
     background-color: #eaeaea;

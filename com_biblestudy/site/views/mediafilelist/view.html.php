@@ -3,15 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.helper');
-jimport('joomla.html.toolbar');
+use Joomla\Registry\Registry;
 
 /**
  * View class for MediaFilelist
@@ -25,19 +24,26 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 
 	/** @var  string Can Do */
 	public $canDo;
+
 	/** @var  string Media Types */
 	public $mediatypes;
+
 	/** @var  string Page Class SFX */
 	public $pageclass_sfx;
+
 	/** @var  string New Link */
 	public $newlink;
+
 	/** Items @var JObject */
 	protected $items;
+
 	/** Pagination @var array */
 	protected $pagination;
+
 	/** State @var object */
 	protected $state;
-	/** @var  JRegistry */
+
+	/** @var  Registry */
 	protected $params;
 
 	/**

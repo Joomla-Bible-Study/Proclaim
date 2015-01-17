@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * Class for Sermon
@@ -75,7 +77,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param   string $key  The name of the primary key of the URL variable.
+	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
 	 * @return    Boolean    True if access level checks pass, false otherwise.
 	 *
@@ -92,8 +94,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param   string $key     The name of the primary key of the URL variable.
-	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
 	 *
@@ -109,8 +111,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key     The name of the primary key of the URL variable.
-	 * @param   string $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return    Boolean    True if successful, false otherwise.
 	 *
@@ -132,19 +134,14 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Comment
 	 *
-	 * @return NULL
-	 *
-	 *
+	 * @return void
 	 */
 	public function comment()
 	{
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
-		$option    = $input->get('option', '', 'cmd');
 		$model     = $this->getModel('sermon');
-		$menu      = $mainframe->getMenu();
-		$item      = $menu->getActive();
 		$t         = '';
 
 		if (!$t)
@@ -154,7 +151,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		$input->set('t', $t);
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($model->_template[0]->params);
 		$params = $registry;
 
@@ -163,23 +160,16 @@ class BiblestudyControllerSermon extends JControllerForm
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
-			require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/captcha/recaptchalib.php';
-			$privatekey = $params->get('private_key');
-			$resp       = recaptcha_check_answer(
-				$privatekey,
-				$_SERVER["REMOTE_ADDR"],
-				$_POST["recaptcha_challenge_field"],
-				$_POST["recaptcha_response_field"]
-			);
+			JPluginHelper::importPlugin('captcha');
+			$dispatcher = JEventDispatcher::getInstance();
+			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
 
-			if (!$resp->is_valid)
+			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
-
-				$cap = 0;
 
 				return null;
 			}
@@ -219,9 +209,9 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    object    The model.
 	 *
@@ -237,32 +227,20 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Email comment out.
 	 *
-	 * @param   object $params  Params of to parse
+	 * @param   Joomla\Registry\Registry  $params  Params of to parse
 	 *
 	 * @return null
 	 */
 	public function commentsEmail($params)
 	{
-		$mainframe  = JFactory::getApplication();
 		$input      = new JInput;
-		$menuitemid = $input->get('Itemid', '', 'int');
 
-		if ($menuitemid)
-		{
-			$menu       = $mainframe->getMenu();
-			$menuparams = $menu->getParams($menuitemid);
-		}
 		$comment_author    = $input->get('full_name', 'Anonymous', 'string');
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
-		$comment_email     = $input->get('user_email', 'No Email', 'string');
-		$comment_text      = $input->get('comment_text', 'None', 'string');
 		$comment_published = $input->get('published', 0, 'int');
-		$comment_date      = $input->get('comment_date', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
 		$config            = JFactory::getConfig();
-		$comment_abspath   = JPATH_SITE;
 		$comment_mailfrom  = $config->get('mailfrom');
-		$comment_fromname  = $config->get('fromname');
 
 		$comment_livesite = JURI::root();
 		$db               = JFactory::getDBO();
@@ -275,7 +253,6 @@ class BiblestudyControllerSermon extends JControllerForm
 		$mail               = JFactory::getMailer();
 		$ToEmail            = $params->get('recipient', '');
 		$Subject            = $params->get('subject', 'Comments');
-		$FromName           = $params->get('fromname', $comment_fromname);
 
 		if (empty($ToEmail))
 		{
@@ -322,7 +299,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return    boolean
 	 *
@@ -330,12 +307,11 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		$user  = JFactory::getUser();
 		$allow = null;
 
 		if ($allow === null)
 		{
-			// In the absense of better information, revert to the component permissions.
+			// In the absence of better information, revert to the component permissions.
 			return parent::allowAdd();
 		}
 		else
@@ -347,8 +323,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -362,8 +338,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param   int    $recordId The primary key id for the item.
-	 * @param   string $urlVar   The name of the URL variable for the id.
+	 * @param   int     $recordId  The primary key id for the item.
+	 * @param   string  $urlVar    The name of the URL variable for the id.
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
 	 *
@@ -375,7 +351,6 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit');
 		$append = '';
 
 		// Setup redirect info.

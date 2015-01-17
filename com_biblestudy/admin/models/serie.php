@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modeladmin');
 
 /**
  * Serie admin model
@@ -27,11 +25,13 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
+	protected $_teacher;
+
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -64,8 +64,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -102,7 +101,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return    boolean    True on success.
 	 *
@@ -142,7 +141,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -156,9 +155,9 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Batch copy items to a new category or current.
 	 *
-	 * @param   integer $value     The new category.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   integer  $value     The new category.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
 	 *
 	 * @return  mixed  An array of new IDs on success, boolean false on failure.
 	 *
@@ -248,9 +247,9 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   string $name    The table name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $options Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
 	 */
@@ -262,8 +261,8 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -276,35 +275,35 @@ class BiblestudyModelSerie extends JModelAdmin
 		parent::cleanCache('mod_biblestudy_podcast');
 	}
 
-    /**
+	/**
      * Method to test whether a record can be deleted.
      *
-     * @param   object $record  A record object.
+     * @param   object  $record  A record object.
      *
      * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
      *
      * @since    1.6
      */
-    protected function canDelete($record)
-    {
-        if (!empty($record->id))
-        {
-            if ($record->published != -2)
-            {
-                return false;
-            }
-            $user = JFactory::getUser();
+	protected function canDelete($record)
+	{
+		if (!empty($record->id))
+		{
+			if ($record->published != -2)
+			{
+				return false;
+			}
+			$user = JFactory::getUser();
 
-            return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
-        }
+			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object $record  A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
 	 *
@@ -327,7 +326,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable $table  A reference to a JTable object.
+	 * @param   JTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -336,15 +335,13 @@ class BiblestudyModelSerie extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
 
 		$table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);
-		$table->alias       = JApplication::stringURLSafe($table->alias);
+		$table->alias       = JApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplication::stringURLSafe($table->series_text);
+			$table->alias = JApplicationHelper::stringURLSafe($table->series_text);
 		}
 
 		if (empty($table->id))
@@ -392,7 +389,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   int $pk The id of the primary key.
+	 * @param   int  $pk  The id of the primary key.
 	 *
 	 * @return    mixed    Object on success, false on failure.
 	 */
@@ -411,7 +408,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable $table  A JTable object.
+	 * @param   JTable  $table  A JTable object.
 	 *
 	 * @return  array  An array of conditions to add to ordering queries.
 	 *
@@ -425,9 +422,9 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Method to allow derived classes to prepossess the form.
 	 *
-	 * @param   JForm  $form   A JForm object.
-	 * @param   mixed  $data   The data expected for the form.
-	 * @param   string $group  The name of the plugin group to import (defaults to "content").
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
 	 *
 	 * @return  void
 	 *

@@ -2,13 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * View class for Teacher
@@ -25,10 +27,10 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  object Contact */
 	protected $contact;
 
-	/** @var  JRegistry Admin */
+	/** @var  Registry Admin */
 	protected $state;
 
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
 	/** @var  TableTemplate Template Info */
@@ -39,6 +41,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 	/** @var  JObject Print */
 	protected $print;
+
+	/** @var  JDocument Print */
+	protected $document;
 
 	/** @var  JObject Studies */
 	protected $studies;
@@ -58,6 +63,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
 
+		/** @var Registry $params */
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
@@ -109,7 +115,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
 			$item->information = $this->contact->misc;
 			$item->phone       = $this->contact->telephone;
-			$cregistry         = new JRegistry;
+			$cregistry         = new Registry;
 			$cregistry->loadString($this->contact->params);
 			$contact_params     = $cregistry;
 			$item->facebooklink = $contact_params->get('linka');
@@ -221,7 +227,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
 		$title      = null;
 

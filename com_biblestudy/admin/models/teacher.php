@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modeladmin');
 
 /**
  * Teacher model class
@@ -130,7 +128,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 		}
 	}
 
-
 	/**
 	 * Method to check-out a row for editing.
 	 *
@@ -230,8 +227,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
-		$date = JFactory::getDate();
-		$user = JFactory::getUser();
 
 		$table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
 		$table->alias       = JApplicationHelper::stringURLSafe($table->alias);

@@ -10,6 +10,8 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
@@ -17,16 +19,23 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
 
+/* Load language file out of administrator folder
+ * if phrase is not found in specific language file, load english language file:
+ */
+$language = JFactory::getLanguage();
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
+$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
+
 // Need for inline player
 $document = JFactory::getDocument();
 
-/** @var $params JRegistry */
+/** @var $params Registry */
 $templatemenuid = $params->get('t');
 $template = JBSMParams::getTemplateparams();
 $pagebuilder = new JBSMPagebuilder;
 
 $admin = JBSMParams::getAdmin();
-$admin_params = new JRegistry($admin[0]->params);
+$admin_params = new Registry($admin[0]->params);
 $items = $pagebuilder->studyBuilder(null, null, $params);
 
 // Attempt to change mysql for error in large select

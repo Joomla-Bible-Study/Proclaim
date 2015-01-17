@@ -3,7 +3,7 @@
  * Form sub migrate
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * @since      7.1.0
@@ -16,8 +16,7 @@ JHtml::_('jquery.framework');
 
 defined('_JEXEC') or die;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" enctype="multipart/form-data"
-      method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<table class="row-fluid">
 			<tr>
@@ -65,7 +64,7 @@ defined('_JEXEC') or die;
 				<td>
 					<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
 					<a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
-						<button type="button" class="btn btn-default">Back</button>
+						<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
 					</a>
 				</td>
 			</tr>

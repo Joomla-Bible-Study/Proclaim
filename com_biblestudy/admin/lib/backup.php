@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -75,7 +75,7 @@ class JBSMBackup
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/database/' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -107,7 +107,7 @@ class JBSMBackup
 		 */
 		if (!ini_get('safe_mode'))
 		{
-			set_time_limit(300);
+			set_time_limit(3000);
 		}
 
 		$db = JFactory::getDBO();
@@ -165,7 +165,7 @@ class JBSMBackup
 					}
 					else
 					{
-						$data[] = $db->qn($key) . "=" . $db->q($db->escape($value));
+						$data[] = $db->qn($key) . "=" . $db->q($value);
 					}
 				}
 				$export .= implode(',', $data);

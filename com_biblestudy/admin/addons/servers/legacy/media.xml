@@ -33,7 +33,7 @@
             </field>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
-                   default="100">
+                   default="">
                 <option value="">JBS_CMN_USE_GLOBAL</option>
                 <option value="1">JBS_CMN_POPUP</option>
                 <option value="2">JBS_CMN_INLINE</option>
@@ -64,7 +64,7 @@
                    description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
-            <field name="media_image" type="text" extension="com_biblestudy"
+            <field name="media_image" type="media" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox span6" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>

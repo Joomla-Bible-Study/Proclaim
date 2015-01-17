@@ -11,6 +11,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Utility class for JW Player behaviors
  *
@@ -44,7 +46,7 @@ abstract class JHtmlJwplayer
 		}
 
 		$doc = JFactory::getDocument();
-		/** @var  $params JRegistry */
+		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', 'TjvXVbBq1W5ERezVSOmBx4Nfyt6Fhbh9V9yEeQ==');
 		$cdn = $params->get('jwplayer_cdn', 'https://jwpsrv.com/library/wAdVatfVEeKyOyIACqoQEQ.js');
@@ -91,6 +93,16 @@ abstract class JHtmlJwplayer
 		if ($player == true)
 		{
 			$media->playerheight = 30;
+		}
+
+		// Check to see if file name is for youtube and helps with old converted file names.
+		if (strpos($media->path1, 'youtube.com') !== false)
+		{
+			$media->path1 = 'https://' . strstr($media->path1, 'youtube.com');
+		}
+		elseif (strpos($media->path1, 'youtu.be') !== false)
+		{
+			$media->path1 = 'https://' . strstr($media->path1, 'youtu.be');
 		}
 		$render = "";
 		if ($popup)

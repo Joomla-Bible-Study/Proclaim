@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -25,18 +25,21 @@ class BiblestudyViewComment extends JViewLegacy
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * Form Data
 	 *
 	 * @var object
 	 */
 	protected $form;
+
 	/**
 	 * Item
 	 *
 	 * @var object
 	 */
 	protected $item;
+
 	/**
 	 * State
 	 *
@@ -47,7 +50,7 @@ class BiblestudyViewComment extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */

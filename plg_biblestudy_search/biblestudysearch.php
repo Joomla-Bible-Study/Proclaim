@@ -2,13 +2,12 @@
 /**
  * @package     BibleStudy
  * @subpackage  Search.BibleStudy
- * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  *
  */
 defined('_JEXEC') or die;
-jimport('joomla.plugin.plugin');
 
 /**
  * Plugin class for BibleStudy Search
@@ -23,8 +22,8 @@ class PlgSearchBiblestudysearch extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -32,7 +31,6 @@ class PlgSearchBiblestudysearch extends JPlugin
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
 	}
 
 	/**
@@ -43,7 +41,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 	public function onContentSearchAreas()
 	{
 		static $areas = array(
-			'biblestudies' => 'PLG_SEARCH_BIBLESTUDYSEARCH_BIBLESTUDYSEARCH'
+			'biblestudies' => 'JBS_PLG_SEARCH_BIBLESTUDYSEARCH'
 		);
 
 		return $areas;
@@ -55,10 +53,10 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 * The sql must return the following fields that are used in a common display
 	 * routine:
 	 *
-	 * @param   string $text     Target search string
-	 * @param   string $phrase   mathcing option, exact|any|all
-	 * @param   string $ordering ordering option, newest|oldest|popular|alpha|category
-	 * @param   mixed  $areas    An array if the search it to be restricted to areas, null if search all
+	 * @param   string  $text      Target search string
+	 * @param   string  $phrase    mathcing option, exact|any|all
+	 * @param   string  $ordering  ordering option, newest|oldest|popular|alpha|category
+	 * @param   mixed   $areas     An array if the search it to be restricted to areas, null if search all
 	 *
 	 * @return array
 	 */
@@ -98,9 +96,6 @@ class PlgSearchBiblestudysearch extends JPlugin
 		{
 			return array();
 		}
-		$section = JText::_('PLG_SEARCH_BIBLESTUDYSEARCH');
-
-		$wheres = array();
 
 		switch ($phrase)
 		{
@@ -153,6 +148,11 @@ class PlgSearchBiblestudysearch extends JPlugin
 		}
 		if (!empty($state))
 		{
+			// Load language files (english language file as fallback)
+			$language = JFactory::getLanguage();
+			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
+
 			$query     = $db->getQuery(true);
 			$set_title = $this->params->get('set_title');
 			$template  = $jinput->getInt('t', '1', 'get');

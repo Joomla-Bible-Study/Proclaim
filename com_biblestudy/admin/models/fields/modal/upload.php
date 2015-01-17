@@ -1,4 +1,15 @@
-
+<?php
+/**
+ * ???
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
+// No Direct Access
+defined('_JEXEC') or die;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <head>
@@ -6,7 +17,8 @@
 
     <title>Plupload - Queue widget example</title>
 
-    <link rel="stylesheet" href="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css"
+          type="text/css" media="screen" />
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
@@ -22,7 +34,7 @@
 
 
 </head>
-<body style="font: 13px Verdana; background: #eee; color: #333">
+<body style="font: 13px Verdana; background: #eee; color: #333;">
 
 <form method="post" action="dump.php">
     <div id="uploader">
