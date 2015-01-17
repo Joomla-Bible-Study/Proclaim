@@ -66,6 +66,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->resetStack();
 		$this->resetTimer();
 		$this->getVersions();
+		$this->postinstallclenup(JFactory::getDbo());
 		$this->_finish = array('1');
 
 		if (empty($this->_versionStack))
@@ -720,4 +721,20 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 	}
 
+	/**
+	 * Cleanup postinstall before migration
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla Database Driver
+	 *
+	 * @return void
+	 */
+	private function postinstallclenup($db)
+	{
+		// Post Install Messages Cleanup for Component
+		$query = $db->getQuery(true);
+		$query->delete('#__postinstall_messages')
+			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query);
+		$db->execute();
+	}
 }
