@@ -9,7 +9,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * BibleStudy Install Script
@@ -161,6 +160,8 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
 		// Need to load JBSMDbHelper for script
 		$dbhelper    = new JBSMDbHelper;
 		$db    = JFactory::getDBO();
@@ -232,8 +233,9 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Post Install Messages Cleanup for Component
-		$query = ' DELETE FROM ' . $db->quoteName('#__postinstall_messages') .
-			' WHERE ' . $db->quoteName('language_extension') . ' = ' . $db->quote('com_biblestudy');
+		$query = $db->getQuery(true);
+		$query->delete('#__postinstall_messages')
+			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
 		$db->setQuery($query);
 		$db->execute();
 
@@ -249,6 +251,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$row = JTable::getInstance('extension');
 		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
 
