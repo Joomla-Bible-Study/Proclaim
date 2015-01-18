@@ -226,13 +226,12 @@
                     <!-- Force a stage if its already staged -->
                     <property name="force" value="${stage_joomla"/>
                 </phingcall>
+				<!--Link Joomla to the webserver's root directory  -->
+				<symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>
             </then>
         </if>
 
         <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
-
-        <!-- Link Joomla to the webserver's root directory  -->
-        <!--<symlink target="${basedir}/.joomla-dev" link="${joomla_path}${joomla_dir}" overwrite="true"/>-->
 
 		<echo message="Linking component to Joomla!"/>
 
