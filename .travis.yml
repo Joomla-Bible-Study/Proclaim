@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 php:
   - 5.3
 # Until we start using phpunit we only need to test are menumum version.
@@ -12,7 +14,6 @@ services:
   - redis-server
 
 before_script:
-  - composer self-update
   - composer install --dev
   # - pyrus install -f pear/PHP_CodeSniffer-1.5.5
   # - pyrus install -f pear/Cache_Lite
