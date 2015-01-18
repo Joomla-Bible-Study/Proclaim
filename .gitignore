@@ -40,3 +40,4 @@ tests/unit/.joomla-cms/
 /bin/phploc
 /bin/phpmd
 /bin/phpunit
+/composer.phar

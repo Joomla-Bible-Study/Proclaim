@@ -41,13 +41,17 @@ Contributing
 ------------
 We appreciate contributions in varioius capacities, below are some ways that you can contribute to this project
 
-###Development
+###Setup
 1. [Fork this repository.][fork]
-2. [Create a topic branch.][branch]
-3. Implement your feature or bug fix.
-4. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
-4. Run `composer install --dev && vendor/bin/phing build` (requires [Composer][https://getcomposer.org] to be installed)
-5. If not building sucessfully, go back to step **3**
+2. Load dev dependencies with [Composer][composer]: `php composer.phar install --dev`
+3. [Set up your dev environment][setup]
+
+###Development
+1. [Create a topic branch.][branch]
+2. Implement your feature or bug fix.
+3. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
+4. Run `bin/phing build`
+5. If not building sucessfully, go back to step **1**
 6. Add your files to repositiory: `git add .`
 7. Commit your files: `git commit -m "Implemented feature [x]"`
 8. Push your changes: `git push`
@@ -67,7 +71,8 @@ For every major release, we prefer to have an approximate 2 week testing window.
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
 [phing]: http://www.phing.info/
-
+[setup]: https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment
+[composer]: https://getcomposer.org/download/
 
 Reporting Issues and requesting features
 ----------------------------------------
