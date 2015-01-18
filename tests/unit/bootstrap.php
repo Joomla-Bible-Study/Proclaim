@@ -23,7 +23,7 @@ ini_set('zend.ze1_compatibility_mode', '0');
 error_reporting(E_ALL & ~E_STRICT);
 ini_set('display_errors', 1);
 
-/*.joomla-cms/libraries
+/*.joomla-dev/libraries
  * Ensure that required path constants are defined.  These can be overridden within the phpunit.xml file
  * if you chose to create a custom version of that file.
  */
@@ -33,15 +33,15 @@ if (!defined('JPATH_TESTS'))
 }
 if (!defined('JPATH_PLATFORM'))
 {
-	define('JPATH_PLATFORM', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
+	define('JPATH_PLATFORM', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev/libraries'));
 }
 if (!defined('JPATH_LIBRARIES'))
 {
-	define('JPATH_LIBRARIES', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms/libraries'));
+	define('JPATH_LIBRARIES', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev/libraries'));
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', realpath(dirname(dirname(__FILE__)) . '/.joomla-cms'));
+	define('JPATH_BASE', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev'));
 }
 if (!defined('JPATH_ROOT'))
 {
