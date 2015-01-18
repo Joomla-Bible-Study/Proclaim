@@ -19,5 +19,8 @@
             "name": "Michael Heiniger",
             "email": "michael.heiniger@gmail.com"
         }
-    ]
+    ],
+    "config": {
+        "bin-dir": "bin"
+    }
 }
