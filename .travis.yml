@@ -31,7 +31,7 @@ before_script:
 
 script:
   - bin/phing pmd
-  - bin/phpcs --report=full --ignore=*/tests/*,S3.class.php,*/tmpl/*,*/plupload/* --extensions=php -p --standard=build/phpcs/Joomla .
+  - bin/phpcs --report=full --ignore=*/tests/*,S3.class.php,*/tmpl/*,*/plupload/*,/build/,/vendor/,/bin/,/.joomla-dev/ --extensions=php -p --standard=build/phpcs/Joomla .
 
 branches:
   except:
