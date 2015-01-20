@@ -322,10 +322,28 @@ class JBSMPodcast
 
 						$episodedetailtemp = '
                         	   <item>
-                        		<title>' . $title . '</title>
-                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
-							. $episode->sid . $detailstemplateid . '</link>
-                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+                        		<title>' . $title . '</title>';
+						/*
+						 * Default is to episode
+						 * 1 = Direct Link.
+						 * 2 = Popup Player Window with default player as internal.
+						 */
+						if ($podinfo->linktype == '1')
+						{
+							$episodedetailtemp .= '<link>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</link>';
+						}
+						elseif ($podinfo->link == '2')
+						{
+							$episodedetailtemp .= '<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
+								$episode->sid . $detailstemplateid . '</link>';
+						}
+						else
+						{
+							$episodedetailtemp .= '<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+								. $episode->sid . $detailstemplateid . '</link>';
+						}
+
+						$episodedetailtemp .= '<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>

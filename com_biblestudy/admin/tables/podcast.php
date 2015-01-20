@@ -183,6 +183,17 @@ class TablePodcast extends JTable
 	public $detailstemplateid = null;
 
 	/**
+	 * Type of link to use for podcast.
+	 *
+	 * 0 = Default is to episode.
+	 * 1 = Direct Link.
+	 * 2 = Popup Player Window with default player as internal.
+	 *
+	 * @var string
+	 */
+	public $linktype = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object

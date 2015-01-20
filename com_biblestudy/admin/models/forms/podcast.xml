@@ -81,6 +81,12 @@
         <option value="6">JBS_PDC_BOOK_CHAPTER</option>
         <option value="7">JBS_CMN_CUSTOM</option>
     </field>
+    <field name="linktype" type="list" default="0"
+           label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC" class="span12 small">
+        <option value="0">To Epesode</option>
+        <option value="1">To Direct Media</option>
+        <option value="2">To Media Player Internal</option>
+    </field>
     <field name="customsubtitle" type="textarea" label="JBS_CMN_CUSTOM"
            description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
