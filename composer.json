@@ -5,13 +5,15 @@
         
     },
     "require-dev": {
-        "phing/phing": "2.8.2",
+        "phing/phing": "2.9.1",
+        "pdepend/pdepend": "1.1.1",
+        "sebastian/phpcpd": "*",
         "pear/versioncontrol_git": "dev-master",
         "pear/pear_exception": "dev-master",
-        "phpunit/phpunit": "4.0.17",
+        "phpunit/phpunit": "4.1.*",
         "sebastian/phpcpd": "2.0.0",
         "phploc/phploc": "2.0.4",
-        "phpmd/phpmd": "1.5.0",
+        "phpmd/phpmd": "1.4.1",
         "phpunit/php-invoker": "~1.1",
         "squizlabs/php_codesniffer": "1.5.5"
     },
@@ -23,5 +25,10 @@
     ],
     "config": {
         "bin-dir": "bin"
-    }
+    },
+    "autoload": {
+        "psr-0": { "PHP_Depend": "vendor/pdepend/pdepend/src/main/php" }
+    },
+    "include-path": ["vendor/pdepend/pdepend/src/main/php"]
+
 }

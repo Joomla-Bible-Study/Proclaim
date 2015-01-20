@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="biblestudy" default="build" basedir=".">
-    <property name="basedir" value="${project.basedir}" />
+	<php expression="include('vendor/autoload.php')"/>
+
+	<property name="basedir" value="${project.basedir}" />
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to run the unit tests against -->
