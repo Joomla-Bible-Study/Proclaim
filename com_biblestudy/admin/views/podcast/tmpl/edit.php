@@ -156,6 +156,14 @@ $input  = $app->input;
             </div>
             <div class="control-group">
                 <div class="control-label">
+                    <?php echo $this->form->getLabel('linktype'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('linktype'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
 					<?php echo $this->form->getLabel('alternatelink'); ?>
                 </div>
                 <div class="controls">

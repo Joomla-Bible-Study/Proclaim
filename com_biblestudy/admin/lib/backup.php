@@ -165,7 +165,7 @@ class JBSMBackup
 					}
 					else
 					{
-						$data[] = $db->qn($key) . "=" . $db->q($value);
+						$data[] = $db->qn($key) . "=" . $db->q(trim(preg_replace('/\s\s+/', '\n', $value)));
 					}
 				}
 				$export .= implode(',', $data);
@@ -241,17 +241,21 @@ class JBSMBackup
 	 */
 	public function output_file($file, $name, $mime_type = '')
 	{
-		// Disable caching
-		header("Pragma: public");
-		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Cache-Control: private");
+		// Clears file status cache
+		clearstatcache();
+		$jweb = new JApplicationWeb;
+		$jweb->clearHeaders();
 
 		// Turn off output buffering to decrease cpu usage
 		@ob_end_clean();
 
-		// Disable execution time limit
-		set_time_limit(0);
+		/**
+		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+		 */
+		if (!ini_get('safe_mode'))
+		{
+			set_time_limit(3000);
+		}
 
 		// Required for IE, otherwise Content-Disposition may be ignored
 		if (ini_get('zlib.output_compression'))

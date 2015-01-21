@@ -136,7 +136,7 @@ VALUES
 
 INSERT INTO `#__bsms_servers` (`id`, `server_name`, `type`, `published`, `asset_id`, `access`, `params`, `media`)
 VALUES
-  (1, 'Legacy', 'legacy', 1, 0, 1, '{"path":"\/\/www.calvarychapelnewberg.net\/"}', NULL);
+  (1, 'Legacy', 'legacy', 1, 0, 1, '{"path":"\/\/www.calvarychapelnewberg.net\/"}', '{}');
 
 
 --
