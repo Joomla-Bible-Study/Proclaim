@@ -95,7 +95,7 @@ class BiblestudyModelSermons extends JModelList
 			$db    = $this->getDBO();
 			$query = $db->getQuery(true);
 			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
-				->from( '#__bsms_studies' )
+				->from('#__bsms_studies')
 				->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
 				->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
 				->where('#__bsms_topics.published = 1')
