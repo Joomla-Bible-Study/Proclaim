@@ -33,10 +33,9 @@
  <exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
  <exclude-pattern type="relative">*/plupload/*</exclude-pattern>
  <exclude-pattern type="relative">*/build/*</exclude-pattern>
- <exclude-pattern>vendor/*</exclude-pattern>
- <exclude-pattern>bin/*</exclude-pattern>
- <exclude-pattern>.joomla-dev/*</exclude-pattern>
- <!-- /tests/*,S3.class.php,*/tmpl/*,*/plupload/*,/build/,/vendor/,/bin/,/.joomla-dev/ -->
+ <exclude-pattern type="relative">vendor/*</exclude-pattern>
+ <exclude-pattern type="relative">bin/*</exclude-pattern>
+ <exclude-pattern type="relative">.joomla-dev/*</exclude-pattern>
 
  <!-- Include all sniffs in an external standard directory -->
 
