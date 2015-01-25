@@ -1,7 +1,5 @@
-language: php
-
 sudo: false
-
+language: php
 php:
   - 5.3
 # Until we start using phpunit we only need to test are menumum version.
