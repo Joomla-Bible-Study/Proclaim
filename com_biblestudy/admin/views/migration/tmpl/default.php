@@ -13,6 +13,15 @@ defined('_JEXEC') or die();
 
 JHTML::_('behavior.framework');
 JHtml::_('behavior.modal');
+
+if ($this->totalVersions != '0')
+{
+	$pre = $this->doneVersions . ' of ' . $this->totalVersions;
+}
+else
+{
+	$pre = '';
+}
 ?>
 <?php if ($this->more): ?>
 	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>
@@ -20,7 +29,7 @@ JHtml::_('behavior.modal');
 	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 <?php endif; ?>
 <div class="migration-status">
-	<div class="status"><?php echo $this->totalVersions . ' - ' . $this->doneVersions . ' ' .  JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+	<div class="status"><?php echo $pre . ' ' .  JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
 

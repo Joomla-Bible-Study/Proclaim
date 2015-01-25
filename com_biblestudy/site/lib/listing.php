@@ -549,9 +549,9 @@ class JBSMListing
 				$j   = $r;
 				$tmp = $array[(int) (($l + $r) / 2)];
 
-				// Split the array in to parts
+				/* Split the array in to parts
 				// first: objects with "smaller" property $property
-				// second: objects with "bigger" property $property
+				// second: objects with "bigger" property $property */
 				do
 				{
 					while ($array[$i]->{$property} < $tmp->{$property})
@@ -574,7 +574,8 @@ class JBSMListing
 						$j--;
 					}
 
-				} while ($i <= $j);
+				}
+				while ($i <= $j);
 
 				if ($i < $r)
 				{
@@ -584,9 +585,11 @@ class JBSMListing
 				}
 				$r = $j;
 
-			} while ($l < $r);
+			}
+			while ($l < $r);
 
-		} while ($cur != 0);
+		}
+		while ($cur != 0);
 
 		// Added ordering.
 		if ($order == "DESC")
@@ -1369,10 +1372,6 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'description':
-				if ($header == 1)
-				{
-					$data = JText::_('JBS_CMN_DESCRIPTION');
-				}
 				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1)
 				{
 					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_biblestudy.' . $type) : $data = '');
@@ -1494,11 +1493,6 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacherimage':
-
-				if ($header == 1)
-				{
-					$data = JText::_('JBS_CMN_TEACHER_IMAGE');
-				}
 				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
 				{
 					if ($item->teacher_thumbnail)
@@ -2242,7 +2236,6 @@ class JBSMListing
 		$view     = $input->getString('view', '');
 		$column   = '';
 		$mime     = ' AND #__bsms_mediafiles.mime_type = 1';
-		$itemlink = $params->get('itemidlinktype');
 
 		switch ($islink)
 		{
@@ -2304,11 +2297,11 @@ class JBSMListing
 			case 5 :
 				// Case 5 is a file link with Tooltip
 				JFactory::getApplication()->enqueueMessage('Need to update this ASAP Listing->getLink->case5', 'error');
-//				$filepath = $this->getFilepath($id3, 'study_id', $mime);
-//				$link     = JRoute::_($filepath);
-//				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
-//				$column .= '<a href="' . $link . '">';
 
+/*				$filepath = $this->getFilepath($id3, 'study_id', $mime);
+				$link     = JRoute::_($filepath);
+				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
+				$column  .= '<a href="' . $link . '">'; */
 				break;
 
 			case 6 :
@@ -2652,7 +2645,6 @@ class JBSMListing
 				$image      = $share_params->get('shareimage');
 				$height     = $share_params->get('shareimageh', '44px');
 				$width      = $share_params->get('shareimagew', '44px');
-				$totalchars = $share_params->get('totalcharacters');
 				$use_bitly  = $share_params->get('use_bitly');
 				$mainlink   = $share_params->get('mainlink');
 				$appkey     = $share_params->get('api', 'R_dc86635ad2d1e883cab8fad316ca12f6');
@@ -2819,61 +2811,6 @@ class JBSMListing
 		}
 
 		return $short;
-	}
-
-	// @todo I believe all of the functions below can be removed TF
-
-	/**
-	 * Run Content Plugins on content
-	 *
-	 * @param   object                    $item    ?
-	 * @param   Joomla\Registry\Registry  $params  ?
-	 * @param   string                    $type    ?
-	 *
-	 * @return bool|string
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function runContentPlugins($item, $params, $type)
-	{
-		JFactory::getApplication()->enqueueMessage('must remove fuction runContentPlugins');
-
-		return false;
-	}
-
-	/**
-	 * Get Title
-	 *
-	 * @param   Joomla\Registry\Registry  $params    System Params
-	 * @param   object                    $row       Item info
-	 * @param   int                       $template  Template
-	 *
-	 * @return string
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function getTitle($params, $row, $template)
-	{
-		JFactory::getApplication()->enqueueMessage('must remove fuction getTitle');
-
-		return false;
-	}
-
-	/**
-	 * Get CustomHead
-	 *
-	 * @param   int                       $rowcolid  Row ID Column
-	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 *
-	 * @return string
-	 *
-	 * @deprecated 9.0.0
-	 */
-	private function getCustomhead($rowcolid, $params)
-	{
-		JFactory::getApplication()->enqueueMessage('must remove fuction getCustomhead');
-
-		return false;
 	}
 
 }

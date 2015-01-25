@@ -51,7 +51,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Display
 	 *
-	 * @param   string $tpl Template to display
+	 * @param   string  $tpl  Template to display
 	 *
 	 * @return null
 	 */

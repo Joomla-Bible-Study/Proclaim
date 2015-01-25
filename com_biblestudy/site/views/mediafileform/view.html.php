@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 /**
  * View class for MediaFile
  *
@@ -26,10 +27,10 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/** @var  string Upload Folder */
 	public $upload_server;
 
-	/** @var array Form */
+	/** @var JForm Form */
 	protected $form;
 
-	/** @var array Item */
+	/** @var object Item */
 	protected $item;
 
 	/** @var string Return Page */

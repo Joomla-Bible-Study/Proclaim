@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -116,8 +116,6 @@ class BiblestudyViewPopup extends JViewLegacy
 		{
 			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
-
-		jimport('joomla.application.component.helper');
 
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
@@ -235,11 +233,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string $text      Text info
-	 * @param   object $media     Media info
-	 * @param   string $scripture scripture
-	 * @param   string $date      Date
-	 * @param   string $length    Length of Title
+	 * @param   string  $text       Text info
+	 * @param   object  $media      Media info
+	 * @param   string  $scripture  scripture
+	 * @param   string  $date       Date
+	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 */

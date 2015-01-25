@@ -331,7 +331,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Get Pagination state but is harde coded to be true right now.
+	 * Get Pagination state but is hard coded to be true right now.
 	 *
 	 * @return boolean
 	 */

@@ -58,15 +58,19 @@ class BiblestudyViewCpanel extends JViewLegacy
 
 		$this->state = $this->get('State');
 		$this->data  = $this->get('Data');
+		$model       = $this->getModel();
 
 		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
-
 
 		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();
 
 		$this->sidebar = JHtmlSidebar::render();
+
+		// Post-installation messages information
+		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
+		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
 		// Display the template
 		parent::display($tpl);

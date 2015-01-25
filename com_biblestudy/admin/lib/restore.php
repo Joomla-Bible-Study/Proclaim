@@ -392,12 +392,6 @@ class JBSMRestore
 
 			return false;
 		}
-		elseif (($iscernt !== 0) && ($parent === true))
-		{
-			$app->enqueueMessage(JText::_('JBS_IBM_MIGRATE_NOT_OLD_DB'), 'warning');
-
-			return false;
-		}
 		elseif (($iscernt === 0) && ($parent !== true))
 		{ // Way to check to see if file came from restore and is current.
 			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'waring');

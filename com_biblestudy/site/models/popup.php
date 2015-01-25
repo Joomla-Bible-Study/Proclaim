@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 /**
  * Comment model class
  *
@@ -33,6 +34,7 @@ class BiblestudyModelPopup extends JModelLegacy
 		$app = JFactory::getApplication('site');
 
 		// Load the parameters.
+		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();

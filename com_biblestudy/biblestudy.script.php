@@ -7,10 +7,8 @@
  * */
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * BibleStudy Install Script
@@ -21,21 +19,13 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
 class Com_BiblestudyInstallerScript
 {
 
-	/**
-	 * The component's name
-	 *
-	 * @var string
-	 * */
+	/** @var string The component's name */
 	protected $biblestudy_extension = 'com_biblestudy';
 
 	/** @var string Path to Mysql files */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	/**
-	 * The release value to be displayed and check against throughout this file.
-	 *
-	 * @var string
-	 */
+	/** @var string The release value to be displayed and check against throughout this file. */
 	private $_release = '9.0.0';
 
 	/**
@@ -170,6 +160,8 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+
 		// Need to load JBSMDbHelper for script
 		$dbhelper    = new JBSMDbHelper;
 		$db    = JFactory::getDBO();
@@ -241,8 +233,9 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Post Install Messages Cleanup for Component
-		$query = ' DELETE FROM ' . $db->quoteName('#__postinstall_messages') .
-			' WHERE ' . $db->quoteName('language_extension') . ' = ' . $db->quote('com_biblestudy');
+		$query = $db->getQuery(true);
+		$query->delete('#__postinstall_messages')
+			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
 		$db->setQuery($query);
 		$db->execute();
 
@@ -258,6 +251,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		$row = JTable::getInstance('extension');
 		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
 
@@ -287,12 +281,14 @@ class Com_BiblestudyInstallerScript
 				$version = '0.0.0';
 			}
 
+			// Used for php files updates.
+			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
 			// We have a version!
 			foreach ($files as $file)
 			{
 				if (version_compare($file, $version) > 0)
 				{
-					$this->update_count = 0;
 					$this->allUpdate($file, $db);
 					$this->updatePHP($file, $db);
 				}

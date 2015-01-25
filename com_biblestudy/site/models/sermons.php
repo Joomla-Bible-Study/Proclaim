@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Model class for Sermons
  *
@@ -29,7 +27,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   11.1
@@ -66,7 +64,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Translate item entries: books, topics
 	 *
-	 * @param   array $items Books
+	 * @param   array  $items  Books
 	 *
 	 * @return object
 	 *

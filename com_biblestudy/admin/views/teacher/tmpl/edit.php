@@ -86,7 +86,8 @@ $input = $app->input;
 				?>
 				<div class="button2-left">
 					<div class="blank">
-						<a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change'); Joomla.submitbutton('teacher.apply'); "
+						<a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change');
+						Joomla.submitbutton('teacher.apply'); "
 						   title="Clear">
 							<?php echo JText::_('JBS_CMN_CLEAR'); ?>
 						</a>
@@ -256,14 +257,17 @@ $input = $app->input;
 
 <!-- Begin Sidebar -->
 <div class="span2 form-vertical">
-	<div class="row">
-		<div class="thumbnail">
-			<img src="<?php echo JURI::root() . $this->item->teacher_thumbnail; ?>"/>
+	<div class="control-group">
+			<img src="<?php echo JURI::root() . $this->item->teacher_thumbnail; ?>" alt="<?php echo $this->form->getValue('teachername'); ?>"
+			     class="thumbnail center"/>
 
+		<div class="control-label">
 			<h3 class="text-center">
 				<?php echo $this->form->getValue('teachername'); ?>
 			</h3>
 			<?php echo $this->form->getLabel('image'); ?>
+		</div>
+		<div class="controls">
 			<?php echo $this->form->getInput('image'); ?>
 		</div>
 	</div>

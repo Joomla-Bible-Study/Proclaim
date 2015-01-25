@@ -19,7 +19,7 @@
             <option value="0">
                 JUNPUBLISHED
             </option>
-            <option value="-2">
+            <option value="-2">Thum
                 JTRASHED
             </option>
         </field>
@@ -49,7 +49,7 @@
                 />
         <field name="title" type="text" class="inputbox" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="image" type="file" accept="image/*" label="JBS_TCH_TEACHER_IMAGE_LARGE"/>
+        <field name="image" type="media" accept="image/*" label="JBS_TCH_TEACHER_IMAGE_LARGE" class="span2 small"/>
         <field name="teacher_image" type="hidden"/>
         <field name="phone" type="text" class="inputbox" size="60"
                label="JBS_TCH_PHONE"/>

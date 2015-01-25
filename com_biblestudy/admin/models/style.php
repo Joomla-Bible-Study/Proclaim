@@ -10,9 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
 /**
  * Style Model class
  *
@@ -33,8 +30,8 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return    mixed    A JForm object on success, false on failure
 	 *
@@ -56,7 +53,7 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -70,7 +67,7 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Fix the css naming of ID and Class
 	 *
-	 * @param   array $pks ID
+	 * @param   array  $pks  ID
 	 *
 	 * @return boolean
 	 */
@@ -110,8 +107,8 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
@@ -157,9 +154,9 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return    JTable    A database object
 	 *
@@ -193,7 +190,7 @@ class BiblestudyModelStyle extends JModelAdmin
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk  The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return    mixed    Object on success, false on failure.
 	 *

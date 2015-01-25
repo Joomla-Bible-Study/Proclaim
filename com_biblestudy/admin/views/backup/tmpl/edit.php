@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
+
 // Load the tooltip behavior.
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
@@ -16,16 +17,8 @@ JHtml::_('formbehavior.chosen', 'select');
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task == 'admin.cancel' || document.formvalidator.isValid(document.id('item-backup'))) {
-			Joomla.submitform(task, document.getElementById('item-backup'));
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
-		}
-	}
-</script>
-<form action="index.php" method="post" name="adminForm" id="item-backup">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" enctype="multipart/form-data"
+      method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<div class="span10 form-horizontal">
 			<h3><?php echo JText::_('JBS_CMN_EXPORT'); ?></h3>
@@ -56,7 +49,6 @@ defined('_JEXEC') or die;
 				</div>
 				<div class="controls">
 					<input class="input_box" id="importdb" name="importdb" type="file" size="57"/>
-					<?php echo ' - ' . JText::_('JBS_IBM_IMPORT_ONLY'); ?>
 				</div>
 			</div>
 			<div class="control-group">
@@ -81,9 +73,10 @@ defined('_JEXEC') or die;
 				</div>
 			</div>
 			<div class="control-group">
-				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>" name="submit"/>
+				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
+				       name="submit"/>
 				<a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
-					<button type="button" class="btn btn-default">Back</button>
+					<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
 				</a>
 			</div>
 		</div>
@@ -91,4 +84,5 @@ defined('_JEXEC') or die;
 	<input type="hidden" name="option" value="com_biblestudy"/>
 	<input type="hidden" name="task" value="admin.doimport"/>
 	<input type="hidden" name="controller" value="admin"/>
+	<?php echo JHtml::_('form.token'); ?>
 </form>

@@ -10,8 +10,10 @@
 // No direct access
 defined('_JEXEC') or die();
 
-if (is_array($this->files)) : ?>
-	<?php foreach ($this->files as $i => $file) : ?>
+if (is_array($this->files))
+	: ?>
+	<?php foreach ($this->files as $i => $file)
+		: ?>
 		<tr>
 			<td class="file_icon file">
 				<a class="finfo" id="file_info<?php echo $i; ?>" href="#"><img
@@ -26,20 +28,23 @@ if (is_array($this->files)) : ?>
 						     src="<?php echo (!is_array($file->imgInfo)) ? $this->imgURL . 'ext/' . $file->ext . '.png' : $file->link; ?>"/>
 					</div>
 					<div class="prev_right">
-						<?php if (is_array($file->imgInfo)) : ?>
-							<span><?php echo JText::_('COM_MEDIAMU_FINFO_DIMS'); ?></span> <?php echo JText::_('COM_MEDIAMU_FINFO_WIDTH'); ?>
-							<?php echo $file->imgInfo[0]; ?> <?php echo JText::_('COM_MEDIAMU_FINFO_HEIGHT'); ?> <?php echo $file->imgInfo[1]; ?>
+						<?php if (is_array($file->imgInfo))
+							: ?>
+							<span><?php echo JText::_('COM_MEDIAMU_FINFO_DIMS') . '</span> ' . JText::_('COM_MEDIAMU_FINFO_WIDTH'); ?>
+							<?php echo $file->imgInfo[0] . JText::_('COM_MEDIAMU_FINFO_HEIGHT') . ' ' . $file->imgInfo[1]; ?>
 							<br/>
-						<?php endif; ?>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_SIZE'); ?></span> <?php echo $file->size; ?><br/>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_ACCESSED'); ?></span> <?php echo $file->accessTime; ?>
+						<?php
+endif;
+						?>
+						<span><?php echo JText::_('COM_MEDIAMU_FINFO_SIZE') . '</span>' . $file->size; ?><br/>
+						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_ACCESSED') . '</span> ' . $file->accessTime; ?>
 						<br/>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_MODIFIED'); ?></span> <?php echo $file->modifiedTime; ?>
+						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_MODIFIED') . '</span> ' . $file->modifiedTime; ?>
 						<br/>
 					</div>
 					<div class="prev_footer">
-						<a class="open_btn" target="_blank"
-						   href="<?php echo $file->link; ?>"><?php echo JText::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
+						<a class="open_btn" target="_blank" href="<?php echo $file->link; ?>">
+							<?php echo JText::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
 						<span>|</span> <a class="path_rm_btn" name="<?php echo base64_encode($file->basename); ?>"
 						                  href="#"><?php echo JText::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
 					</div>
@@ -56,6 +61,9 @@ if (is_array($this->files)) : ?>
 				       value="<?php echo base64_encode($file->basename); ?>"/>
 			</td>
 		</tr>
-	<?php endforeach; ?>
-<?php endif; ?>
+	<?php
+endforeach; ?>
+<?php
+endif;
+?>
 

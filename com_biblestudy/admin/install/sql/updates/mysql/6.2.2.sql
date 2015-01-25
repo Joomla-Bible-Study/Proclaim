@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__bsms_update` (id, version) VALUES (1, '6.2.2')
+INSERT INTO `#__bsms_update` (id, version) VALUES (5, '6.2.2')
 ON DUPLICATE KEY UPDATE version= '6.2.2';
 

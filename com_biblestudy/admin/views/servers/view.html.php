@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for Servers
  *
@@ -57,7 +56,7 @@ class BiblestudyViewServers extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -69,10 +68,8 @@ class BiblestudyViewServers extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'server');
-
-        $this->types        = $this->get('ServerOptions');
+		$this->types      = $this->get('ServerOptions');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))

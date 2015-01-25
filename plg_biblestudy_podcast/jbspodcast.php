@@ -270,23 +270,17 @@ class PlgSystemJBSPodcast extends JPlugin
 	{
 
 		$livesite = JURI::root();
-		$config   = JFactory::getConfig();
-		$mailfrom = $config->get('config.mailfrom');
-		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$year = '(' . date('Y') . ')';
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';
 		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
-		$Body2    = '';
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
 		$Subject  = $params->get('subject');
-		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));
 

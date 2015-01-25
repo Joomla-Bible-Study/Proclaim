@@ -51,7 +51,10 @@ class BibleStudyModelMigration extends JModelLegacy
 	private $_biblestudyEid = 0;
 
 	/** @var array Array of Finish Task */
-	private $_finish = array();
+	private $_finish = array(1);
+
+	/** @var array int of Finish Task */
+	private $_isimport = 0;
 
 	/**
 	 * Start Looking though the Versions
@@ -63,6 +66,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->resetStack();
 		$this->resetTimer();
 		$this->getVersions();
+		$this->postinstallclenup(JFactory::getDbo());
 		$this->_finish = array('1');
 
 		if (empty($this->_versionStack))
@@ -349,6 +353,8 @@ class BibleStudyModelMigration extends JModelLegacy
 
 			$this->totalVersions += count($php);
 		}
+		$this->_isimport = JFactory::getApplication()->input->getInt('jbsmalt', 0);
+		$this->totalVersions += 1;
 		return true;
 	}
 
@@ -551,6 +557,13 @@ class BibleStudyModelMigration extends JModelLegacy
 		$db  = JFactory::getDbo();
 		$app = JFactory::getApplication();
 		$run = true;
+		if ($this->_isimport)
+		{
+			$this->fiximportparams();
+			$this->running = 'Fixing Params';
+			$this->_isimport = 0;
+			$this->doneVersions++;
+		}
 		if (!empty($this->_versionStack))
 		{
 			krsort($this->_versionStack);
@@ -574,7 +587,6 @@ class BibleStudyModelMigration extends JModelLegacy
 			while (!empty($this->_finish) && $this->haveEnoughTime())
 			{
 				array_pop($this->_finish);
-				$this->running = JText::_('JBS_MIG_FINISHED');
 				$this->doneVersions++;
 				$this->finish(true);
 			}
@@ -584,7 +596,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		{
 			// Just finished
 			$this->resetStack();
-
+			$this->running = JText::_('JBS_MIG_FINISHED');
 			return false;
 		}
 
@@ -668,4 +680,61 @@ class BibleStudyModelMigration extends JModelLegacy
 		return $update->version;
 	}
 
+	/**
+	 * Fix Import problem
+	 *
+	 * @return bool True if fix complete, False if failure
+	 */
+	public static function fiximportparams()
+	{
+		$db     = JFactory::getDbo();
+		$tables = JBSMDbHelper::getObjects();
+		$set    = false;
+		$bad    = array('\":\"', '{\"', '\",\"', '\"}');
+		$good   = array('":"', '{"', '","', '"}');
+		foreach ($tables as $table)
+		{
+			if (strpos($table['name'], '_bsms_timeset') == false)
+			{
+				$query = $db->getQuery(true);
+				$query->select('*')->from($table);
+				$db->setQuery($query);
+				$data = $db->loadObjectList();
+				foreach ($data as $row)
+				{
+					if (isset($row->params))
+					{
+						$row->params = str_replace($bad, $good, $row->params);
+						$set         = true;
+					}
+					if (isset($row->metadata))
+					{
+						$row->metadata = str_replace($bad, $good, $row->metadata);
+						$set           = true;
+					}
+					if ($set)
+					{
+						$db->updateObject($table['name'], $row, 'id');
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Cleanup postinstall before migration
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla Database Driver
+	 *
+	 * @return void
+	 */
+	private function postinstallclenup($db)
+	{
+		// Post Install Messages Cleanup for Component
+		$query = $db->getQuery(true);
+		$query->delete('#__postinstall_messages')
+			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
+		$db->setQuery($query);
+		$db->execute();
+	}
 }

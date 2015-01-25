@@ -1,7 +1,6 @@
 <?php
-
 /**
- * JView html
+ * Templates html
  *
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
@@ -10,7 +9,6 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Templates
@@ -27,36 +25,42 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	public $templates;
+
 	/**
 	 * State
 	 *
 	 * @var array
 	 */
 	public $f_levels;
+
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	public $sidebar;
+
 	/**
 	 * Items
 	 *
 	 * @var array
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var array
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
@@ -67,7 +71,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

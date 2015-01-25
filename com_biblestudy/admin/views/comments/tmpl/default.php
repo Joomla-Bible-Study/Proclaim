@@ -146,7 +146,7 @@ $sortFields = $this->getSortFields();
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
 						</td>
 
-						<td class="nowrap has-context">
+						<td class="nowrap has-context" style="width:10%">
 							<div class="pull-left">
 								<?php if ($canEdit || $canEditOwn) : ?>
 									<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - '

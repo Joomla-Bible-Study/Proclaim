@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Styles list model class
  *
@@ -24,7 +22,7 @@ class BiblestudyModelstyles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -44,8 +42,8 @@ class BiblestudyModelstyles extends JModelList
 	/**
 	 * Populate State.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

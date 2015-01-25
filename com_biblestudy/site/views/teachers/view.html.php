@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * View class for Teachers
  *
@@ -24,7 +22,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Document
 	 *
-	 * @var object
+	 * @var JDocument
 	 */
 	public $document;
 

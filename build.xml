@@ -25,7 +25,6 @@
 	<!-- List of all files that are packaged and distributed -->
 	<fileset dir="${basedir}" id="distributed_files">
 		<include name="com_biblestudy/**/*.php"/>
-		<include name="joomSEF_extension/**/*.php"/>
 		<include name="mod_biblestudy/**/*.php"/>
 		<include name="mod_biblestudy_podcast/**/*.php"/>
 		<include name="plg_biblestudy_backup/**/*.php"/>
@@ -160,9 +159,7 @@
 	<!-- Create plg_xmap_jbs.zip, and joomsef_com_biblestudy.zip -->
     <target name="package.addons" depends="init" description="Builds addons, including third party integrations">
     	<delete file="${basedir}/build/packages/addons/plg_xmap_jbs.zip"/>
-    	<delete file="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip"/>
     	<zip destfile="${basedir}/build/packages/addons/plg_xmap_jbs.zip" basedir="${basedir}/xmap_JBS"/>
-        <zip destfile="${basedir}/build/packages/addons/joomsef_com_biblestudy.zip" basedir="${basedir}/joomSEF_extension"/>
     </target>
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->

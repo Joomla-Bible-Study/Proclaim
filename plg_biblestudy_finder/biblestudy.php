@@ -97,11 +97,6 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderCategoryChangeState($extension, $pks, $value)
 	{
-		// We probably don't need this
-		if ($extension == 'com_biblestudy')
-		{
-
-		}
 	}
 
 	/**
@@ -247,7 +242,12 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		// Initialize the item parameters.
 		$registry = new Registry;
 		$registry->loadString($item->params);
-		$item->params = $registry;
+		$item->params = JComponentHelper::getParams('com_biblestudy', true);
+		$item->params->merge($registry);
+
+		$registry = new Registry;
+		$registry->loadString($item->metadata);
+		$item->metadata = $registry;
 
 		// Trigger the onContentPrepare event.
 		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
@@ -255,7 +255,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->slug);
+		$item->route = JBSMHelperRoute::getArticleRoute($item->slug, $item->language);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -313,7 +313,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 	/**
 	 * Method to get a SQL query to load the published and access states for
-	 * an article and category.
+	 * an biblestudy.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *

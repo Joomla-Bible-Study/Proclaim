@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for a list of Messages.
  *
@@ -26,60 +25,70 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * Books
 	 *
 	 * @var object
 	 */
 	public $books;
+
 	/**
 	 * Teachers
 	 *
 	 * @var object
 	 */
 	public $teachers;
+
 	/**
 	 * Series
 	 *
 	 * @var object
 	 */
 	public $series;
+
 	/**
 	 * Message Types
 	 *
 	 * @var object
 	 */
 	public $messageTypes;
+
 	/**
 	 * Years
 	 *
 	 * @var object
 	 */
 	public $years;
+
 	/**
 	 * Filter Levels
 	 *
 	 * @var array
 	 */
 	public $f_levels;
+
 	/**
 	 * Side Bar
 	 *
 	 * @var object
 	 */
 	public $sidebar;
+
 	/**
 	 * Items
 	 *
 	 * @var object
 	 */
 	protected $items;
+
 	/**
 	 * Pagination
 	 *
 	 * @var object
 	 */
 	protected $pagination;
+
 	/**
 	 * State
 	 *
@@ -90,7 +99,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

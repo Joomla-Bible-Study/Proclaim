@@ -176,7 +176,7 @@
         <fieldset name="MEDIA">
             <field name="protocol" type="text" size="10" default="http://"
                    label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
-            <field name="media_player" type="list" default="0"
+            <field name="player" type="list" default="0"
                    label="JBS_TPL_MEDIA_MEDIA_PLAYER" description="JBS_TPL_MEDIA_MEDIA_PLAYER_DESC">
                 <option value="0">JBS_CMN_DIRECT_LINK</option>
                 <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
@@ -204,9 +204,9 @@
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
 	        </field>
-            <field name="player_width" type="text" default="400"
+            <field name="player_width" type="text" default="640"
                    label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
-            <field name="player_height" type="text" default="300"
+            <field name="player_height" type="text" default="385"
                    label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
             <field name="embedshare" default="TRUE" type="list"
                    label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">

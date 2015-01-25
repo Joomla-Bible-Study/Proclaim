@@ -164,7 +164,8 @@ class BiblestudyModelSermon extends JModelItem
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived)))
 				{
-					return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
+					JFactory::getApplication()->enqueueMessage(JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'), 'error');
+					return false;
 				}
 
 				// Concat topic_text and concat topic_params do not fit, so translate individually
@@ -232,12 +233,12 @@ class BiblestudyModelSermon extends JModelItem
 			{
 				if ($e->getCode() == 404)
 				{
-					// Need to go thru the error handler to allow Redirect to work.
-					JError::raiseError(404, $e->getMessage());
+					// Need to go through the error handler to allow Redirect to work.
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 				}
 				else
 				{
-					$this->setError($e);
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 					$this->_item[$pk] = false;
 				}
 			}

@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
+
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafile.php');
@@ -62,9 +62,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = ArrayHelper::toObject($properties, 'JObject');
-
-		// Convert attrib field to Registry.
+		$value      = JArrayHelper::toObject($properties, 'JObject');
 
 		// Convert params field to Registry.
 		$registry = new Registry;

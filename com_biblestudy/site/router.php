@@ -71,7 +71,6 @@ function biblestudyParseRoute($segments)
 	// Count route segments
 	$count = count($segments);
 
-
 	if ($count == 3)
 	{
 		$vars['view'] = $segments[0];

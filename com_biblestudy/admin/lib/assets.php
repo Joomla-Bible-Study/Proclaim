@@ -313,7 +313,7 @@ class JBSMAssets
 				{
 					$nullrows++;
 				}
-				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+				// If there is a jasset_id but no match to the parent_id then a mismatch has occurred
 				if (self::$parent_id != $result->parent_id && $result->jasset_id)
 				{
 					$nomatchrows++;

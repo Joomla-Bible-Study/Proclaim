@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for TemplateCode
  *
@@ -26,36 +25,42 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * @var string
 	 */
 	public $defaultcode;
+
 	/**
 	 * Type
 	 *
 	 * @var string
 	 */
 	public $type;
+
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
 	public $canDo;
+
 	/**
 	 * Form
 	 *
 	 * @var object
 	 */
 	protected $form;
+
 	/**
 	 * Item
 	 *
 	 * @var object
 	 */
 	protected $item;
+
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
 	protected $state;
+
 	/**
 	 * Defaults
 	 *
@@ -66,7 +71,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *

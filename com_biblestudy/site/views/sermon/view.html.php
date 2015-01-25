@@ -2,10 +2,10 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -207,7 +207,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
 		{
@@ -305,7 +304,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
 
-
 		if ($this->getLayout() == 'pagebreak')
 		{
 			$this->_displayPagebreak($tpl);
@@ -347,7 +345,6 @@ class BiblestudyViewSermon extends JViewLegacy
 		$detailslink       = htmlspecialchars($u->toString());
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
-
 
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);

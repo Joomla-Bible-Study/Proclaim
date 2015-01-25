@@ -349,6 +349,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$copysuccess = false;
 		$result      = null;
+		$alt         = '';
 
 		// This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
 		$app   = JFactory::getApplication();
@@ -374,10 +375,11 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$import = new JBSMRestore;
 			$result = $import->importdb($parent);
+			$alt    = '&jbsmalt=1';
 		}
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1');
+			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1' . $alt);
 		}
 		else
 		{

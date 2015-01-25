@@ -672,52 +672,6 @@ class JBSMMedia
 	}
 
 	/**
-	 * Return Media Table
-	 *
-	 * @param   object                    $row     Table info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 *
-	 * @return null|string
-	 *
-	 * @deprecated 9.0.0 Removed for fluid.
-	 */
-	public function getMediaTable($row, $params)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaTable');
-		return false;
-	}
-
-	/**
-	 * Get Media ID
-	 *
-	 * @param   int  $id  ID of media
-	 *
-	 * @return object
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function getMediaid($id)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaid');
-		return false;
-	}
-
-	/**
-	 * Get Media info Row1
-	 *
-	 * @param   int  $id  ID of media Row
-	 *
-	 * @return object|boolean
-	 *
-	 * @deprecated 9.0.0
-	 */
-	public function getMediaRows($id)
-	{
-		JFactory::getApplication()->enqueueMessage('Bad Function remove and don not use getMediaRows');
-		return false;
-	}
-
-	/**
 	 * Get Media info Row2
 	 *
 	 * @param   int  $id  ID of Row

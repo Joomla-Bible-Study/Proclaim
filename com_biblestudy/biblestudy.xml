@@ -42,7 +42,6 @@
     <!-- Media files -->
     <media destination="com_biblestudy" folder="media">
         <folder>backup</folder>
-        <folder>captcha</folder>
         <folder>css</folder>
         <folder>fancybox</folder>
         <folder>images</folder>

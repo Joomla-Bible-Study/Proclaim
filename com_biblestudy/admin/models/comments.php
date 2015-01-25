@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Comments model class
  *
@@ -24,7 +22,7 @@ class BiblestudyModelComments extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -79,8 +77,8 @@ class BiblestudyModelComments extends JModelList
 	/**
 	 * Populate State
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -113,7 +111,7 @@ class BiblestudyModelComments extends JModelList
 	/**
 	 * Get Stored ID
 	 *
-	 * @param   string $id  An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -141,9 +139,6 @@ class BiblestudyModelComments extends JModelList
 	{
 		// Create a new query object.
 		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
-		$app   = JFactory::getApplication();
 
 		// Select the required fields from the table.
 		$query = $db->getQuery(true);

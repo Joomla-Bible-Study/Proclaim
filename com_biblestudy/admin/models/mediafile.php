@@ -2,16 +2,16 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
+ * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * MediaFile model class
@@ -27,13 +27,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
-
-	/**
-	 * Admin
-	 *
-	 * @var string
-	 */
-	private $_admin;
 
 	/**
 	 * Data
@@ -147,7 +140,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$server_id = $this->data->server_id;
 		if (empty($server_id))
 		{
-			//@TODO This may not be optimal, seems like a hack
+			// @TODO This may not be optimal, seems like a hack
 			return new JForm("No-op");
 		}
 		// Reverse lookup server_id to server type
@@ -221,8 +214,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -286,7 +278,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		ArrayHelper::toInteger($pks);
+		JArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))

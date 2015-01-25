@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Podcasts model class
  *
@@ -24,7 +22,7 @@ class BiblestudyModelPodcasts extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -48,7 +46,7 @@ class BiblestudyModelPodcasts extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id  An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -73,8 +71,8 @@ class BiblestudyModelPodcasts extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

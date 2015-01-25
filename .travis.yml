@@ -30,7 +30,7 @@ before_script:
 
 script:
   - phing pmd
-  - phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .
+  - phpcs --report=full --ignore=*/tests/*,S3.class.php,*/tmpl/*,*/plupload/* --extensions=php -p --standard=build/phpcs/Joomla .
 
 branches:
   except:

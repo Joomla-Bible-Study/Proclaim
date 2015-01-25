@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Utilities\ArrayHelper;
+
 
 /**
  * MediaFiles list controller class
@@ -45,8 +45,8 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 		$order = $this->input->post->get('order', array(), 'array');
 
 		// Sanitize the input
-		ArrayHelper::toInteger($pks);
-		ArrayHelper::toInteger($order);
+		JArrayHelper::toInteger($pks);
+		JArrayHelper::toInteger($order);
 
 		// Get the model
 		$model = $this->getModel();
