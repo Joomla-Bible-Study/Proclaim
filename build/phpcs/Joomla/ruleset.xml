@@ -31,10 +31,10 @@
  <exclude-pattern type="relative">com_biblestudy/test/*</exclude-pattern>
  <exclude-pattern>*/tmpl/*</exclude-pattern>
  <exclude-pattern>*/plupload/*</exclude-pattern>
- <exclude-pattern>/build/</exclude-pattern>
- <exclude-pattern>/vendor/</exclude-pattern>
- <exclude-pattern>/bin/</exclude-pattern>
- <exclude-pattern>/.joomla-dev/</exclude-pattern>
+ <exclude-pattern>*/build/*</exclude-pattern>
+ <exclude-pattern>*/vendor/*</exclude-pattern>
+ <exclude-pattern>*/bin/*</exclude-pattern>
+ <exclude-pattern>*/.joomla-dev/*</exclude-pattern>
  <!-- /tests/*,S3.class.php,*/tmpl/*,*/plupload/*,/build/,/vendor/,/bin/,/.joomla-dev/ -->
 
  <!-- Include all sniffs in an external standard directory -->
