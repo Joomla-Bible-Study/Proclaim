@@ -126,7 +126,6 @@ class BiblestudyModelSermons extends JModelList
 		return $this->_Topics;
 	}
 
-
 	/**
 	 * Order New using strcmp
 	 *
