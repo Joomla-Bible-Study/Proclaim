@@ -13,12 +13,6 @@ services:
 
 before_script:
   - composer install --dev
-  # - pyrus install -f pear/PHP_CodeSniffer-1.5.5
-  # - pyrus install -f pear/Cache_Lite
-  # - pear channel-discover pear.phing.info
-  # - pear channel-discover pear.phpmd.org
-  # - pear install phpmd/PHP_PMD
-  # - pear install phing/phing
   - phpenv rehash
   # Set up Apache
   # - ./build/travis/php-apache.sh
