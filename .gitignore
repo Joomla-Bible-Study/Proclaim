@@ -34,3 +34,11 @@ com_biblestudy/admin/views/test/tmpl/index.html
 tests/unit/.joomla-cms/
 
 /vendor/
+/bin/phing
+/bin/pdepend
+/bin/phpcpd
+/bin/phploc
+/bin/phpmd
+/bin/phpunit
+/bin/phpcs
+/composer.phar
