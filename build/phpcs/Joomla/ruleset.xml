@@ -32,7 +32,7 @@
  <exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
  <exclude-pattern type="relative">*/plupload/*</exclude-pattern>
  <exclude-pattern type="relative">*/build/*</exclude-pattern>
- <exclude-pattern type="relative">*/vendor/*</exclude-pattern>
+ <exclude-pattern>*/vendor/*</exclude-pattern>
  <exclude-pattern type="relative">*/bin/*</exclude-pattern>
  <exclude-pattern type="relative">*/.joomla-dev/*</exclude-pattern>
  <!-- /tests/*,S3.class.php,*/tmpl/*,*/plupload/*,/build/,/vendor/,/bin/,/.joomla-dev/ -->
