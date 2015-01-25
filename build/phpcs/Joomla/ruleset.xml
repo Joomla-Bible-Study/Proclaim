@@ -29,12 +29,13 @@
 
  <!-- Used for JBSM Exlutions of libraries -->
  <exclude-pattern type="relative">com_biblestudy/test/*</exclude-pattern>
+ <exclude-pattern type="relative">com_biblestudy/admin/addons/servers/amazonS3/S3.class.php</exclude-pattern>
  <exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
  <exclude-pattern type="relative">*/plupload/*</exclude-pattern>
  <exclude-pattern type="relative">*/build/*</exclude-pattern>
- <exclude-pattern>*/vendor/*</exclude-pattern>
- <exclude-pattern type="relative">*/bin/*</exclude-pattern>
- <exclude-pattern type="relative">*/.joomla-dev/*</exclude-pattern>
+ <exclude-pattern>vendor/*</exclude-pattern>
+ <exclude-pattern>bin/*</exclude-pattern>
+ <exclude-pattern>.joomla-dev/*</exclude-pattern>
  <!-- /tests/*,S3.class.php,*/tmpl/*,*/plupload/*,/build/,/vendor/,/bin/,/.joomla-dev/ -->
 
  <!-- Include all sniffs in an external standard directory -->
