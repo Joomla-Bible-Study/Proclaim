@@ -92,17 +92,20 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		if (parent::save($data))
+		if ($data)
 		{
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
 			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
 
-			/* This code could be uncommented and would remove spaces from filename
-			// $data['filename'] = str_replace(' ','_',$data['filename']);
-			// Remove starting and trailing spaces */
-			$data['filename'] = trim($data['filename']);
+			/* This code could be uncommented and would remove spaces from filename */
+			$data['filename'] = str_replace(' ', '%20', $data['filename']);
 
-			return true;
+			// Remove starting and trailing spaces
+			$data['filename'] = trim($data['filename']);
+			if (parent::save($data))
+			{
+				return true;
+			}
 		}
 
 		return false;

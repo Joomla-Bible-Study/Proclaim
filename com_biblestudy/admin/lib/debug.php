@@ -18,8 +18,10 @@ assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 /**
  * Class JBSMDebug
  *
- * @package  BibleStudy
- * @since    9.0.0
+ * @package     BibleStudy
+ * @since       8.0.0
+ *
+ * @deprecated  9.0.0 JBSM
  */
 Class JBSMDebug
 {
@@ -32,6 +34,8 @@ Class JBSMDebug
 	 * @param   string  $message  ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Debug_Assert_callback($script, $line, $message)
 	{
@@ -51,6 +55,8 @@ Class JBSMDebug
 	 * @param   int     $back  ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Trigger_Db_error($text = '', $back = 0)
 	{
@@ -86,7 +92,7 @@ Class JBSMDebug
 	 *
 	 * @return void
 	 *
-	 * @deprecated 9.0.0
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Check_Db_error($text = '', $back = 0)
 	{
@@ -99,7 +105,7 @@ Class JBSMDebug
 	 *
 	 * @return void
 	 *
-	 * @deprecated 9.0.0
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Check_Db_warning($text = '')
 	{
@@ -112,7 +118,7 @@ Class JBSMDebug
 	 *
 	 * @return void
 	 *
-	 * @deprecated 9.0.0
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Trigger_Db_warning($text = '')
 	{
@@ -124,10 +130,12 @@ Class JBSMDebug
 	 * @param   array  $varlist  ?
 	 *
 	 * @return string
+	 *
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Debug_vars($varlist)
 	{
-		$output = '<table border=1><tr> <th>variable</th> <th>value</th> </tr>';
+		$output = '<table border="1"><tr> <th>variable</th> <th>value</th> </tr>';
 
 		foreach ($varlist as $key => $value)
 		{
@@ -196,6 +204,8 @@ Class JBSMDebug
 	 * @param   int  $back  ?
 	 *
 	 * @return object
+	 *
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Debug_Call_Stack_info($back = 1)
 	{
@@ -212,6 +222,8 @@ Class JBSMDebug
 	 * @param   int     $back     ?
 	 *
 	 * @return void
+	 *
+	 * @deprecated  9.0.0 JBSM
 	 */
 	public function Biblestudy_error($message, $level = E_USER_NOTICE, $back = 1)
 	{

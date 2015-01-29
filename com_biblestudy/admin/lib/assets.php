@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Asset Fix class
  *
- * @package  BibleStudy.Admin
- * @since    7.0.4
+ * @since  7.0.4
  */
 class JBSMAssets
 {

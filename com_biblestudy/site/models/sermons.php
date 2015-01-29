@@ -118,10 +118,27 @@ class BiblestudyModelSermons extends JModelList
 				$output[]     = $value;
 			}
 
+			// Sort the Topics after Translation to Alphabetically
+			usort($output, array($this, "order_new"));
 			$this->_Topics = $output;
 		}
 
 		return $this->_Topics;
+	}
+
+	/**
+	 * Order New using strcmp
+	 *
+	 * @param   object  $a  Start.
+	 * @param   object  $b  End.
+	 *
+	 * @return int Used to place in new sort.
+	 */
+	private function order_new($a, $b)
+	{
+		$a = (array) $a;
+		$b = (array) $b;
+		return strcmp($a["text"], $b["text"]);
 	}
 
 	/**
