@@ -663,8 +663,8 @@
                 <option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
                 <option value="3">JBS_TPL_SHOW_AS_POPUP</option>
             </field>
-            <field name="bible_version" type="list" default="51" label="JBS_TPL_CHOOSE_BIBLE_VERSION"
-                   description="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
+            <field name="bible_version" type="list" default="51"
+                   label="JBS_TPL_CHOOSE_BIBLE_VERSION" description="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
                 <option value="69">1550 Stephanus New Testament (NT)</option>
                 <option value="68">1881 Westcott-Hort New Testament (NT)</option>
                 <option value="70">1894 Scrivener New Testament (NT)</option>
@@ -766,7 +766,8 @@
                 <option value="0">JBS_ADM_INTERNAL_SHARE</option>
                 <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
             </field>
-            <field name="sharelabel" type="text" size="100" default="Share This" label="JBS_ADM_SHARELABEL" description="JBS_ADM_SHARELABEL_DESC" />
+            <field name="sharelabel" type="text" size="100" default="Share This"
+                   label="JBS_TPL_SHARELABEL" description="JBS_TPL_SHARELABEL_DESC" />
             <field name="comments_type" type="list" default="0"
                    label="JBS_TPL_COMMENT_TYPE" description="JBS_TPL_COMMENT_TYPE_DESC">
                     <option value="0">JBS_TPL_JBS_COMMENTS</option>
@@ -775,7 +776,7 @@
             </field>
             <field name="show_comments" type="accesslevel" default=""
                    label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC">
-                    <option value="0">Don't Show</option>
+                    <option value="0">JBS_CMN_HIDE</option>
             </field>
             <field name="link_comments" default="0" type="list"
                    label="JBS_TPL_DETAILS_LINK_COMMENTS" description="JBS_TPL_DETAILS_LINK_COMMENTS_DESC">
