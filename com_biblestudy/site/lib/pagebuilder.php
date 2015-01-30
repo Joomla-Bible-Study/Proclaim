@@ -233,7 +233,7 @@ class JBSMPageBuilder
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
 		$query->where('media.id IN (' . $mediaids . ')');
 		$query->where('media.published = 1');
-		$query->order('media.ordering, image.media_image_name ASC');
+		$query->order('media.ordering ASC');
 		$db->setQuery($query);
 		$medias       = $db->loadObjectList();
 		$mediareturns = array();
