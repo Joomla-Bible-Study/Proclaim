@@ -91,6 +91,7 @@
             <folder>tables</folder>
             <folder>views</folder>
             <folder>addons</folder>
+            <folder>postinstall</folder>
         </files>
     </administration>
 

@@ -137,7 +137,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->main = $images->mainStudyImage();
 
 		// Only load pagebuilder if the default template is NOT being used
-		if ($params->get('useexpert_list') > 0 && !$params->get('sermonstemplate'))
+		if ($params->get('useexpert_list') > 0 || is_string($params->get('sermonstemplate')) == TRUE)
 		{
 			$page_builder = new JBSMPagebuilder;
 
@@ -157,11 +157,10 @@ class BiblestudyViewSermons extends JViewLegacy
 					$pelements        = $page_builder->buildPage($item, $params);
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
-					$item->media      = $pelements->media;
+					$item->media      = $pelements->media; dump($item->media);
 					$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
-
 					if (isset($pelements->study_thumbnail))
 					{
 						$item->study_thumbnail = $pelements->study_thumbnail;

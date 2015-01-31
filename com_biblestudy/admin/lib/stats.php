@@ -507,7 +507,7 @@ class JBSMStats
 
 			$media_players = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
 				'<br /><strong>' . JText::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
-				'<br /><strong><a href="http://extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">' .
+				'<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
 				JText::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
 				JText::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
 				JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
