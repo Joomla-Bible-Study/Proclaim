@@ -107,11 +107,12 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+
 		$input      = new JInput;
 		$limitstart = $input->get('limitstart', '', 'int');
 		$input->set('start', $limitstart);
 		$this->state = $this->get('State');
-
+		$this->template   = $this->state->get('template');
 		$items = $this->get('Items');
 
 		$this->limitstart = $input->get('start', '', 'int');
@@ -154,10 +155,10 @@ class BiblestudyViewSermons extends JViewLegacy
 				{
 					$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-					$pelements        = $page_builder->buildPage($item, $params);
+					$pelements        = $page_builder->buildPage($item, $params, $this->template);
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
-					$item->media      = $pelements->media; dump($item->media);
+					$item->media      = $pelements->media;
 					$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
@@ -233,7 +234,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		// End scripture helper
 		// Get the data for the drop down boxes
-		$this->template   = $this->state->get('template');
+
 		$this->pagination = $pagination;
 		$this->order      = $this->orders;
 		$this->topic      = $this->topics;
