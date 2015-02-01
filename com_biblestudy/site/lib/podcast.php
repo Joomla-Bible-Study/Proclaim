@@ -301,6 +301,7 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
+							case 7:
 							case 5:
 								if ($this->templateid !== $detailstemplateid || is_null($this->template))
 								{
