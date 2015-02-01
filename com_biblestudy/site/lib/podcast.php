@@ -293,7 +293,7 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
-							case 7:
+							case 5:
 								$template = JBSMParams::getTemplateparams($detailstemplateid);
 								$element = $custom->getCustom(
 									$rowid = '24',
