@@ -30,6 +30,10 @@ JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/li
 class JBSMPodcast
 {
 
+	private $templateid = 0;
+
+	private $template = null;
+
 	/**
 	 * Make Podcasts
 	 *
@@ -233,13 +237,17 @@ class JBSMPodcast
 								}
 								break;
 							case 5:
-								$template = JBSMParams::getTemplateparams($detailstemplateid);
+								if ($this->templateid !== $detailstemplateid || is_null($this->template))
+								{
+									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
+									$this->templateid = $detailstemplateid;
+								}
 								$element = $custom->getCustom(
 									$rowid = '24',
 									$podinfo->custom,
 									$episode,
 									$params,
-									$template
+									$this->template
 								);
 
 								$title = $element->element;
@@ -294,14 +302,18 @@ class JBSMPodcast
 								}
 								break;
 							case 5:
-								$template = JBSMParams::getTemplateparams($detailstemplateid);
+								if ($this->templateid !== $detailstemplateid || is_null($this->template))
+								{
+									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
+									$this->templateid = $detailstemplateid;
+								}
 								$element = $custom->getCustom(
 									$rowid = '24',
 									$podinfo->episodesubtitle,
 									$episode,
 									$params,
 									$admin_params,
-									$template
+									$this->template
 								);
 
 								$subtitle = $element->element;
