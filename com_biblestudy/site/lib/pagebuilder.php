@@ -35,7 +35,7 @@ class JBSMPageBuilder
 	 *
 	 * @return object
 	 */
-	public function buildPage($item, $params)
+	public function buildPage($item, $params, $template)
 	{
 		$item->tp_id = '1';
 		$images      = new JBSMImages;
@@ -47,7 +47,7 @@ class JBSMPageBuilder
 
 		if ($mids)
 		{
-			$page->media = self::mediaBuilder($mids, $params);
+			$page->media = self::mediaBuilder($mids, $params, $template, $item);
 		}
 		else
 		{
@@ -217,11 +217,18 @@ class JBSMPageBuilder
 	 *
 	 * @return string
 	 */
-	private function mediaBuilder($mediaids, $params)
+	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
-		$images        = new JBSMImages;
-		$mediaelements = new JBSMMedia;
-		$mediaimage    = '';
+
+		//$images        = new JBSMImages;
+		$listing = new JBSMListing();
+		$mediaids = $listing->getFluidMediaids($item);
+		$media = $listing->getMediafiles($mediaids);
+		$item->mediafiles = $media;
+		$mediafiles = $listing->getFluidMediaFiles($item, $params, $template);
+
+		return $mediafiles;
+		/*$mediaimage    = '';
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -307,7 +314,7 @@ class JBSMPageBuilder
 		}
 		$mediareturn = implode('', $mediareturns);
 
-		return $mediareturn;
+		return $mediareturn;*/
 	}
 
 	/**
