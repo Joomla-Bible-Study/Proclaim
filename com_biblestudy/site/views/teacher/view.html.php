@@ -135,9 +135,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
-
+		$template      = $this->get('template');
 		// Only use Pagebuilder if using a template other than the default_main
-		if ($params->get('useexpert_teacherdetail') > 0 || $params->get('teachertemplate') > 0)
+		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teachertemplate')))
 		{
 			if ($params->get('show_teacher_studies') > 0)
 			{
@@ -151,7 +151,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 				foreach ($studies as $i => $study)
 				{
-					$pelements               = $pagebuilder->buildPage($study, $params);
+					$pelements               = $pagebuilder->buildPage($study, $params, $template);
 					$studies[$i]->scripture1 = $pelements->scripture1;
 					$studies[$i]->scripture2 = $pelements->scripture2;
 					$studies[$i]->media      = $pelements->media;
@@ -211,7 +211,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-
+		$this->document =& JFactory::getDocument();
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -263,15 +263,15 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+			$this->document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif ($this->params->get('menu-meta_keywords'))
 		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+			$this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
 		}
 		else
 		{
-			$this->document->setMetadata('keywords', $this->params->get('metakey'));
+			$this->document->setMetaData('keywords', $this->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -289,7 +289,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
+			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 

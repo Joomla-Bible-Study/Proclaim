@@ -82,7 +82,7 @@ class TableTemplate extends JTable
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tabletemplate(&$db)
+	public function Tabletemplate($db)
 	{
 		parent::__construct('#__bsms_templates', 'id', $db);
 	}

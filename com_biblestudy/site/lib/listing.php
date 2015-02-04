@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+require_once JPATH_ADMINISTRATOR .'/components/com_biblestudy/tables/template.php';
 use Joomla\Registry\Registry;
 
 /**

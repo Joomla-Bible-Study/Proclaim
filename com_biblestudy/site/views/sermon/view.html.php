@@ -208,10 +208,10 @@ class BiblestudyViewSermon extends JViewLegacy
 		JHtml::_('biblestudy.loadcss', $this->params);
 
 		// Only load pagebuilder if the default template is NOT being used
-		if ($this->item->params->get('useexpert_details') > 0 && !$this->params->get('sermontemplate'))
+		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
 		{
 			$pagebuilder            = new JBSMPagebuilder;
-			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params);
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $template);
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
