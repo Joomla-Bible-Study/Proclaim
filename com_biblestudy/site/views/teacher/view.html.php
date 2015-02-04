@@ -42,8 +42,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  JObject Print */
 	protected $print;
 
-	/** @var  JDocument Print */
-	protected $document;
+	/** @var  JDocument Print
+	protected $document; */
 
 	/** @var  JObject Studies */
 	protected $studies;
@@ -211,7 +211,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-		$this->document =& JFactory::getDocument();
+		$this->document = JFactory::getDocument();
 		$this->_prepareDocument();
 
 		parent::display($tpl);
