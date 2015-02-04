@@ -117,7 +117,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');
 
 		$images = new JBSMImages;
-		if ($params->get('useexpert_teacherdetail') > 0 && !$params->get('teacherstemplate'))
+		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))
 		{
 			$pagebuilder = new JBSMPagebuilder;
 

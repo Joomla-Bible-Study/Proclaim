@@ -407,7 +407,6 @@ class JBSMPageBuilder
 		// Filter only for authorized view
 		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
 		$query->where('study.access IN (' . $groups . ')');
-
 		$db->setQuery($query, 0, $limit);
 		$studies = $db->loadObjectList();
 //Get media files for each study

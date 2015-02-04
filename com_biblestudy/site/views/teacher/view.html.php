@@ -59,7 +59,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	{
 		$pagebuilder = new JBSMPagebuilder;
 
-		$this->studies = $this->get('studies');
+
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
 
@@ -136,9 +136,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
 		$template      = $this->get('template');
-		// Only use Pagebuilder if using a template other than the default_main
-		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teachertemplate')))
-		{
+
+
 			if ($params->get('show_teacher_studies') > 0)
 			{
 				$studies = $pagebuilder->studyBuilder(
@@ -146,7 +145,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 					$wherefield,
 					$params,
 					$limit,
-					$order
+					$order,
+					$template
 				);
 
 				foreach ($studies as $i => $study)
@@ -202,8 +202,9 @@ class BiblestudyViewTeacher extends JViewLegacy
 					}
 				}
 				$this->teacherstudies = $studies;
+				$this->studies = $studies;
 			}
-		}
+
 		$this->item = $item;
 		$print      = $input->get('print', '', 'bool');
 

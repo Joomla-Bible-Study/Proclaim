@@ -21,7 +21,7 @@ $listing = new JBSMListing;
 
 	<div class="row-fluid">
 		<div class="span12">
-			<?php $teacherstudies = $listing->getFluidListing($this->studies, $this->params, $this->template, $type = 'sermons');
+			<?php $teacherstudies = $listing->getFluidListing($this->teacherstudies, $this->params, $this->template, $type = 'sermons');
 			echo $teacherstudies; ?>
 		</div>
 	</div>
