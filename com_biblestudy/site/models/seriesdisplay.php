@@ -167,7 +167,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
 				// Use created if modified is 0
 				'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END AS modified, ' .
-				'study.modified_by, uam.name AS modified_by_name,' .
+				'study.modified_by, user_name AS modified_by_name,' .
 				// Use created if publish_up is 0
 				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END AS publish_up,' .
 				'study.publish_down,

@@ -128,7 +128,15 @@ class Migration900
 					}
 					else
 					{
-						$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+						if (!substr_count($mediaImage->path2, '/'))
+						{
+							$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+						}
+						else
+						{
+							$mimage = $mediaImage->path2;
+						}
+
 					}
 				}
 				$registry->loadString($mediaFile->params);

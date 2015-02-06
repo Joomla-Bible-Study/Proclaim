@@ -107,11 +107,12 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+
 		$input      = new JInput;
 		$limitstart = $input->get('limitstart', '', 'int');
 		$input->set('start', $limitstart);
 		$this->state = $this->get('State');
-
+		$this->template   = $this->state->get('template');
 		$items = $this->get('Items');
 
 		$this->limitstart = $input->get('start', '', 'int');
@@ -137,7 +138,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->main = $images->mainStudyImage();
 
 		// Only load pagebuilder if the default template is NOT being used
-		if ($params->get('useexpert_list') > 0 && !$params->get('sermonstemplate'))
+		if ($params->get('useexpert_list') > 0 || is_string($params->get('sermonstemplate')) == TRUE)
 		{
 			$page_builder = new JBSMPagebuilder;
 
@@ -154,14 +155,13 @@ class BiblestudyViewSermons extends JViewLegacy
 				{
 					$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-					$pelements        = $page_builder->buildPage($item, $params);
+					$pelements        = $page_builder->buildPage($item, $params, $this->template);
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
 					$item->media      = $pelements->media;
 					$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
-
 					if (isset($pelements->study_thumbnail))
 					{
 						$item->study_thumbnail = $pelements->study_thumbnail;
@@ -234,7 +234,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		// End scripture helper
 		// Get the data for the drop down boxes
-		$this->template   = $this->state->get('template');
+
 		$this->pagination = $pagination;
 		$this->order      = $this->orders;
 		$this->topic      = $this->topics;

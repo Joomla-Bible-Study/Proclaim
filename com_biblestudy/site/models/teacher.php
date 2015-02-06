@@ -82,15 +82,7 @@ class BiblestudyModelTeacher extends JModelItem
 		return $this->_item[$pk];
 	}
 
-	/**
-	 * Get Studies
-	 *
-	 * @return bool|mixed
-	 */
-	public function getStudies()
-	{
-		JFactory::getApplication()->enqueueMessage('Need to move to Listing.php teacher.php->getStudies()');
-	}
+
 
 	/**
 	 * Method to auto-populate the model state.
