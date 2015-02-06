@@ -705,8 +705,9 @@ class JBSMMedia
 			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
-
-			$media->spath = $params->path;
+			if ($params->path)
+			{$media->spath = $params->path;}
+			else {($media->spath = '');}
 			return $media;
 		}
 		else
