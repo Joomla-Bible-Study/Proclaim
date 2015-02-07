@@ -162,9 +162,9 @@ class BiblestudyModelSermon extends JModelItem
 				}
 
 				// Check for published state if filter set.
-				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived)))
+				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
 				{
-					JFactory::getApplication()->enqueueMessage(JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'), 'error');
+					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
 					return false;
 				}
 

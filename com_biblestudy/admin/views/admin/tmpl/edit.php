@@ -436,6 +436,7 @@ $input = $app->input;
            value="<?php echo @$this->item->params['thumbnail_series_size']; ?>"/>
     <input type="hidden" id="thumbnail_study_size_old"
            value="<?php echo @$this->item->params['thumbnail_study_size']; ?>"/>
+    <input type="hidden" name="tooltype" value=""/>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
     <?php echo JHtml::_('form.token'); ?>

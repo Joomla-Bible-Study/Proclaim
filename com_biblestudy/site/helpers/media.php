@@ -15,8 +15,7 @@ use Joomla\Registry\Registry;
 /**
  * Joomla! Bible Study Media class.
  *
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since  7.0.0
  */
 class JBSMMedia
 {
@@ -220,12 +219,6 @@ class JBSMMedia
 	public function getPlayerCode($params, $player, $image, $media)
 	{
 		$input       = new JInput;
-		$height      = 24;
-		$width       = 24;
-		$backcolor   = $params->get('backcolor', '0x287585');
-		$frontcolor  = $params->get('frontcolor', '0xFFFFFF');
-		$lightcolor  = $params->get('lightcolor', '0x000000');
-		$screencolor = $params->get('screencolor', '0xFFFFFF');
 		$template    = $input->get('t', '1', 'int');
 
 		// Here we get more information about the particular media file
@@ -273,6 +266,7 @@ class JBSMMedia
 				return $playercode;
 				break;
 
+			case 7:
 			case 1: // Internal
 				switch ($player->type)
 				{
@@ -342,27 +336,6 @@ class JBSMMedia
 				$playercode = $this->getVirtuemart($media, $params, $image);
 
 				return $playercode;
-				break;
-
-			case 7: // Legacy internal player
-				// @todo need to remove for internal player do to the JS is out of date and broken on all new browsers.
-				switch ($player->type)
-				{
-					case 2:
-
-						JHTML::_('jwplayer.framework');
-						$playercode = JHtmlJwplayer::render($media, $media->id, $params, false, true);
-						return $playercode;
-						break;
-
-					case 1:
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=7&amp;t=" . $template .
-							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight
-							. "'); return false\">" . $image . "</a>";
-
-						return $playercode;
-						break;
-				}
 				break;
 
 			case 8: // Embed code
@@ -617,7 +590,7 @@ class JBSMMedia
 			else
 			{
 				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-					$media->params->filename . '&amp;size=' . $media->params->size . '">';
+					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
 			}
 
 			// Check to see if they want to use a popup
@@ -705,8 +678,14 @@ class JBSMMedia
 			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
-
-			$media->spath = $params->path;
+			if ($params->path)
+			{
+				$media->spath = $params->path;
+			}
+			else
+			{
+				($media->spath = '');
+			}
 			return $media;
 		}
 		else

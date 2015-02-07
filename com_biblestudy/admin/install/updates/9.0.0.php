@@ -13,8 +13,7 @@ use \Joomla\Registry\Registry;
 /**
  * Update for 9.0.0 class
  *
- * @package  BibleStudy.Admin
- * @since    9.0.0
+ * @since  9.0.0
  */
 class Migration900
 {
@@ -128,7 +127,15 @@ class Migration900
 					}
 					else
 					{
-						$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+						if (!substr_count($mediaImage->path2, '/'))
+						{
+							$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+						}
+						else
+						{
+							$mimage = $mediaImage->path2;
+						}
+
 					}
 				}
 				$registry->loadString($mediaFile->params);
@@ -298,7 +305,8 @@ class Migration900
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
-		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret');
+		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret',
+			'server_type', 'ftp_username', 'ftp_password');
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters

@@ -65,7 +65,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->state = $this->get('state');
 		/** @var  $params Registry */
 		$params = $this->state->template->params;
-		$this->template = $this->state->get('tepmlate');
+		$this->template = $this->state->get('template');
 
 		$document = JFactory::getDocument();
 

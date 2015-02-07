@@ -35,7 +35,7 @@ $doc->addStyleDeclaration($style);
 
 	if ($this->player == 8)
 	{
-		echo stripslashes($this->media->mediacode);
+		echo stripslashes($this->params->get('mediacode'));
 	}
 	if ($this->player == 0)
 	{

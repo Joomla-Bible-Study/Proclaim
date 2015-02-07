@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Model class for Teacher
  *
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyModelTeacher extends JModelItem
 {
@@ -80,16 +79,6 @@ class BiblestudyModelTeacher extends JModelItem
 		}
 
 		return $this->_item[$pk];
-	}
-
-	/**
-	 * Get Studies
-	 *
-	 * @return bool|mixed
-	 */
-	public function getStudies()
-	{
-		JFactory::getApplication()->enqueueMessage('Need to move to Listing.php teacher.php->getStudies()');
 	}
 
 	/**

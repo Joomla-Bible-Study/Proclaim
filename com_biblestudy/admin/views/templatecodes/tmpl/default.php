@@ -118,9 +118,9 @@ $sortFields = $this->getSortFields();
 			$link               = JRoute::_('index.php?option=com_biblestudy&task=templatecode.edit&id=' . (int) $item->id);
 			$item->max_ordering = 0; //??
 			$canCreate          = $user->authorise('core.create');
-			$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
-			$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
-			$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+			$canEdit            = $user->authorise('core.edit', 'com_biblestudy.templatcode.' . $item->id);
+			$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.templatecode.' . $item->id);
+			$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.templatecode.' . $item->id);
 			?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -129,7 +129,7 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="center">
                 <div class="btn-group">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'templatecodes.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
 
@@ -143,26 +143,26 @@ $sortFields = $this->getSortFields();
                     <div class="pull-left">
 						<?php
 							// Create dropdown items
-							JHtml::_('dropdown.edit', $item->id, 'message.');
+							JHtml::_('dropdown.edit', $item->id, 'templatecode.');
 							JHtml::_('dropdown.divider');
 							if ($item->published) :
-								JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.publish', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							JHtml::_('dropdown.divider');
 
 							if ($archived) :
-								JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.archive', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							if ($trashed) :
-								JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.trash', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							// Render dropdown list
