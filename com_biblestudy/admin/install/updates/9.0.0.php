@@ -13,7 +13,8 @@ use \Joomla\Registry\Registry;
 /**
  * Update for 9.0.0 class
  *
- * @since  9.0.0
+ * @package  BibleStudy.Admin
+ * @since    9.0.0
  */
 class Migration900
 {
@@ -179,10 +180,6 @@ class Migration900
 
 				$registry->loadObject($params);
 
-				// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
-				$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
-				$metadata['downloads'] = $mediaFile->downloads;
-
 				$newMediaFile->server_id = $newServer->id;
 				$newMediaFile->params    = $registry->toString();
 
@@ -285,10 +282,6 @@ class Migration900
 			$params->popup	        = $mediaFile->popup;
 
 			$registry->loadObject($params);
-
-			// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
-			$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
-			$metadata['downloads'] = $mediaFile->downloads;
 
 			$newMediaFile->server_id = $newServer->id;
 			$newMediaFile->params    = $registry->toString();
