@@ -44,3 +44,5 @@ tests/unit/.joomla-cms/
 /composer.phar
 
 tests/.joomla-cms
+
+*.phar
