@@ -397,7 +397,6 @@ class JBSMPageBuilder
 			->join('LEFT', '#__users AS users ON study.user_id = users.id')
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
-
 		$query->group('study.id');
 		$query->where('study.published = 1');
 		$query->where('series.published =1 OR study.series_id <= 0');
