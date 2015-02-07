@@ -320,7 +320,7 @@ $input = $app->input;
 			<?php echo $this->form->getLabel('user_id'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->params->get('user_id') : $this->item->user_id) ?>
 		</div>
 	</div>
 	<div class="control-group">
