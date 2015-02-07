@@ -80,7 +80,7 @@ class TableTemplate extends JTable
 	/**
 	 * Contractor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   JDatabaseDriver  $db  Database connector object
 	 */
 	public function Tabletemplate($db)
 	{

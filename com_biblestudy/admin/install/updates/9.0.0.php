@@ -13,7 +13,7 @@ use \Joomla\Registry\Registry;
 /**
  * Update for 9.0.0 class
  *
- * @since    9.0.0
+ * @since  9.0.0
  */
 class Migration900
 {

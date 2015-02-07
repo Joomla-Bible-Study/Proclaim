@@ -15,7 +15,7 @@ use Joomla\Registry\Registry;
 /**
  * Joomla! Bible Study Media class.
  *
- * @since    7.0.0
+ * @since  7.0.0
  */
 class JBSMMedia
 {

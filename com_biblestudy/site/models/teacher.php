@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Model class for Teacher
  *
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyModelTeacher extends JModelItem
 {
@@ -81,8 +80,6 @@ class BiblestudyModelTeacher extends JModelItem
 
 		return $this->_item[$pk];
 	}
-
-
 
 	/**
 	 * Method to auto-populate the model state.
