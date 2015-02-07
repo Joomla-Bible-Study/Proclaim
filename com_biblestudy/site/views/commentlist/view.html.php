@@ -16,8 +16,7 @@ defined('_JEXEC') or die;
  * @property mixed canDo
  * @property array f_levels
  * @property mixed sidebar
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyViewCommentlist extends JViewLegacy
 {

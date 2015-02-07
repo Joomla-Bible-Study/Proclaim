@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Comments model class
  *
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyModelComments extends JModelList
 {

@@ -17,8 +17,7 @@ JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/
 /**
  * Comments model class
  *
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyModelCommentlist extends BiblestudyModelComments
 {
