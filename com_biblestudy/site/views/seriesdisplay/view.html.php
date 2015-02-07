@@ -120,7 +120,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 
-		if ($params->get('seriesdisplaytemplate') > 0)
+		if (is_string($params->get('seriesdisplaytemplate')) )
 		{
 			// Get studies associated with the series
 			$pagebuilder = new JBSMPagebuilder;
@@ -129,11 +129,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 			$limit       = $params->get('series_detail_limit', 10);
 			$seriesorder = $params->get('series_detail_order', 'DESC');
-			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $limit, $seriesorder);
+			$studies     = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $limit, $seriesorder, $this->template);
 
 			foreach ($studies AS $i => $study)
 			{
-				$pelements               = $pagebuilder->buildPage($study, $params);
+				$pelements               = $pagebuilder->buildPage($study, $params, $this->template);
 				$studies[$i]->scripture1 = $pelements->scripture1;
 				$studies[$i]->scripture2 = $pelements->scripture2;
 				$studies[$i]->media      = $pelements->media;
@@ -191,19 +191,13 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		{
 			$document->setMetadata('keywords', $params->get('metakey'));
 		}
-		elseif (!$params->get('metakey'))
-		{
-			$document->setMetadata('keywords', $this->admin_params->get('metakey'));
-		}
+
 
 		if ($params->get('metadesc'))
 		{
 			$document->setDescription($params->get('metadesc'));
 		}
-		elseif (!$params->get('metadesc'))
-		{
-			$document->setDescription($this->admin_params->get('metadesc'));
-		}
+
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
@@ -216,7 +210,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			return;
 		}
 
-		$studies = $items;
+		//$studies = $items;
 
 		$input->set('returnid', $items->id);
 

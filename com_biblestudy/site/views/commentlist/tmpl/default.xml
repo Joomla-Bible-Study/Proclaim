@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: form.xml tf 5-23-2008 $ -->
 <metadata>
-    <layout title="JBS_MNU_COMMENTS_LIST_EDIT_LAYOUT2">
+    <layout title="JBS_MNU_COMMENTS_LIST_EDIT_LAYOUT">
         <message>
             <![CDATA[JBS_MNU_COMMENTS_LIST_EDIT_LAYOUT_DESC]]>
         </message>

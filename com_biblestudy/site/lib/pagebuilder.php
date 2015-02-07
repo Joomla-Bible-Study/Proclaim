@@ -228,93 +228,7 @@ class JBSMPageBuilder
 		$mediafiles = $listing->getFluidMediaFiles($item, $params, $template);
 
 		return $mediafiles;
-		/*$mediaimage    = '';
 
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('media.*');
-		$query->from('#__bsms_mediafiles as media');
-		$query->select('server.id as serverid, server.params as sparams');
-		$query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server_id');
-		$query->select('study.media_hours, study.media_minutes, study.media_seconds');
-		$query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
-		$query->where('media.id IN (' . $mediaids . ')');
-		$query->where('media.published = 1');
-		$query->order('media.ordering ASC');
-		$db->setQuery($query);
-		$medias       = $db->loadObjectList();
-		$mediareturns = array();
-
-		foreach ($medias as $media)
-		{
-			$link_type = $media->link_type;
-			$registry  = new Registry;
-			$registry->loadString($media->params);
-			$params->merge($registry);
-			$registry = new Registry;
-			$registry->loadString($media->smedia);
-			$media->smedia = $registry;
-			$registry      = new Registry;
-			$registry->loadString($media->sparams);
-			$media->sparams = $registry;
-			$mediaid        = $media->id;
-			if ($media->impath)
-			{
-				$mediaimage = $media->impath;
-			}
-			elseif ($media->path2)
-			{
-				$mediaimage = 'media/com_biblestudy/images/' . $media->path2;
-			}
-			if (!$media->path2 && !$media->impath)
-			{
-				$mediaimage = 'media/com_biblestudy/images/speaker24.png';
-			}
-			$image = $mediaelements->useJImage($mediaimage, $media->params->get('mimetext'));
-			$player         = $mediaelements->getPlayerAttributes($params, $media);
-			$playercode     = $mediaelements->getPlayerCode($params, $player, $image, $media);
-			$d_image        = ($params->get('default_download_image') ? $params->get('default_download_image') : 'download.png');
-			$download_tmp   = $images->getMediaImage($d_image, null);
-			$download_image = $download_tmp->path;
-			$compat_mode    = $params->get('compat_mode');
-			$downloadlink   = null;
-
-			if ($link_type > 0)
-			{
-				$width  = $download_tmp->width;
-				$height = $download_tmp->height;
-
-				if ($compat_mode == 0)
-				{
-					$downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
-						(int) $mediaid . '&view=sermons&task=download">';
-				}
-				else
-				{
-					$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-						$media->params->get('filename') . '&size=' . $media->params->get('size') . '">';
-				}
-				$downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
-					$height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
-			}
-			switch ($link_type)
-			{
-				case 0:
-					$mediareturns[] = $playercode;
-					break;
-
-				case 1:
-					$mediareturns[] = $playercode . $downloadlink;
-					break;
-
-				case 2:
-					$mediareturns[] = $downloadlink;
-					break;
-			}
-		}
-		$mediareturn = implode('', $mediareturns);
-
-		return $mediareturn;*/
 	}
 
 	/**
@@ -381,7 +295,7 @@ class JBSMPageBuilder
 	 *
 	 * @return array
 	 */
-	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC')
+	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template)
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDBO();
@@ -430,7 +344,7 @@ class JBSMPageBuilder
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = $db->getQuery(true);
-		$query->select('list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+		$query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
 			// Use created if modified is 0
@@ -482,209 +396,6 @@ class JBSMPageBuilder
 			->join('LEFT', '#__users AS users ON study.user_id = users.id')
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
-		// Filter over teachers
-		$filters = $teacher;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.teacher_id = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters as $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.teacher_id = ' . (int) $filter, $condition);
-				}
-			}
-		}
-
-		// Filter locations
-		$filters = $locations;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.location_id = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.location_id = ' . (int) $filter, $condition);
-				}
-			}
-		}
-
-		// Filter over books
-		$filters = $book;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.booknumber = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.booknumber = ' . (int) $filter, $condition);
-				}
-			}
-		}
-		$filters = $series;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.series_id = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.series_id = ' . (int) $filter, $condition);
-				}
-			}
-		}
-		$filters = $topic;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.topics_id = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.topics_id = ' . (int) $filter, $condition);
-				}
-			}
-		}
-
-		// Filter by language
-		$lang = JFactory::getLanguage();
-
-		if ($lang || $language != '*')
-		{
-			$query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
-		}
-		else
-		{
-			$query->where('study.language in (' . $language . ')');
-		}
-
-		$filters = $messagetype_menu;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.messagetype = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.messagetype = ' . (int) $filter, $condition);
-				}
-			}
-		}
-		$filters = $year;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
-			}
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			if ($filters !== null)
-			{
-				foreach ($filters AS $filter)
-				{
-					if ($filter != -1)
-					{
-						$query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
-					}
-				}
-			}
-		}
 
 		$query->group('study.id');
 		$query->where('study.published = 1');
@@ -696,9 +407,14 @@ class JBSMPageBuilder
 		// Filter only for authorized view
 		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
 		$query->where('study.access IN (' . $groups . ')');
-
 		$db->setQuery($query, 0, $limit);
 		$studies = $db->loadObjectList();
+//Get media files for each study
+		for ($i = 0, $n = count($studies); $i < $n; $i++)
+		{
+			$study = &$studies[$i];
+			$study->media = $this->mediaBuilder($study->mids, $params, $template, $study);
+		}
 
 		return $studies;
 	}
