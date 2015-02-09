@@ -127,9 +127,9 @@ $input = $app->input;
 	<div id="cpanel" class="btn-group">
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
 			                     style="text-decoration:none; margin: 5px"
-			                     title="Assets Check" class="btn cpanl-img"> <img
+			                     title=<?php echo JText::_('JBS_ADM_ASSET_CHECK') ?> class="btn cpanl-img"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Assets Check </span></a>
+						border="0"/> <span> <?php echo JText::_('JBS_ADM_ASSET_CHECK') ?> </span></a>
 <!--        Disabled until we figure out a better way to do this.-->
 
 <!--		<div style="float:left;">-->
@@ -141,14 +141,14 @@ $input = $app->input;
 <!--		</div>-->
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
 			                     style="text-decoration:none; margin: 5px"
-			                     title="Migrate" class="btn"> <img
+			                     title=<?php echo JText::_('JBS_ADM_MIGRATE') ?> class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Migrate </span></a>
+						border="0"/> <span> <?php echo JText::_('JBS_ADM_MIGRATE') ?> </span></a>
 		<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
 			                     style="text-decoration:none; margin: 5px"
-			                     title="Backup / Restore" class="btn"> <img
+			                     title=<?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?> class="btn"> <img
 						src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt="" align="middle"
-						border="0"/> <span> Backup / Restor </span></a>
+						border="0"/> <span> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?> </span></a>
 	</div>
 </div>
 <div class="tab-pane" id="admin">
@@ -383,7 +383,7 @@ $input = $app->input;
         </div>
         <div class="control-group">
             <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton3(task)">
-                <i class="icon-user icon-white"></i> Submit
+                <i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
             </button>
         </div>
     </div>
@@ -411,7 +411,7 @@ $input = $app->input;
         </div>
         <div class="control-group">
             <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton4(task)">
-                <i class="icon-user icon-white"></i> Submit
+                <i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
             </button>
         </div>
     </div>
