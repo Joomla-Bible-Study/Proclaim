@@ -85,7 +85,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafileform&task=mediafileform.edit"  class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		// Escape strings for HTML output

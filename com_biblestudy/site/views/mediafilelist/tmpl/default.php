@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+/** @var $this BiblestudyViewMediafilelist */
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
