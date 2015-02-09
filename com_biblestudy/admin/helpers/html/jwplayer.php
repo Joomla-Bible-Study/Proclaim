@@ -90,6 +90,8 @@ abstract class JHtmlJwplayer
 		{
 			$params->playerresponsive = 0;
 		}
+
+		// Used to set for MP3 and audio player look
 		if ($player == true)
 		{
 			$media->playerheight = 30;
@@ -124,7 +126,7 @@ abstract class JHtmlJwplayer
 		}
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
 						jwplayer('placeholder" . $id . "').setup({
-							'file': '" . $media->path1 . "',
+							'file': '" . $media->path1 . "',;
 							";
 		if ($params->playerresponsive == 0)
 		{

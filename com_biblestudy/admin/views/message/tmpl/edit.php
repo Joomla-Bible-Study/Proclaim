@@ -348,13 +348,9 @@ $input  = $app->input;
 				</div>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
-
 						<?php echo $this->form->getInput('rules'); ?>
-
 					</div>
 				<?php endif; ?>
-
-
 				<?php
 				foreach ($params as $name => $fieldSet): ?>
 				<div class="tab-pane" id="metadata">
@@ -465,9 +461,7 @@ $input  = $app->input;
 
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
-
 						<?php echo $this->form->getInput('rules'); ?>
-
 					</div>
 				<?php endif; ?>
 				<?php echo JHtml::_('form.token'); ?>

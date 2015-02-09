@@ -10,8 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.modal');
+JHtml::_('behavior.keepalive');
+JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('behavior.framework');
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -380,7 +385,6 @@ $input = $app->input;
 		</div>
 	</div>
 </div>
-
 <?php if ($this->canDo->get('core.admin')): ?>
 	<div class="tab-pane" id="permissions">
 
@@ -388,8 +392,6 @@ $input = $app->input;
 
 	</div>
 <?php endif; ?>
-
-
 <div class="tab-pane" id="metadata">
 	<?php
 	foreach ($params as $name => $fieldset):
@@ -399,7 +401,6 @@ $input = $app->input;
 				<?php echo $this->escape(JText::_($fieldset->description)); ?>
 			</p>
 		<?php endif; ?>
-
 		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 		<div class="control-group">
 			<div class="control-label">
@@ -476,6 +477,14 @@ $input = $app->input;
 		</tr>
 		</tfoot>
 	</table>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('download_id'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('download_id'); ?>
+		</div>
+	</div>
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 </div>
