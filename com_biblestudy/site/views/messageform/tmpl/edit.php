@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+// Load the tooltip behavior.
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
@@ -17,22 +18,20 @@ JHtml::_('behavior.modal');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
+
+$params = $this->form->getFieldsets('params');
+$app    = JFactory::getApplication();
+$input  = $app->input;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
-			Joomla.submitform(task, document.getElementById('adminForm'));
+		if (task == 'message.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
 	}
 </script>
-<?php
-$params = $this->form->getFieldsets('params');
-$app = JFactory::getApplication();
-$input = $app->input;
-?>
-
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id=' . (int) $this->item->id); ?>"
@@ -266,6 +265,7 @@ $input = $app->input;
 		<div class="control-label">
 			<?php echo $this->form->getLabel('topics'); ?>
 		</div>
+		<div class="clr"></div>
 		<div class="controls">
 			<?php echo $this->form->getInput('topics'); ?>
 		</div>
@@ -485,12 +485,13 @@ $input = $app->input;
 			<?php echo $this->form->getInput('download_id'); ?>
 		</div>
 	</div>
-	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 </div>
 </div>
-<?php echo JHtml::_('form.token'); ?>
-<!-- End Sidebar -->
+		<!-- End Sidebar -->
+		<?php echo $this->form->getInput('thumbnailm'); ?>
+		<?php echo $this->form->getInput('id'); ?>
+		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 		</div>
 </div>
 </form>
