@@ -180,10 +180,6 @@ class Migration900
 
 				$registry->loadObject($params);
 
-				// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
-				$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
-				$metadata['downloads'] = $mediaFile->downloads;
-
 				$newMediaFile->server_id = $newServer->id;
 				$newMediaFile->params    = $registry->toString();
 
@@ -200,10 +196,11 @@ class Migration900
 			}
 		}
 
-		/** @var TableServer $newServer2 */
+		/** @var TableServer $newServer */
 		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-		$newServer->server_name = 'Defualt';
+		$newServer->server_name = 'Default';
 		$newServer->type        = "legacy";
+		$newServer->params      = $db->q("{'path':''}");
 		$newServer->id          = null;
 		$newServer->store();
 
@@ -286,10 +283,6 @@ class Migration900
 
 			$registry->loadObject($params);
 
-			// @todo I don't think we want to add both hits and plays to gather. Will need to verify this with tom
-			$metadata['hits']      = $mediaFile->hits + $mediaFile->plays;
-			$metadata['downloads'] = $mediaFile->downloads;
-
 			$newMediaFile->server_id = $newServer->id;
 			$newMediaFile->params    = $registry->toString();
 			$newMediaFile->metadata  = json_encode($metadata);
@@ -306,7 +299,8 @@ class Migration900
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
-		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret');
+		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret',
+			'server_type', 'ftp_username', 'ftp_password');
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters

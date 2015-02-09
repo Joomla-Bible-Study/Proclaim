@@ -15,8 +15,7 @@ use Joomla\Registry\Registry;
 /**
  * Class to build page elements in use by custom template files
  *
- * @package  BibleStudy.Site
- * @since    7.0.1
+ * @since  7.0.1
  */
 class JBSMPageBuilder
 {
@@ -30,8 +29,9 @@ class JBSMPageBuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object                    $item    Item info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   object                    $item      Item info
+	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  Template data
 	 *
 	 * @return object
 	 */
@@ -214,18 +214,18 @@ class JBSMPageBuilder
 	 *
 	 * @param   array                     $mediaids  ID of Media
 	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   object                    $template  template date
+	 * @param   object                    $item      Item Params
 	 *
 	 * @return string
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
-
-		//$images        = new JBSMImages;
-		$listing = new JBSMListing();
-		$mediaids = $listing->getFluidMediaids($item);
-		$media = $listing->getMediafiles($mediaids);
+		$listing          = new JBSMListing;
+		$mediaids         = $listing->getFluidMediaids($item);
+		$media            = $listing->getMediafiles($mediaids);
 		$item->mediafiles = $media;
-		$mediafiles = $listing->getFluidMediaFiles($item, $params, $template);
+		$mediafiles       = $listing->getFluidMediaFiles($item, $params, $template);
 
 		return $mediafiles;
 
@@ -292,10 +292,11 @@ class JBSMPageBuilder
 	 * @param   Joomla\Registry\Registry  $params      Item params
 	 * @param   int                       $limit       Limit of Records
 	 * @param   string                    $order       DESC or ASC
+	 * @param   object                    $template    Template Data
 	 *
 	 * @return array
 	 */
-	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template)
+	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDBO();
@@ -396,7 +397,6 @@ class JBSMPageBuilder
 			->join('LEFT', '#__users AS users ON study.user_id = users.id')
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
-
 		$query->group('study.id');
 		$query->where('study.published = 1');
 		$query->where('series.published =1 OR study.series_id <= 0');
@@ -409,7 +409,8 @@ class JBSMPageBuilder
 		$query->where('study.access IN (' . $groups . ')');
 		$db->setQuery($query, 0, $limit);
 		$studies = $db->loadObjectList();
-//Get media files for each study
+
+		// Get media files for each study
 		for ($i = 0, $n = count($studies); $i < $n; $i++)
 		{
 			$study = &$studies[$i];

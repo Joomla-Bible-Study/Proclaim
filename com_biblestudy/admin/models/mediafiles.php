@@ -21,6 +21,13 @@ use Joomla\Registry\Registry;
 class BiblestudyModelMediafiles extends JModelList
 {
 	/**
+	 * Model context string.
+	 *
+	 * @var        string
+	 */
+	public $_context = 'com_biblestudy.mediafiles';
+
+	/**
 	 * Number of Deletions
 	 *
 	 * @var int

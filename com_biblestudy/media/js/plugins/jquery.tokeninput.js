@@ -425,6 +425,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
             hide_dropdown();
+
         }
     }
 

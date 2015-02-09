@@ -85,7 +85,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafileform&task=mediafileform.edit"  class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		// Escape strings for HTML output
@@ -163,11 +163,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	{
 		return array(
 			'study.studytitle'     => JText::_('JBS_CMN_STUDY_TITLE'),
-			'mediatype.media_text' => JText::_('JBS_MED_MEDIA_TYPE'),
-			'mediafile.filename'   => JText::_('JBS_MED_FILENAME'),
-			'mediafile.published'  => JText::_('JSTATUS'),
+			'mediafile.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
 			'mediafile.id'         => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }

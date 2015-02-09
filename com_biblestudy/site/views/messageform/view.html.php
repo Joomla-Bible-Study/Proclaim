@@ -105,11 +105,12 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
 		$document            = JFactory::getDocument();
 
+		JHtml::_('jquery.framework');
 		$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
 		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
 		$script = "
-            \$j(document).ready(function() {
-                \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
+            jQuery(document).ready(function() {
+                jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
                 {
                     theme: 'jbs',
                     hintText: '" . JText::_('JBS_CMN_TOPIC_TAG') . "',
@@ -117,6 +118,7 @@ class BiblestudyViewMessageform extends JViewLegacy
                     searchingText: '" . JText::_('JBS_CMN_SEARCHING') . "',
                     animateDropdown: false,
                     preventDuplicates: true,
+                    allowFreeTagging: true,
                     prePopulate: " . $this->get('topics') . "
                 });
             });

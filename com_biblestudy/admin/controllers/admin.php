@@ -15,8 +15,7 @@ use \Joomla\Registry\Registry;
 /**
  * Controller for Admin
  *
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyControllerAdmin extends JControllerForm
 {
@@ -71,7 +70,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function changePlayers()
 	{
 		$db   = JFactory::getDBO();
-		$msg  = JText::_('JBS_ADM_ERROR_OCCURED');
+		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
 		$reg->loadArray($post['params']);
@@ -79,31 +78,36 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$to   = $reg->get('to');
 		if ($from != 'x' && $to != 'x')
 		{
-			switch ($from)
-			{
-				case '100':
-					$query = $db->getQuery(true);
-					$query->update('#__bsms_mediafiles')
-						->set('player = ' . $db->quote($to))
-						->where('player IS NULL');
-					break;
-
-				default:
-					$query = $db->getQuery(true);
-					$query->update('#__bsms_mediafiles')
-						->set('player = ' . $db->quote($to))
-						->where('player = ' . $db->quote($from));
-			}
+			$query = $db->getQuery(true);
+			$query->select('id, params')
+				->from('#__bsms_mediafiles');
 			$db->setQuery($query);
 
-			if ($db->execute())
+			foreach ($db->loadObjectList() as $media)
 			{
-				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+				$reg = new Registry;
+				$reg->loadString($media->params);
+				if ($reg->get('player', 0) == $from)
+				{
+					$reg->set('player', $to);
+
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('params = ' . $db->q($reg->toString()))
+						->where('id = ' . (int) $media->id);
+					$db->setQuery($query);
+
+					if (!$db->execute())
+					{
+						$msg = JText::_('JBS_ADM_ERROR_OCCURED');
+						$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+					}
+				}
 			}
 		}
 		else
 		{
-			$msg .= ': Missed setting the From or Two';
+			$msg = JText::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or Two';
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
@@ -120,19 +124,32 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$msg    = null;
 		$from   = $jinput->getInt('pfrom', '', 'post');
 		$to     = $jinput->getInt('pto', '', 'post');
+		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$query  = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')
-			->set('popup = ' . $db->q($to))
-			->where('popup = ' . $db->q($from));
+		$query->select('id, params')
+			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
 
-		if (!$db->execute())
+		foreach ($db->loadObjectList() as $media)
 		{
-			$msg = JText::_('JBS_ADM_ERROR_OCCURED');
-		}
-		else
-		{
-			$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			$reg = new Registry;
+			$reg->loadString($media->params);
+			if ($reg->get('popup', 0) == $from)
+			{
+				$reg->set('popup', $to);
+
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set('params = ' . $db->q($reg->toString()))
+					->where('id = ' . (int) $media->id);
+				$db->setQuery($query);
+
+				if (!$db->execute())
+				{
+					$msg = JText::_('JBS_ADM_ERROR_OCCURED');
+					$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				}
+			}
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}

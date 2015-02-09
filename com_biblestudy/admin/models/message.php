@@ -485,7 +485,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function checkout($pk = null)
 	{
-		return $pk;
+		return true;
 	}
 
 	/**

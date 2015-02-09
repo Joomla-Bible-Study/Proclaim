@@ -192,12 +192,10 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			$document->setMetadata('keywords', $params->get('metakey'));
 		}
 
-
 		if ($params->get('metadesc'))
 		{
 			$document->setDescription($params->get('metadesc'));
 		}
-
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
@@ -209,8 +207,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 			return;
 		}
-
-		//$studies = $items;
 
 		$input->set('returnid', $items->id);
 

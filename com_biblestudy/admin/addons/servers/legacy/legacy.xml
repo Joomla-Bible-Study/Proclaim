@@ -7,7 +7,7 @@
     </config>
 	<fields name="params">
 		<fieldset name="Server" label="JBS_ADDON_LEGACY_DETAILS">
-	        <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox" size="35"></field>
+	        <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox" size="35" />
 		</fieldset>
 	</fields>
     <fields name="media">

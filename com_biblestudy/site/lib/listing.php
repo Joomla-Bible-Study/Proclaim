@@ -11,14 +11,13 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-require_once JPATH_ADMINISTRATOR .'/components/com_biblestudy/tables/template.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables/template.php';
 use Joomla\Registry\Registry;
 
 /**
  * BibleStudy listing class
  *
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since  7.0.0
  */
 class JBSMListing
 {

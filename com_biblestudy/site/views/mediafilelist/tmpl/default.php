@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+/** @var $this BiblestudyViewMediafilelist */
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
@@ -25,7 +26,28 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'ordering';
+$saveOrder = $listOrder == 'mediafile.ordering';
+
+if ($saveOrder)
+{
+	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
+$sortFields = $this->getSortFields();
+?>
+<script type="text/javascript">
+	Joomla.orderTable = function () {
+		table = document.getElementById("sortTable");
+		direction = document.getElementById("directionTable");
+		order = table.options[table.selectedIndex].value;
+		if (order != '<?php echo $listOrder; ?>') {
+			dirn = 'asc';
+		} else {
+			dirn = direction.options[direction.selectedIndex].value;
+		}
+		Joomla.tableOrdering(order, dirn, '');
+	}
+</script>
 ?>
 <h2><?php echo JText::_('JBS_CMN_MEDIA'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilelist'); ?>" method="post"
@@ -53,16 +75,13 @@ $saveOrder = $listOrder == 'ordering';
 			<div class="btn-group pull-right hidden-phone">
 				<label for="directionTable"
 				       class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
-				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
+				<select name="directionTable" id="directionTable" class="input-medium"
+				        onchange="Joomla.orderTable()">
 					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-					<option value="asc" <?php if ($listDirn == 'asc')
-					{
-						echo 'selected="selected"';
-					} ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
-					<option value="desc" <?php if ($listDirn == 'desc')
-					{
-						echo 'selected="selected"';
-					} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
+					<option
+						value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+					<option
+						value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
 				</select>
 			</div>
 			<div class="btn-group pull-right">

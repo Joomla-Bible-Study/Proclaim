@@ -10,24 +10,28 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('formbehavior.chosen', 'select');
+// Load the tooltip behavior.
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.modal');
+JHtml::_('behavior.keepalive');
+JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('behavior.framework');
+
+$params = $this->form->getFieldsets('params');
+$app    = JFactory::getApplication();
+$input  = $app->input;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task == 'sermon.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
-			Joomla.submitform(task, document.getElementById('adminForm'));
+		if (task == 'message.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+			Joomla.submitform(task, document.getElementById('item-form'));
 		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
 	}
 </script>
-<?php
-$params = $this->form->getFieldsets('params');
-$app = JFactory::getApplication();
-$input = $app->input;
-?>
-
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&a_id=' . (int) $this->item->id); ?>"
@@ -261,6 +265,7 @@ $input = $app->input;
 		<div class="control-label">
 			<?php echo $this->form->getLabel('topics'); ?>
 		</div>
+		<div class="clr"></div>
 		<div class="controls">
 			<?php echo $this->form->getInput('topics'); ?>
 		</div>
@@ -320,7 +325,7 @@ $input = $app->input;
 			<?php echo $this->form->getLabel('user_id'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->params->get('user_id') : $this->item->user_id) ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -380,7 +385,6 @@ $input = $app->input;
 		</div>
 	</div>
 </div>
-
 <?php if ($this->canDo->get('core.admin')): ?>
 	<div class="tab-pane" id="permissions">
 
@@ -388,8 +392,6 @@ $input = $app->input;
 
 	</div>
 <?php endif; ?>
-
-
 <div class="tab-pane" id="metadata">
 	<?php
 	foreach ($params as $name => $fieldset):
@@ -399,7 +401,6 @@ $input = $app->input;
 				<?php echo $this->escape(JText::_($fieldset->description)); ?>
 			</p>
 		<?php endif; ?>
-
 		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 		<div class="control-group">
 			<div class="control-label">
@@ -476,12 +477,21 @@ $input = $app->input;
 		</tr>
 		</tfoot>
 	</table>
-	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+	<div class="control-group">
+		<div class="control-label">
+			<?php echo $this->form->getLabel('download_id'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('download_id'); ?>
+		</div>
+	</div>
 </div>
 </div>
-<?php echo JHtml::_('form.token'); ?>
-<!-- End Sidebar -->
+		<!-- End Sidebar -->
+		<?php echo $this->form->getInput('thumbnailm'); ?>
+		<?php echo $this->form->getInput('id'); ?>
+		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 		</div>
 </div>
 </form>

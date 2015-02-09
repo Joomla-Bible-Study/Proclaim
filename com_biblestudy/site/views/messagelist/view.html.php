@@ -109,7 +109,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		$this->_prepareDocument();
