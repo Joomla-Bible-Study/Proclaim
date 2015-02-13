@@ -53,7 +53,7 @@ class JBSMDownload
 		$protocol = $params->get('protocol', 'http://');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath')
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams')
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
 			->where('#__bsms_mediafiles.id = ' . $mid);
@@ -67,123 +67,132 @@ class JBSMDownload
 		$registry->loadString($media->params);
 		$params->merge($registry);
 
-		$filename      = $media->filename;
-		$size          = $media->size;
-		$download_file = $protocol . $filename;
+		$registry = new Registry;
+		$registry->loadString($media->sparams);
+		$sparams = $registry;
+
+		$filename      = $params->get('filename');
+		$size          = $params->get('size');
+		$download_file = $protocol . $sparams->get('path') . $filename;
 		$mimeType      = $params->get('mimetype');
 		/** @var $download_file object */
 		$getsize = $this->getRemoteFileSize($download_file);
-
-		if ($size === '')
+		if ($filename && $getsize)
 		{
-			if ($size != $getsize)
-			{
 
-				if ($getsize != false)
+			if ($size === '')
+			{
+				if ($size != $getsize)
 				{
-					$size = $getsize;
+
+					if ($getsize != false)
+					{
+						$size = $getsize;
+					}
 				}
 			}
-		}
 
-		// Clean the output buffer
-		@ob_end_clean();
+			// Clean the output buffer
+			@ob_end_clean();
 
-		// Test for protocol and set the appropriate headers
-		jimport('joomla.environment.uri');
-		$_tmp_uri      = JURI::getInstance(JURI::current());
-		$_tmp_protocol = $_tmp_uri->getScheme();
+			// Test for protocol and set the appropriate headers
+			jimport('joomla.environment.uri');
+			$_tmp_uri      = JURI::getInstance(JURI::current());
+			$_tmp_protocol = $_tmp_uri->getScheme();
 
-		if ($_tmp_protocol == "https")
-		{
-			// SSL Support
-			header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
-		}
-		else
-		{
-			header("Cache-Control: public, must-revalidate");
-			header('Cache-Control: pre-check=0, post-check=0, max-age=0');
-			header('Pragma: no-cache');
-			header("Expires: 0");
-		} /* end if protocol https */
-		header('Content-Transfer-Encoding: none');
-		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-		header("Accept-Ranges:  bytes");
-
-		// Modified by Rene
-		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
-		$newFileSize = $size - 1;
-
-		// Default values! Will be overridden if a valid range header field was detected!
-		$resultLenght = (string) $size;
-		$resultRange  = "0-" . $newFileSize;
-
-		/* We support requests for a single range only.
-		 * So we check if we have a range field. If yes ensure that it is a valid one.
-		 * If it is not valid we ignore it and sending the whole file.
-		 * */
-		if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE']))
-		{
-			// Let's take the right side
-			list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
-
-			// And get the two values (as strings!)
-			$httpRange = explode('-', $httpRange);
-
-			// Check if we have values! If not we have nothing to do!
-			if (!empty($httpRange[0]) || !empty($httpRange[1]))
+			if ($_tmp_protocol == "https")
 			{
-				// We need the new content length ...
-				$resultLenght = $size - $httpRange[0] - $httpRange[1];
+				// SSL Support
+				header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
+			}
+			else
+			{
+				header("Cache-Control: public, must-revalidate");
+				header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+				header('Pragma: no-cache');
+				header("Expires: 0");
+			} /* end if protocol https */
+			header('Content-Transfer-Encoding: none');
+			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+			header("Accept-Ranges:  bytes");
 
-				// ... and we can add the 206 Status.
-				header("HTTP/1.1 206 Partial Content");
+			// Modified by Rene
+			// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
+			$newFileSize = $size - 1;
 
-				// Now we need the content-range, so we have to build it depending on the given range!
-				// ex.: -500 -> the last 500 bytes
-				if (empty($httpRange[0]))
+			// Default values! Will be overridden if a valid range header field was detected!
+			$resultLenght = (string) $size;
+			$resultRange  = "0-" . $newFileSize;
+
+			/* We support requests for a single range only.
+			 * So we check if we have a range field. If yes ensure that it is a valid one.
+			 * If it is not valid we ignore it and sending the whole file.
+			 * */
+			if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE']))
+			{
+				// Let's take the right side
+				list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
+
+				// And get the two values (as strings!)
+				$httpRange = explode('-', $httpRange);
+
+				// Check if we have values! If not we have nothing to do!
+				if (!empty($httpRange[0]) || !empty($httpRange[1]))
 				{
-					$resultRange = $resultLenght . '-' . $newFileSize;
-				}
+					// We need the new content length ...
+					$resultLenght = $size - $httpRange[0] - $httpRange[1];
 
-				// Ex.: 500- -> from 500 bytes to file size
-				elseif (empty($httpRange[1]))
-				{
-					$resultRange = $httpRange[0] . '-' . $newFileSize;
-				}
+					// ... and we can add the 206 Status.
+					header("HTTP/1.1 206 Partial Content");
 
-				// Ex.: 500-1000 -> from 500 to 1000 bytes
-				else
-				{
-					$resultRange = $httpRange[0] . '-' . $httpRange[1];
+					// Now we need the content-range, so we have to build it depending on the given range!
+					// ex.: -500 -> the last 500 bytes
+					if (empty($httpRange[0]))
+					{
+						$resultRange = $resultLenght . '-' . $newFileSize;
+					}
+
+					// Ex.: 500- -> from 500 bytes to file size
+					elseif (empty($httpRange[1]))
+					{
+						$resultRange = $httpRange[0] . '-' . $newFileSize;
+					}
+
+					// Ex.: 500-1000 -> from 500 to 1000 bytes
+					else
+					{
+						$resultRange = $httpRange[0] . '-' . $httpRange[1];
+					}
 				}
 			}
-		}
-		header('Content-Length: ' . $resultLenght);
-		header('Content-Range: bytes ' . $resultRange . '/' . $size);
+			header('Content-Length: ' . $resultLenght);
+			header('Content-Range: bytes ' . $resultRange . '/' . $size);
 
-		header('Content-Type: ' . $mimeType);
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-		header('Content-Transfer-Encoding: binary\n');
+			header('Content-Type: ' . $mimeType);
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			header('Content-Transfer-Encoding: binary\n');
 
-		// Try to deliver in chunks
-		@set_time_limit(0);
-		$fp = @fopen($download_file, 'rb');
+			// Try to deliver in chunks
+			@set_time_limit(0);
+			$fp = @fopen($download_file, 'rb');
 
-		if ($fp !== false)
-		{
-			while (!feof($fp))
+			if ($fp !== false)
 			{
-				echo fread($fp, 8192);
+				while (!feof($fp))
+				{
+					echo fread($fp, 8192);
+				}
+				fclose($fp);
 			}
-			fclose($fp);
+			else
+			{
+				@readfile($download_file);
+			}
+			flush();
+			exit;
 		}
-		else
-		{
-			@readfile($download_file);
-		}
-		flush();
-		exit;
+		JFactory::getApplication()->enqueueMessage('Error Looking up Media file for download', 'error');
+		return;
 	}
 
 	/**
@@ -201,17 +210,20 @@ class JBSMDownload
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')->set('downloads = downloads + 1 ')->where('id = ' . $mid);
 		$db->setQuery($query);
-		$db->execute();
-
+		if (!$db->execute())
+		{
+			JFactory::getApplication()->enqueueMessage('Error applying hit to donwload', 'error');
+			return false;
+		}
 		return true;
 	}
 
 	/**
 	 * Method to get file size
 	 *
-	 * @param   string  $url  URL
+	 * @param   string  $url  URL to get file size of.
 	 *
-	 * @return  boolean
+	 * @return  mixed|boolean Returns file size or false if error.
 	 */
 	protected function getRemoteFileSize($url)
 	{
