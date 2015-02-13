@@ -9,7 +9,7 @@ ALTER TABLE `#__bsms_servers` MODIFY COLUMN `type` CHAR(255) NOT NULL;
 -- -- MediaFiles
 ALTER TABLE `#__bsms_mediafiles` MODIFY COLUMN `hits` INT (10) DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `server_id` INT(5) NULL AFTER `study_id`;
-ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `metadata` TEXT NOT NULL AFTER `params`;
+ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `metadata` TEXT NOT NULL AFTER `podcast_id`;
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_checkout` (`checked_out`);
