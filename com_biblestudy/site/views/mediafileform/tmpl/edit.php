@@ -30,8 +30,8 @@ $app = JFactory::getApplication();
 // Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
-$option = $input->get('option', '', 'cmd');
 $input = new JInput;
+$option = $input->get('option', '', 'cmd');
 $study = $app->getUserState($option . 'sid');
 $sdate = $app->getUserState($option . 'sdate');
 

@@ -100,7 +100,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_finish       = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
-		$this->running = JText::_('Starting');
+		$this->running = JText::_('JBS_MIG_STARTING');
 	}
 
 	/**
@@ -510,7 +510,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			$this->_finish       = array();
 			$this->totalVersions = 0;
 			$this->doneVersions  = 0;
-			$this->running = JText::_('Starting');
+			$this->running = JText::_('JBS_MIG_STARTING');
 
 			return;
 		}

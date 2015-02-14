@@ -216,7 +216,7 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function doBackup()
 	{
-		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/');
+		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/backup.php');
 		$dbbackup = new JBSMBackup;
 		$backup   = $dbbackup->exportdb($run = 2);
 
