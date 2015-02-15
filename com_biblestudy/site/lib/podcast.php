@@ -54,7 +54,9 @@ class JBSMPodcast
 
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
+		$query->select('*')
+			->from('#__bsms_podcast')
+			->where('#__bsms_podcast.published = ' . 1);
 		$db->setQuery($query);
 		$podids       = $db->loadObjectList();
 		$custom       = new JBSMCustom;
@@ -166,7 +168,7 @@ class JBSMPodcast
 						{
 							$hours = '00';
 						}
-						// If there is no length set, we default to 35 minuts
+						// If there is no length set, we default to 35 mints
 						if (!$episode->media_minutes && !$episode->media_seconds)
 						{
 							$episode->media_minutes = 35;
@@ -179,7 +181,11 @@ class JBSMPodcast
 						$pod_title    = $podinfo->episodetitle;
 						$pod_subtitle = $podinfo->episodesubtitle;
 
-						if (!$episode->size)
+						if ($episode->params->get('size'))
+						{
+							$episode->size = $episode->params->get('size');
+						}
+						else
 						{
 							$episode->size = '30000000';
 						}

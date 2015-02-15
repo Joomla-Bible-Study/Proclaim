@@ -88,7 +88,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	 *
 	 * @param   object  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean   True if Time is difference. False if not grater then now.
 	 */
 	public function checktime($params)
 	{
@@ -119,12 +119,12 @@ class PlgSystemJBSPodcast extends JPlugin
 	 *
 	 * @param   Joomla\Registry\Registry  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean Check to see if to day is right.
 	 */
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = & JFactory::getConfig();
+		$config    = JFactory::getConfig();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
