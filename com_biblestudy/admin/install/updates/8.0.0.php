@@ -99,7 +99,7 @@ class Migration800
 				if (!$db->execute())
 				{
 
-					JFactory::getApplication()->enqueueMessage('Filed to delete old topic id: ' . $topic->id, 'warning');
+					JFactory::getApplication()->enqueueMessage('Failed to delete old topic id: ' . $topic->id, 'warning');
 
 					return false;
 				}
@@ -143,7 +143,7 @@ class Migration800
 
 				if (!$db->execute())
 				{
-					JFactory::getApplication()->enqueueMessage('Update of Studies topics Filed' . $result->id, 'warning');
+					JFactory::getApplication()->enqueueMessage('Update of Studies topics Failed' . $result->id, 'warning');
 
 					return;
 				}
@@ -241,7 +241,7 @@ class Migration800
 
 			if (!$db->execute())
 			{
-				JFactory::getApplication()->enqueueMessage('Update of mediafile params Filed' . $result->id, 'warning');
+				JFactory::getApplication()->enqueueMessage('Update of mediafile params Failed' . $result->id, 'warning');
 
 				return false;
 			}

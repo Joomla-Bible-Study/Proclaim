@@ -73,6 +73,9 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->params = $this->state->template->params;
 
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		if (!$this->canDo->get('core.edit'))
 		{
 			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');

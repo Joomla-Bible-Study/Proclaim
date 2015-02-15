@@ -87,6 +87,9 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$this->user   = $user;
 
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		if (!$this->params->def('page_title', ''))
 		{
 			define('JBSPAGETITLE', 0);

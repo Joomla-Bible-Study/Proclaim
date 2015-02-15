@@ -71,6 +71,10 @@ class BiblestudyViewCommentlist extends JViewLegacy
 
 			return;
 		}
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
 
 		// Check permissions to enter studies

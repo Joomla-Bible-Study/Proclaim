@@ -24,8 +24,8 @@ defined('_JEXEC') or die; ?>
 				<fieldset class="panelform">
 					<legend><?php echo JText::_('JBS_CMN_EXPORT'); ?></legend>
 					<ul>
-						<li><?php echo $this->templates; ?></td><?php ?>
-							<input type="submit" value="Submit"
+						<li><?php echo $this->templates; ?>
+							<input type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
 							       onclick="Joomla.submitbutton('templates.template_export')"/>
 						</li>
 					</ul>
@@ -36,7 +36,7 @@ defined('_JEXEC') or die; ?>
 					<legend><?php echo JText::_('JBS_CMN_IMPORT'); ?></legend>
 					<ul>
 						<li><input class="input_box" id="template_import" name="template_import" type="file" size="57"/>
-							<input type="submit" value="Submit"
+							<input type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
 							       onclick="Joomla.submitbutton('templates.template_import')"/>
 						</li>
 					</ul>
