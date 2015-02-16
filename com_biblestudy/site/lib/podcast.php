@@ -148,7 +148,8 @@ class JBSMPodcast
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
 					$registry        = new Registry;
-					$registry->loadString($podinfo->params);
+					$registry->loadString(JBSMParams::getAdmin()->params);
+					$registry->merge(JBSMParams::getTemplateparams()->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
 
@@ -351,7 +352,7 @@ class JBSMPodcast
 						{
 							$episodedetailtemp .= '<link>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</link>';
 						}
-						elseif ($podinfo->link == '2')
+						elseif ($podinfo->linktype == '2')
 						{
 							$episodedetailtemp .= '<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
 								$episode->sid . $detailstemplateid . '</link>';
@@ -408,7 +409,7 @@ class JBSMPodcast
 									"%20",
 									$episode->params->get('filename')
 								) . '" length="' . $episode->params->get('size') . '" type="'
-								. $episode->mimetype . '" />
+								. $episode->params->get('mimetype') . '" />
                         			<guid>http://' . str_replace(
 									' ',
 									"%20",
@@ -499,8 +500,7 @@ class JBSMPodcast
 		{
 			return false;
 		}
-
-		$return = getimagesize(JURI::root() . $path);
+		$return = @getimagesize(JURI::root() . $path);
 
 		return $return;
 	}
