@@ -7,7 +7,10 @@
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
-
+/**
+ * Bible Study Core Defines
+ */
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * JBSBackup jPlugin class
  *
