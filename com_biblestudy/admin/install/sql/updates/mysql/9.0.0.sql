@@ -69,4 +69,5 @@ ALTER TABLE `#__bsms_studies` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`user_id`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
 
+ALTER TABLE `#__bsms_podcast` ADD COLUMN `linktype` INT(10) NOT NULL  DEFAULT '0' AFTER `customsubtitle`;
 -- drop all asset ides in php referring to folder media and memtype;
