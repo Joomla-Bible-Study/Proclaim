@@ -13,7 +13,7 @@
             <field name="id" type="modal_studydetails"
                    description="JBS_MNU_SELECT_STUDY_DESC"
                    label="JBS_CMN_SELECT_STUDY"
-
+                    required="true"
                     />
 
             <field name="t" type="sql"
