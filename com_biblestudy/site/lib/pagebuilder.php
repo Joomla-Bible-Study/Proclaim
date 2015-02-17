@@ -399,13 +399,16 @@ class JBSMPageBuilder
 
 		$query->group('study.id');
 		$query->where('study.published = 1');
-		$query->where('series.published =1 OR study.series_id <= 0');
-		$query->where($wherefield . ' = ' . $whereitem);
+		$query->where('series.published = 1 OR study.series_id <= 0');
+		if ($wherefield && $whereitem)
+		{
+			$query->where($wherefield . ' = ' . $whereitem);
+		}
 
 		$query->order('studydate ' . $order);
 
 		// Filter only for authorized view
-		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
+		$query->where('(series.access IN (' . $groups . ') AND study.series_id <= 0)');
 		$query->where('study.access IN (' . $groups . ')');
 		$db->setQuery($query, 0, $limit);
 		$studies = $db->loadObjectList();

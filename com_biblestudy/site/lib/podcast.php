@@ -50,7 +50,7 @@ class JBSMPodcast
 
 		// Get english language file as fallback
 		$language = JFactory::getLanguage();
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
@@ -79,7 +79,7 @@ class JBSMPodcast
 				}
 
 				// Load language file
-				$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', $podlanguage, true);
+				$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);

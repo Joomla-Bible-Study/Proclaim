@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * This is a dummy form element to load the components language file
  *
@@ -52,8 +53,8 @@ class JFormFieldLoadLanguageFile extends JFormField
 	{
 		// Get language file; english language as fallback
 		$language = JFactory::getLanguage();
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
+		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 		// Return an empty string; nothing to display
 		return '';
