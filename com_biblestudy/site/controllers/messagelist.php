@@ -33,7 +33,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Mediafileform', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Messagelist', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

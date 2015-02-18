@@ -173,6 +173,28 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
+		// Technically guest could edit an article, but lets not check that to improve performance a little.
+		if (!$user->get('guest'))
+		{
+			$userId = $user->get('id');
+			$asset  = 'com_biblestudy.message.' . $item->id;
+dump($user->authorise('core.edit', $asset));
+			// Check general edit permission first.
+			if ($user->authorise('core.edit', $asset))
+			{
+				$item->params->set('access-edit', true);
+			}
+
+			// Now check if edit.own is available.
+			elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+			{
+				// Check for a valid user and that they are the owner.
+				if ($userId == $item->created_by)
+				{
+					$item->params->set('access-edit', true);
+				}
+			}
+		}
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
