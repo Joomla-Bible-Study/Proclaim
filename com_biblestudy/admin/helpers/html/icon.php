@@ -141,7 +141,7 @@ abstract class JHtmlIcon
 		{
 			return;
 		}
-dump($article);
+
 		// Ignore if the state is negative (trashed).
 		if ($article->published < 0)
 		{

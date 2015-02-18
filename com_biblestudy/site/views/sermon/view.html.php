@@ -178,7 +178,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$userId = $user->get('id');
 			$asset  = 'com_biblestudy.message.' . $item->id;
-dump($user->authorise('core.edit', $asset));
+
 			// Check general edit permission first.
 			if ($user->authorise('core.edit', $asset))
 			{
