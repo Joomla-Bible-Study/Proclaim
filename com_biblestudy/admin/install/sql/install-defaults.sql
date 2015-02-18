@@ -115,11 +115,11 @@ INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, 
 -- Dumping data for table `#__bsms_podcast`
 --
 
-INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`)
+INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `episodesubtitle`, `customsubtitle`, `linktype`)
 VALUES
   (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30,
    'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com',
-   50, 1, 0, '', 1, 0, 1);
+   50, 1, 0, '', 1, 0, 1, '', '', '', '', '', '', '', '', 0);
 
 --
 -- Dumping data for table `#__bsms_series`
