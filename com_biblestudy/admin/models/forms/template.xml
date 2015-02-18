@@ -767,7 +767,7 @@
                 <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
             </field>
             <field name="sharelabel" type="text" size="100" default="Share This"
-                   label="JBS_TPL_SHARELABEL" description="JBS_TPL_SHARELABEL_DESC" />
+                   label="JBS_TPL_SHARE_LABEL" description="JBS_TPL_SHARE_DESC" />
             <field name="comments_type" type="list" default="0"
                    label="JBS_TPL_COMMENT_TYPE" description="JBS_TPL_COMMENT_TYPE_DESC">
                     <option value="0">JBS_TPL_JBS_COMMENTS</option>
