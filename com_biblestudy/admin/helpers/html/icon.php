@@ -1,13 +1,12 @@
-<?php
 /**
- * @package     Joomla.Site
- * @subpackage  com_content
- *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
-
-defined('_JEXEC') or die;
+* Part of Joomla BibleStudy Package
+*
+* @package    BibleStudy.Admin
+* @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+* @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+* @link       http://www.JoomlaBibleStudy.org
+* */
+// No Direct Access
 
 use Joomla\Registry\Registry;
 
@@ -175,14 +174,6 @@ abstract class JHtmlIcon
 		{
 			$overlib = JText::_('JPUBLISHED');
 		}
-
-		//$date   = JHtml::_('date', $article->created);
-		//$author = $article->created_by_alias ? $article->created_by_alias : $article->author;
-
-		//$overlib .= '&lt;br /&gt;';
-		//$overlib .= $date;
-		//$overlib .= '&lt;br /&gt;';
-		//$overlib .= JText::sprintf('COM_CONTENT_WRITTEN_BY', htmlspecialchars($author, ENT_COMPAT, 'UTF-8'));
 
 		if ($legacy)
 		{
