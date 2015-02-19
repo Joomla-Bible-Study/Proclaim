@@ -20,6 +20,7 @@ DELETE FROM `#__bsms_topics` WHERE `topic_text` = 'A';
 
 -- -- Remove Old tables
 DROP TABLE IF EXISTS `#__bsms_order`;
+DROP TABLE IF EXISTS `#__bsms_search`;
 
 -- -- Locations
 ALTER TABLE `#__bsms_locations` ADD COLUMN `contact_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact' AFTER `location_text`;
