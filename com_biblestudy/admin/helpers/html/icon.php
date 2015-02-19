@@ -1,3 +1,4 @@
+<?php
 /**
 * Part of Joomla BibleStudy Package
 *
