@@ -18,25 +18,23 @@ JHtml::_('behavior.multiselect');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->state->params);
 
-$app = JFactory::getApplication();
-$user = JFactory::getUser();
-$userId = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$archived = $this->state->get('filter.published') == 2 ? true : false;
-$trashed = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'ordering';
+$app        = JFactory::getApplication();
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$listOrder  = $this->escape($this->state->get('list.ordering'));
+$listDirn   = $this->escape($this->state->get('list.direction'));
+$archived   = $this->state->get('filter.published') == 2 ? true : false;
+$trashed    = $this->state->get('filter.published') == -2 ? true : false;
+$saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
+var_dump($listOrder);
 ?>
 <script type="text/javascript">
-	var table;
-	var direction;
-	var order;
-	var dirn;
 	Joomla.orderTable = function () {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
+		var table = document.getElementById("sortTable");
+		var direction = document.getElementById("directionTable");
+		var order = table.options[table.selectedIndex].value;
+		var dirn;
 		if (order != '<?php echo $listOrder; ?>') {
 			dirn = 'asc';
 		} else {
@@ -88,14 +86,15 @@ $sortFields = $this->getSortFields();
 					</select>
 				</div>
 			<div class="btn-group pull-right">
-				<label for="sortTable" class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
+				<label for="sortTable"
+				       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
 				<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
 					<option value=""><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></option>
 					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
 				</select>
 			</div>
 		</div>
-		<table id="articleList" class="table table-striped">
+		<table class="table table-striped adminlist" id="comments">
 			<thead>
 			<tr>
 				<th width="1%">
@@ -141,7 +140,7 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="center">
 						<div class="btn-group">
-							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'commentlist.', $canChange, 'cb', '', ''); ?>
+							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
 						</div>
 					</td>
 
