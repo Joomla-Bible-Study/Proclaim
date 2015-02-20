@@ -23,6 +23,18 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelMessageform extends BiblestudyModelMessage
 {
+	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see     JController
+	 * @since   11.1
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
 
 	/**
 	 * Method to get article data.
@@ -50,6 +62,11 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		$properties = $table->getProperties(1);
 		$value      = JArrayHelper::toObject($properties, 'JObject');
+
+		// Convert params field to Registry.
+		$registry = new Registry;
+		$registry->loadString($value->params);
+		$value->params = $registry->toArray();
 
 		return $value;
 	}
