@@ -145,5 +145,6 @@ JHtml::_('formbehavior.chosen', 'select');
     </div>
     <?php echo $this->form->getInput('asset_id'); ?>
     <input type="hidden" name="task" value=""/>
+	<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->getCmd('return'); ?>"/>
     <?php echo JHtml::_('form.token'); ?>
 </form>

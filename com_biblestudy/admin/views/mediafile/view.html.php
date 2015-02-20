@@ -72,11 +72,6 @@ class BiblestudyViewMediafile extends JViewLegacy
 			return false;
 		}
 
-		if ($this->getLayout() == 'modal')
-		{
-			$this->form->setFieldAttribute('language', 'readonly', 'true');
-		}
-
 		// Set the toolbar
 		$this->addToolbar();
 
