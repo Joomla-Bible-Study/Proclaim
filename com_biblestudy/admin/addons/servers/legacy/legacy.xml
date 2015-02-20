@@ -45,7 +45,7 @@
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox" required="true">
             </field>
-            <field name="mime_type" type="text" extension="com_biblestudy"
+            <field name="mime_type" type="mimetype" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
                    class="inputbox">
             </field>

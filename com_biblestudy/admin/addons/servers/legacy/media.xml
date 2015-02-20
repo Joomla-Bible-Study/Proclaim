@@ -44,14 +44,6 @@
                    filter="raw"/>
         </fieldset>
         <fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES">
-            <!--<field name="serverFolders"-->
-	        <!--type="folders"-->
-	        <!--label="JBS_MED_PATH_OR_FOLDER"-->
-	        <!--description="JBS_MED_PATH_OR_FOLDER_DESC"-->
-	        <!--class="inputbox"-->
-	        <!--override="true">-->
-	        <!--<option value="0">JOPTION_USE_DEFAULT</option>-->
-	        <!--</field>-->
             <field name="filename"
                    type="plupload"
                    handler="upload"
@@ -67,12 +59,10 @@
             <field name="media_image" type="media" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox span6" default="">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
-            <field name="mime_type" type="text" extension="com_biblestudy"
+            <field name="mime_type" type="mimetype" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
                    class="inputbox" default="">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
             </field>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">

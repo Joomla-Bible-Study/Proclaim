@@ -27,7 +27,6 @@ $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
-var_dump($listOrder);
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
