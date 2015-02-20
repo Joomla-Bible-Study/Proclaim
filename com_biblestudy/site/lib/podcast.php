@@ -404,7 +404,7 @@ class JBSMPodcast
 						else
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . str_replace(
+								'<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
 									' ',
 									"%20",
 									$episode->params->get('filename')
