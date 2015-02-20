@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.modal');
+JHtml::_('bootstrap.modal');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
@@ -394,9 +394,8 @@ $input  = $app->input;
 								<tr class="row<?php echo $i % 2; ?>">
 									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
-											. (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
-										<a class="btn btn-primary"
-										   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
+											. (int) $item->id . '&amp;tmpl=component&amp;layout=modal'; ?>
+										<a class="btn btn-primary modal" href="<?php echo $link; ?>"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 										</a>
@@ -428,8 +427,8 @@ $input  = $app->input;
 						<tfoot>
 						<tr>
 							<td colspan="5">
-								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;sid='
-									. $this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;&amp;sid='
+									. $this->form->getValue('id') . '&amp;tmpl=component&amp;layout=modal'; ?>
 								<?php
 								if (empty($this->item->id))
 								{
@@ -439,9 +438,7 @@ $input  = $app->input;
 								else
 								{
 									?>
-									<a class="btn btn-primary"
-									   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
-									   title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+									<a class="btn btn-primary modal" href="<?php echo $link; ?>" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
 										<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
 								}
 								?>
