@@ -49,7 +49,7 @@
                    handler="upload"
                    label="JBS_MED_FILENAME"
                    description="JBS_MED_USE_FILENAME_AS_PATH"
-                   class="inputbox span10"/>
+                   class="inputbox"/>
             <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
                    description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
             <field name="special" type="text" label="JBS_MED_TARGET"

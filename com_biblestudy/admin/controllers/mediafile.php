@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerMediafile extends JControllerForm
 {
-
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
@@ -114,5 +113,21 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($media_id), false));
+	}
+
+	/**
+	 * Function that allows child controller access to model data after the data has been saved.
+	 *
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
+	 *
+	 * @return    void
+	 *
+	 * @since    3.1
+	 */
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	{
+
+		return;
 	}
 }
