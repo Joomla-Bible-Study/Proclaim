@@ -366,8 +366,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function setTopics($pks, $data)
 	{
-
-		if (empty($pks))
+		if (empty($pks) && $pks != 0)
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
 

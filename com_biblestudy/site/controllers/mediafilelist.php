@@ -20,6 +20,26 @@ class BiblestudyControllerMediafilelist extends JControllerAdmin
 {
 
 	/**
+	 * View item
+	 *
+	 * @since    1.6
+	 */
+	protected $view_item = 'mediafileform';
+
+	/**
+	 * View list
+	 *
+	 * @since    1.6
+	 */
+	protected $view_list = 'mediafilelist';
+
+	/**
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	/**
 	 * Proxy for getModel
 	 *
 	 * @param   string  $name    The name of the model
