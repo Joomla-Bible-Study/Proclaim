@@ -258,7 +258,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->page->dropdowns = '';
 
 		// Build drop down menus for search filters
-        $dropdowns = array();
+		$dropdowns = array();
+
 		// Get the Popular stats
 		$stats               = new JBSMStats;
 		$this->page->popular = $stats->top_score_site();
