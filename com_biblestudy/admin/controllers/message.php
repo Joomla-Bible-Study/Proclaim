@@ -145,16 +145,12 @@ class BiblestudyControllerMessage extends JControllerForm
 				if ($aTag != "")
 				{
 					$tagRow = JTable::getInstance('studytopics', 'Table');
-					$isDup  = $this->isDuplicate($data['id'], $aTag);
-					if (!$isDup)
+					$tagRow->study_id = $data['id'];
+					$tagRow->topic_id = $aTag;
+					if (!$tagRow->store())
 					{
-						$tagRow->study_id = $data['id'];
-						$tagRow->topic_id = $aTag;
-						if (!$tagRow->store())
-						{
-							$app->enqueueMessage('Error Storing Tags with Message', 'error');
-							return false;
-						}
+						$app->enqueueMessage('Error Storing Tags with Message', 'error');
+						return false;
 					}
 				}
 			}
@@ -169,47 +165,15 @@ class BiblestudyControllerMessage extends JControllerForm
 					$tagRow           = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $model->getState('topic.id');
-					$isDup            = $this->isDuplicate($tagRow->study_id, $aTag);
-					if (!$isDup)
+					if (!$tagRow->store())
 					{
-						if (!$tagRow->store())
-						{
-							$app->enqueueMessage('Error Storing New Tags', 'error');
-							return false;
-						}
+						$app->enqueueMessage('Error Storing New Tags', 'error');
+						return false;
 					}
 				}
 			}
 		}
 
 		return parent::save($key, $urlVar);
-	}
-
-	/**
-	 * Duplicate Check
-	 *
-	 * @param   int  $study_id  Study ID
-	 * @param   int  $topic_id  Topic ID
-	 *
-	 * @return boolean
-	 */
-	private function isDuplicate($study_id, $topic_id)
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_studytopics')
-			->where('study_id = ' . (int) $study_id)
-			->where('topic_id = ' . (int) $topic_id);
-		$db->setQuery($query);
-		$tresult = $db->loadObject();
-		if (empty($tresult))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
 	}
 }
