@@ -22,6 +22,8 @@ JHtml::_('behavior.framework');
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
+
+$return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -393,7 +395,7 @@ $input  = $app->input;
 								<tr class="row<?php echo $i % 2; ?>">
 									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
-											. (int) $item->id . '&amp;return=' . base64_encode(JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id)); ?>
+											. (int) $item->id . '&amp;return=' . $return; ?>
 										<a class="btn btn-primary" href="<?php echo $link; ?>"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
@@ -426,8 +428,8 @@ $input  = $app->input;
 						<tfoot>
 						<tr>
 							<td colspan="5">
-								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;&amp;sid='
-									. $this->form->getValue('id') . '&amp;return=' . base64_encode(JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id)); ?>
+								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;sid='
+									. $this->form->getValue('id') . '&amp;return=' . $return; ?>
 								<?php
 								if (empty($this->item->id))
 								{

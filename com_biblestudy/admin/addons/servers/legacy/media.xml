@@ -24,7 +24,7 @@
         <fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
             <field name="player" type="list" label="JBS_MED_PLAYER"
                    description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
-                <option value="">JBS_CMN_USE_GLOBAL</option>
+                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="1">JBS_CMN_DIRECT_LINK</option>
                 <option value="2">JBS_CMN_USE_INTERNAL_PLAYER</option>
                 <option value="3">JBS_CMN_USE_AV</option>
@@ -34,7 +34,7 @@
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
                    default="">
-                <option value="">JBS_CMN_USE_GLOBAL</option>
+                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="1">JBS_CMN_POPUP</option>
                 <option value="2">JBS_CMN_INLINE</option>
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
@@ -49,11 +49,17 @@
                    handler="upload"
                    label="JBS_MED_FILENAME"
                    description="JBS_MED_USE_FILENAME_AS_PATH"
-                   class="inputbox"/>
+                   class="inputbox span10"/>
             <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
                    description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
-            <field name="special" type="text" label="JBS_MED_TARGET"
-                   description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15"/>
+            <field name="special" type="list" label="JBS_MED_TARGET"
+                   description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15" default="">
+	            <option value="">JGLOBAL_USE_GLOBAL</option>
+	            <option value="_blank">_blank</option>
+	            <option value="_self">_self</option>
+	            <option value="_parent">_parent</option>
+	            <option value="_top">_top</option>
+            </field>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
             <field name="media_image" type="media" extension="com_biblestudy"
