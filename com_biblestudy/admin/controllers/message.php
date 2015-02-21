@@ -116,30 +116,100 @@ class BiblestudyControllerMessage extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = null)
 	{
-		$model     = $this->getModel('Topic');
-		$jinput    = new JInput;
-		$data = $jinput->post->get('jform', array(), 'array');
-		$topic_ids = array();
+		/** @var BibleStudyModelTopic $model */
+		$model      = $this->getModel('Topic');
+		$app        = JFactory::getApplication();
+		$data       = $this->input->post->get('jform', array(), 'array');
 
-		// Non-numeric topics are assumed to be new and are added to the database
-		$topics = explode(',', $data['topics']);
+		// Get Tags
+		$vTags = $data['topics'];
+		$iTags = explode(",", $vTags);
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
-		foreach ($topics as $topic)
+		// Remove Exerting StudyTopics tags
+		$db = JFactory::getDbo();
+		$qurey = $db->getQuery(true);
+		$qurey->delete('#__bsms_studytopics')
+			->where('study_id =' . $data['id']);
+		$db->setQuery($qurey);
+		if (!$db->execute())
 		{
-			if (!is_numeric($topic) && !empty($topic))
+			$app->enqueueMessage('error deleting topics', 'error');
+		}
+
+		foreach ($iTags as $aTag)
+		{
+			if (is_numeric($aTag))
 			{
-				$model->save(array('topic_text' => $topic, 'language' => $data['language']));
-				$topic_ids[] = $model->getState('topic.id');
+				// It's an existing tag.  Add it
+				if ($aTag != "")
+				{
+					$tagRow = JTable::getInstance('studytopics', 'Table');
+					$isDup  = $this->isDuplicate($data['id'], $aTag);
+					if (!$isDup)
+					{
+						$tagRow->study_id = $data['id'];
+						$tagRow->topic_id = $aTag;
+						if (!$tagRow->store())
+						{
+							$app->enqueueMessage('Error Storing Tags with Message', 'error');
+							return false;
+						}
+					}
+				}
 			}
 			else
 			{
-				$topic_ids[] = $topic;
+				// It's a new tag.  Gotta insert it into the Topics table.
+				if ($aTag != "")
+				{
+					$model->save(array('topic_text' => $aTag, 'language' => $data['language']));
+
+					// Gotta somehow make sure this isn't a duplicate...
+					$tagRow           = JTable::getInstance('studytopics', 'Table');
+					$tagRow->study_id = $data['id'];
+					$tagRow->topic_id = $model->getState('topic.id');
+					$isDup            = $this->isDuplicate($tagRow->study_id, $aTag);
+					if (!$isDup)
+					{
+						if (!$tagRow->store())
+						{
+							$app->enqueueMessage('Error Storing New Tags', 'error');
+							return false;
+						}
+					}
+				}
 			}
 		}
-		$data['topics'] = implode(',', $topic_ids);
 
-		$jinput->set('jform', $data);
+		return parent::save($key, $urlVar);
+	}
 
-		return parent::save();
+	/**
+	 * Duplicate Check
+	 *
+	 * @param   int  $study_id  Study ID
+	 * @param   int  $topic_id  Topic ID
+	 *
+	 * @return boolean
+	 */
+	private function isDuplicate($study_id, $topic_id)
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_studytopics')
+			->where('study_id = ' . (int) $study_id)
+			->where('topic_id = ' . (int) $topic_id);
+		$db->setQuery($query);
+		$tresult = $db->loadObject();
+		if (empty($tresult))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
