@@ -71,6 +71,10 @@ class BiblestudyViewCommentlist extends JViewLegacy
 
 			return;
 		}
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
 
 		// Check permissions to enter studies
@@ -136,7 +140,6 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			'comment.published' => JText::_('JSTATUS'),
 			'study.studytitle'  => JText::_('JBS_CMN_TITLE'),
 			'comment.language'  => JText::_('JGRID_HEADING_LANGUAGE'),
-			'access_level'      => JText::_('JGRID_HEADING_ACCESS'),
 			'comment.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}

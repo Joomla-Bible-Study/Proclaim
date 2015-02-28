@@ -9,7 +9,7 @@ ALTER TABLE `#__bsms_servers` MODIFY COLUMN `type` CHAR(255) NOT NULL;
 -- -- MediaFiles
 ALTER TABLE `#__bsms_mediafiles` MODIFY COLUMN `hits` INT (10) DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `server_id` INT(5) NULL AFTER `study_id`;
-ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `metadata` TEXT NOT NULL AFTER `params`;
+ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `metadata` TEXT NOT NULL AFTER `podcast_id`;
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out` INT(11) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_checkout` (`checked_out`);
@@ -20,6 +20,7 @@ DELETE FROM `#__bsms_topics` WHERE `topic_text` = 'A';
 
 -- -- Remove Old tables
 DROP TABLE IF EXISTS `#__bsms_order`;
+DROP TABLE IF EXISTS `#__bsms_search`;
 
 -- -- Locations
 ALTER TABLE `#__bsms_locations` ADD COLUMN `contact_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact' AFTER `location_text`;
@@ -69,4 +70,5 @@ ALTER TABLE `#__bsms_studies` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`user_id`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
 
+ALTER TABLE `#__bsms_podcast` ADD COLUMN `linktype` INT(10) NOT NULL  DEFAULT '0' AFTER `customsubtitle`;
 -- drop all asset ides in php referring to folder media and memtype;

@@ -18,13 +18,20 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerMediafile extends JControllerForm
 {
-
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
 	 * @since 7.0
 	 */
 	protected $view_list = 'mediafiles';
+
+	/**
+	 * The URL option for the component.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $option = 'com_biblestudy';
 
 	/**
 	 * Class constructor.
@@ -73,7 +80,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object  $model  The model.
+	 * @param   BiblestudyModelMediafile  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -83,13 +90,31 @@ class BiblestudyControllerMediafile extends JControllerForm
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		/** @var JModelLegacy $model */
-		$model = $this->getModel('Mediafile', '', array());
+		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
 
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafiles' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
+	}
+
+	/**
+	 * Method to cancel an edit.
+	 *
+	 * @param   string  $key  The name of the primary key of the URL variable.
+	 *
+	 * @return  boolean  True if access level checks pass, false otherwise.
+	 *
+	 * @since   12.2
+	 */
+	public function cancel($key = null)
+	{
+		if ($this->input->getCmd('return') && parent::cancel($key))
+		{
+			$this->setRedirect(base64_decode($this->input->getCmd('return')));
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -114,5 +139,68 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($media_id), false));
+	}
+
+	/**
+	 * Function that allows child controller access to model data after the data has been saved.
+	 *
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
+	 *
+	 * @return    void
+	 *
+	 * @since    3.1
+	 */
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	{
+		$return = $this->input->getCmd('return');
+		$task   = $this->input->get('task');
+		if ($return && $task != 'apply')
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			$this->setRedirect(base64_decode($return));
+		}
+		return;
+	}
+
+	/**
+	 * Gets the URL arguments to append to an item redirect.
+	 *
+	 * @param   integer  $recordId  The primary key id for the item.
+	 * @param   string   $urlVar    The name of the URL variable for the id.
+	 *
+	 * @return  string  The arguments to append to the redirect URL.
+	 *
+	 * @since   12.2
+	 */
+	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
+	{
+		$tmpl   = $this->input->get('tmpl');
+		$layout = $this->input->get('layout', 'edit', 'string');
+		$return = $this->input->getCmd('return');
+		$append = '';
+
+		// Setup redirect info.
+		if ($tmpl)
+		{
+			$append .= '&tmpl=' . $tmpl;
+		}
+
+		if ($layout)
+		{
+			$append .= '&layout=' . $layout;
+		}
+
+		if ($recordId)
+		{
+			$append .= '&' . $urlVar . '=' . $recordId;
+		}
+
+		if ($return)
+		{
+			$append .= '&return=' . $return;
+		}
+
+		return $append;
 	}
 }

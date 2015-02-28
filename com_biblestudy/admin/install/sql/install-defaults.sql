@@ -97,13 +97,12 @@ INSERT INTO `#__bsms_locations` (`id`, `location_text`, `published`, `asset_id`,
 -- Dumping data for table `#__bsms_mediafiles`
 --
 
-INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `params`, `metadata`, `downloads`, `plays`, `hits`, `ordering`, `createdate`, `published`, `comment`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`)
+INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `metadata`, `ordering`, `createdate`, `hits`, `published`, `comment`, `downloads`, `plays`, `params`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `checked_out`, `checked_out_time`)
 VALUES
   (1, 1, 1, '1',
-   '{"link_type":"","docMan_id":"0","article_id":"-1","virtueMart_id":"0","player":"","popup":"","mediacode":"","media_image":"/media/com_biblestudy/images\/speaker24.png","filename":"\/\/www.calvarychapelnewberg.net\/MediaFiles\/2014\/2014-004.mp3","size":"","special":"","localFolder":"","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":""}',
-   '{"plays":"0", "downloads":"0"}', 0, 0, 0, 0, '2009-09-13 00:10:00', 1, 'Sample Media file', 0, 1, '', 1,
-   'admin',
-   '0000-00-00 00:00:00', 1);
+   '{"plays":"0", "downloads":"0"}', 0, '2009-09-13 00:10:00', 0, 1, 'Sample Media file', 0, 0,
+   '{"link_type":"","docMan_id":"0","article_id":"-1","virtueMart_id":"0","player":"","popup":"","mediacode":"","media_image":"/media/com_biblestudy/images/speaker24.png","filename":"//www.calvarychapelnewberg.net/MediaFiles/2014/2014-004.mp3","size":"","special":"","localFolder":"","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":""}',
+   0, 1, '', 1, 'admin', '0000-00-00 00:00:00', 1, 0, '0000-00-00 00:00:00');
 
 --
 -- Dumping data for table `#__bsms_message_type`
@@ -116,11 +115,11 @@ INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, 
 -- Dumping data for table `#__bsms_podcast`
 --
 
-INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`)
+INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `episodesubtitle`, `customsubtitle`, `linktype`)
 VALUES
   (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30,
    'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com',
-   50, 1, 0, '', 1, 0, 1);
+   50, 1, 0, '', 1, 0, 1, '', '', '', '', '', '', '', '', 0);
 
 --
 -- Dumping data for table `#__bsms_series`
@@ -134,9 +133,9 @@ VALUES
 -- Dumping data for table `#__bsms_servers`
 --
 
-INSERT INTO `#__bsms_servers` (`id`, `server_name`, `type`, `published`, `asset_id`, `access`, `params`, `media`)
+INSERT INTO `#__bsms_servers` (`id`, `server_name`, `published`, `asset_id`, `access`, `type`, `params`, `media`)
 VALUES
-  (1, 'Legacy', 'legacy', 1, 0, 1, '{"path":"\/\/www.calvarychapelnewberg.net\/"}', '{}');
+  (1, 'Legacy', 1, 0, 1, 'legacy', '{"path":"\/\/www.calvarychapelnewberg.net\/"}', '{}');
 
 
 --

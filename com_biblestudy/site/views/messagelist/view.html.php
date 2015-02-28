@@ -98,6 +98,9 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$modelView          = $this->getModel();
 		$this->items        = $modelView->getTranslated($items);
 
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		if (!$this->canDo->get('core.edit'))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
@@ -109,7 +112,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		$this->_prepareDocument();

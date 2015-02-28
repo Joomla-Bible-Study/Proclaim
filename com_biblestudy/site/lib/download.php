@@ -41,7 +41,9 @@ class JBSMDownload
 
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);
-		$query->select('id, params')->from('#__bsms_templates')->where('id = ' . $template);
+		$query->select('id, params')
+			->from('#__bsms_templates')
+			->where('id = ' . (int) $template);
 		$db->setQuery($query);
 		$template = $db->loadObject();
 
@@ -53,13 +55,27 @@ class JBSMDownload
 		$protocol = $params->get('protocol', 'http://');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath')
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams')
 			->from('#__bsms_mediafiles')
-			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)')
-			->where('#__bsms_mediafiles.id = ' . $mid);
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
+			->where('#__bsms_mediafiles.id = ' . (int) $mid);
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->LoadObject();
+		if ($media)
+		{
+			$reg = new Registry;
+			$reg->loadString($media->sparams);
+			$sparams = $reg->toObject();
+			if ($sparams->path)
+			{
+				$media->spath = $sparams->path;
+			}
+			else
+			{
+				($media->spath = '');
+			}
+		}
 		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
@@ -67,122 +83,49 @@ class JBSMDownload
 		$registry->loadString($media->params);
 		$params->merge($registry);
 
-		$filename      = $media->filename;
-		$size          = $media->size;
-		$download_file = $protocol . $filename;
-		$mimeType      = $params->get('mimetype');
+		$filename      = $params->get('filename');
+		$download_file = $protocol . $media->spath . $filename;
+
 		/** @var $download_file object */
 		$getsize = $this->getRemoteFileSize($download_file);
 
-		if ($size === '')
-		{
-			if ($size != $getsize)
-			{
-
-				if ($getsize != false)
-				{
-					$size = $getsize;
-				}
-			}
-		}
-
-		// Clean the output buffer
-		@ob_end_clean();
-
-		// Test for protocol and set the appropriate headers
-		jimport('joomla.environment.uri');
-		$_tmp_uri      = JURI::getInstance(JURI::current());
-		$_tmp_protocol = $_tmp_uri->getScheme();
-
-		if ($_tmp_protocol == "https")
-		{
-			// SSL Support
-			header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
-		}
-		else
-		{
-			header("Cache-Control: public, must-revalidate");
-			header('Cache-Control: pre-check=0, post-check=0, max-age=0');
-			header('Pragma: no-cache');
-			header("Expires: 0");
-		} /* end if protocol https */
-		header('Content-Transfer-Encoding: none');
-		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-		header("Accept-Ranges:  bytes");
-
-		// Modified by Rene
-		// HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
-		$newFileSize = $size - 1;
-
-		// Default values! Will be overridden if a valid range header field was detected!
-		$resultLenght = (string) $size;
-		$resultRange  = "0-" . $newFileSize;
-
-		/* We support requests for a single range only.
-		 * So we check if we have a range field. If yes ensure that it is a valid one.
-		 * If it is not valid we ignore it and sending the whole file.
-		 * */
-		if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE']))
-		{
-			// Let's take the right side
-			list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
-
-			// And get the two values (as strings!)
-			$httpRange = explode('-', $httpRange);
-
-			// Check if we have values! If not we have nothing to do!
-			if (!empty($httpRange[0]) || !empty($httpRange[1]))
-			{
-				// We need the new content length ...
-				$resultLenght = $size - $httpRange[0] - $httpRange[1];
-
-				// ... and we can add the 206 Status.
-				header("HTTP/1.1 206 Partial Content");
-
-				// Now we need the content-range, so we have to build it depending on the given range!
-				// ex.: -500 -> the last 500 bytes
-				if (empty($httpRange[0]))
-				{
-					$resultRange = $resultLenght . '-' . $newFileSize;
-				}
-
-				// Ex.: 500- -> from 500 bytes to file size
-				elseif (empty($httpRange[1]))
-				{
-					$resultRange = $httpRange[0] . '-' . $newFileSize;
-				}
-
-				// Ex.: 500-1000 -> from 500 to 1000 bytes
-				else
-				{
-					$resultRange = $httpRange[0] . '-' . $httpRange[1];
-				}
-			}
-		}
-		header('Content-Length: ' . $resultLenght);
-		header('Content-Range: bytes ' . $resultRange . '/' . $size);
-
-		header('Content-Type: ' . $mimeType);
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-		header('Content-Transfer-Encoding: binary\n');
-
-		// Try to deliver in chunks
 		@set_time_limit(0);
-		$fp = @fopen($download_file, 'rb');
+		ignore_user_abort(false);
+		ini_set('output_buffering', 0);
+		ini_set('zlib.output_compression', 0);
 
-		if ($fp !== false)
+		// Bytes per chunk (10 MB)
+		$chunk = 10 * 1024 * 1024;
+
+		$fh = fopen($download_file, "rb");
+
+		if ($fh === false)
 		{
-			while (!feof($fp))
-			{
-				echo fread($fp, 8192);
-			}
-			fclose($fp);
+			echo "Unable to open file";
 		}
-		else
+
+		// Clean the output buffer, Added to fix ZIP file corruption
+		@ob_end_clean();
+		@ob_start();
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+		header('Expires: 0');
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header('Pragma: public');
+		header("Content-Transfer-Encoding: binary");
+		header('Content-Length: ' . $getsize);
+
+		// Repeat reading until EOF
+		while (!feof($fh))
 		{
-			@readfile($download_file);
+			echo fread($fh, $chunk);
+			@ob_flush();
+			@flush();
 		}
-		flush();
+		fclose($fh);
 		exit;
 	}
 
@@ -191,7 +134,7 @@ class JBSMDownload
 	 *
 	 * @param   int  $mid  Media ID
 	 *
-	 * @return  boolean
+	 * @return  boolean True if hit makes it or False if failed to query
 	 *
 	 * @since   7.0.0
 	 */
@@ -199,10 +142,15 @@ class JBSMDownload
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')->set('downloads = downloads + 1 ')->where('id = ' . $mid);
+		$query->update('#__bsms_mediafiles')
+			->set('downloads = downloads + 1 ')
+			->where('id = ' . $mid);
 		$db->setQuery($query);
-		$db->execute();
 
+		if (!$db->execute())
+		{
+			return false;
+		}
 		return true;
 	}
 
@@ -211,7 +159,7 @@ class JBSMDownload
 	 *
 	 * @param   string  $url  URL
 	 *
-	 * @return  boolean
+	 * @return  int|boolean  Return size or false read.
 	 */
 	protected function getRemoteFileSize($url)
 	{
@@ -254,7 +202,7 @@ class JBSMDownload
 			}
 		}
 
-		return $return;
+		return (int) $return;
 	}
 
 }

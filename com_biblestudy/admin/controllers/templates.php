@@ -346,15 +346,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$objects[]    = $this->getExportSetting($result, $data);
 		$filecontents = implode(' ', $objects);
 		$filename     = $result->title . '.sql';
-		$filepath     = JPATH_ROOT . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename;
+		$filepath     = JPATH_ROOT . '/tmp/' . $filename;
 
 		if (!JFile::write($filepath, $filecontents))
 		{
 			return false;
 		}
-		$xport = new JBSMRestore;
-
-		// @todo need to find replacement bcc
+		$xport = new JBSMBackup;
 		$xport->output_file($filepath, $filename, 'text/x-sql');
 		JFile::delete($filepath);
 		$message = JText::_('JBS_TPL_EXPORT_SUCCESS');

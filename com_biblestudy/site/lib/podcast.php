@@ -50,11 +50,13 @@ class JBSMPodcast
 
 		// Get english language file as fallback
 		$language = JFactory::getLanguage();
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_podcast')->where('#__bsms_podcast.published = ' . 1);
+		$query->select('*')
+			->from('#__bsms_podcast')
+			->where('#__bsms_podcast.published = ' . 1);
 		$db->setQuery($query);
 		$podids       = $db->loadObjectList();
 		$custom       = new JBSMCustom;
@@ -77,7 +79,7 @@ class JBSMPodcast
 				}
 
 				// Load language file
-				$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', $podlanguage, true);
+				$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
@@ -146,7 +148,8 @@ class JBSMPodcast
 					}
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
 					$registry        = new Registry;
-					$registry->loadString($podinfo->params);
+					$registry->loadString(JBSMParams::getAdmin()->params);
+					$registry->merge(JBSMParams::getTemplateparams()->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
 
@@ -166,7 +169,7 @@ class JBSMPodcast
 						{
 							$hours = '00';
 						}
-						// If there is no length set, we default to 35 minuts
+						// If there is no length set, we default to 35 mints
 						if (!$episode->media_minutes && !$episode->media_seconds)
 						{
 							$episode->media_minutes = 35;
@@ -179,7 +182,11 @@ class JBSMPodcast
 						$pod_title    = $podinfo->episodetitle;
 						$pod_subtitle = $podinfo->episodesubtitle;
 
-						if (!$episode->size)
+						if ($episode->params->get('size'))
+						{
+							$episode->size = $episode->params->get('size');
+						}
+						else
 						{
 							$episode->size = '30000000';
 						}
@@ -345,7 +352,7 @@ class JBSMPodcast
 						{
 							$episodedetailtemp .= '<link>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</link>';
 						}
-						elseif ($podinfo->link == '2')
+						elseif ($podinfo->linktype == '2')
 						{
 							$episodedetailtemp .= '<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
 								$episode->sid . $detailstemplateid . '</link>';
@@ -397,12 +404,12 @@ class JBSMPodcast
 						else
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . str_replace(
+								'<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
 									' ',
 									"%20",
 									$episode->params->get('filename')
 								) . '" length="' . $episode->params->get('size') . '" type="'
-								. $episode->mimetype . '" />
+								. $episode->params->get('mimetype') . '" />
                         			<guid>http://' . str_replace(
 									' ',
 									"%20",
@@ -493,8 +500,7 @@ class JBSMPodcast
 		{
 			return false;
 		}
-
-		$return = getimagesize(JURI::root() . $path);
+		$return = @getimagesize(JURI::root() . $path);
 
 		return $return;
 	}

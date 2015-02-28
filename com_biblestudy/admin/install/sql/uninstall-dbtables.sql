@@ -22,4 +22,5 @@ DROP TABLE IF EXISTS `#__bsms_locations`;
 DROP TABLE IF EXISTS `#__bsms_timeset`;
 DROP TABLE IF EXISTS `#__bsms_styles`;
 DROP TABLE IF EXISTS `#__bsms_install`;
+DROP TABLE IF EXISTS `#__bsms_search`;
 DROP TABLE IF EXISTS `#__bsms_update`;

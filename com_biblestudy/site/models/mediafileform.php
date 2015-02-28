@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
-
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafile.php');
 

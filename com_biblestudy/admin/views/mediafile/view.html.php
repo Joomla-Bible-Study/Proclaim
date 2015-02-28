@@ -93,7 +93,10 @@ class BiblestudyViewMediafile extends JViewLegacy
 	{
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
+		$user  = JFactory::getUser();
+		$userId = $user->get('id');
 		$isNew = ($this->item->id == 0);
+		$checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'mp3.png');
 
@@ -106,16 +109,21 @@ class BiblestudyViewMediafile extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			// Can't save the record if it's checked out.
+			if (!$checkedOut)
 			{
-				JToolBarHelper::apply('mediafile.apply');
-				JToolBarHelper::save('mediafile.save');
-
-				if ($this->canDo->get('core.create', 'com_biblestudy'))
+				if ($this->canDo->get('core.edit', 'com_biblestudy'))
 				{
-					JToolBarHelper::save2new('mediafile.save2new');
+					JToolBarHelper::apply('mediafile.apply');
+					JToolBarHelper::save('mediafile.save');
+
+					if ($this->canDo->get('core.create', 'com_biblestudy'))
+					{
+						JToolBarHelper::save2new('mediafile.save2new');
+					}
 				}
 			}
+
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_biblestudy'))
 			{

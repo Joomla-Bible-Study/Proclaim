@@ -30,7 +30,7 @@ $JBSMListing = new JBSMListing;
 	<div class="row-fluid">
 		<div class="span12">
 			<?php
-			$list = $JBSMListing->getFluidListing($items, $params, $admin_params, $template, $type = "sermons");
+			$list = $JBSMListing->getFluidListing($items, $params, $template, $type = "sermons");
 			echo $list;
 			?>
 		</div>

@@ -25,18 +25,18 @@ JHtml::_('biblestudy.loadcss', $this->params);
 
 // Create shortcut to parameters.
 $params = $this->item->params;
-$app = JFactory::getApplication();
+$app    = JFactory::getApplication();
 
 // Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
+$input  = new JInput;
 $option = $input->get('option', '', 'cmd');
-$input = new JInput;
-$study = $app->getUserState($option . 'sid');
-$sdate = $app->getUserState($option . 'sdate');
+$study  = $app->getUserState($option . 'sid');
+$sdate  = $app->getUserState($option . 'sdate');
 
-$size = $app->getUserState($option . 'size');
-$fname = $app->getUserState($option . 'fname');
+$size     = $app->getUserState($option . 'size');
+$fname    = $app->getUserState($option . 'fname');
 $serverid = $app->getUserState($option . 'serverid');
 
 if ($this->item->server)
@@ -74,7 +74,7 @@ elseif (empty($this->item->study_id))
 		var wint = (screen.height - Wheight) / 2;
 
 		var msg1 = window.open("components/com_biblestudy/convert1.htm", "Window", "scrollbars=1,width=" + Wwidth + ",height=" + Wheight + "" +
-			",top=" + wint + ",left=" + winl);
+		",top=" + wint + ",left=" + winl);
 		if (!msg1.closed) {
 			msg1.focus();
 		}
@@ -174,444 +174,445 @@ elseif (empty($this->item->study_id))
 
 </script>
 <div class="edit item-page biblestudy">
-<form
-	action="<?php
-	$input = new JInput;
+	<form
+		action="<?php
+		$input = new JInput;
 
-	if ($input->get('layout', '', 'string') == 'modal')
-	{
-		$url = 'index.php?option=com_biblestudy&layout=mediafileform&tmpl=component&layout=modal&a_id=' . (int) $this->item->id;
-	}
-	else
-	{
-		$url = 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&a_id=' . (int) $this->item->id;
-	}
-	echo $url;
-	?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+		if ($input->get('layout', '', 'string') == 'modal')
+		{
+			$url = 'index.php?option=com_biblestudy&layout=mediafileform&tmpl=component&layout=modal&a_id=' . (int) $this->item->id;
+		}
+		else
+		{
+			$url = 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&a_id=' . (int) $this->item->id;
+		}
+		echo $url;
+		?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 
-<div class="btn-toolbar">
-	<?php
-	echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+		<div class="btn-toolbar">
+			<?php
+			echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
 
-	if ($input->get('layout', '', 'string') == 'modal')
-	{
-		?>
+			if ($input->get('layout', '', 'string') == 'modal')
+			{
+				?>
 
-		<div class="btn-group">
-			<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
-				<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
-			</button>
-		</div>
-		<div class="btn-group">
-			<button type="button" onclick="window.parent.SqueezeBox.close();  ">
-				<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
-			</button>
-		</div>
-	<?php
-	}
-	else
-	{
-		?>
-		<div class="btn-group">
-			<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
-				<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
-			</button>
-		</div>
-		<div class="btn-group">
-			<button type="button" class="btn" onclick="Joomla.submitbutton('mediafileform.cancel')">
-				<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
-			</button>
-		</div>
-	<?php } ?>
-</div>
-<!-- Begin Content -->
-<fieldset>
-<ul class="nav nav-tabs">
-	<li class="active">
-		<a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-	</li>
-	<li>
-		<a href="#state" data-toggle="tab"><?php echo JText::_('JBS_CMN_ITEM_PUBLISHED'); ?></a>
-	</li>
-	<li>
-		<a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
-	</li>
-	<li>
-		<a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
-	</li>
-	<li>
-		<a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
-	</li>
-	<li>
-		<a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
-	</li>
-	<li>
-		<a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
-	</li>
-	<li>
-		<a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
-	</li>
-
-	<?php if ($this->canDo->get('core.admin')): ?>
-		<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a></li>
-	<?php endif ?>
-</ul>
-<div class="tab-content">
-<div class="tab-pane active" id="general">
-
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('id'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('plays'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('plays'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('downloads'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('downloads'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('createdate'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('createdate', null, empty($this->item->createdate) ? $sdate : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('study_id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('study_id', null, empty($this->item->study_id) ? $study : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('podcast_id'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->params->get('podcast') : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('link_type'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->params->get('download') : $this->item->link_type); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('comments'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('comments'); ?>
-		</div>
-	</div>
-
-
-</div>
-<div class="tab-pane" id="linktype">
-	<div class="row-fluid">
-
-
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('docMan_id'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('docMan_id'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('article_id'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('article_id'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('virtueMart_id'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('virtueMart_id'); ?>
-			</div>
-		</div>
-
-	</div>
-</div>
-<div class="tab-pane" id="player">
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('player'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('player'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('popup'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('popup'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('mediacode'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('mediacode'); ?>
-		</div>
-	</div>
-
-
-</div>
-<div class="tab-pane" id="file">
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('plays'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('plays'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('downloads'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('downloads'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('server'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('path'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('filename'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('size'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('size', null, empty($this->item->size) ? $size : null); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('special'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->params->get('target') : $this->item->special); ?>
-		</div>
-	</div>
-
-
-</div>
-<div class="tab-pane" id="upload">
-
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo JText::_('JBS_STY_UPLOAD'); ?>
-		</div>
-		<div class="controls">
-			<table class="table table-striped adminlist">
-
-				<tbody>
-				<tr>
-					<td>
-						<?php echo $this->upload_server; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-						<?php echo $this->upload_folder; ?></td>
-					</td></tr>
-				<tr>
-					<td>
-
-						<input type="file" name="uploadfile" value=""/>
-						<button type="button" onclick="submitbutton('upload')">
-							<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
-					</td>
-					<td></td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-<div class="tab-pane" id="mediatype">
-
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('media_image'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput(
-				'media_image',
-				null,
-				empty($this->item->study_id) ? $this->params->get('media_image') : $this->item->media_image
-			); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('mime_type'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->params->get('mime') : $this->item->mime_type); ?>
-		</div>
-	</div>
-
-
-</div>
-<div class="tab-pane" id="parameters">
-	<?php foreach ($params as $name => $fieldset) :
-		foreach ($this->form->getFieldset('params') as $field) :  ?>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $field->label; ?>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
+						<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
+					</button>
 				</div>
-				<div class="controls">
-					<?php echo $field->input; ?>
+				<div class="btn-group">
+					<button type="button" onclick="window.parent.SqueezeBox.close();  ">
+						<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
+					</button>
 				</div>
-			</div>
-		<?php endforeach; ?>
-	<?php endforeach; ?>
-</div>
-<div class="tab-pane" id="publish">
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('user_id'); ?>
+			<?php
+			}
+			else
+			{
+				?>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('mediafileform.save')">
+						<span class="icon-ok"></span>&#160;<?php echo JText::_('JSAVE') ?>
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn" onclick="Joomla.submitbutton('mediafileform.cancel')">
+						<span class="icon-cancel"></span>&#160;<?php echo JText::_('JCANCEL') ?>
+					</button>
+				</div>
+			<?php } ?>
 		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('user_name'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('user_name'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('modified'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('modified'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('modified_by'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('modified_by'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('publish_up'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('publish_up'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="control-label">
-			<?php echo $this->form->getLabel('publish_down'); ?>
-		</div>
-		<div class="controls">
-			<?php echo $this->form->getInput('publish_down'); ?>
-		</div>
-	</div>
-</div>
-<div class="tab-pane" id="state">
-	<fieldset>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('published'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('published'); ?>
-			</div>
-		</div>
+		<!-- Begin Content -->
+		<fieldset>
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+				</li>
+				<li>
+					<a href="#state" data-toggle="tab"><?php echo JText::_('JBS_CMN_ITEM_PUBLISHED'); ?></a>
+				</li>
+				<li>
+					<a href="#linktype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></a>
+				</li>
+				<li>
+					<a href="#player" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></a>
+				</li>
+				<li>
+					<a href="#file" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></a>
+				</li>
+				<li>
+					<a href="#upload" data-toggle="tab"><?php echo JText::_('JBS_MED_UPLOAD'); ?></a>
+				</li>
+				<li>
+					<a href="#mediatype" data-toggle="tab"><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></a>
+				</li>
+				<li>
+					<a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
+				</li>
 
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('access'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('access'); ?>
-			</div>
-		</div>
+				<?php if ($this->canDo->get('core.admin')): ?>
+					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+					</li>
+				<?php endif ?>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="general">
 
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('language'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('language'); ?>
-			</div>
-		</div>
-</div>
-<?php if ($this->canDo->get('core.admin')): ?>
-	<div class="tab-pane" id="permissions">
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('id'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('id'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('plays'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('plays'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('downloads'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('downloads'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('createdate'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('createdate', null, empty($this->item->createdate) ? $sdate : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('study_id'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('study_id', null, empty($this->item->study_id) ? $study : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('podcast_id'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('podcast_id', null, empty($this->item->study_id) ? $this->params->get('podcast') : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('link_type'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('link_type', null, empty($this->item->study_id) ? $this->params->get('download') : $this->item->link_type); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('comments'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('comments'); ?>
+						</div>
+					</div>
 
-		<div class="control-group">
-			<div class="controls">
-				<?php echo $this->form->getInput('rules'); ?>
+
+				</div>
+				<div class="tab-pane" id="linktype">
+					<div class="row-fluid">
+
+
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('docMan_id'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('docMan_id'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('article_id'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('article_id'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('virtueMart_id'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('virtueMart_id'); ?>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="tab-pane" id="player">
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('player'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('player'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('popup'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('popup'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('mediacode'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('mediacode'); ?>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="tab-pane" id="file">
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('plays'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('plays'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('downloads'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('downloads'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('server'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('path'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('filename'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('size'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('size', null, empty($this->item->size) ? $size : null); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('special'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('special', null, empty($this->item->study_id) ? $this->params->get('target') : $this->item->special); ?>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="tab-pane" id="upload">
+
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo JText::_('JBS_STY_UPLOAD'); ?>
+						</div>
+						<div class="controls">
+							<table class="table table-striped adminlist">
+
+								<tbody>
+								<tr>
+									<td>
+										<?php echo $this->upload_server; ?></td>
+									</td></tr>
+								<tr>
+									<td>
+										<?php echo $this->upload_folder; ?></td>
+									</td></tr>
+								<tr>
+									<td>
+
+										<input type="file" name="uploadfile" value=""/>
+										<button type="button" onclick="submitbutton('upload')">
+											<?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
+									</td>
+									<td></td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="mediatype">
+
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('media_image'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput(
+								'media_image',
+								null,
+								empty($this->item->study_id) ? $this->params->get('media_image') : $this->item->media_image
+							); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('mime_type'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('mime_type', null, empty($this->item->study_id) ? $this->params->get('mime') : $this->item->mime_type); ?>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="tab-pane" id="parameters">
+					<?php foreach ($params as $name => $fieldset) :
+						foreach ($this->form->getFieldset('params') as $field) : ?>
+							<div class="control-group">
+								<div class="control-label">
+									<?php echo $field->label; ?>
+								</div>
+								<div class="controls">
+									<?php echo $field->input; ?>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					<?php endforeach; ?>
+				</div>
+				<div class="tab-pane" id="publish">
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('user_id'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('user_name'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('user_name'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('modified'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('modified'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('modified_by'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('modified_by'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('publish_up'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('publish_up'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('publish_down'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('publish_down'); ?>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="state">
+					<fieldset>
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('published'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('published'); ?>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('access'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('access'); ?>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('language'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('language'); ?>
+							</div>
+						</div>
+				</div>
+				<?php if ($this->canDo->get('core.admin')): ?>
+					<div class="tab-pane" id="permissions">
+
+						<div class="control-group">
+							<div class="controls">
+								<?php echo $this->form->getInput('rules'); ?>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+				<input type="hidden" name="flupfile" value=""/>
+				<input type="hidden" name="task" value=""/>
+				<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+				<?php echo JHtml::_('form.token'); ?>
 			</div>
-		</div>
-	</div>
-<?php endif; ?>
-<input type="hidden" name="flupfile" value=""/>
-<input type="hidden" name="task" value=""/>
-<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
-<?php echo JHtml::_('form.token'); ?>
-</div>
-</fieldset>
-</form>
+		</fieldset>
+	</form>
 </div>
 <div class="clearfix"></div>
 

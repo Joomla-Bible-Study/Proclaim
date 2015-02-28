@@ -73,6 +73,10 @@ class BiblestudyViewCommentform extends JViewLegacy
 		{
 			throw new Exception(implode("\n", $errors), 500);
 		}
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		// Check permissions to enter comments
 		if (!$this->canDo->get('core.edit'))
 		{
