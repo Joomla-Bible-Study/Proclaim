@@ -35,7 +35,7 @@ $input = JFactory::getApplication()->input;
         <thead>
         <tr>
             <th>
-                <?php echo JHtml::_('grid.sort', '*SERVER NAME*', 'mediafile.name', $listDir, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort', 'JBS_SVR_SERVER_NAME', 'mediafile.name', $listDir, $listOrder); ?>
             </th>
         </tr>
         </thead>

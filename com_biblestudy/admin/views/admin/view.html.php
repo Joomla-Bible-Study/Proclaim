@@ -297,8 +297,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolBarHelper::divider();
-		JToolBarHelper::save('admin.save');
 		JToolBarHelper::apply('admin.apply');
+		JToolBarHelper::save('admin.save');
 		JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
