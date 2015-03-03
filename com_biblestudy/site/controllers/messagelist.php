@@ -21,6 +21,25 @@ JLoader::register('BiblestudyControllerMessages', JPATH_ADMINISTRATOR . '/compon
  */
 class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 {
+	/**
+	 * View item
+	 *
+	 * @since    1.6
+	 */
+	protected $view_item = 'messageform';
+
+	/**
+	 * View list
+	 *
+	 * @since    1.6
+	 */
+	protected $view_list = 'messagelist';
+
+	/**
+	 * @var        string    The prefix to use with controller messages.
+	 * @since    1.6
+	 */
+	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
 	 * Proxy for getModel
@@ -33,7 +52,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Mediafileform', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Messagelist', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

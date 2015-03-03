@@ -9,6 +9,7 @@
  */
 defined('_JEXEC') or die;
 
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * Plugin class for BibleStudy Search
  *
@@ -150,8 +151,8 @@ class PlgSearchBiblestudysearch extends JPlugin
 		{
 			// Load language files (english language file as fallback)
 			$language = JFactory::getLanguage();
-			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
-			$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
+			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 			$query     = $db->getQuery(true);
 			$set_title = $this->params->get('set_title');

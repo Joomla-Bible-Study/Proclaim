@@ -10,8 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 JHTML::_('behavior.tooltip');
+JHtml::_('behavior.caption');
 
 // Create shortcuts to some parameters.
 $params = $this->item->params;
@@ -67,7 +68,7 @@ if ($this->item->params->get('showrelated') == 1)
 		</div>
 	<?php endif; ?>
 <?php else : ?>
-	<div class="pull-right">
+	<div id="pop-print" class="btn hidden-print">
 		<?php echo JHtml::_('icon.print_screen', $this->item, $params); ?>
 	</div>
 <?php endif; ?>

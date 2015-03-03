@@ -20,6 +20,7 @@ DELETE FROM `#__bsms_topics` WHERE `topic_text` = 'A';
 
 -- -- Remove Old tables
 DROP TABLE IF EXISTS `#__bsms_order`;
+DROP TABLE IF EXISTS `#__bsms_search`;
 
 -- -- Locations
 ALTER TABLE `#__bsms_locations` ADD COLUMN `contact_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact' AFTER `location_text`;
@@ -69,4 +70,5 @@ ALTER TABLE `#__bsms_studies` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_createdby` (`user_id`);
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_checkout` (`checked_out`);
 
+ALTER TABLE `#__bsms_podcast` ADD COLUMN `linktype` INT(10) NOT NULL  DEFAULT '0' AFTER `customsubtitle`;
 -- drop all asset ides in php referring to folder media and memtype;

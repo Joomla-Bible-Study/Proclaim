@@ -18,13 +18,14 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 require_once BIBLESTUDY_PATH_MOD . '/helper.php';
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 /* Load language file out of administrator folder
  * if phrase is not found in specific language file, load english language file:
  */
 $language = JFactory::getLanguage();
-$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
-$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Need for inline player
 $document = JFactory::getDocument();
@@ -48,19 +49,7 @@ $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
-for ($i = 0; $i < $count; $i++)
-{
-
-	if ($items[$i]->access > 1)
-	{
-		if (!in_array($items[$i]->access, $groups))
-		{
-			unset($items[$i]);
-		}
-	}
-}
-
-if ($params->get('useexpert_module') > 0)
+if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')))
 {
 
 	foreach ($items AS $item)
@@ -125,9 +114,6 @@ $document = JFactory::getDocument();
 
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $params);
-
-$language = JFactory::getLanguage();
-$language->load('com_biblestudy', JPATH_ROOT . '/components/com_biblestudy');
 $config = JComponentHelper::getParams('com_biblestudy');
 
 // We need to load the path to the helper files

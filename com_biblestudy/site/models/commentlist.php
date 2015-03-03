@@ -79,5 +79,7 @@ class BiblestudyModelCommentlist extends BiblestudyModelComments
 		$this->setState('admin', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
+
+		parent::populateState('study.studytitle', 'DESC');
 	}
 }

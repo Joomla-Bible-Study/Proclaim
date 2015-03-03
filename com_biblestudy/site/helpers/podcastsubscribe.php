@@ -35,7 +35,7 @@ class JBSMPodcastSubscribe
 		{
 
 			$subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
-			$subscribe .= '<div class="prow">';
+			$subscribe .= '<div class="prow span12">';
 
 			foreach ($podcasts AS $podcast)
 			{
@@ -53,21 +53,21 @@ class JBSMPodcastSubscribe
 						break;
 
 					case 2:
-						$subscribe .= '<div class="pcell"><h3>' . $podcast->title . '</h3><div class="clr padding-bottom-5"><hr /></div>';
+						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr />';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '</div>';
 						break;
 
 					case 3:
-						$subscribe .= '<div class="pcell"><h3>' . $podcast->title . '</h3><div class="clr padding-bottom-5"><hr /></div>';
+						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr />';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '</div>';
 						break;
 
 					case 4:
-						$subscribe .= '<div class="pcell"><h3>' . $podcast->title . '</h3><div class="clr padding-bottom-5"><hr /></div><div class="fltlft">';
+						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr /><div class="pull-left span2">';
 						$subscribe .= $this->buildStandardPodcast($podcast);
-						$subscribe .= '</div><div class="fltlft">';
+						$subscribe .= '</div><div class="pull-left span2">';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '</div></div>';
 						break;
@@ -86,34 +86,20 @@ class JBSMPodcastSubscribe
 	/**
 	 * Get Podcasts
 	 *
-	 * @return object
+	 * @return object Object List of Podcasts
 	 */
 	public function getPodcasts()
 	{
+		$user   = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery('true');
-		$query->select('*');
-		$query->from('#__bsms_podcast as p');
-		$query->where('p.published = 1');
+		$query->select('*')
+			->from('#__bsms_podcast as p')
+			->where('p.published = 1')
+			->where('p.access IN (' . $groups . ')');
 		$db->setQuery($query);
 		$podcasts = $db->loadObjectList();
-
-		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
-		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($podcasts);
-
-		for ($i = 0; $i < $count; $i++)
-		{
-
-			if ($podcasts[$i]->access > 1)
-			{
-				if (!in_array($podcasts[$i]->access, $groups))
-				{
-					unset($podcasts[$i]);
-				}
-			}
-		}
 
 		return $podcasts;
 	}
@@ -165,8 +151,10 @@ class JBSMPodcastSubscribe
 
 		if ($image->path)
 		{
-			$podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="'
-				. $image->height . '" alt="' . $words . '" title="' . $words . '" />';
+			$podcastimage = JHtml::image(
+				JURI::base() . $image->path, $words, 'width = "' . $image->width
+				. '" height = "' . $image->height . '" title = "' . $words . '"'
+			);
 		}
 
 		return $podcastimage;
@@ -186,7 +174,7 @@ class JBSMPodcastSubscribe
 		if (!empty($podcast->alternateimage))
 		{
 			$image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-			$link  = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
+			$link  = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clearfix"></div>';
 			$subscribe .= $link;
 		}
 		$subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';

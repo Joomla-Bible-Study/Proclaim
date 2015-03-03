@@ -88,7 +88,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	 *
 	 * @param   object  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean   True if Time is difference. False if not grater then now.
 	 */
 	public function checktime($params)
 	{
@@ -96,7 +96,8 @@ class PlgSystemJBSPodcast extends JPlugin
 		$now   = time();
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$query->select('timeset')
+			->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
@@ -119,18 +120,19 @@ class PlgSystemJBSPodcast extends JPlugin
 	 *
 	 * @param   Joomla\Registry\Registry  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean Check to see if to day is right.
 	 */
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = & JFactory::getConfig();
+		$config    = JFactory::getConfig();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$query->select('timeset')
+			->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
@@ -243,7 +245,8 @@ class PlgSystemJBSPodcast extends JPlugin
 		$time  = time();
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->update('#__jbspodcast_timeset')->set('timeset = ' . $time);
+		$query->update('#__jbspodcast_timeset')
+			->set('timeset = ' . $time);
 		$db->setQuery($query);
 		$db->execute();
 		$updateresult = $db->getAffectedRows();

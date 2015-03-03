@@ -282,60 +282,6 @@ abstract class JHtmlBiblestudy
 	}
 
 	/**
-	 * Display a batch widget for the player selector.
-	 *
-	 * @return  string  The necessary HTML for the widget.
-	 *
-	 * @since   2.5
-	 */
-	public static function mimetype()
-	{
-		// Create the batch selector to change the mime type on a selection list.
-		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTip" title="' .
-			JText::_('JBS_CMN_MIMETYPE') . '::' . JText::_('JBS_BAT_MIMETYPE_DESC') . '">',
-			JText::_('JBS_CMN_MIMETYPE'), '</label>',
-			'<select name="batch[mimetype]" class="inputbox" id="batch-mimetype">',
-			'<option value="">' . JText::_('JBS_BAT_MIMETYPE_NOCHANGE') . '</option>',
-			JHtml::_('select.options', self::Mimetypelist(), 'value', 'text'), '</select>'
-		);
-
-		return implode("\n", $lines);
-	}
-
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return    array    The field option objects.
-	 *
-	 * @since    1.6
-	 */
-	public static function Mimetypelist()
-	{
-		$options = null;
-		$db      = JFactory::getDbo();
-		$query   = $db->getQuery(true);
-
-		$query->select('id As value, mimetype As text');
-		$query->from('#__bsms_mime_type AS a');
-		$query->order('a.mimetype ASC');
-
-		// Get the options.
-		$db->setQuery($query);
-
-		try
-		{
-			$options = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
-		}
-
-		return $options;
-	}
-
-	/**
 	 * Display a batch widget for the teacher selector.
 	 *
 	 * @return  string  The necessary HTML for the widget.

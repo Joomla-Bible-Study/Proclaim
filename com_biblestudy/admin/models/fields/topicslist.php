@@ -43,7 +43,10 @@ class JFormFieldTopicslist extends JFormFieldList
 	{
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('id, topic_text, params AS topic_params')->from('#__bsms_topics')->where('published = ' . 1)->order('topic_text asc');
+		$query->select('id, topic_text, params AS topic_params')
+			->from('#__bsms_topics')
+			->where('published = ' . 1)
+			->order('topic_text asc');
 		$db->setQuery((string) $query);
 		$topics  = $db->loadObjectList();
 		$options = array();

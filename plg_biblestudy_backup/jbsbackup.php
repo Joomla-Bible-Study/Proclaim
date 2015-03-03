@@ -7,7 +7,10 @@
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
-
+/**
+ * Bible Study Core Defines
+ */
+require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * JBSBackup jPlugin class
  *
@@ -28,7 +31,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function __construct(& $subject, $config)
 	{
-
+		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/backup.php');
+		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
@@ -216,7 +220,6 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function doBackup()
 	{
-		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/backup.php');
 		$dbbackup = new JBSMBackup;
 		$backup   = $dbbackup->exportdb($run = 2);
 

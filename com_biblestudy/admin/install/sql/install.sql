@@ -249,6 +249,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `alternatewords`          VARCHAR(20),
   `episodesubtitle`         INT(11)                   DEFAULT NULL,
   `customsubtitle`          VARCHAR(200)              DEFAULT NULL,
+  `linktype`                INT(10)         NOT NULL  DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

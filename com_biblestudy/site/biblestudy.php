@@ -32,8 +32,8 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
  * if phrase is not found in specific language file, load english language file:
  */
 $language = JFactory::getLanguage();
-$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, 'en-GB', true);
-$language->load('com_biblestudy', JPATH_COMPONENT_ADMINISTRATOR, null, true);
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
 $controller->execute(JFactory::getApplication()->input->get('task', '', 'cmd'));
