@@ -99,8 +99,8 @@ class BiblestudyViewShare extends JViewLegacy
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::save('share.save');
 			JToolBarHelper::apply('share.apply');
+			JToolBarHelper::save('share.save');
 			JToolBarHelper::save2new('share.save2new');
 			JToolBarHelper::cancel('share.cancel');
 		}

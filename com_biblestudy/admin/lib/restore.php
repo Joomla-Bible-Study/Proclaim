@@ -293,7 +293,7 @@ class JBSMRestore
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
 		{
-			$app->enqueueMessage(JText::_('WARNINSTALLFILE'), 'warning');
+			$app->enqueueMessage(JText::_('JBS_IBM_ERROR_PHP_UPLOAD_NOT_ENABLED'), 'warning');
 
 			return false;
 		}
@@ -309,7 +309,7 @@ class JBSMRestore
 		// Check if there was a problem uploading the file.
 		if ($userfile['error'] || $userfile['size'] < 1)
 		{
-			$app->enqueueMessage(JText::_('WARNINSTALLUPLOADERROR'), 'warning');
+			$app->enqueueMessage(JText::_('JBS_IBM_ERROR_UPLOAD_FAILED'), 'warning');
 
 			return false;
 		}

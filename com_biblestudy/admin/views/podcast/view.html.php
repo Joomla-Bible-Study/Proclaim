@@ -97,8 +97,8 @@ class BiblestudyViewPodcast extends JViewLegacy
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::save('podcast.save');
 			JToolBarHelper::apply('podcast.apply');
+			JToolBarHelper::save('podcast.save');
 			JToolBarHelper::save2new('podcast.save2new');
 			JToolBarHelper::cancel('podcast.cancel');
 		}
