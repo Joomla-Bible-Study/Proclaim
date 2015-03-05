@@ -149,13 +149,13 @@ $input = $app->input;
 		<div class="span3 form-vertical">
 			<h4>
 				<?php
-				echo $this->escape($this->item->addon->name);
+                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->name); }
 				?>
 			</h4>
 
 			<p>
 				<?php
-				echo $this->escape($this->item->addon->description);
+                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->description);}
 				?>
 			</p>
 		</div>
