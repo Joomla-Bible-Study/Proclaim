@@ -337,7 +337,7 @@ class JBSMListing
 		}
 		if ($type == 'seriesdisplays')
 		{
-			if ($params->get('use_headers_series') > 0)
+			if ($params->get('use_headers_series') > 0 && is_object($items))
 			{
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 			}
