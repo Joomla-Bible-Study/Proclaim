@@ -595,7 +595,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 or study.series_id <= 0');
+		$query->where('(series.published = 1 or study.series_id <= 0)');
 
 		// Begin the filters for menu items
 		$params      = $this->getState('params');
@@ -899,7 +899,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($series >= 1)
 		{
 			$query->where('study.series_id = ' . (int) $series);
-
+            //echo $query->dump();
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
 		}
