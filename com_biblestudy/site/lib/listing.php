@@ -1538,25 +1538,25 @@ class JBSMListing
 				$classelement = '';
 				break;
 			case 1:
-				$classelement = '<p';
+				$classelement = 'p';
 				break;
 			case 2:
-				$classelement = '<h1';
+				$classelement = 'h1';
 				break;
 			case 3:
-				$classelement = '<h2';
+				$classelement = 'h2';
 				break;
 			case 4:
-				$classelement = '<h3';
+				$classelement = 'h3';
 				break;
 			case 5:
-				$classelement = '<h4';
+				$classelement = 'h4';
 				break;
 			case 6:
-				$classelement = '<h5';
+				$classelement = 'h5';
 				break;
 			case 7:
-				$classelement = '<blockquote';
+				$classelement = 'blockquote';
 		}
 		if ($header == 1)
 		{
@@ -1565,7 +1565,7 @@ class JBSMListing
 		}
 		if ($classelement)
 		{
-			$classopen  = $classelement . ' ' . $style . '>';
+			$classopen  = '<'.$classelement . ' ' . $style . '>';
 			$classclose = '</' . $classelement . '>';
 		}
 		else
