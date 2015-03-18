@@ -36,7 +36,7 @@ class JBSMListing
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
-		$list         = '';
+        $list         = '';
 		$row          = array();
 		$this->params = $params;
 		$item         = '';
