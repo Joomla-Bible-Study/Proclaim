@@ -48,7 +48,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-?>
+
 <h2><?php echo JText::_('JBS_CMN_MEDIA'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilelist'); ?>" method="post"
       name="adminForm" id="adminForm">
