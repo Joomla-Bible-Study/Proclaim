@@ -36,7 +36,7 @@ class JBSMListing
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
-		$list         = '';
+        $list         = '';
 		$row          = array();
 		$this->params = $params;
 		$item         = '';
@@ -337,7 +337,7 @@ class JBSMListing
 		}
 		if ($type == 'seriesdisplays')
 		{
-			if ($params->get('use_headers_series') > 0)
+			if ($params->get('use_headers_series') > 0 && is_object($items))
 			{
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 			}
@@ -1538,25 +1538,25 @@ class JBSMListing
 				$classelement = '';
 				break;
 			case 1:
-				$classelement = '<p';
+				$classelement = 'p';
 				break;
 			case 2:
-				$classelement = '<h1';
+				$classelement = 'h1';
 				break;
 			case 3:
-				$classelement = '<h2';
+				$classelement = 'h2';
 				break;
 			case 4:
-				$classelement = '<h3';
+				$classelement = 'h3';
 				break;
 			case 5:
-				$classelement = '<h4';
+				$classelement = 'h4';
 				break;
 			case 6:
-				$classelement = '<h5';
+				$classelement = 'h5';
 				break;
 			case 7:
-				$classelement = '<blockquote';
+				$classelement = 'blockquote';
 		}
 		if ($header == 1)
 		{
@@ -1565,7 +1565,7 @@ class JBSMListing
 		}
 		if ($classelement)
 		{
-			$classopen  = $classelement . ' ' . $style . '>';
+			$classopen  = '<'.$classelement . ' ' . $style . '>';
 			$classclose = '</' . $classelement . '>';
 		}
 		else
@@ -1917,6 +1917,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end2;
 			$v_b        = $row->verse_begin2;
 			$v_e        = $row->verse_end2;
+            $book = JText::_($row->bookname2);
 		}
 		elseif ($scripturerow == 1 && isset($row->booknumber) >= 1)
 		{
@@ -1925,6 +1926,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end;
 			$v_b        = $row->verse_begin;
 			$v_e        = $row->verse_end;
+            $book = JText::_($row->bookname);
 		}
 
 		if (!isset($booknumber))
@@ -1940,7 +1942,7 @@ class JBSMListing
 			return $scripture;
 		}
 
-		$book = JText::_($row->bookname);
+
 
 		$b1  = ' ';
 		$b2  = ':';
