@@ -226,7 +226,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 OR study.series_id <= 0');
+		$query->where('(series.published = 1 OR study.series_id <= 0)');
 		$query->where('study.series_id = ' . $sid);
 
 		// Order by order filter
