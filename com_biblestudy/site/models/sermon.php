@@ -113,6 +113,9 @@ class BiblestudyModelSermon extends JModelItem
 				$query->select('b.bookname as bookname');
 				$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
 
+                $query->select('book2.bookname as bookname2');
+                $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
+
 				// Join over locations
 				$query->select('l.id as lid, l.location_text');
 				$query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
