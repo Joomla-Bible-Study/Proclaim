@@ -50,13 +50,40 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function __construct($config = array())
 	{
-		$input = new JInput;
-		$input->set('a_id', $input->get('a_id', 0, 'int'));
+		$this->input = JFactory::getApplication()->input;
+		$this->input->set('id', $this->input->get('a_id', 0, 'int'));
 		parent::__construct($config);
+	}
 
-		// Register Extra tasks
-		$this->registerTask('add', 'edit');
-		$this->registerTask('upload', 'upload');
+	/**
+	 * Handles XHR requests (i.e. File uploads)
+	 *
+	 * @return void
+	 *
+	 * @throws  Exception
+	 * @since   9.0.0
+	 */
+	public function xhr()
+	{
+		JSession::checkToken('get') or die('Invalid Token');
+
+		$addonType = $this->input->get('type', 'Legacy', 'string');
+		$handler   = $this->input->get('handler');
+
+		// Load the addon
+		$addon = JBSMAddon::getInstance($addonType);
+
+		if (method_exists($addon, $handler))
+		{
+			echo json_encode($addon->$handler($this->input));
+
+			$app = JFactory::getApplication();
+			$app->close();
+		}
+		else
+		{
+			throw new Exception(JText::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+		}
 	}
 
 	/**
@@ -110,9 +137,14 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	public function cancel($key = 'a_id')
 	{
 		parent::cancel($key);
+		if ($this->input->getCmd('return') && parent::cancel($key))
+		{
+			$this->setRedirect(base64_decode($this->input->getCmd('return')));
 
-		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -167,13 +199,30 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	{
 		$result = parent::save($key, $urlVar);
 
-		// If ok, redirect to the return page.
-		if ($result)
+		return $result;
+	}
+
+	/**
+	 * Function that allows child controller access to model data after the data has been saved.
+	 *
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
+	 *
+	 * @return    void
+	 *
+	 * @since    3.1
+	 */
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	{
+		$return = $this->input->getCmd('return');
+		$task   = $this->input->get('task');
+		if ($return && $task != 'apply')
 		{
-			$this->setRedirect($this->getReturnPage());
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			$this->setRedirect(base64_decode($return));
 		}
 
-		return $result;
+		return;
 	}
 
 	/**
@@ -209,19 +258,18 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param   int     $recordId  The primary key id for the item.
-	 * @param   string  $urlVar    The name of the URL variable for the id.
+	 * @param   integer  $recordId  The primary key id for the item.
+	 * @param   string   $urlVar    The name of the URL variable for the id.
 	 *
-	 * @return    string    The arguments to append to the redirect URL.
+	 * @return  string  The arguments to append to the redirect URL.
 	 *
-	 * @since    1.6
+	 * @since   12.2
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = new JInput;
-
-		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
+		$layout = $this->input->get('layout', 'edit', 'string');
+		$return = $this->input->getCmd('return');
 		$append = '';
 
 		// Setup redirect info.
@@ -230,30 +278,19 @@ class BiblestudyControllerMediafileform extends JControllerForm
 			$append .= '&tmpl=' . $tmpl;
 		}
 
-		$append .= '&layout=edit';
+		if ($layout)
+		{
+			$append .= '&layout=' . $layout;
+		}
 
 		if ($recordId)
 		{
 			$append .= '&' . $urlVar . '=' . $recordId;
 		}
 
-		$itemId = $this->input->getInt('Itemid');
-		$return = $this->getReturnPage();
-		$catId  = $this->input->getInt('catid', null, 'get');
-
-		if ($itemId)
-		{
-			$append .= '&Itemid=' . $itemId;
-		}
-
-		if ($catId)
-		{
-			$append .= '&catid=' . $catId;
-		}
-
 		if ($return)
 		{
-			$append .= '&return=' . base64_encode($return);
+			$append .= '&return=' . $return;
 		}
 
 		return $append;

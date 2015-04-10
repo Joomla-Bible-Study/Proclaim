@@ -19,6 +19,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
 
+$return = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
@@ -431,11 +432,10 @@ $input  = $app->input;
 								foreach ($this->mediafiles as $i => $item) :
 									?>
 									<tr class="row<?php echo $i % 2; ?>">
-										<td class="center">
-											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' .
-												(int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
-											<a class="btn btn-primary"
-											   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
+										<td>
+											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;id='
+												. (int) $item->id . '&amp;return=' . $return; ?>
+											<a class="btn btn-primary" href="<?php echo $link; ?>"
 											   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 												<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 											</a>

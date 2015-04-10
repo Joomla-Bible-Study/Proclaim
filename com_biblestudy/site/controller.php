@@ -34,7 +34,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @var    JInput
 	 * @since  12.2
 	 */
-	protected $input;
+	//protected $input;
 
 	/**
 	 * Constructor.
