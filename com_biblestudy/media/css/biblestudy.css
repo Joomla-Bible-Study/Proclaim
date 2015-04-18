@@ -1,552 +1,503 @@
 /* This file is generated out of the database table #__bsms_styles */
 /* It will be overwritten when saving the CSS Style content to the database */
-
-
 /* New Teacher Details Codes */
-
+#bsm_teachertable {
+  margin: 0;
+  border-collapse: separate;
+}
 #bsm_teachertable .bsm_studiestitlerow {
-    background-color: #666;
+  background-color: #666;
 }
 #bsm_teachertable .teacheraddress {
-    text-align:left;
+  text-align: left;
 }
 #bsm_teachertable .teacherwebsite {
-    text-align:left;
+  text-align: left;
 }
 #bsm_teachertable .teacherfacebook {
-    text-align:left;
+  text-align: left;
 }
 #bsm_teachertable .bsm_teachertwitter {
-    text-align:left;
+  text-align: left;
 }
 #bsm_teachertable .bsm_teacherblog {
-    text-align:left;
+  text-align: left;
 }
 #bsm_teachertable .bsm_teacherlink1 {
-    text-align:left;
-}
-#bsm_teachertable {
-    margin: 0;
-    border-collapse:separate;
+  text-align: left;
 }
 #bsm_teachertable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
 #bsm_teachertable .titlerow {
-    border-bottom: thick;
+  border-bottom: thick;
 }
 #bsm_teachertable .title {
-    font-size:18px;
-    font-weight:bold;
-    border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid #999999;
+  padding: 4px 0px 4px 4px;
 }
 #bsm_teachertable .bsm_separator {
-    border-bottom: 1px solid #999999;
+  border-bottom: 1px solid #999999;
 }
 #bsm_teachertable .bsm_teachername {
-    font-weight: bold;
-    font-size: 14px;
-    color: #000000;
-    white-space:nowrap;
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+  white-space: nowrap;
 }
 #bsm_teachertable .bsm_teacheremail {
-    font-weight:normal;
-    font-size: 11px;
+  font-weight: normal;
+  font-size: 11px;
 }
 #bsm_teachertable .bsm_teacherwebsite {
-    font-weight:normal;
-    font-size: 11px;
+  font-weight: normal;
+  font-size: 11px;
 }
 #bsm_teachertable .bsm_teacherphone {
-    font-weight:normal;
-    font-size: 11px;
+  font-weight: normal;
+  font-size: 11px;
 }
 #bsm_teachertable .bsm_short {
-    padding: 8px 4px 4px;
-}
-#bsm_teachertable .bsm_studiestitlerow {
-    background-color: #666;
+  padding: 8px 4px 4px;
 }
 #bsm_teachertable .bsm_titletitle {
-    font-weight:bold;
-    color:#FFFFFF;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 #bsm_teachertable .bsm_titlescripture {
-    font-weight:bold;
-    color:#FFFFFF;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 #bsm_teachertable .bsm_titledate {
-    font-weight:bold;
-    color:#FFFFFF;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 #bsm_teachertable .bsm_teacherlong {
-    padding: 8px 4px 4px;
-    border-bottom: 1px solid #999999;
+  padding: 8px 4px 4px;
+  border-bottom: 1px solid #999999;
 }
 #bsm_teachertable tr.bsodd {
-    background-color:#FFFFFF;
-    border-bottom: 1px solid #999999;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #999999;
 }
 #bsm_teachertable tr.bseven {
-    background-color:#FFFFF0;
-    border-bottom: 1px solid #999999;
+  background-color: #FFFFF0;
+  border-bottom: 1px solid #999999;
 }
 #bsm_teachertable .lastrow td {
-    border-bottom:1px solid grey;
-    padding-bottom:7px;
-    padding-top:7px;
+  border-bottom: 1px solid grey;
+  padding-bottom: 7px;
+  padding-top: 7px;
 }
 #bsm_teachertable .bsm_teacherfooter {
-    border-top: 1px solid #999999;
-    padding: 4px 1px 1px 4px;
+  border-top: 1px solid #999999;
+  padding: 4px 1px 1px 4px;
 }
-
-
 /* New Landing Page CSS */
 .landingtable {
-    clear:both;
-    width:auto;
-    display:table;
+  clear: both;
+  width: auto;
+  display: table;
 }
-
 .landingrow {
-    display:inline;
-    padding: 1em;
+  display: inline;
+  padding: 1em;
 }
-
 .landingcell {
-    display:table-cell;
+  display: table-cell;
 }
-
 .landinglink a {
-    display:inline;
+  display: inline;
 }
-
-
-/* Terms of use or donate display settings */
-.termstext {
-}
-
-.termslink{
-}
-
-
-/* Podcast Subscription Display Settings */
 .podcastsubscribe {
-    clear:both;
-    display:table;
-    width:100%;
-    background-color:#eee;
-    border-radius: 15px 15px 15px 15px;
-    border: 1px solid grey;
-    padding: 1em;
+  clear: both;
+  display: table;
+  width: 100%;
+  background-color: #eee;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
 }
 .podcastsubscribe .image {
-    float: left;
-    padding-right: 5px;
-    display: inline;
+  float: left;
+  padding-right: 5px;
+  display: inline;
 }
 .podcastsubscribe .image .text {
-    display:inline;
-    position:relative;
-    right:50px;
-    bottom:-10px;
+  display: inline;
+  position: relative;
+  right: 50px;
+  bottom: -10px;
 }
 .podcastsubscribe .prow {
-    display: table-row;
-    width:auto;
-    clear:both;
+  display: table-row;
+  width: auto;
+  clear: both;
 }
 .podcastsubscribe .pcell {
-    display: table-cell;
-    float:left;
-    background-color:#e3e2e2;
-    border-radius: 15px 15px 15px 15px;
-    border: 1px solid grey;
-    padding: 1em;
-    margin-right: 5px;
+  display: table-cell;
+  float: left;
+  background-color: #e3e2e2;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
+  margin-right: 5px;
 }
-
-.podcastheader h3 {
-    display:table-header;
-    text-align:center;
-}
-
+/* Listing Page Items */
 .podcastheader {
-    font-weight: bold;
+  font-weight: bold;
 }
-
+.podcastheader h3 {
+  display: table-header;
+  text-align: center;
+}
 .fltlft {
-  float:left;
+  float: left;
   padding-right: 5px;
 }
-
-
-/* Listing Page Items */
 div.listingfooter ul li {
-    list-style: none outside none;
+  list-style: none outside none;
 }
-
-#listingfooter li, #listingfooter ul {
-    display: inline;
+#listingfooter li,
+#listingfooter ul {
+  display: inline;
 }
-
-#listintro p, #listintro td {
-    margin: 0;
-    font-weight: bold;
-    color: black;
+#listintro p,
+#listintro td {
+  margin: 0;
+  font-weight: bold;
+  color: black;
 }
-
 #bsdropdownmenu {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
-
 .bslisttable {
-    margin: 0;
-    border-collapse:separate;
+  margin: 0;
+  border-collapse: separate;
 }
-.bslisttable th, .bslisttable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
+.bslisttable .lastcol {
+  border-right: grey 2px solid;
+}
+.bslisttable .lastrow td {
+  border-bottom: 2px solid grey;
+  padding-bottom: 7px;
+}
+.bslisttable th {
+  background-color: #707070;
+  font-weight: bold;
+  color: white;
+}
+.bslisttable th.firstrow {
+  border-bottom: grey 2px solid;
+}
+.bslisttable tr.lastrow th {
+  border-bottom: 2px solid grey;
+  padding-bottom: 3px;
+}
+.bslisttable tr.bsodd td {
+  background-color: #FFFFFF;
+}
+.bslisttable tr.bseven td {
+  background-color: #FFFFF0;
+}
+.bslisttable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+.bslisttable .scripture1 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+.bslisttable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+.bslisttable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+.bslisttable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+.bslisttable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+.bslisttable .teacher {
+  white-space: nowrap;
+}
+.bslisttable .location_text {
+  white-space: nowrap;
+}
+.bslisttable .topic_text {
+  white-space: nowrap;
+}
+.bslisttable .message_type {
+  white-space: nowrap;
+}
+.bslisttable .jbsmedia {
+  white-space: nowrap;
+}
+.bslisttable .store {
+  white-space: nowrap;
+}
+.bslisttable .details-text {
+  white-space: nowrap;
+}
+.bslisttable .details-pdf {
+  white-space: nowrap;
+}
+.bslisttable .details-text-pdf {
+  white-space: nowrap;
+}
+.bslisttable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+.bslisttable .secondary_reference {
+  white-space: nowrap;
+}
+.bslisttable .teacher-title-name {
+  white-space: nowrap;
+}
+.bslisttable .submitted {
+  white-space: nowrap;
+}
+.bslisttable .hits {
+  white-space: nowrap;
+}
+.bslisttable .studynumber {
+  white-space: nowrap;
+}
+.bslisttable .filesize {
+  white-space: nowrap;
+}
+.bslisttable .custom {
+  white-space: nowrap;
+}
+.bslisttable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+.bslisttable .thumbnail {
+  white-space: nowrap;
+}
+.bslisttable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+.bslisttable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+.bslisttable th,
+.bslisttable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
 .bslisttable .row1col1,
 .bslisttable .row2col1,
 .bslisttable .row3col1,
 .bslisttable .row4col1 {
-    border-left: grey 2px solid;
-}
-.bslisttable .lastcol {
-    border-right: grey 2px solid;
-}
-.bslisttable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-.bslisttable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
+  border-left: grey 2px solid;
 }
 .bslisttable th.row1col1,
 .bslisttable th.row1col2,
 .bslisttable th.row1col3,
 .bslisttable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
+  border-top: grey 2px solid;
+  padding-top: 3px;
 }
-.bslisttable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-.bslisttable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-.bslisttable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-.bslisttable tr.bseven td {
-    background-color:#FFFFF0;
-}
-.bslisttable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-.bslisttable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-.bslisttable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-.bslisttable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-}
-.bslisttable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-.bslisttable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-.bslisttable .studyintro {
-}
-.bslisttable .teacher {
-    white-space:nowrap;
-}
-.bslisttable .location_text {
-    white-space:nowrap;
-}
-.bslisttable .topic_text {
-    white-space:nowrap;
-}
-.bslisttable .message_type {
-    white-space:nowrap;
-}
-.bslisttable .jbsmedia {
-    white-space:nowrap;
-}
-.bslisttable .store {
-    white-space:nowrap;
-}
-.bslisttable .details-text {
-    white-space:nowrap;
-}
-.bslisttable .details-pdf {
-    white-space:nowrap;
-}
-.bslisttable .details-text-pdf {
-    white-space:nowrap;
-}
-.bslisttable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-.bslisttable .secondary_reference {
-    white-space:nowrap;
-}
-.bslisttable .teacher-title-name {
-    white-space:nowrap;
-}
-.bslisttable .submitted {
-    white-space:nowrap;
-}
-.bslisttable .hits {
-    white-space:nowrap;
-}
-.bslisttable .studynumber {
-    white-space:nowrap;
-}
-.bslisttable .filesize {
-    white-space:nowrap;
-}
-.bslisttable .custom {
-    white-space:nowrap;
-}
-.bslisttable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-.bslisttable .thumbnail {
-    white-space:nowrap;
-}
-.bslisttable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-.bslisttable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-
-
-/* Module Style Settings */
 #bsmsmoduletable {
-    margin: 0;
-    border-collapse:separate;
+  margin: 0;
+  border-collapse: separate;
 }
-#bsmsmoduletable th, #bsmsmoduletable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
+#bsmsmoduletable .lastcol {
+  border-right: grey 2px solid;
+}
+#bsmsmoduletable .lastrow td {
+  border-bottom: 2px solid grey;
+  padding-bottom: 7px;
+}
+#bsmsmoduletable th {
+  background-color: #707070;
+  font-weight: bold;
+  color: white;
+}
+#bsmsmoduletable th.firstrow {
+  border-bottom: grey 2px solid;
+}
+#bsmsmoduletable tr.lastrow th {
+  border-bottom: 2px solid grey;
+  padding-bottom: 3px;
+}
+#bsmsmoduletable tr.bsodd td {
+  background-color: #FFFFFF;
+}
+#bsmsmoduletable tr.bseven td {
+  background-color: #FFFFF0;
+}
+#bsmsmoduletable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+#bsmsmoduletable .scripture1 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsmoduletable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsmoduletable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+#bsmsmoduletable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+#bsmsmoduletable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+#bsmsmoduletable .teacher {
+  white-space: nowrap;
+}
+#bsmsmoduletable .location_text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .topic_text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .message_type {
+  white-space: nowrap;
+}
+#bsmsmoduletable .jbsmedia {
+  white-space: nowrap;
+}
+#bsmsmoduletable .store {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-pdf {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-text-pdf {
+  white-space: nowrap;
+}
+#bsmsmoduletable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+#bsmsmoduletable .secondary_reference {
+  white-space: nowrap;
+}
+#bsmsmoduletable .teacher-title-name {
+  white-space: nowrap;
+}
+#bsmsmoduletable .submitted {
+  white-space: nowrap;
+}
+#bsmsmoduletable .hits {
+  white-space: nowrap;
+}
+#bsmsmoduletable .studynumber {
+  white-space: nowrap;
+}
+#bsmsmoduletable .filesize {
+  white-space: nowrap;
+}
+#bsmsmoduletable .custom {
+  white-space: nowrap;
+}
+#bsmsmoduletable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+#bsmsmoduletable .thumbnail {
+  white-space: nowrap;
+}
+#bsmsmoduletable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+#bsmsmoduletable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+#bsmsmoduletable th,
+#bsmsmoduletable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
 #bsmsmoduletable .row1col1,
 #bsmsmoduletable .row2col1,
 #bsmsmoduletable .row3col1,
 #bsmsmoduletable .row4col1 {
-    border-left: grey 2px solid;
-}
-#bsmsmoduletable .lastcol {
-    border-right: grey 2px solid;
-}
-#bsmsmoduletable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-#bsmsmoduletable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
+  border-left: grey 2px solid;
 }
 #bsmsmoduletable th.row1col1,
 #bsmsmoduletable th.row1col2,
 #bsmsmoduletable th.row1col3,
 #bsmsmoduletable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
-}
-#bsmsmoduletable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-#bsmsmoduletable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-#bsmsmoduletable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-#bsmsmoduletable tr.bseven td {
-    background-color:#FFFFF0;
-}
-#bsmsmoduletable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-#bsmsmoduletable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsmoduletable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsmoduletable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-}
-#bsmsmoduletable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-#bsmsmoduletable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-#bsmsmoduletable .studyintro {
-}
-#bsmsmoduletable .teacher {
-    white-space:nowrap;
-}
-#bsmsmoduletable .location_text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .topic_text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .message_type {
-    white-space:nowrap;
-}
-#bsmsmoduletable .jbsmedia {
-    white-space:nowrap;
-}
-#bsmsmoduletable .store {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-pdf {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-text-pdf {
-    white-space:nowrap;
-}
-#bsmsmoduletable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-#bsmsmoduletable .secondary_reference {
-    white-space:nowrap;
-}
-#bsmsmoduletable .teacher-title-name {
-    white-space:nowrap;
-}
-#bsmsmoduletable .submitted {
-    white-space:nowrap;
-}
-#bsmsmoduletable .hits {
-    white-space:nowrap;
-}
-#bsmsmoduletable .studynumber {
-    white-space:nowrap;
-}
-#bsmsmoduletable .filesize {
-    white-space:nowrap;
-}
-#bsmsmoduletable .custom {
-    white-space:nowrap;
-}
-#bsmsmoduletable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-#bsmsmoduletable .thumbnail {
-    white-space:nowrap;
-}
-#bsmsmoduletable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-#bsmsmoduletable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-
-
-/* Landing Page Items */
-.landinglist {
-}
-#landing_label {
-}
-.landing_item {
+  border-top: grey 2px solid;
+  padding-top: 3px;
 }
 .landing_title {
-    font-family:arial;
-    font-size:16px;
-    font-weight:bold;
-}
-.landing_table {
+  font-family: arial;
+  font-size: 16px;
+  font-weight: bold;
 }
 #landing_td {
-    width: 33%;
+  width: 33%;
 }
 .landing_separator {
-    height:15px;
+  height: 15px;
 }
-#biblestudy_landing {
-}
-
 #showhide {
-    font-family:arial;
-    font-size:12px;
-    font-weight:bold;
-    text-decoration:none;
+  font-family: arial;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
 }
 #showhide .showhideheadingbutton img {
-    vertical-align:bottom;
+  vertical-align: bottom;
 }
-
-
-/* Popup Window Items */
 .popupwindow {
-    margin: 5px;
-    text-align:center;
+  margin: 5px;
+  text-align: center;
 }
 p.popuptitle {
-    font-weight: bold;
-    color: black;
+  font-weight: bold;
+  color: black;
 }
 .popupfooter {
-    margin: 5px;
-    text-align:center;
+  margin: 5px;
+  text-align: center;
 }
 p.popupfooter {
-    font-weight: bold;
-    color: grey;
+  font-weight: bold;
+  color: grey;
 }

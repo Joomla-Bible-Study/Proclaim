@@ -36,7 +36,7 @@ class JBSMListing
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
-        $list         = '';
+		$list         = '';
 		$row          = array();
 		$this->params = $params;
 		$item         = '';
@@ -1565,7 +1565,7 @@ class JBSMListing
 		}
 		if ($classelement)
 		{
-			$classopen  = '<'.$classelement . ' ' . $style . '>';
+			$classopen  = '<' . $classelement . ' ' . $style . '>';
 			$classclose = '</' . $classelement . '>';
 		}
 		else
@@ -1894,6 +1894,7 @@ class JBSMListing
 	public function getScripture($params, $row, $esv, $scripturerow)
 	{
 		$scripture = '';
+		$book      = '';
 
 		if (!isset($row->id))
 		{
@@ -1917,7 +1918,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end2;
 			$v_b        = $row->verse_begin2;
 			$v_e        = $row->verse_end2;
-            $book = JText::_($row->bookname2);
+			$book       = JText::_($row->bookname2);
 		}
 		elseif ($scripturerow == 1 && isset($row->booknumber) >= 1)
 		{
@@ -1926,7 +1927,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end;
 			$v_b        = $row->verse_begin;
 			$v_e        = $row->verse_end;
-            $book = JText::_($row->bookname);
+            $book       = JText::_($row->bookname);
 		}
 
 		if (!isset($booknumber))
@@ -1941,8 +1942,6 @@ class JBSMListing
 
 			return $scripture;
 		}
-
-
 
 		$b1  = ' ';
 		$b2  = ':';
