@@ -430,7 +430,6 @@ class JBSMListing
 		}
 		foreach ($row as $value)
 		{
-			$list .= $value;
 		}
 
 		return $list;
