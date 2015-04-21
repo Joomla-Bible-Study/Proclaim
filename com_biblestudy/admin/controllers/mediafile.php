@@ -114,6 +114,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));
 			return true;
 		}
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 		return false;
 	}
 
