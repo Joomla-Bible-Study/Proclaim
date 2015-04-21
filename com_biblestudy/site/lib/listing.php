@@ -368,6 +368,7 @@ class JBSMListing
 			}
 
 		}
+
 		// Go through and attach the media files as an array to their study
 		if ($type == 'sermons')
 		{
@@ -430,6 +431,7 @@ class JBSMListing
 		}
 		foreach ($row as $value)
 		{
+			$list .= $value;
 		}
 
 		return $list;
