@@ -1928,7 +1928,10 @@ class JBSMListing
 			$ch_e       = $row->chapter_end;
 			$v_b        = $row->verse_begin;
 			$v_e        = $row->verse_end;
-			$book       = JText::_($row->bookname);
+			if (isset($row->bookname))
+			{
+				$book = JText::_($row->bookname);
+			}
 		}
 
 		if (!isset($booknumber))

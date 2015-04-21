@@ -6,8 +6,9 @@
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
                    class="inputbox" size="1" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-                <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+                <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
             </field>
         </fieldset>
         <fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">
