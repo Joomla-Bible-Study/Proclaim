@@ -18,11 +18,8 @@ JHtml::_('formbehavior.chosen', 'select');
 
 ?>
 <script type="text/javascript">
-    Joomla.submitbutton = function (task, server) {
-        if (task == 'mediafile.setServer') {
-            document.id('item-form').elements['jform[server_id]'].value = server;
-            Joomla.submitform(task, document.getElementById('item-form'));
-        } else if (task == 'mediafile.cancel') {
+    Joomla.submitbutton = function (task) {
+        if (task == 'mediafile.cancel') {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else if (task == 'mediafile.apply' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));

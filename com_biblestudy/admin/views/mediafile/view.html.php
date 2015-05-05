@@ -67,9 +67,12 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 		$options       = $app->input->get('options');
 		$this->options = new stdClass();
+
+		$this->options->study_id   = null;
+		$this->options->createdate = null;
 		if ($options)
 		{
-			$options       = explode('&', base64_decode($app->input->get('options')));
+			$options = explode('&', base64_decode($app->input->get('options')));
 			foreach ($options as $option_st)
 			{
 				$option_st = explode('=', $option_st);
