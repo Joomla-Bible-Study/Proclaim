@@ -43,6 +43,7 @@ class BiblestudyModelSermons extends JModelList
 				'study.studydate',
 				'study.studytitle',
 				'book.bookname',
+				'book.bookname2',
 				'teacher.teachername',
 				'messageType.message_type',
 				'series.series_text',
@@ -75,6 +76,8 @@ class BiblestudyModelSermons extends JModelList
 		foreach ($items as $item)
 		{
 			$item->bookname   = JText::_($item->bookname);
+			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+			$item->bookname2   = JText::_($item->bookname2);
 			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
 		}
 
@@ -566,6 +569,9 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
+
 		// Join over Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
 			'SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
@@ -595,7 +601,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 or study.series_id <= 0');
+		$query->where('(series.published = 1 or study.series_id <= 0)');
 
 		// Begin the filters for menu items
 		$params      = $this->getState('params');

@@ -15,9 +15,9 @@
             <field name="link_type" type="list" extension="com_biblestudy"
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
                    class="inputbox" default="1">
-                <option value="1">JBS_MED_NO_DOWNLOAD_ICON</option>
-                <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-                <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+                <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
             </field>
         </fieldset>
         <fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
@@ -52,7 +52,7 @@
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
             <field name="autostart" type="list"
-                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC" default="1">
+                   label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC" default="1">
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
             </field>

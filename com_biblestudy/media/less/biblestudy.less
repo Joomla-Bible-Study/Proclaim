@@ -1,65 +1,36 @@
-@color1: #ffffff;
-@color2: #999999;
-@color3: #000000;
+/* This file is generated out of the database table #__bsms_styles */
+/* It will be overwritten when saving the CSS Style content to the database */
 
-#bsm_teachertable_list {
-  margin: 0;
-  border-collapse: separate;
-  .bsm_teachername {
-	font-weight: bold;
-	font-size: 14px;
-	color: @color3;
-	}
-  .titlerow {
-	border-bottom: thick;
-	}
-  .title {
-	font-size: 18px;
-	font-weight: bold;
-	border-bottom: 3px solid @color2;
-	padding: 4px 0 4px 4px;
-	}
-  .bsm_separator {
-	border-bottom: 1px solid @color2;
-	}
-  .bsm_teacheremail,
-  .bsm_teacherwebsite,
-  .bsm_teacherphone {
-	font-weight: normal;
-	font-size: 11px;
-	}
-  .bsm_short {
-	padding: 8px 4px 4px;
-	}
-  .bsm_titletitle,
-  .bsm_titlescripture,
-  .bsm_titledate {
-	font-weight: bold;
-	color: @color1;
-	}
-  .bsm_teacherlong {
-	padding: 8px 4px 4px;
-	border-bottom: 1px solid @color2;
-	}
-  .bsm_teacherfooter {
-	border-top: 1px solid @color2;
-	padding: 4px 1px 1px 4px;
-	}
-  }
-
+/* New Teacher Details Codes */
 #bsm_teachertable {
   margin: 0;
   border-collapse: separate;
   .bsm_studiestitlerow {
 	background-color: #666;
+	background-color: #666;
 	}
-  .teacheraddress,
-  .teacherwebsite,
-  .teacherfacebook,
-  .bsm_teachertwitter,
-  .bsm_teacherblog,
+  .teacheraddress {
+	text-align: left;
+	}
+  .teacherwebsite {
+	text-align: left;
+	}
+  .teacherfacebook {
+	text-align: left;
+	}
+  .bsm_teachertwitter {
+	text-align: left;
+	}
+  .bsm_teacherblog {
+	text-align: left;
+	}
   .bsm_teacherlink1 {
 	text-align: left;
+	}
+  td {
+	text-align: left;
+	padding: 0 5px 0 5px;
+	border: none;
 	}
   .titlerow {
 	border-bottom: thick;
@@ -67,20 +38,26 @@
   .title {
 	font-size: 18px;
 	font-weight: bold;
-	border-bottom: 3px solid @color2;
-	padding: 4px 0 4px 4px;
+	border-bottom: 3px solid #999999;
+	padding: 4px 0px 4px 4px;
 	}
   .bsm_separator {
-	border-bottom: 1px solid @color2;
+	border-bottom: 1px solid #999999;
 	}
   .bsm_teachername {
 	font-weight: bold;
 	font-size: 14px;
-	color: @color3;
+	color: #000000;
 	white-space: nowrap;
 	}
-  .bsm_teacheremail,
-  .bsm_teacherwebsite,
+  .bsm_teacheremail {
+	font-weight: normal;
+	font-size: 11px;
+	}
+  .bsm_teacherwebsite {
+	font-weight: normal;
+	font-size: 11px;
+	}
   .bsm_teacherphone {
 	font-weight: normal;
 	font-size: 11px;
@@ -88,22 +65,44 @@
   .bsm_short {
 	padding: 8px 4px 4px;
 	}
-  .bsm_titletitle,
-  .bsm_titlescripture,
+  .bsm_titletitle {
+	font-weight: bold;
+	color: #FFFFFF;
+	}
+  .bsm_titlescripture {
+	font-weight: bold;
+	color: #FFFFFF;
+	}
   .bsm_titledate {
 	font-weight: bold;
-	color: @color1;
+	color: #FFFFFF;
 	}
   .bsm_teacherlong {
 	padding: 8px 4px 4px;
-	border-bottom: 1px solid @color2;
+	border-bottom: 1px solid #999999;
+	}
+  tr.bsodd {
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #999999;
+	}
+  tr.bseven {
+	background-color: #FFFFF0;
+	border-bottom: 1px solid #999999;
+	}
+  .lastrow {
+	td {
+	  border-bottom: 1px solid grey;
+	  padding-bottom: 7px;
+	  padding-top: 7px;
+	  }
 	}
   .bsm_teacherfooter {
-	border-top: 1px solid @color2;
+	border-top: 1px solid #999999;
 	padding: 4px 1px 1px 4px;
 	}
   }
 
+/* New Landing Page CSS */
 .landingtable {
   clear: both;
   width: auto;
@@ -127,6 +126,8 @@
 
 .podcastsubscribe {
   clear: both;
+  display: table;
+  width: 100%;
   background-color: #eee;
   border-radius: 15px 15px 15px 15px;
   border: 1px solid grey;
@@ -154,19 +155,17 @@
 	border-radius: 15px 15px 15px 15px;
 	border: 1px solid grey;
 	padding: 1em;
+	margin-right: 5px;
 	}
   }
 
+/* Listing Page Items */
 .podcastheader {
   font-weight: bold;
   h3 {
-	display: table-header-group;
+	display: table-header;
 	text-align: center;
 	}
-  }
-
-.podcastlinks {
-  display: inline;
   }
 
 .fltlft {
@@ -186,8 +185,10 @@ div.listingfooter {
   display: inline;
   }
 
-#main ul, #main li {
-  display: inline;
+#listintro p, #listintro td {
+  margin: 0;
+  font-weight: bold;
+  color: black;
   }
 
 #bsdropdownmenu {
@@ -197,13 +198,50 @@ div.listingfooter {
 .bslisttable {
   margin: 0;
   border-collapse: separate;
+  .lastcol {
+	border-right: grey 2px solid;
+	}
+  .lastrow {
+	td {
+	  border-bottom: 2px solid grey;
+	  padding-bottom: 7px;
+	  }
+	}
+  th {
+	background-color: #707070;
+	font-weight: bold;
+	color: white;
+	}
+  th.firstrow {
+	border-bottom: grey 2px solid;
+	}
+  tr.lastrow {
+	th {
+	  border-bottom: 2px solid grey;
+	  padding-bottom: 3px;
+	  }
+	}
+  tr.bsodd {
+	td {
+	  background-color: #FFFFFF;
+	  }
+	}
+  tr.bseven {
+	td {
+	  background-color: #FFFFF0;
+	  }
+	}
   .date {
 	white-space: nowrap;
 	font-size: 1.2em;
 	color: grey;
 	font-weight: bold;
 	}
-  .scripture1,
+  .scripture1 {
+	white-space: nowrap;
+	color: #c02121;
+	font-weight: bold;
+	}
   .scripture2 {
 	white-space: nowrap;
 	color: #c02121;
@@ -222,22 +260,57 @@ div.listingfooter {
 	white-space: nowrap;
 	font-style: italic;
 	}
-  .teacher,
-  .location_text,
-  .topic_text,
-  .message_type,
-  .jbsmedia,
-  .store,
-  .details-text,
-  .details-pdf,
-  .details-text-pdf,
-  .secondary_reference,
-  .teacher-title-name,
-  .submitted,
-  .hits,
-  .studynumber,
-  .filesize,
-  .thumbnail,
+  .teacher {
+	white-space: nowrap;
+	}
+  .location_text {
+	white-space: nowrap;
+	}
+  .topic_text {
+	white-space: nowrap;
+	}
+  .message_type {
+	white-space: nowrap;
+	}
+  .jbsmedia {
+	white-space: nowrap;
+	}
+  .store {
+	white-space: nowrap;
+	}
+  .details-text {
+	white-space: nowrap;
+	}
+  .details-pdf {
+	white-space: nowrap;
+	}
+  .details-text-pdf {
+	white-space: nowrap;
+	}
+  .detailstable {
+	td {
+	  border: none;
+	  padding: 0 2px 0 0;
+	  }
+	}
+  .secondary_reference {
+	white-space: nowrap;
+	}
+  .teacher-title-name {
+	white-space: nowrap;
+	}
+  .submitted {
+	white-space: nowrap;
+	}
+  .hits {
+	white-space: nowrap;
+	}
+  .studynumber {
+	white-space: nowrap;
+	}
+  .filesize {
+	white-space: nowrap;
+	}
   .custom {
 	white-space: nowrap;
 	}
@@ -245,74 +318,14 @@ div.listingfooter {
 	font-size: 2em;
 	font-weight: bold;
 	}
-  }
-
-.component-content {
-  ul {
-	text-align: center;
-	}
-  li {
-	display: inline;
-	}
-  }
-
-.pagenav {
-  margin-left: 10px;
-  margin-right: 10px;
-  }
-
-#bsmsdetailstable {
-  margin: 0;
-  border-collapse: separate;
-  .date {
+  .thumbnail {
 	white-space: nowrap;
-	font-size: 1.2em;
-	color: grey;
-	font-weight: bold;
-	}
-  .scripture1,
-  .scripture2 {
-	white-space: nowrap;
-	color: #c02121;
-	font-weight: bold;
-	}
-  .title {
-	font-size: 1.2em;
-	color: #707070;
-	font-weight: bold;
-	}
-  .series_text {
-	white-space: nowrap;
-	color: grey;
-	}
-  .duration {
-	white-space: nowrap;
-	font-style: italic;
-	}
-  .teacher,
-  .location_text,
-  .topic_text,
-  .message_type,
-  .jbsmedia,
-  .store,
-  .details-text,
-  .details-pdf,
-  .details-text-pdf,
-  .secondary_reference,
-  .teacher-title-name,
-  .submitted,
-  .hits,
-  .studynumber,
-  .filesize,
-  .thumbnail,
-  .custom {
-	white-space: nowrap;
-	}
-  .commentshead {
-	font-size: 2em;
-	font-weight: bold
 	}
   .mediatable {
+	td {
+	  border: none;
+	  padding: 0 6px 0 0;
+	  }
 	span.bsfilesize {
 	  font-size: 0.6em;
 	  position: relative;
@@ -321,32 +334,68 @@ div.listingfooter {
 	}
   }
 
-#titletable {
-  margin: 0;
-  border-collapse: separate;
-  .titlesecondline {
-	font-weight: bold;
-	}
-  .titlefirstline {
-	font-size: 20px;
-	font-weight: bold;
-	}
+.bslisttable th, .bslisttable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
   }
 
-#recaptcha_widget_div {
-  position: static !important;
+.bslisttable .row1col1, .bslisttable .row2col1, .bslisttable .row3col1, .bslisttable .row4col1 {
+  border-left: grey 2px solid;
+  }
+
+.bslisttable th.row1col1, .bslisttable th.row1col2, .bslisttable th.row1col3, .bslisttable th.row1col4 {
+  border-top: grey 2px solid;
+  padding-top: 3px;
   }
 
 #bsmsmoduletable {
   margin: 0;
   border-collapse: separate;
+  .lastcol {
+	border-right: grey 2px solid;
+	}
+  .lastrow {
+	td {
+	  border-bottom: 2px solid grey;
+	  padding-bottom: 7px;
+	  }
+	}
+  th {
+	background-color: #707070;
+	font-weight: bold;
+	color: white;
+	}
+  th.firstrow {
+	border-bottom: grey 2px solid;
+	}
+  tr.lastrow {
+	th {
+	  border-bottom: 2px solid grey;
+	  padding-bottom: 3px;
+	  }
+	}
+  tr.bsodd {
+	td {
+	  background-color: #FFFFFF;
+	  }
+	}
+  tr.bseven {
+	td {
+	  background-color: #FFFFF0;
+	  }
+	}
   .date {
 	white-space: nowrap;
 	font-size: 1.2em;
 	color: grey;
 	font-weight: bold;
 	}
-  .scripture1,
+  .scripture1 {
+	white-space: nowrap;
+	color: #c02121;
+	font-weight: bold;
+	}
   .scripture2 {
 	white-space: nowrap;
 	color: #c02121;
@@ -364,109 +413,58 @@ div.listingfooter {
   .duration {
 	white-space: nowrap;
 	font-style: italic;
-	}
-  .teacher,
-  .location_text,
-  .topic_text,
-  .message_type,
-  .jbsmedia,
-  .store,
-  .details-text,
-  .details-pdf,
-  .details-text-pdf,
-  .secondary_reference,
-  .teacher-title-name,
-  .submitted,
-  .hits,
-  .studynumber,
-  .filesize,
-  .custom,
-  .thumbnail {
-	white-space: nowrap;
-	}
-  .commentshead {
-	font-size: 2em;
-	font-weight: bold;
-	}
-  .mediatable {
-	span.bsfilesize {
-	  font-size: 0.6em;
-	  position: relative;
-	  bottom: 7px;
-	  }
-	}
-  }
-
-#seriestable {
-  margin: 0;
-  border-collapse: separate;
-  .thumbnail {
-	img {
-	  border: 1px solid grey;
-	  }
 	}
   .teacher {
-	font-weight: bold;
-	img {
-	  border: 1px solid grey;
+	white-space: nowrap;
+	}
+  .location_text {
+	white-space: nowrap;
+	}
+  .topic_text {
+	white-space: nowrap;
+	}
+  .message_type {
+	white-space: nowrap;
+	}
+  .jbsmedia {
+	white-space: nowrap;
+	}
+  .store {
+	white-space: nowrap;
+	}
+  .details-text {
+	white-space: nowrap;
+	}
+  .details-pdf {
+	white-space: nowrap;
+	}
+  .details-text-pdf {
+	white-space: nowrap;
+	}
+  .detailstable {
+	td {
+	  border: none;
+	  padding: 0 2px 0 0;
 	  }
 	}
-  .title {
-	font-weight: bold;
-	font-size: larger;
-	}
-  .description {
-	p {
-	  width: 500px;
-	  }
-	}
-  }
-
-#seriesstudytable {
-  margin: 0;
-  border-collapse: separate;
-  .date {
+  .secondary_reference {
 	white-space: nowrap;
-	font-size: 1.2em;
-	color: grey;
-	font-weight: bold;
 	}
-  .scripture1,
-  .scripture2 {
+  .teacher-title-name {
 	white-space: nowrap;
-	color: #c02121;
-	font-weight: bold;
 	}
-  .title {
-	font-size: 1.2em;
-	color: #707070;
-	font-weight: bold;
-	font-style: italic;
-	}
-  .series_text {
+  .submitted {
 	white-space: nowrap;
-	color: grey;
 	}
-  .duration {
+  .hits {
 	white-space: nowrap;
-	font-style: italic;
 	}
-  .teacher,
-  .location_text,
-  .topic_text,
-  .message_type,
-  .jbsmedia,
-  .store,
-  .details-text,
-  .details-pdf,
-  .details-text-pdf,
-  .secondary_reference,
-  .teacher-title-name,
-  .submitted,
-  .hits,
-  .studynumber,
-  .filesize,
-  .thumbnail,
+  .studynumber {
+	white-space: nowrap;
+	}
+  .filesize {
+	white-space: nowrap;
+	}
   .custom {
 	white-space: nowrap;
 	}
@@ -474,7 +472,14 @@ div.listingfooter {
 	font-size: 2em;
 	font-weight: bold;
 	}
+  .thumbnail {
+	white-space: nowrap;
+	}
   .mediatable {
+	td {
+	  border: none;
+	  padding: 0 6px 0 0;
+	  }
 	span.bsfilesize {
 	  font-size: 0.6em;
 	  position: relative;
@@ -483,79 +488,37 @@ div.listingfooter {
 	}
   }
 
-.tool-tip {
-  color: #fff;
-  width: 300px;
-  z-index: 13000;
+#bsmsmoduletable th, #bsmsmoduletable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
   }
 
-.tool-title {
-  font-weight: bold;
-  font-size: 11px;
-  margin: 0;
-  color: #9FD4FF;
-  padding: 8px 8px 4px;
-  background: url(../images/tooltip/bubble.gif) top left;
+#bsmsmoduletable .row1col1, #bsmsmoduletable .row2col1, #bsmsmoduletable .row3col1, #bsmsmoduletable .row4col1 {
+  border-left: grey 2px solid;
   }
 
-.tool-text {
-  font-size: 11px;
-  padding: 4px 8px 8px;
-  background: url(../images/tooltip/bubble_filler.gif) bottom right;
-  }
-
-.custom-tip {
-  color: #000;
-  width: 300px;
-  z-index: 13000;
-  border: 2px solid #666666;
-  background-color: white;
-  }
-
-.custom-title {
-  font-weight: bold;
-  font-size: 11px;
-  margin: 0;
-  color: @color3;
-  padding: 8px 8px 4px;
-  background: #666666;
-  border-bottom: 1px solid @color2;
-  }
-
-.custom-text {
-  font-size: 11px;
-  padding: 4px 8px 8px;
-  background: @color2;
-  }
-
-.bsmbutton {
-  background-color: white;
-  }
-
-#toolbar {
-  a:hover {
-	a:visited {
-	  color: #0b55c4;
-	  }
-	}
-  }
-
-#bsmsshare {
-  margin: 0;
-  border-collapse: separate;
-  float: right;
-  border: 1px solid #CFCFCF;
-  background-color: #F5F5F5;
+#bsmsmoduletable th.row1col1, #bsmsmoduletable th.row1col2, #bsmsmoduletable th.row1col3, #bsmsmoduletable th.row1col4 {
+  border-top: grey 2px solid;
+  padding-top: 3px;
   }
 
 .landing_title {
-  font-family: "Times New Roman", arial, serif;
+  font-family: arial;
   font-size: 16px;
   font-weight: bold;
   }
 
+#landing_td {
+  width: 33%;
+  }
+
+.landing_separator {
+  height: 15px;
+  }
+
 #showhide {
-  font-family: "Times New Roman", arial, serif;
+  font-family: arial;
   font-size: 12px;
   font-weight: bold;
   text-decoration: none;
@@ -564,10 +527,6 @@ div.listingfooter {
 	  vertical-align: bottom;
 	  }
 	}
-  }
-
-.landing_separator {
-  height: 15px;
   }
 
 .popupwindow {

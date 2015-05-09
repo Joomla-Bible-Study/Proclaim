@@ -1256,6 +1256,7 @@ class JBSMLanding
 	 */
 	public function getBooksLandingPage($params)
 	{
+
 		$user     = JFactory::getUser();
 		$db       = JFactory::getDBO();
 		$order    = 'ASC';
@@ -1309,8 +1310,9 @@ class JBSMLanding
 			$order = $params->get('landing_default_order', 'ASC');
 		}
 		// Compute view access permissions.
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-
+		$groups = $user->getAuthorisedViewLevels();
+		$groups = array_unique($groups);
+		$groups = implode(',', $groups);
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
 			->from('#__bsms_books a')
@@ -1319,7 +1321,8 @@ class JBSMLanding
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
 			->where('b.published = 1')
-			->order('a.booknumber ' . $order);
+			->order('a.booknumber ' . $order)
+			->group('a.bookname');
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();

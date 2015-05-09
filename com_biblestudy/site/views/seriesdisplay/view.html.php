@@ -120,7 +120,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 
-		if (is_string($params->get('seriesdisplaytemplate')) )
+		if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true )
 		{
 			// Get studies associated with the series
 			$pagebuilder = new JBSMPagebuilder;
@@ -183,7 +183,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 				}
 
 			}
-			$this->seriesstudies = $studies;
 			$this->page          = $items;
 		}
 		// Prepare meta information (under development)

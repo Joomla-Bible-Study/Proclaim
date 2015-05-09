@@ -578,7 +578,15 @@ class JBSMMedia
 
 		$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 
-		if ($media->params->get('link_type') > 0)
+		if ($media->params->get('link_type'))
+		{
+			$link_type = $media->params->get('link_type');
+		}
+		else
+		{
+			$link_type = $media->smedia->get('link_type');
+		}
+		if ($link_type > 0)
 		{
 			$compat_mode = $params->get('compat_mode');
 
@@ -602,7 +610,8 @@ class JBSMMedia
 			}
 			$downloadlink .= $download_image . '</a>';
 		}
-		switch ($media->params->get('link_type'))
+
+		switch ($link_type)
 		{
 			case 0:
 				$table .= $playercode;

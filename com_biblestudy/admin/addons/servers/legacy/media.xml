@@ -6,8 +6,9 @@
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
                    class="inputbox" size="1" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="2">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-                <option value="3">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+                <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
             </field>
         </fieldset>
         <fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">
@@ -52,13 +53,13 @@
                    class="inputbox span10"/>
             <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
                    description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
-            <field name="special" type="list" label="JBS_MED_TARGET"
-                   description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15" default="">
+            <field name="special" type="list" label="JBS_MED_LINK_TARGET"
+                   description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="">
 	            <option value="">JGLOBAL_USE_GLOBAL</option>
-	            <option value="_blank">_blank</option>
-	            <option value="_self">_self</option>
-	            <option value="_parent">_parent</option>
-	            <option value="_top">_top</option>
+	            <option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
+	            <option value="_self">JBS_MED_LINK_TARGET_SELF</option>
+	            <option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
+	            <option value="_top">JBS_MED_LINK_TARGET_TOP</option>
             </field>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
@@ -83,7 +84,7 @@
             <field name="popupmargin" type="text" default="50"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
             <field name="autostart" type="list"
-                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC" default="">
+                   label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>

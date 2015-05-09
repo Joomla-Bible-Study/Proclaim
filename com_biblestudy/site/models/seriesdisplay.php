@@ -194,6 +194,9 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
+
 		// Join over Plays/Downloads
 		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) AS totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
@@ -223,7 +226,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 OR study.series_id <= 0');
+		$query->where('(series.published = 1 OR study.series_id <= 0)');
 		$query->where('study.series_id = ' . $sid);
 
 		// Order by order filter

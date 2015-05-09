@@ -131,8 +131,6 @@ class BiblestudyViewMessageform extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
-
 		$this->_prepareDocument();
 
 		parent::display($tpl);

@@ -240,17 +240,17 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->topic      = $this->topics;
 
 		// Get the template options for showing the dropdowns
-		$teacher_menu1     = $params->get('teacher_id');
+		$teacher_menu1     = $params->get('mteacher_id');
 		$teacher_menu      = $teacher_menu1[0];
-		$topic_menu1       = $params->get('topic_id');
+		$topic_menu1       = $params->get('mtopic_id');
 		$topic_menu        = $topic_menu1[0];
-		$book_menu1        = $params->get('booknumber');
+		$book_menu1        = $params->get('mbooknumber');
 		$book_menu         = $book_menu1[0];
-		$location_menu1    = $params->get('locations');
+		$location_menu1    = $params->get('mlocations');
 		$location_menu     = $location_menu1[0];
-		$series_menu1      = $params->get('series_id');
+		$series_menu1      = $params->get('mseries_id');
 		$series_menu       = $series_menu1[0];
-		$messagetype_menu1 = $params->get('messagetype');
+		$messagetype_menu1 = $params->get('mmessagetype');
 		$messagetype_menu  = $messagetype_menu1[0];
 
 		// Initialize the page

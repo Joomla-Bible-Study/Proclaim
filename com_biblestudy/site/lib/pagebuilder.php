@@ -74,7 +74,7 @@ class JBSMPageBuilder
 		$esv          = 0;
 		$scripturerow = 2;
 
-		if (isset($item->chapter_begin2) && $item->booknumber2 >= 1)
+		if ($item->booknumber2 >= 1)
 		{
 			$page->scripture2 = $JBSMElements->getScripture($params, $item, $esv, $scripturerow);
 		}
@@ -375,6 +375,9 @@ class JBSMPageBuilder
 		// Join over Books
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
 
 		// Join over Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,

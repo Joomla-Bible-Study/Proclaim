@@ -100,8 +100,6 @@ else
 		<?php
 	} // End of foreach
 	?>
-</div>
-</div>
 
 </div>
 	<?php
@@ -144,7 +142,6 @@ if ($allow > 9)
 		{
 			?>
             <div class="span12">
-                <td>
 					<?php
 					if ($user->name)
 					{
@@ -240,4 +237,4 @@ if ($allow > 9)
 } // End if $allow > 9
 ?>
 </div>
-</div>
+
