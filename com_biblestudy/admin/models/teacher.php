@@ -87,7 +87,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @param   object  $record  A record object.
 	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
+	 *                   component.
 	 *
 	 * @since   12.2
 	 */
@@ -112,13 +113,17 @@ class BiblestudyModelTeacher extends JModelAdmin
 			{
 				return true;
 			}
-
-			foreach ($studies as $studie)
+			if ($record->published == '-2' || $record->published == '0')
 			{
-				$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-			}
 
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+				foreach ($studies as $studie)
+				{
+					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+				}
+
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+
+			}
 
 			return false;
 		}
