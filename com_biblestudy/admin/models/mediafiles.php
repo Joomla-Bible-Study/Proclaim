@@ -72,6 +72,22 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$items = parent::getItems();
 
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
 		foreach ($items as $item)
 		{
 

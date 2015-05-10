@@ -99,7 +99,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -112,15 +112,17 @@ class BiblestudyViewMessages extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'message');
-		$modelView        = $this->getModel();
-		$this->items      = $modelView->getTranslated($items);
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
+		$modelView   = $this->getModel();
+		$this->items = $modelView->getTranslated($items);
 
-		$this->books        = $this->get('Books');
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
+		$this->books         = $this->get('Books');
+		$this->teachers      = $this->get('Teachers');
+		$this->series        = $this->get('Series');
+		$this->messageTypes  = $this->get('MessageTypes');
+		$this->years         = $this->get('Years');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -149,7 +151,6 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
 			$this->sidebar = JHtmlSidebar::render();
 		}
 
@@ -172,7 +173,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar  = JToolBar::getInstance('toolbar');
+		$bar = JToolBar::getInstance('toolbar');
 
 		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
 

@@ -59,8 +59,8 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Populate the State
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return void
 	 */
@@ -76,7 +76,7 @@ class BiblestudyModelTeachers extends JModelList
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin(true);
@@ -107,5 +107,35 @@ class BiblestudyModelTeachers extends JModelList
 		}
 
 		$this->setState('filter.language', $app->getLanguageFilter());
+	}
+
+	/**
+	 * Method to get a list of sermons.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   9.0.0
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
 	}
 }
