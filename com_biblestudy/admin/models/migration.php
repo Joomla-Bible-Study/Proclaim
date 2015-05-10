@@ -588,7 +588,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			{
 				array_pop($this->_finish);
 				$this->doneVersions++;
-				$this->finish(true);
+				$this->finish();
 			}
 		}
 
