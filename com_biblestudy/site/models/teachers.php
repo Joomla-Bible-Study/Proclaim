@@ -59,8 +59,8 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Populate the State
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return void
 	 */

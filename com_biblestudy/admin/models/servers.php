@@ -207,7 +207,6 @@ class BiblestudyModelServers extends JModelList
 		return $query;
 	}
 
-
 	/**
 	 * Method to get a list of articles.
 	 * Overridden to add a check for access levels.

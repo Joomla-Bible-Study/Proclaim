@@ -72,7 +72,6 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$items = parent::getItems();
 
-
 		if (JFactory::getApplication()->isSite())
 		{
 			$user   = JFactory::getUser();

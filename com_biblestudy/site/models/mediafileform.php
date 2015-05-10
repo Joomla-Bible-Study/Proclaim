@@ -38,41 +38,6 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		parent::__construct($config);
 	}
 
-//	/**
-//	 * Method to get article data.
-//	 *
-//	 * @param   integer  $pk  The id of the article.
-//	 *
-//	 * @return    mixed    Content item data object on success, false on failure.
-//	 */
-//	public function getItem($pk = null)
-//	{
-//		// Initialise variables.
-//		$pk = (int) (!empty($pk)) ? $pk : $this->getState('mediafile.id');
-//
-//		// Get a row instance.
-//		$table = $this->getTable();
-//
-//		// Attempt to load the row.
-//		$return = $table->load($pk);
-//
-//		// Check for a table object error.
-//		if ($return === false)
-//		{
-//			return false;
-//		}
-//
-//		$properties = $table->getProperties(1);
-//		$value      = JArrayHelper::toObject($properties, 'JObject');
-//
-//		// Convert params field to Registry.
-//		$registry = new Registry;
-//		$registry->loadString($value->params);
-//		$value->params = $registry->toArray();
-//
-//		return $value;
-//	}
-
 	/**
 	 * Get the return URL.
 	 *

@@ -32,8 +32,8 @@ class JFormFieldServer extends JFormField
 		$allowClear = ((string) $this->element['clear'] != 'false') ? true : false;
 
 		// Build the script.
-		$view     = JFactory::getApplication()->input->get('view');
-		$size     = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
+		$view = JFactory::getApplication()->input->get('view');
+		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
 		$model  = JModelLegacy::getInstance('servers', 'BibleStudyModel');
@@ -142,11 +142,11 @@ class JFormFieldServer extends JFormField
 		{
 			$value = (int) $this->value;
 		}
-		//	$html[] = '<input type="hidden" id="jform_serverType" value="' . $server['type'] . '"/>';
 
 		// The current server display field.
 		$html[] = '<span class="input-append">';
-		$html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $server['name'] . '"' . $size . ' disabled="disabled" size="35" />';
+		$html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $server['name'] . '"' .
+			$size . ' disabled="disabled" size="35" />';
 		$html[] = '<a'
 			. ' class="modal btn hasTooltip"'
 			. ' title="' . JHtml::tooltipText('JBS_SVR_SERVER_NAME') . '"'
@@ -154,7 +154,6 @@ class JFormFieldServer extends JFormField
 			. ' rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
 			. '<i class="icon-file"></i> ' . JText::_('JSELECT')
 			. '</a>';
-
 
 		// Edit Server button.
 		if ($allowEdit)

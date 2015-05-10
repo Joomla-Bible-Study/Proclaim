@@ -50,8 +50,8 @@ class BiblestudyModelTemplate extends JModelAdmin
 	/**
 	 * Method to change the published state of one or more records.
 	 *
-	 * @param   array   &$pks  A list of the primary keys to change.
-	 * @param   integer $value The value of the published state.
+	 * @param   array    &$pks   A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -61,14 +61,15 @@ class BiblestudyModelTemplate extends JModelAdmin
 	{
 		foreach ($pks as $i => $pk)
 		{
-			if($pk == 1 && $value != 1)
+			if ($pk == 1 && $value != 1)
 			{
 				JFactory::getApplication()->enqueueMessage(JTEXT::_('JBS_TPL_DEFAULT_ERROR'), 'error');
 				unset($pks[$i]);
-			};
+			}
 		}
 		return parent::publish($pks, $value);
 	}
+
 	/**
 	 * Get the form data
 	 *

@@ -58,7 +58,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -87,7 +87,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		}
 
 		$options       = $app->input->get('options');
-		$this->options = new stdClass();
+		$this->options = new stdClass;
 
 		$this->options->study_id   = null;
 		$this->options->createdate = null;
