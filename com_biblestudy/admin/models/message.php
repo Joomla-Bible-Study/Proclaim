@@ -271,7 +271,6 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		if ($topics)
 		{
-
 			foreach ($topics as $topic)
 			{
 				$text             = JBSMTranslated::getTopicItemTranslated($topic);
@@ -299,6 +298,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$query->select('m.id, m.language, m.createdate, m.params');
 		$query->from('#__bsms_mediafiles AS m');
 		$query->where('m.study_id = ' . (int) $this->getItem()->id);
+		$query->where('published =' . 1);
 		$query->order('m.createdate DESC');
 
 		// Join over the asset groups.

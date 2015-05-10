@@ -230,6 +230,19 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$pk = $jinput->get('a_id', 0);
+
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$pk = $jinput->get('id', 0);
+		}
+
 		if (!empty($this->data))
 		{
 			return $this->data;

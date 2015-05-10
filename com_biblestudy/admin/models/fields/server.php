@@ -32,7 +32,7 @@ class JFormFieldServer extends JFormField
 		$allowClear = ((string) $this->element['clear'] != 'false') ? true : false;
 
 		// Build the script.
-		$media_id = (int) $this->form->getValue('id');
+		$view     = JFactory::getApplication()->input->get('view');
 		$size     = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
@@ -90,7 +90,15 @@ class JFormFieldServer extends JFormField
 
 		// Setup variables for display.
 		$html = array();
-		$link = 'index.php?option=com_biblestudy&amp;view=servers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
+		if ($view == 'mediafileform')
+		{
+			$sview = 'serverslist';
+		}
+		else
+		{
+			$sview = 'servers';
+		}
+		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
 
 		if (isset($this->element['language']))
 		{

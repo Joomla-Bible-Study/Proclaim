@@ -38,6 +38,8 @@ class JFormFieldModal_Study extends JFormField
 		// Load the modal behavior script.
 		JHtml::_('behavior.modal', 'a.modal');
 
+		$view = JFactory::getApplication()->input->get('view');
+
 		// Build the script.
 		$script   = array();
 		$script[] = '   function jSelectStudy_' . $this->id . '(id, title, book, teacher, series, type, year, topic, state, object) {';
@@ -51,7 +53,15 @@ class JFormFieldModal_Study extends JFormField
 
 		// Setup variables for display.
 		$html = array();
-		$link = 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
+		if ($view == 'mediafileform')
+		{
+			$sview = 'messagelist';
+		}
+		else
+		{
+			$sview = 'servers';
+		}
+		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
 		$db = JFactory::getDBO();
 		$db->setQuery(

@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+
 /**
  * View class for MediaFile
  *
@@ -51,60 +52,77 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/** @var  string Can Do */
 	protected $canDo;
 
+	/** @var object */
+	protected $options;
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
 
-		$app  = JFactory::getApplication();
-
-		// Get model data.
-		$this->state       = $this->get('State');
-		$this->item        = $this->get('Item');
-		$this->form        = $this->get('Form');
-		$this->return_page = $this->get('ReturnPage');
-
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
-
-		$this->params = $this->state->template->params;
+		$app              = JFactory::getApplication();
+		$this->form       = $this->get("Form");
+		$this->media_form = $this->get("MediaForm");
+		$this->item       = $this->get("Item");
+		$this->state      = $this->get("State");
+		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
+		$this->params     = $this->state->get('admin');
+		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
-		if (!$this->canDo->get('core.edit'))
+		if (!$this->params->def('page_title', ''))
 		{
-			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			define('JBSPAGETITLE', 0);
+		}
+		else
+		{
+			define('JBSPAGETITLE', 1);
+		}
+
+		$options       = $app->input->get('options');
+		$this->options = new stdClass();
+
+		$this->options->study_id   = null;
+		$this->options->createdate = null;
+		if ($options)
+		{
+			$options = explode('&', base64_decode($app->input->get('options')));
+			foreach ($options as $option_st)
+			{
+				$option_st = explode('=', $option_st);
+				if ($option_st[0] == 'study_id')
+				{
+					$this->options->study_id = $option_st[1];
+				}
+				if ($option_st[0] == 'createdate')
+				{
+					$this->options->createdate = $option_st[1];
+				}
+			}
+		}
+
+		// Needed to load the article field type for the article selector
+		JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
+
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			$app->enqueueMessage(implode("\n", $errors), 'error');
 
 			return;
 		}
 
-		$db = JFactory::getDBO();
+		// Set the document
+		$this->_prepareDocument();
 
-		// Get server for upload dropdown
-		$query = $db->getQuery(true);
-		$query->select('id as value, server_name as text')->from('#__bsms_servers')->where('published=1')->order('server_name asc');
-		$db->setQuery($query);
-		$db->execute();
-		$server              = array(
-			array(
-				'value' => '',
-				'text'  => JText::_('JBS_MED_SELECT_SERVER')
-			),
-		);
-		$serverlist          = array_merge($server, $db->loadObjectList());
-		$idsel               = "'SWFUpload_0'";
-		$ref1                = JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"'
-			. '', 'value', 'text', ''
-		);
-		$this->upload_server = $ref1;
-
-		$this->setLayout('edit');
-
+		// Display the template
 		parent::display($tpl);
 	}
 
@@ -115,9 +133,9 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
-		$menus   = $app->getMenu();
-		$title   = null;
+		$app   = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$title = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

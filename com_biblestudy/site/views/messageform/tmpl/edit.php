@@ -433,7 +433,7 @@ $input  = $app->input;
 									?>
 									<tr class="row<?php echo $i % 2; ?>">
 										<td>
-											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;id='
+											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id='
 												. (int) $item->id . '&amp;return=' . $return; ?>
 											<a class="btn btn-primary" href="<?php echo $link; ?>"
 											   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
@@ -445,7 +445,7 @@ $input  = $app->input;
 										</td>
 
 									</tr>
-								<?php
+									<?php
 								endforeach;
 							else:
 								?>

@@ -141,7 +141,7 @@ $sortFields = $this->getSortFields();
 					<td class="nowrap has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-							<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&id=' . (int) $item->id); ?>">
+							<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
 								<?php endif; ?>
 								<span class="label">
 										<?php
