@@ -112,7 +112,8 @@ class JFormFieldServer extends JFormField
 			$query = $db->getQuery(true)
 				->select($db->quoteName('server_name'))
 				->from($db->quoteName('#__bsms_servers'))
-				->where('id = ' . (int) $this->value);
+				->where('id = ' . (int) $this->value)
+				->where('published = ' . 1);
 			$db->setQuery($query);
 
 			try
