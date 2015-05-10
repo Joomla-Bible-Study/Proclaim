@@ -93,8 +93,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes .
-			' width="' . $return->width . '" height="' . $return->height . '">';
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 
 		return $imagereturn;
 	}
