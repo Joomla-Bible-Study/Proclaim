@@ -71,6 +71,9 @@ class BiblestudyViewServersList extends JViewLegacy
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'server');
 		$this->types      = $this->get('ServerOptions');
 
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{

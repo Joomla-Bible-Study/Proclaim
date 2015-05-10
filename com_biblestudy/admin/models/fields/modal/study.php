@@ -59,7 +59,7 @@ class JFormFieldModal_Study extends JFormField
 		}
 		else
 		{
-			$sview = 'servers';
+			$sview = 'messages';
 		}
 		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 

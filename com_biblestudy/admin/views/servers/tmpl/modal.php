@@ -24,16 +24,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">
-	<fieldset id="filter clearfix">
-		<div class="btn-group pull-left">
-			<label for="filter_search" class="element-invisible">
-				<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>
-			</label>
-			<input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"
-			       id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-			       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
-		</div>
-	</fieldset>
+	<?php
+	// Search tools bar
+	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	?>
 	<table class="table table-striped table-condensed">
 		<thead>
 		<tr>

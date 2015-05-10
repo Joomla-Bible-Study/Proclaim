@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.5" method="upgrade">
     <!-- Generic Metadata -->
     <name>COM_BIBLESTUDY</name>
     <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007 - 2014 Joomla Bible Study Team All rights reserved</copyright>
+    <copyright>(C) 2007 - 2015 Joomla Bible Study Team All rights reserved</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>9.0.0-dev140412</version>
-    <creationDate>Dec 23, 2014</creationDate>
+    <version>9.0.0-dev150510</version>
+    <creationDate>June 1, 2015</creationDate>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <description>JBS_INS_XML_DESCRIPTION</description>

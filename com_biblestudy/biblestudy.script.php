@@ -34,7 +34,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_joomla_release = '2.5.6';
+	private $_minimum_joomla_release = '3.2.0';
 
 	/**
 	 * Find minimum required PHP version for this extension.
