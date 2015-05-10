@@ -56,7 +56,7 @@ class BiblestudyViewServers extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -65,11 +65,13 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'server');
-		$this->types      = $this->get('ServerOptions');
+		$this->items         = $this->get('Items');
+		$this->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'server');
+		$this->types         = $this->get('ServerOptions');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -165,13 +167,6 @@ class BiblestudyViewServers extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-
-		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
 	}
 
 	/**
