@@ -135,7 +135,6 @@ class TableTemplate extends JTable
 	 */
 	public function store($updateNulls = false)
 	{
-
 		// Attempt to store the user data.
 		$oldrow = JTable::getInstance('template', 'Table');
 

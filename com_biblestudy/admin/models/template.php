@@ -20,6 +20,26 @@ class BiblestudyModelTemplate extends JModelAdmin
 {
 
 	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array $data The form data.
+	 *
+	 * @return  boolean  True on success, False on error.
+	 *
+	 * @since   12.2
+	 */
+	public function save($data)
+	{
+		// Make sure we cannot unpublished default template.
+		if ($data['id'] == '1' && $data['published'] != '1')
+		{
+			JFactory::getApplication()->enqueueMessage(JTEXT::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+			return false;
+		}
+
+		return parent::save($data);
+	}
+	/**
 	 * Copy Template
 	 *
 	 * @param   array  $cid  ID of template
