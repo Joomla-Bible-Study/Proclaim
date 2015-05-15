@@ -145,6 +145,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication();
+
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -182,6 +184,15 @@ class BiblestudyModelMediafiles extends JModelList
 		$this->setState('filter.player', $player);
 
 		parent::populateState('mediafile.createdate', 'DESC');
+
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -217,6 +228,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
@@ -252,12 +264,20 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
 		}
+
 		// Filter by access level.
 		$access = $this->getState('filter.access');
 
 		if ($access)
 		{
 			$query->where('mediafile.access = ' . (int) $access);
+		}
+
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('a.access IN (' . $groups . ')');
 		}
 
 		// Filter by study title
@@ -276,8 +296,31 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
 		}
 
+
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('mediafile.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+				$query->where('a.alias LIKE ' . $search );
+			}
+		}
+
+		// Filter on the language.
+		if ($language = $this->getState('filter.language'))
+		{
+			$query->where('mediafile.language = ' . $db->quote($language));
+		}
+
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'ordering');
+		$orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 
 		// Sqlsrv change

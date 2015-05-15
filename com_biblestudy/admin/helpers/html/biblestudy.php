@@ -160,7 +160,7 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return   array    The field option objects.
+	 * @return   Object    The field option objects.
 	 *
 	 * @since    1.6
 	 */
