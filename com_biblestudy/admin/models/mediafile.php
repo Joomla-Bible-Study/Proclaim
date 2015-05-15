@@ -95,7 +95,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($data)
 		{
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
-			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
 			/* This code could be uncommented and would remove spaces from filename */
 			$data['filename'] = str_replace(' ', '%20', $data['filename']);
@@ -252,6 +252,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if (!empty($this->data))
 		{
+			// Make Podcast Id to be array for view
+			if (!empty($this->data->podcast_id))
+			{
+				$this->data->podcast_id = explode(',', $this->data->podcast_id);
+			}
+
 			// Convert metadata field to array
 			$registry             = new Registry($this->data->metadata);
 			$this->data->metadata = $registry->toArray();

@@ -93,6 +93,14 @@ JHtml::_('formbehavior.chosen', 'select');
 
                         </div>
                         <div class="span3 form-vertical">
+	                        <div class="control-group">
+		                        <div class="control-label">
+			                        <?php echo $this->form->getLabel('id'); ?>
+		                        </div>
+		                        <div class="controls">
+			                        <?php echo $this->form->getInput('id'); ?>
+		                        </div>
+	                        </div>
                             <div class="control-group">
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('published'); ?>
