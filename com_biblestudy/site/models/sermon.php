@@ -143,6 +143,13 @@ class BiblestudyModelSermon extends JModelItem
 						->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
 				}
 
+				// Implement View Level Access
+				if (!$user->authorise('core.admin'))
+				{
+					$groups = implode(',', $user->getAuthorisedViewLevels());
+					$query->where('s.access IN (' . $groups . ')');
+				}
+
 				// Filter by published state.
 				$published = $this->getState('filter.published');
 				$archived  = $this->getState('filter.archived');
@@ -160,15 +167,15 @@ class BiblestudyModelSermon extends JModelItem
 				if (empty($data))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
-
-					return false;
+					return $data;
 				}
 
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
-					return false;
+					$data = null;
+					return $data;
 				}
 
 				// Concat topic_text and concat topic_params do not fit, so translate individually
