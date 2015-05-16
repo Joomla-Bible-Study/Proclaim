@@ -58,9 +58,9 @@ class JBSMMedia
 
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
-			$mediafile = '<div style="display:inline;">' . $mediafile .
+			$mediafile = $mediafile .
 				'<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' .
-				self::getFluidFilesize($media, $params) . '</div></div>';
+				self::getFluidFilesize($media, $params) . '</div>';
 		}
 
 		return $mediafile;
@@ -86,7 +86,7 @@ class JBSMMedia
 
 		try
 		{
-			$return = $image->getImageFileProperties(JPATH_ROOT . $path);
+			$return = $image->getImageFileProperties($path);
 		}
 		catch (Exception $e)
 		{

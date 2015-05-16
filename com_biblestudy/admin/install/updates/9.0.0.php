@@ -345,10 +345,14 @@ class Migration900
 	 */
 	private function deleteColumns ($table, $columns, $db)
 	{
+		$columns2 = $db->getTableColumns($table);
 		foreach ($columns as $column)
 		{
-			$db->setQuery('ALTER TABLE ' . $table . ' DROP ' . $column);
-			$db->execute();
+			if (isset($columns2[$column]))
+			{
+				$db->setQuery('ALTER TABLE ' . $table . ' DROP ' . $column);
+				$db->execute();
+			}
 		}
 	}
 

@@ -56,6 +56,7 @@ class JBSMListing
 			$medias = $this->getFluidMediaids($items);
 			$item   = $items;
 		}
+
 		// Get the media files in one query
 		if (isset($medias))
 		{
@@ -831,7 +832,7 @@ class JBSMListing
 
 				if ($row5count == $row5count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -852,7 +853,7 @@ class JBSMListing
 
 				if ($row6count == $row6count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -896,7 +897,6 @@ class JBSMListing
 		$tmenu = $params->get('teacheritemid');
 		/** @var string $data */
 		$data       = '';
-		$mediaclass = '';
 
 		// Match the data in $item to a row/col in $row->name
 		$extra = '';

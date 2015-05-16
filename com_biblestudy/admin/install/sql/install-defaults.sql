@@ -101,7 +101,7 @@ INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `
 VALUES
   (1, 1, 1, '1',
    '{"plays":"0", "downloads":"0"}', 0, '2009-09-13 00:10:00', 0, 1, 'Sample Media file', 0, 0,
-   '{"link_type":"","docMan_id":"0","article_id":"-1","virtueMart_id":"0","player":"","popup":"","mediacode":"","media_image":"/media/com_biblestudy/images/speaker24.png","filename":"/MediaFiles/2014/2014-004.mp3","size":"","special":"","localFolder":"","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":""}',
+   '{"link_type":"","docMan_id":"0","article_id":"-1","virtueMart_id":"0","player":"","popup":"","mediacode":"","media_image":"media/com_biblestudy/images/speaker24.png","filename":"/MediaFiles/2014/2014-004.mp3","size":"","special":"","localFolder":"","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":""}',
    0, 1, '', 1, 'admin', '0000-00-00 00:00:00', 1, 0, '0000-00-00 00:00:00');
 
 --
