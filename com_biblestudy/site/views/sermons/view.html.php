@@ -111,9 +111,9 @@ class BiblestudyViewSermons extends JViewLegacy
 		$input      = new JInput;
 		$limitstart = $input->get('limitstart', '', 'int');
 		$input->set('start', $limitstart);
-		$this->state = $this->get('State');
+		$this->state      = $this->get('State');
 		$this->template   = $this->state->get('template');
-		$items = $this->get('Items');
+		$items            = $this->get('Items');
 
 		$this->limitstart = $input->get('start', '', 'int');
 		$pagination       = $this->get('Pagination');
@@ -278,7 +278,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			$go = null;
 		}
 		// Build go button
-		$this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '">';
+		$this->page->gobutton = '<input class="btn btn-primary pull-right" type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '">';
 
 		if ($params->get('use_go_button') > 0)
 		{
@@ -402,12 +402,8 @@ class BiblestudyViewSermons extends JViewLegacy
 			$this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
 			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
 		}
-		foreach ($dropdowns as $value)
-		{
-			$dropdownmenus[] = $value;
-		}
-		asort($dropdownmenus);
-		foreach ($dropdownmenus as $dmenus)
+		JBSMBibleStudyHelper::array_sort_by_column($dropdowns, 'order');
+		foreach ($dropdowns as $dmenus)
 		{
 			$this->page->dropdowns .= $dmenus['item'];
 		}

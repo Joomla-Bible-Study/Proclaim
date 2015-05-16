@@ -10,13 +10,15 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('bootstrap.framework');
+JHtml::_('behavior.framework', true);
+JHtml::_('jquery.framework');
+JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher = new JBSMTeacher;
 $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 ?>
 
-<div class="container-fluid JBSM">
+<div class="container-fluid">
 	<div id="bsheader">
 		<?php
 		if ($this->params->get('showpodcastsubscribelist') == 1)

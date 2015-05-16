@@ -443,7 +443,6 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		$template->id = $t;
-
 		$this->setState('template', $template);
 		$this->setState('admin', $admin);
 

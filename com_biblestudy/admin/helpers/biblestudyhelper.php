@@ -644,4 +644,24 @@ class JBSMBibleStudyHelper
 
 		return $options;
 	}
+
+	/**
+	 * Sorting the Array a Column
+	 *
+	 * @param   Array   $arr  Array to sort
+	 * @param   string  $col  Sort column
+	 * @param   int     $dir  Direction to sort
+	 *
+	 * @return void applied back to the array
+	 */
+	public static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
+	{
+		$sort_col = array();
+		foreach ($arr as $key => $row)
+		{
+			$sort_col[$key] = $row[$col];
+		}
+
+		array_multisort($sort_col, $dir, $arr);
+	}
 }
