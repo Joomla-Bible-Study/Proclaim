@@ -285,7 +285,7 @@ class BiblestudyModelMediafiles extends JModelList
 		if (!$user->authorise('core.admin'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
-			$query->where('a.access IN (' . $groups . ')');
+			$query->where('mediafile.access IN (' . $groups . ')');
 		}
 
 		// Filter by study title
