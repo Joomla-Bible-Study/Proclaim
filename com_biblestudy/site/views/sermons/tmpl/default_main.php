@@ -16,7 +16,7 @@ $JBSMTeacher = new JBSMTeacher;
 $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 ?>
 
-<div class="container-fluid">
+<div class="container-fluid JBSM">
 	<div id="bsheader">
 		<?php
 		if ($this->params->get('showpodcastsubscribelist') == 1)

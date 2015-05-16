@@ -747,7 +747,7 @@ class JBSMListing
 
 				if ($row1count == $row1count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -768,7 +768,7 @@ class JBSMListing
 
 				if ($row2count == $row2count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -789,7 +789,7 @@ class JBSMListing
 
 				if ($row3count == $row3count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -810,7 +810,7 @@ class JBSMListing
 
 				if ($row4count == $row4count2)
 				{
-					$frow .= '<div class="row-fluid">';
+					$frow .= '<div class="row-fluid JBSM">';
 				}
 				if ($header == 1)
 				{
@@ -895,7 +895,8 @@ class JBSMListing
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
 		/** @var string $data */
-		$data = '';
+		$data       = '';
+		$mediaclass = '';
 
 		// Match the data in $item to a row/col in $row->name
 		$extra = '';
@@ -1593,7 +1594,12 @@ class JBSMListing
 				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $item, $template);
 			}
 		}
-		$frow = '<div class="span' . $row->colspan . ' ' . $customclass . '"><div class="">' . $classopen;
+		$frow = '<div class="span' . $row->colspan;
+		if ($customclass)
+		{
+			$frow .= ' ' . $customclass;
+		}
+		$frow .= '"><div class="">' . $classopen;
 		if ($link)
 		{
 			$frow .= $link;
@@ -2126,7 +2132,7 @@ class JBSMListing
 	public function getFluidMediaFiles($item, $params, $template)
 	{
 		$med      = new JBSMMedia;
-		$mediarow = '<div style="display:inline;">';
+		$mediarow = '<div style="display:inline; padding:5px;">';
 		foreach ($item->mediafiles as $media)
 		{
 			$mediarow .= $med->getFluidMedia($media, $params, $template);
@@ -2268,12 +2274,6 @@ class JBSMListing
 				$column = '<a href="' . $link . '">';
 				break;
 
-			case 2 :
-				$filepath = $this->getFilepath($id3, 'study_id', $mime);
-				$link     = JRoute::_($filepath);
-				$column .= '<a href="' . $link . '">';
-				break;
-
 			case 3 :
 				$link = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 
@@ -2300,13 +2300,7 @@ class JBSMListing
 				break;
 
 			case 5 :
-				// Case 5 is a file link with Tooltip
-				JFactory::getApplication()->enqueueMessage('Need to update this ASAP Listing->getLink->case5', 'error');
-
-/*				$filepath = $this->getFilepath($id3, 'study_id', $mime);
-				$link     = JRoute::_($filepath);
 				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
-				$column  .= '<a href="' . $link . '">'; */
 				break;
 
 			case 6 :

@@ -86,7 +86,7 @@ class JBSMMedia
 
 		try
 		{
-			$return = $image->getImageFileProperties($path);
+			$return = $image->getImageFileProperties(JPATH_ROOT . $path);
 		}
 		catch (Exception $e)
 		{
@@ -254,7 +254,7 @@ class JBSMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=0&amp;view=popup&amp;t="
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player . "&amp;view=popup&amp;t="
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\">" . $image . "</a>";
 						break;
