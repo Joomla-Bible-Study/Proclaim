@@ -31,6 +31,34 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 		parent::__construct($config);
 	}
 
+	public function checkin()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
+
+		$model  = $this->getModel();
+		$return = $model->checkin($ids);
+
+		if ($return === false)
+		{
+			// Checkin failed.
+			$message = JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
+			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
+
+			return false;
+		}
+		else
+		{
+			// Checkin succeeded.
+			$message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
+			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
+
+			return true;
+		}
+	}
+
 	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *

@@ -132,6 +132,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 			JToolBarHelper::save('mediafile.save');
 			JToolBarHelper::save2new('mediafile.save2new');
 			JToolBarHelper::cancel('mediafile.cancel');
+			JToolbarHelper::checkin('mediafile.checkin');
 		}
 		else
 		{

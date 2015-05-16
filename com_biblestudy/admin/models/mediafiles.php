@@ -71,6 +71,10 @@ class BiblestudyModelMediafiles extends JModelList
 		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 
 		$items = parent::getItems();
+		if (!$items)
+		{
+			return false;
+		}
 
 		if (JFactory::getApplication()->isSite())
 		{
@@ -235,7 +239,7 @@ class BiblestudyModelMediafiles extends JModelList
 				'list.select', 'mediafile.* ')
 		);
 
-		$query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
+		$query->from('#__bsms_mediafiles AS mediafile');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -252,6 +256,10 @@ class BiblestudyModelMediafiles extends JModelList
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
+
+		// Join over the users for the checked out user.
+		$query->select('uc.name AS editor')
+			->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
 
 		// Filter by published state
 		$published = $this->getState('filter.published');

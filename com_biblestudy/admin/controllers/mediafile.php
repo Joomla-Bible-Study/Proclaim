@@ -109,6 +109,43 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function cancel($key = null)
 	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$app     = JFactory::getApplication();
+		$model   = $this->getModel();
+		$table   = $model->getTable();
+		$checkin = property_exists($table, 'checked_out');
+
+		if (empty($key))
+		{
+			$key = $table->getKeyName();
+		}
+
+		$recordId = $app->input->getInt($key);
+
+		// Attempt to check-in the current record.
+		if ($recordId)
+		{
+			if ($checkin)
+			{
+				if ($model->checkin($recordId) === false)
+				{
+					// Check-in failed, go back to the record and display a notice.
+					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+					$this->setMessage($this->getError(), 'error');
+
+					$this->setRedirect(
+						JRoute::_(
+							'index.php?option=' . $this->option . '&view=' . $this->view_item
+							. $this->getRedirectToItemAppend($recordId, $key), false
+						)
+					);
+
+					return false;
+				}
+			}
+		}
+
 		if ($this->input->getCmd('return') && parent::cancel($key))
 		{
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));

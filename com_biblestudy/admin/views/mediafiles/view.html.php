@@ -165,6 +165,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			JToolBarHelper::unpublishList('mediafiles.unpublish');
 			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('mediafiles.archive');
+			JToolbarHelper::checkin('mediafiles.checkin');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))

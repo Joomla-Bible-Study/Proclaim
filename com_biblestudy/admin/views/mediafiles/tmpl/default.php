@@ -12,9 +12,8 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
@@ -31,20 +30,25 @@ if ($saveOrder)
 	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
-?>
-<script type="text/javascript">
-	Joomla.orderTable = function () {
+
+JFactory::getDocument()->addScriptDeclaration('
+	Joomla.orderTable = function()
+	{
 		table = document.getElementById("sortTable");
 		direction = document.getElementById("directionTable");
 		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
+		if (order != "' . $listOrder . '")
+		{
+			dirn = "asc";
+		}
+		else
+		{
 			dirn = direction.options[direction.selectedIndex].value;
 		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
+		Joomla.tableOrdering(order, dirn, "");
+	};
+');
+?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
@@ -53,6 +57,7 @@ $sortFields = $this->getSortFields();
 	</div>
 	<div id="j-main-container" class="span10">
 		<?php else : ?>
+		<div id="j-main-container">
 		<?php endif; ?>
 		<?php
 		// Search tools bar
@@ -66,21 +71,20 @@ $sortFields = $this->getSortFields();
 			<table class="table table-striped adminlist" id="mediafileList">
 				<thead>
 				<tr>
-					<th width="1%" class="nowrap center">
+					<th width="1%" class="nowrap center hidden-phone">
 						<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
 					</th>
-					<th width="1%" class="nowrap">
-						<input type="checkbox" name="checkall-toggle" value=""
-						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+					<th width="1%" class="center">
+						<?php echo JHtml::_('grid.checkall'); ?>
 					</th>
 
 					<th class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'mediafile.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?php echo JText::_('JBS_MED_RESOURCE_NAME'); ?>
 					</th>
-					<th>
+					<th class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 					</th>
 					<th>
@@ -92,10 +96,10 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JHtml::_('grid.sort', 'JBS_CMN_MODIFIED', 'mediafile.modified', $listDirn, $listOrder); ?>
 					</th>
-					<th>
+					<th width="10%" class="nowrap center hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JBS_MED_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
 					</th>
-					<th colspan="2">
+					<th colspan="2" width="5%" class="nowrap center hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_FILES_STATS', 'mediafile.plays', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
@@ -106,109 +110,101 @@ $sortFields = $this->getSortFields();
 					$ordering   = ($listOrder == 'mediafile.ordering');
 					$canCreate  = $user->authorise('core.create');
 					$canEdit    = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
+					$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
 					$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
 					$canChange  = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+					$label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
+					$label .= $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])
+							? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
 					?>
 					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id ?>">
-						<td class="center">
+						<td class="order nowrap center hidden-phone">
 							<?php
-							if ($canChange) :
-								$disableClassName = '';
-								$disabledLabel    = '';
-								if (!$saveOrder) :
-									$disabledLabel    = JText::_('JORDERINGDISABLED');
-									$disableClassName = 'inactive tip-top';
-								endif;
-								?>
-								<span class="sortable-handler hasTooltip <?php echo $disableClassName ?>"
-								      title="<?php echo $disabledLabel ?>">
-                                            <i class="icon-menu"></i>
-                                        </span>
+							$iconClass = '';
+							if (!$canChange)
+							{
+								$iconClass = ' inactive';
+							}
+							elseif (!$saveOrder)
+							{
+								$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+							}
+							?>
+								<span class="sortable-handler hasTooltip <?php echo $iconClass ?>">
+                                    <i class="icon-menu"></i>
+                                </span><?php if ($canChange && $saveOrder) : ?>
 								<input type="text" style="display:none" name="order[]" size="5"
-								       value="<?php echo $item->ordering; ?>"
-								       class="width-10 text-area-order "/>
-							<?php else : ?>
-								<span class="sortable-handler inactive">
-                                            <i class="icon-menu"></i>
-                                        </span>
+								       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 							<?php endif; ?>
 						</td>
 						<td class="center">
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 						</td>
 						<td class="center">
-							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', $canChange, 'cb', '', ''); ?>
-						</td>
-						<td>
-							<div class="pull-left">
-								<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int) $item->id); ?>">
-									<?php endif; ?>
-									<span class="label">
-										<?php
-										$label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
-										$label .= $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])
-											? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
-										?>
-										<?php echo $label; ?>
-				                    </span>
-									<?php echo($this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])); ?>
-									<?php if ($canEdit || $canEditOwn) : ?>
-								</a>
-							<?php endif; ?>
-							</div>
-							<div class="pull-left">
+							<div class="btn-group">
+								<?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', $canChange, 'cb', null, null); ?>
 								<?php
 								// Create dropdown items
-								JHtml::_('dropdown.edit', $item->id, 'mediafile.');
-								JHtml::_('dropdown.divider');
-								if ($item->published) :
-									JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafiles.');
-								else :
-									JHtml::_('dropdown.publish', 'cb' . $i, 'mediafiles.');
-								endif;
+								$action = $archived ? 'unarchive' : 'archive';
+								JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'mediafiles');
 
-								JHtml::_('dropdown.divider');
-
-								if ($archived) :
-									JHtml::_('dropdown.unarchive', 'cb' . $i, 'mediafiles.');
-								else :
-									JHtml::_('dropdown.archive', 'cb' . $i, 'mediafiles.');
-								endif;
-
-								if ($trashed) :
-									JHtml::_('dropdown.untrash', 'cb' . $i, 'mediafiles.');
-								else :
-									JHtml::_('dropdown.trash', 'cb' . $i, 'mediafiles.');
-								endif;
+								$action = $trashed ? 'untrash' : 'trash';
+								JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'mediafiles');
 
 								// Render dropdown list
-								echo JHtml::_('dropdown.render');
+								echo JHtml::_('actionsdropdown.render', $this->escape($label));
 								?>
 							</div>
 						</td>
-						<td>
+						<td class="has-context">
+							<div class="pull-left">
+								<?php if ($item->checked_out) : ?>
+									<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'mediafiles.', $canCheckin); ?>
+								<?php endif; ?>
+								<?php if ($item->language == '*'): ?>
+									<?php $language = JText::alt('JALL', 'language'); ?>
+								<?php else: ?>
+									<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+								<?php endif;?>
+								<?php if ($canEdit || $canEditOwn) : ?>
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int) $item->id); ?>">
+										<span class="label pull-left"><?php echo $this->escape($label); ?></span>
+									</a>
+								<?php else : ?>
+									<span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>">
+										<?php echo $label; ?>
+				                    </span>
+								<?php endif; ?>
+							</div>
+							<div class="clearfix"></div>
+							<div class="pull-left">
+								<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int) $item->id); ?>">
+									<?php echo $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()]); ?>
+								</a>
+							</div>
+						</td>
+						<td class="center">
 							<?php echo $this->escape($item->studytitle); ?>
 						</td>
-						<td>
+						<td class="hidden-phone">
 							<?php echo $this->escape($item->serverConfig->name->__toString()); ?>
 						</td>
-						<td>
+						<td class="nowrap small hidden-phone">
 							<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
 						</td>
-						<td>
+						<td class="nowrap small hidden-phone">
 							<?php if ($item->modified != '0000-00-00 00:00:00'):
 								echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC4'));
 							endif;
 							?>
 						</td>
-						<td class="center">
+						<td class="center hidden-phone">
 							<?php echo $this->escape($item->access_level); ?>
 						</td>
-						<td>
+						<td class="center hidden-phone">
 							<?php echo $this->escape($item->plays); ?>
 						</td>
-						<td>
+						<td class="center hidden-phone">
 							<?php echo $this->escape($item->downloads); ?>
 						</td>
 					</tr>
@@ -220,7 +216,7 @@ $sortFields = $this->getSortFields();
 			<?php //Load the batch processing form. ?>
 			<?php echo $this->loadTemplate('batch'); ?>
 			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="boxchecked" value="0"/>
+			<input type="hidden" name="boxchecked" value="0" />
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 			<?php echo JHtml::_('form.token'); ?>

@@ -12,15 +12,14 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listOrder = $this->escape($this->state->get('list.ordering', 'study.studydate'));
+$listDirn  = $this->escape($this->state->get('list.direction', 'desc'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
@@ -32,20 +31,25 @@ if ($saveOrder)
 }
 
 $sortFields = $this->getSortFields();
-?>
-<script type="text/javascript">
-	Joomla.orderTable = function () {
+
+JFactory::getDocument()->addScriptDeclaration('
+	Joomla.orderTable = function()
+	{
 		table = document.getElementById("sortTable");
 		direction = document.getElementById("directionTable");
 		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
+		if (order != "' . $listOrder . '")
+		{
+			dirn = "asc";
+		}
+		else
+		{
 			dirn = direction.options[direction.selectedIndex].value;
 		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
+		Joomla.tableOrdering(order, dirn, "");
+	};
+');
+?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -73,9 +77,7 @@ $sortFields = $this->getSortFields();
 							<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
 						</th>
 						<th width="1%" class="hidden-phone">
-							<input type="checkbox" name="checkall-toggle" value=""
-							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
-							       onclick="Joomla.checkAll(this)"/>
+							<?php echo JHtml::_('grid.checkall'); ?>
 						</th>
 
 						<th width="1%" style="min-width:55px" class="nowrap center">
@@ -122,25 +124,22 @@ $sortFields = $this->getSortFields();
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->series_id; ?>">
 							<td class="order nowrap center hidden-phone">
-								<?php if ($canChange) :
-									$disableClassName = '';
-									$disabledLabel    = '';
-
-									if (!$saveOrder) :
-										$disabledLabel    = JText::_('JORDERINGDISABLED');
-										$disableClassName = 'inactive tip-top';
-									endif; ?>
-									<span class="sortable-handler hasTooltip <?php echo $disableClassName; ?>"
-									      title="<?php echo $disabledLabel; ?>">
-				                <i class="icon-menu"></i>
-				            </span>
+								<?php
+								$iconClass = '';
+								if (!$canChange)
+								{
+									$iconClass = ' inactive';
+								}
+								elseif (!$saveOrder)
+								{
+									$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+								}
+								?>
+								<span class="sortable-handler hasTooltip <?php echo $iconClass ?>">
+                                    <i class="icon-menu"></i>
+                                </span><?php if ($canChange && $saveOrder) : ?>
 									<input type="text" style="display:none" name="order[]" size="5"
-									       value="<?php echo $item->ordering; ?>"
-									       class="width-10 text-area-order "/>
-								<?php else : ?>
-									<span class="sortable-handler inactive">
-					            <i class="icon-menu"></i>
-				            </span>
+									       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 								<?php endif; ?>
 							</td>
 							<td class="center hidden-phone">
@@ -148,7 +147,17 @@ $sortFields = $this->getSortFields();
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?>
+									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?><?php
+									// Create dropdown items
+									$action = $archived ? 'unarchive' : 'archive';
+									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'messages');
+
+									$action = $trashed ? 'untrash' : 'trash';
+									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'messages');
+
+									// Render dropdown list
+									echo JHtml::_('actionsdropdown.render', $this->escape($item->studytitle));
+									?>
 								</div>
 							</td>
 							<td class="small hidden-phone hidden-tablet">
@@ -173,45 +182,6 @@ $sortFields = $this->getSortFields();
 										<p class="smallsub">
 											<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
 									<?php endif; ?>
-								</div>
-								<div class="pull-left">
-									<?php
-									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'message.');
-									JHtml::_('dropdown.divider');
-
-									if ($item->published)
-									{
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
-									}
-									else
-									{
-										JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
-									}
-
-									JHtml::_('dropdown.divider');
-
-									if ($archived)
-									{
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
-									}
-									else
-									{
-										JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
-									}
-
-									if ($trashed)
-									{
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
-									}
-									else
-									{
-										JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
-									}
-
-									// Render dropdown list
-									echo JHtml::_('dropdown.render');
-									?>
 								</div>
 							</td>
 							<td class="nowrap hidden-phone hidden-tablet">
@@ -257,8 +227,9 @@ $sortFields = $this->getSortFields();
 			<?php echo $this->pagination->getListFooter(); ?>
 			<?php //Load the batch processing form. ?>
 			<?php echo $this->loadTemplate('batch'); ?>
+
 			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="boxchecked" value="0"/>
+			<input type="hidden" name="boxchecked" value="0" />
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 			<?php echo JHtml::_('form.token'); ?>

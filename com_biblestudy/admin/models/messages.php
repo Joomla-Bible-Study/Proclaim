@@ -123,9 +123,12 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-		foreach ($items as $item)
+		if ($items)
 		{
-			$item->bookname = JText::_($item->bookname);
+			foreach ($items as $item)
+			{
+				$item->bookname = JText::_($item->bookname);
+			}
 		}
 
 		return $items;
@@ -348,8 +351,7 @@ class BiblestudyModelMessages extends JModelList
 		$app = JFactory::getApplication('administrator');
 
 		// Adjust the context to support modal layouts.
-		$input  = $app->input;
-		$layout = $input->get('layout');
+		$layout = $app->input->get('layout');
 
 		if ($layout)
 		{
@@ -393,6 +395,8 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
+		parent::populateState('study.studydate', 'desc');
+
 		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
 
@@ -401,8 +405,6 @@ class BiblestudyModelMessages extends JModelList
 			$this->setState('filter.language', $forcedLanguage);
 			$this->setState('filter.forcedLanguage', $forcedLanguage);
 		}
-
-		parent::populateState('study.studydate', 'DESC');
 	}
 
 	/**
@@ -558,8 +560,8 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');
+		$orderCol  = $this->state->get('list.ordering', 'study.id');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
