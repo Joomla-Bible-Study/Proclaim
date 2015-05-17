@@ -37,6 +37,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	 */
 	public $state;
 
+	public $main;
+
 	/**
 	 * Execute and display a template script.
 	 *
