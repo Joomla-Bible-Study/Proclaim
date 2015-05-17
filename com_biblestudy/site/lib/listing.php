@@ -432,7 +432,7 @@ class JBSMListing
 		}
 		foreach ($row as $value)
 		{
-			$list .= $value;
+			$list .= "\n\t" . $value;
 		}
 
 		return $list;
