@@ -310,9 +310,8 @@ class JBSMLanding
 			->select('b.access')
 			->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
 			->where('b.language in (' . $language . ')')
-			->where('a.list_show = 1 and a.published = 1')
+			->where('a.published = 1')
 			->where('b.access IN (' . $groups . ')')
-			->where('b.published = 1')
 			->where('a.landing_show > 0')
 			->group('a.id')
 			->order('a.ordering, a.teachername ' . $order);
