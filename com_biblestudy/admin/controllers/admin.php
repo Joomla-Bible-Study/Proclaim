@@ -317,7 +317,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		else
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'eroor');
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 
