@@ -100,7 +100,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_finish       = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
-		$this->running = JText::_('JBS_MIG_STARTING');
+		$this->running       = JText::_('JBS_MIG_STARTING');
 	}
 
 	/**
@@ -690,8 +690,8 @@ class BibleStudyModelMigration extends JModelLegacy
 		$db     = JFactory::getDbo();
 		$tables = JBSMDbHelper::getObjects();
 		$set    = false;
-		$bad    = array('\":\"', '{\"', '\",\"', '\"}');
-		$good   = array('":"', '{"', '","', '"}');
+		$bad    = array('\":\"', '{\"', '\",\"', '\"}', '\":[\"', '\"],\"');
+		$good   = array('":"', '{"', '","', '"}', '":["', '"],"');
 		foreach ($tables as $table)
 		{
 			if (strpos($table['name'], '_bsms_timeset') == false)
