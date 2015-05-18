@@ -39,6 +39,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 
 		return parent::save($data);
 	}
+
 	/**
 	 * Copy Template
 	 *
