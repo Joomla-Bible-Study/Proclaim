@@ -5,7 +5,7 @@
 		<field
 				name="search"
 				type="text"
-				label="COM_CONTENT_FILTER_SEARCH_DESC"
+				label="JBS_CMN_FILTER_SEARCH_DESC"
 				hint="JSEARCH_FILTER"
 				/>
 		<field
@@ -44,6 +44,15 @@
 				>
 			<option value="">JBS_CMN_SELECT_TEACHER</option>
 		</field>
+        <field
+                name="series"
+                type="SeriesList"
+                label="JBS_CMN_SELECT_SERIES"
+                description="JBS_CMN_SELECT_SERIES_DESC"
+                onchange="this.form.submit();"
+                >
+            <option value="">JBS_CMN_SELECT_SERIES</option>
+        </field>
 		<field
 				name="messagetype"
 				type="Messagetypelist"
@@ -61,19 +70,6 @@
 				onchange="this.form.submit();"
 				>
 			<option value="">JBS_CMN_SELECT_LOCATION</option>
-		</field>
-		<field
-				name="level"
-				type="integer"
-				first="1"
-				last="10"
-				step="1"
-				label="JOPTION_FILTER_LEVEL"
-				languages="*"
-				description="JOPTION_FILTER_LEVEL_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JOPTION_SELECT_MAX_LEVELS</option>
 		</field>
 		<field
 				name="access"

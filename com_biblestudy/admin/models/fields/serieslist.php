@@ -20,7 +20,7 @@ JFormHelper::loadFieldClass('list');
  * @package  BibleStudy.Admin
  * @since    7.0.4
  */
-class JFormFieldSerieslist extends JFormFieldList
+class JFormFieldSeriesList extends JFormFieldList
 {
 
 	/**
@@ -28,7 +28,7 @@ class JFormFieldSerieslist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Series';
+	protected $type = 'SeriesList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -37,10 +37,12 @@ class JFormFieldSerieslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id,series_text');
 		$query->from('#__bsms_series');
+		$query->where('published = 1');
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options  = array();

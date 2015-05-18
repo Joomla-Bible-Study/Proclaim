@@ -164,7 +164,7 @@ INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `
 VALUES
   (1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL,
    '0', NULL, 1, 0, 0, NULL, '0', -1, 'Sample Study Title', 'sample-study-title',
-   'Sample text you can use as an introduction to your study', '', '', '', '1', -1,
+   'Sample text you can use as an introduction to your study', '', '', '', '1', 1,
    'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com',
    '', NULL, NULL, '{"metakey":"","metadesc":""}', 0, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00',
    '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 1, 1, '*', 0);

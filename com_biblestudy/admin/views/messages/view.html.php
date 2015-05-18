@@ -116,11 +116,6 @@ class BiblestudyViewMessages extends JViewLegacy
 		$modelView   = $this->getModel();
 		$this->items = $modelView->getTranslated($items);
 
-		$this->books         = $this->get('Books');
-		$this->teachers      = $this->get('Teachers');
-		$this->series        = $this->get('Series');
-		$this->messageTypes  = $this->get('MessageTypes');
-		$this->years         = $this->get('Years');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 

@@ -18,15 +18,6 @@
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
-				name="mediaYear"
-				type="Yearlist"
-				label="JBS_CMN_SELECT_YEAR"
-				description="JBS_CMN_SELECT_YEAR_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JBS_CMN_SELECT_YEAR</option>
-		</field>
-		<field
 				name="level"
 				type="integer"
 				first="1"

@@ -166,26 +166,14 @@ class BiblestudyModelMediafiles extends JModelList
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
-		$this->setState('filter.filename', $filename);
-
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-
-		$study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
-		$this->setState('filter.study_id', $study);
 
 		$mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
 		$this->setState('filter.mediaYears', $mediaYears);
 
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
-
-		$download = $this->getUserStateFromRequest($this->context . '.filter.download', 'filter_download', '');
-		$this->setState('filter.download', $download);
-
-		$player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player', '');
-		$this->setState('filter.player', $player);
 
 		parent::populateState('mediafile.createdate', 'DESC');
 
@@ -212,7 +200,6 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.filename');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.study_id');
@@ -304,7 +291,6 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
 		}
 
-
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
 
@@ -317,7 +303,7 @@ class BiblestudyModelMediafiles extends JModelList
 			else
 			{
 				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-				$query->where('a.alias LIKE ' . $search );
+				$query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search );
 			}
 		}
 

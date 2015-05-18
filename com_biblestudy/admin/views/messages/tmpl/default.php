@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('bootstrap.tooltip');
+JHtml::_('bootstrap.framework');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -31,7 +31,6 @@ if ($saveOrder)
 }
 
 $sortFields = $this->getSortFields();
-
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.orderTable = function()
 	{
@@ -202,11 +201,11 @@ JFactory::getDocument()->addScriptDeclaration('
 								<?php echo $this->escape($item->series_text); ?>
 							</td>
 							<td class="center hidden-phone hidden-tablet">
-								<?php echo JHtml::tooltip($this->escape($item->hits), JText::_('JBS_CMN_HITS'), null, JText::_('JBS_CMN_HITS'), '', 'Tooltip', 'hasTip small blue') ?>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->hits); ?>"><?php echo JText::_('JBS_CMN_HITS'); ?></button>
 								<br/>
-								<?php echo JHtml::tooltip($this->escape($item->totalplays), JText::_('JBS_CMN_PLAYS'), null, JText::_('JBS_CMN_PLAYS'), '', 'Tooltip', 'hasTip small blue') ?>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->totalplays); ?>"><?php echo JText::_('JBS_CMN_PLAYS'); ?></button>
 								<br/>
-								<?php echo JHtml::tooltip($this->escape($item->totaldownloads), JText::_('JBS_CMN_DOWNLOADS'), null, JText::_('JBS_CMN_DOWNLOADS'), '', 'Tooltip', 'hasTip small blue') ?>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></button>
 							</td>
 							<td class="small hidden-phone hidden-tablet">
 								<?php if ($item->language == '*'): ?>
