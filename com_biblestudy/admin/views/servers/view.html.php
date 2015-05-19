@@ -120,11 +120,6 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
-
-		// Get the toolbar object instance
-		$bar = JToolBar::getInstance('toolbar');
-
 		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'servers.png');
 
 		if ($this->canDo->get('core.create'))
@@ -153,19 +148,6 @@ class BiblestudyViewServers extends JViewLegacy
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('servers.trash');
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.edit'))
-		{
-			JToolBarHelper::divider();
-			JHtml::_('bootstrap.modal', 'collapseModal');
-
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 	}
 
