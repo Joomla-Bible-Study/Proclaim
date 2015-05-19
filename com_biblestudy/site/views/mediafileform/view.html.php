@@ -72,7 +72,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->state      = $this->get("State");
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		$this->params     = $this->state->get('admin');
-		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
 
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);

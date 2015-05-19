@@ -21,6 +21,12 @@ $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
+<script type="text/javascript">
+	jSelectServer_jform_server_id = function(server_id) {
+		window.parent.Joomla.submitbutton('mediafile.setServer', server_id);
+		window.parent.SqueezeBox.close();
+	}
+</script>
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">

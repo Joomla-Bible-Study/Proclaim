@@ -49,9 +49,14 @@ class JFormFieldServer extends JFormField
 		$script = array();
 
 		// Select button script
+		$script[] = '       jSelectServer_jform_server_id = function(server_id) {
+        window.parent.Joomla.submitbutton(\'mediafile.setServer\', server_id);
+        window.parent.SqueezeBox.close();
+    }';
 		$script[] = '	function jSelectServer_' . $this->id . '(id, name, object) {';
 		$script[] = '		document.getElementById("' . $this->id . '").value = id;';
 		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
+
 
 		if ($allowEdit)
 		{

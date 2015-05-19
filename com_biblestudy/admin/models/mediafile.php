@@ -266,6 +266,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$server_id             = $this->getState('mediafile.server_id');
 			$this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
 
+			$study_id             = $this->getState('mediafile.study_id');
+			$this->data->study_id = empty($study_id) ? $this->data->study_id : $study_id;
+
+			$createdate             = $this->getState('mediafile.createdate');
+			$this->data->createdate = empty($createdate) ? $this->data->createdate : $createdate;
+
 		}
 
 		return $this->data;
@@ -670,8 +676,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$this->setState('mediafile.id', $pk);
 
 		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
-
 		$this->setState('mediafile.server_id', $server_id);
+
+		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$this->setState('mediafile.study_id', $study_id);
+
+		$createdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$this->setState('mediafile.createdate', $createdate);
 	}
 
 	/**

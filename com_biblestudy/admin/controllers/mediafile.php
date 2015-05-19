@@ -45,6 +45,54 @@ class BiblestudyControllerMediafile extends JControllerForm
 		parent::__construct($config);
 	}
 
+
+	/**
+	 * Method to add a new record.
+	 *
+	 * @return  mixed  True if the record can be added, a error object if not.
+	 *
+	 * @since   12.2
+	 */
+	public function add()
+	{
+		$app = JFactory::getApplication();
+
+		if (parent::add())
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resets the User state for the server type. Needed to allow the value from the DB to be used
+	 *
+	 * @param   int     $key     ?
+	 * @param   string  $urlVar  ?
+	 *
+	 * @return  bool
+	 *
+	 * @since   9.0.0
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		$app    = JFactory::getApplication();
+		$result = parent::edit();
+
+		if ($result)
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+		}
+
+		return true;
+	}
 	/**
 	 * Handles XHR requests (i.e. File uploads)
 	 *
@@ -168,15 +216,16 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$input = $app->input;
 
 		$data = $input->get('jform', array(), 'post', 'array');
-		$data = json_decode(base64_decode($data['server_id']));
-
-		$media_id  = isset($data->media_id) ? $data->media_id : 0;
-		$server_id = isset($data->server_id) ? $data->server_id : 0;
+		$cdate = $data['createdate'];
+		$study_id = $data['study_id'];
+		$server_id = $data['server_id'];
 
 		// Save server in the session
+		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($media_id), false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($data['id']), false));
 	}
 
 	/**

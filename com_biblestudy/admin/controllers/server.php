@@ -44,6 +44,7 @@ class BiblestudyControllerServer extends JControllerForm
 
 		if (parent::add())
 		{
+			$app->setUserState('com_biblestudy.edit.server.server_name', null);
 			$app->setUserState('com_biblestudy.edit.server.type', null);
 
 			return true;
@@ -69,6 +70,7 @@ class BiblestudyControllerServer extends JControllerForm
 
 		if ($result)
 		{
+			$app->setUserState('com_biblestudy.edit.server.server_name', null);
 			$app->setUserState('com_biblestudy.edit.server.type', null);
 		}
 
@@ -87,13 +89,15 @@ class BiblestudyControllerServer extends JControllerForm
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
-		$data = $input->get('jform', array(), 'post', 'array');
-		$type = json_decode(base64_decode($data['type']));
+		$data  = $input->get('jform', array(), 'post', 'array');
+		$sname = $data['server_name'];
+		$type  = json_decode(base64_decode($data['type']));
 
 		$recordId = isset($type->id) ? $type->id : 0;
 
 		// Save the endpoint in the session
 		$app->setUserState('com_biblestudy.edit.server.type', $type->name);
+		$app->setUserState('com_biblestudy.edit.server.server_name', $sname);
 
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId), false));
 	}
