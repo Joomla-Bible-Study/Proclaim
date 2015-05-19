@@ -559,7 +559,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		$run = true;
 		if ($this->_isimport)
 		{
-			$this->fiximportparams();
+			$this->fiximport();
 			$this->running = 'Fixing Params';
 			$this->_isimport = 0;
 			$this->doneVersions++;
@@ -685,17 +685,16 @@ class BibleStudyModelMigration extends JModelLegacy
 	 *
 	 * @return bool True if fix complete, False if failure
 	 */
-	public static function fiximportparams()
+	public static function fiximport()
 	{
 		$db     = JFactory::getDbo();
 		$tables = JBSMDbHelper::getObjects();
 		$set    = false;
-		$bad    = array('\":\"', '{\"', '\",\"', '\"}', '\":[\"', '\"],\"');
-		$good   = array('":"', '{"', '","', '"}', '":["', '"],"');
 		foreach ($tables as $table)
 		{
 			if (strpos($table['name'], '_bsms_timeset') == false)
 			{
+
 				$query = $db->getQuery(true);
 				$query->select('*')->from($table);
 				$db->setQuery($query);
@@ -704,12 +703,17 @@ class BibleStudyModelMigration extends JModelLegacy
 				{
 					if (isset($row->params))
 					{
-						$row->params = str_replace($bad, $good, $row->params);
+						$row->params = stripslashes($row->params);
 						$set         = true;
 					}
 					if (isset($row->metadata))
 					{
-						$row->metadata = str_replace($bad, $good, $row->metadata);
+						$row->metadata = stripslashes($row->metadata);
+						$set           = true;
+					}
+					if (isset($row->stylecode))
+					{
+						$row->stylecode = stripslashes($row->stylecode);
 						$set           = true;
 					}
 					if ($set)
