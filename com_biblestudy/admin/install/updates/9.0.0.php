@@ -43,6 +43,7 @@ class Migration900
 
 		foreach ($db->loadObjectList() as $server)
 		{
+			/** @var TableServer $newServer */
 			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 			$newServer->load($server->id);
 			$params = array();
