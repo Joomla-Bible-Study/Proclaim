@@ -164,7 +164,7 @@ class JBSExport
 					}
 					else
 					{
-						$data[] = $db->qn($key) . "=" . $db->q($db->escape($value));
+						$data[] = $db->qn($key) . "=" . $db->q($value);
 					}
 				}
 				$export .= implode(',', $data);
