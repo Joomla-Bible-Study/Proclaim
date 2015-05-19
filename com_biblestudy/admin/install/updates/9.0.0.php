@@ -199,8 +199,8 @@ class Migration900
 		/** @var TableServer $newServer */
 		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 		$newServer->server_name = 'Default';
-		$newServer->type        = "legacy";
-		$newServer->params      = $db->q("{'path':''}");
+		$newServer->type        = 'legacy';
+		$newServer->params      = '{"path":""}';
 		$newServer->id          = null;
 		$newServer->store();
 
