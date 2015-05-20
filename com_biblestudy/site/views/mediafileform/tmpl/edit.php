@@ -104,7 +104,6 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getInput('podcast_id', null, empty($this->item->podcast_id) ? $this->params->get('podcast') : $this->item->podcast_id); ?>
                                 </div>
                             </div>
-
                         </div>
                         <div class="span3 form-vertical">
                             <div class="control-group">
@@ -155,6 +154,7 @@ JHtml::_('formbehavior.chosen', 'select');
         </div>
     </div>
     <?php echo $this->form->getInput('asset_id'); ?>
+	<?php echo $this->form->getInput('id'); ?>
     <input type="hidden" name="task" value=""/>
 	<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->getCmd('return'); ?>"/>
     <?php echo JHtml::_('form.token'); ?>

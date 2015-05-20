@@ -50,8 +50,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function __construct($config = array())
 	{
-		$this->input = JFactory::getApplication()->input;
-		$this->input->set('id', $this->input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 	}
 
@@ -197,6 +195,8 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
+		$input = JFactory::getApplication()->input;
+		$input->set('a_id', $input->get('id'));
 		$result = parent::save($key, $urlVar);
 
 		return $result;

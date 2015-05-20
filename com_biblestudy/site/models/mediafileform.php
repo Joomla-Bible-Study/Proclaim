@@ -66,7 +66,6 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 
 		// Load state from the request.
 		$pk = $input->get('a_id', null, 'INTEGER');
-		$input->set('id', $pk);
 		$this->setState('mediafile.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');
