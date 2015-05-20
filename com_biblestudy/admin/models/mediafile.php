@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
-
+JLoader::register('TableServer', BIBLESTUDY_PATH_ADMIN . '/tables/server.php');
 /**
  * MediaFile model class
  *
@@ -97,11 +97,22 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
 			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-			/* This code could be uncommented and would remove spaces from filename */
-			$data['filename'] = str_replace(' ', '%20', $data['filename']);
+			$params = new JRegistry;
+			$params->loadArray($data['params']);
+			if (isset($params->toObject()->size))
+			{
+				$table = new TableServer(JFactory::getDbo());
+				$table->load($data['server_id']);
 
-			// Remove starting and trailing spaces
-			$data['filename'] = trim($data['filename']);
+				$path = new JRegistry;
+				$path->loadString($table->params);
+
+				if ($table->type == 'legacy')
+				{
+					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $path->get('path') . '/' . $params->get('filename')));
+					$data['params'] = $params->toArray();
+				}
+			}
 			if (parent::save($data))
 			{
 				return true;

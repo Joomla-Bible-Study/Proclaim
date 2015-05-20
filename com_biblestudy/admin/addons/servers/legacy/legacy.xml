@@ -8,7 +8,11 @@
 	<fields name="params">
 		<fieldset name="Server" label="JBS_ADDON_LEGACY_DETAILS">
 	        <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox" size="35" />
-		</fieldset>
+            <field name="protocol" type="list" label="JBS_MED_PROTOCOL" description="JBS_MED_PROTOCOL_DESC" class="inputbox" default="http://">
+                <option value="http://">http://</option>
+                <option value="https://">https://</option>
+            </field>
+        </fieldset>
 	</fields>
     <fields name="media">
         <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
