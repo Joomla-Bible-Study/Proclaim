@@ -18,10 +18,13 @@ JHtml::_('formbehavior.chosen', 'select');
 
 ?>
 <script type="text/javascript">
-    Joomla.submitbutton = function (task) {
-        if (task == 'mediafile.cancel') {
+    Joomla.submitbutton = function (task, server_id) {
+	    if (task == 'mediafileform.setServer') {
+		    document.id('item-form').elements['jform[server_id]'].value = server_id;
+		    Joomla.submitform(task, document.id('item-form'));
+	    } else if (task == 'mediafileform.cancel') {
             Joomla.submitform(task, document.getElementById('item-form'));
-        } else if (task == 'mediafile.apply' || document.formvalidator.isValid(document.id('item-form'))) {
+        } else if (task == 'mediafileform.apply' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else {
             alert('<?php echo $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")); ?>');
@@ -71,7 +74,7 @@ JHtml::_('formbehavior.chosen', 'select');
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
                     <div class="row-fluid">
-                        <div class="span9">
+                        <div class="span10">
                             <div class="control-group">
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('study_id'); ?>
@@ -104,8 +107,6 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getInput('podcast_id', null, empty($this->item->podcast_id) ? $this->params->get('podcast') : $this->item->podcast_id); ?>
                                 </div>
                             </div>
-                        </div>
-                        <div class="span3 form-vertical">
                             <div class="control-group">
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('published'); ?>
@@ -135,6 +136,8 @@ JHtml::_('formbehavior.chosen', 'select');
                 </div>
                 <?php foreach ($this->media_form->getFieldsets('params') as $name => $fieldset): ?>
                     <div class="tab-pane" id="<?php echo $name; ?>">
+	                    <div class="row-fluid">
+		                    <div class="span10">
                         <?php foreach ($this->media_form->getFieldset($name) as $field): ?>
                             <div class="control-group">
                                 <div class="control-label">
@@ -145,6 +148,8 @@ JHtml::_('formbehavior.chosen', 'select');
                                 </div>
                             </div>
                         <?php endforeach; ?>
+		                    </div>
+	                    </div>
                     </div>
                 <?php endforeach; ?>
                 <div class="tab-pane" id="rules">

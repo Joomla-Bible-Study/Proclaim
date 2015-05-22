@@ -93,11 +93,19 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function add()
 	{
+		$app = JFactory::getApplication();
+
 		if (!parent::add())
 		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+
 			// Redirect to the return page.
 			$this->setRedirect($this->getReturnPage());
 		}
+
+		return false;
 	}
 
 	/**
@@ -157,7 +165,15 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
+		$app    = JFactory::getApplication();
 		$result = parent::edit($key, $urlVar);
+
+		if ($result)
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+		}
 
 		return $result;
 	}
@@ -253,6 +269,31 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'a_id')
 	{
 		return true;
+	}
+
+	/**
+	 * Sets the server for this media record
+	 *
+	 * @return  void
+	 *
+	 * @since   9.0.0
+	 */
+	public function setServer()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+
+		$data = $input->get('jform', array(), 'post', 'array');
+		$cdate = $data['createdate'];
+		$study_id = $data['study_id'];
+		$server_id = $data['server_id'];
+
+		// Save server in the session
+		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
+		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
+
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($data['id']), false));
 	}
 
 	/**

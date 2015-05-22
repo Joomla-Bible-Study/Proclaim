@@ -81,8 +81,13 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 
 		$this->setState('layout', $app->input->get('layout'));
 
-		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$cdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$this->setState('mediafile.createdate', $cdate);
 
+		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$this->setState('mediafile.study_id', $study_id);
+
+		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
 		$this->setState('mediafile.server_id', $server_id);
 	}
 
