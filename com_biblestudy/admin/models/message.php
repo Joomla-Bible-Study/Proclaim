@@ -311,23 +311,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			return $this->data;
 		}
 
-		$this->data = parent::getItem($pk);
-
-		if (!empty($this->data))
-		{
-			// Make Podcast Id to be array for view
-			if (!empty($this->data->podcast_id))
-			{
-				$this->data->podcast_id = explode(',', $this->data->podcast_id);
-			}
-
-			// Convert metadata field to array
-			$registry             = new Registry($this->data->metadata);
-			$this->data->metadata = $registry->toArray();
-
-		}
-
-		return $this->data;
+		return parent::getItem($pk);
 	}
 
 	/**
