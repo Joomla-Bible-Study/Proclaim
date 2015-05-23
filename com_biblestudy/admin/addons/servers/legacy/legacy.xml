@@ -47,12 +47,10 @@
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
             <field name="media_image" type="media" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-                   class="inputbox">
-            </field>
+                   class="inputbox"/>
             <field name="mime_type" type="mimetype" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-                   class="inputbox">
-            </field>
+                   class="inputbox"/>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
             <field name="autostart" type="list"

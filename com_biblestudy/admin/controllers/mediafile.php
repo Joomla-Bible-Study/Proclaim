@@ -136,8 +136,6 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
 
 		// Preset the redirect

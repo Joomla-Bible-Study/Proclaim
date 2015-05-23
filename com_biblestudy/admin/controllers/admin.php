@@ -48,9 +48,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function tools()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$tool = JFactory::getApplication()->input->get('tooltype', '', 'post');
 
 		switch ($tool)
@@ -262,8 +259,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function back()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
 	}
@@ -340,9 +335,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function dbReset()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$user = JFactory::getUser();
 
 		if (in_array('8', $user->groups))
@@ -574,9 +566,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function getThumbnailListXHR()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$document     = JFactory::getDocument();
 		$input        = JFactory::getApplication()->input;
 		$images_paths = array();
@@ -607,9 +596,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function createThumbnailXHR()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$document = JFactory::getDocument();
 		$input    = JFactory::getApplication()->input;
 

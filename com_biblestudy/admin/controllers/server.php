@@ -86,9 +86,6 @@ class BiblestudyControllerServer extends JControllerForm
 	 */
 	public function setType()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 

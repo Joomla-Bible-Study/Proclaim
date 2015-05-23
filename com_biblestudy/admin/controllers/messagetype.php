@@ -42,8 +42,6 @@ class BiblestudyControllerMessagetype extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		/** @var JModelLegacy $model */
 		$model = $this->getModel('Messagetype', '', array());
 
