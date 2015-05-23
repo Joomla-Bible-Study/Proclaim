@@ -47,7 +47,7 @@
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
             <field name="media_image" type="media" extension="com_biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-                   class="inputbox" required="true">
+                   class="inputbox">
             </field>
             <field name="mime_type" type="mimetype" extension="com_biblestudy"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"

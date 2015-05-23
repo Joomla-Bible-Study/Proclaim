@@ -94,7 +94,7 @@ $input = $app->input;
 						<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
 							<div class="control-group">
 								<div class="control-label">
-									<?php echo $field->label; ?>
+									<?php echo JText::_($field->label); ?>
 								</div>
 								<div class="controls">
 									<?php echo $field->input; ?>
@@ -120,7 +120,7 @@ $input = $app->input;
 										<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
 											<div class="control-group">
 												<div class="control-label">
-													<?php echo $field->label; ?>
+													<?php echo JText::_($field->label); ?>
 												</div>
 												<div class="controls">
 													<?php echo $field->input; ?>
