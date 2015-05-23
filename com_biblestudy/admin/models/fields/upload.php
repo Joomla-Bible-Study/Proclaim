@@ -44,7 +44,7 @@ class JFormFieldUpload extends JFormField
                     var path = jQuery("#jform_params_localFolder").val();
                     var type = jQuery("#jform_serverType").val();
                     uploader.setOption("multipart_params", {
-                        handler: "' . $this->element["handler"] . '",
+                        handler: "' . $this->getTitle("handler") . '",
                         path: path,
                         type: type
                     });
@@ -53,10 +53,14 @@ class JFormFieldUpload extends JFormField
             });
         ');
 
+		$class = $this->getAttribute('class') ? (string) $this->getAttribute('class') : '';
+
+		$required = 'requires="' . $this->getAttribute('required') . '"';
+
 		$html = '<div class="control-group">
                         <div class="input-append">
-                        <input type="text" placeholder="Enter the upload path" class="span5" name="' . $this->name .
-			'" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
+                        <input type="text" placeholder="Enter the upload path" class="' . $class . '" name="' . $this->name .
+			'" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $required . '/>
 			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
                           <a id="btn-add-file"class="btn btn-default">
                              <i class="icon-plus"></i>

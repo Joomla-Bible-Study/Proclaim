@@ -3,7 +3,7 @@
     <fields name="params">
         <fieldset name="upload" label="Upload">
             <field name="upload" type="upload" label="Upload" description="Upload here"
-                    handler="upload"/>
+                    handler="upload" class="input required" required="true"/>
         </fieldset>
     </fields>
 </media>
