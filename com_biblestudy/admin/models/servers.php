@@ -182,7 +182,10 @@ class BiblestudyModelServers extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-
+		if (JFactory::getApplication()->input->get('layout') == 'modal' && $published === '')
+		{
+			$published = 1;
+		}
 		if (is_numeric($published))
 		{
 			$query->where('server.published = ' . (int) $published);
