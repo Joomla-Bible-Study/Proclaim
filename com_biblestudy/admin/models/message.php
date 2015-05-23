@@ -338,8 +338,6 @@ class BiblestudyModelMessage extends JModelAdmin
 		// If no image uploaded, just save data as usual
 		if (empty($files['image']['tmp_name']))
 		{
-			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
-
 			return parent::save($data);
 		}
 
@@ -349,68 +347,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		// Modify model data
 		$data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
 
-		$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
-
 		return parent::save($data);
-	}
-
-	/**
-	 * Routine to save the topics(tags)
-	 *
-	 * @param   int     $pks   Is the id of the record being saved.
-	 * @param   string  $data  from post
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.0.2
-	 */
-	public function setTopics($pks, $data)
-	{
-		if (empty($pks) && $pks != 0)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
-
-			return false;
-		}
-
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		// Clear the tags first
-		$query->delete();
-		$query->from('#__bsms_studytopics');
-		$query->where('study_id = ' . $pks);
-		$db->setQuery($query->__toString());
-
-		if (!$db->execute())
-		{
-			return false;
-		}
-		$query->clear();
-
-		// Add all the tags back
-		if ($data['topics'])
-		{
-			$topics = explode(",", $data['topics']);
-
-			foreach ($topics as $topic)
-			{
-				if ($topic)
-				{
-					$tdata           = new stdClass;
-					$tdata->topic_id = $topic;
-					$tdata->study_id = $pks;
-
-					if (!$db->insertObject('#__bsms_studytopics', $tdata))
-					{
-						return false;
-					}
-				}
-			}
-
-		}
-
-		return true;
 	}
 
 	/**
@@ -425,19 +362,22 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Get the form.
-		$form = $this->loadForm(
-			'com_biblestudy.message',
-			'message',
-			array(
-				'control'   => 'jform',
-				'load_data' => $loadData
-			)
-		);
 
 		if (empty($form))
 		{
-			return false;
+			// Get the form.
+			$form = $this->loadForm(
+					'com_biblestudy.message',
+					'message',
+					array(
+							'control'   => 'jform',
+							'load_data' => $loadData
+					)
+			);
+			if (empty($form))
+			{
+				return false;
+			}
 		}
 		$jinput = JFactory::getApplication()->input;
 
