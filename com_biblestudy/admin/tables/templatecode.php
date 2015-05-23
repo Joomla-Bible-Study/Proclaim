@@ -152,6 +152,10 @@ class TableTemplatecode extends JTable
 
 			return false;
 		}
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
 
 		return parent::store($updateNulls);
 	}

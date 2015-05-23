@@ -80,9 +80,9 @@ class TableTemplate extends JTable
 	/**
 	 * Contractor
 	 *
-	 * @param   JDatabaseDriver  $db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tabletemplate($db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_templates', 'id', $db);
 	}
@@ -141,6 +141,10 @@ class TableTemplate extends JTable
 		if (!$oldrow->load($this->id) && $oldrow->getError())
 		{
 			$this->setError($oldrow->getError());
+		}
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
 		}
 
 		return parent::store($updateNulls);

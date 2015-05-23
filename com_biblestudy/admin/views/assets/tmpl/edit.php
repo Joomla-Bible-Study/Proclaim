@@ -51,7 +51,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				</a>
 			</div>
 			<div class="clearfix"></div>
-			<div class="table">
+			<div class="table table-bordered table-hover table-striped">
 				<?php
 				$input = new JInput;
 				$checkassets2 = $input->get('checkassets', null, 'array');
@@ -67,6 +67,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					echo '<th>' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_NULLROWS') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
 					echo '</tr>';
 					echo '</thead>';
@@ -95,6 +96,16 @@ JFactory::getDocument()->addScriptDeclaration("
 							echo '<p>';
 						}
 						echo JText::_($asset['matchrows']) . '</p></td>';
+						echo '<td>';
+						if ($asset['arulesrows'] > 0)
+						{
+							echo '<p style="color: red">';
+						}
+						else
+						{
+							echo '<p>';
+						}
+						echo JText::_($asset['arulesrows']) . '</p></td>';
 						echo '<td>';
 						if ($asset['nomatchrows'] > 0)
 						{

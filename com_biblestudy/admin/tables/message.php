@@ -294,18 +294,11 @@ class TableMessage extends JTable
 	public $publish_down = '0000-00-00 00:00:00';
 
 	/**
-	 * The rules associated with this record.
-	 *
-	 * @var    JRules    A JRules object.
-	 */
-	protected $_rules;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function TableMessage(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
@@ -340,6 +333,30 @@ class TableMessage extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**

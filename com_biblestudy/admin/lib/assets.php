@@ -50,7 +50,7 @@ class JBSMAssets
 			// Put the table into the return array
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
-			$query->select('j.id, j.asset_id, a.id as aid, a.parent_id')
+			$query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
 					->from($db->qn($object['name']) . ' as j')
 					->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
@@ -66,7 +66,7 @@ class JBSMAssets
 				}
 
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if (self::$parent_id != $result->parent_id && $result->asset_id)
+				if ((self::$parent_id != $result->parent_id || $result->rules === "") && $result->asset_id)
 				{
 					self::deleteasset($result);
 					self::setasset($result, $object['assetname']);
@@ -294,13 +294,14 @@ class JBSMAssets
 			// Put the table into the return array
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
-			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id')
+			$query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.rules as arules, a.parent_id')
 					->from($db->qn($object['name']) . ' as j')
 					->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
 			$results     = $db->loadObjectList();
 			$nullrows    = 0;
 			$matchrows   = 0;
+			$arulesrows  = 0;
 			$nomatchrows = 0;
 			$numrows     = count($results);
 
@@ -317,10 +318,15 @@ class JBSMAssets
 				{
 					$nomatchrows++;
 				}
-				// If $parent_id and $result->parent_id match then everything is okay
-				if (self::$parent_id == $result->parent_id)
+				// If $parent_id and $result->parent_id match and the Asset rules are not blank then everything is okay
+				if (self::$parent_id == $result->parent_id && $result->arules !== "")
 				{
 					$matchrows++;
+				}
+				// If $parent_id and $result->parent_id match and the Asset rules is blank we need to fix
+				if (self::$parent_id == $result->parent_id && $result->arules === "")
+				{
+					$arulesrows++;
 				}
 			}
 			$return[] = array(
@@ -328,6 +334,7 @@ class JBSMAssets
 					'numrows'          => $numrows,
 					'nullrows'         => $nullrows,
 					'matchrows'        => $matchrows,
+					'arulesrows'       => $arulesrows,
 					'nomatchrows'      => $nomatchrows,
 					'parent_id'        => self::$parent_id,
 					'result_parent_id' => $result->parent_id,

@@ -48,6 +48,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function tools()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$tool = JFactory::getApplication()->input->get('tooltype', '', 'post');
 
 		switch ($tool)
@@ -69,6 +72,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function changePlayers()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$db   = JFactory::getDBO();
 		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
@@ -119,6 +125,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function changePopup()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$jinput = JFactory::getApplication()->input;
 		$db     = JFactory::getDBO();
 		$msg    = null;
@@ -161,6 +170,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetHits()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$db   = JFactory::getDBO();
 		$msg  = null;
 		$post = $_POST['jform'];
@@ -192,6 +204,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetDownloads()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$msg   = null;
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -218,6 +233,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetPlays()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$msg   = null;
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
@@ -244,6 +262,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function back()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
 	}
 
@@ -254,6 +275,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function checkassets()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
 		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
@@ -267,6 +291,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function convertSermonSpeaker()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$convert      = new JBSMSSConvert;
 		$ssconversion = $convert->convertSS();
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $ssconversion);
@@ -279,6 +306,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function convertPreachIt()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$convert      = new JBSMPIconvert;
 		$piconversion = $convert->convertPI();
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $piconversion);
@@ -293,6 +323,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function fix()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$model = $this->getModel('admin');
 		$model->fix();
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
@@ -307,6 +340,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function dbReset()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$user = JFactory::getUser();
 
 		if (in_array('8', $user->groups))
@@ -332,6 +368,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function fixAssets($dbReset = false)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$asset = new JBSMAssets;
 		$asset->fixAssets();
 		if (!$dbReset)
@@ -349,6 +388,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function aliasUpdate()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$alias  = new JBSMAlias;
 		$update = $alias->updateAlias();
 		$this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
@@ -364,6 +406,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function doimport($parent = true)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$copysuccess = false;
 		$result      = null;
 		$alt         = '';
@@ -413,6 +458,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function copyTables($oldprefix)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		// Create table tablename_new like tablename; -> this will copy the structure...
 		// Insert into tablename_new select * from tablename; -> this would copy all the data
 		$db     = JFactory::getDBO();
@@ -461,6 +509,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function import()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$application = JFactory::getApplication();
 		$import      = new JBSMRestore;
 		$parent      = false;
@@ -488,6 +539,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function export()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$input  = new JInput;
 		$run    = $input->get('run', '', 'int');
 		$export = new JBSMBackup;
@@ -520,7 +574,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function getThumbnailListXHR()
 	{
-		JSession::checkToken('get') or die('Invalid Token');
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$document     = JFactory::getDocument();
 		$input        = JFactory::getApplication()->input;
 		$images_paths = array();
@@ -551,7 +607,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function createThumbnailXHR()
 	{
-		JSession::checkToken('get') or die('Invalid Token');
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$document = JFactory::getDocument();
 		$input    = JFactory::getApplication()->input;
 

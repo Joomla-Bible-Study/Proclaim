@@ -43,6 +43,9 @@ class BiblestudyControllerMessages extends JControllerAdmin
 	 */
 	public function saveOrderAjax()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		// Get the input
 		$pks   = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');

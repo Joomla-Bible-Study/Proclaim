@@ -45,6 +45,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function template_import()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -308,6 +311,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function performDB($query)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$db = JFactory::getDBO();
 		$db->setQuery($query);
 
@@ -326,6 +332,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function template_export()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$input          = new JInput;
 		$data           = $input->get('template_export');
 		$exporttemplate = $data;
@@ -369,6 +378,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	private function getExportSetting($result)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		// Export must be in this order: css, template files, template.
 		$registry = new Registry;
 		$registry->loadString($result->params);
@@ -458,6 +470,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function getTemplate($template)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');

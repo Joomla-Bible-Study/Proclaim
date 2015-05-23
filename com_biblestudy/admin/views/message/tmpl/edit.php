@@ -457,13 +457,6 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 						</div>
 					</div>
 				</div>
-
-				<?php if ($this->canDo->get('core.admin')): ?>
-					<div class="tab-pane" id="permissions">
-						<?php echo $this->form->getInput('rules'); ?>
-					</div>
-				<?php endif; ?>
-				<?php echo JHtml::_('form.token'); ?>
 			</div>
 		</div>
 		<div class="span2 form-vertical">
@@ -522,5 +515,6 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 		<?php echo $this->form->getInput('thumbnailm'); ?>
 		<?php echo $this->form->getInput('id'); ?>
 		<input type="hidden" name="task" value=""/>
+		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

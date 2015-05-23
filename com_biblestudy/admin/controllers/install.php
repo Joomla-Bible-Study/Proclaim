@@ -38,6 +38,9 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function fixAssets()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$asset      = new JBSMAssets;
 		$fix_assets = $asset->fixAssets();
 		$input      = new JInput;

@@ -29,6 +29,14 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_biblestudy.message';
+
+	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
 	 * @param   string  $type    The table type to instantiate
@@ -231,22 +239,11 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
-			// Get the form.
-			$form = $this->loadForm(
-					'com_biblestudy.message',
-					'message',
-					array(
-							'control'   => 'jform',
-							'load_data' => $loadData
-					)
-			);
-			if (empty($form))
-			{
-				return false;
-			}
+			return false;
 		}
 		$jinput = JFactory::getApplication()->input;
 

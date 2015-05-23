@@ -40,6 +40,9 @@ class BiblestudyControllerServer extends JControllerForm
 	 */
 	public function add()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$app = JFactory::getApplication();
 
 		if (parent::add())
@@ -65,6 +68,9 @@ class BiblestudyControllerServer extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$app    = JFactory::getApplication();
 		$result = parent::edit();
 
@@ -86,6 +92,9 @@ class BiblestudyControllerServer extends JControllerForm
 	 */
 	public function setType()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
