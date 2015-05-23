@@ -53,8 +53,6 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	 */
 	public function __construct($config = array())
 	{
-		$input = new JInput;
-		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 
 		// Register Extra tasks
@@ -117,6 +115,7 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 		// Redirect to the return page.
 		$this->setRedirect($this->getReturnPage());
 	}
+
 	/**
 	 * Proxy for getModel
 	 *
@@ -148,6 +147,23 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	public function edit($key = null, $urlVar = 'a_id')
 	{
 		$result = parent::edit($key, $urlVar);
+
+		return $result;
+	}
+
+	/**
+	 * Method to save a record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return    Boolean    True if successful, false otherwise.
+	 *
+	 * @since    1.6
+	 */
+	public function save($key = null, $urlVar = 'a_id')
+	{
+		$result = parent::save($key, $urlVar);
 
 		return $result;
 	}

@@ -29,140 +29,6 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method to store a record
-	 *
-	 * @access    public
-	 * @return    boolean    True on success
-	 */
-	public function store()
-	{
-		// Fix up special html fields
-
-		/** @var TableMessage $row */
-		$row        = $this->getTable();
-		$input      = new JInput;
-		$data       = $input->post;
-		$scriptures = null;
-
-		// Allows HTML content to come through to the database row
-		$data['studytext']           = $input->get('studytext', '', 'string');
-		$data['studyintro']          = str_replace('"', "'", $data['studyintro']);
-		$data['studynumber']         = str_replace('"', "'", $data['studynumber']);
-		$data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-
-		foreach ($data['scripture'] as $scripture)
-		{
-			if (!$data['text'][key($data['scripture'])] == '')
-			{
-				$scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
-			}
-			next($data['scripture']);
-		}
-		$data['scripture'] = implode(';', $scriptures);
-
-		// Bind the form fields to the table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the table to the database
-		// Checks to make sure a valid date field has been entered
-		if (!$row->studydate)
-		{
-			$row->studydate = date('Y-m-d H:i:s');
-		}
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Get Tags
-		$vTags = $input->get('topic_tags', '', 'string');
-		$iTags = explode(",", $vTags);
-
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
-
-		foreach ($iTags as $aTag)
-		{
-			if (is_numeric($aTag))
-			{
-				// It's an existing tag.  Add it
-				if ($aTag != "")
-				{
-
-					$tagRow = JTable::getInstance('studytopics', 'Table');
-
-					$isDup = $this->isDuplicate($row->id, $aTag);
-
-					if (!$isDup)
-					{
-						$tagRow->study_id = $row->id;
-						$tagRow->topic_id = $aTag;
-
-						if (!$tagRow->store())
-						{
-							$this->setError($this->_db->getErrorMsg());
-
-							return false;
-						}
-					}
-				}
-			}
-			else
-			{
-				// It's a new tag.  Gotta insert it into the Topics table.
-				if ($aTag != "")
-				{
-					$topicRow             = JTable::getInstance('topic', 'Table');
-					$tempText             = $aTag;
-					$tempText             = str_replace("0_", "", $tempText);
-					$topicRow->topic_text = $tempText;
-					$topicRow->published  = 1;
-
-					if (!$topicRow->store())
-					{
-						$this->setError($this->_db->getErrorMsg());
-
-						return false;
-					}
-
-					// Gotta somehow make sure this isn't a duplicate...
-					$tagRow           = JTable::getInstance('studytopics', 'Table');
-					$tagRow->study_id = $row->id;
-					$tagRow->topic_id = $topicRow->id;
-
-					$isDup = $this->isDuplicate($row->id, $aTag);
-
-					if (!$isDup)
-					{
-						if (!$tagRow->store())
-						{
-							$this->setError($this->_db->getErrorMsg());
-
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
 	 * @param   string  $type    The table type to instantiate
@@ -332,8 +198,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
-		$data   = $input->get('jform', false, 'array');
 		$files  = $input->files->get('jform');
+		if ($input->get('a_id'))
+		{
+			$data['id'] = $input->get('a_id');
+		}
 
 		// If no image uploaded, just save data as usual
 		if (empty($files['image']['tmp_name']))
@@ -411,6 +280,54 @@ class BiblestudyModelMessage extends JModelAdmin
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Method to get media item
+	 *
+	 * @param   int  $pk  int
+	 *
+	 * @return  mixed|void
+	 *
+	 * @since   9.0.0
+	 */
+	public function getItem($pk = null)
+	{
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$pk = $jinput->get('a_id', 0);
+
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$pk = $jinput->get('id', 0);
+		}
+
+		if (!empty($this->data))
+		{
+			return $this->data;
+		}
+
+		$this->data = parent::getItem($pk);
+
+		if (!empty($this->data))
+		{
+			// Make Podcast Id to be array for view
+			if (!empty($this->data->podcast_id))
+			{
+				$this->data->podcast_id = explode(',', $this->data->podcast_id);
+			}
+
+			// Convert metadata field to array
+			$registry             = new Registry($this->data->metadata);
+			$this->data->metadata = $registry->toArray();
+
+		}
+
+		return $this->data;
 	}
 
 	/**
