@@ -6,7 +6,7 @@
                     handler="upload"/>
         </fieldset>
         <fieldset name="publishing" label="Publishing">
-            <field name="published" type="list" label="JSTATUS" description="JFIEDL_PUBLISHED_DESC" size="1" default="1" filter="integer"/>
+            <field name="published" type="status" label="JSTATUS" description="JFIEDL_PUBLISHED_DESC" size="1" default="1" filter="integer"/>
         </fieldset>
     </fields>
 </media>
