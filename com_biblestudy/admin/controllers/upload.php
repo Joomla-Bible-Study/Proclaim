@@ -244,8 +244,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 */
 	private function _setResponse($code, $msg = null, $error = true)
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		if ($error)
 		{
