@@ -133,7 +133,6 @@ class BiblestudyModelPodcasts extends JModelList
 		$query->select('ag.title AS access_level')
 				->join('LEFT', '#__viewlevels AS ag ON ag.id = podcast.access');
 
-
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))
 		{

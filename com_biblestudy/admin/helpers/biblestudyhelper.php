@@ -648,9 +648,9 @@ class JBSMBibleStudyHelper
 	/**
 	 * Sorting the Array a Column
 	 *
-	 * @param   Array   $arr  Array to sort
-	 * @param   string  $col  Sort column
-	 * @param   int     $dir  Direction to sort
+	 * @param   Array   &$arr  Array to sort
+	 * @param   string  $col   Sort column
+	 * @param   int     $dir   Direction to sort
 	 *
 	 * @return void applied back to the array
 	 */

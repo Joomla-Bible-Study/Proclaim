@@ -716,7 +716,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Method override to check-in a record or an array of record
 	 *
-	 * @param   mixed $pks The ID of the primary key or an array of IDs
+	 * @param   mixed  $pks  The ID of the primary key or an array of IDs
 	 *
 	 * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
 	 *

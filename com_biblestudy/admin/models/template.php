@@ -22,7 +22,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success, False on error.
 	 *

@@ -254,9 +254,9 @@ class JBSMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player . "&amp;view=popup&amp;t="
-							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
-							$player->playerheight . "'); return false\">" . $image . "</a>";
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
+								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
+								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\">" . $image . "</a>";
 						break;
 				}
 

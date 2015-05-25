@@ -31,6 +31,13 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 		parent::__construct($config);
 	}
 
+	/**
+	 * Check in of one or more records.
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   12.2
+	 */
 	public function checkin()
 	{
 		// Check for request forgeries.

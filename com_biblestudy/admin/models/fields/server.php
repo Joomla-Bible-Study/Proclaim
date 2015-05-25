@@ -48,7 +48,6 @@ class JFormFieldServer extends JFormField
 		// Build the script.
 		$script = array();
 
-
 		// Setup variables for display.
 		$html = array();
 		if ($view == 'mediafileform')
@@ -67,7 +66,6 @@ class JFormFieldServer extends JFormField
 		$script[] = '	function jSelectServer_' . $this->id . '(id, name, object) {';
 		$script[] = '		document.getElementById("' . $this->id . '").value = id;';
 		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
-
 
 		if ($allowEdit)
 		{

@@ -45,7 +45,6 @@ class BiblestudyControllerMediafile extends JControllerForm
 		parent::__construct($config);
 	}
 
-
 	/**
 	 * Method to add a new record.
 	 *
@@ -226,7 +225,8 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($data['id']), false));
+		$redirect = $this->getRedirectToItemAppend($data['id']);
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
 	}
 
 	/**

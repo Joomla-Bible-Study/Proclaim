@@ -51,7 +51,6 @@ class BiblestudyModelMessages extends JModelList
 		parent::__construct($config);
 	}
 
-
 	/**
 	 * Translate item entries: books, topics
 	 *

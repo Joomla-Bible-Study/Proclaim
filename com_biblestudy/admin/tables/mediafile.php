@@ -222,7 +222,7 @@ class TableMediafile extends JTable
 	 * Method to check a row in if the necessary properties/fields exist.  Checking
 	 * a row in will allow other users the ability to edit the row.
 	 *
-	 * @param   mixed $pk An optional primary key value to check out.  If not set the instance property value is used.
+	 * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
 	 *
 	 * @return  boolean  True on success.
 	 *

@@ -82,8 +82,6 @@ class JBSMHelper
 		return $showhide;
 	}
 
-
-
 	/**
 	 * Method to get file size
 	 *

@@ -303,7 +303,7 @@ class BiblestudyModelMediafiles extends JModelList
 			else
 			{
 				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-				$query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search );
+				$query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search);
 			}
 		}
 
