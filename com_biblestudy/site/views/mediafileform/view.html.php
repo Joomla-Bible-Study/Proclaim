@@ -118,6 +118,8 @@ class BiblestudyViewMediafileform extends JViewLegacy
 			return;
 		}
 
+		$this->setLayout('edit');
+
 		// Set the document
 		$this->_prepareDocument();
 

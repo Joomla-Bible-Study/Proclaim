@@ -131,6 +131,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
+		$this->setLayout('edit');
+
 		$this->_prepareDocument();
 
 		parent::display($tpl);
