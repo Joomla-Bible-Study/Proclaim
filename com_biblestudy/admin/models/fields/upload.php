@@ -44,7 +44,7 @@ class JFormFieldUpload extends JFormField
                     var path = jQuery("#jform_params_localFolder").val();
                     var type = jQuery("#jform_serverType").val();
                     uploader.setOption("multipart_params", {
-                        handler: "' . $this->getTitle("handler") . '",
+                        handler: "' . $this->getAttribute("handler") . '",
                         path: path,
                         type: type
                     });
