@@ -270,9 +270,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function checkassets()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
 		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
