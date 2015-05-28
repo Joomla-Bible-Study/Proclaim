@@ -206,23 +206,22 @@ class BiblestudyModelMessage extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
-		$files  = $input->files->get('jform');
 		if ($input->get('a_id'))
 		{
 			$data['id'] = $input->get('a_id');
 		}
 
+		$path = 'images/BibleStudy/studies/' . $data['id'];
+
 		// If no image uploaded, just save data as usual
-		if (empty($files['image']['tmp_name']))
+		if (empty($data['thumbnailm']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
 		{
 			return parent::save($data);
 		}
-
-		$path = 'images/BibleStudy/studies/' . $data['id'];
-		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_study_size'));
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
 
 		// Modify model data
-		$data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
+		$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
 	}

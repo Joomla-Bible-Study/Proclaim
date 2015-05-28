@@ -109,7 +109,9 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		$app = JFactory::getApplication();
+		/** @var Joomla\Registry\Registry $params */
+		$params = JBSMParams::getAdmin()->params;
+		$app    = JFactory::getApplication();
 
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
@@ -119,21 +121,17 @@ class BiblestudyModelSerie extends JModelAdmin
 			$data['alias'] = $alias;
 		}
 
-		$input = JFactory::getApplication()->input;
-		$data  = $input->get('jform', false, 'array');
-		$files = $input->files->get('jform');
-
 		// If no image uploaded, just save data as usual
-		if (empty($files['image']['tmp_name']))
+		if (empty($data['series_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
 		{
 			return parent::save($data);
 		}
 
 		$path = 'images/BibleStudy/series/' . $data['id'];
-		JBSMThumbnail::create($files['image'], $path, 'thumbnail_series_size');
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
 
 		// Modify model data
-		$data['series_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+		$data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
 	}

@@ -158,23 +158,21 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$input  = JFactory::getApplication()->input;
-		$data   = $input->get('jform', false, 'array');
-		$files  = $input->files->get('jform');
 
 		// If no image uploaded, just save data as usual
-		if (empty($files['image']['tmp_name']))
+		if (empty($data['teacher_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
 		{
 			return parent::save($data);
 		}
 
-		$path = 'images/BibleStudy/teachers/' . $data['id'];
-		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_teacher_size'));
+		$path = 'images/BibleStudy/studies/' . $data['id'];
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size'));
 
 		// Modify model data
-		$data['teacher_image']     = $path . '/original_' . $files['image']['name'];
-		$data['teacher_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+		$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];
+		$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
 	}
