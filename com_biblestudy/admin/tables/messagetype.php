@@ -47,7 +47,7 @@ class TableMessagetype extends JTable
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tablemessagetype(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_message_type', 'id', $db);
 	}
@@ -82,6 +82,30 @@ class TableMessagetype extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**

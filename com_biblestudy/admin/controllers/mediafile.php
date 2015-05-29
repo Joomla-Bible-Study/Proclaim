@@ -46,6 +46,53 @@ class BiblestudyControllerMediafile extends JControllerForm
 	}
 
 	/**
+	 * Method to add a new record.
+	 *
+	 * @return  mixed  True if the record can be added, a error object if not.
+	 *
+	 * @since   12.2
+	 */
+	public function add()
+	{
+		$app = JFactory::getApplication();
+
+		if (parent::add())
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resets the User state for the server type. Needed to allow the value from the DB to be used
+	 *
+	 * @param   int     $key     ?
+	 * @param   string  $urlVar  ?
+	 *
+	 * @return  bool
+	 *
+	 * @since   9.0.0
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		$app    = JFactory::getApplication();
+		$result = parent::edit();
+
+		if ($result)
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+		}
+
+		return true;
+	}
+	/**
 	 * Handles XHR requests (i.e. File uploads)
 	 *
 	 * @return void
@@ -88,8 +135,6 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
 
 		// Preset the redirect
@@ -109,11 +154,49 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function cancel($key = null)
 	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$app     = JFactory::getApplication();
+		$model   = $this->getModel();
+		$table   = $model->getTable();
+		$checkin = property_exists($table, 'checked_out');
+
+		if (empty($key))
+		{
+			$key = $table->getKeyName();
+		}
+
+		$recordId = $app->input->getInt($key);
+
+		// Attempt to check-in the current record.
+		if ($recordId)
+		{
+			if ($checkin)
+			{
+				if ($model->checkin($recordId) === false)
+				{
+					// Check-in failed, go back to the record and display a notice.
+					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+					$this->setMessage($this->getError(), 'error');
+
+					$this->setRedirect(
+						JRoute::_(
+							'index.php?option=' . $this->option . '&view=' . $this->view_item
+							. $this->getRedirectToItemAppend($recordId, $key), false
+						)
+					);
+
+					return false;
+				}
+			}
+		}
+
 		if ($this->input->getCmd('return') && parent::cancel($key))
 		{
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));
 			return true;
 		}
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 		return false;
 	}
 
@@ -126,19 +209,24 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function setServer()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
 		$data = $input->get('jform', array(), 'post', 'array');
-		$data = json_decode(base64_decode($data['server_id']));
-
-		$media_id  = isset($data->media_id) ? $data->media_id : 0;
-		$server_id = isset($data->server_id) ? $data->server_id : 0;
+		$cdate = $data['createdate'];
+		$study_id = $data['study_id'];
+		$server_id = $data['server_id'];
 
 		// Save server in the session
+		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($media_id), false));
+		$redirect = $this->getRedirectToItemAppend($data['id']);
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
 	}
 
 	/**
@@ -175,9 +263,10 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{
-		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit', 'string');
-		$return = $this->input->getCmd('return');
+		$tmpl    = $this->input->get('tmpl');
+		$layout  = $this->input->get('layout', 'edit', 'string');
+		$return  = $this->input->getCmd('return');
+		$options = $this->input->get('options');
 		$append = '';
 
 		// Setup redirect info.
@@ -194,6 +283,11 @@ class BiblestudyControllerMediafile extends JControllerForm
 		if ($recordId)
 		{
 			$append .= '&' . $urlVar . '=' . $recordId;
+		}
+
+		if ($options)
+		{
+			$append .= '&options=' . $options;
 		}
 
 		if ($return)

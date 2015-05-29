@@ -16,11 +16,14 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
+/** @var BiblestudyViewTeacher $this */
+
 // Create shortcut to parameters.
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app = JFactory::getApplication();
 $input = $app->input;
+
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -81,22 +84,13 @@ $input = $app->input;
 		</div>
 		<div class="controls">
 			<?php echo $this->form->getInput('contact'); ?>
-			<?php if ($this->item->contact)
+			<?php if ($this->form->getValue('contact'))
 			{
 				?>
 				<div class="button2-left">
 					<div class="blank">
-						<a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change');
-						Joomla.submitbutton('teacher.apply'); "
-						   title="Clear">
-							<?php echo JText::_('JBS_CMN_CLEAR'); ?>
-						</a>
-					</div>
-				</div>
-				<div class="button2-left">
-					<div class="blank">
-						<a href="index.php?option=com_contact&task=contact.edit&id=<?php echo (int) $this->item->contact; ?>"
-						   target="blank">'<?php echo JText::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
+						<a href="index.php?option=com_contact&task=contact.edit&id=<?php echo (int) $this->form->getValue('contact'); ?>"
+						   target="blank" class="btn modal"><?php echo JText::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
 						</a>
 					</div>
 				</div>

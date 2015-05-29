@@ -201,7 +201,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
 		{
 
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 		}
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see

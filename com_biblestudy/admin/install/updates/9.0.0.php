@@ -43,6 +43,7 @@ class Migration900
 
 		foreach ($db->loadObjectList() as $server)
 		{
+			/** @var TableServer $newServer */
 			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 			$newServer->load($server->id);
 			$params = array();
@@ -199,8 +200,8 @@ class Migration900
 		/** @var TableServer $newServer */
 		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 		$newServer->server_name = 'Default';
-		$newServer->type        = "legacy";
-		$newServer->params      = $db->q("{'path':''}");
+		$newServer->type        = 'legacy';
+		$newServer->params      = '{"path":""}';
 		$newServer->id          = null;
 		$newServer->store();
 
@@ -345,10 +346,14 @@ class Migration900
 	 */
 	private function deleteColumns ($table, $columns, $db)
 	{
+		$columns2 = $db->getTableColumns($table);
 		foreach ($columns as $column)
 		{
-			$db->setQuery('ALTER TABLE ' . $table . ' DROP ' . $column);
-			$db->execute();
+			if (isset($columns2[$column]))
+			{
+				$db->setQuery('ALTER TABLE ' . $table . ' DROP ' . $column);
+				$db->execute();
+			}
 		}
 	}
 

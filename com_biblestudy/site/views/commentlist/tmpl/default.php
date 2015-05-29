@@ -10,13 +10,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
-JHtml::_('biblestudy.framework');
-JHtml::_('biblestudy.loadcss', $this->state->params);
 
 $app        = JFactory::getApplication();
 $user       = JFactory::getUser();
@@ -74,14 +72,10 @@ $sortFields = $this->getSortFields();
 					<select name="directionTable" id="directionTable" class="input-medium"
 					        onchange="Joomla.orderTable()">
 						<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-						<option value="asc" <?php if ($listDirn == 'asc')
-						{
-							echo 'selected="selected"';
-						} ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
-						<option value="desc" <?php if ($listDirn == 'desc')
-						{
-							echo 'selected="selected"';
-						} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
+						<option
+								value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+						<option
+								value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
 					</select>
 				</div>
 			<div class="btn-group pull-right">

@@ -29,6 +29,9 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 */
 	public function upload()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		// 5 minutes execution time
 		@set_time_limit(5 * 60);
 
@@ -241,6 +244,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 */
 	private function _setResponse($code, $msg = null, $error = true)
 	{
+
 		if ($error)
 		{
 			$jsonrpc = array(

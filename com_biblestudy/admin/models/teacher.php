@@ -87,7 +87,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @param   object  $record  A record object.
 	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
+	 *                   component.
 	 *
 	 * @since   12.2
 	 */
@@ -112,13 +113,17 @@ class BiblestudyModelTeacher extends JModelAdmin
 			{
 				return true;
 			}
-
-			foreach ($studies as $studie)
+			if ($record->published == '-2' || $record->published == '0')
 			{
-				$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-			}
 
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+				foreach ($studies as $studie)
+				{
+					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+				}
+
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+
+			}
 
 			return false;
 		}
@@ -153,23 +158,21 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$input  = JFactory::getApplication()->input;
-		$data   = $input->get('jform', false, 'array');
-		$files  = $input->files->get('jform');
 
 		// If no image uploaded, just save data as usual
-		if (empty($files['image']['tmp_name']))
+		if (empty($data['teacher_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
 		{
 			return parent::save($data);
 		}
 
-		$path = 'images/BibleStudy/teachers/' . $data['id'];
-		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_teacher_size'));
+		$path = 'images/BibleStudy/studies/' . $data['id'];
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size'));
 
 		// Modify model data
-		$data['teacher_image']     = $path . '/original_' . $files['image']['name'];
-		$data['teacher_thumbnail'] = $path . '/thumb_' . $files['image']['name'];
+		$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];
+		$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
 	}

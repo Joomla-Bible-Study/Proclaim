@@ -97,12 +97,14 @@ class TableMediafile extends JTable
 
 	public $hits = 0;
 
+	public $checked_out;
+
 	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tablemediafile(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_mediafiles', 'id', $db);
 	}
@@ -139,6 +141,30 @@ class TableMediafile extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -190,5 +216,67 @@ class TableMediafile extends JTable
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
+	}
+
+	/**
+	 * Method to check a row in if the necessary properties/fields exist.  Checking
+	 * a row in will allow other users the ability to edit the row.
+	 *
+	 * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    http://docs.joomla.org/JTable/checkIn
+	 * @since   11.1
+	 * @throws  UnexpectedValueException
+	 */
+	public function checkIn($pk = null)
+	{
+		// If there is no checked_out or checked_out_time field, just return true.
+		if (!property_exists($this, 'checked_out') || !property_exists($this, 'checked_out_time'))
+		{
+			return true;
+		}
+
+		if (is_null($pk))
+		{
+			$pk = array();
+
+			foreach ($this->_tbl_keys AS $key)
+			{
+				$pk[$this->$key] = $this->$key;
+			}
+		}
+		elseif (!is_array($pk))
+		{
+			$pk = array($this->_tbl_key => $pk);
+		}
+
+		foreach ($this->_tbl_keys AS $key)
+		{
+			$pk[$key] = empty($pk[$key]) ? $this->$key : $pk[$key];
+
+			if ($pk[$key] === null)
+			{
+				throw new UnexpectedValueException('Null primary key not allowed.');
+			}
+		}
+
+		// Check the row in by primary key.
+		$query = $this->_db->getQuery(true)
+			->update($this->_tbl)
+			->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
+			->set($this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote($this->_db->getNullDate()));
+		$this->appendPrimaryKeys($query, $pk);
+		$this->_db->setQuery($query);
+
+		// Check for a database error.
+		$this->_db->execute();
+
+		// Set table values in the object.
+		$this->checked_out      = 0;
+		$this->checked_out_time = '';
+
+		return true;
 	}
 }

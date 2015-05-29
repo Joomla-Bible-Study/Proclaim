@@ -29,14 +29,6 @@ class BiblestudyController extends JControllerLegacy
 	public $mediaCode;
 
 	/**
-	 * Hold a JInput object for easier access to the input variables.
-	 *
-	 * @var    JInput
-	 * @since  12.2
-	 */
-	protected $input;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.

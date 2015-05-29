@@ -19,6 +19,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
 
+$return = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
@@ -34,8 +35,9 @@ $input  = $app->input;
 </script>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 	<form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messageform&a_id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
+			action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messageform&a_id=' . (int) $this->item->id); ?>"
+			method="post" name="adminForm" id="adminForm" class="form-validate form-vertical"
+			enctype="multipart/form-data">
 		<div class="row-fluid">
 			<div class="btn-toolbar">
 				<div class="btn-group">
@@ -108,22 +110,6 @@ $input  = $app->input;
 						</div>
 					</div>
 					<div class="tab-pane" id="scripture">
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('script1'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('script1'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('script2'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('script1'); ?>
-							</div>
-						</div>
 						<div class="control-group">
 							<div class="control-label">
 								<?php echo $this->form->getLabel('booknumber'); ?>
@@ -215,6 +201,14 @@ $input  = $app->input;
 					</div>
 
 					<div class="tab-pane" id="info">
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('image'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('image'); ?>
+							</div>
+						</div>
 						<div class="control-group">
 							<div class="control-label">
 								<?php echo $this->form->getLabel('media_hours'); ?>
@@ -431,11 +425,10 @@ $input  = $app->input;
 								foreach ($this->mediafiles as $i => $item) :
 									?>
 									<tr class="row<?php echo $i % 2; ?>">
-										<td class="center">
-											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=' .
-												(int) $item->id . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
-											<a class="btn btn-primary"
-											   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
+										<td>
+											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id='
+													. (int) $item->id . '&amp;return=' . $return; ?>
+											<a class="btn btn-primary" href="<?php echo $link; ?>"
 											   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 												<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 											</a>
@@ -459,7 +452,7 @@ $input  = $app->input;
 							<tr>
 								<td colspan="4">
 									<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' .
-										$this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
+											$this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
 									<?php
 									if (empty($this->item->id))
 									{
@@ -490,8 +483,6 @@ $input  = $app->input;
 					</div>
 				</div>
 				<!-- End Sidebar -->
-				<?php echo $this->form->getInput('thumbnailm'); ?>
-				<?php echo $this->form->getInput('id'); ?>
 				<input type="hidden" name="task" value=""/>
 				<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
 				<?php echo JHtml::_('form.token'); ?>

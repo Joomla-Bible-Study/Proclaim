@@ -71,6 +71,25 @@ class BiblestudyModelMediafiles extends JModelList
 		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 
 		$items = parent::getItems();
+		if (!$items)
+		{
+			return false;
+		}
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
 
 		foreach ($items as $item)
 		{
@@ -130,6 +149,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication();
+
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -145,14 +166,8 @@ class BiblestudyModelMediafiles extends JModelList
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
-		$this->setState('filter.filename', $filename);
-
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-
-		$study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
-		$this->setState('filter.study_id', $study);
 
 		$mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
 		$this->setState('filter.mediaYears', $mediaYears);
@@ -160,13 +175,16 @@ class BiblestudyModelMediafiles extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		$download = $this->getUserStateFromRequest($this->context . '.filter.download', 'filter_download', '');
-		$this->setState('filter.download', $download);
-
-		$player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player', '');
-		$this->setState('filter.player', $player);
-
 		parent::populateState('mediafile.createdate', 'DESC');
+
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -182,7 +200,6 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.filename');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.study_id');
@@ -202,13 +219,14 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
 				'list.select', 'mediafile.* ')
 		);
 
-		$query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
+		$query->from('#__bsms_mediafiles AS mediafile');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -226,6 +244,10 @@ class BiblestudyModelMediafiles extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
 
+		// Join over the users for the checked out user.
+		$query->select('uc.name AS editor')
+			->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
+
 		// Filter by published state
 		$published = $this->getState('filter.published');
 
@@ -237,12 +259,20 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
 		}
+
 		// Filter by access level.
 		$access = $this->getState('filter.access');
 
 		if ($access)
 		{
 			$query->where('mediafile.access = ' . (int) $access);
+		}
+
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('mediafile.access IN (' . $groups . ')');
 		}
 
 		// Filter by study title
@@ -261,8 +291,30 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
 		}
 
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('mediafile.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+				$query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search);
+			}
+		}
+
+		// Filter on the language.
+		if ($language = $this->getState('filter.language'))
+		{
+			$query->where('mediafile.language = ' . $db->quote($language));
+		}
+
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'ordering');
+		$orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 
 		// Sqlsrv change

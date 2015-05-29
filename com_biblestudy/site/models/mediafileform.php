@@ -33,42 +33,9 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 */
 	public function __construct($config = array())
 	{
+		$app = JFactory::getApplication();
+		$app->input->set('id', $app->input->getInt('a_id'));
 		parent::__construct($config);
-	}
-
-	/**
-	 * Method to get article data.
-	 *
-	 * @param   integer  $pk  The id of the article.
-	 *
-	 * @return    mixed    Content item data object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		// Initialise variables.
-		$pk = (int) (!empty($pk)) ? $pk : $this->getState('mediafile.id');
-
-		// Get a row instance.
-		$table = $this->getTable();
-
-		// Attempt to load the row.
-		$return = $table->load($pk);
-
-		// Check for a table object error.
-		if ($return === false)
-		{
-			return false;
-		}
-
-		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		// Convert params field to Registry.
-		$registry = new Registry;
-		$registry->loadString($value->params);
-		$value->params = $registry->toArray();
-
-		return $value;
 	}
 
 	/**
@@ -94,39 +61,34 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 */
 	protected function populateState()
 	{
-		$app = JFactory::getApplication('site');
+		$app   = JFactory::getApplication('site');
+		$input = $app->input;
 
 		// Load state from the request.
-		$pk = $app->input->getInt('a_id');
+		$pk = $input->get('a_id', null, 'INTEGER');
 		$this->setState('mediafile.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
 
-		// Load the parameters.
+		// Load the parameters
+		/** @var jRegistry $params */
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
-
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
-
-		$t = $params->get('mediafileid');
-
-		if (!$t)
-		{
-			$input = new JInput;
-			$t     = $input->get('t', 1, 'int');
-		}
-
-		$template->id = $t;
-
-		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$admin    = JBSMParams::getAdmin();
+		$params->merge($admin);
+		$this->setState('admin', $params);
 
 		$this->setState('layout', $app->input->get('layout'));
+
+		$cdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$this->setState('mediafile.createdate', $cdate);
+
+		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$this->setState('mediafile.study_id', $study_id);
+
+		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$this->setState('mediafile.server_id', $server_id);
 	}
 
 }

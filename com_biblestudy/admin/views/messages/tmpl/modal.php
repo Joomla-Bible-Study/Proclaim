@@ -18,63 +18,20 @@ if (JFactory::getApplication()->isSite())
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.multiselect');
 JHtml::_('behavior.tooltip');
-$input = new JInput;
-$function = $input->get('function', 'jSelectStudy', 'cmd');
+$input     = new JInput;
+$function  = $input->get('function', 'jSelectStudy', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
 	method="post" name="adminForm" id="adminForm">
-	<fieldset id="filter clearfix">
-		<div class="filter-search btn-group pull-left">
-			<label for="filter_search"
-			       class="element-invisible"><?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?></label>
-			<input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"
-			       id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-			       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
-		</div>
-		<div class="btn-group pull-left hidden-phone">
-			<button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
-					class="icon-search"></i></button>
-			<button class="btn tip hasTooltip" type="button"
-			        onclick="document.id('filter_search').value='';this.form.submit();"
-			        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
-		</div>
-		<div class="right">
-			<select name="filter_book" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
-				<?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
-			</select>
-			<select name="filter_teacher" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
-				<?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
-			</select>
-			<select name="filter_series" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_SERIES'); ?></option>
-				<?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
-			</select>
-			<select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGETYPE'); ?></option>
-				<?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
-			</select>
-			<select name="filter_year" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
-				<?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
-			</select>
-			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter._published'), true); ?>
-			</select>
-			<select name="filter_language" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
-			</select>
-		</div>
-	</fieldset>
-	<div class="clr"></div>
+	<?php
+	// Search tools bar
+	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	?>
 
-	<table class="adminlist">
+	<table class="table table-striped table-condensed">
 		<thead>
 		<tr>
 			<th>

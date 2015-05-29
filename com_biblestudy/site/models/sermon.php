@@ -113,8 +113,8 @@ class BiblestudyModelSermon extends JModelItem
 				$query->select('b.bookname as bookname');
 				$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
 
-                $query->select('book2.bookname as bookname2');
-                $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
+				$query->select('book2.bookname as bookname2');
+				$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
 
 				// Join over locations
 				$query->select('l.id as lid, l.location_text');
@@ -143,6 +143,13 @@ class BiblestudyModelSermon extends JModelItem
 						->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
 				}
 
+				// Implement View Level Access
+				if (!$user->authorise('core.admin'))
+				{
+					$groups = implode(',', $user->getAuthorisedViewLevels());
+					$query->where('s.access IN (' . $groups . ')');
+				}
+
 				// Filter by published state.
 				$published = $this->getState('filter.published');
 				$archived  = $this->getState('filter.archived');
@@ -160,15 +167,15 @@ class BiblestudyModelSermon extends JModelItem
 				if (empty($data))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
-
-					return false;
+					return $data;
 				}
 
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
-					return false;
+					$data = null;
+					return $data;
 				}
 
 				// Concat topic_text and concat topic_params do not fit, so translate individually

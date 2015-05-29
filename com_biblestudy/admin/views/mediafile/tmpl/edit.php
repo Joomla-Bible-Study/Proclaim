@@ -18,11 +18,11 @@ JHtml::_('formbehavior.chosen', 'select');
 
 ?>
 <script type="text/javascript">
-    Joomla.submitbutton = function (task, server) {
-        if (task == 'mediafile.setServer') {
-            document.id('item-form').elements['jform[server_id]'].value = server;
-            Joomla.submitform(task, document.getElementById('item-form'));
-        } else if (task == 'mediafile.cancel') {
+    Joomla.submitbutton = function (task, server_id) {
+	    if (task == 'mediafile.setServer') {
+		    document.id('item-form').elements['jform[server_id]'].value = server_id;
+		    Joomla.submitform(task, document.id('item-form'));
+	    } else if (task == 'mediafile.cancel') {
             Joomla.submitform(task, document.getElementById('item-form'));
         } else if (task == 'mediafile.apply' || document.formvalidator.isValid(document.id('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
@@ -66,7 +66,7 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getLabel('study_id'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('study_id'); ?>
+                                    <?php echo $this->form->getInput('study_id', null, empty($this->item->study_id) ? $this->options->study_id : $this->item->study_id); ?>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -74,7 +74,7 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getLabel('createdate'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('createdate'); ?>
+                                    <?php echo $this->form->getInput('createdate', null, empty($this->item->createdate) ? $this->options->createdate : $this->item->createdate); ?>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -82,7 +82,7 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getLabel('server_id'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('server_id'); ?>
+                                    <?php echo $this->form->getInput('server_id', null, empty($this->item->server_id) ? $this->admin_params->get('server') : $this->item->server_id); ?>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -90,12 +90,20 @@ JHtml::_('formbehavior.chosen', 'select');
                                     <?php echo $this->form->getLabel('podcast_id'); ?>
                                 </div>
                                 <div class="controls">
-                                    <?php echo $this->form->getInput('podcast_id'); ?>
+                                    <?php echo $this->form->getInput('podcast_id', null, empty($this->item->podcast_id) ? $this->admin_params->get('podcast') : $this->item->podcast_id); ?>
                                 </div>
                             </div>
 
                         </div>
                         <div class="span3 form-vertical">
+	                        <div class="control-group">
+		                        <div class="control-label">
+			                        <?php echo $this->form->getLabel('id'); ?>
+		                        </div>
+		                        <div class="controls">
+			                        <?php echo $this->form->getInput('id'); ?>
+		                        </div>
+	                        </div>
                             <div class="control-group">
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('published'); ?>

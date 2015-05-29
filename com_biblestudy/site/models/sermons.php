@@ -43,7 +43,7 @@ class BiblestudyModelSermons extends JModelList
 				'study.studydate',
 				'study.studytitle',
 				'book.bookname',
-                'book.bookname2',
+				'book.bookname2',
 				'teacher.teachername',
 				'messageType.message_type',
 				'series.series_text',
@@ -77,8 +77,8 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$item->bookname   = JText::_($item->bookname);
 			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
-            $item->bookname2   = JText::_($item->bookname2);
-            $item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+			$item->bookname2   = JText::_($item->bookname2);
+			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -443,7 +443,6 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		$template->id = $t;
-
 		$this->setState('template', $template);
 		$this->setState('admin', $admin);
 
@@ -569,11 +568,10 @@ class BiblestudyModelSermons extends JModelList
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
-        $query->select('book2.bookname as bookname2');
-        $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
 
-
-        // Join over Plays/Downloads
+		// Join over Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
 			'SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
@@ -906,7 +904,7 @@ class BiblestudyModelSermons extends JModelList
 		if ($series >= 1)
 		{
 			$query->where('study.series_id = ' . (int) $series);
-            //echo $query->dump();
+
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
 		}
@@ -986,4 +984,33 @@ class BiblestudyModelSermons extends JModelList
 		return $query;
 	}
 
+	/**
+	 * Method to get a list of sermons.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   9.0.0
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
+	}
 }

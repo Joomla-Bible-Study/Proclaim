@@ -29,138 +29,12 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method to store a record
+	 * The type alias for this content type (for example, 'com_content.article').
 	 *
-	 * @access    public
-	 * @return    boolean    True on success
+	 * @var      string
+	 * @since    3.2
 	 */
-	public function store()
-	{
-		// Fix up special html fields
-
-		/** @var TableMessage $row */
-		$row        = $this->getTable();
-		$input      = new JInput;
-		$data       = $input->post;
-		$scriptures = null;
-
-		// Allows HTML content to come through to the database row
-		$data['studytext']           = $input->get('studytext', '', 'string');
-		$data['studyintro']          = str_replace('"', "'", $data['studyintro']);
-		$data['studynumber']         = str_replace('"', "'", $data['studynumber']);
-		$data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-
-		foreach ($data['scripture'] as $scripture)
-		{
-			if (!$data['text'][key($data['scripture'])] == '')
-			{
-				$scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
-			}
-			next($data['scripture']);
-		}
-		$data['scripture'] = implode(';', $scriptures);
-
-		// Bind the form fields to the table
-		if (!$row->bind($data))
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Make sure the record is valid
-		if (!$row->check())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Store the table to the database
-		// Checks to make sure a valid date field has been entered
-		if (!$row->studydate)
-		{
-			$row->studydate = date('Y-m-d H:i:s');
-		}
-		if (!$row->store())
-		{
-			$this->setError($this->_db->getErrorMsg());
-
-			return false;
-		}
-
-		// Get Tags
-		$vTags = $input->get('topic_tags', '', 'string');
-		$iTags = explode(",", $vTags);
-
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
-
-		foreach ($iTags as $aTag)
-		{
-			if (is_numeric($aTag))
-			{
-				// It's an existing tag.  Add it
-				if ($aTag != "")
-				{
-
-					$tagRow = JTable::getInstance('studytopics', 'Table');
-
-					$isDup = $this->isDuplicate($row->id, $aTag);
-
-					if (!$isDup)
-					{
-						$tagRow->study_id = $row->id;
-						$tagRow->topic_id = $aTag;
-
-						if (!$tagRow->store())
-						{
-							$this->setError($this->_db->getErrorMsg());
-
-							return false;
-						}
-					}
-				}
-			}
-			else
-			{
-				// It's a new tag.  Gotta insert it into the Topics table.
-				if ($aTag != "")
-				{
-					$topicRow             = JTable::getInstance('topic', 'Table');
-					$tempText             = $aTag;
-					$tempText             = str_replace("0_", "", $tempText);
-					$topicRow->topic_text = $tempText;
-					$topicRow->published  = 1;
-
-					if (!$topicRow->store())
-					{
-						$this->setError($this->_db->getErrorMsg());
-
-						return false;
-					}
-
-					// Gotta somehow make sure this isn't a duplicate...
-					$tagRow           = JTable::getInstance('studytopics', 'Table');
-					$tagRow->study_id = $row->id;
-					$tagRow->topic_id = $topicRow->id;
-
-					$isDup = $this->isDuplicate($row->id, $aTag);
-
-					if (!$isDup)
-					{
-						if (!$tagRow->store())
-						{
-							$this->setError($this->_db->getErrorMsg());
-
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		return true;
-	}
+	public $typeAlias = 'com_biblestudy.message';
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -271,7 +145,6 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		if ($topics)
 		{
-
 			foreach ($topics as $topic)
 			{
 				$text             = JBSMTranslated::getTopicItemTranslated($topic);
@@ -299,6 +172,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$query->select('m.id, m.language, m.createdate, m.params');
 		$query->from('#__bsms_mediafiles AS m');
 		$query->where('m.study_id = ' . (int) $this->getItem()->id);
+		$query->where('published =' . 1);
 		$query->order('m.createdate DESC');
 
 		// Join over the asset groups.
@@ -332,85 +206,24 @@ class BiblestudyModelMessage extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
-		$data   = $input->get('jform', false, 'array');
-		$files  = $input->files->get('jform');
-
-		// If no image uploaded, just save data as usual
-		if (empty($files['image']['tmp_name']))
+		if ($input->get('a_id'))
 		{
-			$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
-
-			return parent::save($data);
+			$data['id'] = $input->get('a_id');
 		}
 
 		$path = 'images/BibleStudy/studies/' . $data['id'];
-		JBSMThumbnail::create($files['image'], $path, $params->get('thumbnail_study_size'));
+
+		// If no image uploaded, just save data as usual
+		if (empty($data['thumbnailm']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
+		{
+			return parent::save($data);
+		}
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
 
 		// Modify model data
-		$data['thumbnailm'] = $path . '/thumb_' . $files['image']['name'];
-
-		$this->setTopics((int) $this->getState($this->getName() . '.id'), $data);
+		$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
-	}
-
-	/**
-	 * Routine to save the topics(tags)
-	 *
-	 * @param   int     $pks   Is the id of the record being saved.
-	 * @param   string  $data  from post
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.0.2
-	 */
-	public function setTopics($pks, $data)
-	{
-		if (empty($pks) && $pks != 0)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_NO_ITEM_SELECTED'));
-
-			return false;
-		}
-
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		// Clear the tags first
-		$query->delete();
-		$query->from('#__bsms_studytopics');
-		$query->where('study_id = ' . $pks);
-		$db->setQuery($query->__toString());
-
-		if (!$db->execute())
-		{
-			return false;
-		}
-		$query->clear();
-
-		// Add all the tags back
-		if ($data['topics'])
-		{
-			$topics = explode(",", $data['topics']);
-
-			foreach ($topics as $topic)
-			{
-				if ($topic)
-				{
-					$tdata           = new stdClass;
-					$tdata->topic_id = $topic;
-					$tdata->study_id = $pks;
-
-					if (!$db->insertObject('#__bsms_studytopics', $tdata))
-					{
-						return false;
-					}
-				}
-			}
-
-		}
-
-		return true;
 	}
 
 	/**
@@ -426,15 +239,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm(
-			'com_biblestudy.message',
-			'message',
-			array(
-				'control'   => 'jform',
-				'load_data' => $loadData
-			)
-		);
-
+		$form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
 			return false;
@@ -471,6 +276,38 @@ class BiblestudyModelMessage extends JModelAdmin
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Method to get media item
+	 *
+	 * @param   int  $pk  int
+	 *
+	 * @return  mixed|void
+	 *
+	 * @since   9.0.0
+	 */
+	public function getItem($pk = null)
+	{
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$pk = $jinput->get('a_id', 0);
+
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$pk = $jinput->get('id', 0);
+		}
+
+		if (!empty($this->data))
+		{
+			return $this->data;
+		}
+
+		return parent::getItem($pk);
 	}
 
 	/**

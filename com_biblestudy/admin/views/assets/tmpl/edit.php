@@ -26,6 +26,14 @@ JFactory::getDocument()->addScriptDeclaration("
 			{
 				Joomla.submitform(task, form);
 			}
+			elseif (task == 'admin.checkassets' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+			elseif (task == 'admin.fixAssets' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
 		};
 ");
 ?>
@@ -35,23 +43,22 @@ JFactory::getDocument()->addScriptDeclaration("
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
 
 			<div class="span2">
-				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.checkassets') ?>"><img
+				<a onclick="Joomla.submitbutton('admin.checkassets')">
+					<img
 						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
 						alt="Check Assets" height="48" width="48" style="clear: right"/>
-
 					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
 				</a>
 			</div>
 			<div class="span2">
-				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.fixAssets') ?>"><img
+				<a onclick="Joomla.submitbutton('admin.fixAssets')"><img
 						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
 						alt="Fix Assets" height="48" width="48"/>
-
 					<div><?php echo JText::_('JBS_ADM_FIX'); ?></div>
 				</a>
 			</div>
 			<div class="clearfix"></div>
-			<div class="table">
+			<div class="table table-bordered table-hover table-striped">
 				<?php
 				$input = new JInput;
 				$checkassets2 = $input->get('checkassets', null, 'array');
@@ -67,6 +74,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					echo '<th>' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_NULLROWS') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
+					echo '<th>' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
 					echo '<th>' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
 					echo '</tr>';
 					echo '</thead>';
@@ -96,6 +104,16 @@ JFactory::getDocument()->addScriptDeclaration("
 						}
 						echo JText::_($asset['matchrows']) . '</p></td>';
 						echo '<td>';
+						if ($asset['arulesrows'] > 0)
+						{
+							echo '<p style="color: red">';
+						}
+						else
+						{
+							echo '<p>';
+						}
+						echo JText::_($asset['arulesrows']) . '</p></td>';
+						echo '<td>';
 						if ($asset['nomatchrows'] > 0)
 						{
 							echo '<p style="color: red">';
@@ -114,9 +132,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				}
 				?>
 			</div>
-			<input type="hidden" name="option" value="com_biblestudy"/>
-			<input type="hidden" name="task" value="admin.checkassets"/>
-			<input type="hidden" name="controller" value="admin"/>
+			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="tooltype" value=""/>
 			<?php echo JHtml::_('form.token'); ?>
 		</div>

@@ -112,15 +112,12 @@ class BiblestudyViewMessages extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'message');
-		$modelView        = $this->getModel();
-		$this->items      = $modelView->getTranslated($items);
+		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
+		$modelView   = $this->getModel();
+		$this->items = $modelView->getTranslated($items);
 
-		$this->books        = $this->get('Books');
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -149,7 +146,6 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
 			$this->sidebar = JHtmlSidebar::render();
 		}
 
@@ -172,7 +168,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar  = JToolBar::getInstance('toolbar');
+		$bar = JToolBar::getInstance('toolbar');
 
 		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
 
@@ -216,48 +212,6 @@ class BiblestudyViewMessages extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-
-		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_TEACHER'),
-			'filter_teacher',
-			JHtml::_('select.options', JBSMBibleStudyHelper::getTeachers(), 'value', 'text', $this->state->get('filter.teacher'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_YEAR'),
-			'filter_year',
-			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_BOOK'),
-			'filter_book',
-			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_MESSAGETYPE'),
-			'filter_messagetype',
-			JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_LOCATION'),
-			'filter_location',
-			JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
-		);
 	}
 
 	/**

@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
-
+JLoader::register('TableServer', BIBLESTUDY_PATH_ADMIN . '/tables/server.php');
 /**
  * MediaFile model class
  *
@@ -95,13 +95,24 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($data)
 		{
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
-			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-			/* This code could be uncommented and would remove spaces from filename */
-			$data['filename'] = str_replace(' ', '%20', $data['filename']);
+			$params = new JRegistry;
+			$params->loadArray($data['params']);
+			if (isset($params->toObject()->size))
+			{
+				$table = new TableServer(JFactory::getDbo());
+				$table->load($data['server_id']);
 
-			// Remove starting and trailing spaces
-			$data['filename'] = trim($data['filename']);
+				$path = new JRegistry;
+				$path->loadString($table->params);
+
+				if ($table->type == 'legacy')
+				{
+					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $path->get('path') . '/' . $params->get('filename')));
+					$data['params'] = $params->toArray();
+				}
+			}
 			if (parent::save($data))
 			{
 				return true;
@@ -230,6 +241,19 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$pk = $jinput->get('a_id', 0);
+
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$pk = $jinput->get('id', 0);
+		}
+
 		if (!empty($this->data))
 		{
 			return $this->data;
@@ -239,6 +263,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if (!empty($this->data))
 		{
+			// Make Podcast Id to be array for view
+			if (!empty($this->data->podcast_id))
+			{
+				$this->data->podcast_id = explode(',', $this->data->podcast_id);
+			}
+
 			// Convert metadata field to array
 			$registry             = new Registry($this->data->metadata);
 			$this->data->metadata = $registry->toArray();
@@ -246,6 +276,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// Set the server_id from session if available or fall back on the db value
 			$server_id             = $this->getState('mediafile.server_id');
 			$this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
+
+			$study_id             = $this->getState('mediafile.study_id');
+			$this->data->study_id = empty($study_id) ? $this->data->study_id : $study_id;
+
+			$createdate             = $this->getState('mediafile.createdate');
+			$this->data->createdate = empty($createdate) ? $this->data->createdate : $createdate;
 
 		}
 
@@ -651,8 +687,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$this->setState('mediafile.id', $pk);
 
 		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
-
 		$this->setState('mediafile.server_id', $server_id);
+
+		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$this->setState('mediafile.study_id', $study_id);
+
+		$createdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$this->setState('mediafile.createdate', $createdate);
 	}
 
 	/**
@@ -670,5 +711,51 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$condition[] = 'study_id = ' . (int) $table->study_id;
 
 		return $condition;
+	}
+
+	/**
+	 * Method override to check-in a record or an array of record
+	 *
+	 * @param   mixed  $pks  The ID of the primary key or an array of IDs
+	 *
+	 * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
+	 *
+	 * @since   12.2
+	 */
+	public function checkin($pks = array())
+	{
+		$pks   = (array) $pks;
+		$table = $this->getTable();
+		$count = 0;
+
+		if (empty($pks))
+		{
+			$pks = array((int) $this->getState('mediafile.id'));
+		}
+
+		// Check in all items.
+		foreach ($pks as $pk)
+		{
+			if ($table->load($pk))
+			{
+				if ($table->checked_out > 0)
+				{
+					if (!parent::checkin($pk))
+					{
+						return false;
+					}
+
+					$count++;
+				}
+			}
+			else
+			{
+				$this->setError($table->getError());
+
+				return false;
+			}
+		}
+
+		return $count;
 	}
 }

@@ -101,6 +101,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
+			$language = JFactory::getLanguage();
+			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
 			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);

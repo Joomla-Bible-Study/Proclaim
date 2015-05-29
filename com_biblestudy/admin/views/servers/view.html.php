@@ -65,11 +65,13 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'server');
-		$this->types      = $this->get('ServerOptions');
+		$this->items         = $this->get('Items');
+		$this->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'server');
+		$this->types         = $this->get('ServerOptions');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -118,11 +120,6 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
-
-		// Get the toolbar object instance
-		$bar = JToolBar::getInstance('toolbar');
-
 		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'servers.png');
 
 		if ($this->canDo->get('core.create'))
@@ -152,26 +149,6 @@ class BiblestudyViewServers extends JViewLegacy
 		{
 			JToolBarHelper::trash('servers.trash');
 		}
-
-		// Add a batch button
-		if ($user->authorise('core.edit'))
-		{
-			JToolBarHelper::divider();
-			JHtml::_('bootstrap.modal', 'collapseModal');
-
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
-
-		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
 	}
 
 	/**

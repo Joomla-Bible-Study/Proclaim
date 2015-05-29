@@ -45,6 +45,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function template_import()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -306,7 +309,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 *
 	 * @return boolean
 	 */
-	public function performDB($query)
+	private function performDB($query)
 	{
 		$db = JFactory::getDBO();
 		$db->setQuery($query);
@@ -326,6 +329,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function template_export()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$input          = new JInput;
 		$data           = $input->get('template_export');
 		$exporttemplate = $data;

@@ -90,20 +90,22 @@ class BiblestudyViewMessagelist extends JViewLegacy
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
-		$this->books        = $this->get('Books');
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
-		$modelView          = $this->getModel();
-		$this->items        = $modelView->getTranslated($items);
+		$this->books         = $this->get('Books');
+		$this->teachers      = $this->get('Teachers');
+		$this->series        = $this->get('Series');
+		$this->messageTypes  = $this->get('MessageTypes');
+		$this->years         = $this->get('Years');
+		$modelView           = $this->getModel();
+		$this->items         = $modelView->getTranslated($items);
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 			return;
 		}

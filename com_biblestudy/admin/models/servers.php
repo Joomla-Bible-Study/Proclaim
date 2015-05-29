@@ -175,13 +175,17 @@ class BiblestudyModelServers extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user  = JFactory::getUser();
 
 		$query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
 		$query->from('#__bsms_servers AS server');
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-
+		if (JFactory::getApplication()->input->get('layout') == 'modal' && $published === '')
+		{
+			$published = 1;
+		}
 		if (is_numeric($published))
 		{
 			$query->where('server.published = ' . (int) $published);
@@ -191,12 +195,18 @@ class BiblestudyModelServers extends JModelList
 			$query->where('(server.published = 0 OR server.published = 1)');
 		}
 
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('server.access IN (' . $groups . ')');
+		}
+
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering');
-		$orderDirn = $this->state->get('list.direction');
+		$orderCol  = $this->state->get('list.ordering', 'server.server_name');
+		$orderDirn = $this->state->get('list.direction', 'DESC');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
 	}
-
 }

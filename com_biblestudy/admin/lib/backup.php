@@ -165,7 +165,7 @@ class JBSMBackup
 					}
 					else
 					{
-						$data[] = $db->qn($key) . "=" . $db->q(trim(preg_replace('/\s\s+/', '', $value)));
+						$data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(array("\r\n", "\r"), "\n", $value)));
 					}
 				}
 				$export .= implode(',', $data);

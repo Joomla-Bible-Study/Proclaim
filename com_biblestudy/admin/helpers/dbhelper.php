@@ -479,6 +479,14 @@ class JBSMDbHelper
 				}
 			}
 		}
+
+		// Remove old assets.
+		$query = $db->getQuery(true);
+		$query->delete('#__assets')
+			->where('name LIKE ' . $db->q('com_biblestudy.%'));
+		$db->setQuery($query);
+		$db->execute();
+
 		$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
 
 		return true;

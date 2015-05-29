@@ -88,6 +88,12 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafile');
 
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
+		$this->sortDirection = $this->state->get('list.direction');
+		$this->sortColumn    = $this->state->get('list.ordering');
+
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
@@ -159,6 +165,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			JToolBarHelper::unpublishList('mediafiles.unpublish');
 			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('mediafiles.archive');
+			JToolbarHelper::checkin('mediafiles.checkin');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
@@ -184,30 +191,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		}
 
 		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
-
-		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediafiles');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_CMN_SELECT_YEAR'),
-			'filter_mediaYears',
-			JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JBS_MED_FILTER_DOWNLOAD'),
-			'filter_download',
-			JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
-		);
 	}
 
 	/**

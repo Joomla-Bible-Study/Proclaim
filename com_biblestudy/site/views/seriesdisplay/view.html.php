@@ -183,7 +183,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 				}
 
 			}
-			//$this->seriesstudies = $studies;
 			$this->page          = $items;
 		}
 		// Prepare meta information (under development)

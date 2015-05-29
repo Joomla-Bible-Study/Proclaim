@@ -87,8 +87,11 @@ class BiblestudyModelServer extends JModelAdmin
 			$this->data->media = $registry->toArray();
 
 			// Set the type from session if available or fall back on the db value
-			$type             = $this->getState('server.type');
-			$this->data->type = empty($type) ? $this->data->type : $type;
+			$server_name             = $this->getState('server.server_name');
+			$this->data->server_name = empty($server_name) ? $this->data->server_name : $server_name;
+
+			$type                    = $this->getState('server.type');
+			$this->data->type        = empty($type) ? $this->data->type : $type;
 
 			// Load server type configuration if available
 			if ($this->data->type)
@@ -278,6 +281,9 @@ class BiblestudyModelServer extends JModelAdmin
 
 		$pk = $input->get('id', null, 'INTEGER');
 		$this->setState('server.id', $pk);
+
+		$sname = $app->getUserState('com_biblestudy.edit.server.server_name');
+		$this->setState('server.server_name', $sname);
 
 		$type = $app->getUserState('com_biblestudy.edit.server.type');
 		$this->setState('server.type', $type);

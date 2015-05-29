@@ -70,9 +70,9 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$this->form        = $this->get('Form');
 		$this->return_page = $this->get('ReturnPage');
 
-		$input        = new JInput;
-		$option       = $input->get('option', '', 'cmd');
-		$app = JFactory::getApplication();
+		$input  = new JInput;
+		$option = $input->get('option', '', 'cmd');
+		$app    = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$input->set('sid', $this->item->id);
@@ -85,7 +85,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		// Create a shortcut to the parameters.
 		$this->params = $this->state->template->params;
 
-		$this->user   = $user;
+		$this->user = $user;
 
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
@@ -131,7 +131,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-		$this->return_page_item = base64_encode(JURI::base() . '/index.php?option=com_biblestudy&view=squeezebox&tmpl=component');
+		$this->setLayout('edit');
 
 		$this->_prepareDocument();
 
@@ -145,9 +145,9 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
-		$menus   = $app->getMenu();
-		$title   = null;
+		$app   = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$title = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

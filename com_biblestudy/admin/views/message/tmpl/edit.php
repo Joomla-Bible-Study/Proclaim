@@ -23,7 +23,8 @@ $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
 
-$return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
+$return  = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
+$options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -200,7 +201,7 @@ $return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' 
 							<?php echo $this->form->getLabel('image'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('image'); ?>
+							<?php echo $this->form->getInput('image', null, $this->item->thumbnailm); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -395,7 +396,7 @@ $return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' 
 								<tr class="row<?php echo $i % 2; ?>">
 									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
-											. (int) $item->id . '&amp;return=' . $return; ?>
+											. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 										<a class="btn btn-primary" href="<?php echo $link; ?>"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
@@ -429,7 +430,7 @@ $return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' 
 						<tr>
 							<td colspan="5">
 								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;sid='
-									. $this->form->getValue('id') . '&amp;return=' . $return; ?>
+									. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return; ?>
 								<?php
 								if (empty($this->item->id))
 								{
@@ -456,13 +457,6 @@ $return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' 
 						</div>
 					</div>
 				</div>
-
-				<?php if ($this->canDo->get('core.admin')): ?>
-					<div class="tab-pane" id="permissions">
-						<?php echo $this->form->getInput('rules'); ?>
-					</div>
-				<?php endif; ?>
-				<?php echo JHtml::_('form.token'); ?>
 			</div>
 		</div>
 		<div class="span2 form-vertical">
@@ -521,5 +515,6 @@ $return = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' 
 		<?php echo $this->form->getInput('thumbnailm'); ?>
 		<?php echo $this->form->getInput('id'); ?>
 		<input type="hidden" name="task" value=""/>
+		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

@@ -28,7 +28,7 @@ class JBSMLanding
 	 *
 	 * @return string
 	 */
-	public function getLocationsLandingPage($params, $id)
+	public function getLocationsLandingPage($params, $id = 0)
 	{
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
@@ -98,6 +98,7 @@ class JBSMLanding
 			->where('b.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
+			->group('a.id')
 			->order('a.location_text ' . $order);
 		$db->setQuery($query);
 
@@ -247,7 +248,7 @@ class JBSMLanding
 	 *
 	 * @return string
 	 */
-	public function getTeacherLandingPage($params, $id)
+	public function getTeacherLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
 		$db        = JFactory::getDBO();
@@ -309,10 +310,10 @@ class JBSMLanding
 			->select('b.access')
 			->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
 			->where('b.language in (' . $language . ')')
-			->where('a.list_show = 1 and a.published = 1')
+			->where('a.published = 1')
 			->where('b.access IN (' . $groups . ')')
-			->where('b.published = 1')
 			->where('a.landing_show > 0')
+			->group('a.id')
 			->order('a.ordering, a.teachername ' . $order);
 		$db->setQuery($query);
 
@@ -488,7 +489,7 @@ class JBSMLanding
 	 *
 	 * @todo look like $numRows was not defined not sure if needed. TOM
 	 */
-	public function getSeriesLandingPage($params, $id)
+	public function getSeriesLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
 		$user      = JFactory::getUser();
@@ -549,6 +550,7 @@ class JBSMLanding
 			->where('a.language in (' . $language . ')')
 			->where('b.access IN (' . $groups . ')')
 			->where('b.published = 1')
+			->group('a.id')
 			->order('a.series_text ' . $order);
 		$db->setQuery($query);
 
@@ -725,12 +727,11 @@ class JBSMLanding
 	 *
 	 * @return string
 	 */
-	public function getYearsLandingPage($params, $id)
+	public function getYearsLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
 		$db        = JFactory::getDBO();
 		$user      = JFactory::getUser();
-		$input     = new JInput;
 		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
@@ -782,6 +783,7 @@ class JBSMLanding
 			->where('language in (' . $language . ')')
 			->where('access IN (' . $groups . ')')
 			->where('published = 1')
+			->group('year(studydate)')
 			->order('year(studydate) ' . $order);
 		$db->setQuery($query);
 
@@ -882,12 +884,12 @@ class JBSMLanding
 	 *
 	 * @return string
 	 */
-	public function getTopicsLandingPage($params, $id)
+	public function getTopicsLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
 		$user      = JFactory::getUser();
 		$db        = JFactory::getDBO();
-		$input     = new JInput;
+		$input     = $mainframe->input;
 		$order     = 'ASC';
 		$topic     = null;
 		$teacherid = null;
@@ -942,6 +944,7 @@ class JBSMLanding
 			->where('#__bsms_topics.published = 1')
 			->where('#__bsms_studies.published = 1')
 			->order('#__bsms_topics.topic_text ' . $order)
+			->group('id')
 			->where('#__bsms_studies.language in (' . $language . ')')
 			->where('#__bsms_studies.access IN (' . $groups . ')');
 		$db->setQuery($query);
@@ -1039,13 +1042,11 @@ class JBSMLanding
 	 *
 	 * @return string
 	 */
-	public function getMessageTypesLandingPage($params, $id)
+	public function getMessageTypesLandingPage($params, $id = 0)
 	{
 		$mainframe   = JFactory::getApplication();
 		$db          = JFactory::getDBO();
 		$user        = JFactory::getUser();
-		$input       = new JInput;
-		$input       = new JInput;
 		$messagetype = null;
 		$order       = 'ASC';
 		$teacherid   = null;
@@ -1109,6 +1110,7 @@ class JBSMLanding
 			->where('b.access IN (' . $groups . ')')
 			->where('b.published = 1')
 			->where('a.landing_show > 0')
+			->group('a.id')
 			->order('a.message_type ' . $order);
 		$db->setQuery($query);
 
@@ -1251,13 +1253,14 @@ class JBSMLanding
 	 * Get Books for Landing Page.
 	 *
 	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 */
-	public function getBooksLandingPage($params)
+	public function getBooksLandingPage($params, $id = 0)
 	{
 
-        $user     = JFactory::getUser();
+		$user     = JFactory::getUser();
 		$db       = JFactory::getDBO();
 		$order    = 'ASC';
 		$book     = null;
@@ -1310,9 +1313,9 @@ class JBSMLanding
 			$order = $params->get('landing_default_order', 'ASC');
 		}
 		// Compute view access permissions.
-        $groups = $user->getAuthorisedViewLevels();
-        $groups = array_unique($groups);
-        $groups = implode(',',$groups);
+		$groups = $user->getAuthorisedViewLevels();
+		$groups = array_unique($groups);
+		$groups = implode(',', $groups);
 		$query = $db->getQuery(true);
 		$query->select('distinct a.*')
 			->from('#__bsms_books a')
@@ -1322,7 +1325,7 @@ class JBSMLanding
 			->where('b.access IN (' . $groups . ')')
 			->where('b.published = 1')
 			->order('a.booknumber ' . $order)
-            ->group('a.bookname');
+			->group('a.bookname');
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();

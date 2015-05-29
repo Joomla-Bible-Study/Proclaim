@@ -91,6 +91,11 @@ class TableStyle extends JTable
 		$file        = JPATH_ROOT . '/media/com_biblestudy/css/site/' . $filename;
 		JFile::write($file, $filecontent);
 
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
 		return parent::store($updateNulls);
 	}
 

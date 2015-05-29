@@ -42,8 +42,6 @@ class BiblestudyControllerComment extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		// Set the model
 		$model = $this->getModel('Comment', '', array());
 

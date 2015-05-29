@@ -58,9 +58,9 @@ class JBSMMedia
 
 		if ($params->get('show_filesize') > 0 && isset($media))
 		{
-			$mediafile = '<div style="display:inline;">' . $mediafile .
+			$mediafile = $mediafile .
 				'<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' .
-				self::getFluidFilesize($media, $params) . '</div></div>';
+				self::getFluidFilesize($media, $params) . '</div>';
 		}
 
 		return $mediafile;
@@ -93,8 +93,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes .
-			' width="' . $return->width . '" height="' . $return->height . '">';
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 
 		return $imagereturn;
 	}
@@ -255,9 +254,9 @@ class JBSMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=0&amp;view=popup&amp;t="
-							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
-							$player->playerheight . "'); return false\">" . $image . "</a>";
+						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
+								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
+								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\">" . $image . "</a>";
 						break;
 				}
 
@@ -578,7 +577,15 @@ class JBSMMedia
 
 		$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 
-		if ($media->params->get('link_type') > 0)
+		if ($media->params->get('link_type'))
+		{
+			$link_type = $media->params->get('link_type');
+		}
+		else
+		{
+			$link_type = $media->smedia->get('link_type');
+		}
+		if ($link_type > 0)
 		{
 			$compat_mode = $params->get('compat_mode');
 
@@ -602,7 +609,8 @@ class JBSMMedia
 			}
 			$downloadlink .= $download_image . '</a>';
 		}
-		switch ($media->params->get('link_type'))
+
+		switch ($link_type)
 		{
 			case 0:
 				$table .= $playercode;

@@ -28,9 +28,18 @@
         <field name="filename" type="text" class="inputbox" label="JBS_STYLE_FILENAME"
                description="JBS_STYLE_FILENAME_DESC"
                size="75" required="true"/>
-        <field name="stylecode" type="editor" editor="codemirror|none" buttons="no" rows="20" cols="100"
-               label="JBS_STYLE_CODE" description="JBS_STYLE_CODE_DESC"
-               required="true" filter="raw"/>
+        <field name="stylecode"
+               type="editor"
+               editor="codemirror|none"
+               buttons="no"
+               label="JBS_STYLE_CODE"
+               description="JBS_STYLE_CODE_DESC"
+               height="500px"
+               rows="20"
+               cols="80"
+               required="true"
+               syntax="css"
+               filter="raw"/>
         <field name="asset_id" type="hidden" filter="unset"/>
         <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
                translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"

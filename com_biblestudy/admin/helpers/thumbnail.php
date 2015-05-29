@@ -9,6 +9,9 @@
  */
 defined('_JEXEC') or die;
 
+jimport('joomla.filesystem.file');
+jimport('joomla.filesystem.folder');
+
 /**
  * Thumbnail helper class
  *
@@ -31,8 +34,9 @@ class JBSMThumbnail
 	 */
 	public static function create($file, $path, $size = 100)
 	{
-		$original = JPATH_ROOT . '/' . $path . '/original_' . $file['name'];
-		$thumb    = JPATH_ROOT . '/' . $path . '/thumb_' . $file['name'];
+		$name = basename($file);
+		$original = JPATH_ROOT . '/' . $file;
+		$thumb    = JPATH_ROOT . '/' . $path . '/thumb_' . $name;
 
 		// Delete destination folder if it exists
 		if (JFolder::exists(JPATH_ROOT . '/' . $path))
@@ -42,11 +46,10 @@ class JBSMThumbnail
 
 		// Move uploaded image to destination
 		JFolder::create(JPATH_ROOT . '/' . $path);
-		JFile::move($file['tmp_name'], $original);
 
 		// Create thumbnail
 		$image     = new JImage($original);
-		$thumbnail = $image->resize($size, $size);
+		$thumbnail = $image->resize($size, $size, true);
 		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
 	}
 
@@ -73,5 +76,26 @@ class JBSMThumbnail
 		$image     = new JImage($path);
 		$thumbnail = $image->resize($new_size, $new_size);
 		$thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
+	}
+
+	/**
+	 * Resize image
+	 *
+	 * @param   string  $path  Path to file
+	 * @param   string  $file  file to check
+	 *
+	 * @return null
+	 */
+	public static function check($path, $file = null)
+	{
+		if(!JFolder::exists($path))
+		{
+			return false;
+		}
+		elseif ($file)
+		{
+			return JFile::exists(JPATH_ROOT . $path . $file);
+		}
+		return true;
 	}
 }
