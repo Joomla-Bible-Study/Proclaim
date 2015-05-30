@@ -140,8 +140,15 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$server_id = $this->data->server_id;
 		if (empty($server_id))
 		{
-			// @TODO This may not be optimal, seems like a hack
-			return new JForm("No-op");
+			/** @var JRegistry $admin */
+			$admin                 = JBSMParams::getAdmin()->params;
+			$server_id             = $admin->get('server');
+			$this->data->server_id = $server_id;
+			if (empty($server_id))
+			{
+				// @TODO This may not be optimal, seems like a hack
+				return new JForm("No Default Server");
+			}
 		}
 		// Reverse lookup server_id to server type
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
