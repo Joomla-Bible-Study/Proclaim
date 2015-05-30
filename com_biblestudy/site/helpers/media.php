@@ -93,7 +93,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
+		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left">';
 
 		return $imagereturn;
 	}
@@ -108,7 +108,6 @@ class JBSMMedia
 	 */
 	public function getPlayerAttributes($params, $media)
 	{
-
 		$player               = new stdClass;
 		$player->playerwidth  = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');

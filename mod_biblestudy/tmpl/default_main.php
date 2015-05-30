@@ -48,3 +48,4 @@ $JBSMListing = new JBSMListing;
 	</div>
 	<!--end of footer div-->
 </div> <!--end container -->
+<div style="clear: both"></div>
