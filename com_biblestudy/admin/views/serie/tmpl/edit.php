@@ -92,7 +92,7 @@ $input = $app->input;
 									<?php echo $this->form->getLabel('image'); ?>
 								</div>
 								<div class="controls">
-									<?php echo $this->form->getInput('image'); ?>
+									<?php echo $this->form->getInput('image', null, $this->item->series_thumbnail); ?>
 								</div>
 							</div>
 						</div>
