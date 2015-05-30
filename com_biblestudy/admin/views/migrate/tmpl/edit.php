@@ -15,8 +15,23 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
 
 defined('_JEXEC') or die;
+
+JFactory::getDocument()->addScriptDeclaration("
+		Joomla.submitbutton = function(task)
+		{
+			var form = document.getElementById('item-assets');
+			if (task == 'admin.back' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+			elseif (task == 'admin.doimport' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+		};
+");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" enctype="multipart/form-data"
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&id=1'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<div class="span12 form-horizontal">
@@ -61,8 +76,7 @@ defined('_JEXEC') or die;
 				</div>
 			</div>
 			<div class="control-group">
-				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
-				       name="submit"/>
+				<button onclick="Joomla.submitbutton('admin.doimport')" class="btn btn-primary"><?php echo JText::_('JBS_CMN_SUBMIT'); ?></button>
 				<a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
 					<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
 				</a>
@@ -78,8 +92,6 @@ defined('_JEXEC') or die;
 		</div>
 	</div>
 	</div>
-	<input type="hidden" name="option" value="com_biblestudy"/>
 	<input type="hidden" name="task" value="admin.doimport"/>
-	<input type="hidden" name="controller" value="admin"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>
