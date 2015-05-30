@@ -162,7 +162,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		$params = JBSMParams::getAdmin()->params;
 
 		// If no image uploaded, just save data as usual
-		if (empty($data['teacher_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
+		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
 			return parent::save($data);
 		}

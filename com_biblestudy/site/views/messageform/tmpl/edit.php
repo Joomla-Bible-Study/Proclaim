@@ -63,6 +63,10 @@ $input  = $app->input;
 					<li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
 					<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
 					<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
+					<?php if ($this->canDo->get('core.admin')): ?>
+						<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+						</li>
+					<?php endif ?>
 				</ul>
 				<div class="tab-content">
 					<!-- Begin Tabs -->
@@ -208,7 +212,7 @@ $input  = $app->input;
 								<?php echo $this->form->getLabel('image'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('image'); ?>
+								<?php echo $this->form->getInput('image', null, $this->item->thumbnailm); ?>
 							</div>
 						</div>
 						<div class="control-group">
@@ -382,7 +386,7 @@ $input  = $app->input;
 								<?php echo $this->form->getInput('id'); ?>
 							</div>
 						</div>
-					</div>
+					</div><?php dump($this->canDo->get('core.admin')); ?>
 					<?php if ($this->canDo->get('core.admin')): ?>
 						<div class="tab-pane" id="permissions">
 
