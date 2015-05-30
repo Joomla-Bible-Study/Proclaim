@@ -6,7 +6,7 @@
         <media_resource>filename</media_resource>
     </config>
     <fields name="media">
-        <fieldset name="params" label="Parameters">
+        <fieldset name="params" label="JBS_ADDON_LOCAL_PARAMETERS">
             <field name="baseurl" type="text" label="JBS_ADDON_LOCAL_BASE" description="JBS_ADDON_LOCAL_BASE" required="true"/>
         </fieldset>
     </fields>

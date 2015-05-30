@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
     <fields name="params">
-        <fieldset name="upload" label="Upload">
-            <field name="upload" type="upload" label="Upload" description="Upload here"
+        <fieldset name="upload" label="JBS_ADDON_LOCAL_DETAILS">
+            <field name="upload" type="upload" label="JBS_ADDON_LOCAL_UPLOAD" description="JBS_ADDON_LOCAL_UPLOAD_DESC"
                     handler="upload" class="input required" required="true"/>
         </fieldset>
     </fields>
