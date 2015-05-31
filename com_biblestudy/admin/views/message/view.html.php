@@ -36,13 +36,6 @@ class BiblestudyViewMessage extends JViewLegacy
 	protected $item;
 
 	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * Admin
 	 *
 	 * @var array

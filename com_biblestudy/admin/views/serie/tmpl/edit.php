@@ -19,10 +19,6 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-// Create shortcut to parameters.
-$params = $this->state->get('params');
-$params = $params->toArray();
-
 $app = JFactory::getApplication();
 $input = $app->input;
 ?>
@@ -92,7 +88,7 @@ $input = $app->input;
 									<?php echo $this->form->getLabel('image'); ?>
 								</div>
 								<div class="controls">
-									<?php echo $this->form->getInput('image', null, $this->item->series_thumbnail); ?>
+									<?php echo $this->form->getInput('image', null, empty($this->item->series_thumbnail) ? $this->admin_params->get('default_series_image') : $this->item->series_thumbnail); ?>
 								</div>
 							</div>
 						</div>

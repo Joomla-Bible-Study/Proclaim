@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * JView class for Serie
  *
@@ -41,18 +43,11 @@ class BiblestudyViewSerie extends JViewLegacy
 	protected $item;
 
 	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * Admin
 	 *
-	 * @var object
+	 * @var Registry
 	 */
-	protected $admin;
+	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
@@ -65,8 +60,11 @@ class BiblestudyViewSerie extends JViewLegacy
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'serie');
+		$admin = JBSMParams::getAdmin();
+		$registry    = new Registry;
+		$registry->loadString($admin->params);
+		$this->admin_params = $registry;
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
