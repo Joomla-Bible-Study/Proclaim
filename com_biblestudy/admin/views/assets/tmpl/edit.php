@@ -58,32 +58,32 @@ JFactory::getDocument()->addScriptDeclaration("
 				</a>
 			</div>
 			<div class="clearfix"></div>
-			<div class="table table-bordered table-hover table-striped">
+			<div class="table table-hover table-striped">
 				<?php
 				$input = new JInput;
 				$checkassets2 = $input->get('checkassets', null, 'array');
 
 				if ($checkassets2)
 				{
-					echo '<table>';
+					echo '<table style="border: 1px solid">';
 					echo '<caption><h2>' . JText::_('JBS_ADM_ASSET_TABLE_NAME') . '</h2></caption>';
 					echo '<thead>';
 					echo '<tr>';
 
-					echo '<th>' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
-					echo '<th>' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
-					echo '<th>' . JText::_('JBS_ADM_NULLROWS') . '</th>';
-					echo '<th>' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
-					echo '<th>' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
-					echo '<th>' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
+					echo '<th style="width: 20%;" class="center">' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
+					echo '<th class="center">' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
+					echo '<th class="center">' . JText::_('JBS_ADM_NULLROWS') . '</th>';
+					echo '<th class="center">' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
+					echo '<th class="center">' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
+					echo '<th class="center">' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
 					echo '</tr>';
 					echo '</thead>';
 					foreach ($checkassets2 as $asset)
 					{
 						echo '<tr>';
 						echo '<td><p>' . JText::_($asset['realname']) . '</p></td>';
-						echo '<td><p>' . JText::_($asset['numrows']) . '</p></td>';
-						echo '<td>';
+						echo '<td class="center"><p>' . JText::_($asset['numrows']) . '</p></td>';
+						echo '<td class="center">';
 						if ($asset['nullrows'] > 0)
 						{
 							echo '<p style="color: red;">';
@@ -93,7 +93,7 @@ JFactory::getDocument()->addScriptDeclaration("
 							echo '<p>';
 						}
 						echo JText::_($asset['nullrows']) . '</p></td>';
-						echo '<td>';
+						echo '<td class="center">';
 						if ($asset['matchrows'] > 0)
 						{
 							echo '<p style="color: green">';
@@ -103,7 +103,7 @@ JFactory::getDocument()->addScriptDeclaration("
 							echo '<p>';
 						}
 						echo JText::_($asset['matchrows']) . '</p></td>';
-						echo '<td>';
+						echo '<td class="center">';
 						if ($asset['arulesrows'] > 0)
 						{
 							echo '<p style="color: red">';
@@ -113,7 +113,7 @@ JFactory::getDocument()->addScriptDeclaration("
 							echo '<p>';
 						}
 						echo JText::_($asset['arulesrows']) . '</p></td>';
-						echo '<td>';
+						echo '<td class="center">';
 						if ($asset['nomatchrows'] > 0)
 						{
 							echo '<p style="color: red">';
@@ -125,7 +125,7 @@ JFactory::getDocument()->addScriptDeclaration("
 						echo JText::_($asset['nomatchrows']) . '</p></td>';
 						echo '</tr>';
 					}
-					echo '<tr><td colspan="5">';
+					echo '<tr><td colspan="6">';
 					echo '<p>' . JText::_('JBS_ADM_ASSET_EXPLANATION') . '</p>';
 					echo '</td></tr>';
 					echo '</table>';

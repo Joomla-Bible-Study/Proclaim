@@ -40,9 +40,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 */
 	public function execute($task)
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		if ($task != 'run')
 		{
 			$task = 'browse';
@@ -57,9 +54,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 */
 	public function browse()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$app = JFactory::getApplication();
 		/** @var BibleStudyModelMigration $model */
 		$model = $this->getModel('migration');
@@ -78,9 +72,6 @@ class BiblestudyControllerMigration extends JControllerLegacy
 	 */
 	public function run()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
 		$app   = JFactory::getApplication();
 		$model = $this->getModel('migration');
 		$state = $model->run();

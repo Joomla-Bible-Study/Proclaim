@@ -162,13 +162,13 @@ class BiblestudyModelTeacher extends JModelAdmin
 		$params = JBSMParams::getAdmin()->params;
 
 		// If no image uploaded, just save data as usual
-		if (empty($data['teacher_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
+		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
 			return parent::save($data);
 		}
 
 		$path = 'images/BibleStudy/studies/' . $data['id'];
-		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size'));
+		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
 		$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];

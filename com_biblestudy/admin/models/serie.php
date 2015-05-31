@@ -122,7 +122,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		}
 
 		// If no image uploaded, just save data as usual
-		if (empty($data['series_thumbnail']) && (empty($data['image']) || strpos($data['image'], 'thumb_') !== false))
+		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
 			return parent::save($data);
 		}

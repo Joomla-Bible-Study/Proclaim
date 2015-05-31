@@ -309,10 +309,11 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit', 'string');
-		$return = $this->input->getCmd('return');
-		$append = '';
+		$tmpl    = $this->input->get('tmpl');
+		$layout  = $this->input->get('layout', 'edit', 'string');
+		$options = $this->input->get('options');
+		$return  = $this->input->getCmd('return');
+		$append  = '';
 
 		// Setup redirect info.
 		if ($tmpl)
@@ -333,6 +334,11 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		if ($return)
 		{
 			$append .= '&return=' . $return;
+		}
+
+		if ($options)
+		{
+			$append .= '&options=' . $options;
 		}
 
 		return $append;

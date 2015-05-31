@@ -19,7 +19,9 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
 
-$return = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
+$return  = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
+$options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
+
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
 $input  = $app->input;
@@ -61,6 +63,10 @@ $input  = $app->input;
 					<li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
 					<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
 					<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
+					<?php if ($this->canDo->get('core.admin')): ?>
+						<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+						</li>
+					<?php endif ?>
 				</ul>
 				<div class="tab-content">
 					<!-- Begin Tabs -->
@@ -206,7 +212,7 @@ $input  = $app->input;
 								<?php echo $this->form->getLabel('image'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('image'); ?>
+								<?php echo $this->form->getInput('image', null, $this->item->thumbnailm); ?>
 							</div>
 						</div>
 						<div class="control-group">
@@ -380,7 +386,7 @@ $input  = $app->input;
 								<?php echo $this->form->getInput('id'); ?>
 							</div>
 						</div>
-					</div>
+					</div><?php dump($this->canDo->get('core.admin')); ?>
 					<?php if ($this->canDo->get('core.admin')): ?>
 						<div class="tab-pane" id="permissions">
 
@@ -427,7 +433,7 @@ $input  = $app->input;
 									<tr class="row<?php echo $i % 2; ?>">
 										<td>
 											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id='
-													. (int) $item->id . '&amp;return=' . $return; ?>
+													. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 											<a class="btn btn-primary" href="<?php echo $link; ?>"
 											   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 												<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
@@ -451,8 +457,8 @@ $input  = $app->input;
 							<tfoot>
 							<tr>
 								<td colspan="4">
-									<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id=0&amp;sid=' .
-											$this->form->getValue('id') . '&amp;tmpl=component&amp;view=mediafileform&amp;layout=modal&amp;return=' . $this->return_page_item; ?>
+									<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;sid='
+											. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return;  ?>
 									<?php
 									if (empty($this->item->id))
 									{
@@ -462,9 +468,7 @@ $input  = $app->input;
 									else
 									{
 										?>
-										<a class="btn btn-primary"
-										   onclick="SqueezeBox.fromElement(this, {handler:'iframe', size: {x: 900, y: 550}, url:'<?php echo $link; ?>'})"
-										   title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+										<a class="btn btn-primary" href="<?php echo $link; ?>" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
 											<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
 									}
 									?>

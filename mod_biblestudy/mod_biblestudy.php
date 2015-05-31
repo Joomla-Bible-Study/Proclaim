@@ -32,7 +32,7 @@ $document = JFactory::getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
-$template = JBSMParams::getTemplateparams();
+$template = JBSMParams::getTemplateparams($templatemenuid);
 $pagebuilder = new JBSMPagebuilder;
 
 $admin = JBSMParams::getAdmin();
