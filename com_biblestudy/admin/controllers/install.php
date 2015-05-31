@@ -30,29 +30,4 @@ class BiblestudyControllerInstall extends JControllerForm
 	{
 		parent::__construct($config);
 	}
-
-	/**
-	 * Fix Assets
-	 *
-	 * @return void
-	 */
-	public function fixAssets()
-	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		$asset      = new JBSMAssets;
-		$fix_assets = $asset->fixAssets();
-		$input      = new JInput;
-		$input->set('messages', $fix_assets);
-
-		$jbsname = $input->get('jbsname');
-		$jbstype = $input->get('jbstype');
-
-		if ($jbsname)
-		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
-		}
-	}
-
 }

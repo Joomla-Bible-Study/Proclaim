@@ -52,7 +52,6 @@ class BiblestudyController extends JControllerLegacy
 
 		$view   = $app->input->getCmd('view', 'cpanel');
 		$layout = $app->input->getCmd('layout', 'default');
-		$id     = $app->input->getInt('id');
 
 		if ($layout !== 'modal')
 		{
@@ -68,7 +67,11 @@ class BiblestudyController extends JControllerLegacy
 			JBSMDbHelper::setinstallstate();
 			$cache = new JCache(array('defaultgroup' => 'default'));
 			$cache->clean();
-			$this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
+			$fixassets = new JBSMAssets();
+			$fix_assets = $fixassets->fixassets();
+			$this->input->set('messages', $fix_assets);
+			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
+
 		}
 		$type = $app->input->getWord('view');
 
@@ -94,26 +97,6 @@ class BiblestudyController extends JControllerLegacy
 						$this->setRedirect('index.php?option=com_biblestudy&view=admin ', $popups);
 						break;
 				}
-			}
-		}
-
-		if ($app->input->getCmd('view') == 'study')
-		{
-			$model = $this->getModel('study');
-		}
-		$fixassets = $app->input->getWord('task ', ' ', 'get');
-
-		if ($fixassets == 'fixassetid')
-		{
-			$dofix = fixJBSAssets::fixassets();
-
-			if (!$dofix)
-			{
-				$app->enqueueMessage('SOME_ERROR_CODE', ' Fix Asset Function not successful', 'notice');
-			}
-			else
-			{
-				$app->enqueueMessage('SOME_ERROR_CODE ', 'Fix assets successful', 'notice');
 			}
 		}
 

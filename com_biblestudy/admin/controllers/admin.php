@@ -360,8 +360,18 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		$app   = JFactory::getApplication();
 		$asset = new JBSMAssets;
-		$asset->fixAssets();
+		$dofix = $asset->fixAssets();
+
+		if (!$dofix)
+		{
+			$app->enqueueMessage(JText::_('JBS_ADM_ASSET_FIX_ERROR'), 'notice');
+		}
+		else
+		{
+			$app->enqueueMessage(JText::_('JBS_ADM_ASSET_FIXED'), 'notice');
+		}
 		if (!$dbReset)
 		{
 			$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
