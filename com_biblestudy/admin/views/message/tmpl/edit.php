@@ -201,7 +201,7 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 							<?php echo $this->form->getLabel('image'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('image', null, $this->item->thumbnailm); ?>
+							<?php echo $this->form->getInput('image', null, empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm); ?>
 						</div>
 					</div>
 					<div class="control-group">

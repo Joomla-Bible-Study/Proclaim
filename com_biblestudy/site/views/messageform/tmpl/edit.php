@@ -212,7 +212,7 @@ $input  = $app->input;
 								<?php echo $this->form->getLabel('image'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('image', null, $this->item->thumbnailm); ?>
+								<?php echo $this->form->getInput('image', null, empty($this->item->thumbnailm) ? $this->params->get('default_study_image') : $this->item->thumbnailm); ?>
 							</div>
 						</div>
 						<div class="control-group">
