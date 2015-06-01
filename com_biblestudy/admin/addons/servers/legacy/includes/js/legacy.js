@@ -1,5 +1,3 @@
-'use strict';
-
 jQuery(document).ready(function () {
     window.uploader = new plupload.Uploader({
         runtimes: 'html5',

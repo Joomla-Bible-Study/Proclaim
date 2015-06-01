@@ -127,7 +127,7 @@ class BiblestudyModelSerie extends JModelAdmin
 			return parent::save($data);
 		}
 
-		$path = 'images/BibleStudy/series/' . $data['id'];
+		$path = 'images/biblestudy/series/' . $data['id'];
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
 
 		// Modify model data

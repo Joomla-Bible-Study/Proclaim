@@ -211,7 +211,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			$data['id'] = $input->get('a_id');
 		}
 
-		$path = 'images/BibleStudy/studies/' . $data['id'];
+		$path = 'images/biblestudy/studies/' . $data['id'];
 
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)

@@ -97,19 +97,25 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
 			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-			$params = new JRegistry;
+			$params = new Registry;
 			$params->loadArray($data['params']);
 			if (isset($params->toObject()->size))
 			{
 				$table = new TableServer(JFactory::getDbo());
 				$table->load($data['server_id']);
 
-				$path = new JRegistry;
+				$path = new Registry;
 				$path->loadString($table->params);
+
+				$set_path = '';
+				if ($path->get('path'))
+				{
+					$set_path = $path->get('path') . '/';
+				}
 
 				if ($table->type == 'legacy')
 				{
-					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $path->get('path') . '/' . $params->get('filename')));
+					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol', rtrim(JUri::root(), '/')) . $set_path . $params->get('filename')));
 					$data['params'] = $params->toArray();
 				}
 			}

@@ -43,7 +43,7 @@ class JFormFieldPlupload extends JFormField
                 uploader.bind("BeforeUpload", function() {
                     uploader.setOption("multipart_params", {
                         handler: "' . $this->element["handler"] . '",
-                        path: jQuery("#jform_params_filename").val()
+                        path: "/images/biblestudy/media/"
                     });
                 });
                 uploader.init();
