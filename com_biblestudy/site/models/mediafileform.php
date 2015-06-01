@@ -76,7 +76,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$params = $app->getParams();
 		$this->setState('params', $params);
 		$admin    = JBSMParams::getAdmin();
-		$params->merge($admin);
+		$params->merge($admin->params);
 		$this->setState('admin', $params);
 
 		$this->setState('layout', $app->input->get('layout'));

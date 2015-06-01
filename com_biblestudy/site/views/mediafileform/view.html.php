@@ -40,14 +40,11 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	/** @var array State */
 	protected $state;
 
-	/** @var array Admin */
-	protected $admin;
-
 	/** @var  Registry Params */
 	protected $params;
 
-	/** @var  Registry Admin Params */
-	protected $admin_params;
+	/** @var  object Media Form */
+	protected $media_form;
 
 	/** @var  string Can Do */
 	protected $canDo;
