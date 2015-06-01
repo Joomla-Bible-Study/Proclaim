@@ -34,12 +34,11 @@ class JFormFieldPlupload extends JFormField
 		// Include Plupload libraries
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
-
 		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
-
+		$view = JFactory::getApplication()->input->get('view');
 		$document->addScriptDeclaration('
             jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_biblestudy&task=mediafile.xhr&' . JSession::getFormToken() . '=1");
+                uploader.setOption("url", "index.php?option=com_biblestudy&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
                 uploader.bind("BeforeUpload", function() {
                     uploader.setOption("multipart_params", {
                         handler: "' . $this->element["handler"] . '",

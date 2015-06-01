@@ -92,6 +92,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		return true;
 	}
+
 	/**
 	 * Handles XHR requests (i.e. File uploads)
 	 *
