@@ -386,7 +386,7 @@ $input  = $app->input;
 								<?php echo $this->form->getInput('id'); ?>
 							</div>
 						</div>
-					</div><?php dump($this->canDo->get('core.admin')); ?>
+					</div>
 					<?php if ($this->canDo->get('core.admin')): ?>
 						<div class="tab-pane" id="permissions">
 
