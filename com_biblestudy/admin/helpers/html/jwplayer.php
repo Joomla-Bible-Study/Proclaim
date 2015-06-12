@@ -126,7 +126,7 @@ abstract class JHtmlJwplayer
 		}
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
 						jwplayer('placeholder" . $id . "').setup({
-							'file': '" . $media->path1 . "',;
+							'file': '" . $media->path1 . "',
 							";
 		if ($params->playerresponsive == 0)
 		{
