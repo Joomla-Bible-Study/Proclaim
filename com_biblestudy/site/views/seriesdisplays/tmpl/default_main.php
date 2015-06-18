@@ -22,7 +22,32 @@ $series_menu = $this->params->get('series_id', 1);
 
 $params = $this->params;
 $url = $params->get('stylesheet');
-
+switch ($this->params->get('series_element'))
+{
+    case 0:
+        $classelement = '';
+        break;
+    case 1:
+        $classelement = 'p';
+        break;
+    case 2:
+        $classelement = 'h1';
+        break;
+    case 3:
+        $classelement = 'h2';
+        break;
+    case 4:
+        $classelement = 'h3';
+        break;
+    case 5:
+        $classelement = 'h4';
+        break;
+    case 6:
+        $classelement = 'h5';
+        break;
+    case 7:
+        $classelement = 'blockquote';
+}
 if ($url)
 {
 	$document->addStyleSheet($url);
@@ -33,7 +58,7 @@ if ($url)
 	<form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
 		<div class="hero-unit"> <!-- This div is the header container -->
 
-			<h1 class="componentheading">
+			<<?php echo $classelement; ?> class="componentheading">
 				<?php
 				if ($this->params->get('show_page_image_series'))
 				{
@@ -48,7 +73,7 @@ if ($url)
 					echo $this->params->get('series_title');
 				}
 				?>
-			</h1>
+			</<?php echo $classelement; ?>>
 		</div>
 		<!--header-->
 

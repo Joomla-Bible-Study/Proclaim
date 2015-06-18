@@ -1144,6 +1144,7 @@
             <field name="show_page_image_series"  type="media" directory="/" size="60"
                    label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
                    description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
+            <field name="series_element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="use_headers_series" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
                 <option value="0">JBS_TPL_NO_HEADER_ROW</option>
