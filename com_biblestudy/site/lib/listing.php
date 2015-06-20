@@ -1534,32 +1534,8 @@ class JBSMListing
 				$customclass = $row->custom;
 			}
 		}
-		switch ($row->element)
-		{
-			case 0:
-				$classelement = '';
-				break;
-			case 1:
-				$classelement = 'p';
-				break;
-			case 2:
-				$classelement = 'h1';
-				break;
-			case 3:
-				$classelement = 'h2';
-				break;
-			case 4:
-				$classelement = 'h3';
-				break;
-			case 5:
-				$classelement = 'h4';
-				break;
-			case 6:
-				$classelement = 'h5';
-				break;
-			case 7:
-				$classelement = 'blockquote';
-		}
+		$classelement = $this->createelement($row->element);
+
 		if ($header == 1)
 		{
 			$classelement = '';
@@ -2812,4 +2788,34 @@ class JBSMListing
 		return $short;
 	}
 
+    public function createelement($element)
+    {
+        switch ($element)
+        {
+            case 0:
+                $classelement = '';
+                break;
+            case 1:
+                $classelement = 'p';
+                break;
+            case 2:
+                $classelement = 'h1';
+                break;
+            case 3:
+                $classelement = 'h2';
+                break;
+            case 4:
+                $classelement = 'h3';
+                break;
+            case 5:
+                $classelement = 'h4';
+                break;
+            case 6:
+                $classelement = 'h5';
+                break;
+            case 7:
+                $classelement = 'blockquote';
+        }
+        return $classelement;
+    }
 }

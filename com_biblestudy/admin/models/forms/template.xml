@@ -307,6 +307,7 @@
             </field>
             <field name="page_title" type="text" default="Bible Studies"
                    label="JBS_TPL_PAGE_TITLE"/>
+            <field name="studies_element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="use_headers_list" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
                 <option value="0">JBS_TPL_NO_HEADER_ROW</option>
@@ -824,7 +825,7 @@
         <fieldset name="TEACHER" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="teacher_title" type="text" default="Our Teachers"
                    label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
-
+            <field name="teachers_element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC" />
             <field name="useexpert_teacherlist" type="list" default="0"
                    label="JBS_TPL_CUSTOM_VIEW_TEACHERLIST" description="JBS_TPL_CUSTOM_VIEW_DESC">
                 <option value="0">JBS_CMN_DONT_USE</option>

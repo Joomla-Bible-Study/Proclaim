@@ -16,6 +16,8 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher = new JBSMTeacher;
 $teachers = $JBSMTeacher->getTeachersFluid($this->params);
+$listing = new JBSMListing;
+$classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
 
 <div class="container-fluid">
@@ -70,7 +72,7 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 				<?php if ($this->params->get('show_page_image') > 0)
 				{ ?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>"><?php } ?>
 				<?php if ($this->params->get('show_page_title') == 1)
-				{ ?><h2><?php echo $this->params->get('page_title'); ?></h2><?php } ?>
+				{ ?><<?php echo $classelement; ?> class="componentheading"><?php echo $this->params->get('page_title'); ?></<?php echo $classelement; ?>><?php } ?>
 				<?php if ($this->params->get('list_intro'))
 				{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
 			</div>
@@ -84,7 +86,7 @@ $teachers = $JBSMTeacher->getTeachersFluid($this->params);
 
 	<?php echo $this->page->dropdowns; ?>
 	<hr/>
-	<?php $listing = new JBSMListing;
+	<?php
 	$list = $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
 	echo $list;
 	?>

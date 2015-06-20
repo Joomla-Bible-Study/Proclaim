@@ -9,14 +9,15 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+$listing = new JBSMListing;
+$classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container-fluid">
-	<div class="row-fluid">
+    <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
 
-		<div class="span12">
-			<h2><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></h2>
-		</div>
+
+            <<?php echo $classelement; ?> class="componentheading"><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></<?php echo $classelement; ?>>
+
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
@@ -28,7 +29,7 @@ defined('_JEXEC') or die;
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
-			<?php $listing = new JBSMListing;
+			<?php
 			echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
 			?>
 		</div>
