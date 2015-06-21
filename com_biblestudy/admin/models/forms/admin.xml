@@ -52,9 +52,9 @@
         </field>
 
 	    <!--Thumbnail sizes-->
-	    <field name="thumbnail_teacher_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
-        <field name="thumbnail_series_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
-        <field name="thumbnail_study_size" default="100px" type="text" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
+	    <field name="thumbnail_teacher_size" default="100" type="text" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
+        <field name="thumbnail_series_size" default="100" type="text" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
+        <field name="thumbnail_study_size" default="100" type="text" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
 
         <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
                description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
