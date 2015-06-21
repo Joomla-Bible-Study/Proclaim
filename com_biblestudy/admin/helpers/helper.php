@@ -119,14 +119,17 @@ class JBSMHelper
 		$return      = false;
 		$arr_headers = explode("\n", $headers);
 
-		foreach ($arr_headers as $header)
+		if(strpos($arr_headers[0], '200'))
 		{
-			$s = "Content-Length: ";
-
-			if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
+			foreach ($arr_headers as $header)
 			{
-				$return = trim(substr($header, strlen($s)));
-				break;
+				$s = "Content-Length: ";
+
+				if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
+				{
+					$return = trim(substr($header, strlen($s)));
+					break;
+				}
 			}
 		}
 
