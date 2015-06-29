@@ -39,13 +39,13 @@ $input = $app->input;
             if (task === 'admin.save' || task === 'admin.apply') {
                 // Confirm thumbnail changes
                 var thumbnail_changes = [];
-                if (jQuery('#thumbnail_teacher_size_old').val() !== jQuery('#jform_params_thumbnail_teacher_size').val()) {
+                if (jQuery('#thumbnail_teacher_size_old').val() !== jQuery('#jform_params_thumbnail_teacher_size').val() && jQuery('#thumbnail_teacher_size_old').val() != '') {
                     thumbnail_changes.push('teachers');
                 }
-                if (jQuery('#thumbnail_series_size_old').val() !== jQuery('#jform_params_thumbnail_series_size').val()) {
+                if (jQuery('#thumbnail_series_size_old').val() !== jQuery('#jform_params_thumbnail_series_size').val() && jQuery('#thumbnail_series_size_old').val() != '') {
                     thumbnail_changes.push('series');
                 }
-                if (jQuery('#thumbnail_study_size_old').val() !== jQuery('#jform_params_thumbnail_study_size').val()) {
+                if (jQuery('#thumbnail_study_size_old').val() !== jQuery('#jform_params_thumbnail_study_size').val() && jQuery('#thumbnail_study_size_old').val() != '') {
                     thumbnail_changes.push('studies');
                 }
                 if (thumbnail_changes.length > 0) {
