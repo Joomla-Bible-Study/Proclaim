@@ -80,7 +80,7 @@ abstract class JHtmlJwplayer
 	{
 		if (!isset($params->popupimage))
 		{
-			$params->popupimage = "media/com_biblestudy/images/speaker24.png";
+			$params->popupimage = "images/biblestudy/speaker24.png";
 		}
 		if (!isset($params->playerposition))
 		{
@@ -126,7 +126,7 @@ abstract class JHtmlJwplayer
 		}
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
 						jwplayer('placeholder" . $id . "').setup({
-							'file': '" . $media->path1 . "',
+							'file': '" . $media->path1 . "',;
 							";
 		if ($params->playerresponsive == 0)
 		{

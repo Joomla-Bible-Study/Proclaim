@@ -49,7 +49,7 @@ class JBSMMedia
 		}
 		else
 		{
-			$mediaimage = 'media/com_biblestudy/images/speaker24.png';
+			$mediaimage = 'images/biblestudy//speaker24.png';
 		}
 		$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
 		$player     = self::getPlayerAttributes($params, $media);

@@ -411,17 +411,12 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-
 		if ($type == 'install')
 		{
-			// Copy the css file over to another location
-			$src = JPATH_SITE . '/components/com_biblestudy/assets/css/biblestudy.css';
-
-			if (JFile::exists($src))
-			{
-				JFile::copy($src, JPATH_SITE . '/tmp/biblestudy.css');
-			}
+			// Copy the images to the new folder
+			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
+
 		// Set the #__schemas version_id to the correct number for error from 7.0.0
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
