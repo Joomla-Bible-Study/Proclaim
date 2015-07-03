@@ -72,7 +72,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 				<?php if ($this->params->get('show_page_image') > 0)
 				{ ?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>"><?php } ?>
 				<?php if ($this->params->get('show_page_title') == 1)
-				{ ?><<?php echo $classelement; ?> class="componentheading"><?php echo $this->params->get('page_title'); ?></<?php echo $classelement; ?>><?php } ?>
+				{ ?><<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align');?>"><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
 				<?php if ($this->params->get('list_intro'))
 				{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
 			</div>
