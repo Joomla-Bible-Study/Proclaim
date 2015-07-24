@@ -338,7 +338,10 @@ class BiblestudyControllerAdmin extends JControllerForm
     public function fixAssets($dbReset = false)
     {
         // Check for request forgeries.
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        if (!$dbReset)
+        {
+            JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        }
 
         $app = JFactory::getApplication();
         $asset = new JBSMAssets;
