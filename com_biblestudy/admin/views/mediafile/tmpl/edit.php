@@ -16,21 +16,19 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 
-?>
-<script type="text/javascript">
+JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task, server_id) {
-		if (task == 'mediafile.setServer') {
-			document.id('item-form').elements['jform[server_id]'].value = server_id;
-			Joomla.submitform(task, document.id('item-form'));
-		} else if (task == 'mediafile.cancel') {
-			Joomla.submitform(task, document.getElementById('item-form'));
-		} else if (task == 'mediafile.apply' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == "mediafile.setServer") {
+			document.id("item-form").elements["jform[server_id]"].value = server_id;
+			Joomla.submitform(task, document.id("item-form"));
+		} else if (task == "mediafile.cancel"|| document.formvalidator.isValid(document.id("item-form"))) {
+			Joomla.submitform(task, document.getElementById("item-form"));
 		} else {
-			alert('<?php echo $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")); ?>');
+			alert("' . $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
 		}
 	}
-</script>
+');
+?>
 <form action="<?php echo 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
       name="adminForm"
