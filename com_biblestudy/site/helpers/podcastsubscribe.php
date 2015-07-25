@@ -35,7 +35,7 @@ class JBSMPodcastSubscribe
 		{
 
 			$subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
-			$subscribe .= '<div class="prow span12">';
+			$subscribe .= '<div class="prow">';
 
 			foreach ($podcasts AS $podcast)
 			{
@@ -92,7 +92,7 @@ class JBSMPodcastSubscribe
 	{
 		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('*')
 			->from('#__bsms_podcast as p')
@@ -118,7 +118,7 @@ class JBSMPodcastSubscribe
 		if (!empty($podcast->podcast_image_subscribe))
 		{
 			$image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-			$link  = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
+			$link  = '<div class="image"><a href="' . JUri::base() . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
 			$subscribe .= $link;
 		}
 
@@ -130,7 +130,7 @@ class JBSMPodcastSubscribe
 		{
 			$name = $podcast->podcast_subscribe_desc;
 		}
-		$subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $name . '</a></div>';
+		$subscribe .= '<div class="text"><a href="' . JUri::base() . $podcast->filename . '">' . $name . '</a></div>';
 
 		return $subscribe;
 	}
@@ -152,7 +152,7 @@ class JBSMPodcastSubscribe
 		if ($image->path)
 		{
 			$podcastimage = JHtml::image(
-				JURI::base() . $image->path, $words, 'width = "' . $image->width
+				JUri::base() . $image->path, $words, 'width = "' . $image->width
 				. '" height = "' . $image->height . '" title = "' . $words . '"'
 			);
 		}
