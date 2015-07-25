@@ -482,7 +482,7 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 				<div class="control-label">
 					<?php echo $this->form->getLabel('studydate'); ?>
 				</div>
-				<div class="controls">
+				<div class="controls span10 small">
 					<?php echo $this->form->getInput('studydate'); ?>
 				</div>
 			</div>
