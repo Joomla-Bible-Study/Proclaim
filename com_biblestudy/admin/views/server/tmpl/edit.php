@@ -22,12 +22,12 @@ $input = $app->input;
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
 		if (task == 'server.setType') {
-			document.id('item-form').elements['jform[type]'].value = type;
-			Joomla.submitform(task, document.id('item-form'));
+			document.id('server-form').elements['jform[type]'].value = type;
+			Joomla.submitform(task, document.id('server-form'));
 		} else if (task == 'server.cancel') {
-			Joomla.submitform(task, document.getElementById('item-form'));
-		} else if (task == 'server.apply' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+			Joomla.submitform(task, document.getElementById('server-form'));
+		} else if (task == 'server.apply' || document.formvalidator.isValid(document.id('server-form'))) {
+			Joomla.submitform(task, document.getElementById('server-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
@@ -35,7 +35,7 @@ $input = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="server-form" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span8 form-horizontal">

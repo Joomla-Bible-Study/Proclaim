@@ -134,13 +134,13 @@ abstract class JBSMAddon
 	 */
 	public static function getInstance($type, $config = array())
 	{
-		$type       = preg_replace('/[^A-Z0-9_\.-]/i', '', $type);
+		$type       = strtolower(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
 		$addonClass = "JBSMAddon" . ucfirst($type);
 
 		if (!class_exists($addonClass))
 		{
 			jimport('joomla.filesystem.path');
-			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $type, $type . '.php');
+			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $type . '/', $type . '.php');
 			if ($path)
 			{
 				require_once $path;

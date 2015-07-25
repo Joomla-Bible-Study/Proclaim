@@ -28,8 +28,8 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task == 'message.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == 'message.cancel' || document.formvalidator.isValid(document.id('message-form'))) {
+			Joomla.submitform(task, document.getElementById('message-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
@@ -37,7 +37,7 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 </script>
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+	method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">

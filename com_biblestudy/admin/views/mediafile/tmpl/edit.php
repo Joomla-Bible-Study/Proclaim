@@ -19,10 +19,10 @@ JHtml::_('formbehavior.chosen', 'select');
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task, server_id) {
 		if (task == "mediafile.setServer") {
-			document.id("item-form").elements["jform[server_id]"].value = server_id;
-			Joomla.submitform(task, document.id("item-form"));
-		} else if (task == "mediafile.cancel"|| document.formvalidator.isValid(document.id("item-form"))) {
-			Joomla.submitform(task, document.getElementById("item-form"));
+			document.id("media-form").elements["jform[server_id]"].value = server_id;
+			Joomla.submitform(task, document.id("media-form"));
+		} else if (task == "mediafile.cancel"|| document.formvalidator.isValid(document.id("media-form"))) {
+			Joomla.submitform(task, document.getElementById("media-form"));
 		} else {
 			alert("' . $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
 		}
@@ -32,7 +32,7 @@ JFactory::getDocument()->addScriptDeclaration('
 <form action="<?php echo 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
       name="adminForm"
-      id="item-form"
+      id="media-form"
       class="form-validate form-horizontal">
 	<div class="row-fluid">
 		<div class="span12">
