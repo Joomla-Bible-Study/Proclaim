@@ -27,10 +27,10 @@ class JBSMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object                    $items     Items
-	 * @param   Joomla\Registry\Registry  $params    Page Params
-	 * @param   TableTemplate             $template  Template name
-	 * @param   String                    $type      Type of Listing
+	 * @param   Object                   $items    Items
+	 * @param   Joomla\Registry\Registry $params   Page Params
+	 * @param   TableTemplate            $template Template name
+	 * @param   String                   $type     Type of Listing
 	 *
 	 * @return string
 	 */
@@ -441,7 +441,7 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Id's
 	 *
-	 * @param   Object  $item  Items info
+	 * @param   Object $item Items info
 	 *
 	 * @return array
 	 */
@@ -460,7 +460,7 @@ class JBSMListing
 	/**
 	 * Get Media Files
 	 *
-	 * @param   Array  $medias  Media files
+	 * @param   Array $medias Media files
 	 *
 	 * @return mixed
 	 */
@@ -505,7 +505,7 @@ class JBSMListing
 	/**
 	 * Get list Params Array
 	 *
-	 * @param   string  $paramtext  Param Text
+	 * @param   string $paramtext Param Text
 	 *
 	 * @return stdClass
 	 */
@@ -527,9 +527,9 @@ class JBSMListing
 	/**
 	 * Sort Array of Object by Property
 	 *
-	 * @param   array   $array     ?
-	 * @param   string  $property  ?
-	 * @param   string  $order     ?
+	 * @param   array  $array    ?
+	 * @param   string $property ?
+	 * @param   string $order    ?
 	 *
 	 * @return array
 	 */
@@ -576,8 +576,7 @@ class JBSMListing
 						$j--;
 					}
 
-				}
-				while ($i <= $j);
+				} while ($i <= $j);
 
 				if ($i < $r)
 				{
@@ -587,11 +586,9 @@ class JBSMListing
 				}
 				$r = $j;
 
-			}
-			while ($l < $r);
+			} while ($l < $r);
 
-		}
-		while ($cur != 0);
+		} while ($cur != 0);
 
 		// Added ordering.
 		if ($order == "DESC")
@@ -605,14 +602,14 @@ class JBSMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   Array                     $listrows   ?
-	 * @param   Array                     $listsorts  ?
-	 * @param   Object                    $item       ?
-	 * @param   Joomla\Registry\Registry  $params     Item Params
-	 * @param   TableTemplate             $template   Template info
-	 * @param   string                    $oddeven    ?
-	 * @param   string                    $header     ?
-	 * @param   string                    $type       ?
+	 * @param   Array                    $listrows  ?
+	 * @param   Array                    $listsorts ?
+	 * @param   Object                   $item      ?
+	 * @param   Joomla\Registry\Registry $params    Item Params
+	 * @param   TableTemplate            $template  Template info
+	 * @param   string                   $oddeven   ?
+	 * @param   string                   $header    ?
+	 * @param   string                   $type      ?
 	 *
 	 * @return string
 	 */
@@ -882,12 +879,12 @@ class JBSMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object                    $item      ?
-	 * @param   Object                    $row       ?
-	 * @param   Joomla\Registry\Registry  $params    ?
-	 * @param   TableTemplate             $template  ?
-	 * @param   string                    $header    ?
-	 * @param   string                    $type      ?
+	 * @param   Object                   $item     ?
+	 * @param   Object                   $row      ?
+	 * @param   Joomla\Registry\Registry $params   ?
+	 * @param   TableTemplate            $template ?
+	 * @param   string                   $header   ?
+	 * @param   string                   $type     ?
 	 *
 	 * @return string
 	 */
@@ -896,7 +893,7 @@ class JBSMListing
 		$smenu = $params->get('detailsitemid');
 		$tmenu = $params->get('teacheritemid');
 		/** @var string $data */
-		$data       = '';
+		$data = '';
 
 		// Match the data in $item to a row/col in $row->name
 		$extra = '';
@@ -1600,11 +1597,11 @@ class JBSMListing
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String                    $custom    ?
-	 * @param   Object                    $item      ?
-	 * @param   Joomla\Registry\Registry  $params    ?
-	 * @param   TableTemplate             $template  ?
-	 * @param   String                    $type      ?
+	 * @param   String                   $custom   ?
+	 * @param   Object                   $item     ?
+	 * @param   Joomla\Registry\Registry $params   ?
+	 * @param   TableTemplate            $template ?
+	 * @param   String                   $type     ?
 	 *
 	 * @return mixed
 	 */
@@ -1629,11 +1626,11 @@ class JBSMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String                    $custom    ?
-	 * @param   Object                    $row       ?
-	 * @param   Joomla\Registry\Registry  $params    ?
-	 * @param   TableTemplate             $template  ?
-	 * @param   String                    $type      ?
+	 * @param   String                   $custom   ?
+	 * @param   Object                   $row      ?
+	 * @param   Joomla\Registry\Registry $params   ?
+	 * @param   TableTemplate            $template ?
+	 * @param   String                   $type     ?
 	 *
 	 * @return mixed|null|string
 	 */
@@ -1867,10 +1864,10 @@ class JBSMListing
 	/**
 	 * Get Scripture
 	 *
-	 * @param   object  $params        Item Params
-	 * @param   object  $row           Row Info
-	 * @param   string  $esv           ESV String
-	 * @param   string  $scripturerow  Scripture Row
+	 * @param   object $params       Item Params
+	 * @param   object $row          Row Info
+	 * @param   string $esv          ESV String
+	 * @param   string $scripturerow Scripture Row
 	 *
 	 * @return string
 	 */
@@ -2042,8 +2039,8 @@ class JBSMListing
 	/**
 	 * Get Duration
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 * @param   Object                    $row     Row info
+	 * @param   Joomla\Registry\Registry $params Item Params
+	 * @param   Object                   $row    Row info
 	 *
 	 * @return  null|string
 	 */
@@ -2097,9 +2094,9 @@ class JBSMListing
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object                    $item      ?
-	 * @param   Joomla\Registry\Registry  $params    ?
-	 * @param   TableTemplate             $template  ?
+	 * @param   Object                   $item     ?
+	 * @param   Joomla\Registry\Registry $params   ?
+	 * @param   TableTemplate            $template ?
 	 *
 	 * @return string
 	 *
@@ -2121,8 +2118,8 @@ class JBSMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   Joomla\Registry\Registry  $params     Item Params
-	 * @param   string                    $studydate  Study Date
+	 * @param   Joomla\Registry\Registry $params    Item Params
+	 * @param   string                   $studydate Study Date
 	 *
 	 * @return string
 	 */
@@ -2178,8 +2175,8 @@ class JBSMListing
 	/**
 	 * Use JImage Class
 	 *
-	 * @param   String  $path  Path to File
-	 * @param   String  $alt   Alternate Text
+	 * @param   String $path Path to File
+	 * @param   String $alt  Alternate Text
 	 *
 	 * @return bool|stdClass
 	 *
@@ -2205,24 +2202,24 @@ class JBSMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool                      $islink      ?
-	 * @param   string                    $id3         ?
-	 * @param   int                       $tid         ?
-	 * @param   object                    $smenu       ?
-	 * @param   object                    $tmenu       ?
-	 * @param   Joomla\Registry\Registry  $params      ?
-	 * @param   object                    $row         ?
-	 * @param   TableTemplate             $templateid  ?
+	 * @param   bool                     $islink     ?
+	 * @param   string                   $id3        ?
+	 * @param   int                      $tid        ?
+	 * @param   object                   $smenu      ?
+	 * @param   object                   $tmenu      ?
+	 * @param   Joomla\Registry\Registry $params     ?
+	 * @param   object                   $row        ?
+	 * @param   TableTemplate            $templateid ?
 	 *
 	 * @return string
 	 */
 	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
 	{
-		$input    = new JInput;
-		$Itemid   = $input->get('Itemid', '', 'int');
-		$view     = $input->getString('view', '');
-		$column   = '';
-		$mime     = ' AND #__bsms_mediafiles.mime_type = 1';
+		$input  = new JInput;
+		$Itemid = $input->get('Itemid', '', 'int');
+		$view   = $input->getString('view', '');
+		$column = '';
+		$mime   = ' AND #__bsms_mediafiles.mime_type = 1';
 
 		switch ($islink)
 		{
@@ -2276,7 +2273,7 @@ class JBSMListing
 				break;
 
 			case 5 :
-				$column   = JBSMHelper::getTooltip($row, $params, $templateid);
+				$column = JBSMHelper::getTooltip($row, $params, $templateid);
 				break;
 
 			case 6 :
@@ -2306,9 +2303,9 @@ class JBSMListing
 	/**
 	 * Get File Path
 	 *
-	 * @param   string  $id3      ID
-	 * @param   string  $idfield  ID Filed
-	 * @param   string  $mime     MimeType ID
+	 * @param   string $id3     ID
+	 * @param   string $idfield ID Filed
+	 * @param   string $mime    MimeType ID
 	 *
 	 * @return string
 	 */
@@ -2322,9 +2319,9 @@ class JBSMListing
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int                       $id3     Study ID ID
-	 * @param   string                    $islink  Is a Link
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                      $id3    Study ID ID
+	 * @param   string                   $islink Is a Link
+	 * @param   Joomla\Registry\Registry $params Item Params
 	 *
 	 * @return string
 	 */
@@ -2380,9 +2377,9 @@ class JBSMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object                    $row       Item Info
-	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TableTemplate             $template  Template
+	 * @param   object                   $row      Item Info
+	 * @param   Joomla\Registry\Registry $params   Item Params
+	 * @param   TableTemplate            $template Template
 	 *
 	 * @return object
 	 *
@@ -2427,8 +2424,8 @@ class JBSMListing
 	/**
 	 * Get Study Exp
 	 *
-	 * @param   object                    $row     Item Info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   object                   $row    Item Info
+	 * @param   Joomla\Registry\Registry $params Item Params
 	 *
 	 * @return object
 	 *
@@ -2458,7 +2455,7 @@ class JBSMListing
 		$label  = str_replace('{{location}}', $row->location_text, $label);
 
 		// Passage
-		$link  = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
+		$link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$link .= '<div id="bsms_scripture" style="display:none;"></strong>';
 		$response = $this->getPassage($params, $row);
 		$link .= $response;
@@ -2507,8 +2504,8 @@ class JBSMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 * @param   object                    $row     Item Info
+	 * @param   Joomla\Registry\Registry $params Item Params
+	 * @param   object                   $row    Item Info
 	 *
 	 * @return string
 	 */
@@ -2556,9 +2553,9 @@ class JBSMListing
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string                    $link    Link
-	 * @param   object                    $row     Item Info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   string                   $link   Link
+	 * @param   object                   $row    Item Info
+	 * @param   Joomla\Registry\Registry $params Item Params
 	 *
 	 * @return null|string
 	 */
@@ -2567,7 +2564,7 @@ class JBSMListing
 		jimport('joomla.html.parameter');
 
 		// Find a better way to do this.
-		$template = new TableTemplate(JFactory::getDbo());
+		$template     = new TableTemplate(JFactory::getDbo());
 		$template->id = (int) '1';
 
 		$sharetype = $params->get('sharetype', 1);
@@ -2617,13 +2614,13 @@ class JBSMListing
 				$share_params = $registry;
 				$custom       = new JBSMCustom;
 
-				$image      = $share_params->get('shareimage');
-				$height     = $share_params->get('shareimageh', '44px');
-				$width      = $share_params->get('shareimagew', '44px');
-				$use_bitly  = $share_params->get('use_bitly');
-				$mainlink   = $share_params->get('mainlink');
-				$appkey     = $share_params->get('api', 'R_dc86635ad2d1e883cab8fad316ca12f6');
-				$login      = $share_params->get('username', 'joomlabiblestudy');
+				$image     = $share_params->get('shareimage');
+				$height    = $share_params->get('shareimageh', '44px');
+				$width     = $share_params->get('shareimagew', '44px');
+				$use_bitly = $share_params->get('use_bitly');
+				$mainlink  = $share_params->get('mainlink');
+				$appkey    = $share_params->get('api', 'R_dc86635ad2d1e883cab8fad316ca12f6');
+				$login     = $share_params->get('username', 'joomlabiblestudy');
 
 				if ($use_bitly == 1)
 				{
@@ -2755,11 +2752,11 @@ class JBSMListing
 	/**
 	 * make a URL small
 	 *
-	 * @param   string  $url      Url
-	 * @param   string  $login    Login
-	 * @param   string  $appkey   AppKey
-	 * @param   string  $format   Format
-	 * @param   string  $version  Version
+	 * @param   string $url     Url
+	 * @param   string $login   Login
+	 * @param   string $appkey  AppKey
+	 * @param   string $format  Format
+	 * @param   string $version Version
 	 *
 	 * @return string
 	 */
@@ -2788,34 +2785,35 @@ class JBSMListing
 		return $short;
 	}
 
-    public function createelement($element)
-    {
-        switch ($element)
-        {
-            case 0:
-                $classelement = '';
-                break;
-            case 1:
-                $classelement = 'p';
-                break;
-            case 2:
-                $classelement = 'h1';
-                break;
-            case 3:
-                $classelement = 'h2';
-                break;
-            case 4:
-                $classelement = 'h3';
-                break;
-            case 5:
-                $classelement = 'h4';
-                break;
-            case 6:
-                $classelement = 'h5';
-                break;
-            case 7:
-                $classelement = 'blockquote';
-        }
-        return $classelement;
-    }
+	public function createelement($element)
+	{
+		switch ($element)
+		{
+			case 0:
+				$classelement = '';
+				break;
+			case 1:
+				$classelement = 'p';
+				break;
+			case 2:
+				$classelement = 'h1';
+				break;
+			case 3:
+				$classelement = 'h2';
+				break;
+			case 4:
+				$classelement = 'h3';
+				break;
+			case 5:
+				$classelement = 'h4';
+				break;
+			case 6:
+				$classelement = 'h5';
+				break;
+			case 7:
+				$classelement = 'blockquote';
+		}
+
+		return $classelement;
+	}
 }
