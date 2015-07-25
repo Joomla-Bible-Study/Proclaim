@@ -1,29 +1,34 @@
-sudo: required
+# Forces new Travis-CI Infrastructure
+sudo: false
+
 language: php
+
 php:
   - 5.3
 # Until we start using phpunit we only need to test are menumum version.
 #  - 5.4
 #  - 5.5
 #  - 5.6
+#  - 7.0
 
 services:
   - memcached
   - redis-server
 
 before_script:
-  - composer install --dev
+  # Make sure all dev dependencies are installed
+  - composer install
   - phpenv rehash
   # Set up Apache
   # - ./build/travis/php-apache.sh
   # Enable additional PHP extensions
-  - phpenv config-add build/travis/phpenv/memcached.ini
-  - phpenv config-add build/travis/phpenv/apc-$TRAVIS_PHP_VERSION.ini
-  - phpenv config-add build/travis/phpenv/redis.ini
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then phpenv config-add build/travis/phpenv/memcached.ini; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' == '5.3' ] || [ '$TRAVIS_PHP_VERSION' == '5.4' ]; then phpenv config-add build/travis/phpenv/apc-$TRAVIS_PHP_VERSION.ini; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then phpenv config-add build/travis/phpenv/redis.ini; fi"
 
 script:
   - bin/phing pmd
-  - bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then libraries/vendor/bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
 
 branches:
   except:
