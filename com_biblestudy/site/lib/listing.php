@@ -2564,7 +2564,8 @@ class JBSMListing
 		jimport('joomla.html.parameter');
 
 		// Find a better way to do this.
-		$template     = new TableTemplate(JFactory::getDbo());
+		$db           = JFactory::getDbo();
+		$template     = new TableTemplate($db);
 		$template->id = (int) '1';
 
 		$sharetype = $params->get('sharetype', 1);
