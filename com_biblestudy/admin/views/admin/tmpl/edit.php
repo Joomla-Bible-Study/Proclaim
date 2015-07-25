@@ -147,12 +147,10 @@ $input = $app->input;
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
 									border="0"/> <span> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&task=admin.aliasUpdate'); ?>"
-						   style="text-decoration:none; margin: 5px"
-						   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>" class="btn"> <img
+						<button onclick="Joomla::submitbutton('admin.alaisfix')" class="btn" style="margin-top: 5px;"><img
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_RESET_ALIAS') ?> </span></a>
+									border="0"/> <span> <?php echo JText::_('JBS_ADM_RESET_ALIAS') ?> </span></button>
 					</div>
 				</div>
 				<div class="tab-pane" id="admin">
