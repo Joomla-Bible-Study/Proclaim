@@ -27,7 +27,7 @@ class JBSMAssets
 	 */
 	public static function fixassets ()
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.

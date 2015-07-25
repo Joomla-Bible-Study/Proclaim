@@ -33,7 +33,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     /**
      * Class constructor.
      *
-     * @param   array $config A named array of configuration variables.
+     * @param   array  $config  A named array of configuration variables.
      *
      * @since    1.6
      */
@@ -73,7 +73,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $post = $_POST['jform'];
         $reg = new Registry;
@@ -121,7 +121,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $jinput = JFactory::getApplication()->input;
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $msg = null;
         $from = $jinput->getInt('pfrom', '', 'post');
         $to = $jinput->getInt('pto', '', 'post');
@@ -162,7 +162,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $msg = null;
         $post = $_POST['jform'];
         $reg = new Registry;
@@ -194,7 +194,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $msg = null;
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->update('#__bsms_mediafiles')
             ->set('downloads = ' . 0);
@@ -220,7 +220,7 @@ class BiblestudyControllerAdmin extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $msg = null;
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->update('#__bsms_mediafiles')
             ->set('plays = ' . 0);
@@ -345,7 +345,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
         $app = JFactory::getApplication();
         $asset = new JBSMAssets;
-        $dofix = $asset->fixAssets();
+        $dofix = $asset->fixassets();
 
         if (!$dofix) {
             $app->enqueueMessage(JText::_('JBS_ADM_ASSET_FIX_ERROR'), 'notice');
@@ -378,7 +378,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     /**
      * Do the import
      *
-     * @param   boolean $parent Source of info
+     * @param   boolean  $parent  Source of info
      *
      * @return void
      */
@@ -421,7 +421,7 @@ class BiblestudyControllerAdmin extends JControllerForm
     /**
      * Copy Old Tables to new Joomla! Tables
      *
-     * @param   string $oldprefix Old table Prefix
+     * @param   string  $oldprefix  Old table Prefix
      *
      * @return boolean
      */
@@ -432,7 +432,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
         // Create table tablename_new like tablename; -> this will copy the structure...
         // Insert into tablename_new select * from tablename; -> this would copy all the data
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
 
@@ -445,17 +445,17 @@ class BiblestudyControllerAdmin extends JControllerForm
                 $newtablename = $prefix . $newsubtablename;
                 $query = 'DROP TABLE IF EXISTS ' . $newtablename;
 
-                if (!JBSMDbHelper::performdb($query)) {
+                if (!JBSMDbHelper::performDB($query)) {
                     return false;
                 }
                 $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
 
-                if (!JBSMDbHelper::performdb($query)) {
+                if (!JBSMDbHelper::performDB($query)) {
                     return false;
                 }
                 $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
 
-                if (!JBSMDbHelper::performdb($query)) {
+                if (!JBSMDbHelper::performDB($query)) {
                     return false;
                 }
             }

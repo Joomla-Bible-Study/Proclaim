@@ -25,16 +25,20 @@ $input  = $app->input;
 
 $return  = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
-?>
-<script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task == 'message.cancel' || document.formvalidator.isValid(document.id('message-form'))) {
-			Joomla.submitform(task, document.getElementById('message-form'));
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+
+
+JFactory::getDocument()->addScriptDeclaration('
+	Joomla.submitbutton = function (task)
+	{
+		if (task == "message.cancel" || document.formvalidator.isValid(document.id("message-form")))
+		{
+			Joomla.submitform(task, document.getElementById("message-form"));
 		}
-	}
-</script>
+	};
+');
+
+?>
+
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
 	method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
