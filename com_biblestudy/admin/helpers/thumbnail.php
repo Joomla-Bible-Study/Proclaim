@@ -69,7 +69,7 @@ class JBSMThumbnail
 		$old_thumbs = JFolder::files(dirname($path), 'thumb_', true, true);
 		foreach ($old_thumbs as $thumb)
 		{
-			Jfile::delete($thumb);
+			JFile::delete($thumb);
 		}
 
 		// Create new thumbnail
@@ -88,7 +88,7 @@ class JBSMThumbnail
 	 */
 	public static function check($path, $file = null)
 	{
-		if(!JFolder::exists($path))
+		if (!JFolder::exists($path))
 		{
 			return false;
 		}
