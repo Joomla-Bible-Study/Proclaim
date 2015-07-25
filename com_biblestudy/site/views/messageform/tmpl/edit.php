@@ -300,6 +300,14 @@ $input  = $app->input;
 						</div>
 						<div class="control-group">
 							<div class="control-label">
+								<?php echo $this->form->getLabel('access'); ?>
+							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('access'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="control-label">
 								<?php echo $this->form->getLabel('published'); ?>
 							</div>
 							<div class="controls">
