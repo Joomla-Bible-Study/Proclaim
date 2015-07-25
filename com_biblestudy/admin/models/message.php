@@ -62,7 +62,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_studytopics')
@@ -93,8 +93,13 @@ class BiblestudyModelMessage extends JModelAdmin
 		// Do search in case of present study only, suppress otherwise
 		$input          = new JInput;
 		$translatedList = array();
+		$id = $input->get('a_id', 0, 'int');
+		if (!$id)
+		{
+			$id = $input->get('id', 0, 'int');
+		}
 
-		if ($input->get('id', 0, 'int') > 0)
+		if ($id > 0)
 		{
 			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
@@ -103,7 +108,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			$query->from('#__bsms_studytopics AS studytopics');
 
 			$query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-			$query->where('studytopics.study_id = ' . $input->get('id', 0, 'int'));
+			$query->where('studytopics.study_id = ' . $id);
 
 			$db->setQuery($query->__toString());
 			$topics = $db->loadObjectList();
