@@ -543,8 +543,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function export()
 	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Check for request forgeries. ToDo:  Need to find a solution for this.
+		// JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$input  = new JInput;
 		$run    = $input->get('run', '', 'int');

@@ -29,10 +29,10 @@ defined('_JEXEC') or die;
 					     alt="Export" height="48" width="48"/></div>
 				<div class="controls">
 					<!--suppress HtmlUnknownTarget -->
-					<a href="index.php?option=com_biblestudy&task=admin.export&run=1"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
+					<a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=admin.export&run=1"); ?>" class="btn btn-primary"> <?php echo JText::_('JBS_CMN_EXPORT'); ?></a>
 					<?php echo '<br /><br />'; ?>
 					<!--suppress HtmlUnknownTarget -->
-					<a href="index.php?option=com_biblestudy&task=admin.export&run=2"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
+					<a href="index.php?option=com_biblestudy&task=admin.export&run=2" class="btn"> <?php echo JText::_('JBS_IBM_SAVE_DB'); ?></a>
 				</div>
 			</div>
 			<hr/>
@@ -48,7 +48,15 @@ defined('_JEXEC') or die;
 					     alt="Import" height="48" width="48"/>
 				</div>
 				<div class="controls">
-					<input class="input_box" id="importdb" name="importdb" type="file" size="57"/>
+					<div style="position:relative;">
+						<a class='btn btn-primary' href="javascript:">
+							Choose File...
+							<input type="file"
+							       style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+							       name="importdb" size="40" onchange='jQuery("#upload-file-info").html(jQuery(this).val());'>
+						</a>
+						<span class='label label-info' id="upload-file-info"></span>
+					</div>
 				</div>
 			</div>
 			<div class="control-group">
