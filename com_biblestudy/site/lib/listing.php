@@ -576,7 +576,8 @@ class JBSMListing
 						$j--;
 					}
 
-				} while ($i <= $j);
+				}
+				while ($i <= $j);
 
 				if ($i < $r)
 				{
@@ -586,9 +587,11 @@ class JBSMListing
 				}
 				$r = $j;
 
-			} while ($l < $r);
+			}
+			while ($l < $r);
 
-		} while ($cur != 0);
+		}
+		while ($cur != 0);
 
 		// Added ordering.
 		if ($order == "DESC")

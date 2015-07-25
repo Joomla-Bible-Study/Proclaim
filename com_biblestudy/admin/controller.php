@@ -46,7 +46,7 @@ class BiblestudyController extends JControllerLegacy
 		$app = JFactory::getApplication();
 
 		// Attempt to change mysql for error in large select
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 
@@ -58,7 +58,7 @@ class BiblestudyController extends JControllerLegacy
 			JBSMBibleStudyHelper::addSubmenu($view);
 		}
 
-		$jbsstate = JBSMDbHelper::getinstallstate();
+		$jbsstate = JBSMDbHelper::getInstallState();
 
 		if ($jbsstate)
 		{
@@ -67,7 +67,7 @@ class BiblestudyController extends JControllerLegacy
 			JBSMDbHelper::setinstallstate();
 			$cache = new JCache(array('defaultgroup' => 'default'));
 			$cache->clean();
-			$fixassets = new JBSMAssets();
+			$fixassets = new JBSMAssets;
 			$fix_assets = $fixassets->fixassets();
 			$this->input->set('messages', $fix_assets);
 			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
@@ -115,7 +115,7 @@ class BiblestudyController extends JControllerLegacy
 	public function changePlayers()
 	{
 		$app  = JFactory::getApplication();
-		$db   = JFactory::getDBO();
+		$db   = JFactory::getDbo();
 		$msg  = null;
 		$data = $app->input->get('jform', array(), 'post  ', ' array');
 		$from = $data['params']['from'];
@@ -162,7 +162,7 @@ class BiblestudyController extends JControllerLegacy
 	public function changePopup()
 	{
 		$app  = JFactory::getApplication();
-		$db   = JFactory::getDBO();
+		$db   = JFactory::getDbo();
 		$msg  = null;
 		$data = $app->input->get('jform', array(), 'post', 'array  ');
 		$from = $data['params']['pFrom'];
@@ -208,7 +208,7 @@ class BiblestudyController extends JControllerLegacy
 	{
 		$app   = JFactory::getApplication();
 		$id    = $app->input->getInt('id', 0, 'get');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits=' . 0)
@@ -236,7 +236,7 @@ class BiblestudyController extends JControllerLegacy
 	{
 		$app   = JFactory::getApplication();
 		$id    = $app->input->getInt('id', 0, 'get');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = ' . 0)
@@ -264,7 +264,7 @@ class BiblestudyController extends JControllerLegacy
 	{
 		$jinput = new JInput;
 		$id     = $jinput->getInt('id', 0, 'get');
-		$db     = JFactory::getDBO();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = ' . 0)

@@ -155,7 +155,7 @@ class JBSMDbHelper
 	 */
 	public static function checkTables($table, $field)
 	{
-		$db     = JFactory::getDBO();
+		$db     = JFactory::getDbo();
 		$fields = $db->getTableColumns($table, 'false');
 
 		if ($fields)
@@ -231,7 +231,7 @@ class JBSMDbHelper
 	 */
 	public static function getObjects()
 	{
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -260,7 +260,7 @@ class JBSMDbHelper
 	 */
 	public static function getInstallState()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_admin');
 		$db->setQuery($query);
@@ -290,7 +290,7 @@ class JBSMDbHelper
 	 */
 	public static function setInstallState()
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_admin')
 			->set('installstate = NULL')
@@ -322,7 +322,7 @@ class JBSMDbHelper
 	{
 		$app = JFactory::getApplication();
 		/* Start by getting existing Style */
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
@@ -402,7 +402,7 @@ class JBSMDbHelper
 	 */
 	public static function reloadtable($result, $table = 'Style')
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -431,7 +431,7 @@ class JBSMDbHelper
 	public static function resetdb()
 	{
 		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
+		$db  = JFactory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
@@ -503,7 +503,7 @@ class JBSMDbHelper
 	{
 
 		$app   = JFactory::getApplication();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
