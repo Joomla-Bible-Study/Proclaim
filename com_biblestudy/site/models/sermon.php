@@ -54,7 +54,7 @@ class BiblestudyModelSermon extends JModelItem
 	public function hit($pk = null)
 	{
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
@@ -268,7 +268,7 @@ class BiblestudyModelSermon extends JModelItem
 		$app = JFactory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
 
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);
@@ -332,7 +332,7 @@ class BiblestudyModelSermon extends JModelItem
 		$params = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
+		$admin    = JBSMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);

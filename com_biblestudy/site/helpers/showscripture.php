@@ -126,7 +126,7 @@ class JBSMShowScripture
 	 */
 	public function getHideShow()
 	{
-		$contents = $this->body_only(file_get_contents($this->link));
+		$contents = '<iframe id="scripture" src="' . $this->link . '" width="100%" height="400px;"></iframe>';
 		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
 		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
 		$passage .= '<div id="scripture" style="display: none;">';
@@ -148,7 +148,7 @@ class JBSMShowScripture
 	 */
 	public function body_only($html)
 	{
-		return preg_replace("/.*<body[^>]*>|<\/body>.*/si", "", $html);
+		return '<iframe id = "scripture" src = "' . $this->link . '" width = "100%" height = "400px;" ></iframe >';
 	}
 
 	/**
@@ -158,7 +158,7 @@ class JBSMShowScripture
 	 */
 	public function getShow()
 	{
-		$contents = $this->body_only(file_get_contents($this->link));
+		$contents = '<iframe id = "scripture" src = "' . $this->link . '" width = "100%" height = "400px;" ></iframe >';
 		$passage  = '<div class = "passage">' . $contents . '</div>';
 
 		return $passage;
