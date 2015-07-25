@@ -119,7 +119,7 @@ class JBSMHelper
 		$return      = false;
 		$arr_headers = explode("\n", $headers);
 
-		if(strpos($arr_headers[0], '200'))
+		if (strpos($arr_headers[0], '200'))
 		{
 			foreach ($arr_headers as $header)
 			{
