@@ -17,7 +17,8 @@
     },
     "require-dev": {
         "phing/phing": "2.9.1",
-        "pdepend/pdepend": "1.1.1",
+        "pdepend/pdepend": "*",
+        "phpmd/phpmd": "*",
         "pear/versioncontrol_git": "dev-master",
         "pear/pear_exception": "dev-master",
         "phpunit/phpunit": "4.1.*",
