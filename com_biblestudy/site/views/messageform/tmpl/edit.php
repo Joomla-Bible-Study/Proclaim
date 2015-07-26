@@ -25,25 +25,25 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 // Set up defaults
 if ($input->getInt('id'))
 {
-	$studytitle  = '';
-	$thumbnailm  = '';
-	$teacher_id  = '';
-	$location_id = '';
-	$series_id   = '';
-	$messagetype = '';
-	$thumbnailm  = '';
-	$user_id     = '';
+	$booknumber  = $this->item->booknumber;
+	$thumbnailm  = $this->item->thumbnailm;
+	$teacher_id  = $this->item->teacher_id;
+	$location_id = $this->item->location_id;
+	$series_id   = $this->item->series_id;
+	$messagetype = $this->item->messagetype;
+	$thumbnailm  = $this->item->thumbnailm;
+	$user_id     = $this->item->user_id;
 }
 else
 {
-	$studytitle  = empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber;
-	$thumbnailm  = empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm;
-	$teacher_id  = empty($this->item->teacher_id) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id;
-	$location_id = empty($this->item->location_id) ? $this->admin_params->get('location_id') : $this->item->location_id;
-	$series_id   = empty($this->item->series_id) ? $this->admin_params->get('series_id') : $this->item->series_id;
-	$messagetype = empty($this->item->messagetype) ? $this->admin_params->get('messagetype') : $this->item->messagetype;
-	$thumbnailm  = empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm;
-	$user_id     = empty($this->item->user_id) ? $this->admin->user_id : $this->item->user_id;
+	$booknumber  = $this->admin_params->get('booknumber');
+	$thumbnailm  = $this->admin_params->get('default_study_image');
+	$teacher_id  = $this->admin_params->get('teacher_id');
+	$location_id = $this->admin_params->get('location_id');
+	$series_id   = $this->admin_params->get('series_id');
+	$messagetype = $this->admin_params->get('messagetype');
+	$thumbnailm  = $this->admin_params->get('default_study_image');
+	$user_id     = $this->admin->user_id;
 }
 
 $params = $this->form->getFieldsets('params');
@@ -145,7 +145,7 @@ $input  = $app->input;
 								<?php echo $this->form->getLabel('booknumber'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('booknumber', null, $studytitle); ?>
+								<?php echo $this->form->getInput('booknumber', null, $booknumber); ?>
 							</div>
 						</div>
 						<div class="control-group">

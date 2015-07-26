@@ -25,11 +25,11 @@ $input = $app->input;
 // Set up defaults
 if ($input->getInt('id'))
 {
-	$templatecode = '';
+	$templatecode = $this->item->templatecode;
 }
 else
 {
-	$templatecode = empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode;
+	$templatecode = $this->defaultcode;
 }
 ?>
 <script type="text/javascript">

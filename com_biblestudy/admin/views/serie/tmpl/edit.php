@@ -25,11 +25,11 @@ $input = $app->input;
 // Set up defaults
 if ($input->getInt('id'))
 {
-	$series_thumbnail = '';
+	$series_thumbnail = $this->item->series_thumbnail;
 }
 else
 {
-	$series_thumbnail = empty($this->item->series_thumbnail) ? $this->admin_params->get('default_series_image') : $this->item->series_thumbnail;
+	$series_thumbnail = $this->admin_params->get('default_series_image');
 }
 ?>
 

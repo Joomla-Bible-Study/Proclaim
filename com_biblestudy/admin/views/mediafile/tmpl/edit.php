@@ -19,15 +19,15 @@ JHtml::_('formbehavior.chosen', 'select');
 // Set up defaults
 if ($input->getInt('id'))
 {
-	$study_id   = '';
-	$createdate = '';
-	$podcast_id = '';
+	$study_id   = $this->item->study_id;
+	$createdate = $this->item->createdate;
+	$podcast_id = $this->item->podcast_id;
 }
 else
 {
-	$study_id   = empty($this->item->study_id) ? $this->options->study_id : $this->item->study_id;
-	$createdate = empty($this->item->createdate) ? $this->options->createdate : $this->item->createdate;
-	$podcast_id = empty($this->item->podcast_id) ? $this->admin_params->get('podcast') : $this->item->podcast_id;
+	$study_id   = $this->options->study_id;
+	$createdate = $this->options->createdate;
+	$podcast_id = $this->admin_params->get('podcast');
 }
 
 JFactory::getDocument()->addScriptDeclaration('

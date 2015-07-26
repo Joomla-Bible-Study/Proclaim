@@ -24,11 +24,11 @@ $input = $app->input;
 // Set up defaults
 if ($input->getInt('id'))
 {
-	$teacher_thumbnail = '';
+	$teacher_thumbnail = $this->item->teacher_thumbnail;
 }
 else
 {
-	$teacher_thumbnail = empty($this->item->teacher_thumbnail) ? $this->admin->params->get('default_teacher_image') : $this->item->teacher_thumbnail;
+	$teacher_thumbnail = $this->admin->params->get('default_teacher_image');
 }
 
 ?>
