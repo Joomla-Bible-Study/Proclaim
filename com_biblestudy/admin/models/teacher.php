@@ -161,9 +161,13 @@ class BiblestudyModelTeacher extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 
+		dump($data['image']);
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
+			// Modify model data
+			$data['teacher_image']     = "";
+			$data['teacher_thumbnail'] = "";
 			return parent::save($data);
 		}
 

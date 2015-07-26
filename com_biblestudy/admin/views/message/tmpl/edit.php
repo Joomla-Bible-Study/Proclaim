@@ -26,6 +26,29 @@ $input  = $app->input;
 $return  = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
+// Set up defaults
+if ($input->getInt('id'))
+{
+	$studytitle  = '';
+	$thumbnailm  = '';
+	$teacher_id  = '';
+	$location_id = '';
+	$series_id   = '';
+	$messagetype = '';
+	$thumbnailm  = '';
+	$user_id     = '';
+}
+else
+{
+	$studytitle  = empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber;
+	$thumbnailm  = empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm;
+	$teacher_id  = empty($this->item->teacher_id) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id;
+	$location_id = empty($this->item->location_id) ? $this->admin_params->get('location_id') : $this->item->location_id;
+	$series_id   = empty($this->item->series_id) ? $this->admin_params->get('series_id') : $this->item->series_id;
+	$messagetype = empty($this->item->messagetype) ? $this->admin_params->get('messagetype') : $this->item->messagetype;
+	$thumbnailm  = empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm;
+	$user_id     = empty($this->item->user_id) ? $this->admin->user_id : $this->item->user_id;
+}
 
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task)
@@ -113,7 +136,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'booknumber',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('booknumber') : $this->item->booknumber
+								$studytitle
 							); ?>
 						</div>
 					</div>
@@ -205,7 +228,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getLabel('image'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('image', null, empty($this->item->thumbnailm) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm); ?>
+							<?php echo $this->form->getInput('image', null, $thumbnailm); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -240,7 +263,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'teacher_id',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('teacher_id') : $this->item->teacher_id
+								$teacher_id
 							); ?>
 						</div>
 					</div>
@@ -252,7 +275,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'location_id',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('location_id') : $this->item->location_id
+								$location_id
 							); ?>
 						</div>
 					</div>
@@ -264,7 +287,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'series_id',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('series_id') : $this->item->series_id
+								$series_id
 							); ?>
 						</div>
 					</div>
@@ -285,7 +308,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'messagetype',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('messagetype') : $this->item->messagetype
+								$messagetype
 							) ?>
 						</div>
 					</div>
@@ -297,7 +320,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getInput(
 								'thumbnailm',
 								null,
-								empty($this->item->studytitle) ? $this->admin_params->get('default_study_image') : $this->item->thumbnailm
+								$thumbnailm
 							); ?>
 						</div>
 					</div>
@@ -308,7 +331,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo $this->form->getLabel('user_id'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+							<?php echo $this->form->getInput('user_id', null, $user_id) ?>
 						</div>
 					</div>
 					<div class="control-group">

@@ -21,6 +21,16 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $app = JFactory::getApplication();
 $input = $app->input;
+
+// Set up defaults
+if ($input->getInt('id'))
+{
+	$series_thumbnail = '';
+}
+else
+{
+	$series_thumbnail = empty($this->item->series_thumbnail) ? $this->admin_params->get('default_series_image') : $this->item->series_thumbnail;
+}
 ?>
 
 <script type="text/javascript">
@@ -88,7 +98,7 @@ $input = $app->input;
 									<?php echo $this->form->getLabel('image'); ?>
 								</div>
 								<div class="controls">
-									<?php echo $this->form->getInput('image', null, empty($this->item->series_thumbnail) ? $this->admin_params->get('default_series_image') : $this->item->series_thumbnail); ?>
+									<?php echo $this->form->getInput('image', null, $series_thumbnail); ?>
 								</div>
 							</div>
 						</div>

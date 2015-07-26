@@ -128,7 +128,7 @@
             <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
         </field>
         <field name="thumbnailm" type="hidden"/>
-        <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12"/>
+        <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
         <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
                filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
         <field name="rules" type="rules" label="JFIELD_RULES_LABEL"

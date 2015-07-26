@@ -21,6 +21,16 @@ $params = $this->state->get('params');
 $params = $params->toArray();
 $app = JFactory::getApplication();
 $input = $app->input;
+
+// Set up defaults
+if ($input->getInt('id'))
+{
+	$templatecode = '';
+}
+else
+{
+	$templatecode = empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode;
+}
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -79,7 +89,7 @@ $input = $app->input;
 							<div class="clr"></div>
 							<hr/>
 							<div class="editor-border">
-								<?php echo $this->form->getInput('templatecode', null, empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode); ?>
+								<?php echo $this->form->getInput('templatecode', null, $templatecode); ?>
 							</div>
 						</div>
 					</div>

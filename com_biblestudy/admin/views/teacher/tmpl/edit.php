@@ -21,6 +21,16 @@ JHtml::_('formbehavior.chosen', 'select');
 $app   = JFactory::getApplication();
 $input = $app->input;
 
+// Set up defaults
+if ($input->getInt('id'))
+{
+	$teacher_thumbnail = '';
+}
+else
+{
+	$teacher_thumbnail = empty($this->item->teacher_thumbnail) ? $this->admin->params->get('default_teacher_image') : $this->item->teacher_thumbnail;
+}
+
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -252,19 +262,20 @@ $input = $app->input;
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">
 			<div class="control-group">
-				<?php if ($this->item->teacher_thumbnail) : ?>
-				<img src="<?php echo JURI::root() . $this->item->teacher_thumbnail; ?>"
-				     alt="<?php echo $this->form->getValue('teachername'); ?>"
-				     class="thumbnail center"/>
-				<?php endif; ?>
 				<div class="control-label">
+					<?php var_dump($this->item->teacher_thumbnail); ?>
+					<?php if ($this->item->teacher_thumbnail) : ?>
+						<img src="<?php echo JURI::root() . '/' . $this->item->teacher_thumbnail; ?>"
+						     alt="<?php echo $this->form->getValue('teachername'); ?>"
+						     class="thumbnail center"/>
+					<?php endif; ?>
 					<h3 class="text-center">
 						<?php echo $this->form->getValue('teachername'); ?>
 					</h3>
 					<?php echo $this->form->getLabel('image'); ?>
 				</div>
 				<div class="controls">
-					<?php echo $this->form->getInput('image', null, empty($this->item->teacher_thumbnail) ? $this->admin->params->get('default_teacher_image') : $this->item->teacher_thumbnail); ?>
+					<?php echo $this->form->getInput('image', null, $teacher_thumbnail); ?>
 				</div>
 			</div>
 			<hr/>
