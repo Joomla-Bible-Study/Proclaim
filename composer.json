@@ -1,34 +1,40 @@
 {
     "name": "joomla-bible-study/joomla-bible-study",
+    "type": "project",
     "description": "Joomla-Bible-Study",
+    "keywords": ["bible", "biblestudy", "joomlabiblestudy"],
+    "homepage": "https://github.com/Joomla-Bible-Study/Joomla-Bible-Study",
+    "license": "GPL-2.0+",
+    "config": {
+      "bin-dir": "bin"
+    },
     "require": {
-        
+      "php": ">=5.3.10",
+      "ircmaxell/password-compat": "1.*",
+      "leafo/lessphp": "0.3.9",
+      "phpmailer/phpmailer": "5.2.9",
+      "symfony/yaml": "2.*"
     },
     "require-dev": {
         "phing/phing": "2.9.1",
         "pdepend/pdepend": "1.1.1",
-        "sebastian/phpcpd": "*",
         "pear/versioncontrol_git": "dev-master",
         "pear/pear_exception": "dev-master",
         "phpunit/phpunit": "4.1.*",
         "sebastian/phpcpd": "2.0.0",
         "phploc/phploc": "2.0.4",
-        "phpmd/phpmd": "1.4.1",
-        "phpunit/php-invoker": "~1.1",
-        "squizlabs/php_codesniffer": "1.5.5"
+        "squizlabs/php_codesniffer": "~1.5",
+        "pear/cache_lite": "1.7.16"
     },
     "authors": [
         {
             "name": "Michael Heiniger",
             "email": "michael.heiniger@gmail.com"
         }
-    ],
-    "config": {
-        "bin-dir": "bin"
-    },
-    "autoload": {
-        "psr-0": { "PHP_Depend": "vendor/pdepend/pdepend/src/main/php" }
-    },
-    "include-path": ["vendor/pdepend/pdepend/src/main/php"]
+    ]
+//    "autoload": {
+//        "psr-0": { "PHP_Depend": "vendor/pdepend/pdepend/src/main/php" }
+//    },
+//    "include-path": ["vendor/pdepend/pdepend/src/main/php"]
 
 }
