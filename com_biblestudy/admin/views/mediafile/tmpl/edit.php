@@ -17,7 +17,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 
 // Set up defaults
-if ($input->getInt('id'))
+if (JFactory::getApplication()->input->getInt('id'))
 {
 	$study_id   = $this->item->study_id;
 	$createdate = $this->item->createdate;

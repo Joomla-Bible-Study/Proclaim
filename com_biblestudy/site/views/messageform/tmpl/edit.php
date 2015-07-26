@@ -22,8 +22,12 @@ JHtml::_('behavior.framework');
 $return  = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
+$params = $this->form->getFieldsets('params');
+$app    = JFactory::getApplication();
+$input  = $app->input;
+
 // Set up defaults
-if ($input->getInt('id'))
+if ($input->getInt('a_id'))
 {
 	$booknumber  = $this->item->booknumber;
 	$thumbnailm  = $this->item->thumbnailm;
@@ -45,10 +49,6 @@ else
 	$thumbnailm  = $this->admin_params->get('default_study_image');
 	$user_id     = $this->admin->user_id;
 }
-
-$params = $this->form->getFieldsets('params');
-$app    = JFactory::getApplication();
-$input  = $app->input;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -145,7 +145,7 @@ $input  = $app->input;
 								<?php echo $this->form->getLabel('booknumber'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('booknumber', null, $booknumber); ?>
+								<?php echo $this->form->getInput('booknumber', null, $book); ?>
 							</div>
 						</div>
 						<div class="control-group">

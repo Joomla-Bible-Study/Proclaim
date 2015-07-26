@@ -37,17 +37,17 @@ class JFormFieldPlupload extends JFormField
 		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
 		$view = JFactory::getApplication()->input->get('view');
 		$document->addScriptDeclaration('
-            jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_biblestudy&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
-                uploader.bind("BeforeUpload", function() {
-                    uploader.setOption("multipart_params", {
-                        handler: "' . $this->element["handler"] . '",
-                        path: "/images/biblestudy/media/"
-                    });
-                });
-                uploader.init();
-            });
-        ');
+			jQuery(document).ready(function() {
+				uploader.setOption("url", "index.php?option=com_biblestudy&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
+				uploader.bind("BeforeUpload", function() {
+					uploader.setOption("multipart_params", {
+						handler: "' . $this->element["handler"] . '",
+						path: "/images/biblestudy/media/"
+					});
+				});
+				uploader.init();
+			});
+		');
 
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 

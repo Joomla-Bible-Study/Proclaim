@@ -23,7 +23,7 @@ $app = JFactory::getApplication();
 $input = $app->input;
 
 // Set up defaults
-if ($input->getInt('id'))
+if ($input->getInt('a_id'))
 {
 	$templatecode = $this->item->templatecode;
 }
