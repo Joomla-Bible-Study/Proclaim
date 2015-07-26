@@ -36,9 +36,9 @@ if ($saveOrder)
 $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
-	Joomla.orderTable = function () {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
+	Joomla.orderTable=function () {
+		var table = document.getElementById("sortTable");
+		var direction = document.getElementById("directionTable");
 		order = table.options[table.selectedIndex].value;
 		if (order != '<?php echo $listOrder; ?>') {
 			dirn = 'asc';
@@ -56,27 +56,26 @@ $sortFields = $this->getSortFields();
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
 				<label for="filter_search"
-				       class="element-invisible"><?php echo JText::_('JBS_MED_FILENAME'); ?>
+						class="element-invisible"><?php echo JText::_('JBS_MED_FILENAME'); ?>
 					: </label>
 				<input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_MED_FILENAME') ?>"
-				       id="filter_search"
-				       value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-				       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
+						id="filter_search"
+						value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
+						title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
 			</div>
 			<div class="btn-group pull-left hidden-phone">
 				<button class="btn tip hasTooltip" type="submit"
-				        title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
+						title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
 						class="icon-search"></i></button>
 				<button class="btn tip hasTooltip" type="button"
-				        onclick="document.id('filter_filename').value='';this.form.submit();"
-				        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
+						onclick="document.id('filter_filename').value='';this.form.submit();"
+						title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
 			</div>
 			<div class="clearfix"></div>
 			<div class="btn-group pull-right hidden-phone">
 				<label for="directionTable"
-				       class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
-				<select name="directionTable" id="directionTable" class="input-medium"
-				        onchange="Joomla.orderTable()">
+						class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
+				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
 					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
 					<option
 						value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
@@ -106,7 +105,7 @@ $sortFields = $this->getSortFields();
 			<tr>
 				<th width="1%" class="hidden-phone">
 					<input type="checkbox" name="checkall-toggle" value=""
-					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+							title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
 				<th width="1%" style="min-width:25px" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
@@ -150,7 +149,7 @@ $sortFields = $this->getSortFields();
 											? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
 										?>
 										<?php echo $label; ?>
-				                    </span>
+								</span>
 								<?php echo '...' . substr($this->escape($item->params[$item->serverConfig->config->media_resource->__toString()]), -25); ?>
 								<?php if ($canEdit || $canEditOwn) : ?>
 							</a>
