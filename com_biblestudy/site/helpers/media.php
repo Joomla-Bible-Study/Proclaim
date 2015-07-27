@@ -93,7 +93,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left">';
+		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left">';
 
 		return $imagereturn;
 	}
@@ -309,7 +309,7 @@ class JBSMMedia
 
 					case 2: // This plays the video inline
 						$mediacode  = $this->getAVmediacode($media->mediacode, $media);
-						$playercode = JHTML::_('content.prepare', $mediacode);
+						$playercode = JHtml::_('content.prepare', $mediacode);
 						break;
 				}
 
@@ -636,7 +636,7 @@ class JBSMMedia
 	 */
 	public function hitPlay($id)
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = plays + 1')
@@ -661,7 +661,7 @@ class JBSMMedia
 	public function getMediaRows2($id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
@@ -675,7 +675,7 @@ class JBSMMedia
 			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
 			->where('#__bsms_mediafiles.id = ' . (int) $id)
 			->where('#__bsms_mediafiles.published = ' . 1)
-			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')')
+			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
 			->order('ordering asc');
 		$db->setQuery($query);
 		$media = $db->loadObject();
@@ -699,21 +699,6 @@ class JBSMMedia
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Function to get File Size
-	 *
-	 * @param   string  $file_size  Size in bytes
-	 *
-	 * @return null|string
-	 *
-	 * @deprecate 9.0.0 This is replace by getFluidFilesize
-	 */
-	public function getFilesize($file_size)
-	{
-		JFactory::getApplication()->enqueueMessage('Use JBSMedia->getFluidFilesize');
-		return false;
 	}
 
 }

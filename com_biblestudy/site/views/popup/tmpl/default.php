@@ -23,13 +23,13 @@ $doc->addStyleDeclaration($style);
 	if ($this->params->get('player') == 3 || $this->player == 3 || $this->params->get('player') == 2 || $this->player == 2)
 	{
 		$mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
-		echo JHTML::_('content.prepare', $mediacode);
+		echo JHtml::_('content.prepare', $mediacode);
 	}
 	// Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWPlayer.
 	if ($this->params->get('player') == 1 || $this->player == 1 || $this->player == 7)
 	{
 		$player = ($this->player == '7' ? true : false);
-		JHTML::_('jwplayer.framework');
+		JHtml::_('jwplayer.framework');
 		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params->toObject(), true, $player);
 	}
 
@@ -39,7 +39,7 @@ $doc->addStyleDeclaration($style);
 	}
 	if ($this->player == 0)
 	{
-		echo '<a href="' . JRoute::_($this->params->get('filename')) . '"> Link to: ' .
+		echo '<a href="' . JRoute::_($this->path1) . '"> Link to: ' .
 			$this->media->studytitle . '</a>';
 	}
 	?>
