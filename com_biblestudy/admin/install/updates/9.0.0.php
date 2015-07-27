@@ -305,8 +305,14 @@ class Migration900
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
 
 		// Modify admin table to add thumbnail default parameters
+		/** @type TableAdmin $admin */
 		$admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));
 		$admin->load(1);
+		$registry = new Registry;
+		$registry->loadString($admin->params);
+		$registry->set('server', $newServer->id);
+		$admin->params = $registry->toString();
+		$admin->store(1);
 
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
@@ -351,7 +357,7 @@ class Migration900
 		{
 			if (isset($columns2[$column]))
 			{
-				$db->setQuery('ALTER TABLE ' . $table . ' DROP ' . $column);
+				$db->setQuery('ALTER TABLE `' . $table . '` DROP COLUMN `' . $column . '`');
 				$db->execute();
 			}
 		}
@@ -367,7 +373,7 @@ class Migration900
 	 */
 	private function deleteTable ($table, $db)
 	{
-		$db->setQuery('DROP TABLE ' . $table);
+		$db->setQuery('DROP TABLE `' . $table . '`');
 		$db->execute();
 	}
 
