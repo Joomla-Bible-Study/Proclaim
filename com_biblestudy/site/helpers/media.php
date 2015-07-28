@@ -280,7 +280,7 @@ class JBSMMedia
 							$player->playerheight = 40;
 						}
 						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
-							'" pheight="' . $player->playerheight .'">' . $image . '</a>';
+							'" pheight="' . $player->playerheight . '">' . $image . '</a>';
 						return $playercode;
 						break;
 
