@@ -24,7 +24,7 @@
         "phpunit/phpunit": "4.1.*",
         "sebastian/phpcpd": "2.0.0",
         "phploc/phploc": "2.0.4",
-        "squizlabs/php_codesniffer": "~1.5",
+        "squizlabs/php_codesniffer": "~2.0",
         "pear/cache_lite": "1.7.16"
     }
 }
