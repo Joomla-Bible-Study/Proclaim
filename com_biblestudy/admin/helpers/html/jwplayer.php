@@ -151,7 +151,7 @@ abstract class JHtmlJwplayer
 					});
 				</script>";
 
-		//return $render;
+		return $render;
 
 	}
 }
