@@ -35,16 +35,19 @@
         $(".fancybox_jwplayer").on("click", function () {
             var tarGet;
             var myVideo = this.href;
-            var width = 640; //parseInt(this.rel.match(/width=[0-9]+/i)[0].replace('width=', ''));
-            var height = 381; //parseInt(this.rel.match(/height=[0-9]+/i)[0].replace('height=', ''));
+	        var player = $(".fancybox_jwplayer");
+	        var height = player.attr('pheight');
+	        var width = player.attr('pwidth');
             $.fancybox({
-                content: '<div id="video_container" style="width:640px;height:381px;">Loading the player ... </div> ',
+	            minWidth: 481,
+	            minHeight: 40,
+                content: '<div id="video_container" style="width:' + width + 'px; height:' + height + 'px;">Loading the player ... </div> ',
                 afterShow: function () {
                     jwplayer("video_container").setup({
                         flashplayer: "media/com_biblestudy/player/jwplayer.flash.swf",
                         file: myVideo,
-                        width: width,
-                        height: height
+	                    width: width,
+	                    height: height
                     }); // jwplayer setup
                 } // afterShow
             }); // fancybox

@@ -181,9 +181,13 @@ class JBSMMedia
 		}
 		$item_playertype = $params->get('popup');
 
-		if ($param_playertype)
+		if ($param_playertype && !$media->params->get('popup'))
 		{
 			$player->type = $param_playertype;
+		}
+		else
+		{
+			$player->type = $media->params->get('popup');
 		}
 
 		switch ($item_playertype)
@@ -228,10 +232,14 @@ class JBSMMedia
 		{
 			$media->malttext = '';
 		}
-		if (!substr_count($path, '://') && !substr_count($path, '//'))
+		if (substr_count($path, '://') && substr_count($path, '//'))
 		{
 			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $media->sparams->get('path') . $path;
+		}
+		else
+		{
+			$path = $media->sparams->get('path') . $path;
 		}
 
 		switch ($player->player)
@@ -241,14 +249,11 @@ class JBSMMedia
 
 				switch ($player->type)
 				{
-
 					case 2: // New window
-
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $media->special . '">' . $image . '</a>';
-
 						return $playercode;
 						break;
 
@@ -270,10 +275,12 @@ class JBSMMedia
 				{
 					case 3: // Squeezebox view
 						JHtml::_('fancybox.framework', true, true);
-						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" rel="width="' .
-							$player->playerwidth . '" height="' . $player->playerheight .
-							'">' . $image . '</a>';
-
+						if ($player->player == 7)
+						{
+							$player->playerheight = 40;
+						}
+						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
+							'" pheight="' . $player->playerheight .'">' . $image . '</a>';
 						return $playercode;
 						break;
 

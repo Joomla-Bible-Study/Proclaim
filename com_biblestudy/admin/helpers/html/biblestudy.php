@@ -119,11 +119,11 @@ abstract class JHtmlBiblestudy
 	public static function playerlist()
 	{
 		$options   = array();
-		$options[] = array('value' => 100, 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
+		$options[] = array('value' => '', 'text' => JText::_('JBS_CMN_USE_GLOBAL'));
 		$options[] = array('value' => 0, 'text' => JText::_('JBS_CMN_DIRECT_LINK'));
 		$options[] = array('value' => 1, 'text' => JText::_('JBS_CMN_USE_INTERNAL_PLAYER'));
 		$options[] = array('value' => 3, 'text' => JText::_('JBS_CMN_USE_AV'));
-		$options[] = array('value' => 7, 'text' => JText::_('JBS_CMN_USE_LEGACY_PLAYER'));
+		$options[] = array('value' => 7, 'text' => JText::_('JBS_CMN_USE_MP3_PLAYER'));
 		$options[] = array('value' => 8, 'text' => JText::_('JBS_CMN_USE_EMBED_CODE'));
 		$object    = new stdClass;
 

@@ -7,7 +7,6 @@
   border-collapse: separate;
   .bsm_studiestitlerow {
 	background-color: #666;
-	background-color: #666;
 	}
   .teacheraddress {
 	text-align: left;
@@ -39,7 +38,7 @@
 	font-size: 18px;
 	font-weight: bold;
 	border-bottom: 3px solid #999999;
-	padding: 4px 0px 4px 4px;
+	padding: 4px 0 4px 4px;
 	}
   .bsm_separator {
 	border-bottom: 1px solid #999999;
@@ -163,7 +162,7 @@
 .podcastheader {
   font-weight: bold;
   h3 {
-	display: table-header;
+	display: inline;
 	text-align: center;
 	}
   }
@@ -504,7 +503,7 @@ div.listingfooter {
   }
 
 .landing_title {
-  font-family: arial;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 16px;
   font-weight: bold;
   }
@@ -518,7 +517,7 @@ div.listingfooter {
   }
 
 #showhide {
-  font-family: arial;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 12px;
   font-weight: bold;
   text-decoration: none;
@@ -539,6 +538,7 @@ p.popuptitle {
   color: black;
   }
 
+// Footer Stuff
 .popupfooter {
   margin: 5px;
   text-align: center;
@@ -549,6 +549,7 @@ p.popupfooter {
   color: grey;
   }
 
-.row-fluid .JBSM .span2{
-  margin-left: 0 !important;
+// Used to affect boot strap and keep alignment in the display.
+.JBSM [class*="span"]{
+  margin-left: 0;
   }

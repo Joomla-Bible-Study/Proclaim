@@ -23,7 +23,7 @@ abstract class JHtmlFancybox
 	protected static $loaded = array();
 
 	/**
-	 * Method to load the bPopup JavaScript framework into the document head
+	 * Method to load the fancybox JavaScript framework into the document head
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
