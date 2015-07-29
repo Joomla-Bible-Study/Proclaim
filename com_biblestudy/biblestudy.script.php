@@ -65,7 +65,7 @@ class Com_BiblestudyInstallerScript
 		$this->_release = $parent->get("manifest")->version;
 
 		// Start DB factory
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
 		$query = $db->getQuery(true);
@@ -120,7 +120,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function install($parent)
 	{
-		$db     = JFactory::getDBO();
+		$db     = JFactory::getDbo();
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
 
 		if ($buffer === false)
@@ -164,7 +164,7 @@ class Com_BiblestudyInstallerScript
 
 		// Need to load JBSMDbHelper for script
 		$dbhelper    = new JBSMDbHelper;
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$drop_result = '';
 
 		if ($dbhelper->checkIfTable('#__bsms_admin'))
@@ -418,7 +418,7 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Set the #__schemas version_id to the correct number for error from 7.0.0
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
@@ -463,7 +463,7 @@ class Com_BiblestudyInstallerScript
 		$db->execute();
 
 		// An redirect to a new location after the install is completed.
-		$parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
+		$parent->getParent()->set('redirect_url', JUri::base() . 'index.php?option=com_biblestudy');
 	}
 
 	/**
@@ -867,7 +867,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function fixMenus()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__menu')
@@ -914,7 +914,7 @@ class Com_BiblestudyInstallerScript
 		// Correct blank records
 		foreach ($tables as $table)
 		{
-			$db = JFactory::getDBO();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update($table['table'])
 				->set('language = ' . $db->q('*'))
