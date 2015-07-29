@@ -66,26 +66,26 @@
 }
 #bsm_teachertable .bsm_titletitle {
   font-weight: bold;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #bsm_teachertable .bsm_titlescripture {
   font-weight: bold;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #bsm_teachertable .bsm_titledate {
   font-weight: bold;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #bsm_teachertable .bsm_teacherlong {
   padding: 8px 4px 4px;
   border-bottom: 1px solid #999999;
 }
 #bsm_teachertable tr.bsodd {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-bottom: 1px solid #999999;
 }
 #bsm_teachertable tr.bseven {
-  background-color: #FFFFF0;
+  background-color: #fffff0;
   border-bottom: 1px solid #999999;
 }
 #bsm_teachertable .lastrow td {
@@ -199,10 +199,10 @@ div.listingfooter ul li {
   padding-bottom: 3px;
 }
 .bslisttable tr.bsodd td {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 .bslisttable tr.bseven td {
-  background-color: #FFFFF0;
+  background-color: #fffff0;
 }
 .bslisttable .date {
   white-space: nowrap;
@@ -344,10 +344,10 @@ div.listingfooter ul li {
   padding-bottom: 3px;
 }
 #bsmsmoduletable tr.bsodd td {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 #bsmsmoduletable tr.bseven td {
-  background-color: #FFFFF0;
+  background-color: #fffff0;
 }
 #bsmsmoduletable .date {
   white-space: nowrap;

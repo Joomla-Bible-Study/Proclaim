@@ -55,6 +55,7 @@ JFactory::getDocument()->addScriptDeclaration('
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
+		<hr/>
 	</div>
 	<div id="j-main-container" class="span10">
 		<?php else : ?>
