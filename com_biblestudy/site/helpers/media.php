@@ -220,13 +220,18 @@ class JBSMMedia
 	 */
 	public function getPlayerCode($params, $player, $image, $media)
 	{
+
+		// Merging the item params into the global.
+		$params = clone $params;
+		$params->merge($media->params);
+
 		$input       = new JInput;
 		$template    = $input->get('t', '1', 'int');
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
-		$path     = $media->params->get('filename');
+		$path     = $params->get('filename');
 
 		if (!isset($media->malttext))
 		{
@@ -253,7 +258,7 @@ class JBSMMedia
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $media->special . '">' . $image . '</a>';
+							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
 						return $playercode;
 						break;
 
@@ -279,8 +284,8 @@ class JBSMMedia
 						{
 							$player->playerheight = 40;
 						}
-						$playercode = '<a href="' . $path . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
-							'" pheight="' . $player->playerheight . '">' . $image . '</a>';
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
+							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
 						return $playercode;
 						break;
 

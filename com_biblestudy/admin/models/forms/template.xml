@@ -195,10 +195,17 @@
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
+			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
+			       description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="_blank">
+				<option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
+				<option value="_self">JBS_MED_LINK_TARGET_SELF</option>
+				<option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
+				<option value="_top">JBS_MED_LINK_TARGET_TOP</option>
+			</field>
 			<field name="autostart" type="list" default="1"
 			       label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC">
-				<option value="1">JYES</option>
-				<option value="2">JNO</option>
+				<option value="true">JYES</option>
+				<option value="false">JNO</option>
 			</field>
 			<field name="playerresposive" type="list" default="1"
 			       label="JBS_TPL_RESPONSIVE" description="JBS_TPL_RESPONSIVE_DESC">

@@ -86,8 +86,8 @@
 			<field name="autostart" type="list"
 			       label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC" default="">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="1">JYES</option>
-				<option value="2">JNO</option>
+				<option value="true">JYES</option>
+				<option value="false">JNO</option>
 			</field>
 		</fieldset>
 	</fields>
