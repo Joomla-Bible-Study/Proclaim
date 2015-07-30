@@ -12,7 +12,7 @@
 
 DROP TABLE IF EXISTS `#__bsms_admin`;
 
-CREATE TABLE `#__bsms_admin` (
+CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
   `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `drop_tables`  INT(3)                    DEFAULT '0',
   `params`       TEXT,
@@ -42,7 +42,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_books`;
 
-CREATE TABLE `#__bsms_books` (
+CREATE TABLE IF NOT EXISTS `#__bsms_books` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `bookname`   VARCHAR(250)              DEFAULT NULL,
   `booknumber` INT(5)                    DEFAULT NULL,
@@ -139,7 +139,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_comments`;
 
-CREATE TABLE `#__bsms_comments` (
+CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
   `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `published`    TINYINT(3)       NOT NULL DEFAULT '0',
   `study_id`     INT(11)          NOT NULL DEFAULT '0',
@@ -162,7 +162,7 @@ CREATE TABLE `#__bsms_comments` (
 
 DROP TABLE IF EXISTS `#__bsms_locations`;
 
-CREATE TABLE `#__bsms_locations` (
+CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
   `id`               INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
   `location_text`    VARCHAR(250)                 DEFAULT NULL,
   `contact_id`       INT(10) UNSIGNED    NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact',
@@ -229,7 +229,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_mediafiles`;
 
-CREATE TABLE `#__bsms_mediafiles` (
+CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `study_id`         INT(5)                    DEFAULT NULL,
   `server_id`        INT(5)                    DEFAULT NULL,
@@ -284,7 +284,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_message_type`;
 
-CREATE TABLE `#__bsms_message_type` (
+CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
   `id`           INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `message_type` TEXT                                             NOT NULL,
   `alias`        VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -314,7 +314,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_podcast`;
 
-CREATE TABLE `#__bsms_podcast` (
+CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `id`                      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title`                   VARCHAR(100)              DEFAULT NULL,
   `website`                 VARCHAR(100)              DEFAULT NULL,
@@ -368,7 +368,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_series`;
 
-CREATE TABLE `#__bsms_series` (
+CREATE TABLE IF NOT EXISTS `#__bsms_series` (
   `id`               INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `series_text`      TEXT,
   `alias`            VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -402,7 +402,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_servers`;
 
-CREATE TABLE `#__bsms_servers` (
+CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `server_name` VARCHAR(250)     NOT NULL DEFAULT '',
   `published`   TINYINT(3)       NOT NULL DEFAULT '1',
@@ -439,7 +439,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_share`;
 
-CREATE TABLE `#__bsms_share` (
+CREATE TABLE IF NOT EXISTS `#__bsms_share` (
   `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name`      VARCHAR(250)              DEFAULT NULL,
   `params`    TEXT,
@@ -479,7 +479,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_studies`;
 
-CREATE TABLE `#__bsms_studies` (
+CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
   `id`                  INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `studydate`           DATETIME                                                  DEFAULT NULL,
   `teacher_id`          INT(11)                                                   DEFAULT '1',
@@ -567,7 +567,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_studytopics`;
 
-CREATE TABLE `#__bsms_studytopics` (
+CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
   `id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `study_id` INT(3)           NOT NULL DEFAULT '0',
   `topic_id` INT(3)           NOT NULL DEFAULT '0',
@@ -596,7 +596,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_styles`;
 
-CREATE TABLE `#__bsms_styles` (
+CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
   `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `published` TINYINT(3)       NOT NULL DEFAULT '1',
   `filename`  TEXT             NOT NULL,
@@ -624,7 +624,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_teachers`;
 
-CREATE TABLE `#__bsms_teachers` (
+CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `id`                INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `teacher_image`     TEXT,
   `teacher_thumbnail` TEXT,
@@ -688,7 +688,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_templatecode`;
 
-CREATE TABLE `#__bsms_templatecode` (
+CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `published`    TINYINT(3)       NOT NULL DEFAULT '1',
   `type`         TINYINT(3)       NOT NULL,
@@ -704,7 +704,7 @@ CREATE TABLE `#__bsms_templatecode` (
 
 DROP TABLE IF EXISTS `#__bsms_templates`;
 
-CREATE TABLE `#__bsms_templates` (
+CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
   `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `type`      VARCHAR(255)     NOT NULL,
   `tmpl`      LONGTEXT         NOT NULL,
@@ -738,7 +738,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_timeset`;
 
-CREATE TABLE `#__bsms_timeset` (
+CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
   `timeset` VARCHAR(14) NOT NULL DEFAULT '',
   `backup`  VARCHAR(14)          DEFAULT NULL,
   PRIMARY KEY (`timeset`)
@@ -760,7 +760,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_topics`;
 
-CREATE TABLE `#__bsms_topics` (
+CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `topic_text` TEXT,
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
@@ -884,7 +884,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `#__bsms_update`;
 
-CREATE TABLE `#__bsms_update` (
+CREATE TABLE IF NOT EXISTS `#__bsms_update` (
   `id`      INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `version` VARCHAR(255)              DEFAULT NULL,
   PRIMARY KEY (`id`)
