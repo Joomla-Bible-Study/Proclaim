@@ -90,7 +90,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = $db->splitSql($query);
@@ -215,7 +215,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			->from('#__bsms_templatecode')
 			->order($db->q('id') . ' DESC');
 		$db->setQuery($query, 0, $tc);
-		$data = $db->loadObjectlist();
+		$data = $db->loadObjectList();
 
 		foreach ($data AS $tpcode):
 
@@ -314,7 +314,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	private function performDB($query)
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -345,14 +345,14 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
 		}
 		jimport('joomla.filesystem.file');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
 		$query->where('t.id = ' . $exporttemplate);
 		$db->setQuery($query);
 		$result       = $db->loadObject();
-		$objects[]    = $this->getExportSetting($result, $data);
+		$objects[]    = $this->getExportSetting($result);
 		$filecontents = implode(' ', $objects);
 		$filename     = $result->title . '.sql';
 		$filepath     = JPATH_ROOT . '/tmp/' . $filename;
@@ -382,7 +382,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$db      = JFactory::getDBO();
+		$db      = JFactory::getDbo();
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);
@@ -397,8 +397,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$db->setQuery($query2);
 			$db->execute();
 			$cssresult = $db->loadObject();
-			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->escape($cssresult->filename)
-				. "',\n`stylecode` = '" . $db->escape($cssresult->stylecode) . "';\n";
+			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q($cssresult->filename)
+				. ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
 		}
 
 		// Get the individual template files
@@ -448,10 +448,10 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$objects .= "\n\n--\n-- Template Table\n--\n";
 
 		// Create the main template insert
-		$objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->escape($result->type) . "',";
-		$objects .= "\n`params` = '" . $db->escape($result->params) . "',";
-		$objects .= "\n`title` = '" . $db->escape($result->title) . "',";
-		$objects .= "\n`text` = '" . $db->escape($result->text) . "';";
+		$objects .= "\nINSERT INTO #__bsms_templates SET `type` = " . $db->q($result->type) . ",";
+		$objects .= "\n`params` = " . $db->q($result->params) . ",";
+		$objects .= "\n`title` = " . $db->q($result->title) . ",";
+		$objects .= "\n`text` = " . $db->q($result->text) . ";";
 
 		$objects .= "\n-- --------------------------------------------------------\n\n";
 
@@ -467,7 +467,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

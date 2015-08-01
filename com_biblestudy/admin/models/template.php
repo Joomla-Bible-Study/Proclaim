@@ -51,7 +51,8 @@ class BiblestudyModelTemplate extends JModelAdmin
 	{
 		foreach ($cid as $id)
 		{
-			$tmplCurr = JTable::getInstance('template', 'Table');
+			/** @type TableTemplate $tmplCurr */
+			$tmplCurr = JTable::getInstance('Template', 'Table');
 
 			$tmplCurr->load($id);
 			$tmplCurr->id = null;
@@ -84,7 +85,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 		{
 			if ($pk == 1 && $value != 1)
 			{
-				JFactory::getApplication()->enqueueMessage(JTEXT::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
 				unset($pks[$i]);
 			}
 		}

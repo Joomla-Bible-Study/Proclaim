@@ -94,7 +94,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
