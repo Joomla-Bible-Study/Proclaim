@@ -103,10 +103,6 @@ class BiblestudyViewMediafileform extends JViewLegacy
 				}
 			}
 		}
-		else
-		{
-			//$this->options
-		}
 
 		// Needed to load the article field type for the article selector
 		JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
