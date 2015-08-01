@@ -10,6 +10,7 @@ defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
+
 /**
  * BibleStudy Install Script
  *
@@ -34,7 +35,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
-	private $_minimum_joomla_release = '3.2.0';
+	private $_minimum_joomla_release = '3.4.1';
 
 	/**
 	 * Find minimum required PHP version for this extension.
@@ -57,7 +58,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function preflight($type, $parent)
 	{
-		// This component does not work with Joomla releases prior to 2.5
+		// This component does not work with Joomla releases prior to 3.4
 		// abort if the current Joomla release is older
 
 		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
@@ -103,7 +104,7 @@ class Com_BiblestudyInstallerScript
 		}
 		else
 		{
-			JFactory::$application->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
+			JFactory::getApplication()->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
 			$install_good = false;
 		}
 
@@ -138,9 +139,14 @@ class Com_BiblestudyInstallerScript
 			if ($querie != '' && $querie{0} != '#')
 			{
 				$db->setQuery($querie);
-				$db->execute();
+				if (!$db->execute())
+				{
+					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
+					die;
+				}
 			}
 		}
+
 		require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
 		$fresh = new JBSMFreshInstall;
 

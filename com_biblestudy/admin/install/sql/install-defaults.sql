@@ -1,31 +1,5 @@
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
-/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
-
-
-# Dump of table #__bsms_admin
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_admin`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
-  `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `drop_tables`  INT(3)                    DEFAULT '0',
-  `params`       TEXT,
-  `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `installstate` TEXT,
-  `debug`        TINYINT(3)       NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_admin` WRITE;
-/*!40000 ALTER TABLE `#__bsms_admin` DISABLE KEYS */;
+-- Dump of table #__bsms_admin
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`, `installstate`, `debug`)
 VALUES
@@ -33,26 +7,9 @@ VALUES
    '{\"metakey\":\"\",\"metadesc\":\"\",\"compat_mode\":\"0\",\"studylistlimit\":\"10\",\"show_location_media\":\"0\",\"popular_limit\":\"\",\"character_filter\":\"1\",\"format_popular\":\"0\",\"default_main_image\":\"\",\"default_series_image\":\"\",\"default_teacher_image\":\"\",\"default_download_image\":\"\",\"default_showHide_image\":\"\",\"thumbnail_teacher_size\":\"150\",\"thumbnail_series_size\":\"150\",\"thumbnail_study_size\":\"150\",\"location_id\":\"-1\",\"teacher_id\":\"1\",\"series_id\":\"-1\",\"booknumber\":\"-1\",\"messagetype\":\"-1\",\"default_study_image\":\"\",\"download\":\"1\",\"target\":\" \",\"server\":\"1\",\"podcast\":[\"-1\"],\"from\":\"x\",\"to\":\"x\",\"pFrom\":\"x\",\"pTo\":\"x\",\"controls\":\"1\",\"jwplayer_pro\":\"0\",\"jwplayer_key\":\"\",\"jwplayer_cdn\":\"\",\"jwplayer_skin\":\"\",\"jwplayer_autostart\":\"false\",\"jwplayer_fallback\":\"true\",\"jwplayer_mute\":\"false\",\"jwplayer_stagevideo\":\"false\",\"jwplayer_primary\":\"html5\",\"playlist\":\"false\",\"jwplayer_listbar\":\"false\",\"jwplayer_logo\":\"\",\"sharing\":\"false\",\"jwplayer_related\":\"false\",\"jwplayer_advertising\":\"\",\"rtmp\":\"Comming Soon\",\"ga\":\"Comming Soon\",\"jwplayer_sitecatalyst\":\"Comming Soon\",\"captions\":\"false\"}',
    7587, 1, NULL, 0);
 
-/*!40000 ALTER TABLE `#__bsms_admin` ENABLE KEYS */;
-UNLOCK TABLES;
 
-
-# Dump of table #__bsms_books
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_books`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_books` (
-  `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `bookname`   VARCHAR(250)              DEFAULT NULL,
-  `booknumber` INT(5)                    DEFAULT NULL,
-  `published`  TINYINT(3)       NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_books` WRITE;
-/*!40000 ALTER TABLE `#__bsms_books` DISABLE KEYS */;
+-- Dump of table #__bsms_books
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`)
 VALUES
@@ -130,89 +87,8 @@ VALUES
   (72, 'JBS_BBK_SIRACH', 172, 1),
   (73, 'JBS_BBK_BARUCH', 173, 1);
 
-/*!40000 ALTER TABLE `#__bsms_books` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_comments
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_comments`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
-  `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `published`    TINYINT(3)       NOT NULL DEFAULT '0',
-  `study_id`     INT(11)          NOT NULL DEFAULT '0',
-  `user_id`      INT(11)          NOT NULL DEFAULT '0',
-  `full_name`    VARCHAR(50)      NOT NULL DEFAULT '',
-  `user_email`   VARCHAR(100)     NOT NULL DEFAULT '',
-  `comment_date` DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `comment_text` TEXT             NOT NULL,
-  `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `language`     CHAR(7)          NOT NULL COMMENT 'The language code for the Comments.',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-
-# Dump of table #__bsms_locations
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_locations`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
-  `id`               INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
-  `location_text`    VARCHAR(250)                 DEFAULT NULL,
-  `contact_id`       INT(10) UNSIGNED    NOT NULL DEFAULT '0' COMMENT 'Used to link to com_contact',
-  `address`          TEXT,
-  `suburb`           VARCHAR(100)                 DEFAULT NULL,
-  `state`            VARCHAR(100)                 DEFAULT NULL,
-  `country`          VARCHAR(100)                 DEFAULT NULL,
-  `postcode`         VARCHAR(100)                 DEFAULT NULL,
-  `telephone`        VARCHAR(255)                 DEFAULT NULL,
-  `fax`              VARCHAR(255)                 DEFAULT NULL,
-  `misc`             MEDIUMTEXT,
-  `image`            VARCHAR(255)                 DEFAULT NULL,
-  `email_to`         VARCHAR(255)                 DEFAULT NULL,
-  `default_con`      TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  `checked_out`      INT(10) UNSIGNED    NOT NULL DEFAULT '0',
-  `checked_out_time` DATETIME            NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `params`           TEXT                NOT NULL,
-  `user_id`          INT(11)             NOT NULL DEFAULT '0',
-  `mobile`           VARCHAR(255)        NOT NULL DEFAULT '',
-  `webpage`          VARCHAR(255)        NOT NULL DEFAULT '',
-  `sortname1`        VARCHAR(255)        NOT NULL,
-  `sortname2`        VARCHAR(255)        NOT NULL,
-  `sortname3`        VARCHAR(255)        NOT NULL,
-  `language`         CHAR(7)             NOT NULL,
-  `created`          DATETIME            NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `created_by`       INT(10) UNSIGNED    NOT NULL DEFAULT '0',
-  `created_by_alias` VARCHAR(255)        NOT NULL DEFAULT '',
-  `modified`         DATETIME            NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by`      INT(10) UNSIGNED    NOT NULL DEFAULT '0',
-  `metakey`          TEXT                NOT NULL,
-  `metadesc`         TEXT                NOT NULL,
-  `metadata`         TEXT                NOT NULL,
-  `featured`         TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Set if article is featured.',
-  `xreference`       VARCHAR(50)         NOT NULL COMMENT 'A reference to enable linkages to external data sets.',
-  `version`          INT(10) UNSIGNED    NOT NULL DEFAULT '1',
-  `hits`             INT(10) UNSIGNED    NOT NULL DEFAULT '0',
-  `publish_up`       DATETIME            NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `publish_down`     DATETIME            NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `published`        TINYINT(3)          NOT NULL DEFAULT '1',
-  `asset_id`         INT(10) UNSIGNED    NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`           INT(10) UNSIGNED    NOT NULL DEFAULT '1',
-  `ordering`         INT(11)             NOT NULL DEFAULT '0',
-  `landing_show`     INT(3)                       DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_locations` WRITE;
-/*!40000 ALTER TABLE `#__bsms_locations` DISABLE KEYS */;
+-- Dump of table #__bsms_locations
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_locations` (`id`, `location_text`, `contact_id`, `address`, `suburb`, `state`, `country`, `postcode`, `telephone`, `fax`, `misc`, `image`, `email_to`, `default_con`, `checked_out`, `checked_out_time`, `params`, `user_id`, `mobile`, `webpage`, `sortname1`, `sortname2`, `sortname3`, `language`, `created`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `metakey`, `metadesc`, `metadata`, `featured`, `xreference`, `version`, `hits`, `publish_up`, `publish_down`, `published`, `asset_id`, `access`, `ordering`, `landing_show`)
 VALUES
@@ -220,48 +96,8 @@ VALUES
    '', '', '', '', '', '', '0000-00-00 00:00:00', 0, '', '0000-00-00 00:00:00', 0, '', '', '', 0, '', 1, 0,
    '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 7480, 1, 1, NULL);
 
-/*!40000 ALTER TABLE `#__bsms_locations` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_mediafiles
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_mediafiles`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
-  `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `study_id`         INT(5)                    DEFAULT NULL,
-  `server_id`        INT(5)                    DEFAULT NULL,
-  `podcast_id`       VARCHAR(50)               DEFAULT NULL,
-  `metadata`         TEXT             NOT NULL,
-  `ordering`         INT(11)          NOT NULL DEFAULT '0',
-  `createdate`       DATETIME                  DEFAULT NULL,
-  `hits`             INT(10)                   DEFAULT '0',
-  `published`        TINYINT(3)       NOT NULL DEFAULT '1',
-  `comment`          TEXT,
-  `downloads`        INT(10)                   DEFAULT '0',
-  `plays`            INT(10)                   DEFAULT '0',
-  `params`           TEXT,
-  `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `language`         CHAR(7)          NOT NULL COMMENT 'The language code for the MediaFile.',
-  `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
-  `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `checked_out`      INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `checked_out_time` DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_study_id` (`study_id`),
-  KEY `idx_access` (`access`),
-  KEY `idx_checkout` (`checked_out`),
-  KEY `idx_createdby` (`created_by`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_mediafiles` WRITE;
-/*!40000 ALTER TABLE `#__bsms_mediafiles` DISABLE KEYS */;
+-- Dump of table #__bsms_mediafiles
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `metadata`, `ordering`, `createdate`, `hits`, `published`, `comment`, `downloads`, `plays`, `params`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `checked_out`, `checked_out_time`)
 VALUES
@@ -275,83 +111,15 @@ VALUES
    '{\"link_type\":\"0\",\"docMan_id\":\"0\",\"article_id\":\"-1\",\"virtueMart_id\":\"0\",\"player\":\"1\",\"popup\":\"3\",\"mediacode\":\"\",\"filename\":\"https:\\/\\/youtu.be\\/PsFo6MhAB9o\",\"size\":0,\"special\":\"\",\"media_image\":\"images\\/biblestudy\\/youtube24.png\",\"mime_type\":\"video\\/mp4\",\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\",\"autostart\":\"\"}',
    7596, 1, '*', 0, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00');
 
-/*!40000 ALTER TABLE `#__bsms_mediafiles` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_message_type
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_message_type`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
-  `id`           INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
-  `message_type` TEXT                                             NOT NULL,
-  `alias`        VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `published`    TINYINT(3)                                       NOT NULL DEFAULT '1',
-  `asset_id`     INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
-  `ordering`     INT(11)                                          NOT NULL DEFAULT '0',
-  `landing_show` INT(3)                                                    DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_message_type` WRITE;
-/*!40000 ALTER TABLE `#__bsms_message_type` DISABLE KEYS */;
+-- Dump of table #__bsms_message_type
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, `asset_id`, `access`, `ordering`, `landing_show`)
 VALUES
   (1, 'Sunday', X'73756E646179', 1, 7482, 1, 1, NULL);
 
-/*!40000 ALTER TABLE `#__bsms_message_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_podcast
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_podcast`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
-  `id`                      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title`                   VARCHAR(100)              DEFAULT NULL,
-  `website`                 VARCHAR(100)              DEFAULT NULL,
-  `description`             TEXT,
-  `image`                   VARCHAR(130)              DEFAULT NULL,
-  `imageh`                  INT(3)                    DEFAULT NULL,
-  `imagew`                  INT(3)                    DEFAULT NULL,
-  `author`                  VARCHAR(100)              DEFAULT NULL,
-  `podcastimage`            VARCHAR(130)              DEFAULT NULL,
-  `podcastsearch`           VARCHAR(255)              DEFAULT NULL,
-  `filename`                VARCHAR(150)              DEFAULT NULL,
-  `language`                VARCHAR(10)               DEFAULT 'en-us',
-  `editor_name`             VARCHAR(150)              DEFAULT NULL,
-  `editor_email`            VARCHAR(150)              DEFAULT NULL,
-  `podcastlimit`            INT(5)                    DEFAULT NULL,
-  `published`               TINYINT(3)       NOT NULL DEFAULT '1',
-  `episodetitle`            INT(11)                   DEFAULT NULL,
-  `custom`                  VARCHAR(200)              DEFAULT NULL,
-  `detailstemplateid`       INT(11)                   DEFAULT NULL,
-  `asset_id`                INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`                  INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `alternatelink`           VARCHAR(300)              DEFAULT NULL COMMENT 'replaces podcast file link on subscription',
-  `alternateimage`          VARCHAR(150)              DEFAULT NULL COMMENT 'alternate image path for podcast',
-  `podcast_subscribe_show`  INT(3)                    DEFAULT NULL,
-  `podcast_image_subscribe` VARCHAR(150)              DEFAULT NULL COMMENT 'The image to use for the podcast subscription image',
-  `podcast_subscribe_desc`  VARCHAR(150)              DEFAULT NULL COMMENT 'Words to go below podcast subscribe image',
-  `alternatewords`          VARCHAR(20)               DEFAULT NULL,
-  `episodesubtitle`         INT(11)                   DEFAULT NULL,
-  `customsubtitle`          VARCHAR(200)              DEFAULT NULL,
-  `linktype`                INT(10)          NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_podcast` WRITE;
-/*!40000 ALTER TABLE `#__bsms_podcast` DISABLE KEYS */;
+-- Dump of table #__bsms_podcast
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `episodesubtitle`, `customsubtitle`, `linktype`)
 VALUES
@@ -359,65 +127,15 @@ VALUES
    'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com',
    50, 1, 0, '', 1, 7483, 1, '', '', 0, '', '', '', 0, '', 0);
 
-/*!40000 ALTER TABLE `#__bsms_podcast` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_series
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_series`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_series` (
-  `id`               INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
-  `series_text`      TEXT,
-  `alias`            VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `teacher`          INT(3)                                                    DEFAULT NULL,
-  `description`      TEXT,
-  `series_thumbnail` VARCHAR(150)                                              DEFAULT NULL,
-  `published`        TINYINT(3)                                       NOT NULL DEFAULT '1',
-  `asset_id`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `ordering`         INT(11)                                          NOT NULL DEFAULT '0',
-  `access`           INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
-  `language`         CHAR(7)                                          NOT NULL COMMENT 'The language code for the Series.',
-  `landing_show`     INT(3)                                                    DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_series` WRITE;
-/*!40000 ALTER TABLE `#__bsms_series` DISABLE KEYS */;
+-- Dump of table #__bsms_series
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_series` (`id`, `series_text`, `alias`, `teacher`, `description`, `series_thumbnail`, `published`, `asset_id`, `ordering`, `access`, `language`, `landing_show`)
 VALUES
   (1, 'Worship Series', X'776F72736869702D736572696573', -1, '', '', 1, 7484, 1, 1, '*', NULL);
 
-/*!40000 ALTER TABLE `#__bsms_series` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_servers
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_servers`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
-  `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `server_name` VARCHAR(250)     NOT NULL DEFAULT '',
-  `published`   TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`    INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`      INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `type`        CHAR(255)        NOT NULL,
-  `params`      TEXT             NOT NULL,
-  `media`       TEXT             NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_servers` WRITE;
-/*!40000 ALTER TABLE `#__bsms_servers` DISABLE KEYS */;
+-- Dump of table #__bsms_servers
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_servers` (`id`, `server_name`, `published`, `asset_id`, `access`, `type`, `params`, `media`)
 VALUES
@@ -430,30 +148,8 @@ VALUES
    '{\"path\":\"http:\\/\\/calvarynewberg.org\\/\",\"protocol\":\"http:\\/\\/\"}',
    '{\"link_type\":\"1\",\"player\":\"0\",\"popup\":\"2\",\"mediacode\":\"\",\"media_image\":\"images\\/biblestudy\\/pdf16.png\",\"mime_type\":\"application\\/pdf\",\"autostart\":\"1\"}');
 
-/*!40000 ALTER TABLE `#__bsms_servers` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_share
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_share`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_share` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name`      VARCHAR(250)              DEFAULT NULL,
-  `params`    TEXT,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `ordering`  INT(11)          NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_share` WRITE;
-/*!40000 ALTER TABLE `#__bsms_share` DISABLE KEYS */;
+-- Dump of table #__bsms_share
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`, `asset_id`, `access`, `ordering`)
 VALUES
@@ -470,80 +166,8 @@ VALUES
    '{\"mainlink\":\"http://www.myspace.com/index.cfm?\",\"item1prefix\":\"fuseaction=postto&t=\",\"item1\":5,\"item1custom\":\"\",\"item2prefix\":\"&c=\",\"item2\":6,\"item2custom\":\"\",\"item3prefix\":\"&u=\",\"item3\":200,\"item3custom\":\"\",\"item4prefix\":\"&l=1\",\"item4\":\"\",\"item4custom\":\"\",\"use_bitly\":0,\"username\":\"\",\"api\":\"\",\"shareimage\":\"media/com_biblestudy/images/myspace.png\",\"shareimagew\":\"33px\",\"shareimageh\":\"33px\",\"totalcharacters\":\"\",\"alttext\":\"MySpace\"}',
    1, 7488, 1, 4);
 
-/*!40000 ALTER TABLE `#__bsms_share` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_studies
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_studies`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
-  `id`                  INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
-  `studydate`           DATETIME                                                  DEFAULT NULL,
-  `teacher_id`          INT(11)                                                   DEFAULT '1',
-  `studynumber`         VARCHAR(100)                                              DEFAULT '',
-  `booknumber`          INT(3)                                                    DEFAULT '101',
-  `chapter_begin`       INT(3)                                                    DEFAULT '1',
-  `verse_begin`         INT(3)                                                    DEFAULT '1',
-  `chapter_end`         INT(3)                                                    DEFAULT '1',
-  `verse_end`           INT(3)                                                    DEFAULT '1',
-  `secondary_reference` TEXT,
-  `booknumber2`         VARCHAR(4)                                                DEFAULT NULL,
-  `chapter_begin2`      VARCHAR(4)                                                DEFAULT NULL,
-  `verse_begin2`        VARCHAR(4)                                                DEFAULT NULL,
-  `chapter_end2`        VARCHAR(4)                                                DEFAULT NULL,
-  `verse_end2`          VARCHAR(4)                                                DEFAULT NULL,
-  `prod_dvd`            VARCHAR(100)                                              DEFAULT NULL,
-  `prod_cd`             VARCHAR(100)                                              DEFAULT NULL,
-  `server_cd`           VARCHAR(10)                                               DEFAULT NULL,
-  `server_dvd`          VARCHAR(10)                                               DEFAULT NULL,
-  `image_cd`            VARCHAR(10)                                               DEFAULT NULL,
-  `image_dvd`           VARCHAR(10)                                               DEFAULT '0',
-  `studytext2`          TEXT,
-  `comments`            TINYINT(1)                                                DEFAULT '1',
-  `hits`                INT(10)                                          NOT NULL DEFAULT '0',
-  `user_id`             INT(10)                                                   DEFAULT NULL,
-  `user_name`           VARCHAR(50)                                               DEFAULT NULL,
-  `show_level`          VARCHAR(100)                                     NOT NULL DEFAULT '0',
-  `location_id`         INT(3)                                                    DEFAULT NULL,
-  `studytitle`          TEXT,
-  `alias`               VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `studyintro`          TEXT,
-  `media_hours`         VARCHAR(2)                                                DEFAULT NULL,
-  `media_minutes`       VARCHAR(2)                                                DEFAULT NULL,
-  `media_seconds`       VARCHAR(2)                                                DEFAULT NULL,
-  `messagetype`         VARCHAR(100)                                              DEFAULT '1',
-  `series_id`           INT(3)                                                    DEFAULT '0',
-  `studytext`           TEXT,
-  `thumbnailm`          TEXT,
-  `thumbhm`             INT(11)                                                   DEFAULT NULL,
-  `thumbwm`             INT(11)                                                   DEFAULT NULL,
-  `params`              TEXT,
-  `checked_out`         INT(11) UNSIGNED                                 NOT NULL DEFAULT '0',
-  `checked_out_time`    DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `published`           TINYINT(3)                                       NOT NULL DEFAULT '0',
-  `publish_up`          DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `publish_down`        DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified`            DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
-  `asset_id`            INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`              INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
-  `ordering`            INT(11)                                          NOT NULL DEFAULT '0',
-  `language`            CHAR(7)                                          NOT NULL COMMENT 'The language code for the Studies.',
-  `download_id`         INT(10)                                          NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`),
-  KEY `idx_seriesid` (`series_id`),
-  KEY `idx_user` (`user_id`),
-  KEY `idx_createdby` (`user_id`),
-  KEY `idx_checkout` (`checked_out`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_studies` WRITE;
-/*!40000 ALTER TABLE `#__bsms_studies` DISABLE KEYS */;
+-- Dump of table #__bsms_studies
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `checked_out`, `checked_out_time`, `published`, `publish_up`, `publish_down`, `modified`, `modified_by`, `asset_id`, `access`, `ordering`, `language`, `download_id`)
 VALUES
@@ -558,56 +182,16 @@ VALUES
    0, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2015-07-28 23:46:05', 627, 7479, 1, 1,
    '*', -1);
 
-/*!40000 ALTER TABLE `#__bsms_studies` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_studytopics
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_studytopics`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
-  `id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `study_id` INT(3)           NOT NULL DEFAULT '0',
-  `topic_id` INT(3)           NOT NULL DEFAULT '0',
-  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`   INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_access` (`access`),
-  KEY `idx_study` (`study_id`),
-  KEY `idx_topic` (`topic_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_studytopics` WRITE;
-/*!40000 ALTER TABLE `#__bsms_studytopics` DISABLE KEYS */;
+-- Dump of table #__bsms_studytopics
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_studytopics` (`id`, `study_id`, `topic_id`, `asset_id`, `access`)
 VALUES
   (3, 1, 114, 7594, 1),
   (4, 1, 114, 7595, 1);
 
-/*!40000 ALTER TABLE `#__bsms_studytopics` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_styles
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_styles`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `filename`  TEXT             NOT NULL,
-  `stylecode` LONGTEXT         NOT NULL,
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_styles` WRITE;
-/*!40000 ALTER TABLE `#__bsms_styles` DISABLE KEYS */;
+-- Dump of table #__bsms_styles
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_styles` (`id`, `published`, `filename`, `stylecode`, `asset_id`)
 VALUES
@@ -615,60 +199,8 @@ VALUES
    '/* This file is generated out of the database table #__bsms_styles */\n/* It will be overwritten when saving the CSS Style content to the database */\n\n\n/* New Teacher Details Codes */\n\n#bsm_teachertable .bsm_studiestitlerow {\n    background-color: #666;\n}\n#bsm_teachertable .teacheraddress {\n    text-align:left;\n}\n#bsm_teachertable .teacherwebsite {\n    text-align:left;\n}\n#bsm_teachertable .teacherfacebook {\n    text-align:left;\n}\n#bsm_teachertable .bsm_teachertwitter {\n    text-align:left;\n}\n#bsm_teachertable .bsm_teacherblog {\n    text-align:left;\n}\n#bsm_teachertable .bsm_teacherlink1 {\n    text-align:left;\n}\n#bsm_teachertable {\n    margin: 0;\n    border-collapse:separate;\n}\n#bsm_teachertable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsm_teachertable .titlerow {\n    border-bottom: thick;\n}\n#bsm_teachertable .title {\n    font-size:18px;\n    font-weight:bold;\n    border-bottom: 3px solid #999999;\n    padding: 4px 0px 4px 4px;\n}\n#bsm_teachertable .bsm_separator {\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable .bsm_teachername {\n    font-weight: bold;\n    font-size: 14px;\n    color: #000000;\n    white-space:nowrap;\n}\n#bsm_teachertable .bsm_teacheremail {\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_teacherwebsite {\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_teacherphone {\n    font-weight:normal;\n    font-size: 11px;\n}\n#bsm_teachertable .bsm_short {\n    padding: 8px 4px 4px;\n}\n#bsm_teachertable .bsm_studiestitlerow {\n    background-color: #666;\n}\n#bsm_teachertable .bsm_titletitle {\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_titlescripture {\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_titledate {\n    font-weight:bold;\n    color:#FFFFFF;\n}\n#bsm_teachertable .bsm_teacherlong {\n    padding: 8px 4px 4px;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable tr.bsodd {\n    background-color:#FFFFFF;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable tr.bseven {\n    background-color:#FFFFF0;\n    border-bottom: 1px solid #999999;\n}\n#bsm_teachertable .lastrow td {\n    border-bottom:1px solid grey;\n    padding-bottom:7px;\n    padding-top:7px;\n}\n#bsm_teachertable .bsm_teacherfooter {\n    border-top: 1px solid #999999;\n    padding: 4px 1px 1px 4px;\n}\n\n\n/* New Landing Page CSS */\n.landingtable {\n    clear:both;\n    width:auto;\n    display:table;\n}\n\n.landingrow {\n    display:inline;\n    padding: 1em;\n}\n\n.landingcell {\n    display:table-cell;\n}\n\n.landinglink a {\n    display:inline;\n}\n\n\n/* Terms of use or donate display settings */\n.termstext {\n}\n\n.termslink{\n}\n\n\n/* Podcast Subscription Display Settings */\n.podcastsubscribe {\n    clear:both;\n    display:table;\n    width:100%;\n    background-color:#eee;\n    border-radius: 15px 15px 15px 15px;\n    border: 1px solid grey;\n    padding: 1em;\n}\n.podcastsubscribe .image {\n    float: left;\n    padding-right: 5px;\n    display: inline;\n}\n.podcastsubscribe .image .text {\n    display:inline;\n    position:relative;\n    right:50px;\n    bottom:-10px;\n}\n.podcastsubscribe .prow {\n    display: table-row;\n    width:auto;\n    clear:both;\n}\n.podcastsubscribe .pcell {\n    display: table-cell;\n    float:left;\n    background-color:#e3e2e2;\n    border-radius: 15px 15px 15px 15px;\n    border: 1px solid grey;\n    padding: 1em;\n    margin-right: 5px;\n}\n\n.podcastheader h3 {\n    display:table-header;\n    text-align:center;\n}\n\n.podcastheader {\n    font-weight: bold;\n}\n\n.fltlft {\n  float:left;\n  padding-right: 5px;\n}\n\n\n/* Listing Page Items */\ndiv.listingfooter ul li {\n    list-style: none outside none;\n}\n\n#listingfooter li, #listingfooter ul {\n    display: inline;\n}\n\n#listintro p, #listintro td {\n    margin: 0;\n    font-weight: bold;\n    color: black;\n}\n\n#bsdropdownmenu {\n    margin-bottom: 10px;\n}\n\n.bslisttable {\n    margin: 0;\n    border-collapse:separate;\n}\n.bslisttable th, .bslisttable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n.bslisttable .row1col1,\n.bslisttable .row2col1,\n.bslisttable .row3col1,\n.bslisttable .row4col1 {\n    border-left: grey 2px solid;\n}\n.bslisttable .lastcol {\n    border-right: grey 2px solid;\n}\n.bslisttable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n.bslisttable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n}\n.bslisttable th.row1col1,\n.bslisttable th.row1col2,\n.bslisttable th.row1col3,\n.bslisttable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n.bslisttable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n.bslisttable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n.bslisttable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n.bslisttable tr.bseven td {\n    background-color:#FFFFF0;\n}\n.bslisttable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n.bslisttable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n.bslisttable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n.bslisttable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n}\n.bslisttable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n.bslisttable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n.bslisttable .studyintro {\n}\n.bslisttable .teacher {\n    white-space:nowrap;\n}\n.bslisttable .location_text {\n    white-space:nowrap;\n}\n.bslisttable .topic_text {\n    white-space:nowrap;\n}\n.bslisttable .message_type {\n    white-space:nowrap;\n}\n.bslisttable .jbsmedia {\n    white-space:nowrap;\n}\n.bslisttable .store {\n    white-space:nowrap;\n}\n.bslisttable .details-text {\n    white-space:nowrap;\n}\n.bslisttable .details-pdf {\n    white-space:nowrap;\n}\n.bslisttable .details-text-pdf {\n    white-space:nowrap;\n}\n.bslisttable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n.bslisttable .secondary_reference {\n    white-space:nowrap;\n}\n.bslisttable .teacher-title-name {\n    white-space:nowrap;\n}\n.bslisttable .submitted {\n    white-space:nowrap;\n}\n.bslisttable .hits {\n    white-space:nowrap;\n}\n.bslisttable .studynumber {\n    white-space:nowrap;\n}\n.bslisttable .filesize {\n    white-space:nowrap;\n}\n.bslisttable .custom {\n    white-space:nowrap;\n}\n.bslisttable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n.bslisttable .thumbnail {\n    white-space:nowrap;\n}\n.bslisttable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n.bslisttable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n\n\n/* Module Style Settings */\n#bsmsmoduletable {\n    margin: 0;\n    border-collapse:separate;\n}\n#bsmsmoduletable th, #bsmsmoduletable td {\n    text-align:left;\n    padding:0 5px 0 5px;\n    border:none;\n}\n#bsmsmoduletable .row1col1,\n#bsmsmoduletable .row2col1,\n#bsmsmoduletable .row3col1,\n#bsmsmoduletable .row4col1 {\n    border-left: grey 2px solid;\n}\n#bsmsmoduletable .lastcol {\n    border-right: grey 2px solid;\n}\n#bsmsmoduletable .lastrow td {\n    border-bottom:2px solid grey;\n    padding-bottom:7px;\n}\n#bsmsmoduletable th {\n    background-color:#707070;\n    font-weight:bold;\n    color:white;\n}\n#bsmsmoduletable th.row1col1,\n#bsmsmoduletable th.row1col2,\n#bsmsmoduletable th.row1col3,\n#bsmsmoduletable th.row1col4 {\n    border-top: grey 2px solid;\n    padding-top:3px;\n}\n#bsmsmoduletable th.firstrow {\n    border-bottom: grey 2px solid;\n}\n#bsmsmoduletable tr.lastrow th {\n    border-bottom:2px solid grey;\n    padding-bottom:3px;\n}\n#bsmsmoduletable tr.bsodd td {\n    background-color:#FFFFFF;\n}\n#bsmsmoduletable tr.bseven td {\n    background-color:#FFFFF0;\n}\n#bsmsmoduletable .date {\n    white-space:nowrap;\n    font-size:1.2em;\n    color:grey;\n    font-weight:bold;\n}\n#bsmsmoduletable .scripture1 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsmoduletable .scripture2 {\n    white-space:nowrap;\n    color:#c02121;\n    font-weight:bold;\n}\n#bsmsmoduletable .title {\n    font-size:1.2em;\n    color:#707070;\n    font-weight:bold;\n}\n#bsmsmoduletable .series_text {\n    white-space:nowrap;\n    color:grey;\n}\n#bsmsmoduletable .duration {\n    white-space:nowrap;\n    font-style:italic;\n}\n#bsmsmoduletable .studyintro {\n}\n#bsmsmoduletable .teacher {\n    white-space:nowrap;\n}\n#bsmsmoduletable .location_text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .topic_text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .message_type {\n    white-space:nowrap;\n}\n#bsmsmoduletable .jbsmedia {\n    white-space:nowrap;\n}\n#bsmsmoduletable .store {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-text {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-pdf {\n    white-space:nowrap;\n}\n#bsmsmoduletable .details-text-pdf {\n    white-space:nowrap;\n}\n#bsmsmoduletable .detailstable td {\n    border: none;\n    padding: 0 2px 0 0;\n}\n#bsmsmoduletable .secondary_reference {\n    white-space:nowrap;\n}\n#bsmsmoduletable .teacher-title-name {\n    white-space:nowrap;\n}\n#bsmsmoduletable .submitted {\n    white-space:nowrap;\n}\n#bsmsmoduletable .hits {\n    white-space:nowrap;\n}\n#bsmsmoduletable .studynumber {\n    white-space:nowrap;\n}\n#bsmsmoduletable .filesize {\n    white-space:nowrap;\n}\n#bsmsmoduletable .custom {\n    white-space:nowrap;\n}\n#bsmsmoduletable .commentshead {\n    font-size: 2em;\n    font-weight:bold;\n}\n#bsmsmoduletable .thumbnail {\n    white-space:nowrap;\n}\n#bsmsmoduletable .mediatable td {\n    border: none;\n    padding: 0 6px 0 0;\n}\n#bsmsmoduletable .mediatable span.bsfilesize {\n    font-size:0.6em;\n    position:relative; bottom: 7px;\n}\n\n\n/* Landing Page Items */\n.landinglist {\n}\n#landing_label {\n}\n.landing_item {\n}\n.landing_title {\n    font-family:arial;\n    font-size:16px;\n    font-weight:bold;\n}\n.landing_table {\n}\n#landing_td {\n    width: 33%;\n}\n.landing_separator {\n    height:15px;\n}\n#biblestudy_landing {\n}\n\n#showhide {\n    font-family:arial;\n    font-size:12px;\n    font-weight:bold;\n    text-decoration:none;\n}\n#showhide .showhideheadingbutton img {\n    vertical-align:bottom;\n}\n\n\n/* Popup Window Items */\n.popupwindow {\n    margin: 5px;\n    text-align:center;\n}\np.popuptitle {\n    font-weight: bold;\n    color: black;\n}\n.popupfooter {\n    margin: 5px;\n    text-align:center;\n}\np.popupfooter {\n    font-weight: bold;\n    color: grey;\n}',
    7586);
 
-/*!40000 ALTER TABLE `#__bsms_styles` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_teachers
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_teachers`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
-  `id`                INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
-  `teacher_image`     TEXT,
-  `teacher_thumbnail` TEXT,
-  `teachername`       VARCHAR(250)                                     NOT NULL DEFAULT '',
-  `alias`             VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `title`             VARCHAR(250)                                              DEFAULT NULL,
-  `phone`             VARCHAR(50)                                               DEFAULT NULL,
-  `email`             VARCHAR(100)                                              DEFAULT NULL,
-  `website`           TEXT,
-  `information`       TEXT,
-  `image`             TEXT,
-  `imageh`            TEXT,
-  `imagew`            TEXT,
-  `thumb`             TEXT,
-  `thumbw`            TEXT,
-  `thumbh`            TEXT,
-  `short`             TEXT,
-  `ordering`          INT(11)                                          NOT NULL DEFAULT '0',
-  `catid`             INT(3)                                                    DEFAULT '1',
-  `list_show`         TINYINT(1)                                       NOT NULL DEFAULT '1',
-  `published`         TINYINT(3)                                       NOT NULL DEFAULT '1',
-  `asset_id`          INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`            INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
-  `language`          CHAR(7)                                          NOT NULL COMMENT 'The language code for the Teachers.',
-  `facebooklink`      VARCHAR(150)                                              DEFAULT NULL,
-  `twitterlink`       VARCHAR(150)                                              DEFAULT NULL,
-  `bloglink`          VARCHAR(150)                                              DEFAULT NULL,
-  `link1`             VARCHAR(150)                                              DEFAULT NULL,
-  `linklabel1`        VARCHAR(150)                                              DEFAULT NULL,
-  `link2`             VARCHAR(150)                                              DEFAULT NULL,
-  `linklabel2`        VARCHAR(150)                                              DEFAULT NULL,
-  `link3`             VARCHAR(150)                                              DEFAULT NULL,
-  `linklabel3`        VARCHAR(150)                                              DEFAULT NULL,
-  `contact`           INT(11)                                                   DEFAULT NULL,
-  `address`           MEDIUMTEXT                                       NOT NULL,
-  `landing_show`      INT(3)                                                    DEFAULT NULL,
-  `address1`          MEDIUMTEXT                                       NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_teachers` WRITE;
-/*!40000 ALTER TABLE `#__bsms_teachers` DISABLE KEYS */;
+-- Dump of table #__bsms_teachers
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `alias`, `title`, `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`, `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`, `asset_id`, `access`, `language`, `facebooklink`, `twitterlink`, `bloglink`, `link1`, `linklabel1`, `link2`, `linklabel2`, `link3`, `linklabel3`, `contact`, `address`, `landing_show`, `address1`)
 VALUES
@@ -679,49 +211,8 @@ VALUES
    '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
    NULL, '', NULL, '');
 
-/*!40000 ALTER TABLE `#__bsms_teachers` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_templatecode
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_templatecode`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
-  `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `published`    TINYINT(3)       NOT NULL DEFAULT '1',
-  `type`         TINYINT(3)       NOT NULL,
-  `filename`     TEXT             NOT NULL,
-  `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `templatecode` MEDIUMTEXT       NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-
-# Dump of table #__bsms_templates
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_templates`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `type`      VARCHAR(255)     NOT NULL,
-  `tmpl`      LONGTEXT         NOT NULL,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `params`    LONGTEXT,
-  `title`     TEXT,
-  `text`      TEXT,
-  `pdf`       TEXT,
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_templates` WRITE;
-/*!40000 ALTER TABLE `#__bsms_templates` DISABLE KEYS */;
+-- Dump of table #__bsms_templates
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`, `text`, `pdf`, `asset_id`, `access`)
 VALUES
@@ -729,52 +220,15 @@ VALUES
    '{\"useterms\":\"0\",\"terms\":\"\",\"css\":\"biblestudy.css\",\"studieslisttemplateid\":\"1\",\"sermonstemplate\":\"0\",\"detailstemplateid\":\"1\",\"sermontemplate\":\"0\",\"teachertemplateid\":\"1\",\"teachertemplate\":\"0\",\"teacherstemplate\":\"0\",\"serieslisttemplateid\":\"1\",\"seriesdisplaystemplate\":\"0\",\"seriesdetailtemplateid\":\"1\",\"seriesdisplaytemplate\":\"0\",\"offset\":\"false\",\"teacher_id\":[\"-1\"],\"series_id\":[\"-1\"],\"booknumber\":[\"-1\"],\"topic_id\":[\"-1\"],\"messagetype\":[\"-1\"],\"locations\":[\"-1\"],\"show_verses\":\"0\",\"stylesheet\":\"\",\"date_format\":\"2\",\"custom_date_format\":\"\",\"duration_type\":\"2\",\"protocol\":\"http:\\/\\/\",\"player\":\"0\",\"popuptype\":\"window\",\"internal_popup\":\"1\",\"special\":\"_blank\",\"autostart\":\"1\",\"playerresposive\":\"1\",\"player_width\":\"400\",\"player_height\":\"300\",\"embedshare\":\"TRUE\",\"backcolor\":\"0x287585\",\"frontcolor\":\"0xFFFFFF\",\"lightcolor\":\"0x000000\",\"screencolor\":\"0x000000\",\"popuptitle\":\"{{title}}\",\"popupfooter\":\"{{filename}}\",\"popupmargin\":\"50\",\"popupbackground\":\"black\",\"popupimage\":\"media\\/com_biblestudy\\/images\\/speaker24.png\",\"show_filesize\":\"1\",\"playerposition\":\"over\",\"playeridlehide\":\"1\",\"useexpert_list\":\"0\",\"headercode\":\"\",\"templatecode\":\"                                   {{teacher}}             {{title}}             {{date}}                                   {{studyintro}}             {{scripture}}                               \",\"wrapcode\":\"0\",\"default_order\":\"DESC\",\"default_order_secondary\":\"ASC\",\"show_page_title\":\"1\",\"show_page_image\":\"1\",\"list_page_title\":\"Bible Studies\",\"list_title_align\":\"text-align:center\",\"use_headers_list\":\"1\",\"studies_element\":\"1\",\"list_intro\":\"\",\"intro_show\":\"1\",\"list_teacher_show\":\"1\",\"listteachers\":[],\"teacherlink\":\"1\",\"showpodcastsubscribelist\":\"1\",\"subscribeintro\":\"Our Podcasts\",\"details_text\":\"Study Details\",\"show_book_search\":\"1\",\"ddbooks\":\"1\",\"booklist\":\"1\",\"use_go_button\":\"1\",\"ddgobutton\":\"2\",\"show_teacher_search\":\"1\",\"ddteachers\":\"3\",\"show_series_search\":\"1\",\"ddseries\":\"4\",\"show_type_search\":\"1\",\"ddmessagetype\":\"5\",\"show_year_search\":\"1\",\"ddyears\":\"6\",\"show_order_search\":\"1\",\"ddorder\":\"7\",\"show_topic_search\":\"1\",\"ddtopics\":\"8\",\"show_locations_search\":\"1\",\"ddlocations\":\"9\",\"show_popular\":\"1\",\"ddpopular\":\"10\",\"listlanguage\":\"0\",\"ddlanguage\":\"11\",\"show_pagination\":\"1\",\"listcolor1\":\"#8f8fb2\",\"listcolor2\":\"#ccccff\",\"rowspanitem\":\"1\",\"rowspanitemspan\":\"2\",\"rowspanitemimage\":\"img-polaroid\",\"rowspanitempull\":\"pull-left\",\"scripture1row\":\"1\",\"scripture1col\":\"3\",\"scripture1colspan\":\"2\",\"scripture1element\":\"1\",\"scripture1custom\":\"\",\"scripture1linktype\":\"0\",\"scripture2row\":\"0\",\"scripture2col\":\"1\",\"scripture2colspan\":\"3\",\"scripture2element\":\"1\",\"scripture2custom\":\"\",\"scripture2linktype\":\"0\",\"secondaryrow\":\"0\",\"secondarycol\":\"1\",\"secondarycolspan\":\"1\",\"secondaryelement\":\"1\",\"secondarycustom\":\"\",\"secondarylinktype\":\"0\",\"jbsmediarow\":\"1\",\"jbsmediacol\":\"4\",\"jbsmediacolspan\":\"4\",\"jbsmediaelement\":\"0\",\"jbsmediacustom\":\"\",\"jbsmedialinktype\":\"2\",\"titlerow\":\"1\",\"titlecol\":\"2\",\"titlecolspan\":\"4\",\"titleelement\":\"1\",\"titlecustom\":\"\",\"titlelinktype\":\"0\",\"daterow\":\"1\",\"datecol\":\"1\",\"datecolspan\":\"2\",\"dateelement\":\"1\",\"datecustom\":\"\",\"datelinktype\":\"0\",\"teacherrow\":\"0\",\"teachercol\":\"1\",\"teachercolspan\":\"1\",\"teacherelement\":\"1\",\"teachercustom\":\"\",\"teacherlinktype\":\"0\",\"teacherimagerrow\":\"0\",\"teacherimagecol\":\"1\",\"teacherimagecolspan\":\"1\",\"teacherimageelement\":\"1\",\"teacherimagecustom\":\"\",\"teacher-titlerow\":\"0\",\"teacher-titlecol\":\"1\",\"teacher-titlecolspan\":\"1\",\"teacher-titleelement\":\"1\",\"teacher-titlecustom\":\"\",\"teacher-titlelinktype\":\"0\",\"durationrow\":\"0\",\"durationcol\":\"1\",\"durationcolspan\":\"1\",\"durationelement\":\"1\",\"durationcustom\":\"\",\"durationlinktype\":\"0\",\"studyintrorow\":\"3\",\"studyintrocol\":\"1\",\"studyintrocolspan\":\"12\",\"studyintroelement\":\"1\",\"studyintrocustom\":\"\",\"studyintrolinktype\":\"0\",\"seriesrow\":\"0\",\"seriescol\":\"1\",\"seriescolspan\":\"1\",\"serieselement\":\"1\",\"seriescustom\":\"\",\"serieslinktype\":\"0\",\"seriesthumbnailrow\":\"0\",\"seriesthumbnailcol\":\"1\",\"seriesthumbnailcolspan\":\"1\",\"seriesthumbnailelement\":\"1\",\"seriesthumbnailcustom\":\"\",\"seriesthumbnaillinktype\":\"0\",\"seriesdescriptionrow\":\"0\",\"seriesdescriptioncol\":\"1\",\"seriesdescriptioncolspan\":\"1\",\"seriesdescriptionelement\":\"1\",\"seriesdescriptioncustom\":\"\",\"seriesdescriptionlinktype\":\"0\",\"submittedrow\":\"0\",\"submittedcol\":\"1\",\"submittedcolspan\":\"1\",\"submittedelement\":\"1\",\"submittedcustom\":\"\",\"submittedlinktype\":\"0\",\"hitsrow\":\"0\",\"hitscol\":\"1\",\"hitscolspan\":\"6\",\"hitselement\":\"1\",\"hitscustom\":\"\",\"hitslinktype\":\"0\",\"downloadsrow\":\"0\",\"downloadscol\":\"1\",\"downloadscolspan\":\"1\",\"downloadselement\":\"1\",\"downloadscustom\":\"\",\"downloadslinktype\":\"0\",\"studynumberrow\":\"0\",\"studynumbercol\":\"1\",\"studynumbercolspan\":\"1\",\"studynumberelement\":\"1\",\"studynumbercustom\":\"\",\"studynumberlinktype\":\"0\",\"topicrow\":\"0\",\"topiccol\":\"1\",\"topiccolspan\":\"6\",\"topicelement\":\"1\",\"topiccustom\":\"\",\"topiclinktype\":\"0\",\"locationsrow\":\"0\",\"locationscol\":\"1\",\"locationscolspan\":\"1\",\"locationselement\":\"1\",\"locationscustom\":\"\",\"locationslinktype\":\"0\",\"messagetyperow\":\"0\",\"messagetypecol\":\"1\",\"messagetypecolspan\":\"6\",\"messagetypeelement\":\"1\",\"messagetypecustom\":\"\",\"messagetypelinktype\":\"0\",\"thumbnailrow\":\"0\",\"thumbnailcol\":\"1\",\"thumbnailcolspan\":\"1\",\"thumbnailelement\":\"1\",\"thumbnailcustom\":\"\",\"thumbnaillinktype\":\"0\",\"customrow\":\"0\",\"customcol\":\"1\",\"customcolspan\":\"1\",\"customelement\":\"1\",\"customcustom\":\"\",\"customtext\":\"\",\"show_print_view\":\"1\",\"link_text\":\"Return to Studies List\",\"showrelated\":\"1\",\"showpodcastsubscribedetails\":\"1\",\"show_scripture_link\":\"0\",\"show_passage_view\":\"1\",\"bible_version\":\"51\",\"socialnetworking\":\"1\",\"sharetype\":\"1\",\"sharelabel\":\"Share This\",\"comments_type\":\"0\",\"show_comments\":\"1\",\"link_comments\":\"0\",\"comment_access\":\"1\",\"comment_publish\":\"0\",\"use_captcha\":\"1\",\"public_key\":\"\",\"private_key\":\"\",\"email_comments\":\"1\",\"recipient\":\"\",\"subject\":\"Comments on studies\",\"body\":\"Comments entered.\",\"useexpert_details\":\"0\",\"study_detailtemplate\":\"\",\"teacher_title\":\"Our Teachers\",\"teachers_element\":\"1\",\"useexpert_teacherlist\":\"0\",\"tsrowspanitem\":\"0\",\"tsrowspanitemspan\":\"4\",\"tsrowspanitemimage\":\"img-polaroid\",\"tsrowspanitempull\":\"pull-left\",\"use_headers_teacher_list\":\"1\",\"tslistcolor1\":\"\",\"tslistcolor2\":\"\",\"tsteacherrow\":\"1\",\"tsteachercol\":\"1\",\"tsteachercolspan\":\"2\",\"tsteacherelement\":\"1\",\"tsteachercustom\":\"\",\"tsteacherlinktype\":\"0\",\"tsteacherimagerrow\":\"0\",\"tsteacherimagecol\":\"1\",\"tsteacherimagecolspan\":\"1\",\"tsteacherimageelement\":\"1\",\"tsteacherimagecustom\":\"\",\"tsteacher-titlerow\":\"0\",\"tsteacher-titlecol\":\"1\",\"tsteacher-titlecolspan\":\"1\",\"tsteacher-titleelement\":\"1\",\"tsteacher-titlecustom\":\"\",\"tsteacher-titlelinktype\":\"0\",\"tsteacheremailrow\":\"0\",\"tsteacheremailcol\":\"1\",\"tsteacheremailcolspan\":\"1\",\"tsteacheremailelement\":\"1\",\"tsteacheremailcustom\":\"\",\"tsteacherwebrow\":\"0\",\"tsteacherwebcol\":\"1\",\"tsteacherwebcolspan\":\"1\",\"tsteacherwebelement\":\"1\",\"tsteacherphonerow\":\"0\",\"tsteacherphonecol\":\"1\",\"tsteacherphonecolspan\":\"1\",\"tsteacherphoneelement\":\"1\",\"tsteacherphonecustom\":\"\",\"tsteacherfbrow\":\"0\",\"tsteacherfbcol\":\"1\",\"tsteacherfbcolspan\":\"1\",\"tsteacherfbelement\":\"1\",\"tsteacherfbcustom\":\"\",\"tsteachertwrow\":\"0\",\"tsteachertwcol\":\"1\",\"tsteachertwcolspan\":\"1\",\"tsteachertwelement\":\"1\",\"tsteachertwcustom\":\"\",\"tsteacherblogrow\":\"0\",\"tsteacherblogcol\":\"1\",\"tsteacherblogcolspan\":\"1\",\"tsteacherblogelement\":\"1\",\"tsteacherblogcustom\":\"\",\"tsteachershortrow\":\"0\",\"tsteachershortcol\":\"1\",\"tsteachershortcolspan\":\"1\",\"tsteachershortelement\":\"1\",\"tsteachershortcustom\":\"\",\"tsteachershortlinktype\":\"0\",\"tscustomrow\":\"\",\"tscustomcol\":\"1\",\"tscustomcolspan\":\"1\",\"tscustomelement\":\"1\",\"tscustomcustom\":\"\",\"tscustomtext\":\"\",\"tsteacherallinonerow\":\"0\",\"tsteacherallinonecol\":\"1\",\"tsteacherallinonecolspan\":\"1\",\"tsteacherallinoneelement\":\"1\",\"tsteacherallinonecustom\":\"\",\"teacher_headercode\":\"\",\"teacher_templatecode\":\"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       \",\"teacher_wrapcode\":\"0\",\"show_teacher_studies\":\"0\",\"studies\":\"\",\"label_teacher\":\"Latest Messages\",\"teacherlinkstudies\":\"1\",\"tdrowspanitem\":\"0\",\"tdrowspanitemspan\":\"4\",\"tdrowspanitemimage\":\"img-polaroid\",\"tdrowspanitempull\":\"pull-left\",\"use_headers_teacher_details\":\"1\",\"teacherdisplay_color\":\"\",\"tdteacherrow\":\"1\",\"tdteachercol\":\"1\",\"tdteachercolspan\":\"2\",\"tdteacherelement\":\"1\",\"tdteachercustom\":\"\",\"tdteacherimagerrow\":\"0\",\"tdteacherimagecol\":\"1\",\"tdteacherimagecolspan\":\"1\",\"tdteacherimageelement\":\"1\",\"tdteacherimagecustom\":\"\",\"tdteacher-titlerow\":\"0\",\"tdteacher-titlecol\":\"1\",\"tdteacher-titlecolspan\":\"1\",\"tdteacher-titleelement\":\"1\",\"tdteacher-titlecustom\":\"\",\"tdteacheremailrow\":\"0\",\"tdteacheremailcol\":\"1\",\"tdteacheremailcolspan\":\"1\",\"tdteacheremailelement\":\"1\",\"tdteacheremailcustom\":\"\",\"tdteacherwebrow\":\"0\",\"tdteacherwebcol\":\"1\",\"tdteacherwebcolspan\":\"1\",\"tdteacherwebelement\":\"1\",\"tdteacherphonerow\":\"0\",\"tdteacherphonecol\":\"1\",\"tdteacherphonecolspan\":\"1\",\"tdteacherphoneelement\":\"1\",\"tdteacherphonecustom\":\"\",\"tdteacherfbrow\":\"0\",\"tdteacherfbcol\":\"1\",\"tdteacherfbcolspan\":\"1\",\"tdteacherfbelement\":\"1\",\"tdteacherfbcustom\":\"\",\"tdteachertwrow\":\"0\",\"tdteachertwcol\":\"1\",\"tdteachertwcolspan\":\"1\",\"tdteachertwelement\":\"1\",\"tdteachertwcustom\":\"\",\"tdteacherblogrow\":\"0\",\"tdteacherblogcol\":\"1\",\"tdteacherblogcolspan\":\"1\",\"tdteacherblogelement\":\"1\",\"tdteacherblogcustom\":\"\",\"tdteachershortrow\":\"0\",\"tdteachershortcol\":\"1\",\"tdteachershortcolspan\":\"1\",\"tdteachershortelement\":\"1\",\"tdteachershortcustom\":\"\",\"tdteacherlongrow\":\"0\",\"tdteacherlongcol\":\"1\",\"tdteacherlongcolspan\":\"1\",\"tdteacherlongelement\":\"1\",\"tdteacherlongcustom\":\"\",\"tdteacheraddressrow\":\"0\",\"tdteacheraddresscol\":\"1\",\"tdteacheraddresscolspan\":\"1\",\"tdteacheraddresselement\":\"1\",\"tdteacheraddresscustom\":\"\",\"tdteacherlink1row\":\"0\",\"tdteacherlink1col\":\"1\",\"tdteacherlink1colspan\":\"1\",\"tdteacherlink1element\":\"1\",\"tdteacherlink1custom\":\"\",\"tdteacherlink2row\":\"0\",\"tdteacherlink2col\":\"1\",\"tdteacherlink2colspan\":\"1\",\"tdteacherlink2element\":\"1\",\"tdteacherlink2custom\":\"\",\"tdteacherlink3row\":\"0\",\"tdteacherlink3col\":\"1\",\"tdteacherlink3colspan\":\"1\",\"tdteacherlink3element\":\"1\",\"tdteacherlink3custom\":\"\",\"tdteacherlargeimagerow\":\"0\",\"tdteacherlargeimagecol\":\"1\",\"tdteacherlargeimagecolspan\":\"1\",\"tdteacherlargeimageelement\":\"1\",\"tdteacherlargeimagecustom\":\"\",\"tdcustomrow\":\"\",\"tdcustomcol\":\"1\",\"tdcustomcolspan\":\"1\",\"tdcustomelement\":\"1\",\"tdcustomcustom\":\"\",\"tdcustomtext\":\"\",\"tdteacherallinonerow\":\"0\",\"tdteacherallinonecol\":\"1\",\"tdteacherallinonecolspan\":\"1\",\"tdteacherallinoneelement\":\"1\",\"tdteacherallinonecustom\":\"\",\"useexpert_teacherdetail\":\"0\",\"teacher_detailtemplate\":\"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       \",\"slistcolor1\":\"\",\"slistcolor2\":\"\",\"series_title\":\"Our Series\",\"show_series_title\":\"1\",\"show_page_image_series\":\"1\",\"series_element\":\"1\",\"use_headers_series\":\"1\",\"series_show_description\":\"1\",\"series_characters\":\"\",\"search_series\":\"1\",\"series_list_teachers\":\"1\",\"series_list_years\":\"1\",\"series_list_show_pagination\":\"1\",\"series_list_order\":\"ASC\",\"series_order_field\":\"series_text\",\"srowspanitem\":\"0\",\"srowspanitemspan\":\"4\",\"srowspanitemimage\":\"img-polaroid\",\"srowspanitempull\":\"pull-left\",\"sseriesrow\":\"2\",\"sseriescol\":\"1\",\"sseriescolspan\":\"6\",\"sserieselement\":\"1\",\"sseriescustom\":\"\",\"sserieslinktype\":\"0\",\"sseriesthumbnailrow\":\"1\",\"sseriesthumbnailcol\":\"2\",\"sseriesthumbnailcolspan\":\"1\",\"sseriesthumbnailelement\":\"1\",\"sseriesthumbnailcustom\":\"\",\"sseriesthumbnaillinktype\":\"0\",\"steacherrow\":\"0\",\"steachercol\":\"1\",\"steachercolspan\":\"1\",\"steacherelement\":\"1\",\"steachercustom\":\"\",\"steacherlinktype\":\"0\",\"steacherimagerow\":\"0\",\"steacherimagecol\":\"1\",\"steacherimagecolspan\":\"1\",\"steacherimageelement\":\"1\",\"steacherimagecustom\":\"\",\"steacher-titlerow\":\"0\",\"steacher-titlecol\":\"1\",\"steacher-titlecolspan\":\"1\",\"steacher-titleelement\":\"1\",\"steacher-titlecustom\":\"\",\"steacher-titlelinktype\":\"0\",\"sdescriptionrow\":\"0\",\"sdescriptioncol\":\"1\",\"sdescriptioncolspan\":\"1\",\"sdescriptionelement\":\"1\",\"sdescriptioncustom\":\"\",\"sdescriptionlinktype\":\"0\",\"sdcustomrow\":\"0\",\"sdcustomcol\":\"1\",\"sdcustomcolspan\":\"1\",\"sdcustomelement\":\"1\",\"sdcustomcustom\":\"\",\"sdcustomtext\":\"\",\"series_detail_sort\":\"studydate\",\"series_detail_order\":\"DESC\",\"series_detail_limit\":\"\",\"series_list_return\":\"1\",\"sdrowspanitem\":\"0\",\"sdrowspanitemspan\":\"4\",\"sdrowspanitemimage\":\"img-polaroid\",\"sdrowspanitempull\":\"pull-left\",\"seriesdisplay_color\":\"\",\"use_header_seriesdisplay\":\"0\",\"sdseriesrow\":\"2\",\"sdseriescol\":\"1\",\"sdseriescolspan\":\"6\",\"sdserieselement\":\"1\",\"sdseriescustom\":\"\",\"sdserieslinktype\":\"0\",\"sdseriesthumbnailrow\":\"1\",\"sdseriesthumbnailcol\":\"2\",\"sdseriesthumbnailcolspan\":\"1\",\"sdseriesthumbnailelement\":\"1\",\"sdseriesthumbnailcustom\":\"\",\"sdseriesthumbnaillinktype\":\"0\",\"sdteacherrow\":\"0\",\"sdteachercol\":\"1\",\"sdteachercolspan\":\"1\",\"sdteacherelement\":\"1\",\"sdteachercustom\":\"\",\"sdteacherlinktype\":\"0\",\"sdteacherimagerow\":\"0\",\"sdteacherimagecol\":\"1\",\"sdteacherimagecolspan\":\"1\",\"sdteacherimageelement\":\"1\",\"sdteacherimagecustom\":\"\",\"sdteacher-titlerow\":\"0\",\"sdteacher-titlecol\":\"1\",\"sdteacher-titlecolspan\":\"1\",\"sdteacher-titleelement\":\"1\",\"sdteacher-titlecustom\":\"\",\"sdteacher-titlelinktype\":\"0\",\"sddescriptionrow\":\"0\",\"sddescriptioncol\":\"1\",\"sddescriptioncolspan\":\"1\",\"sddescriptionelement\":\"1\",\"sddescriptioncustom\":\"\",\"sddescriptionlinktype\":\"0\",\"tip_title\":\"Sermon Information\",\"tooltip\":\"1\",\"tip_item1_title\":\"Title\",\"tip_item1\":\"title\",\"tip_item2_title\":\"Details\",\"tip_item2\":\"title\",\"tip_item3_title\":\"Teacher\",\"tip_item3\":\"title\",\"tip_item4_title\":\"Reference\",\"tip_item4\":\"title\",\"tip_item5_title\":\"Date\",\"tip_item5\":\"title\",\"drowspanitem\":\"0\",\"drowspanitemspan\":\"4\",\"drowspanitemimage\":\"img-polaroid\",\"drowspanitempull\":\"pull-left\",\"dscripture1row\":\"1\",\"dscripture1col\":\"1\",\"dscripture1colspan\":\"1\",\"dscripture1element\":\"1\",\"dscripture1custom\":\"\",\"dscripture1linktype\":\"0\",\"dscripture2row\":\"0\",\"dscripture2col\":\"1\",\"dscripture2colspan\":\"1\",\"dscripture2element\":\"1\",\"dscripture2custom\":\"\",\"dscripture2linktype\":\"0\",\"dsecondaryrow\":\"0\",\"dsecondarycol\":\"1\",\"dsecondarycolspan\":\"1\",\"dsecondaryelement\":\"1\",\"dsecondarycustom\":\"\",\"dsecondarylinktype\":\"0\",\"djbsmediarow\":\"1\",\"djbsmediacol\":\"3\",\"djbsmediacolspan\":\"1\",\"djbsmediaelement\":\"1\",\"djbsmediacustom\":\"\",\"djbsmedialinktype\":\"0\",\"dcustomrow\":\"0\",\"dcustomcol\":\"1\",\"dcustomcolspan\":\"1\",\"dcustomelement\":\"1\",\"dcustomcustom\":\"\",\"dcustomtext\":\"\",\"dtitlerow\":\"1\",\"dtitlecol\":\"2\",\"dtitlecolspan\":\"3\",\"dtitleelement\":\"1\",\"dtitlecustom\":\"\",\"dtitlelinktype\":\"0\",\"ddaterow\":\"0\",\"ddatecol\":\"1\",\"ddatecolspan\":\"1\",\"ddateelement\":\"1\",\"ddatecustom\":\"\",\"ddatelinktype\":\"0\",\"dteacherrow\":\"0\",\"dteachercol\":\"1\",\"dteachercolspan\":\"1\",\"dteacherelement\":\"1\",\"dteachercustom\":\"\",\"dteacherlinktype\":\"0\",\"dteacherimagerrow\":\"0\",\"dteacherimagecol\":\"1\",\"dteacherimagecolspan\":\"1\",\"dteacherimageelement\":\"1\",\"dteacherimagecustom\":\"\",\"dteacher-titlerow\":\"0\",\"dteacher-titlecol\":\"1\",\"dteacher-titlecolspan\":\"1\",\"dteacher-titleelement\":\"1\",\"dteacher-titlecustom\":\"\",\"dteacher-titlelinktype\":\"0\",\"ddurationrow\":\"0\",\"ddurationcol\":\"1\",\"ddurationcolspan\":\"1\",\"ddurationelement\":\"1\",\"ddurationcustom\":\"\",\"ddurationlinktype\":\"0\",\"dstudyintrorow\":\"0\",\"dstudyintrocol\":\"1\",\"dstudyintrocolspan\":\"6\",\"dstudyintroelement\":\"1\",\"dstudyintrocustom\":\"\",\"dstudyintrolinktype\":\"0\",\"dseriesrow\":\"0\",\"dseriescol\":\"1\",\"dseriescolspan\":\"1\",\"dserieselement\":\"1\",\"dseriescustom\":\"\",\"dserieslinktype\":\"0\",\"dseriesthumbnailrow\":\"0\",\"dseriesthumbnailcol\":\"1\",\"dseriesthumbnailcolspan\":\"1\",\"dseriesthumbnailelement\":\"1\",\"dseriesthumbnailcustom\":\"\",\"dseriesthumbnaillinktype\":\"0\",\"dseriesdescriptionrow\":\"0\",\"dseriesdescriptioncol\":\"1\",\"dseriesdescriptioncolspan\":\"1\",\"dseriesdescriptionelement\":\"1\",\"dseriesdescriptioncustom\":\"\",\"dseriesdescriptionlinktype\":\"0\",\"dsubmittedrow\":\"0\",\"dsubmittedcol\":\"1\",\"dsubmittedcolspan\":\"1\",\"dsubmittedelement\":\"1\",\"dsubmittedcustom\":\"\",\"dsubmittedlinktype\":\"0\",\"dhitsrow\":\"0\",\"dhitscol\":\"1\",\"dhitscolspan\":\"6\",\"dhitselement\":\"1\",\"dhitscustom\":\"\",\"dhitslinktype\":\"0\",\"ddownloadsrow\":\"0\",\"ddownloadscol\":\"1\",\"ddownloadscolspan\":\"1\",\"ddownloadselement\":\"1\",\"ddownloadscustom\":\"\",\"ddownloadslinktype\":\"0\",\"dstudynumberrow\":\"0\",\"dstudynumbercol\":\"1\",\"dstudynumbercolspan\":\"1\",\"dstudynumberelement\":\"1\",\"dstudynumbercustom\":\"\",\"dstudynumberlinktype\":\"0\",\"dtopicrow\":\"0\",\"dtopiccol\":\"1\",\"dtopiccolspan\":\"6\",\"dtopicelement\":\"1\",\"dtopiccustom\":\"\",\"dtopiclinktype\":\"0\",\"dlocationsrow\":\"0\",\"dlocationscol\":\"1\",\"dlocationscolspan\":\"1\",\"dlocationselement\":\"1\",\"dlocationscustom\":\"\",\"dlocationslinktype\":\"0\",\"dmessagetyperow\":\"0\",\"dmessagetypecol\":\"1\",\"dmessagetypecolspan\":\"6\",\"dmessagetypeelement\":\"1\",\"dmessagetypecustom\":\"\",\"dmessagetypelinktype\":\"0\",\"dthumbnailrow\":\"0\",\"dthumbnailcol\":\"1\",\"dthumbnailcolspan\":\"1\",\"dthumbnailelement\":\"1\",\"dthumbnailcustom\":\"\",\"dthumbnaillinktype\":\"0\",\"landing_hide\":\"0\",\"landing_default_order\":\"ASC\",\"landing_hidelabel\":\"Show\\/Hide All\",\"headingorder_1\":\"teachers\",\"headingorder_2\":\"series\",\"headingorder_3\":\"books\",\"headingorder_4\":\"topics\",\"headingorder_5\":\"locations\",\"headingorder_6\":\"messagetypes\",\"headingorder_7\":\"years\",\"showteachers\":\"1\",\"landingteachersuselimit\":\"0\",\"landingteacherslimit\":\"\",\"teacherslabel\":\"Speakers\",\"linkto\":\"1\",\"showseries\":\"1\",\"landingseriesuselimit\":\"0\",\"landingserieslimit\":\"\",\"serieslabel\":\"Series\",\"series_linkto\":\"0\",\"showbooks\":\"1\",\"landingbookslimit\":\"\",\"bookslabel\":\"Books\",\"showtopics\":\"1\",\"landingtopicslimit\":\"\",\"topicslabel\":\"Topics\",\"showlocations\":\"1\",\"landinglocationsuselimit\":\"0\",\"landinglocationslimit\":\"\",\"locationslabel\":\"Locations\",\"showmessagetypes\":\"1\",\"landingmessagetypeuselimit\":\"0\",\"landingmessagetypeslimit\":\"\",\"messagetypeslabel\":\"Message Types\",\"showyears\":\"1\",\"landingyearslimit\":\"\",\"yearslabel\":\"Years\",\"series_order\":\"2\",\"books_order\":\"2\",\"teachers_order\":\"2\",\"years_order\":\"1\",\"topics_order\":\"2\",\"locations_order\":\"2\",\"messagetypes_order\":\"2\"}',
    'Default', 'textfile24.png', 'pdf24.png', 7490, 1);
 
-/*!40000 ALTER TABLE `#__bsms_templates` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_timeset
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_timeset`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
-  `timeset` VARCHAR(14) NOT NULL DEFAULT '',
-  `backup`  VARCHAR(14)          DEFAULT NULL,
-  PRIMARY KEY (`timeset`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_timeset` WRITE;
-/*!40000 ALTER TABLE `#__bsms_timeset` DISABLE KEYS */;
+-- Dump of table #__bsms_timeset
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_timeset` (`timeset`, `backup`)
 VALUES
   ('1281646339', '1281646339');
 
-/*!40000 ALTER TABLE `#__bsms_timeset` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_topics
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_topics`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
-  `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `topic_text` TEXT,
-  `published`  TINYINT(3)       NOT NULL DEFAULT '1',
-  `params`     VARCHAR(511)              DEFAULT NULL,
-  `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `language`   CHAR(7)                   DEFAULT '*',
-  `access`     INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_topics` WRITE;
-/*!40000 ALTER TABLE `#__bsms_topics` DISABLE KEYS */;
+-- Dump of table #__bsms_topics
+-- ------------------------------------------------------------
 
 INSERT INTO `#__bsms_topics` (`id`, `topic_text`, `published`, `params`, `asset_id`, `language`, `access`)
 VALUES
@@ -874,48 +328,3 @@ VALUES
   (112, 'JBS_TOP_NARNIA', 1, NULL, 7584, '*', 1),
   (113, 'JBS_TOP_DA_VINCI_CODE', 1, NULL, 7585, '*', 1),
   (114, 'Rain', 1, NULL, 7590, '*', 1);
-
-/*!40000 ALTER TABLE `#__bsms_topics` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table #__bsms_update
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__bsms_update`;
-
-CREATE TABLE IF NOT EXISTS `#__bsms_update` (
-  `id`      INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `version` VARCHAR(255)              DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-LOCK TABLES `#__bsms_update` WRITE;
-/*!40000 ALTER TABLE `#__bsms_update` DISABLE KEYS */;
-
-INSERT INTO `#__bsms_update` (`id`, `version`)
-VALUES
-  (7, '7.0.0'),
-  (8, '7.0.1'),
-  (9, '7.0.1.1'),
-  (10, '7.0.2'),
-  (11, '7.0.3'),
-  (12, '7.0.4'),
-  (13, '7.1.0'),
-  (14, '7.1.1'),
-  (15, '7.1.2'),
-  (16, '7.1.3'),
-  (17, '8.0.0'),
-  (18, '8.0.8'),
-  (19, '9.0.0');
-
-/*!40000 ALTER TABLE `#__bsms_update` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-/*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;

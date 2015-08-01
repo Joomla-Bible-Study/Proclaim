@@ -1,132 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.1" method="upgrade">
-    <!-- Generic Metadata -->
-    <name>COM_BIBLESTUDY</name>
-    <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007 - 2015 Joomla Bible Study Team All rights reserved</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>9.0.0-dev150510</version>
-    <creationDate>June 1, 2015</creationDate>
-    <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <description>JBS_INS_XML_DESCRIPTION</description>
+	<!-- Generic Metadata -->
+	<name>COM_BIBLESTUDY</name>
+	<author>Joomla Bible Study Team</author>
+	<copyright>(C) 2007 - 2015 Joomla Bible Study Team All rights reserved</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<version>9.0.0-dev20150801</version>
+	<creationDate>Aug 1, 2015</creationDate>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<description>JBS_INS_XML_DESCRIPTION</description>
 
-    <!-- Installer Hooks -->
-    <scriptfile>biblestudy.script.php</scriptfile>
+	<!-- Installer Hooks -->
+	<scriptfile>biblestudy.script.php</scriptfile>
 
-    <!-- SQL Files -->
-    <install> <!-- Runs on install -->
-        <sql>
-            <file driver="mysql" charset="utf8">install/sql/install.sql</file>
-        </sql>
-    </install>
-    <uninstall> <!-- Runs on uninstall -->
-        <sql>
-            <file driver="mysql" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
-        </sql>
-    </uninstall>
+	<!-- SQL Files -->
+	<install> <!-- Runs on install -->
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall> <!-- Runs on uninstall -->
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/uninstall.sql</file>
+		</sql>
+	</uninstall>
 
-    <files folder="site">
-        <filename>biblestudy.php</filename>
-        <filename>controller.php</filename>
-        <filename>convert1.htm</filename>
-        <filename>router.php</filename>
-        <folder>sef_ext</folder>
-        <folder>views</folder>
-        <folder>models</folder>
-        <folder>controllers</folder>
-        <folder>helpers</folder>
-        <folder>lib</folder>
-    </files>
+	<files folder="site">
+		<filename>biblestudy.php</filename>
+		<filename>controller.php</filename>
+		<filename>convert1.htm</filename>
+		<filename>router.php</filename>
+		<folder>sef_ext</folder>
+		<folder>views</folder>
+		<folder>models</folder>
+		<folder>controllers</folder>
+		<folder>helpers</folder>
+		<folder>lib</folder>
+	</files>
 
-    <!-- Media files -->
-    <media destination="com_biblestudy" folder="media">
-        <folder>backup</folder>
-        <folder>css</folder>
-        <folder>fancybox</folder>
-        <folder>images</folder>
-        <folder>js</folder>
-        <folder>less</folder>
-        <folder>player</folder>
-        <folder>plupload</folder>
-    </media>
+	<!-- Media files -->
+	<media destination="com_biblestudy" folder="media">
+		<folder>backup</folder>
+		<folder>css</folder>
+		<folder>fancybox</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>less</folder>
+		<folder>player</folder>
+		<folder>plupload</folder>
+	</media>
 
-    <administration>
-        <menu img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_BIBLESTUDY</menu>
-        <submenu>
-            <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-            <menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
-            <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
-            <menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
-            <menu link="option=com_biblestudy&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
-            <menu link="option=com_biblestudy&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
-            <menu link="option=com_biblestudy&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
-            <menu link="option=com_biblestudy&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
-            <menu link="option=com_biblestudy&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
-            <menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
-            <menu link="option=com_biblestudy&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
-            <menu link="option=com_biblestudy&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
-            <menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
-            <menu link="option=com_biblestudy&amp;view=shares" img="../media/com_biblestudy/images/menu/icon-16-social.png">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-            <menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
-            <!-- Instead of link you can specify individual link attributes -->
-        </submenu>
+	<administration>
+		<menu img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_BIBLESTUDY</menu>
+		<submenu>
+			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_biblestudy" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
+			<menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
+			<menu link="option=com_biblestudy&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
+			<menu link="option=com_biblestudy&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
+			<menu link="option=com_biblestudy&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
+			<menu link="option=com_biblestudy&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
+			<menu link="option=com_biblestudy&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
+			<menu link="option=com_biblestudy&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
+			<menu link="option=com_biblestudy&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
+			<menu link="option=com_biblestudy&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
+			<menu link="option=com_biblestudy&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
+			<menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
+			<menu link="option=com_biblestudy&amp;view=shares" img="../media/com_biblestudy/images/menu/icon-16-social.png">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+			<menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
+			<menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
+			<menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
+			<!-- Instead of link you can specify individual link attributes -->
+		</submenu>
 
-        <!-- Administration Main File Copy Section -->
-        <files folder="admin">
-            <filename>access.xml</filename>
-            <filename>biblestudy.php</filename>
-            <filename>config.xml</filename>
-            <filename>controller.php</filename>
-            <filename>convert1.htm</filename>
-            <folder>controllers</folder>
-            <folder>help</folder>
-            <folder>helpers</folder>
-            <folder>install</folder>
-            <folder>language</folder>
-            <folder>lib</folder>
-            <folder>models</folder>
-            <folder>tables</folder>
-            <folder>views</folder>
-            <folder>addons</folder>
-            <folder>postinstall</folder>
-        </files>
-    </administration>
+		<!-- Administration Main File Copy Section -->
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>biblestudy.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>convert1.htm</filename>
+			<folder>controllers</folder>
+			<folder>help</folder>
+			<folder>helpers</folder>
+			<folder>install</folder>
+			<folder>language</folder>
+			<folder>lib</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>addons</folder>
+			<folder>postinstall</folder>
+		</files>
+	</administration>
 
-    <!-- new server call -->
-    <updateservers>
-        <server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
-    </updateservers>
+	<!-- new server call -->
+	<updateservers>
+		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
+	</updateservers>
 
-    <!-- Tables -->
-    <!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
-    <tables>
-        <table>#__bsms_admin</table>
-        <table>#__bsms_studies</table>
-        <table>#__bsms_teachers</table>
-        <table>#__bsms_topics</table>
-        <table>#__bsms_servers</table>
-        <table>#__bsms_series</table>
-        <table>#__bsms_message_type</table>
-        <table>#__bsms_media</table>
-        <table>#__bsms_books</table>
-        <table>#__bsms_podcast</table>
-        <table>#__bsms_mediafiles</table>
-        <table>#__bsms_templates</table>
-        <table>#__bsms_templatecode</table>
-        <table>#__bsms_comments</table>
-        <table>#__bsms_studytopics</table>
-        <table>#__bsms_share</table>
-        <table>#__bsms_locations</table>
-        <table>#__bsms_styles</table>
-        <table>#__bsms_timeset</table>
-        <table type="optional">#__bsms_update</table>
-    </tables>
+	<!-- Tables -->
+	<!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
+	<tables>
+		<table>#__bsms_admin</table>
+		<table>#__bsms_studies</table>
+		<table>#__bsms_teachers</table>
+		<table>#__bsms_topics</table>
+		<table>#__bsms_servers</table>
+		<table>#__bsms_series</table>
+		<table>#__bsms_message_type</table>
+		<table>#__bsms_media</table>
+		<table>#__bsms_books</table>
+		<table>#__bsms_podcast</table>
+		<table>#__bsms_mediafiles</table>
+		<table>#__bsms_templates</table>
+		<table>#__bsms_templatecode</table>
+		<table>#__bsms_comments</table>
+		<table>#__bsms_studytopics</table>
+		<table>#__bsms_share</table>
+		<table>#__bsms_locations</table>
+		<table>#__bsms_styles</table>
+		<table>#__bsms_timeset</table>
+		<table type="optional">#__bsms_update</table>
+	</tables>
 
-    <!--  Dependencies -->
-    <dependencies>
-        <dependency type="platform" name="joomla" operator="=" version="3.2"/>
-    </dependencies>
+	<!--  Dependencies -->
+	<dependencies>
+		<dependency type="platform" name="joomla" operator="=" version="3.2"/>
+	</dependencies>
 </extension>
