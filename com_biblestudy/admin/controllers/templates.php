@@ -82,7 +82,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		// Build the appropriate paths
-		$tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
+		$tmp_dest = JPATH_SITE . '/tmp/' . $userfile['name'];
 
 		$tmp_src = $userfile['tmp_name'];
 
@@ -92,7 +92,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 		$db = JFactory::getDBO();
 
-		$query   = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = $db->splitSql($query);
 
 		if (count($queries) == 0)
@@ -262,8 +262,11 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		endforeach;
 
 		// Get new record insert to change name
-		$query = 'SELECT id, title, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
-		$db->setQuery($query);
+		$query = $db->getQuery(true);
+		$query->select('id, title, params')
+			->from('#__bsms_templates')
+			->order('id');
+		$db->setQuery($query, 1);
 		$data = $db->loadObject();
 
 		// Load Table Data.
@@ -476,7 +479,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			return false;
 		}
 		$templatereturn = '
-                        INSERT INTO #__bsms_templatecode SET `type` = "' . $db->escape($object->type) . '",
+                        INSERT INTO `#__bsms_templatecode` SET `type` = "' . $db->escape($object->type) . '",
                         `templatecode` = "' . $db->escape($object->templatecode) . '",
                         `filename`="' . $db->escape($template) . '",
                         `published` = "1";
