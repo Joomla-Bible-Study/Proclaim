@@ -14,7 +14,6 @@
         <action name="core.edit.own" title="JACTION_EDITOWN"
                 description="JACTION_EDITOWN_COMPONENT_DESC"/>
     </section>
-
     <section name="message">
         <action name="core.delete" title="JACTION_DELETE"
                 description="JACTION_DELETE_COMPONENT_DESC"/>

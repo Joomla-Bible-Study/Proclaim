@@ -978,7 +978,6 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function rmoldurl()
 	{
-
 		$urls = array("http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml /extension.xml",
 			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml /extension.xml, ",
 			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml /extension.xml, ",
@@ -988,5 +987,4 @@ class Com_BiblestudyInstallerScript
 
 		return $urls;
 	}
-
 }

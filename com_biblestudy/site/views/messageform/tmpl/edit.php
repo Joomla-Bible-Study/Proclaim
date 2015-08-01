@@ -40,14 +40,14 @@ if ($input->getInt('a_id'))
 }
 else
 {
-	$booknumber  = $this->admin_params->get('booknumber');
-	$thumbnailm  = $this->admin_params->get('default_study_image');
-	$teacher_id  = $this->admin_params->get('teacher_id');
-	$location_id = $this->admin_params->get('location_id');
-	$series_id   = $this->admin_params->get('series_id');
-	$messagetype = $this->admin_params->get('messagetype');
-	$thumbnailm  = $this->admin_params->get('default_study_image');
-	$user_id     = $this->admin->user_id;
+	$booknumber  = $this->state->params->get('booknumber');
+	$thumbnailm  = $this->state->params->get('default_study_image');
+	$teacher_id  = $this->state->params->get('teacher_id');
+	$location_id = $this->state->params->get('location_id');
+	$series_id   = $this->state->params->get('series_id');
+	$messagetype = $this->state->params->get('messagetype');
+	$thumbnailm  = $this->state->params->get('default_study_image');
+	$user_id     = JFactory::getUser()->id;
 }
 ?>
 <script type="text/javascript">

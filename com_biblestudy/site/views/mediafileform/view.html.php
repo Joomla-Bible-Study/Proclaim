@@ -103,6 +103,10 @@ class BiblestudyViewMediafileform extends JViewLegacy
 				}
 			}
 		}
+		else
+		{
+			//$this->options
+		}
 
 		// Needed to load the article field type for the article selector
 		JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
@@ -114,6 +118,12 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 			return;
 		}
+
+		// Create a shortcut to the parameters.
+		$params = &$this->state->params;
+
+		// Escape strings for HTML output
+		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
 		$this->setLayout('edit');
 

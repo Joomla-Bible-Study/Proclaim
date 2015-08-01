@@ -109,8 +109,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$document            = JFactory::getDocument();
 
 		JHtml::_('jquery.framework');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-		$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
+		$document->addScript(JUri::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
+		$document->addStyleSheet(JUri::base() . 'media/com_biblestudy/css/token-input-jbs.css');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
