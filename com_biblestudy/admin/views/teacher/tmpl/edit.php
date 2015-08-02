@@ -263,9 +263,8 @@ else
 		<div class="span2 form-vertical">
 			<div class="control-group">
 				<div class="control-label">
-					<?php var_dump($this->item->teacher_thumbnail); ?>
 					<?php if ($this->item->teacher_thumbnail) : ?>
-						<img src="<?php echo JURI::root() . '/' . $this->item->teacher_thumbnail; ?>"
+						<img src="<?php echo JUri::root() . '/' . $this->item->teacher_thumbnail; ?>"
 						     alt="<?php echo $this->form->getValue('teachername'); ?>"
 						     class="thumbnail center"/>
 					<?php endif; ?>

@@ -102,25 +102,25 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('teacher.apply');
-			JToolBarHelper::save('teacher.save');
-			JToolBarHelper::cancel('teacher.cancel');
+			JToolbarHelper::apply('teacher.apply');
+			JToolbarHelper::save('teacher.save');
+			JToolbarHelper::cancel('teacher.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('teacher.apply');
-				JToolBarHelper::save('teacher.save');
+				JToolbarHelper::apply('teacher.apply');
+				JToolbarHelper::save('teacher.save');
 			}
-			JToolBarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

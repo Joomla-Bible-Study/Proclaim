@@ -30,7 +30,7 @@ class JBSMImages
 	{
 		$path     = null;
 		$image    = null;
-		$database = JFactory::getDBO();
+		$database = JFactory::getDbo();
 		$query    = $database->getQuery(true);
 		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
 		$database->setQuery($query);
