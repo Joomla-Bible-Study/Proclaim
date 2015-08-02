@@ -170,7 +170,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 			return parent::save($data);
 		}
 
-		$path = 'images/biblestudy/studies/' . $data['id'];
+		$path = 'images/biblestudy/teachers/' . $data['id'];
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
