@@ -154,7 +154,7 @@
 .podcastsubscribe{
     clear:both;
     display:table;
-    width:100%;
+    width:auto;
     background-color:#eee;
     border-radius: 15px 15px 15px 15px;
     border: 1px solid grey;
@@ -233,7 +233,7 @@ div.listingfooter ul li {
 }
 .bslisttable {
     margin: 0;
-    border-collapse:separate;
+    border-collapse: collapse;
 }
 .bslisttable th, .bslisttable td {
     text-align:left;
