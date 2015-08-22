@@ -49,9 +49,10 @@ abstract class JHtmlJwplayer
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$key = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-		$cdn = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
+		$cdn = $params->get('jwplayer_cdn', '');
 		if ($cdn)
 		{
+			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
 			JHtml::script($cdn);
 		}
 		else
@@ -127,7 +128,7 @@ abstract class JHtmlJwplayer
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
 						jwplayer('placeholder" . $id . "').setup({
 							'file': '" . $media->path1 . "',
-							";
+						";
 		if ($params->playerresponsive == 0)
 		{
 			$render .= "'height': '" . $media->playerheight . "',

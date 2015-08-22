@@ -297,7 +297,7 @@ class JBSMMedia
 						// Add space for popup window
 						$player->playerwidth  = $player->playerwidth + 20;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;t="
+						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player . "&amp;view=popup&amp;t="
 							. $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width=" . $player->playerwidth . ",height=" .
 							$player->playerheight . "'); return false\">" . $image . "</a>";
 						break;
