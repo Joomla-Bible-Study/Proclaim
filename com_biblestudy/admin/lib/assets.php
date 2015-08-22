@@ -25,7 +25,7 @@ class JBSMAssets
 	 *
 	 * @return boolean
 	 */
-	public static function fixassets ()
+	public static function fixAssets ()
 	{
 		$db = JFactory::getDbo();
 
@@ -84,7 +84,7 @@ class JBSMAssets
 	 */
 	public static function parentid ()
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// First get the new parent_id
 		$query = $db->getQuery(true);
@@ -247,7 +247,7 @@ class JBSMAssets
 	 */
 	private static function deleteasset ($data)
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		if (isset($data->jasset_id))
 		{
@@ -276,7 +276,7 @@ class JBSMAssets
 	public static function checkAssets ()
 	{
 		$return = array();
-		$db     = JFactory::getDBO();
+		$db     = JFactory::getDbo();
 		$result = new stdClass;
 
 		// First get the new parent_id

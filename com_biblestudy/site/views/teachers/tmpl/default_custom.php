@@ -28,7 +28,7 @@ $JBSMTeacher = new JBSMTeacher;
 	<table class="table table-striped" id="bsm_teachertable">
 		<tbody>
 		<tr class="titlerow">
-			<td style="text-align: center" colspan="3" class="title">
+			<td style="text-align: center;" colspan="3" class="title">
 				<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
 			</td>
 		</tr>

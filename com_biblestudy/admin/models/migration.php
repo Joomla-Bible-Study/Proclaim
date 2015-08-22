@@ -560,7 +560,7 @@ class BibleStudyModelMigration extends JModelLegacy
 		if ($this->_isimport)
 		{
 			$this->fiximport();
-			$this->running = 'Fixing Params';
+			$this->running = 'Fixing Imported Params';
 			$this->_isimport = 0;
 			$this->doneVersions++;
 		}

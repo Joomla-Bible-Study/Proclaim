@@ -306,13 +306,20 @@ class Migration900
 
 		// Modify admin table to add thumbnail default parameters
 		/** @type TableAdmin $admin */
-		$admin = JTable::getInstance('Admin', 'Table', array('dbo' => $db));
-		$admin->load(1);
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_admin')
+			->where('id = 1');
+		$db->setQuery($query);
+		$admin = $db->loadObject();
 		$registry = new Registry;
 		$registry->loadString($admin->params);
 		$registry->set('server', $newServer->id);
 		$admin->params = $registry->toString();
-		$admin->store(1);
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
+		$db->setQuery($query);
+		$db->execute();
 
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);

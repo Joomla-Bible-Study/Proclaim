@@ -34,7 +34,7 @@ class JBSMAlias
 	public static function updateAlias()
 	{
 		$done    = 0;
-		$db      = JFactory::getDBO();
+		$db      = JFactory::getDbo();
 		$objects = self::getObjects();
 		$results = array();
 
@@ -101,7 +101,7 @@ class JBSMAlias
 		{
 			return false;
 		}
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, alias, ' . $title)
 			->from($table);

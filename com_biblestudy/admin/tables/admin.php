@@ -29,39 +29,11 @@ class TableAdmin extends JTable
 	public $id = null;
 
 	/**
-	 * Podcast
+	 * Drop Tables
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $podcast = null;
-
-	/**
-	 * Series
-	 *
-	 * @var string
-	 */
-	public $series = null;
-
-	/**
-	 * Study
-	 *
-	 * @var string
-	 */
-	public $study = null;
-
-	/**
-	 * Teacher
-	 *
-	 * @var string
-	 */
-	public $teacher = null;
-
-	/**
-	 * Media
-	 *
-	 * @var string
-	 */
-	public $media = null;
+	public $drop_tables = 0;
 
 	/**
 	 * Params
@@ -71,32 +43,32 @@ class TableAdmin extends JTable
 	public $params = null;
 
 	/**
-	 * Download
+	 * Asset ID
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $download = null;
+	public $asset_id = 0;
 
 	/**
-	 * Main
+	 * Access Level
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $main = null;
+	public $access = 0;
 
 	/**
-	 * ShowHide
+	 * Install State
 	 *
 	 * @var string
 	 */
-	public $showhide = null;
+	public $installstate = null;
 
 	/**
-	 * Drop Tables
+	 * Debug settings
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $drop_tables = null;
+	public $debug = null;
 
 	/**
 	 * Constructor
