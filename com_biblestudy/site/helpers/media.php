@@ -146,11 +146,10 @@ class JBSMMedia
 		}
 		else
 		{
-
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
 
-			$player->player = ($media->params->get('player')) ? $media->params->get('player') : "0";
+			$player->player = ($media->params->get('player')) ? $media->params->get('player') : $params->get('player', 0);
 		}
 		if ($player->player == 3)
 		{
@@ -261,7 +260,7 @@ class JBSMMedia
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
 						return $playercode;
 						break;
-
+					case 3:
 					case 1: // Popup window
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
 								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
