@@ -30,7 +30,7 @@ $doc->addStyleDeclaration($style);
 	{
 		$player = ($this->player == '7' ? true : false);
 		JHtml::_('jwplayer.framework');
-		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params->toObject(), true, $player);
+		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params, true, $player);
 	}
 
 	if ($this->player == 8)

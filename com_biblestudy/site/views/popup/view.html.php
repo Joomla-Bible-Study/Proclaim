@@ -130,6 +130,10 @@ class BiblestudyViewPopup extends JViewLegacy
 		 */
 		$registry = new Registry;
 		$registry->loadString($this->media->params);
+		$this->template->params->merge($registry);
+
+		$registry = new Registry;
+		$registry->loadString($this->template->params);
 		$this->params->merge($registry);
 
 		JHtml::_('biblestudy.framework');

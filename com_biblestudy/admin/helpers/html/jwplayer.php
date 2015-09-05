@@ -48,8 +48,8 @@ abstract class JHtmlJwplayer
 		$doc = JFactory::getDocument();
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$key = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-		$cdn = $params->get('jwplayer_cdn', '');
+		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
+		$cdn    = $params->get('jwplayer_cdn', '');
 		if ($cdn)
 		{
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
@@ -69,11 +69,11 @@ abstract class JHtmlJwplayer
 	/**
 	 * Render JS for media
 	 *
-	 * @param   object  $media   Media info
-	 * @param   int     $id      ID of media
-	 * @param   object  $params  Params from media have to be in object for do to protection.
-	 * @param   bool    $popup   If from a popup
-	 * @param   bool    $player  To make player for audio like (MP3, M4A, etc..)
+	 * @param   object $media  Media info
+	 * @param   int    $id     ID of media
+	 * @param   object $params Params from media have to be in object for do to protection.
+	 * @param   bool   $popup  If from a popup
+	 * @param   bool   $player To make player for audio like (MP3, M4A, etc..)
 	 *
 	 * @return  string
 	 */
@@ -99,7 +99,7 @@ abstract class JHtmlJwplayer
 		}
 		else
 		{
-			$media->playerheight = $media->params->get('player_hight');
+			$media->playerheight = $params->get('player_hight');
 		}
 
 		// Check to see if file name is for youtube and helps with old converted file names.
@@ -124,15 +124,17 @@ abstract class JHtmlJwplayer
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
-		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
-			|| !strpos($media->path1, 'youtube.com')
-			|| strpos($media->path1, 'youtu.be')
-			|| strpos($media->path1, 'rtmp://'))
+		if (
+			!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
+			&& !strpos($media->path1, 'youtube.com')
+			&& !strpos($media->path1, 'youtu.be')
+			&& !strpos($media->path1, 'rtmp://')
+		)
 		{
 			return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get('media_image') . '"/></a>';
 		}
 		$media->playerwidth  = $params->get('player_width');
-		$media->playerheight = $params->getA('player_height');
+		$media->playerheight = $params->get('player_height');
 
 		if ($params->get('playerheight') < 55 && $params->get('playerheight'))
 		{
@@ -150,7 +152,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->extraparams = $params->get('playervars');
 		}
-		if ($media->params->get('altflashvars'))
+		if ($params->get('altflashvars'))
 		{
 			$media->flashvars = $params->get('altflashvars');
 		}
@@ -216,7 +218,7 @@ abstract class JHtmlJwplayer
 			";
 		}
 
-			$render .= "'width': '" . $media->playerwidth . "',
+		$render .= "'width': '" . $media->playerwidth . "',
 						'image': '" . $media->popupimage . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
