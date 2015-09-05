@@ -11,7 +11,7 @@
 // Protect from unauthorized access
 defined('_JEXEC') or die();
 
-JHTML::_('behavior.framework');
+JHtml::_('behavior.framework');
 JHtml::_('behavior.modal');
 
 if ($this->totalVersions != '0')
@@ -23,13 +23,22 @@ else
 	$pre = '';
 }
 ?>
-<?php if ($this->more): ?>
+<?php
+	if ($this->more)
+	{
+	?>
 	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>
-<?php else: ?>
+	<?php
+	}
+	else
+	{
+	?>
 	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
-<?php endif; ?>
+	<?php
+	}
+	?>
 <div class="migration-status">
-	<div class="status"><?php echo $pre . ' ' .  JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+	<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
 
@@ -45,7 +54,9 @@ else
 	<input type="hidden" name="task" value="migration.run"/>
 </form>
 
-<?php if (!$this->more): ?>
+<?php if (!$this->more)
+{
+	?>
 	<div id="j-main-container" class="span10">
 		<div id="cpanel" class="btn-group">
 			<div class="pull-left">
@@ -59,4 +70,5 @@ else
 			</div>
 		</div>
 	</div>
-<?php endif; ?>
+	<?php
+}

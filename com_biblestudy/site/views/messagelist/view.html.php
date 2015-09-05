@@ -149,7 +149,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$title = $this->params->def('page_title', '');
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
 		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{

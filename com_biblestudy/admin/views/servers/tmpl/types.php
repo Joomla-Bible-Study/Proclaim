@@ -1,5 +1,5 @@
 <?php
-//@todo Add proper header
+// @todo Add proper header
 
 defined('_JEXEC') or die;
 $app = JFactory::getApplication();

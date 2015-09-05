@@ -248,7 +248,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
 		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{

@@ -2,10 +2,10 @@
 /**
  * Admin Form
  *
- * @package        BibleStudy.Admin
- * @copyright      2007 - 2015 (C) Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -39,19 +39,24 @@ $input = $app->input;
 			if (task === 'admin.save' || task === 'admin.apply') {
 				// Confirm thumbnail changes
 				var thumbnail_changes = [];
-				if (jQuery('#thumbnail_teacher_size_old').val() !== jQuery('#jform_params_thumbnail_teacher_size').val() && jQuery('#thumbnail_teacher_size_old').val() != '') {
+				var thumbnail_teacher_size_old = jQuery('#thumbnail_teacher_size_old');
+				var thumbnail_series_size_old  = jQuery('#thumbnail_series_size_old');
+				var thumbnail_study_size_old   = jQuery('#thumbnail_study_size_old');
+				if (thumbnail_teacher_size_old.val() !== jQuery('#jform_params_thumbnail_teacher_size').val() && thumbnail_teacher_size_old.val() != '') {
 					thumbnail_changes.push('teachers');
 				}
-				if (jQuery('#thumbnail_series_size_old').val() !== jQuery('#jform_params_thumbnail_series_size').val() && jQuery('#thumbnail_series_size_old').val() != '') {
+				if (thumbnail_series_size_old.val() !== jQuery('#jform_params_thumbnail_series_size').val() && thumbnail_series_size_old.val() != '') {
 					thumbnail_changes.push('series');
 				}
-				if (jQuery('#thumbnail_study_size_old').val() !== jQuery('#jform_params_thumbnail_study_size').val() && jQuery('#thumbnail_study_size_old').val() != '') {
+				if (thumbnail_study_size_old.val() !== jQuery('#jform_params_thumbnail_study_size').val() && thumbnail_study_size_old.val() != '') {
 					thumbnail_changes.push('studies');
 				}
 				if (thumbnail_changes.length > 0) {
-					var resize_thumbnails = confirm("You modified the default thumbnail size(s). Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
+					var resize_thumbnails = confirm("You modified the default thumbnail size(s)." +
+							"Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
 					if (resize_thumbnails) {
-						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1', {images: thumbnail_changes}, function (response) {
+						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+								{images: thumbnail_changes}, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
 									var total_paths = response.total, counter = 0;
 									var progress = 0;
