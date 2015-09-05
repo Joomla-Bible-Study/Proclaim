@@ -46,3 +46,5 @@ tests/unit/.joomla-cms/
 tests/.joomla-cms
 
 *.phar
+
+tests/test.php

@@ -289,7 +289,7 @@ class JBSMMedia
 						break;
 
 					case 2: // Inline
-						JHtmlJwplayer::framework();
+						JHtml::_('Jwplayer.framework', true, true);
 						$playercode = JHtmlJwplayer::render($media, $media->id, $params);
 						break;
 
