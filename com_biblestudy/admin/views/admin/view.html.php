@@ -220,9 +220,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_IBM_SELECT_DB'));
+				$types[]                      = JHtml::_('select.option', '0', JText::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}
 		}
 		else
@@ -293,19 +293,19 @@ class BiblestudyViewAdmin extends JViewLegacy
 	protected function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
-
-		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolBarHelper::divider();
-		JToolBarHelper::apply('admin.apply');
-		JToolBarHelper::save('admin.save');
-		JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
-		JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
-		JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
+		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::divider();
+		JToolbarHelper::apply('admin.apply');
+		JToolbarHelper::save('admin.save');
+		JToolbarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
+		JToolbarHelper::divider();
+		JToolbarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
+		JToolbarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
+		JToolbarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

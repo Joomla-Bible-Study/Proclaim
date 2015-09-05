@@ -375,7 +375,7 @@ class JBSMRestore
 
 			return false;
 		}
-		// Check if sql file is for Joomla! Bible Studys
+		// Check if sql file is for Joomla! Bible Studies
 		$isold   = substr_count($query, '#__bsms_admin_genesis');
 		$isnot   = substr_count($query, '#__bsms_studies');
 		$iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);

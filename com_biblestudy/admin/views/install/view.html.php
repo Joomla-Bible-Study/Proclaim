@@ -70,7 +70,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 			return false;
 		}
-		JHTML::stylesheet('media/com_biblestudy/css/general.css');
+		JHtml::stylesheet('media/com_biblestudy/css/general.css');
 
 		// Install systems setup files
 		$this->installsetup();
@@ -124,7 +124,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		// -- General settings
 
 		jimport('joomla.installer.installer');
-		$db                    = JFactory::getDBO();
+		$db                    = JFactory::getDbo();
 		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
@@ -140,7 +140,7 @@ class BiblestudyViewInstall extends JViewLegacy
 					{
 						// Was the module already installed?
 						$sql = $db->getQuery(true);
-						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->Quote('mod_' . $module));
+						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
 						$result                  = $db->loadResult();
 						$this->status->modules[] = array(

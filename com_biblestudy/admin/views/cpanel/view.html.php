@@ -46,6 +46,10 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected $state;
 
+	protected $hasPostInstallationMessages;
+
+	protected $extension_id;
+
 	/**
 	 * Display
 	 *
@@ -60,7 +64,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$this->data  = $this->get('Data');
 		$model       = $this->getModel();
 
-		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
+		JHtml::stylesheet('media/com_biblestudy/css/cpanel.css');
 
 		$this->total_messages = JBSMStats::get_total_messages();
 
