@@ -327,4 +327,4 @@ VALUES
   (111, 'JBS_TOP_HOT_TOPICS', 1, NULL, 7583, '*', 1),
   (112, 'JBS_TOP_NARNIA', 1, NULL, 7584, '*', 1),
   (113, 'JBS_TOP_DA_VINCI_CODE', 1, NULL, 7585, '*', 1),
-  (114, 'Rain', 1, NULL, 7590, '*', 1);
+  (114, 'JBS_TOP_RAIN', 1, NULL, 7590, '*', 1);
