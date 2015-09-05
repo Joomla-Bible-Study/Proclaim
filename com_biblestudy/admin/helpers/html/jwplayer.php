@@ -97,7 +97,8 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerheight = 30;
 		}
-		else{
+		else
+		{
 			$media->playerheight = $media->params->get('player_hight');
 		}
 
@@ -123,12 +124,10 @@ abstract class JHtmlJwplayer
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
-		if (
-				!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
-				|| !strpos($media->path1, 'youtube.com')
-				|| strpos($media->path1, 'youtu.be')
-				|| strpos($media->path1, 'rtmp://')
-		)
+		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
+			|| !strpos($media->path1, 'youtube.com')
+			|| strpos($media->path1, 'youtu.be')
+			|| strpos($media->path1, 'rtmp://'))
 		{
 			return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get('media_image') . '"/></a>';
 		}
