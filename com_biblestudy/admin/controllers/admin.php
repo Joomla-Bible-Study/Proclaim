@@ -130,8 +130,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$jinput = JFactory::getApplication()->input;
 		$db     = JFactory::getDbo();
 		$msg    = null;
-		$from   = $jinput->getInt('pfrom', '', 'post');
-		$to     = $jinput->getInt('pto', '', 'post');
+		$from   = $jinput->getInt('pfrom', '');
+		$to     = $jinput->getInt('pto', '');
 		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$query  = $db->getQuery(true);
 		$query->select('id, params')
@@ -174,15 +174,10 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$db   = JFactory::getDbo();
 		$msg  = null;
-		$post = $_POST['jform'];
-		$reg  = new Registry;
-		$reg->loadArray($post['params']);
-		$from  = $reg->get(';from');
-		$to    = $reg->get(';to');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('popup = ' . $db->q($to))
-			->where('popup = ' . $db->q($from));
+			->set('hits = ' . 0)
+			->where('hits != 0');
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -210,7 +205,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('downloads = ' . 0);
+			->set('downloads = ' . 0)
+			->where('downloads != 0');
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -239,7 +235,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
-			->set('plays = ' . 0);
+			->set('plays = ' . 0)
+			->where('plays != 0');
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -274,7 +271,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$asset       = new JBSMAssets;
 		$checkassets = $asset->checkAssets();
-		JFactory::getApplication()->input->set('checkassets', $checkassets, 'get', 2);
+		JFactory::getApplication()->input->set('checkassets', $checkassets);
 		parent::display();
 	}
 

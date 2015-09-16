@@ -33,7 +33,7 @@ $input = $app->input;
 	};
 
 	Joomla.submitbutton = function (task) {
-		if (task === 'admin.cancel') {
+		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays') {
 			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else if (document.formvalidator.isValid(document.id('item-admin'))) {
 			if (task === 'admin.save' || task === 'admin.apply') {
