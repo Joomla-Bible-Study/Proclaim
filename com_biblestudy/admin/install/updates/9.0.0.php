@@ -131,7 +131,7 @@ class Migration900
 					{
 						if (!substr_count($mediaImage->path2, '/'))
 						{
-							$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+							$mimage = 'images/biblestudy/' . $mediaImage->path2;
 						}
 						else
 						{
@@ -248,7 +248,7 @@ class Migration900
 				}
 				else
 				{
-					$mimage = 'media/com_biblestudy/images/' . $mediaImage->path2;
+					$mimage = 'images/biblestudy/' . $mediaImage->path2;
 				}
 			}
 			$registry->loadString($mediaFile->params);
@@ -373,7 +373,7 @@ class Migration900
 		{
 			if (isset($columns2[$column]))
 			{
-				$db->setQuery('ALTER TABLE `' . $table . '` DROP COLUMN `' . $column . '`');
+				$db->setQuery('ALTER TABLE ' . $db->gn($table) . ' DROP COLUMN ' . $db->qn($column));
 				$db->execute();
 			}
 		}
@@ -389,7 +389,7 @@ class Migration900
 	 */
 	private function deleteTable ($table, $db)
 	{
-		$db->setQuery('DROP TABLE `' . $table . '`');
+		$db->setQuery('DROP TABLE ' . $db->qn($table));
 		$db->execute();
 	}
 
