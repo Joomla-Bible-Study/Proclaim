@@ -417,7 +417,10 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		if ($type == 'install')
+		//Import filesystem libraries. Perhaps not necessary, but does not hurt
+		jimport('joomla.filesystem.file');
+
+		if (JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
 		{
 			// Copy the images to the new folder
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);

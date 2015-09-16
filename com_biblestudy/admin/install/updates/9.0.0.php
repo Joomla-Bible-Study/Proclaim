@@ -342,6 +342,15 @@ class Migration900
 		$message->version_introduced = '9.0.0';
 		$message->enabled = 1;
 
+		//Import filesystem libraries. Perhaps not necessary, but does not hurt
+		jimport('joomla.filesystem.file');
+
+		if (JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
+		{
+			// Copy the images to the new folder
+			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
+		}
+
 		$script = new BibleStudyModelMigration;
 		$script->postinstall_messages($message, $db);
 
