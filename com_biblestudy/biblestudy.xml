@@ -3,12 +3,12 @@
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
 	<author>Joomla Bible Study Team</author>
-	<copyright>(C) 2007 - 2015 Joomla Bible Study Team All rights reserved</copyright>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>9.0.0-dev20150801</version>
-	<creationDate>Aug 1, 2015</creationDate>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<copyright>(C) 2007 - 2015 Joomla Bible Study All rights reserved.</copyright>
+	<version>9.0.0-beta1</version>
+	<creationDate>Sep 19, 2015</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
 	<!-- Installer Hooks -->
