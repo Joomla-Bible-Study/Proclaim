@@ -342,7 +342,7 @@ class Migration900
 		$message->version_introduced = '9.0.0';
 		$message->enabled = 1;
 
-		//Import filesystem libraries. Perhaps not necessary, but does not hurt
+		// Import filesystem libraries. Perhaps not necessary, but does not hurt
 		jimport('joomla.filesystem.file');
 
 		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
@@ -373,7 +373,7 @@ class Migration900
 		{
 			if (isset($columns2[$column]))
 			{
-				$db->setQuery('ALTER TABLE ' . $db->gn($table) . ' DROP COLUMN ' . $db->qn($column));
+				$db->setQuery('ALTER TABLE ' . $db->qn($table) . ' DROP COLUMN ' . $db->qn($column));
 				$db->execute();
 			}
 		}

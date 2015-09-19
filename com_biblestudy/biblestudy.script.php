@@ -417,7 +417,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		//Import filesystem libraries. Perhaps not necessary, but does not hurt
+		// Import filesystem libraries. Perhaps not necessary, but does not hurt
 		jimport('joomla.filesystem.file');
 
 		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
