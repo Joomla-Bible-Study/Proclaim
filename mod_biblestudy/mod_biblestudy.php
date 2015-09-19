@@ -108,7 +108,7 @@ $jinput    = new JInput;
 
 if (!$templatemenuid)
 {
-	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
+	$templatemenuid = $jinput->getInt('templatemenuid', 1);
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
