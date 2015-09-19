@@ -145,7 +145,7 @@ else
 								<?php echo $this->form->getLabel('booknumber'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('booknumber', null, $book); ?>
+								<?php echo $this->form->getInput('booknumber', null, $booknumber); ?>
 							</div>
 						</div>
 						<div class="control-group">
