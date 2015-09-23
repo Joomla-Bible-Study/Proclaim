@@ -44,7 +44,7 @@
 			       description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
 			       filter="raw"/>
 		</fieldset>
-		<fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES">
+		<fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES" addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
 			<field name="filename"
 			       type="plupload"
 			       handler="upload"
