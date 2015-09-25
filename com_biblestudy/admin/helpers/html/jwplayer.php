@@ -217,7 +217,7 @@ abstract class JHtmlJwplayer
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
-						'image': '" . $media->popupimage . "',
+						'image': '" . $params->popupimage . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
