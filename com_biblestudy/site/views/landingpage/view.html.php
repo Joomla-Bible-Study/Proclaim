@@ -49,7 +49,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$document  = JFactory::getDocument();
-
+//Load the css for icons
+		$document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;
 

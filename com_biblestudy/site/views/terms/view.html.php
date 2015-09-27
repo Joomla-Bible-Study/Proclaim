@@ -99,7 +99,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	{
 		$app   = JFactory::getApplication();
 		$menus = $app->getMenu();
-
+		//Load the css for icons
+		$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 		$title      = null;
 

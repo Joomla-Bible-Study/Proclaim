@@ -43,15 +43,19 @@ class JBSMMedia
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
-		if ($media->params->get('media_image'))
-		{
-			$mediaimage = $media->params->get('media_image');
-		}
-		else
-		{
-			$mediaimage = 'images/biblestudy//speaker24.png';
-		}
-		$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
+
+			if ($media->params->get('media_use_button_icon') >= 1)
+			{
+				$image = $this->mediaButton($media);
+			}
+			else
+			{
+				$mediaimage = $media->params->get('media_image');
+				$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
+			}
+
+
+
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$mediafile  = self::getFluidDownloadLink($media, $params, $template, $playercode);
@@ -66,6 +70,51 @@ class JBSMMedia
 		return $mediafile;
 	}
 
+	/**
+	 * Used to obtain the button and/or icon for the image
+	 * @param $media
+	 * @param $params
+	 * @return mixed
+	 */
+	public function mediaButton($media)
+	{
+		$button = $media->params->get('media_button_type','btn-link');
+		$buttontext = $media->params->get('media_button_text','Audio');
+		$textsize = $media->params->get('media_icon_text_size','24');
+		switch ($media->params->get('media_use_button_icon'))
+		{
+			case 1:
+				//button only
+				$mediaimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'">'.$buttontext.'</div>';
+				break;
+			case 2:
+				// button and icon
+				  if ($media->params->get('media_icon_type') == '1')
+				  {
+					  $icon = $media->params->get('media_custom_icon');
+				  }
+				  else
+				  {
+					  $icon = $media->params->get('media_icon_type','icon-play');
+				  }
+				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'"><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				break;
+			case 3:
+				//icon only
+				if ($media->params->get('media_icon_type') == 1)
+				{
+					$icon = $media->params->get('media_custom_icon');
+				}
+				else
+				{
+					$icon = $media->params->get('media_icon_type','icon-play');
+				}
+				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
+				break;
+		}
+
+		return $mediaimage;
+	}
 	/**
 	 * Use JImage to create images
 	 *
