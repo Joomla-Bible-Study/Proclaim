@@ -1,5 +1,5 @@
 function openConverter1() {
-    var Wheight = 125;
+    var Wheight = 170;
     var Wwidth = 300;
     var winl = (screen.width - Wwidth) / 2;
     var wint = (screen.height - Wheight) / 2;

@@ -2,8 +2,10 @@
 <media>
     <fields name="params">
         <fieldset name="upload" label="JBS_ADDON_LOCAL_DETAILS">
-            <field name="upload" type="plupload" label="JBS_ADDON_LOCAL_UPLOAD" description="JBS_ADDON_LOCAL_UPLOAD_DESC"
+            <field name="filename" type="plupload" label="JBS_ADDON_LOCAL_UPLOAD" description="JBS_ADDON_LOCAL_UPLOAD_DESC"
                     handler="upload" class="input required" required="true"/>
+            <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
+                   description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
         </fieldset>
     </fields>
 </media>
