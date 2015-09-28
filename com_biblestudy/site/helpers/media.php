@@ -81,11 +81,19 @@ class JBSMMedia
 		$button = $media->params->get('media_button_type','btn-link');
 		$buttontext = $media->params->get('media_button_text','Audio');
 		$textsize = $media->params->get('media_icon_text_size','24');
+		if ($media->params->get('media_button_color'))
+		{
+			$color = 'style="background-color:'.$media->params->get('media_button_color').';"';
+		}
+		else
+		{
+			$color = '';
+		}
 		switch ($media->params->get('media_use_button_icon'))
 		{
 			case 1:
 				//button only
-				$mediaimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'">'.$buttontext.'</div>';
+				$mediaimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
 				break;
 			case 2:
 				// button and icon
@@ -97,7 +105,7 @@ class JBSMMedia
 				  {
 					  $icon = $media->params->get('media_icon_type','icon-play');
 				  }
-				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'"><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
 			case 3:
 				//icon only

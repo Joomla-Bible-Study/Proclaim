@@ -84,6 +84,7 @@
 				<option value="btn-warning">JBS_MED_WARNING</option>
 				<option value="btn-danger">JBS_MED_DANGER</option>
 			</field>
+			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
 			<field name="media_icon_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
 				   description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
 				<option value="icon-play">JBS_MED_PLAY</option>
