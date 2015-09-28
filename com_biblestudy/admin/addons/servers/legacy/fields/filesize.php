@@ -59,7 +59,7 @@ class JFormFieldFilesize extends JFormField
 	 */
 	private function sizeConverter()
 	{
-		JHTML::Script('filesize.js', JURI::root() . '/media/com_biblestudy/js/');
+		JHtml::script(Juri::root() . '/media/com_biblestudy/js/filesize.js');
 
 		return '<a style="float: left; margin-top: 6px;" href="javascript:openConverter1();">' . JText::_('JBS_MED_FILESIZE_CONVERTER') . '</a>';
 	}
