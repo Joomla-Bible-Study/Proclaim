@@ -14,23 +14,24 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container-fluid">
     <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
-
-
-            <<?php echo $classelement; ?> class="componentheading"><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></<?php echo $classelement; ?>>
-
+		<<?php echo $classelement; ?> class="componentheading">
+	    <?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+        </<?php echo $classelement; ?>>
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
-			<?php if ($this->params->get('teacher_headercode'))
+			<?php
+			if ($this->params->get('teacher_headercode'))
 			{
 				echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_biblestudy.teachers');
-			} ?>
+			}
+			?>
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
 			<?php
-			echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
+				echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
 			?>
 		</div>
 	</div>

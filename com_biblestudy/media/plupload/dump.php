@@ -7,7 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>Plupload - Form dump</title>
 </head>
-<body style="font: 13px Verdana; background: #eee; color: #333">
+<body style="font: 13px Verdana; background: #eee; color: #333;">
 
 <h1>Post dump</h1>
 

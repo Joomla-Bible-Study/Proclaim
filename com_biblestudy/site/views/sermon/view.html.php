@@ -88,7 +88,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			$app->enqueueMessage(500, implode("\n", $errors), 'error');
+			$app->enqueueMessage(implode("\n", $errors), 'error');
 
 			return;
 		}

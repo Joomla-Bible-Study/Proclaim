@@ -155,7 +155,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$server_id = $this->data->server_id;
 		if (empty($server_id))
 		{
-			/** @var JRegistry $admin */
+			/** @var Joomla\Registry\Registry $admin */
 			$admin                 = JBSMParams::getAdmin()->params;
 			$server_id             = $admin->get('server');
 			$this->data->server_id = $server_id;

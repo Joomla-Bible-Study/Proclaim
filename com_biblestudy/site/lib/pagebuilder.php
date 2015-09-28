@@ -214,7 +214,7 @@ class JBSMPageBuilder
 	 *
 	 * @param   array                     $mediaids  ID of Media
 	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   object                    $template  template date
+	 * @param   TableTemplate             $template  template date
 	 * @param   object                    $item      Item Params
 	 *
 	 * @return string

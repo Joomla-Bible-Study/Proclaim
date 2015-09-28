@@ -320,7 +320,6 @@ class JBSMPodcast
 									$podinfo->episodesubtitle,
 									$episode,
 									$params,
-									$admin_params,
 									$this->template
 								);
 
@@ -587,7 +586,7 @@ class JBSMPodcast
 		// Try to make the template file writable
 		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755'))
 		{
-			JFactory::getApplication()->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file writable', 'notice');
+			JFactory::getApplication()->enqueueMessage('Could not make the file writable', 'notice');
 		}
 
 		$fileit = JFile::write($file, $filecontent);
@@ -599,7 +598,7 @@ class JBSMPodcast
 		if (!$fileit)
 		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+			$app->enqueueMessage('Could not make the file unwritable', 'notice');
 
 			return false;
 		}
@@ -607,7 +606,7 @@ class JBSMPodcast
 		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
 		{
 			JFactory::getApplication()
-				->enqueueMessage('SOME_ERROR_CODE', 'Could not make the file unwritable', 'notice');
+				->enqueueMessage('Could not make the file unwritable', 'notice');
 
 			return false;
 		}

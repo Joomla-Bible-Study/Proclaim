@@ -68,7 +68,7 @@ class BiblestudyModelLandingpage extends JModelList
 		// Load the parameters.
 		$params   = JFactory::getApplication('site')->getParams();
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
+		$admin    = JBSMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -118,7 +118,7 @@ class BiblestudyModelLandingpage extends JModelList
 		{
 			$menuparams->loadString($menu->params);
 		}
-		$query->select('list.select', 's.id');
+		$query->select("'list.select', 's.id'");
 		$query->from('#__bsms_studies as s');
 		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
 		$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');

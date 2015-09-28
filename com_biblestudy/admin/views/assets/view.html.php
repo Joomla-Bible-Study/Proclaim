@@ -76,7 +76,7 @@ class BiblestudyViewAssets extends JViewLegacy
 		$this->item   = $this->get("Item");
 		$this->state  = $this->get("State");
 		$this->canDo  = JBSMBibleStudyHelper::getActions($this->item->id);
-		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
+		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get');
 
 		$this->setLayout('edit');
 
