@@ -59,7 +59,7 @@ $JBSMTeacher = new JBSMTeacher;
 			<?php
 			if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 			{
-				$teacher = $JBSMTeacher->getTeacher($params, (int) $id = 0, $this->admin_params);
+				$teacher = $JBSMTeacher->getTeacher($params, (int) $id = 0);
 
 				if ($teacher)
 				{

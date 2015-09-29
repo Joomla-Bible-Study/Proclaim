@@ -368,7 +368,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		$itemId = $this->input->getInt('Itemid');
 		$return = $this->getReturnPage();
-		$catId  = $this->input->getInt('catid', null, 'get');
+		$catId  = $this->input->getInt('catid', null);
 
 		if ($itemId)
 		{

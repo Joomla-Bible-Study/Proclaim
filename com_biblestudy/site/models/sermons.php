@@ -428,7 +428,7 @@ class BiblestudyModelSermons extends JModelList
 		$params   = $app->getParams();
 
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
+		$admin    = JBSMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);

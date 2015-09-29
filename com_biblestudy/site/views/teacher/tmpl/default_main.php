@@ -18,15 +18,19 @@ $listing = new JBSMListing;
 	$list = $listing->getFluidListing($this->item, $this->params, $this->template, $type = 'teacher');
 	echo $list;
 	?>
-	<?php if ($this->params->get('show_teacher_studies') > 0)
-	{ ?>
+	<?php
+	if ($this->params->get('show_teacher_studies') > 0)
+	{
+		?>
 		<div class="row-fluid">
 			<div class="span12">
 				<?php $teacherstudies = $listing->getFluidListing($this->teacherstudies, $this->params, $this->template, $type = 'sermons');
 				echo $teacherstudies; ?>
 			</div>
 		</div>
-	<?php } ?>
+	<?php
+	}
+	?>
 	<hr/>
 
 	<div class="row-fluid">

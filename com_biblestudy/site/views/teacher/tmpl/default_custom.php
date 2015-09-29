@@ -87,7 +87,7 @@ else
 			. JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
 		?>
 		<tr>
-			<td style="text-align: center" colspan="0" class="bsm_teacherfooter">
+			<td style="text-align: center;" colspan="0" class="bsm_teacherfooter">
 				<a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>">
 					<?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?>
 				</a>

@@ -1976,7 +1976,7 @@
 		if ( $.scrollbarWidth === undefined ) {
 			// http://benalman.com/projects/jquery-misc-plugins/#scrollbarwidth
 			$.scrollbarWidth = function() {
-				var parent = $('<div style="width:50px;height:50px;overflow:auto"><div/></div>').appendTo('body'),
+				var parent = $('<div style="width:50px; height:50px; overflow:auto;"><div/></div>').appendTo('body'),
 					child  = parent.children(),
 					width  = child.innerWidth() - child.height( 99 ).innerWidth();
 

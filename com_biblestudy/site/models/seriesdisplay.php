@@ -64,7 +64,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$params   = $app->getParams();
 		$this->setState('params', $params);
 		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin(true);
+		$admin    = JBSMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);

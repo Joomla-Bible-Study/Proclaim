@@ -46,9 +46,7 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -9999px;
-	background-color: transparent;
-	background-image: url('fancybox_buttons.png');
-	background-repeat: no-repeat;
+	background: transparent url('fancybox_buttons.png') no-repeat;
 	outline: none;
 	opacity: 0.8;
 }
@@ -78,7 +76,7 @@
 	background-position: 3px -60px;
 	border-left: 1px solid #111;
 	border-right: 1px solid #3e3e3e;
-	width: 35px
+	width: 35px;
 }
 
 #fancybox-buttons a.btnToggleOn {

@@ -23,6 +23,6 @@ elseif ($this->params->get('sermonstemplate'))
 }
 else
 {
-   echo $this->loadTemplate('main');
+	echo $this->loadTemplate('main');
 }
 echo $this->loadTemplate('formfooter');

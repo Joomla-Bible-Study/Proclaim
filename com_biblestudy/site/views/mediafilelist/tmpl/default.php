@@ -39,7 +39,8 @@ $sortFields = $this->getSortFields();
 	Joomla.orderTable=function () {
 		var table = document.getElementById("sortTable");
 		var direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
+		var order = table.options[table.selectedIndex].value;
+		var dirn;
 		if (order != '<?php echo $listOrder; ?>') {
 			dirn = 'asc';
 		} else {
@@ -107,7 +108,7 @@ $sortFields = $this->getSortFields();
 					<input type="checkbox" name="checkall-toggle" value=""
 							title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
-				<th width="1%" style="min-width:25px" class="nowrap center">
+				<th width="1%" style="min-width:25px;" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="20%">

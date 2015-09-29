@@ -16,6 +16,7 @@ $option = $input->get('option', '', 'cmd');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document = JFactory::getDocument();
+/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 $url = $params->get('stylesheet');
 
@@ -36,7 +37,8 @@ $JBSMSerieslist = new JBSMSerieslist;
 					?>
 					<img src="<?php echo JURI::base() . $this->main->path; ?>"
 					     alt="<?php echo $this->params->get('series_title') ?>"
-					     width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>"/>
+					     width="<?php echo $this->main->width; ?>"
+					     height="<?php echo $this->main->height; ?>"/>
 					<?php
 					// End of column for logo
 				}
@@ -66,7 +68,7 @@ $JBSMSerieslist = new JBSMSerieslist;
 					break;
 				case 'T':
 					// Table
-					echo '<table class="table table-striped" id="bsms_studytable" style="width: 100%">';
+					echo '<table class="table table-striped" id="bsms_studytable" style="width: 100%;">';
 					break;
 				case 'D':
 					// DIV

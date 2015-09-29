@@ -117,7 +117,7 @@ class BiblestudyController extends JControllerLegacy
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDbo();
 		$msg  = null;
-		$data = $app->input->get('jform', array(), 'post  ', ' array');
+		$data = $app->input->get('jform', array(), 'post  ');
 		$from = $data['params']['from'];
 		$to   = $data['params']['to'];
 
