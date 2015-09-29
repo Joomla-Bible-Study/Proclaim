@@ -109,6 +109,35 @@ class BiblestudyModelAdmin extends JModelAdmin
 		return $pk;
 	}
 
+	public function getMediaImages()
+	{
+		$mediafiles = $this->getMediaFiles();
+		$images = new stdClass();
+		foreach ($mediafiles as $mediafile)
+		{
+			$reg = new Registry;
+			$reg->loadString($mediafile->params);
+			$image = $mediafile->params->get('media_image');
+			$imagecount = substr_count($image,'png');
+		}
+	}
+	public function getMediaFiles()
+	{
+		$db              = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__bsms_mediafiles');
+		$db->setQuery($query->__toString());
+		$mediafiles = $db->loadObjectList();
+		foreach ($mediafiles as $i=>$mediafile)
+		{
+			$reg = new Registry;
+			$reg->loadString($mediafile->params);
+			$mediafiles[$i]->params = $reg;
+		}
+
+		return $mediafiles;
+	}
 	/**
 	 * Fixes database problems
 	 *

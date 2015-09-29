@@ -31,7 +31,11 @@ $input = $app->input;
 		jQuery('[name=task]').val('admin.tools');
 		jQuery("#item-admin").submit();
 	};
-
+	jQuery.submitbutton5 = function () {
+		jQuery('[name=tooltype]').val('mediaimages');
+		jQuery('[name=task]').val('admin.mediaimages');
+		jQuery("#item-admin").submit();
+	};
 	Joomla.submitbutton = function (task) {
 		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays') {
 			Joomla.submitform(task, document.getElementById('item-admin'));
@@ -127,6 +131,7 @@ $input = $app->input;
 				</li>
 				<li><a href="#jwplayer" data-toggle="tab"><?php echo JText::_('JBS_ADM_JWPLAYER'); ?></a></li>
 				<li><a href="#convert" data-toggle="tab"><?php echo JText::_('JBS_IBM_CONVERT'); ?></a></li>
+				<li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_IBM_IMAGES'); ?></a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -423,6 +428,68 @@ $input = $app->input;
 
 					<div> <?php echo $this->ss; ?> </div>
 					<div> <?php echo $this->pi; ?> </div>
+				</div>
+				<div class="tab-pane" id="images">
+					<div class="span12"><h3><?php echo JText::_('JBS_IBM_IMAGES'); ?></h3></div>
+					<div class="span6">
+						<H4 class="tab-description"><?php echo JText::_('JBS_IBM_OLD_IMAGES'); ?></H4>
+					<div class="control-group">
+						<?php echo $this->form->getLabel('mediaimage'); ?>
+						<div class="controls">
+							<?php echo $this->form->getInput('mediaimage'); ?>
+						</div>
+					</div>
+					</div>
+					<div class="span6">
+						<H4 class="tab-description"><?php echo JText::_('JBS_IBM_NEW_IMAGES'); ?></H4>
+					<div class="control-group">
+						<?php echo $this->form->getLabel('media_use_button_icon'); ?>
+						<div class="controls">
+							<?php echo $this->form->getInput('media_use_button_icon'); ?>
+						</div>
+					</div>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('media_button_text'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_button_text'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+						<?php echo $this->form->getLabel('media_button_type'); ?>
+						<div class="controls">
+							<?php echo $this->form->getInput('media_button_type'); ?>
+						</div>
+					</div>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('media_button_color'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_button_color'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('media_icon_type'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_icon_type'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('media_custom_icon'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_custom_icon'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('media_icon_text_size'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_icon_text_size'); ?>
+							</div>
+						</div>
+						<div class="control-group">
+							<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton5(task)">
+								<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
