@@ -307,5 +307,9 @@
         </field>
         <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" />
         <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC" />
+        <field name="media_image" type="media" directory="biblestudy"
+               label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+               class="inputbox span6">
+        </field>
     </fieldset>
 </form>

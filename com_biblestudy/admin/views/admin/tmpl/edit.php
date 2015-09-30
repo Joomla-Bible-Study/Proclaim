@@ -485,6 +485,12 @@ $input = $app->input;
 							</div>
 						</div>
 						<div class="control-group">
+							<?php echo $this->form->getLabel('media_image'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('media_image'); ?>
+							</div>
+						</div>
+						<div class="control-group">
 							<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton5(task)">
 								<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
 							</button>

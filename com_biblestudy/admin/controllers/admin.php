@@ -65,6 +65,28 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
+	 * Change media images from a digital file to css
+	 */
+	public function mediaimages()
+	{
+		$db   = JFactory::getDbo();
+		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+		$post = $_POST['jform'];
+dump($post);
+		switch ($post['mediaimage'])
+		{
+			case 1:
+				break;
+
+			case 2:
+				break;
+
+			case 3:
+				break;
+		}
+
+	}
+	/**
 	 * Change Player Modes
 	 *
 	 * @return void
