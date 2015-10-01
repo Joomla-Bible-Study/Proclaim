@@ -72,17 +72,62 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDbo();
 		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
-dump($post);
+//dump($post);
 		switch ($post['mediaimage'])
 		{
 			case 1:
+				//button only
+				$fromstring = 'media_use_button_icon';
+				$fromvalue = 1;
 				break;
 
 			case 2:
+				//button and icon - NEED TO DO MORE WORK HERE PARSING THE QUERY VALUES
+				$fromstring = "'media_use_button_icon'";
+				$fromvalue = 2;
 				break;
 
 			case 3:
+				//icon only
+				$fromstring = "'media_use_button_icon'";
+				$fromvalue = 3;
 				break;
+
+			default :
+				//it's an image
+				$fromstring = "'media_image'";
+				$fromvalue = $post->mediaimage;
+				break;
+		}
+
+		$db   = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id, params')
+			->from('#__bsms_mediafiles');
+		$db->setQuery($query);
+
+		foreach ($db->loadObjectList() as $media) {
+			$reg = new Registry;
+			$reg->loadString($media->params);
+			if ($reg->get($fromstring) == $fromvalue)
+			{
+				//query to change the image
+				$query = $db->getQuery(true);
+				$reg->set('media_button_color', $post->media_button_color);
+				$reg->set('media_button_text', $post->media_button_text);
+				$reg->set('media_button_type', $post->media_button_type);
+				$reg->set('media_custom_icon', $post->media_custom_icon);
+				$reg->set('media_icon_text', $post->media_icon_text);
+				$reg->set('media_icon_type', $post->media_icon_type);
+				$reg->set('media_image', $post->media_image);
+				$reg->set('media_use_button_icon', $post->media_use_button_icon);
+				$db->setQuery($query);
+				if (!$db->execute())
+				{
+					$msg = JText::_('JBS_ADM_ERROR_OCCURED');
+					$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				}
+			}
 		}
 
 	}
