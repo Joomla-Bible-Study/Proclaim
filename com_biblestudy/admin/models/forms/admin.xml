@@ -277,7 +277,9 @@
         </field>
     </fieldset>
     <fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
-        <field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label" label="JBS_ADM_MEDIA_IMAGES" />
+        <field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label" label="JBS_ADM_MEDIA_IMAGES" >
+        <option value="-1">JBS_SELECT_IMAGE</option>
+        </field>
         <field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
                description="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="">
             <option value="">JBS_MED_NONE</option>

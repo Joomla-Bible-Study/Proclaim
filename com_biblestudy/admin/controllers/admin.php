@@ -72,65 +72,176 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$db   = JFactory::getDbo();
 		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
-//dump($post);
-		switch ($post['mediaimage'])
-		{
-			case 1:
-				//button only
-				$fromstring = 'media_use_button_icon';
-				$fromvalue = 1;
-				break;
-
-			case 2:
-				//button and icon - NEED TO DO MORE WORK HERE PARSING THE QUERY VALUES
-				$fromstring = "'media_use_button_icon'";
-				$fromvalue = 2;
-				break;
-
-			case 3:
-				//icon only
-				$fromstring = "'media_use_button_icon'";
-				$fromvalue = 3;
-				break;
-
-			default :
-				//it's an image
-				$fromstring = "'media_image'";
-				$fromvalue = $post->mediaimage;
-				break;
-		}
-
+		$decoded = json_decode($post['mediaimage']);
 		$db   = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
-
-		foreach ($db->loadObjectList() as $media) {
-			$reg = new Registry;
-			$reg->loadString($media->params);
-			if ($reg->get($fromstring) == $fromvalue)
-			{
-				//query to change the image
-				$query = $db->getQuery(true);
-				$reg->set('media_button_color', $post->media_button_color);
-				$reg->set('media_button_text', $post->media_button_text);
-				$reg->set('media_button_type', $post->media_button_type);
-				$reg->set('media_custom_icon', $post->media_custom_icon);
-				$reg->set('media_icon_text', $post->media_icon_text);
-				$reg->set('media_icon_type', $post->media_icon_type);
-				$reg->set('media_image', $post->media_image);
-				$reg->set('media_use_button_icon', $post->media_use_button_icon);
-				$db->setQuery($query);
-				if (!$db->execute())
+		$images = $db->loadObjectList();
+		$error = 0;
+		$added = 0;
+//dump($post);
+		switch ($decoded->media_use_button_icon)
+		{
+			case 1:
+				//button only
+				$buttontype = $decoded->media_button_type;
+				$buttontext = $decoded->media_button_text;
+				foreach ($images as $media)
 				{
-					$msg = JText::_('JBS_ADM_ERROR_OCCURED');
-					$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+					$reg = new Registry;
+					$reg->loadString($media->params);
+					if ($media->params->get('media_button_type') == $buttontype && $media->params->get('media_button_text') == $buttontext)
+					{
+						$query = $db->getQuery(true);
+						$reg->set('media_button_color', $decoded->media_button_color);
+						$reg->set('media_button_text', $decoded->media_button_text);
+						$reg->set('media_button_type', $decoded->media_button_type);
+						$reg->set('media_custom_icon', $decoded->media_custom_icon);
+						$reg->set('media_icon_text', $decoded->media_icon_text);
+						$reg->set('media_icon_type', $decoded->media_icon_type);
+						$reg->set('media_image', $decoded->media_image);
+						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$db->setQuery($query);
+						$query->update('#__bsms_mediafiles')
+							->set('params = ' . $db->q($reg->toString()))
+							->where('id = ' . (int) $media->id);
+						$db->setQuery($query);
+						if (!$db->execute())
+						{
+							$error++;
+						}
+						else
+						{
+							$added++;
+						}
+					}
 				}
-			}
+				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				break;
+
+			case 2:
+				//button and icon - NEED TO DO MORE WORK HERE PARSING THE QUERY VALUES
+				$buttontype = $decoded->media_button_type;
+				$icontype = $decoded->media_icon_type;
+				foreach ($images as $media)
+				{
+					$reg = new Registry;
+					$reg->loadString($media->params);
+					if ($reg->get('media_button_type') == $buttontype && $reg->get('media_icon_type') == $icontype)
+					{
+						$query = $db->getQuery(true);
+						$reg->set('media_button_color', $decoded->media_button_color);
+						$reg->set('media_button_text', $decoded->media_button_text);
+						$reg->set('media_button_type', $decoded->media_button_type);
+						$reg->set('media_custom_icon', $decoded->media_custom_icon);
+						$reg->set('media_icon_text', $decoded->media_icon_text);
+						$reg->set('media_icon_type', $decoded->media_icon_type);
+						$reg->set('media_image', $decoded->media_image);
+						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$db->setQuery($query);
+						$query->update('#__bsms_mediafiles')
+							->set('params = ' . $db->q($reg->toString()))
+							->where('id = ' . (int) $media->id);
+						$db->setQuery($query);
+						if (!$db->execute())
+						{
+							$error++;
+						}
+						else
+						{
+							$added++;
+						}
+					}
+				}
+				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				break;
+
+			case 3:
+				//icon only
+				$icontype = $decoded->media_icon_type;
+				foreach ($images as $media)
+				{
+					$reg = new Registry;
+					$reg->loadString($media->params);
+					if ($reg->get('media_icon_type') == $icontype)
+					{
+						$query = $db->getQuery(true);
+						$reg->set('media_button_color', $decoded->media_button_color);
+						$reg->set('media_button_text', $decoded->media_button_text);
+						$reg->set('media_button_type', $decoded->media_button_type);
+						$reg->set('media_custom_icon', $decoded->media_custom_icon);
+						$reg->set('media_icon_text', $decoded->media_icon_text);
+						$reg->set('media_icon_type', $decoded->media_icon_type);
+						$reg->set('media_image', $decoded->media_image);
+						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$db->setQuery($query);
+						$query->update('#__bsms_mediafiles')
+							->set('params = ' . $db->q($reg->toString()))
+							->where('id = ' . (int) $media->id);
+						$db->setQuery($query);
+						if (!$db->execute())
+						{
+							$error++;
+						}
+						else
+						{
+							$added++;
+						}
+					}
+				}
+				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				break;
+
+			default :
+				//it's an image
+				$mediaimage = $decoded->media_image;
+				foreach ($images as $media)
+				{
+					$reg = new Registry;
+					$reg->loadString($media->params);
+					if ($reg->get('media_image') == $mediaimage)
+					{
+						$query = $db->getQuery(true);
+						$reg->set('media_button_color', $decoded->media_button_color);
+						$reg->set('media_button_text', $decoded->media_button_text);
+						$reg->set('media_button_type', $decoded->media_button_type);
+						$reg->set('media_custom_icon', $decoded->media_custom_icon);
+						$reg->set('media_icon_text', $decoded->media_icon_text);
+						$reg->set('media_icon_type', $decoded->media_icon_type);
+						$reg->set('media_image', $decoded->media_image);
+						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$db->setQuery($query);
+						$query->update('#__bsms_mediafiles')
+							->set('params = ' . $db->q($reg->toString()))
+							->where('id = ' . (int) $media->id);
+						$db->setQuery($query);
+
+						if (!$db->execute())
+						{
+							$error++;
+						}
+						else
+						{
+							$added++;
+						}
+					}
+
+				}
+				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				break;
 		}
 
+
+
 	}
+
+
 	/**
 	 * Change Player Modes
 	 *
