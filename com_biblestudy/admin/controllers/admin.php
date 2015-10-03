@@ -69,10 +69,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function mediaimages()
 	{
-		$db   = JFactory::getDbo();
-		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
-		$decoded = json_decode($post['mediaimage']);
+		$decoded = json_decode($post['mediaimage']); dump($post);
 		$db   = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
@@ -92,34 +90,47 @@ class BiblestudyControllerAdmin extends JControllerForm
 				{
 					$reg = new Registry;
 					$reg->loadString($media->params);
-					if ($media->params->get('media_button_type') == $buttontype && $media->params->get('media_button_text') == $buttontext)
+					if ($reg->get('media_button_type') == $buttontype && $reg->get('media_button_text') == $buttontext)
 					{
 						$query = $db->getQuery(true);
-						$reg->set('media_button_color', $decoded->media_button_color);
-						$reg->set('media_button_text', $decoded->media_button_text);
-						$reg->set('media_button_type', $decoded->media_button_type);
-						$reg->set('media_custom_icon', $decoded->media_custom_icon);
-						$reg->set('media_icon_text', $decoded->media_icon_text);
-						$reg->set('media_icon_type', $decoded->media_icon_type);
-						$reg->set('media_image', $decoded->media_image);
-						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$reg->set('media_button_color', $post['media_button_color']);
+						$reg->set('media_button_text', $post['media_button_text']);
+						$reg->set('media_button_type', $post['media_button_type']);
+						$reg->set('media_custom_icon', $post['media_custom_icon']);
+						$reg->set('media_icon_text_size', $post['media_icon_text_size']);
+						$reg->set('media_icon_type', $post['media_icon_type']);
+						$reg->set('media_image', $post['media_image']);
+						$reg->set('media_use_button_icon', $post['media_use_button_icon']);
 						$db->setQuery($query);
 						$query->update('#__bsms_mediafiles')
 							->set('params = ' . $db->q($reg->toString()))
 							->where('id = ' . (int) $media->id);
-						$db->setQuery($query);
-						if (!$db->execute())
+						//$db->setQuery($query);
+						try
+						{
+							$db->setQuery($query);
+							$query->update('#__bsms_mediafiles')
+								->set('params = ' . $db->q($reg->toString()))
+								->where('id = ' . (int) $media->id);
+							$rslt = $query->dump(); print_r($rslt);
+							//$db->execute();
+						}
+						catch (RuntimeException $e)
+						{
+							//$msg = $e->getMessage();
+						}
+						/*if (!$db->execute())
 						{
 							$error++;
 						}
 						else
 						{
 							$added++;
-						}
+						}*/
 					}
 				}
-				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				//$msg .= JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				//$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 
 			case 2:
@@ -133,31 +144,45 @@ class BiblestudyControllerAdmin extends JControllerForm
 					if ($reg->get('media_button_type') == $buttontype && $reg->get('media_icon_type') == $icontype)
 					{
 						$query = $db->getQuery(true);
-						$reg->set('media_button_color', $decoded->media_button_color);
-						$reg->set('media_button_text', $decoded->media_button_text);
-						$reg->set('media_button_type', $decoded->media_button_type);
-						$reg->set('media_custom_icon', $decoded->media_custom_icon);
-						$reg->set('media_icon_text', $decoded->media_icon_text);
-						$reg->set('media_icon_type', $decoded->media_icon_type);
-						$reg->set('media_image', $decoded->media_image);
-						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
+						$reg->set('media_button_color', $post['media_button_color']);
+						$reg->set('media_button_text', $post['media_button_text']);
+						$reg->set('media_button_type', $post['media_button_type']);
+						$reg->set('media_custom_icon', $post['media_custom_icon']);
+						$reg->set('media_icon_text_size', $post['media_icon_text_size']);
+						$reg->set('media_icon_type', $post['media_icon_type']);
+						$reg->set('media_image', $post['media_image']);
+						$reg->set('media_use_button_icon', $post['media_use_button_icon']);
 						$db->setQuery($query);
 						$query->update('#__bsms_mediafiles')
 							->set('params = ' . $db->q($reg->toString()))
 							->where('id = ' . (int) $media->id);
-						$db->setQuery($query);
-						if (!$db->execute())
+						//$db->setQuery($query);
+						try
+						{
+							$db->setQuery($query);
+							$query->update('#__bsms_mediafiles')
+								->set('params = ' . $db->q($reg->toString()))
+								->where('id = ' . (int) $media->id);
+							$rslt = $query->dump(); print_r($rslt);
+							//$db->execute();
+
+						}
+						catch (RuntimeException $e)
+						{
+							$msg = $e->getMessage();
+						}
+						/*if (!$db->execute())
 						{
 							$error++;
 						}
 						else
 						{
 							$added++;
-						}
+						}*/
 					}
 				}
-				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				//$msg .= JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				//$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 
 			case 3:
@@ -170,34 +195,48 @@ class BiblestudyControllerAdmin extends JControllerForm
 					if ($reg->get('media_icon_type') == $icontype)
 					{
 						$query = $db->getQuery(true);
-						$reg->set('media_button_color', $decoded->media_button_color);
-						$reg->set('media_button_text', $decoded->media_button_text);
-						$reg->set('media_button_type', $decoded->media_button_type);
-						$reg->set('media_custom_icon', $decoded->media_custom_icon);
-						$reg->set('media_icon_text', $decoded->media_icon_text);
-						$reg->set('media_icon_type', $decoded->media_icon_type);
-						$reg->set('media_image', $decoded->media_image);
-						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
-						$db->setQuery($query);
+						$reg->set('media_button_color', $post['media_button_color']);
+						$reg->set('media_button_text', $post['media_button_text']);
+						$reg->set('media_button_type', $post['media_button_type']);
+						$reg->set('media_custom_icon', $post['media_custom_icon']);
+						$reg->set('media_icon_text_size', $post['media_icon_text_size']);
+						$reg->set('media_icon_type', $post['media_icon_type']);
+						$reg->set('media_image', $post['media_image']);
+						$reg->set('media_use_button_icon', $post['media_use_button_icon']);
+						//$db->setQuery($query);
 						$query->update('#__bsms_mediafiles')
 							->set('params = ' . $db->q($reg->toString()))
 							->where('id = ' . (int) $media->id);
 						$db->setQuery($query);
-						if (!$db->execute())
+						try
+						{
+							$db->setQuery($query);
+							$query->update('#__bsms_mediafiles')
+								->set('params = ' . $db->q($reg->toString()))
+								->where('id = ' . (int) $media->id);
+							$rslt = $query->dump(); print_r($rslt);
+							//$db->execute();
+
+						}
+						catch (RuntimeException $e)
+						{
+							$msg = $e->getMessage();
+						}
+						/*if (!$db->execute())
 						{
 							$error++;
 						}
 						else
 						{
 							$added++;
-						}
+						}*/
 					}
 				}
-				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				//$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				//$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 
-			default :
+			case 0:
 				//it's an image
 				$mediaimage = $decoded->media_image;
 				foreach ($images as $media)
@@ -207,34 +246,48 @@ class BiblestudyControllerAdmin extends JControllerForm
 					if ($reg->get('media_image') == $mediaimage)
 					{
 						$query = $db->getQuery(true);
-						$reg->set('media_button_color', $decoded->media_button_color);
-						$reg->set('media_button_text', $decoded->media_button_text);
-						$reg->set('media_button_type', $decoded->media_button_type);
-						$reg->set('media_custom_icon', $decoded->media_custom_icon);
-						$reg->set('media_icon_text', $decoded->media_icon_text);
-						$reg->set('media_icon_type', $decoded->media_icon_type);
-						$reg->set('media_image', $decoded->media_image);
-						$reg->set('media_use_button_icon', $decoded->media_use_button_icon);
-						$db->setQuery($query);
-						$query->update('#__bsms_mediafiles')
-							->set('params = ' . $db->q($reg->toString()))
-							->where('id = ' . (int) $media->id);
-						$db->setQuery($query);
+						$reg->set('media_button_color', $post['media_button_color']);
+						$reg->set('media_button_text', $post['media_button_text']);
+						$reg->set('media_button_type', $post['media_button_type']);
+						$reg->set('media_custom_icon', $post['media_custom_icon']);
+						$reg->set('media_icon_text_size', $post['media_icon_text_size']);
+						$reg->set('media_icon_type', $post['media_icon_type']);
+						$reg->set('media_image', $post['media_image']);
+						$reg->set('media_use_button_icon', $post['media_use_button_icon']);
+						try
+						{
+							$db->setQuery($query);
+							$query->update('#__bsms_mediafiles')
+								->set('params = ' . $db->q($reg->toString()))
+								->where('id = ' . (int) $media->id);
+							$rslt = $query->dump(); print_r($rslt);
+							//$db->execute();
 
-						if (!$db->execute())
+						}
+						catch (RuntimeException $e)
+						{
+							$msg = $e->getMessage();
+						}
+						/*if (!$db->execute())
 						{
 							$error++;
 						}
 						else
 						{
 							$added++;
-						}
+						}*/
 					}
 
 				}
-				$msg = JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				//$msg .= JText::_('JBS_RESULTS').': '.$added.' '.JText::_(JBS_ERROR).' - '.$error.' '.JText::_('JBS_SUCCESS');
+				//$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+				break;
+
+			default:
+				$msg = JText::_('JBS_NOTHING_MATCHED');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
+
 		}
 
 
