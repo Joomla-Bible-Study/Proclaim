@@ -81,7 +81,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$added = 0;
 		$errortext = '';
 		$msg = JText::_('JBS_RESULTS').': ';
-//dump($post);
+//dump($_POST);
 		switch ($decoded->media_use_button_icon)
 		{
 			case 1:
@@ -250,7 +250,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 							$query->update('#__bsms_mediafiles')
 								->set('params = ' . $db->q($reg->toString()))
 								->where('id = ' . (int) $media->id);
-							//$rslt = $query->dump(); print_r($rslt);
+							//$msg = $query->dump(); print_r($msg);
 							$db->execute();
 							$rows = $db->getAffectedRows();
 							$added = $added + $rows;

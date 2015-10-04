@@ -487,7 +487,7 @@ $input = $app->input;
 						<div class="control-group">
 							<?php echo $this->form->getLabel('media_image'); ?>
 							<div class="controls">
-								<?php echo $this->form->getInput('media_image'); ?>
+								<?php echo $this->form->getInput('media_image');?>
 							</div>
 						</div>
 						<div class="control-group">
