@@ -33,18 +33,17 @@ class JFormFieldMediafileImages extends JFormFieldList
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return   array  An array of JHtml options.
 	 */
-	protected function getOptions()
+	protected function getOptions ()
 	{
 
-			$db    = JFactory::getDBO();
-			$query = $db->getQuery(true);
-			$query->select('*');
-			$query->from('#__bsms_mediafiles');
-			$db->setQuery((string) $query);
-			$mediafiles = $db->loadObjectList();
-
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__bsms_mediafiles');
+		$db->setQuery((string) $query);
+		$mediafiles = $db->loadObjectList();
 
 		$options = array();
 
@@ -60,30 +59,48 @@ class JFormFieldMediafileImages extends JFormFieldList
 					switch ($media->params->get('media_use_button_icon'))
 					{
 						case 1:
-							$button = $this->getButton($media);
+							$button             = $this->getButton($media);
 							$media->media_image = $button;
-							$options[]       = JHtml::_('select.option', '{"media_use_button_icon":"'.$media->params->get('media_use_button_icon').'","media_button_type":"'.$media->params->get('media_button_type').'","media_button_text":"'.$media->params->get('media_button_text').'","media_icon_type":"'.$media->params->get('media_icon_type').'","media_icon_text_size":"'.$media->params->get('media_icon_text_size').'","media_image":""}', $media->media_image);
+							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+							);
 							break;
 						case 2:
-							$button = $this->getButton($media);
-							$icon = $this->getIcon($media);
-							$media->media_image = $button.' - '.$icon;
-							$options[]       = JHtml::_('select.option', '{"media_use_button_icon":"'.$media->params->get('media_use_button_icon').'","media_button_type":"'.$media->params->get('media_button_type').'","media_button_text":"'.$media->params->get('media_button_text').'","media_icon_type":"'.$media->params->get('media_icon_type').'","media_icon_text_size":"'.$media->params->get('media_icon_text_size').'","media_image":""}', $media->media_image);
+							$button             = $this->getButton($media);
+							$icon               = $this->getIcon($media);
+							$media->media_image = $button . ' - ' . $icon;
+							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+							);
 							break;
 						case 3:
-							$icon = $this->getIcon($media);
+							$icon               = $this->getIcon($media);
 							$media->media_image = $icon;
-							$options[]       = JHtml::_('select.option', '{"media_use_button_icon":"'.$media->params->get('media_use_button_icon').'","media_button_type":"'.$media->params->get('media_button_type').'","media_button_text":"'.$media->params->get('media_button_text').'","media_icon_type":"'.$media->params->get('media_icon_type').'","media_icon_text_size":"'.$media->params->get('media_icon_text_size').'","media_image":""}', $media->media_image);
+							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+							);
 							break;
 					}
 				}
-				else{
-					$image = $media->params->get('media_image');
-					$totalcount = strlen($image);
-					$slash = strrpos($image,'/');
-					$imagecount = $totalcount - $slash;
-					$media->media_image = substr($image,$slash + 1,$imagecount);
-					$options[]       = JHtml::_('select.option', '{"media_use_button_icon":"'.$media->params->get('media_use_button_icon').'","media_button_type":"'.$media->params->get('media_button_type').'","media_button_text":"'.$media->params->get('media_button_text').'","media_icon_type":"'.$media->params->get('media_icon_type').'","media_icon_text_size":"'.$media->params->get('media_icon_text_size').'","media_image":"'.$media->params->get('media_image').'"}', $media->media_image);
+				else
+				{
+					$image              = $media->params->get('media_image');
+					$totalcount         = strlen($image);
+					$slash              = strrpos($image, '/');
+					$imagecount         = $totalcount - $slash;
+					$media->media_image = substr($image, $slash + 1, $imagecount);
+					$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+							'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+							$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+							'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
+							$media->params->get('media_image') . '"}', $media->media_image
+					);
 				}
 
 
@@ -92,25 +109,37 @@ class JFormFieldMediafileImages extends JFormFieldList
 		}
 
 		$tmp = array();
-		foreach($options as $k => $v)
+		foreach ($options as $k => $v)
+		{
 			$tmp[$k] = $v->text;
+		}
 
-// Find duplicates in temporary array
+		// Find duplicates in temporary array
 		$tmp = array_unique($tmp);
 
-// Remove the duplicates from original array
-		foreach($options as $k => $v)
+		// Remove the duplicates from original array
+		foreach ($options as $k => $v)
 		{
 			if (!array_key_exists($k, $tmp))
+			{
 				unset($options[$k]);
+			}
 		}
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
 
-	public function getButton($media)
+	/**
+	 * Get Button
+	 *
+	 * @param   Object  $media  Media table.
+	 *
+	 * @return string
+	 */
+	public function getButton ($media)
 	{
+		$button = null;
 		switch ($media->params->get('media_button_type'))
 		{
 			case 'btn-link':
@@ -132,11 +161,20 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$button = JText::_('JBS_MED_DANGER');
 				break;
 		}
+
 		return $button;
 	}
 
-	public function getIcon($media)
+	/**
+	 * Get Icon
+	 *
+	 * @param   Object  $media  Media Table
+	 *
+	 * @return string
+	 */
+	public function getIcon ($media)
 	{
+		$icon = null;
 		switch ($media->params->get('media_icon_type'))
 		{
 			case 'icon-play':
@@ -158,6 +196,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$icon = JText::_('JBS_MED_CUSTOM');
 				break;
 		}
+
 		return $icon;
 	}
 }
