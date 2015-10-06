@@ -416,7 +416,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->item->metadesc = $this->item->studyintro;
 		$this->item->metakey  = $this->item->topics;
 		//Load the css for icons
-		$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
+		//$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();

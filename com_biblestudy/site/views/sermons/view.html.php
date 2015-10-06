@@ -488,7 +488,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 		//Load the css for icons
-		$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
+		//$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);

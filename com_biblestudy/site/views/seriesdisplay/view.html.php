@@ -117,7 +117,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $params);
 		//Load the css for icons
-		$document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
+		//$document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 

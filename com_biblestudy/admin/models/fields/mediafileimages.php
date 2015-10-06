@@ -60,7 +60,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 					{
 						case 1:
 							$button             = $this->getButton($media);
-							$media->media_image = $button;
+							$media->media_image = $button.' - '.$media->params->get('media_button_text');
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
