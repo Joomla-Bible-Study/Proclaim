@@ -332,6 +332,48 @@ $input = $app->input;
 								</div>
 							</div>
 							<div class="control-group">
+								<?php echo $this->form->getLabel('download_use_button_icon'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_use_button_icon'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_button_text'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_button_text'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_button_type'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_button_type'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_button_color'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_button_color'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_icon_type'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_icon_type'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_custom_icon'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_custom_icon'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('download_icon_text_size'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('download_icon_text_size'); ?>
+								</div>
+							</div>
+							<div class="control-group">
 								<?php echo $this->form->getLabel('default_showHide_image', 'params'); ?>
 								<div class="controls">
 									<?php echo $this->form->getInput('default_showHide_image', 'params'); ?>
