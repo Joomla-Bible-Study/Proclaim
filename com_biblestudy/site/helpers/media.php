@@ -124,6 +124,59 @@ class JBSMMedia
 		return $mediaimage;
 	}
 	/**
+	 * Used to obtain the button and/or icon for the image
+	 * @param $media
+	 * @param $params
+	 * @return mixed
+	 */
+	public function downloadButton($download)
+	{
+		$button = $download->get('download_button_type','btn-link');
+		$buttontext = $download->get('download_button_text','Audio');
+		$textsize = $download->get('download_icon_text_size','24');
+		if ($download->get('download_button_color'))
+		{
+			$color = 'style="background-color:'.$download->get('download_button_color').';"';
+		}
+		else
+		{
+			$color = '';
+		}
+		switch ($download->get('download_use_button_icon'))
+		{
+			case 1:
+				//button only
+				$downloadimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
+				break;
+			case 2:
+				// button and icon
+				if ($download->get('download_icon_type') == '1')
+				{
+					$icon = $download->get('download_custom_icon');
+				}
+				else
+				{
+					$icon = $download->get('download_icon_type','icon-play');
+				}
+				$downloadimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				break;
+			case 3:
+				//icon only
+				if ($download->get('download_icon_type') == 1)
+				{
+					$icon = $download->get('download_custom_icon');
+				}
+				else
+				{
+					$icon = $download->get('download_icon_type','icon-play');
+				}
+				$downloadimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
+				break;
+		}
+
+		return $downloadimage;
+	}
+	/**
 	 * Use JImage to create images
 	 *
 	 * @param   string  $path  Path to file
@@ -632,18 +685,20 @@ class JBSMMedia
 	{
 		$table        = '';
 		$downloadlink = '';
-
-		if ($params->get('default_download_image'))
+		if ($params->get('download_use_button_icon') >= 1)
 		{
-			$admin_d_image = $params->get('default_download_image');
+			$download_image = $this->downloadButton($params);
+		}
+		elseif ($params->get('default_download_image'))
+		{
+			$download_image = $params->get('default_download_image');
 		}
 		else
 		{
-			$admin_d_image = null;
+			$d_image = 'media/com_biblestudy/images/download.png';
+			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
-		$d_image = ($admin_d_image ? $admin_d_image : 'media/com_biblestudy/images/download.png');
 
-		$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 
 		if ($media->params->get('link_type'))
 		{
