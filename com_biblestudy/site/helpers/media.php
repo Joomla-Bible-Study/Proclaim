@@ -54,8 +54,6 @@ class JBSMMedia
 				$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
 			}
 
-
-
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$mediafile  = self::getFluidDownloadLink($media, $params, $template, $playercode);
@@ -103,7 +101,7 @@ class JBSMMedia
 				  }
 				  else
 				  {
-					  $icon = $media->params->get('media_icon_type','icon-play');
+					  $icon = $media->params->get('media_icon_type','fa fa-play');
 				  }
 				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
@@ -115,7 +113,7 @@ class JBSMMedia
 				}
 				else
 				{
-					$icon = $media->params->get('media_icon_type','icon-play');
+					$icon = $media->params->get('media_icon_type','fa fa-play');
 				}
 				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
 				break;
@@ -144,11 +142,11 @@ class JBSMMedia
 		}
 		switch ($download->get('download_use_button_icon'))
 		{
-			case 1:
+			case 2:
 				//button only
 				$downloadimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
 				break;
-			case 2:
+			case 3:
 				// button and icon
 				if ($download->get('download_icon_type') == '1')
 				{
@@ -160,7 +158,7 @@ class JBSMMedia
 				}
 				$downloadimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
-			case 3:
+			case 4:
 				//icon only
 				if ($download->get('download_icon_type') == 1)
 				{
@@ -685,13 +683,14 @@ class JBSMMedia
 	{
 		$table        = '';
 		$downloadlink = '';
-		if ($params->get('download_use_button_icon') >= 1)
+		if ($params->get('download_use_button_icon') >= 2)
 		{
 			$download_image = $this->downloadButton($params);
 		}
 		elseif ($params->get('default_download_image'))
 		{
-			$download_image = $params->get('default_download_image');
+			$d_image = $params->get('default_download_image');
+			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
 		else
 		{
