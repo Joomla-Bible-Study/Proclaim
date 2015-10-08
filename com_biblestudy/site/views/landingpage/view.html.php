@@ -50,7 +50,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	{
 		$document  = JFactory::getDocument();
 //Load the css for icons
-		//$document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
+		$document->addStyleSheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;
 

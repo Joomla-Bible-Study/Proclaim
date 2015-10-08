@@ -177,20 +177,23 @@ class JFormFieldMediafileImages extends JFormFieldList
 		$icon = null;
 		switch ($media->params->get('media_icon_type'))
 		{
-			case 'icon-play':
+			case 'fa fa-play':
 				$icon = JText::_('JBS_MED_PLAY');
 				break;
-			case 'icon-youtube':
+			case 'fa fa-youtube':
 				$icon = JText::_('JBS_MED_YOUTUBE');
 				break;
-			case 'icon-video':
+			case 'fa fa-video-camera':
 				$icon = JText::_('JBS_MED_VIDEO');
 				break;
-			case 'icon-broadcast':
+			case 'fa fa-television':
 				$icon = JText::_('JBS_MED_BROADCAST');
 				break;
-			case 'icon-file-2':
+			case 'fa fa-file':
 				$icon = JText::_('JBS_MED_FILE');
+				break;
+			case 'fa fa-vimeo':
+				$icon = JText::_('JBS_MED_VIMEO');
 				break;
 			case '1':
 				$icon = JText::_('JBS_MED_CUSTOM');

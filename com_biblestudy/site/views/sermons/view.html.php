@@ -489,7 +489,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		//Load the css for icons
 		//$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
-		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css');
+		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);

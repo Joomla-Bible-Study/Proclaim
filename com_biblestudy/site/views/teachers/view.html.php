@@ -173,7 +173,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 		//Load the css for icons
-		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css');
+		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		/** @var Joomla\Registry\Registry $itemparams */
 		$itemparams = $app->getParams();
 		$title      = null;
