@@ -60,7 +60,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 					{
 						case 1:
 							$button             = $this->getButton($media);
-							$media->media_image = $button.' - '.$media->params->get('media_button_text');
+							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button.' - '.JText::_('JBS_MED_TEXT').': '.$media->params->get('media_button_text');
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -70,7 +70,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 						case 2:
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
-							$media->media_image = $button . ' - ' . $icon;
+							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button . ' - '.JText::_('JBS_MED_ICON') .': '. $icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -79,7 +79,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 							break;
 						case 3:
 							$icon               = $this->getIcon($media);
-							$media->media_image = $icon;
+							$media->media_image = JText::_('JBS_MED_ICON').': '.$icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -94,7 +94,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 					$totalcount         = strlen($image);
 					$slash              = strrpos($image, '/');
 					$imagecount         = $totalcount - $slash;
-					$media->media_image = substr($image, $slash + 1, $imagecount);
+					$media->media_image = JText::_('JBS_MED_IMAGE').': '.substr($image, $slash + 1, $imagecount);
 					$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 							'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 							$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
