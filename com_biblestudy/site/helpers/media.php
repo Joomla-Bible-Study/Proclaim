@@ -201,7 +201,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left">';
+		$imagereturn = '<div style="display:inline;"><img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left"></div>';
 
 		return $imagereturn;
 	}
