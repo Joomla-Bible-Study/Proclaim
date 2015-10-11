@@ -90,6 +90,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 				}
 				else
 				{
+					if (!$media->params->get('media_image')){break;}
 					$image              = $media->params->get('media_image');
 					$totalcount         = strlen($image);
 					$slash              = strrpos($image, '/');
@@ -101,6 +102,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 							'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
 							$media->params->get('media_image') . '"}', $media->media_image
 					);
+
 				}
 
 
@@ -161,7 +163,10 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$button = JText::_('JBS_MED_DANGER');
 				break;
 		}
-
+		if ($media->params->get('media_button_color'))
+		{
+			$button = $media->params->get('media_button_color');
+		}
 		return $button;
 	}
 
@@ -196,7 +201,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$icon = JText::_('JBS_MED_VIMEO');
 				break;
 			case '1':
-				$icon = JText::_('JBS_MED_CUSTOM');
+				$icon = $media->params->get('media_custom_icon');
 				break;
 		}
 
