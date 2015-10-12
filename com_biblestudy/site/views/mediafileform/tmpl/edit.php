@@ -149,7 +149,7 @@ JFactory::getDocument()->addScriptDeclaration("
 									<?php echo $field->label; ?>
 								</div>
 								<div class="controls">
-									echo $field->input; ?>
+									<?php echo $field->input; ?>
 								</div>
 							</div>
 						<?php endforeach; ?>
