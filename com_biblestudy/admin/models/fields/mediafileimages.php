@@ -44,7 +44,10 @@ class JFormFieldMediafileImages extends JFormFieldList
 		$query->from('#__bsms_mediafiles');
 		$db->setQuery((string) $query);
 		$mediafiles = $db->loadObjectList();
-
+		$case1 = 0;
+		$case2 = 0;
+		$case3 = 0;
+		$case0 = 0;
 		$options = array();
 
 		if ($mediafiles)
@@ -59,6 +62,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 					switch ($media->params->get('media_use_button_icon'))
 					{
 						case 1:
+							$case1++;
 							$button             = $this->getButton($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button.' - '.JText::_('JBS_MED_TEXT').': '.$media->params->get('media_button_text');
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
@@ -68,6 +72,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 							);
 							break;
 						case 2:
+							$case2++;
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button . ' - '.JText::_('JBS_MED_ICON') .': '. $icon;
@@ -78,6 +83,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 							);
 							break;
 						case 3:
+							$case3++;
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_ICON').': '.$icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
@@ -91,6 +97,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 				else
 				{
 					if (!$media->params->get('media_image')){break;}
+					$case0++;
 					$image              = $media->params->get('media_image');
 					$totalcount         = strlen($image);
 					$slash              = strrpos($image, '/');
@@ -115,8 +122,9 @@ class JFormFieldMediafileImages extends JFormFieldList
 		{
 			$tmp[$k] = $v->text;
 		}
+		//Determine the total records for each image/button/incon
+		$count = array_count_values($tmp);
 
-		// Find duplicates in temporary array
 		$tmp = array_unique($tmp);
 
 		// Remove the duplicates from original array
@@ -125,6 +133,18 @@ class JFormFieldMediafileImages extends JFormFieldList
 			if (!array_key_exists($k, $tmp))
 			{
 				unset($options[$k]);
+			}
+		}
+		//Add the number of records from $count to the text of the drop down
+		foreach($options as $k => $v)
+		{
+			foreach($count as $key=>$value)
+			{
+
+				if ($key == $v->text)
+				{
+					$options[$k]->text = $v->text.' ('.$value.')';
+				}
 			}
 		}
 		$options = array_merge(parent::getOptions(), $options);
