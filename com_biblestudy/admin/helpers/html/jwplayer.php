@@ -69,29 +69,16 @@ abstract class JHtmlJwplayer
 	/**
 	 * Render JS for media
 	 *
-	 * @param   object $media  Media info
-	 * @param   int    $id     ID of media
-	 * @param   object $params Params from media have to be in object for do to protection.
-	 * @param   bool   $popup  If from a popup
-	 * @param   bool   $player To make player for audio like (MP3, M4A, etc..)
+	 * @param   object   $media  Media info
+	 * @param   int      $id     ID of media
+	 * @param   Registry $params Params from media have to be in object for do to protection.
+	 * @param   bool     $popup  If from a popup
+	 * @param   bool     $player To make player for audio like (MP3, M4A, etc..)
 	 *
 	 * @return  string
 	 */
 	public static function render($media, $id, $params, $popup = false, $player = false)
 	{
-		if (!isset($params->popupimage))
-		{
-			$params->popupimage = "images/biblestudy/speaker24.png";
-		}
-		if (!isset($params->playerposition))
-		{
-			$params->playerposition = "";
-		}
-		if (!isset($params->playerresponsive))
-		{
-			$params->playerresponsive = 0;
-		}
-
 		// Used to set for MP3 and audio player look
 		if ($player == true)
 		{
@@ -188,7 +175,7 @@ abstract class JHtmlJwplayer
 		$render = "";
 		if ($popup)
 		{
-			if ($params->playerresponsive != 0)
+			if ($params->get('playerresponsive') != 0)
 			{
 				$media->playerwidth = '100%';
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
@@ -207,7 +194,7 @@ abstract class JHtmlJwplayer
 						jwplayer('placeholder" . $id . "').setup({
 							'file': '" . $media->path1 . "',
 						";
-		if ($params->playerresponsive == 0)
+		if ($params->get('playerresponsive') == 0)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
 			";
@@ -219,7 +206,8 @@ abstract class JHtmlJwplayer
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
-						'image': '" . $media->popupimage . "',
+						'displaytitle': '" . $media->headertext . "',
+						'image': '" . $params->get('popupimage','images/biblestudy/speaker24.png') . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
