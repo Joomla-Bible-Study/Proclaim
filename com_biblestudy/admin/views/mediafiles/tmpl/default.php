@@ -39,7 +39,7 @@ JFactory::getDocument()->addScriptDeclaration('
 		order = table.options[table.selectedIndex].value;
 		if (order != "' . $listOrder . '")
 		{
-			dirn = "asc";
+			dirn = "decs";
 		}
 		else
 		{

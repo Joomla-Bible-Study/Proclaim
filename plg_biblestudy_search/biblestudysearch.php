@@ -156,7 +156,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 
 			$query     = $db->getQuery(true);
 			$set_title = $this->params->get('set_title');
-			$template  = $jinput->getInt('t', '1', 'get');
+			$template  = $jinput->getInt('t', '1');
 
 			switch ($set_title)
 			{

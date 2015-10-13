@@ -98,7 +98,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$t = 1;
 		}
-		$this->input->set('t', $t, 'string');
+		$this->input->set('t', $t);
 
 		$safeurlparams = array(
 			'id'               => 'INT',
@@ -345,7 +345,7 @@ class BiblestudyController extends JControllerLegacy
 		$serverid = $this->input->get('upload_server', '', 'int');
 		$folderid = $this->input->get('upload_folder', '', 'int');
 		$app      = JFactory::getApplication();
-		$app->setUserState($option, 'serverid', $serverid);
+		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
 		$form     = $this->input->get('jform', '', 'array');
 		$returnid = $form['id'];

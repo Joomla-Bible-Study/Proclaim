@@ -4,9 +4,9 @@
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-    <copyright>2007-2013 Joomla Bible Study</copyright>
-    <version>8.0.0</version>
-    <creationDate>June 12, 2013</creationDate>
+    <copyright>(C) 2007 - 2015 Joomla Bible Study All rights reserved.</copyright>
+    <version>9.0.0-beta1</version>
+    <creationDate>Sep 19, 2015</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
     <files>

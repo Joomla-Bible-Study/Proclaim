@@ -9,4 +9,3 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-

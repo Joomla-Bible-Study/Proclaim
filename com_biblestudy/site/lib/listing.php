@@ -1522,7 +1522,6 @@ class JBSMListing
 
 		$style        = '';
 		$customclass  = '';
-		$classelement = '';
 		if (isset($row->custom))
 		{
 			if (strpos($row->custom, 'style=') !== false)
@@ -2222,7 +2221,6 @@ class JBSMListing
 		$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
-		$mime   = ' AND #__bsms_mediafiles.mime_type = 1';
 
 		switch ($islink)
 		{
@@ -2311,6 +2309,8 @@ class JBSMListing
 	 * @param   string  $mime     MimeType ID
 	 *
 	 * @return string
+	 *
+	 * @deprecated 8.1.3
 	 */
 	public function getFilepath($id3, $idfield, $mime = null)
 	{
@@ -2416,7 +2416,7 @@ class JBSMListing
 
 		// @todo need to replace this with a new fuction.
 		// For now we need to use the existing mediatable function to get all the media
-		$mediaTable = $Media->getMediaTable($row, $params);
+		$mediaTable = $Media->getFluidMedia($row, $params, $template);
 		$label      = str_replace('{{media}}', $mediaTable, $label);
 
 		// Need to add template items for media...

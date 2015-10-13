@@ -72,7 +72,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters
-		/** @var jRegistry $params */
+		/** @var Joomla\Registry\Registry $params */
 		$params = $app->getParams();
 		$this->setState('params', $params);
 		$admin    = JBSMParams::getAdmin();

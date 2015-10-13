@@ -92,7 +92,7 @@ $saveOrder = $listOrder == 'ordering';
 				<th width="1%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'study.id', $listDirn, $listOrder); ?>
 				</th>
-				<th width="1%" style="min-width:25px" class="nowrap center">
+				<th width="1%" style="min-width:25px;" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone">

@@ -159,8 +159,8 @@ class JFormFieldServer extends JFormField
 
 		// The current server display field.
 		$html[] = '<span class="input-append">';
-		$html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $server['name'] . '"' .
-			$size . ' disabled="disabled" size="35" />';
+		$html[] = '<input type="text" class="input-large" id="' . $this->id . '_name" value="' . $server['name'] . '"' .
+			$size . ' disabled="disabled" size="55" />';
 		$html[] = '<a'
 			. ' class="modal btn hasTooltip"'
 			. ' title="' . JHtml::tooltipText('JBS_SVR_SERVER_NAME') . '"'

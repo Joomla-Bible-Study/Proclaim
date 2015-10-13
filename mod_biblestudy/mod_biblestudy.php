@@ -41,10 +41,6 @@ $params->merge($admin_params);
 $params->merge($template->params);
 $items = $pagebuilder->studyBuilder(null, null, $params);
 
-// Attempt to change mysql for error in large select
-$db = JFactory::getDBO();
-$db->setQuery('SET SQL_BIG_SELECTS=1');
-$db->execute();
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
@@ -108,7 +104,7 @@ $jinput    = new JInput;
 
 if (!$templatemenuid)
 {
-	$templatemenuid = $jinput->get('templatemenuid', 1, 'get', 'int');
+	$templatemenuid = $jinput->getInt('templatemenuid', 1);
 }
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';

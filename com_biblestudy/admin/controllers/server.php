@@ -89,7 +89,7 @@ class BiblestudyControllerServer extends JControllerForm
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
-		$data  = $input->get('jform', array(), 'post', 'array');
+		$data  = $input->get('jform', array(), 'post');
 		$sname = $data['server_name'];
 		$type  = json_decode(base64_decode($data['type']));
 

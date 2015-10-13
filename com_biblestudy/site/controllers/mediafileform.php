@@ -283,7 +283,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
-		$data = $input->get('jform', array(), 'post', 'array');
+		$data = $input->get('jform', array(), 'post');
 		$cdate = $data['createdate'];
 		$study_id = $data['study_id'];
 		$server_id = $data['server_id'];

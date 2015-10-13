@@ -88,7 +88,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			$app->enqueueMessage(500, implode("\n", $errors), 'error');
+			$app->enqueueMessage(implode("\n", $errors), 'error');
 
 			return;
 		}
@@ -415,7 +415,8 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		$this->item->metadesc = $this->item->studyintro;
 		$this->item->metakey  = $this->item->topics;
-
+		//Load the css for icons
+		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();

@@ -50,17 +50,17 @@ class JBSMShowScripture
 				break;
 
 			case 1:
-				$passage = $this->getHideShow($row, $reference);
+				$passage = $this->getHideShow();
 				$css     = true;
 				break;
 
 			case 2:
-				$passage = $this->getShow($row, $reference);
+				$passage = $this->getShow();
 				$css     = true;
 				break;
 
 			case 3:
-				$passage = $this->getLink($row, $reference);
+				$passage = $this->getLink();
 
 				break;
 		}

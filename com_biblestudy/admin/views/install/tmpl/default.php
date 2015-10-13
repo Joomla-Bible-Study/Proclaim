@@ -24,7 +24,7 @@ defined('_JEXEC') or die;
 			The MySQL errors were:
 		</p>
 
-		<p style="font-size: normal;">
+		<p style="font-size: initial;">
 			<?php echo implode("<br/>", $errors); ?>
 		</p>
 	</div>

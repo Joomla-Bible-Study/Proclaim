@@ -79,7 +79,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		</div>
 	</div>
 
-</div><!-- .hero-unit -->
+
 <?php } ?>
 
 <div class="container-fluid">

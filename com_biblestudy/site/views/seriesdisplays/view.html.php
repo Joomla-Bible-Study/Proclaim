@@ -68,7 +68,8 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->template = $this->state->get('template');
 
 		$document = JFactory::getDocument();
-
+		//Load the css for icons
+		$document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 

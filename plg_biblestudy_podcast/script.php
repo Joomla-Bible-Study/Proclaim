@@ -48,7 +48,7 @@ class PlgSystemJBSPodcastInstallerScript
 	}
 
 	/**
-	 * method to update the component
+	 * Method to update the component
 	 *
 	 * @param   string  $parent  is the class calling this method
 	 *

@@ -14,7 +14,7 @@ $j(document).ready(function () {
 
     // Docman integration
     $j('#docManCategories').change(function () {
-        docManItems = $j('#docManItems');
+        var docManItems = $j('#docManItems');
         docManItems.removeOption(/./);
         var catId = $j('#docManCategories option:selected').attr('value');
         var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId=';
@@ -111,7 +111,7 @@ $j(document).ready(function () {
 
     // VirtueMart integration
     $j('#virtueMartCategories').change(function () {
-        virtueMartItems = $j('#virtueMartItems');
+        var virtueMartItems = $j('#virtueMartItems');
         virtueMartItems.removeOption(/./);
         var catId = $j('#virtueMartCategories option:selected').attr('value');
         var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=virtueMartItems&format=raw&catId=';

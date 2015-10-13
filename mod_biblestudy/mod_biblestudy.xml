@@ -2,12 +2,12 @@
 <extension type="module" version="2.5" method="upgrade" client="site">
 	<name>mod_biblestudy</name>
 	<author>Joomla Bible Study Team</author>
-	<copyright>(C) 2007-2013 Joomla Bible Study</copyright>
-	<license>GPL/GNU</license>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<version>9.0.0</version>
-	<creationDate>December 1, 2013</creationDate>
+	<copyright>(C) 2007 - 2015 Joomla Bible Study All rights reserved.</copyright>
+	<version>9.0.0-beta1</version>
+	<creationDate>Sep 19, 2015</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
 		<filename module="mod_biblestudy">mod_biblestudy.php</filename>

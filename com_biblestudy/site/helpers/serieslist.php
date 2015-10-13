@@ -216,7 +216,7 @@ class JBSMSerieslist extends JBSMListing
 		foreach ($items AS $row)
 		{
 			$oddeven = 0;
-			$studies .= $this->getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
+			$studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
 		}
 
 		switch ($params->get('series_wrapcode'))

@@ -13,7 +13,9 @@ defined('_JEXEC') or die();
 $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 
+/** @var JBSMListing $JBSMListing */
 $JBSMListing = new JBSMListing;
+/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 ?>
 <div id="biblestudy" class="noRefTagger">
@@ -47,7 +49,7 @@ else
 
 foreach ($list as $row)
 {
-	$listing = $JBSMListing->getListingExp($row, $params, $admin_params, $templatemenuid);
+	$listing = $JBSMListing->getListingExp($row, $params, $templatemenuid);
 	echo $listing;
 }
 
