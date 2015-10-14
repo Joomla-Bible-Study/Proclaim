@@ -31,27 +31,40 @@ class JBSMMedia
 	 */
 	public function getFluidMedia($media, $params, $template)
 	{
+		jimport('joomla.html.parameter');
+		JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+
+		//smedia are the media settings for each server
 		$registory = new Registry;
 		$registory->loadString($media->smedia);
 		$media->smedia = $registory;
 
+		//params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($media->params);
 		$media->params = $registory;
 
+		//sparams are the server parameters
 		$registory = new Registry;
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
-
-			if ($media->params->get('media_use_button_icon') >= 1)
+			if ($media->params->get('media_use_button_icon') < 0)
 			{
-				$image = $this->mediaButton($media);
+				$imageparams = $media->smedia;
+			}
+		else
+			{
+				$imageparams = $media->params;
+			}
+			if ($imageparams->get('media_use_button_icon') >= 1)
+			{
+				$image = $this->mediaButton($media, $imageparams);
 			}
 			else
 			{
-				$mediaimage = $media->params->get('media_image');
-				$image      = $this->useJImage($mediaimage, $media->params->get('media_text'));
+				$mediaimage = $imageparams->get('media_image');
+				$image      = $this->useJImage($mediaimage, $params->get('media_text'));
 			}
 
 		$player     = self::getPlayerAttributes($params, $media);
@@ -74,20 +87,20 @@ class JBSMMedia
 	 * @param $params
 	 * @return mixed
 	 */
-	public function mediaButton($media)
+	public function mediaButton($media, $imageparams)
 	{
-		$button = $media->params->get('media_button_type','btn-link');
-		$buttontext = $media->params->get('media_button_text','Audio');
-		$textsize = $media->params->get('media_icon_text_size','24');
-		if ($media->params->get('media_button_color'))
+		$button = $imageparams->get('media_button_type','btn-link');
+		$buttontext = $imageparams->get('media_button_text','Audio');
+		$textsize = $imageparams->get('media_icon_text_size','24');
+		if ($imageparams->get('media_button_color'))
 		{
-			$color = 'style="background-color:'.$media->params->get('media_button_color').';"';
+			$color = 'style="background-color:'.$imageparams->get('media_button_color').';"';
 		}
 		else
 		{
 			$color = '';
 		}
-		switch ($media->params->get('media_use_button_icon'))
+		switch ($imageparams->get('media_use_button_icon'))
 		{
 			case 1:
 				//button only
@@ -95,25 +108,25 @@ class JBSMMedia
 				break;
 			case 2:
 				// button and icon
-				  if ($media->params->get('media_icon_type') == '1')
+				  if ($imageparams->get('media_icon_type') == '1')
 				  {
-					  $icon = $media->params->get('media_custom_icon');
+					  $icon = $imageparams->get('media_custom_icon');
 				  }
 				  else
 				  {
-					  $icon = $media->params->get('media_icon_type','fa fa-play');
+					  $icon = $imageparams->get('media_icon_type','fa fa-play');
 				  }
 				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
 			case 3:
 				//icon only
-				if ($media->params->get('media_icon_type') == 1)
+				if ($imageparams->get('media_icon_type') == 1)
 				{
-					$icon = $media->params->get('media_custom_icon');
+					$icon = $imageparams->get('media_custom_icon');
 				}
 				else
 				{
-					$icon = $media->params->get('media_icon_type','fa fa-play');
+					$icon = $imageparams->get('media_icon_type','fa fa-play');
 				}
 				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
 				break;

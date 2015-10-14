@@ -75,7 +75,7 @@
             </field>
             <field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
                    description="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="">
-                <option value="global">JGLOBAL_USE_GLOBAL</option>
+                <option value="-1">JBS_MED_SERVER_OPTIONS</option>
                 <option value="">JBS_MED_NONE</option>
                 <option value="1">JBS_MED_BUTTON_ONLY</option>
                 <option value="2">JBS_MED_BUTTON_AND_ICON</option>

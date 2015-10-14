@@ -377,7 +377,7 @@ class JBSMBibleStudyHelper
 		include_once BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php';
 		$admin_params = JBSMParams::getAdmin();
 
-		if (!isset($admin_params->debuge))
+		if (!isset($admin_params->debug))
 		{
 			$admin_params        = new stdClass;
 			$admin_params->debug = 1;
