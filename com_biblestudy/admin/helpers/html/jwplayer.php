@@ -69,11 +69,11 @@ abstract class JHtmlJwplayer
 	/**
 	 * Render JS for media
 	 *
-	 * @param   object    $media  Media info
-	 * @param   int       $id     ID of media
-	 * @param   Registry  $params Params from media have to be in object for do to protection.
-	 * @param   bool      $popup  If from a popup
-	 * @param   bool      $player To make player for audio like (MP3, M4A, etc..)
+	 * @param   object    $media   Media info
+	 * @param   int       $id      ID of media
+	 * @param   Registry  $params  Params from media have to be in object for do to protection.
+	 * @param   bool      $popup   If from a popup
+	 * @param   bool      $player  To make player for audio like (MP3, M4A, etc..)
 	 *
 	 * @return  string
 	 */
@@ -205,7 +205,7 @@ abstract class JHtmlJwplayer
 
 		$render .= "'width': '" . $media->playerwidth . "',
 						'displaytitle': '" . $media->headertext . "',
-						'image': '" . $params->get('popupimage','images/biblestudy/speaker24.png') . "',
+						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
