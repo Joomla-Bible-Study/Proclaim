@@ -48,12 +48,12 @@ class JBSMLanding
 		$item             = $menu->getActive();
 		$registry         = new Registry;
 
-		if (isset($item->prams))
+		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('locations_order');
+			$menu_order = $params->get('locations_order');
 		}
 		else
 		{
@@ -270,7 +270,7 @@ class JBSMLanding
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('teachers_order');
+			$menu_order = $params->get('teachers_order');
 		}
 		else
 		{
@@ -301,6 +301,7 @@ class JBSMLanding
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -314,7 +315,7 @@ class JBSMLanding
 			->where('b.access IN (' . $groups . ')')
 			->where('a.landing_show > 0')
 			->group('a.id')
-			->order('a.ordering, a.teachername ' . $order);
+			->order('a.teachername ' . $order);
 		$db->setQuery($query);
 
 		$tresult = $db->loadObjectList();
@@ -511,12 +512,12 @@ class JBSMLanding
 		$item           = $menu->getActive();
 		$registry       = new Registry;
 
-		if (isset($item->prams))
+		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('series_order');
+			$menu_order = $params->get('series_order');
 		}
 		else
 		{
@@ -751,7 +752,7 @@ class JBSMLanding
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('years_order');
+			$menu_order = $params->get('years_order');
 		}
 		else
 		{
@@ -905,12 +906,12 @@ class JBSMLanding
 		$item     = $menu->getActive();
 		$registry = new Registry;
 
-		if (isset($item->prams))
+		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('topics_order');
+			$menu_order = $params->get('topics_order'); //dump($menu_order);
 		}
 		else
 		{
@@ -1062,12 +1063,12 @@ class JBSMLanding
 		$item                = $menu->getActive();
 		$registry            = new Registry;
 
-		if (isset($item->prams))
+		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('messagetypes_order');
+			$menu_order = $params->get('messagetypes_order');
 		}
 		else
 		{
@@ -1276,12 +1277,12 @@ class JBSMLanding
 		$item     = $menu->getActive();
 		$registry = new Registry;
 
-		if (isset($item->prams))
+		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $m_params->get('books_order');
+			$menu_order = $params->get('books_order');
 		}
 		else
 		{

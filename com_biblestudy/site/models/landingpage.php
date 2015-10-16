@@ -70,8 +70,8 @@ class BiblestudyModelLandingpage extends JModelList
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin();
 
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
+		//$template->params->merge($params);
+		//$template->params->merge($admin->params);
 		$params = $template->params;
 
 		$t = $params->get('sermonsid');
