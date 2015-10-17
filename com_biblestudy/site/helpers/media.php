@@ -49,7 +49,7 @@ class JBSMMedia
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
-			if ($media->params->get('media_use_button_icon') < 0)
+			if ($media->params->get('media_use_button_icon') == -1)
 			{
 				$imageparams = $media->smedia;
 			}
