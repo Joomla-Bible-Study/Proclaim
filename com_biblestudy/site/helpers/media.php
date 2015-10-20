@@ -69,16 +69,115 @@ class JBSMMedia
 
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
-		$mediafile  = self::getFluidDownloadLink($media, $params, $template, $playercode);
+		//add final div to hold media and filesize
+		//$playercode .= '</div>';
 
-		if ($params->get('show_filesize') > 0 && isset($media))
+		$downloadlink  = self::getFluidDownloadLink($media, $params, $template, $playercode);
+
+		if ($media->params->get('link_type'))
 		{
-			$mediafile = $mediafile .
-				'<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' .
-				self::getFluidFilesize($media, $params) . '</div>';
+			$link_type = $media->params->get('link_type');
+		}
+		else
+		{
+			$link_type = $media->smedia->get('link_type');
+		}
+		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
+		{
+			$size = self::getFluidFilesize($media, $params); dump($size);
+			$filesize =
+				//'<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' .
+				//'<div class="overlay" style="position:absolute; "><h6>'.
+				//'<div class="display:inline;"><h6>'.
+				$size;
+				//. '</div>';
+			//dump($size);
+		}
+
+		switch ($link_type)
+		{
+			case 0:
+				$mediafile = $playercode;
+				break;
+
+			case 1:
+				$mediafile = $playercode . $filesize . $downloadlink;
+				break;
+
+			case 2:
+				$mediafile = $downloadlink;
+				break;
 		}
 
 		return $mediafile;
+	}
+
+	/**
+	 * Return download link
+	 *
+	 * @param   Object                    $media       Media
+	 * @param   Joomla\Registry\Registry  $params      Params
+	 * @param   TableTemplate             $template    Template ID
+	 * @param   string                    $playercode  Player Code
+	 *
+	 * @return string
+	 */
+	public function getFluidDownloadLink($media, $params, $template, $playercode)
+	{
+
+		$downloadlink = '';
+		if ($params->get('download_use_button_icon') >= 2)
+		{
+			$download_image = $this->downloadButton($params);
+		}
+		elseif ($params->get('default_download_image'))
+		{
+			$d_image = $params->get('default_download_image');
+			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+		}
+		else
+		{
+			$d_image = 'media/com_biblestudy/images/download.png';
+			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+		}
+
+
+		if ($media->params->get('link_type'))
+		{
+			$link_type = $media->params->get('link_type');
+		}
+		else
+		{
+			$link_type = $media->smedia->get('link_type');
+		}
+		if ($link_type > 0)
+		{
+			$compat_mode = $params->get('compat_mode');
+
+			if ($compat_mode == 0)
+			{
+				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
+					$media->id . '&amp;view=sermons&amp;task=download">';
+			}
+			else
+			{
+				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
+			}
+
+			// Check to see if they want to use a popup
+			if ($params->get('useterms') > 0)
+			{
+
+				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
+					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+			}
+			$downloadlink .= $download_image . '</a>';
+		}
+
+		return $downloadlink;
+
+
 	}
 
 	/**
@@ -104,7 +203,7 @@ class JBSMMedia
 		{
 			case 1:
 				//button only
-				$mediaimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
+				$mediaimage = '<div  type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
 				break;
 			case 2:
 				// button and icon
@@ -116,7 +215,7 @@ class JBSMMedia
 				  {
 					  $icon = $imageparams->get('media_icon_type','fa fa-play');
 				  }
-				  $mediaimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				  $mediaimage = '<div  type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
 			case 3:
 				//icon only
@@ -128,7 +227,7 @@ class JBSMMedia
 				{
 					$icon = $imageparams->get('media_icon_type','fa fa-play');
 				}
-				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
+				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
 				break;
 		}
 
@@ -214,7 +313,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<div style="display:inline;"><img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' style="float:left"></div>';
+		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 
 		return $imagereturn;
 	}
@@ -491,59 +590,52 @@ class JBSMMedia
 	 */
 	public function getFluidFilesize($media, $params)
 	{
-		$file_size = '';
 		$filesize  = '';
 
-		if (!isset($media->smedia->size))
-		{
-			$table = null;
+		$file_size = $params->get('size'); //echo $file_size;
+		if ($file_size) {
+			//dump($file_size);
+			switch ($file_size) {
+				case  $file_size < 1024 :
+					$file_size = ' ' . 'Bytes';
+					break;
+				case $file_size < 1048576 :
+					$file_size = $file_size / 1024;
+					$file_size = number_format($file_size, 0);
+					$file_size = $file_size . ' ' . 'KB';
+					break;
+				case $file_size < 1073741824 :
+					$file_size = $file_size / 1024;
+					$file_size = $file_size / 1024;
+					$file_size = number_format($file_size, 1);
+					$file_size = $file_size . ' ' . 'MB';
+					break;
+				case $file_size > 1073741824 :
+					$file_size = $file_size / 1024;
+					$file_size = $file_size / 1024;
+					$file_size = $file_size / 1024;
+					$file_size = number_format($file_size, 1);
+					$file_size = $file_size . ' ' . 'GB';
+					break;
+			}
 
-			return $table;
-		}
-		switch ($media->size)
-		{
-			case $media->size < 1024 :
-				$file_size = $media->size . ' ' . 'Bytes';
-				break;
-			case $media->size < 1048576 :
-				$file_size = $media->size / 1024;
-				$file_size = number_format($file_size, 0);
-				$file_size = $file_size . ' ' . 'KB';
-				break;
-			case $media->size < 1073741824 :
-				$file_size = $media->size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = number_format($file_size, 1);
-				$file_size = $file_size . ' ' . 'MB';
-				break;
-			case $media->size > 1073741824 :
-				$file_size = $media->size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = $file_size / 1024;
-				$file_size = number_format($file_size, 1);
-				$file_size = $file_size . ' ' . 'GB';
-				break;
-		}
-		switch ($params->get('show_filesize'))
-		{
-			case 1:
-				$filesize = $file_size;
-				break;
-			case 2:
-				$filesize = $media->comment;
-				break;
-			case 3:
-				if ($media->comment)
-				{
+			switch ($params->get('show_filesize')) {
+				case 1:
+					$filesize = $file_size;
+					break;
+				case 2:
 					$filesize = $media->comment;
-				}
-				else
-				{
-					($filesize = $file_size);
-				}
-				break;
+					break;
+				case 3:
+					if ($media->comment) {
+						$filesize = $media->comment;
+					} else {
+						($filesize = $file_size);
+					}
+					break;
+			}
 		}
-
+		//dump($filesize);
 		return $filesize;
 	}
 
@@ -598,6 +690,83 @@ class JBSMMedia
 		} // End switch
 
 		return $duration;
+	}
+
+
+
+
+	/**
+	 * Update Hit count for plays.
+	 *
+	 * @param   int  $id  ID to apply the hit to.
+	 *
+	 * @return boolean
+	 */
+	public function hitPlay($id)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_mediafiles')
+			->set('plays = plays + 1')
+			->where('id = ' . $db->q($id));
+		$db->setQuery($query);
+
+		if ($db->execute())
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get Media info Row2
+	 *
+	 * @param   int  $id  ID of Row
+	 *
+	 * @return object|boolean
+	 */
+	public function getMediaRows2($id)
+	{
+		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
+			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
+			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
+			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
+			. ' se.id as seriesid, se.series_text, se.series_thumbnail')
+			->from('#__bsms_mediafiles')
+			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
+			->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
+			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
+			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
+			->where('#__bsms_mediafiles.id = ' . (int) $id)
+			->where('#__bsms_mediafiles.published = ' . 1)
+			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
+			->order('ordering asc');
+		$db->setQuery($query);
+		$media = $db->loadObject();
+
+		if ($media)
+		{
+			$reg = new Registry;
+			$reg->loadString($media->sparams);
+			$params = $reg->toObject();
+			if ($params->path)
+			{
+				$media->spath = $params->path;
+			}
+			else
+			{
+				($media->spath = '');
+			}
+			return $media;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -681,160 +850,4 @@ class JBSMMedia
 
 		return $vm;
 	}
-
-	/**
-	 * Return download link
-	 *
-	 * @param   Object                    $media       Media
-	 * @param   Joomla\Registry\Registry  $params      Params
-	 * @param   TableTemplate             $template    Template ID
-	 * @param   string                    $playercode  Player Code
-	 *
-	 * @return string
-	 */
-	public function getFluidDownloadLink($media, $params, $template, $playercode)
-	{
-		$table        = '';
-		$downloadlink = '';
-		if ($params->get('download_use_button_icon') >= 2)
-		{
-			$download_image = $this->downloadButton($params);
-		}
-		elseif ($params->get('default_download_image'))
-		{
-			$d_image = $params->get('default_download_image');
-			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
-		}
-		else
-		{
-			$d_image = 'media/com_biblestudy/images/download.png';
-			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
-		}
-
-
-		if ($media->params->get('link_type'))
-		{
-			$link_type = $media->params->get('link_type');
-		}
-		else
-		{
-			$link_type = $media->smedia->get('link_type');
-		}
-		if ($link_type > 0)
-		{
-			$compat_mode = $params->get('compat_mode');
-
-			if ($compat_mode == 0)
-			{
-				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
-					$media->id . '&amp;view=sermons&amp;task=download">';
-			}
-			else
-			{
-				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
-			}
-
-			// Check to see if they want to use a popup
-			if ($params->get('useterms') > 0)
-			{
-
-				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
-			}
-			$downloadlink .= $download_image . '</a>';
-		}
-
-		switch ($link_type)
-		{
-			case 0:
-				$table .= $playercode;
-				break;
-
-			case 1:
-				$table .= $playercode . $downloadlink;
-				break;
-
-			case 2:
-				$table .= $downloadlink;
-				break;
-		}
-
-		return $table;
-	}
-
-	/**
-	 * Update Hit count for plays.
-	 *
-	 * @param   int  $id  ID to apply the hit to.
-	 *
-	 * @return boolean
-	 */
-	public function hitPlay($id)
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->update('#__bsms_mediafiles')
-			->set('plays = plays + 1')
-			->where('id = ' . $db->q($id));
-		$db->setQuery($query);
-
-		if ($db->execute())
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get Media info Row2
-	 *
-	 * @param   int  $id  ID of Row
-	 *
-	 * @return object|boolean
-	 */
-	public function getMediaRows2($id)
-	{
-		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
-			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
-			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-			. ' se.id as seriesid, se.series_text, se.series_thumbnail')
-			->from('#__bsms_mediafiles')
-			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-			->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
-			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
-			->where('#__bsms_mediafiles.id = ' . (int) $id)
-			->where('#__bsms_mediafiles.published = ' . 1)
-			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
-			->order('ordering asc');
-		$db->setQuery($query);
-		$media = $db->loadObject();
-
-		if ($media)
-		{
-			$reg = new Registry;
-			$reg->loadString($media->sparams);
-			$params = $reg->toObject();
-			if ($params->path)
-			{
-				$media->spath = $params->path;
-			}
-			else
-			{
-				($media->spath = '');
-			}
-			return $media;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 }
