@@ -2107,12 +2107,13 @@ class JBSMListing
 	public function getFluidMediaFiles($item, $params, $template)
 	{
 		$med      = new JBSMMedia;
-		$mediarow = '<div style="display:inline; padding:5px;">';
+		//$mediarow = '<div style="padding:1px;">';
+		$mediarow = '';
 		foreach ($item->mediafiles as $media)
 		{
-			$mediarow .= $med->getFluidMedia($media, $params, $template);
+			$mediarow .= '<div style="display:inline; padding-right:1px;">'.$med->getFluidMedia($media, $params, $template).'</div>';
 		}
-		$mediarow .= '</div>';
+		//$mediarow .= '</div>';
 
 		return $mediarow;
 	}

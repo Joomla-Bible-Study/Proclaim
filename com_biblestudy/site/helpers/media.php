@@ -69,9 +69,6 @@ class JBSMMedia
 
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
-		//add final div to hold media and filesize
-		//$playercode .= '</div>';
-
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template, $playercode);
 
 		if ($media->params->get('link_type'))
@@ -84,14 +81,48 @@ class JBSMMedia
 		}
 		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
 		{
-			$size = self::getFluidFilesize($media, $params); dump($size);
+
+				$file_size = $media->params->get('size');
+				switch ($file_size) {
+					case  $file_size < 1024 :
+						$file_size = ' ' . 'Bytes';
+						break;
+					case $file_size < 1048576 :
+						$file_size = $file_size / 1024;
+						$file_size = number_format($file_size, 0);
+						$file_size = $file_size . ' ' . 'KB';
+						break;
+					case $file_size < 1073741824 :
+						$file_size = $file_size / 1024;
+						$file_size = $file_size / 1024;
+						$file_size = number_format($file_size, 1);
+						$file_size = $file_size . ' ' . 'MB';
+						break;
+					case $file_size > 1073741824 :
+						$file_size = $file_size / 1024;
+						$file_size = $file_size / 1024;
+						$file_size = $file_size / 1024;
+						$file_size = number_format($file_size, 1);
+						$file_size = $file_size . ' ' . 'GB';
+						break;
+				}
+			switch ($params->get('show_filesize')) {
+				case 1:
+
+					break;
+				case 2:
+					$file_size = $media->comment;
+					break;
+				case 3:
+					if ($media->comment) {
+						$file_size = $media->comment;
+					}
+					break;
+			}
+
 			$filesize =
-				//'<div style="font-size: 0.6em;display:inline;position:relative;margin-bottom:15px;padding-right:2px;">' .
-				//'<div class="overlay" style="position:absolute; "><h6>'.
-				//'<div class="display:inline;"><h6>'.
-				$size;
-				//. '</div>';
-			//dump($size);
+				'<div style="font-size: 0.6em;display:inline;">' .
+				$file_size.'</div>';
 		}
 
 		switch ($link_type)
@@ -101,7 +132,7 @@ class JBSMMedia
 				break;
 
 			case 1:
-				$mediafile = $playercode . $filesize . $downloadlink;
+				$mediafile = $playercode . '<div style="display:inline;position:relative;">'.$downloadlink . $filesize.'</div>' ;
 				break;
 
 			case 2:
@@ -592,7 +623,7 @@ class JBSMMedia
 	{
 		$filesize  = '';
 
-		$file_size = $params->get('size'); //echo $file_size;
+		$file_size = $media->params->get('size'); //echo $file_size;
 		if ($file_size) {
 			//dump($file_size);
 			switch ($file_size) {
@@ -618,7 +649,7 @@ class JBSMMedia
 					$file_size = $file_size . ' ' . 'GB';
 					break;
 			}
-
+//dump($file_size);
 			switch ($params->get('show_filesize')) {
 				case 1:
 					$filesize = $file_size;
@@ -635,6 +666,8 @@ class JBSMMedia
 					break;
 			}
 		}
+		$this->fsize = $filesize;
+		//dump($this->fsize);
 		//dump($filesize);
 		return $filesize;
 	}
