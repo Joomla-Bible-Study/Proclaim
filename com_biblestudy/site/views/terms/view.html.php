@@ -40,7 +40,7 @@ class BiblestudyViewTerms extends JViewLegacy
 	 *
 	 * @var JDocument
 	 */
-	protected $document;
+	public $document;
 
 	/**
 	 * Execute and display a template script.
@@ -65,6 +65,10 @@ class BiblestudyViewTerms extends JViewLegacy
 		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
+		//params are the individual params for the media file record
+		$registory = new Registry;
+		$registory->loadString($this->media->params);
+		$this->media->params = $registory;
 		?>
 		<div class="termstext">
 			<?php
@@ -117,7 +121,7 @@ class BiblestudyViewTerms extends JViewLegacy
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
 		$title = $this->params->get('page_title', '');
-		$title .= ' : ' . $this->media->filename;
+		$title .= ' : ' . $this->media->params->get('filename');
 
 		if (empty($title))
 		{

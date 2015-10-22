@@ -31,6 +31,7 @@ class JBSMMedia
 	 */
 	public function getFluidMedia($media, $params, $template)
 	{
+
 		jimport('joomla.html.parameter');
 		JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
@@ -79,6 +80,7 @@ class JBSMMedia
 		{
 			$link_type = $media->smedia->get('link_type');
 		}
+		$filesize = '';
 		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
 		{
 
@@ -200,8 +202,8 @@ class JBSMMedia
 			if ($params->get('useterms') > 0)
 			{
 
-				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+				$downloadlink = '<a class="modal" style="position:static; margin-left:1px;" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
+				. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
 			$downloadlink .= $download_image . '</a>';
 		}
