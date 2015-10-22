@@ -104,7 +104,7 @@ if ($msg)
 								JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 				</div>
 				<div style="border:1px solid #ddd; background:#FBFBFB;">
-					<h3 style="text-align: center">
+					<h3 style="text-align: center;">
 						<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
 					</h3>
 

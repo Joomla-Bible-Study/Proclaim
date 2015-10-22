@@ -80,7 +80,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo JHtml::_('grid.checkall'); ?>
 						</th>
 
-						<th width="1%" style="min-width:55px" class="nowrap center">
+						<th width="1%" style="min-width:55px;" class="nowrap center">
 							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone hidden-tablet">
@@ -138,7 +138,7 @@ JFactory::getDocument()->addScriptDeclaration('
 								<span class="sortable-handler hasTooltip <?php echo $iconClass ?>">
                                     <i class="icon-menu"></i>
                                 </span><?php if ($canChange && $saveOrder) : ?>
-									<input type="text" style="display:none" name="order[]" size="5"
+									<input type="text" style="display:none;" name="order[]" size="5"
 									       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 								<?php endif; ?>
 							</td>
@@ -148,6 +148,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<td class="center">
 								<div class="btn-group">
 									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?><?php
+
 									// Create dropdown items
 									$action = $archived ? 'unarchive' : 'archive';
 									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'messages');

@@ -46,7 +46,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				<a onclick="Joomla.submitbutton('admin.checkassets')">
 					<img
 						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
-						alt="Check Assets" height="48" width="48" style="clear: right"/>
+						alt="Check Assets" height="48" width="48" style="clear: right;"/>
 					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
 				</a>
 			</div>
@@ -65,7 +65,7 @@ JFactory::getDocument()->addScriptDeclaration("
 
 				if ($checkassets2)
 				{
-					echo '<table style="border: 1px solid">';
+					echo '<table style="border: 1px solid;">';
 					echo '<caption><h2>' . JText::_('JBS_ADM_ASSET_TABLE_NAME') . '</h2></caption>';
 					echo '<thead>';
 					echo '<tr>';
@@ -96,7 +96,7 @@ JFactory::getDocument()->addScriptDeclaration("
 						echo '<td class="center">';
 						if ($asset['matchrows'] > 0)
 						{
-							echo '<p style="color: green">';
+							echo '<p style="color: green;">';
 						}
 						else
 						{
@@ -106,7 +106,7 @@ JFactory::getDocument()->addScriptDeclaration("
 						echo '<td class="center">';
 						if ($asset['arulesrows'] > 0)
 						{
-							echo '<p style="color: red">';
+							echo '<p style="color: red;">';
 						}
 						else
 						{
@@ -116,7 +116,7 @@ JFactory::getDocument()->addScriptDeclaration("
 						echo '<td class="center">';
 						if ($asset['nomatchrows'] > 0)
 						{
-							echo '<p style="color: red">';
+							echo '<p style="color: red;">';
 						}
 						else
 						{

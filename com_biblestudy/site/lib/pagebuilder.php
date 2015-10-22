@@ -31,7 +31,7 @@ class JBSMPageBuilder
 	 *
 	 * @param   object                    $item      Item info
 	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   object                    $template  Template data
+	 * @param   TableTemplate             $template  Template data
 	 *
 	 * @return object
 	 */
@@ -292,7 +292,7 @@ class JBSMPageBuilder
 	 * @param   Joomla\Registry\Registry  $params      Item params
 	 * @param   int                       $limit       Limit of Records
 	 * @param   string                    $order       DESC or ASC
-	 * @param   object                    $template    Template Data
+	 * @param   TableTemplate             $template    Template Data
 	 *
 	 * @return array
 	 */

@@ -2107,13 +2107,12 @@ class JBSMListing
 	public function getFluidMediaFiles($item, $params, $template)
 	{
 		$med      = new JBSMMedia;
-		//$mediarow = '<div style="padding:1px;">';
+
 		$mediarow = '';
 		foreach ($item->mediafiles as $media)
 		{
-			$mediarow .= '<div style="display:inline; padding-right:1px;">'.$med->getFluidMedia($media, $params, $template).'</div>';
+			$mediarow .= '<div style="display:inline; padding-right:1px;">' . $med->getFluidMedia($media, $params, $template) . '</div>';
 		}
-		//$mediarow .= '</div>';
 
 		return $mediarow;
 	}
@@ -2387,7 +2386,7 @@ class JBSMListing
 	 *
 	 * @return object
 	 *
-	 * @todo need to fix this as it relise on old code.
+	 * @todo need to fix this as it realise on old code.
 	 */
 	public function getListingExp($row, $params, $template)
 	{
@@ -2468,7 +2467,7 @@ class JBSMListing
 		$label = str_replace('{{plays}}', $row->totalplays, $label);
 		$label = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
-		$mediaTable = $Media->getMediaTable($row, $params);
+		$mediaTable = $Media->getFluidMedia($row, $params, new TableTemplate(JFactory::getDbo()));
 		$label      = str_replace('{{media}}', $mediaTable, $label);
 
 		// Share

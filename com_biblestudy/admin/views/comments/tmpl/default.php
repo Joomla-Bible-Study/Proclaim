@@ -116,7 +116,7 @@ JFactory::getDocument()->addScriptDeclaration('
 						<input type="checkbox" name="checkall-toggle" value=""
 						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 					</th>
-					<th width="1%" style="min-width:55px" class="nowrap center">
+					<th width="1%" style="min-width:55px;" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
@@ -160,7 +160,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?>
 						</td>
 
-						<td class="nowrap has-context" style="width:10%">
+						<td class="nowrap has-context" style="width:10%;">
 							<div class="pull-left">
 								<?php if ($canEdit || $canEditOwn) : ?>
 									<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - '
