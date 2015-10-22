@@ -64,7 +64,7 @@ $sortFields = $this->getSortFields();
 						<input type="checkbox" name="checkall-toggle" value=""
 						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 					</th>
-					<th width="1%" style="min-width:55px" class="nowrap center">
+					<th width="1%" style="min-width:55px;" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'servers.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
@@ -79,7 +79,7 @@ $sortFields = $this->getSortFields();
 				<tbody>
 				<?php
 				foreach ($this->items as $i => $item) :
-					$item->max_ordering = 0; //??
+					$item->max_ordering = 0;
 					$canCreate          = $user->authorise('core.create');
 					$canEdit            = $user->authorise('core.edit', 'com_biblestudy.server.' . $item->id);
 					$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.server.' . $item->id);

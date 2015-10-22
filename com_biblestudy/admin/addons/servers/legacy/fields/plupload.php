@@ -56,7 +56,7 @@ class JFormFieldPlupload extends JFormField
                         <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
 			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
                           <input id="uploader-file" placeholder="Choose a media file"
-                          style="border-left: 0; border-radius: 0; class="span7" type="text" disabled>
+                          style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
                           <a id="btn-add-file"class="btn btn-default">
                              <i class="icon-plus"></i>
                              Add File

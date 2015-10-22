@@ -106,7 +106,7 @@ $sortFields = $this->getSortFields();
 			<input type="checkbox" name="checkall-toggle" value=""
 			       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 		</th>
-		<th width="1%" style="min-width:55px" class="nowrap center">
+		<th width="1%" style="min-width:55px;" class="nowrap center">
 			<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
 		</th>
 		<th>
@@ -149,7 +149,7 @@ $sortFields = $this->getSortFields();
 					      title="<?php echo $disabledLabel ?>">
                                             <i class="icon-menu"></i>
                                         </span>
-					<input type="text" style="display:none" name="order[]" size="5"
+					<input type="text" style="display:none;" name="order[]" size="5"
 					       value="<?php echo $item->ordering; ?>" class="width-10 text-area-order "/>
 				<?php else : ?>
 					<span class="sortable-handler inactive">

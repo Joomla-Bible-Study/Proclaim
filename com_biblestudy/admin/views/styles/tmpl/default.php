@@ -70,7 +70,7 @@ $listDirn  = $this->state->get('list.direction');
                 <input type="checkbox" name="checkall-toggle" value=""
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
-            <th width="1%" style="min-width:55px" class="nowrap center">
+            <th width="1%" style="min-width:55px;" class="nowrap center">
 				<?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
             </th>
             <th>

@@ -153,7 +153,7 @@ if ($saveOrder)
 					      title="<?php echo $disabledLabel ?>">
 								<i class="icon-menu"></i>
 							</span>
-					<input type="text" style="display:none" name="order[]" size="5"
+					<input type="text" style="display:none;" name="order[]" size="5"
 					       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 				<?php else : ?>
 					<span class="sortable-handler inactive">

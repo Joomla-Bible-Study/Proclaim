@@ -140,19 +140,19 @@ $input = $app->input;
 				<div class="tab-pane active" id="cpanl">
 					<div id="cpanel" class="btn-group">
 						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
-						   style="text-decoration:none; margin: 5px"
+						   style="text-decoration:none; margin: 5px;"
 						   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK') ?>" class="btn cpanl-img"> <img
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
 									border="0"/> <span> <?php echo JText::_('JBS_ADM_ASSET_CHECK') ?> </span></a>
 						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
-						   style="text-decoration:none; margin: 5px"
+						   style="text-decoration:none; margin: 5px;"
 						   title="<?php echo JText::_('JBS_ADM_MIGRATE') ?>" class="btn"> <img
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
 									border="0"/> <span> <?php echo JText::_('JBS_ADM_MIGRATE') ?> </span></a>
 						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
-						   style="text-decoration:none; margin: 5px"
+						   style="text-decoration:none; margin: 5px;"
 						   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?>" class="btn"> <img
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"

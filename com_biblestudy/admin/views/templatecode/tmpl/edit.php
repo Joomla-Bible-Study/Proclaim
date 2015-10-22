@@ -79,7 +79,7 @@ else
 							else
 							{
 								?><label id="jform_type-lbl" for="jform_type"
-								         style="clear: both"><?php echo $this->type ?></label>
+								         style="clear: both;"><?php echo $this->type ?></label>
 							<?php } ?>
 						</div>
 						<div class="control-group">

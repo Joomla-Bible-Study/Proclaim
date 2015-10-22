@@ -276,7 +276,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 				}
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
-						': '. $added . ' '.JText::_('JBS_SUCCESS');
+						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 
@@ -286,8 +286,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 				break;
 
 		}
-
-
 
 	}
 

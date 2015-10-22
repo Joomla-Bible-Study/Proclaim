@@ -14,7 +14,7 @@ defined('JPATH_PLATFORM') or die;
 use Joomla\Registry\Registry;
 
 /**
- * Utility class for JW Player behaviors
+ * Utility class for JWplayer behaviors
  *
  * @package     BibleStudy.Admin
  * @subpackage  HTML
@@ -29,9 +29,9 @@ abstract class JHtmlJwplayer
 	protected static $loaded = array();
 
 	/**
-	 * Method to load the jQuery JavaScript framework into the document head
+	 * Method to load the JWplayer JavaScript framework into the document head
 	 *
-	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
+	 * If debugging mode is on an uncompressed version of JWplayer is included for easier debugging.
 	 *
 	 * @return  void
 	 *

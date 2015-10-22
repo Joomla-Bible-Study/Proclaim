@@ -44,7 +44,7 @@ else
 
 <div class="progress progress-striped active">
 	<div class="bar"
-	     style="margin-right: 5px; width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%
+	     style="margin-right: 5px; width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 </div>
 <br/>
 
