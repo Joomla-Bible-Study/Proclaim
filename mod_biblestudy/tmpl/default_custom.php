@@ -42,7 +42,7 @@ if ($params->get('module_headercode'))
 }
 else
 {
-	include_once($path1 . 'helper.php');
+	include_once($path1 . 'helper.php'); /* Todo Tom you need ot look into this error. */
 	$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $templatemenuid, $params->get('use_headers'), $ismodule);
 	echo $header;
 }
