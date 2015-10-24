@@ -195,7 +195,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 		$stats             = new JBSMStats;
 		$this->playerstats = $stats->players();
-		$this->assets      = JFactory::getApplication()->input->get('checkassets', null, 'get', 'array');
+		$this->assets      = JFactory::getApplication()->input->getArray('checkassets', null, 'get');
 		$popups            = $stats->popups();
 		$this->popups      = $popups;
 

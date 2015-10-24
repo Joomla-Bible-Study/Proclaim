@@ -60,7 +60,8 @@ class JFormFieldMediafileImages extends JFormFieldList
 						case 1:
 
 							$button             = $this->getButton($media);
-							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button.' - '.JText::_('JBS_MED_TEXT').': '.$media->params->get('media_button_text');
+							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_TEXT') .
+									': ' . $media->params->get('media_button_text');
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -71,7 +72,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
-							$media->media_image = JText::_('JBS_MED_BUTTON').': '.$button . ' - '.JText::_('JBS_MED_ICON') .': '. $icon;
+							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_ICON') . ': ' . $icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -81,7 +82,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 						case 3:
 
 							$icon               = $this->getIcon($media);
-							$media->media_image = JText::_('JBS_MED_ICON').': '.$icon;
+							$media->media_image = JText::_('JBS_MED_ICON') . ': ' . $icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -92,13 +93,11 @@ class JFormFieldMediafileImages extends JFormFieldList
 				}
 				else
 				{
-					//if (!$media->params->get('media_image')){break;}
-
 					$image              = $media->params->get('media_image');
 					$totalcount         = strlen($image);
 					$slash              = strrpos($image, '/');
 					$imagecount         = $totalcount - $slash;
-					$media->media_image = JText::_('JBS_MED_IMAGE').': '.substr($image, $slash + 1, $imagecount);
+					$media->media_image = JText::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
 					$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 							'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 							$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -107,7 +106,6 @@ class JFormFieldMediafileImages extends JFormFieldList
 					);
 
 				}
-
 
 			}
 
@@ -118,7 +116,8 @@ class JFormFieldMediafileImages extends JFormFieldList
 		{
 			$tmp[$k] = $v->text;
 		}
-		//Determine the total records for each image/button/incon
+
+		// Determine the total records for each image/button/incon
 		$count = array_count_values($tmp);
 
 		$tmp = array_unique($tmp);
@@ -131,15 +130,15 @@ class JFormFieldMediafileImages extends JFormFieldList
 				unset($options[$k]);
 			}
 		}
-		//Add the number of records from $count to the text of the drop down
-		foreach($options as $k => $v)
-		{
-			foreach($count as $key=>$value)
-			{
 
+		// Add the number of records from $count to the text of the drop down
+		foreach ($options as $k => $v)
+		{
+			foreach ($count as $key => $value)
+			{
 				if ($key == $v->text)
 				{
-					$options[$k]->text = $v->text.' ('.$value.')';
+					$options[$k]->text = $v->text . ' (' . $value . ')';
 				}
 			}
 		}

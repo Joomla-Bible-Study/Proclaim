@@ -109,10 +109,18 @@ class BiblestudyModelAdmin extends JModelAdmin
 		return $pk;
 	}
 
+	/**
+	 * Get Media Image
+	 *
+	 * @todo may not be used
+	 *
+	 * @return void
 	public function getMediaImages()
 	{
 		$mediafiles = $this->getMediaFiles();
-		$images = new stdClass();
+
+		$images = new stdClass;
+
 		foreach ($mediafiles as $mediafile)
 		{
 			$reg = new Registry;
@@ -121,6 +129,16 @@ class BiblestudyModelAdmin extends JModelAdmin
 			$imagecount = substr_count($image,'png');
 		}
 	}
+	 *
+	 */
+
+	/**
+	 * Get Media Files
+	 *
+	 * @return mixed
+	 *
+	 * @todo not sure if this should be here.
+	 */
 	public function getMediaFiles()
 	{
 		$db              = JFactory::getDbo();
@@ -129,7 +147,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$query->from('#__bsms_mediafiles');
 		$db->setQuery($query->__toString());
 		$mediafiles = $db->loadObjectList();
-		foreach ($mediafiles as $i=>$mediafile)
+
+		foreach ($mediafiles as $i => $mediafile)
 		{
 			$reg = new Registry;
 			$reg->loadString($mediafile->params);
@@ -138,6 +157,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 
 		return $mediafiles;
 	}
+
 	/**
 	 * Fixes database problems
 	 *

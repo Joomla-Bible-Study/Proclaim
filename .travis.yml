@@ -26,6 +26,7 @@ before_script:
 
 script:
   - bin/phing pmd
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then libraries/vendor/bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
 
 branches:
   except:
