@@ -49,8 +49,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$document  = JFactory::getDocument();
-//Load the css for icons
-		$document->addStyleSheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;
 
@@ -75,7 +74,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 			$document->setDescription($this->params->get('metadesc'));
 		}
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $this->params, $this->params->get('stylesheet'));
+		JHtml::_('biblestudy.loadcss', $this->params, $this->params->get('stylesheet'), 'font-awesome');
 
 		$images   = new JBSMImages;
 		$images->getShowhide();

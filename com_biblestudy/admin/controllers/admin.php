@@ -289,7 +289,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 	}
 
-
 	/**
 	 * Change Player Modes
 	 *

@@ -62,12 +62,13 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @param   Joomla\Registry\Registry  $params  Params for css
 	 * @param   string                    $url     Url of a css file to load
+	 * @param   string                    $font    Url of a css file to load
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($params, $url = null)
+	public static function loadCss($params, $url = null, $font = null)
 	{
 
 		// Import Stylesheets
@@ -85,6 +86,10 @@ abstract class JHtmlBiblestudy
 		if ($url)
 		{
 			JHtml::stylesheet($url);
+		}
+		if ($font == 'font-awesome')
+		{
+			JHtml::stylesheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		}
 	}
 

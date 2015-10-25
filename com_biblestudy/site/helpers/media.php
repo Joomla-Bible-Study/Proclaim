@@ -36,17 +36,17 @@ class JBSMMedia
 		jimport('joomla.html.parameter');
 		JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
-		//smedia are the media settings for each server
+		// Smedia are the media settings for each server
 		$registory = new Registry;
 		$registory->loadString($media->smedia);
 		$media->smedia = $registory;
 
-		//params are the individual params for the media file record
+		// Params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($media->params);
 		$media->params = $registory;
 
-		//sparams are the server parameters
+		// Sparams are the server parameters
 		$registory = new Registry;
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
@@ -55,7 +55,7 @@ class JBSMMedia
 			{
 				$imageparams = $media->smedia;
 			}
-		else
+			else
 			{
 				$imageparams = $media->params;
 			}
@@ -85,7 +85,8 @@ class JBSMMedia
 		{
 
 				$file_size = $media->params->get('size');
-				switch ($file_size) {
+				switch ($file_size)
+				{
 					case  $file_size < 1024 :
 						$file_size = ' ' . 'Bytes';
 						break;
@@ -108,7 +109,8 @@ class JBSMMedia
 						$file_size = $file_size . ' ' . 'GB';
 						break;
 				}
-			switch ($params->get('show_filesize')) {
+			switch ($params->get('show_filesize'))
+			{
 				case 1:
 
 					break;
@@ -116,15 +118,15 @@ class JBSMMedia
 					$file_size = $media->comment;
 					break;
 				case 3:
-					if ($media->comment) {
+					if ($media->comment)
+					{
 						$file_size = $media->comment;
 					}
 					break;
 			}
 
-			$filesize =
-				'<div style="font-size: 0.6em;display:inline;">' .
-				$file_size.'</div>';
+			$filesize = '<div style="font-size: 0.6em;display:inline;">' .
+				$file_size . '</div>';
 		}
 
 		switch ($link_type)
@@ -134,7 +136,7 @@ class JBSMMedia
 				break;
 
 			case 1:
-				$mediafile = $playercode . '<div style="display:inline;position:relative;">'.$downloadlink . $filesize.'</div>' ;
+				$mediafile = $playercode . '<div style="display:inline;position:relative;">' . $downloadlink . $filesize . '</div>';
 				break;
 
 			case 2:
@@ -209,24 +211,25 @@ class JBSMMedia
 		}
 
 		return $downloadlink;
-
-
 	}
 
 	/**
 	 * Used to obtain the button and/or icon for the image
-	 * @param $media
-	 * @param $params
+	 *
+	 * @param   object    $media        ?
+	 * @param   Registry  $imageparams  ?
+	 *
 	 * @return mixed
 	 */
 	public function mediaButton($media, $imageparams)
 	{
-		$button = $imageparams->get('media_button_type','btn-link');
-		$buttontext = $imageparams->get('media_button_text','Audio');
-		$textsize = $imageparams->get('media_icon_text_size','24');
+		$mediaimage = null;
+		$button = $imageparams->get('media_button_type', 'btn-link');
+		$buttontext = $imageparams->get('media_button_text', 'Audio');
+		$textsize = $imageparams->get('media_icon_text_size', '24');
 		if ($imageparams->get('media_button_color'))
 		{
-			$color = 'style="background-color:'.$imageparams->get('media_button_color').';"';
+			$color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
 		}
 		else
 		{
@@ -235,32 +238,33 @@ class JBSMMedia
 		switch ($imageparams->get('media_use_button_icon'))
 		{
 			case 1:
-				//button only
-				$mediaimage = '<div  type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
+				// Button only
+				$mediaimage = '<div  type="button" class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
 				break;
 			case 2:
-				// button and icon
-				  if ($imageparams->get('media_icon_type') == '1')
-				  {
-					  $icon = $imageparams->get('media_custom_icon');
-				  }
-				  else
-				  {
-					  $icon = $imageparams->get('media_icon_type','fa fa-play');
-				  }
-				  $mediaimage = '<div  type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				// Button and icon
+				if ($imageparams->get('media_icon_type') == '1')
+				{
+					$icon = $imageparams->get('media_custom_icon');
+				}
+				else
+				{
+					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
+				}
+				$mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
+						$icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
 				break;
 			case 3:
-				//icon only
+				// Icon only
 				if ($imageparams->get('media_icon_type') == 1)
 				{
 					$icon = $imageparams->get('media_custom_icon');
 				}
 				else
 				{
-					$icon = $imageparams->get('media_icon_type','fa fa-play');
+					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
 				}
-				$mediaimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
 				break;
 		}
 
@@ -268,18 +272,20 @@ class JBSMMedia
 	}
 	/**
 	 * Used to obtain the button and/or icon for the image
-	 * @param $media
-	 * @param $params
+	 *
+	 * @param   Registry  $download  ?
+	 *
 	 * @return mixed
 	 */
 	public function downloadButton($download)
 	{
-		$button = $download->get('download_button_type','btn-link');
-		$buttontext = $download->get('download_button_text','Audio');
-		$textsize = $download->get('download_icon_text_size','24');
+		$downloadimage = null;
+		$button = $download->get('download_button_type', 'btn-link');
+		$buttontext = $download->get('download_button_text', 'Audio');
+		$textsize = $download->get('download_icon_text_size', '24');
 		if ($download->get('download_button_color'))
 		{
-			$color = 'style="background-color:'.$download->get('download_button_color').';"';
+			$color = 'style="background-color:' . $download->get('download_button_color') . ';"';
 		}
 		else
 		{
@@ -288,32 +294,33 @@ class JBSMMedia
 		switch ($download->get('download_use_button_icon'))
 		{
 			case 2:
-				//button only
-				$downloadimage = '<div type="button" class="btn '.$button.' title="'.$buttontext.'" '.$color.'>'.$buttontext.'</div>';
+				// Button only
+				$downloadimage = '<div type="button" class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
 				break;
 			case 3:
-				// button and icon
+				// Button and icon
 				if ($download->get('download_icon_type') == '1')
 				{
 					$icon = $download->get('download_custom_icon');
 				}
 				else
 				{
-					$icon = $download->get('download_icon_type','icon-play');
+					$icon = $download->get('download_icon_type', 'icon-play');
 				}
-				$downloadimage = '<div type="button" class="btn '.$button.'" title="'.$buttontext.'" '.$color.'><span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span></div>';
+				$downloadimage = '<div type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
+						$icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
 				break;
 			case 4:
-				//icon only
+				// Icon only
 				if ($download->get('download_icon_type') == 1)
 				{
 					$icon = $download->get('download_custom_icon');
 				}
 				else
 				{
-					$icon = $download->get('download_icon_type','icon-play');
+					$icon = $download->get('download_icon_type', 'icon-play');
 				}
-				$downloadimage = '<span class="'.$icon.'" title="'.$buttontext.'" style="font-size:'.$textsize.'px;"></span>';
+				$downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
 
@@ -625,10 +632,11 @@ class JBSMMedia
 	{
 		$filesize  = '';
 
-		$file_size = $media->params->get('size'); //echo $file_size;
-		if ($file_size) {
-			//dump($file_size);
-			switch ($file_size) {
+		$file_size = $media->params->get('size');
+		if ($file_size)
+		{
+			switch ($file_size)
+			{
 				case  $file_size < 1024 :
 					$file_size = ' ' . 'Bytes';
 					break;
@@ -651,8 +659,9 @@ class JBSMMedia
 					$file_size = $file_size . ' ' . 'GB';
 					break;
 			}
-//dump($file_size);
-			switch ($params->get('show_filesize')) {
+
+			switch ($params->get('show_filesize'))
+			{
 				case 1:
 					$filesize = $file_size;
 					break;
@@ -660,17 +669,19 @@ class JBSMMedia
 					$filesize = $media->comment;
 					break;
 				case 3:
-					if ($media->comment) {
+					if ($media->comment)
+					{
 						$filesize = $media->comment;
-					} else {
+					}
+					else
+					{
 						($filesize = $file_size);
 					}
 					break;
 			}
 		}
 		$this->fsize = $filesize;
-		//dump($this->fsize);
-		//dump($filesize);
+
 		return $filesize;
 	}
 
@@ -726,8 +737,6 @@ class JBSMMedia
 
 		return $duration;
 	}
-
-
 
 
 	/**

@@ -911,7 +911,7 @@ class JBSMLanding
 			$registry->loadString($item->params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
-			$menu_order = $params->get('topics_order'); //dump($menu_order);
+			$menu_order = $params->get('topics_order');
 		}
 		else
 		{
