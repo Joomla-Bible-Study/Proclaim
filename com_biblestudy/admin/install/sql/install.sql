@@ -282,25 +282,6 @@ CREATE TABLE `#__bsms_servers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#__bsms_share`
---
-
-CREATE TABLE `#__bsms_share` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name`      VARCHAR(250)              DEFAULT NULL,
-  `params`    TEXT,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '1',
-  `ordering`  INT(11)          NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`),
-  KEY `idx_access` (`access`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `#__bsms_studies`
 --
 

@@ -17,7 +17,6 @@ DROP TABLE IF EXISTS `#__bsms_comments`;
 DROP TABLE IF EXISTS `#__bsms_admin`;
 DROP TABLE IF EXISTS `#__bsms_studytopics`;
 DROP TABLE IF EXISTS `#__bsms_version`;
-DROP TABLE IF EXISTS `#__bsms_share`;
 DROP TABLE IF EXISTS `#__bsms_locations`;
 DROP TABLE IF EXISTS `#__bsms_timeset`;
 DROP TABLE IF EXISTS `#__bsms_styles`;

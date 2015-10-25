@@ -848,6 +848,15 @@ class Com_BiblestudyInstallerScript
 			'/components/com_biblestudy/views/mediafile',
 			'/components/com_biblestudy/views/commentslist',
 			'/components/com_biblestudy/views/commentsedit',
+			// JBS 9.0.0
+			'/administrator/componets/com_biblestudy/views/share',
+			'/administrator/componets/com_biblestudy/views/shares',
+			'/administrator/componets/com_biblestudy/models/forms/share.xml',
+			'/administrator/componets/com_biblestudy/models/share.php',
+			'/administrator/componets/com_biblestudy/models/shares.php',
+			'/administrator/componets/com_biblestudy/tables/share.php',
+			'/administrator/componets/com_biblestudy/controllers/shares.php',
+			'/administrator/componets/com_biblestudy/controllers/share.php'
 		);
 
 		foreach ($files as $file)
