@@ -45,7 +45,7 @@ if ($msg)
 			<div id="jbspaypal">
 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 					<input type="hidden" name="cmd" value="_donations">
-					<input type="hidden" name="business" value="tfuller@livingwatersweb.com">
+					<input type="hidden" name="business" value="tfuller@calvarynewberg.org">
 					<input type="hidden" name="lc" value="US">
 					<input type="hidden" name="item_name" value="Joomla Bible Study Team">
 					<input type="hidden" name="no_note" value="0">
@@ -169,13 +169,6 @@ if ($msg)
 						   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn cpanl-img"> <img
 									src="../media/com_biblestudy/images/icons/icon-48-podcast.png" alt="" align="middle"
 									border="0"/> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
-						<a href="index.php?option=com_biblestudy&amp;view=shares"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?>" class="btn cpanl-img">
-							<img
-									src="../media/com_biblestudy/images/icons/icon-48-social.png" alt="" align="middle"
-									border="0"/>
-							<span> <?php echo JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=templates"
 						   style="text-decoration:none;"
 						   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn cpanl-img"> <img

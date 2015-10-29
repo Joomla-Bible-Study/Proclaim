@@ -84,10 +84,6 @@ class JBSMBibleStudyHelper
 					$assetName = 'com_biblestudy.server.' . (int) $Itemid;
 					break;
 
-				case 'share':
-					$assetName = 'com_biblestudy.share.' . (int) $Itemid;
-					break;
-
 				case 'teacher':
 					$assetName = 'com_biblestudy.teacher.' . (int) $Itemid;
 					break;
@@ -185,9 +181,7 @@ class JBSMBibleStudyHelper
 		self::rendermenu(
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
-		self::rendermenu(
-			JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'index.php?option=com_biblestudy&view=shares', $vName == 'shares'
-		);
+
 		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
 		);
