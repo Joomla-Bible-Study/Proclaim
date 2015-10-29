@@ -227,7 +227,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $this->params);
+		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
@@ -415,8 +415,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		$this->item->metadesc = $this->item->studyintro;
 		$this->item->metakey  = $this->item->topics;
-		//Load the css for icons
-		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();

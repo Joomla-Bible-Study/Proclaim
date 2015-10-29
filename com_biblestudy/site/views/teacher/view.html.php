@@ -65,7 +65,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params);
+		JHtml::_('biblestudy.loadcss', $params, '', 'font-awesome');
 
 		$input = new JInput;
 
@@ -230,8 +230,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
 		$title      = null;
-		//Load the css for icons
-		$this->document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();

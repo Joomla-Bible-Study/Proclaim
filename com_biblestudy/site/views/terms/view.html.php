@@ -65,7 +65,8 @@ class BiblestudyViewTerms extends JViewLegacy
 		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
-		//params are the individual params for the media file record
+
+		// Params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($this->media->params);
 		$this->media->params = $registory;
@@ -103,8 +104,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	{
 		$app   = JFactory::getApplication();
 		$menus = $app->getMenu();
-		//Load the css for icons
-		$this->document->addStyleSheet($this->baseurl.'/media/jui/css/icomoon.css');
+
+		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 		$title      = null;
 

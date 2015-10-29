@@ -61,7 +61,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  object Series Studies */
 	protected $seriesstudies;
 
-	/** @var  object Template */
+	/** @var  TableTemplate Template */
 	protected $template;
 
 	/** @var  Registry Params */
@@ -115,9 +115,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. $teacherimage->width . '" alt="" />';
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params);
-		//Load the css for icons
-		$document->addStyleSheet('http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+		JHtml::_('biblestudy.loadcss', $params, '', 'font-awesome');
+
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 

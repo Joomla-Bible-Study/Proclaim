@@ -20,6 +20,9 @@ use Joomla\Registry\Registry;
 class JBSMMedia
 {
 
+	/** @type int File Size */
+	private $fsize = 0;
+
 	/**
 	 * Return Fluid Media row
 	 *
@@ -175,7 +178,6 @@ class JBSMMedia
 			$d_image = 'media/com_biblestudy/images/download.png';
 			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
-
 
 		if ($media->params->get('link_type'))
 		{
@@ -737,7 +739,6 @@ class JBSMMedia
 
 		return $duration;
 	}
-
 
 	/**
 	 * Update Hit count for plays.
