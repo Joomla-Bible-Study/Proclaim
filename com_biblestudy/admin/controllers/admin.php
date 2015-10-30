@@ -808,10 +808,14 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$image_types = $input->get('images', null, 'array');
 		$count       = 0;
+
 		foreach ($image_types as $image_type)
 		{
 			$images = JFolder::files(JPATH_ROOT . '/' . 'images/biblestudy/' . $image_type, 'original_', true, true);
-			$count += count($images);
+			if ( $images != false)
+			{
+				$count += count($images);
+			}
 
 			$images_paths[] = array(array('type' => $image_type, 'images' => $images));
 		}

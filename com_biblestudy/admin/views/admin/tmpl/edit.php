@@ -62,38 +62,51 @@ $input = $app->input;
 						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
 								{images: thumbnail_changes}, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
-									var total_paths = response.total, counter = 0;
+									var total_paths = response.total;
+									var counter = 0;
 									var progress = 0;
-									jQuery.each(response.paths, function () {
-										var type = this[0].type;
-										jQuery.each(this[0].images, function () {
-													var new_size;
-													switch (type) {
-														case 'teachers':
-															new_size = jQuery('#jform_params_thumbnail_teacher_size').val();
-															break;
-														case 'studies':
-															new_size = jQuery('#jform_params_thumbnail_study_size').val();
-															break;
-														case 'series':
-															new_size = jQuery('#jform_params_thumbnail_series_size').val();
-															break;
-													}
-													jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1', {
-														image_path: this,
-														new_size: new_size
-													}, function (response) {
-														counter++;
-														progress += 100 / total_paths;
-														jQuery('#dialog_thumbnail_resize .bar').width(progress + '%');
-														if (counter === total_paths) {
-															// Continue and save the rest of the form now.
-															Joomla.submitform(task, document.getElementById('item-admin'));
+									if (total_paths) {
+										jQuery.each(response.paths, function () {
+											var type = this[0].type;
+											if (this[0].images) {
+												jQuery.each(this[0].images, function () {
+															console.log(this);
+															var new_size;
+															switch (type) {
+																case 'teachers':
+																	new_size = jQuery('#jform_params_thumbnail_teacher_size').val();
+																	break;
+																case 'studies':
+																	new_size = jQuery('#jform_params_thumbnail_study_size').val();
+																	break;
+																case 'series':
+																	new_size = jQuery('#jform_params_thumbnail_series_size').val();
+																	break;
+																default:
+																	new_size = 100;
+																	break;
+															}
+															jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1', {
+																image_path: this,
+																new_size: new_size
+															}, function (response) {
+																counter++;
+																progress += 100 / total_paths;
+																jQuery('#dialog_thumbnail_resize .bar').width(progress + '%');
+																if (counter === total_paths) {
+																	// Continue and save the rest of the form now.
+																	Joomla.submitform(task, document.getElementById('item-admin'));
+																}
+															})
 														}
-													})
-												}
-										)
-									});
+												)
+											} else {
+												Joomla.submitform(task, document.getElementById('item-admin'));
+											}
+										});
+									} else {
+										Joomla.submitform(task, document.getElementById('item-admin'));
+									}
 								}
 						)
 					}
