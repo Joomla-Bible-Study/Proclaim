@@ -132,7 +132,7 @@ class BiblestudyViewSeries extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_SERIES'), 'series.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
 
 		if ($this->canDo->get('core.create'))
 		{

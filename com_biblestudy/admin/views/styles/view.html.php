@@ -117,7 +117,7 @@ class BiblestudyViewStyles extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_STYLES'), 'css.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_STYLES'), 'contract-2 contract-2');
 
 		if ($this->canDo->get('core.create'))
 		{

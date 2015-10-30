@@ -294,7 +294,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
-		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'options options');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::divider();
 		JToolbarHelper::apply('admin.apply');

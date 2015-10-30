@@ -146,7 +146,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'mp3.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
 		if ($this->canDo->get('core.create'))
 		{

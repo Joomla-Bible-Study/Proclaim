@@ -96,7 +96,7 @@ class BiblestudyViewSerie extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

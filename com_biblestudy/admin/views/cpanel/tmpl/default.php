@@ -111,47 +111,47 @@ if ($msg)
 					<div id="cpanel" class="btn-group">
 						<a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn cpanl-img"> <span class="icon-options" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn cpanl-img"> <span class="icon-options" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=messages"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>" class="btn cpanl-img"> <span class="icon-book" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>" class="btn cpanl-img"> <span class="icon-book" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=mediafiles"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn cpanl-img"> <span class="icon-video" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn cpanl-img"> <span class="icon-video" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=teachers"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>" class="btn cpanl-img"> <span class="icon-user" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>" class="btn cpanl-img"> <span class="icon-user" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=series"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn cpanl-img"> <span class="icon-tree-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn cpanl-img"> <span class="icon-tree-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn cpanl-img"> <span class="icon-list-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn cpanl-img"> <span class="icon-list-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=locations"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn cpanl-img"> <span class="icon-home" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn cpanl-img"> <span class="icon-home" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=topics"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn cpanl-img"> <span class="icon-tags" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn cpanl-img"> <span class="icon-tags" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=comments"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn cpanl-img"> <span class="icon-comment" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn cpanl-img"> <span class="icon-comments-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=servers"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn cpanl-img"> <span class="icon-database" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn cpanl-img"> <span class="icon-database" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=podcasts"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn cpanl-img"> <span class="icon-feed" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=templates"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn cpanl-img"> <span class="icon-grid" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn cpanl-img"> <span class="icon-grid" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=templatecodes"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn cpanl-img"> <span class="icon-brush" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
 
 						<a href="index.php?option=com_biblestudy&amp;view=styles"
 						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_STYLES'); ?>" class="btn cpanl-img"> <span class="icon-apply" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px;"></span> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_STYLES'); ?>" class="btn cpanl-img"> <span class="icon-contract-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a>
 					</div>
 					<div style="clear: both;"></div>
 				</div>

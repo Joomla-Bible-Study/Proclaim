@@ -120,7 +120,7 @@ class BiblestudyViewStyle extends JViewLegacy
 		$isNew = ($this->item->id == 0);
 		JToolBarHelper::title(
 			JText::_('JBS_CMN_STYLES') . ': <small><small>[' . ($isNew ? JText::_('JBS_CMN_NEW')
-				: JText::_('JBS_CMN_EDIT')) . ']</small></small>', 'css.png'
+				: JText::_('JBS_CMN_EDIT')) . ']</small></small>', 'contract contract'
 		);
 
 		if ($isNew && $this->canDo->get('core.create'))

@@ -123,7 +123,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'teachers.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'users users');
 
 		if ($this->canDo->get('core.create'))
 		{

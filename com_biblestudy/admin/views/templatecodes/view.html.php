@@ -148,7 +148,7 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'templates.png');
+		JToolBarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
 
 		if ($this->canDo->get('core.create'))
 		{

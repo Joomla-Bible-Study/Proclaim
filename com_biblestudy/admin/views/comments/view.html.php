@@ -54,7 +54,7 @@ class BiblestudyViewComments extends JViewLegacy
 	 */
 	protected $f_levels;
 
-	protected $filterForm;
+	public $filterForm;
 
 	protected $activeFilters;
 
@@ -129,7 +129,7 @@ class BiblestudyViewComments extends JViewLegacy
 		// Get the toolbar object instance
 		$bar   = JToolBar::getInstance('toolbar');
 		$canDo = JBSMBibleStudyHelper::getActions('', 'comment');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))
 		{

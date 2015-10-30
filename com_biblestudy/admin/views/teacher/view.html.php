@@ -102,7 +102,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'user user');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

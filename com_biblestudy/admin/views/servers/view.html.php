@@ -120,7 +120,7 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'servers.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'database database');
 
 		if ($this->canDo->get('core.create'))
 		{

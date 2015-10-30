@@ -133,7 +133,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'grid grid');
 
 		if ($this->canDo->get('core.create'))
 		{

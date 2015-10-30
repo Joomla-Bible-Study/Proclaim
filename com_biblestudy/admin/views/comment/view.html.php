@@ -90,7 +90,7 @@ class BiblestudyViewComment extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comments.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

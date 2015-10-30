@@ -130,7 +130,7 @@ class BiblestudyViewLocations extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'locations.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
 
 		if ($this->canDo->get('core.create'))
 		{

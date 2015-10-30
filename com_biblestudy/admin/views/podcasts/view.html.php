@@ -107,7 +107,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'podcast.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'feed feed');
 
 		if ($this->canDo->get('core.create'))
 		{

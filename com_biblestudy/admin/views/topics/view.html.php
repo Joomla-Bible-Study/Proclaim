@@ -128,7 +128,7 @@ class BiblestudyViewTopics extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'topics.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{

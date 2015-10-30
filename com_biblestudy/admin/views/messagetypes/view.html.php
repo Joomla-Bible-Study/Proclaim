@@ -131,7 +131,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'messagetype.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
 
 		if ($this->canDo->get('core.create'))
 		{
