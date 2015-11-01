@@ -147,7 +147,7 @@ class JBSMLanding
 							$location .= "\n\t" . '<tr>';
 						}
 						$location .= "\n\t\t" . '<td class="landing_td">';
-						$location .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
+						$location .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_location_landing='
 							. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 							. $template . '">';
 
@@ -200,7 +200,7 @@ class JBSMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_location_landing='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -218,7 +218,7 @@ class JBSMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_location_landing='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -361,8 +361,8 @@ class JBSMLanding
 
 						if ($params->get('linkto') == 0)
 						{
-							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-								. '&amp;filter_teacher=' . $b->id
+							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
+								. '&amp;filter_teacher_landing=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
@@ -423,8 +423,8 @@ class JBSMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="landingcell"><a class="landinglink="'
-									. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-									. '&amp;filter_teacher=' . $b->id
+									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
+									. '&amp;filter_teacher_landing=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
@@ -451,15 +451,15 @@ class JBSMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-									. JRoute::_('index.php?option=com_biblestudy&amp;view=sermons&amp;t=' . $template)
-									. '&amp;filter_teacher=' . $b->id
+									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
+									. '&amp;filter_teacher_landing=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-									. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=teacher_landing&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 							$teacher .= $b->teachername;
 
@@ -600,14 +600,14 @@ class JBSMLanding
 
 						if ($params->get('series_linkto') == '0')
 						{
-							$series .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series=' . $b->id
+							$series .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing=' . $b->id
 								. '&amp;filter_book=0&amp;filter_teacher=0'
 								. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 						}
 						else
 						{
-							$series .= '<a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
+							$series .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
 						}
 
 						$series .= $b->series_text;
@@ -662,13 +662,13 @@ class JBSMLanding
 
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
 									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -690,13 +690,13 @@ class JBSMLanding
 
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_series='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
 									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;view=seriesdisplay&amp;id='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -825,7 +825,7 @@ class JBSMLanding
 				}
 				$year .= "\n\t\t" . '<td class="landing_td">';
 
-				$year .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_year='
+				$year .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_year_landing='
 					. $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
 					. 'filter_book=0&amp;filter_messagetype=0&amp;t='
 					. $template . '">';
@@ -986,7 +986,7 @@ class JBSMLanding
 					}
 				}
 				$topic .= "\n\t\t" . '<td class="landing_td">';
-				$topic .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_topic=' . $b->id . '&amp;filter_teacher=0'
+				$topic .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_topic_landing=' . $b->id . '&amp;filter_teacher=0'
 					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 				$trans = new JBSMTranslated;
 				$topic .= $trans->getTopicItemTranslated($b);
@@ -1155,7 +1155,7 @@ class JBSMLanding
 						}
 						$messagetype .= "\n\t\t" . '<td class="landing_td">';
 
-						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id
+						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing=' . $b->id
 							. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
 							. $template . '">';
 
@@ -1210,7 +1210,7 @@ class JBSMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype='
+							<a class="landinglink" href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing='
 								. $b->id . '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
 								. $template . '">';
 							$messagetype .= $b->message_type;
@@ -1228,7 +1228,7 @@ class JBSMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_messagetype=' . $b->id
+							<a class="landinglink" href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing=' . $b->id
 								. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
 								. $template . '">';
 							$messagetype .= $b->message_type;
@@ -1365,7 +1365,7 @@ class JBSMLanding
 					}
 				}
 				$book .= "\n\t\t" . '<td class="landing_td">';
-				$book .= '<a href="index.php?option=com_biblestudy&amp;view=sermons&amp;filter_book=' . $b->booknumber
+				$book .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_book_landing=' . $b->booknumber
 					. '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 					. $template . '">';
 
