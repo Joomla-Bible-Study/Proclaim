@@ -146,16 +146,6 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- Share
---
-ALTER TABLE `#__bsms_share` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_share` ADD INDEX `idx_access` ( `access` );
-ALTER TABLE `#__bsms_share` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
-MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
-MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
---
 -- Studies
 --
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_state` ( `published` );

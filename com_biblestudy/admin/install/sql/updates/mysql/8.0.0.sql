@@ -19,7 +19,6 @@ ALTER TABLE `#__bsms_templatecode` ENGINE = INNODB;
 ALTER TABLE `#__bsms_comments` ENGINE = INNODB;
 ALTER TABLE `#__bsms_admin` ENGINE = INNODB;
 ALTER TABLE `#__bsms_studytopics` ENGINE = INNODB;
-ALTER TABLE `#__bsms_share` ENGINE = INNODB;
 ALTER TABLE `#__bsms_locations` ENGINE = INNODB;
 ALTER TABLE `#__bsms_timeset` ENGINE = INNODB;
 ALTER TABLE `#__bsms_styles` ENGINE = INNODB;
