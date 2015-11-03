@@ -84,9 +84,6 @@ class Migration700
 				'table'   => '#__bsms_servers', 'field' => 'published', 'type' => 'MODIFY',
 				'command' => "tinyint(3) NOT NULL DEFAULT '1'"
 			), array(
-				'table'   => '#__bsms_share', 'field' => 'id', 'type' => 'MODIFY',
-				'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'
-			), array(
 				'table'   => '#__bsms_comments', 'field' => 'study_id', 'type' => 'MODIFY',
 				'command' => "int(11) NOT NULL DEFAULT '0'"
 			), array(
@@ -706,42 +703,6 @@ class Migration700
 				$topic = 'JBS_TOP_' . strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));
 				$query = "UPDATE `#__bsms_topics` SET `topic_text` = " . $db->quote($topic) . " WHERE `id` = " .
 					(int) $db->quote($result->id);
-
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
-				{
-					return false;
-				}
-			}
-		}
-
-		// Fix share params
-		$query = "SELECT `id`, `params` FROM `#__bsms_share`";
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
-
-		if ($results)
-		{
-			foreach ($results AS $result)
-			{
-				// Update the params to json
-				$registry = new Registry;
-
-				if ($result->params)
-				{
-					// Fix incorrect params string literal
-					$params = array();
-					foreach (explode('\n', $result->params) as $param)
-					{
-						$param             = explode('=', str_replace('\n', '', trim($param)));
-						$params[$param[0]] = $param[1];
-					}
-
-					$registry->loadArray($params);
-				}
-				$params2 = $registry->toObject();
-				$params2 = json_encode($params2);
-				$query   = "UPDATE `#__bsms_share` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
-					(int) $db->quote($result->id) . " LIMIT 1";
 
 				if (!JBSMDbHelper::performdb($query, "Build 700: "))
 				{

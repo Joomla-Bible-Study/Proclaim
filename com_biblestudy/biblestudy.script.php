@@ -959,7 +959,6 @@ class Com_BiblestudyInstallerScript
 			array('table' => '#__bsms_podcast'),
 			array('table' => '#__bsms_series'),
 			array('table' => '#__bsms_servers'),
-			array('table' => '#__bsms_share'),
 			array('table' => '#__bsms_studies'),
 			array('table' => '#__bsms_studytopics'),
 			array('table' => '#__bsms_teachers'),

@@ -152,12 +152,6 @@ class JBSMAssets
 						'realname'   => 'JBS_CMN_SERIES'
 				),
 				array(
-						'name'       => '#__bsms_share',
-						'titlefield' => 'name',
-						'assetname'  => 'share',
-						'realname'   => 'JBS_CMN_SOCIAL_NETWORKING_LINKS'
-				),
-				array(
 						'name'       => '#__bsms_teachers',
 						'titlefield' => 'teachername',
 						'assetname'  => 'teacher',

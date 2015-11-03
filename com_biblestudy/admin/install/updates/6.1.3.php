@@ -45,19 +45,7 @@ class Migration613
 		{
 			return false;
 		}
-
-		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_share` (
-				  `id` INT(11) NOT NULL AUTO_INCREMENT,
-				  `name` VARCHAR(250) DEFAULT NULL,
-				  `params` TEXT,
-				  `published` TINYINT(1) NOT NULL DEFAULT '1',
-				  PRIMARY KEY (`id`)
-				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
-		{
-			return false;
-		}
+		
 
 		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 				  `id` INT(11) NOT NULL AUTO_INCREMENT,
