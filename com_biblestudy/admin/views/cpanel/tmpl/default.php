@@ -32,7 +32,7 @@ if ($msg)
 		<div id="j-sidebar-container" class="span2">
 			<div id="fbheader">
 				<a href="index.php?option=com_biblestudy&view=cpanel"><img
-							src="../media/com_biblestudy/images/logo.png"
+							src="../media/com_biblestudy/images/bible2015.png"
 							border="0"
 							alt="<?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"/></a>
 			</div>
