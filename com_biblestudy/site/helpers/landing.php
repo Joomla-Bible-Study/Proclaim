@@ -112,8 +112,6 @@ class JBSMLanding
 				case 0:
 					$t = 0;
 					$i = 0;
-
-					//$location = "\n" . '<table class="table landing_table" width="100%"><tr>';
 					$showdiv  = 0;
 
 					foreach ($tresult as $b)
@@ -123,30 +121,12 @@ class JBSMLanding
 						{
 							if ($showdiv < 1)
 							{
-								if ($i == 1)
-								{
-									//$location .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-									//$location .= "\n\t" . '</tr>';
-								}
-								if ($i == 2)
-								{
-									//$location .= "\n\t\t" . '<td  class="landing_td"></td>';
-									//$location .= "\n\t" . '</tr>';
-								}
-
-								//$location .= "\n" . '</table>';
 								$location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
-								//$location .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
 							}
 						}
-						if ($i == 0)
-						{
-							//$location .= "\n\t" . '<tr>';
-						}
-						//$location .= "\n\t\t" . '<td class="landing_td">';
 						$location .= '<div class="span4">';
 						$location .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_location_landing='
 							. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
@@ -156,31 +136,18 @@ class JBSMLanding
 
 						$location .= '</a>';
 						$location .= '</div>';
-						//$location .= '</td>';
 						$i++;
 						$t++;
 
 						if ($i == 3 && $t != $limit && $t != $count)
 						{
-							//$location .= "\n\t" . '</tr><tr>';
 							$i = 0;
 						}
 						elseif ($i == 3 || $t == $count || $t == $limit)
 						{
-							//$location .= "\n\t" . '</tr>';
 							$i = 0;
 						}
 					}
-					if ($i == 1)
-					{
-						//$location .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-					}
-					if ($i == 2)
-					{
-						//$location .= "\n\t\t" . '<td  class="landing_td"></td>';
-					}
-
-					//$location .= "\n" . '</table>' . "\n";
 
 					if ($showdiv == 1)
 					{
@@ -326,7 +293,6 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			//$teacher = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$showdiv = 0;
 
 			switch ($teacheruselimit)
@@ -339,26 +305,12 @@ class JBSMLanding
 						{
 							if ($showdiv < 1)
 							{
-								if ($i == 1)
-								{
-									//$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-									//$teacher .= "\n\t" . '</tr>';
-								}
-								if ($i == 2)
-								{
-									//$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-									//$teacher .= "\n\t" . '</tr>';
-								}
-
-								//$teacher .= "\n" . '</table>';
 								$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
-								//$teacher .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
 							}
 						}
-						//$teacher .= "\n\t\t" . '<td class="landing_td">';
 
 						if ($params->get('linkto') == 0)
 						{
@@ -376,33 +328,19 @@ class JBSMLanding
 
 						$teacher .= '</a>';
 
-						//$teacher .= '</td>';
 						$teacher .= '</div>';
 						$i++;
 						$t++;
 
 						if ($i == 3 && $t != $limit && $t != $count)
 						{
-							//$teacher .= "\n\t" . '</tr><tr>';
 							$i = 0;
 						}
 						elseif ($i == 3 || $t == $count || $t == $limit)
 						{
-							//$teacher .= "\n\t" . '</tr>';
 							$i = 0;
 						}
 					}
-					if ($i == 1)
-					{
-						//$teacher .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-					}
-
-					if ($i == 2)
-					{
-						//$teacher .= "\n\t\t" . '<td  class="landing_td"></td>';
-					}
-
-					//$teacher .= "\n" . '</table>' . "\n";
 
 					if ($showdiv == 1)
 					{
@@ -462,7 +400,9 @@ class JBSMLanding
 							{
 
 								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
-									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=teacher_landing&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=teacher_landing&amp;id=' .
+												$b->id . '&amp;t=' . $template
+										) . '">';
 							}
 							$teacher .= $b->teachername;
 
@@ -567,12 +507,10 @@ class JBSMLanding
 			switch ($seriesuselimit)
 			{
 				case 0:
-					//$series = "\n" . '<table class="table landing_table" width="100%" >';
 					$series = '';
 					$t = 0;
 					$i = 0;
 
-					//$series .= "\n\t" . '<tr>';
 					$showdiv = 0;
 
 					foreach ($items as &$b)
@@ -581,26 +519,12 @@ class JBSMLanding
 						{
 							if ($showdiv < 1)
 							{
-								if ($i == 1)
-								{
-									//$series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-									//$series .= "\n\t" . '</tr>';
-								}
-								if ($i == 2)
-								{
-									//$series .= "\n\t\t" . '<td  class="landing_td"></td>';
-									//$series .= "\n\t" . '</tr>';
-								}
-
-								//$series .= "\n" . '</table>';
 								$series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
-								//$series .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
 							}
 						}
-						//$series .= "\n\t\t" . '<td class="landing_td">';
 
 						if ($params->get('series_linkto') == '0')
 						{
@@ -612,40 +536,27 @@ class JBSMLanding
 						}
 						else
 						{
-							$series .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id=' . $b->id . '&amp;t=' . $template . '">';
+							$series .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id=' .
+									$b->id . '&amp;t=' . $template . '">';
 						}
 
 						$series .= $b->series_text;
 
 						$series .= '</a>';
 						$series .= '</div>';
-						//$series .= '</td>';
 
 						$i++;
 						$t++;
 
 						if ($i == 3 && $t != $limit && $t != $count)
 						{
-							//$series .= "\n\t" . '</tr><tr>';
 							$i = 0;
 						}
 						elseif ($i == 3 || $t == $count || $t == $limit)
 						{
-							//$series .= "\n\t" . '</tr>';
 							$i = 0;
 						}
 					}
-					if ($i == 1)
-					{
-						//$series .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-					}
-
-					if ($i == 2)
-					{
-						//$series .= "\n\t\t" . '<td  class="landing_td"></td>';
-					}
-
-					//$series .= "\n" . '</table>' . "\n";
 
 					if ($showdiv == 1)
 					{
@@ -667,7 +578,8 @@ class JBSMLanding
 
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
+								$series .= '<div class="landingcell">
+									<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
 									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
@@ -695,13 +607,15 @@ class JBSMLanding
 
 							if ($params->get('series_linkto') == '0')
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
+								$series .= '<div class="landingcell">
+									<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_series_landing='
 									. $b->id . '&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
+								$series .= '<div class="landingcell">
+									<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -800,7 +714,6 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			//$year    = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$year = '';
 			$showdiv = 0;
 
@@ -810,26 +723,12 @@ class JBSMLanding
 				{
 					if ($showdiv < 1)
 					{
-						if ($i == 1)
-						{
-							//$year .= "\n\t\t" . '<td class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-							//$year .= "\n\t" . '</tr>';
-						}
-						if ($i == 2)
-						{
-							//$year .= "\n\t\t" . '<td  class="landing_td"></td>';
-							//$year .= "\n\t" . '</tr>';
-						}
-
-						//$year .= "\n" . '</table>';
 						$year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
-						//$year .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;
 					}
 				}
-				//$year .= "\n\t\t" . '<td class="landing_td">';
 				$year .= '<div class="span2">';
 				$year .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_year_landing='
 					. $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
@@ -840,31 +739,18 @@ class JBSMLanding
 
 				$year .= '</a>';
 				$year .= '</div>';
-				//$year .= '</td>';
 				$i++;
 				$t++;
 
 				if ($i == 3 && $t != $limit && $t != $count)
 				{
-					//$year .= "\n\t" . '</tr><tr>';
 					$i = 0;
 				}
 				elseif ($i == 3 || $t == $count || $t == $limit)
 				{
-					//$year .= "\n\t" . '</tr>';
 					$i = 0;
 				}
 			}
-			if ($i == 1)
-			{
-				//$year .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-			}
-			if ($i == 2)
-			{
-				//$year .= "\n\t\t" . '<td  class="landing_td"></td>';
-			}
-
-			//$year .= "\n" . '</table>' . "\n";
 
 			if ($showdiv == 1)
 			{
@@ -963,7 +849,6 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			//$topic   = "\n" . '<table class="table landing_table" width="100%"><tr>';
 			$topic = '';
 			$showdiv = 0;
 
@@ -973,59 +858,33 @@ class JBSMLanding
 				{
 					if ($showdiv < 1)
 					{
-						if ($i == 1)
-						{
-							//$topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-							//$topic .= "\n\t" . '</tr>';
-						}
-						if ($i == 2)
-						{
-							//$topic .= "\n\t\t" . '<td  class="landing_td"></td>';
-							//$topic .= "\n\t" . '</tr>';
-						}
-
-						//$topic .= "\n" . '</table>';
 						$topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-						//$topic .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;
 					}
 				}
-				//$topic .= "\n\t\t" . '<td class="landing_td">';
 				$topic .= '<div class="span2">';
-				$topic .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_topic_landing=' . $b->id . '&amp;filter_teacher=0'
+				$topic .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_topic_landing=' .
+						$b->id . '&amp;filter_teacher=0'
 					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 				$trans = new JBSMTranslated;
 				$topic .= $trans->getTopicItemTranslated($b);
 
 				$topic .= '</a>';
 				$topic .= '</div>';
-				//$topic .= '</td>';
 				$i++;
 				$t++;
 
 				if ($i == 3 && $t != $limit && $t != $count)
 				{
-					//$topic .= "\n\t" . '</tr><tr>';
 					$i = 0;
 				}
 				elseif ($i == 3 || $t == $count || $t == $limit)
 				{
-					//$topic .= "\n\t" . '</tr>';
 					$i = 0;
 				}
 			}
-			if ($i == 1)
-			{
-				//$topic .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-			}
-			if ($i == 2)
-			{
-				//$topic .= "\n\t\t" . '<td  class="landing_td"></td>';
-			}
-
-			//$topic .= "\n" . '</table>' . "\n";
 
 			if ($showdiv == 1)
 			{
@@ -1034,30 +893,11 @@ class JBSMLanding
 				$showdiv = 2;
 			}
 			$topic .= '<div style="clear:both;"></div>';
-			$topic .= '<div class="landing_separator"></div>';
-
-
-			//new topic listing
-			/*$topic = '';
-			foreach ($tresult as $b)
-			{
-				$topic .= '<div class="span2">';
-				$topic .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_topic_landing=' . $b->id . '&amp;filter_teacher=0'
-						. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-				$trans = new JBSMTranslated;
-				$topic .= $trans->getTopicItemTranslated($b);
-
-				$topic .= '</a>';
-				$topic .= '</div>';
-
-			}
-			$topic .= '<div style="clear:both;"></div>';*/
 		}
 		else
 		{
 			$topic = '<div style="clear:both;"></div>';
 		}
-
 
 		return $topic;
 	}
@@ -1152,7 +992,6 @@ class JBSMLanding
 			switch ($messagetypeuselimit)
 			{
 				case 0:
-					//$messagetype = "\n" . '<table class="table landing_table" width="100%"><tr>';
 					$showdiv     = 0;
 
 					foreach ($tresult as &$b)
@@ -1161,28 +1000,15 @@ class JBSMLanding
 						{
 							if ($showdiv < 1)
 							{
-								if ($i == 1)
-								{
-									//$messagetype .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-									//$messagetype .= "\n\t" . '</tr>';
-								}
-								if ($i == 2)
-								{
-									//$messagetype .= "\n\t\t" . '<td  class="landing_td"></td>';
-									//$messagetype .= "\n\t" . '</tr>';
-								}
-
-								//$messagetype .= "\n" . '</table>';
 								$messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
-								//$messagetype .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 								$i       = 0;
 								$showdiv = 1;
 							}
 						}
-						//$messagetype .= "\n\t\t" . '<td class="landing_td">';
 						$messagetype .= '<div class="span2">';
-						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing=' . $b->id
+						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing=' .
+								$b->id
 							. '&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t='
 							. $template . '">';
 
@@ -1191,34 +1017,18 @@ class JBSMLanding
 						$messagetype .= '</a>';
 						$messagetype .= '</div>';
 
-						//$messagetype .= '</td>';
-
 						$i++;
 						$t++;
 
 						if ($i == 3 && $t != $limit && $t != $count)
 						{
-							//$messagetype .= "\n\t" . '</tr><tr>';
 							$i = 0;
 						}
 						elseif ($i == 3 || $t == $count || $t == $limit)
 						{
-							//$messagetype .= "\n\t" . '</tr>';
 							$i = 0;
 						}
 					}
-
-					if ($i == 1)
-					{
-						//$messagetype .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-					}
-
-					if ($i == 2)
-					{
-						//$messagetype .= "\n\t\t" . '<td  class="landing_td"></td>';
-					}
-
-					//$messagetype .= "\n" . '</table>' . "\n";
 
 					if ($showdiv == 1)
 					{
@@ -1364,7 +1174,6 @@ class JBSMLanding
 
 		if ($count > 0)
 		{
-			//$book    = "\n" . '<table class="table landing_table" width="100%" ><tr>';
 			$showdiv = 0;
 
 			foreach ($tresult as &$b)
@@ -1373,26 +1182,12 @@ class JBSMLanding
 				{
 					if ($showdiv < 1)
 					{
-						if ($i == 1)
-						{
-							//$book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-							//$book .= "\n\t" . '</tr>';
-						}
-						if ($i == 2)
-						{
-							//$book .= "\n\t\t" . '<td  class="landing_td"></td>';
-							//$book .= "\n\t" . '</tr>';
-						}
-
-						//$book .= "\n" . '</table>';
 						$book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
-						//$book .= "\n" . '<table width="100%" class="table landing_table"><tr>';
 
 						$i       = 0;
 						$showdiv = 1;
 					}
 				}
-				//$book .= "\n\t\t" . '<td class="landing_td">';
 				$book .= '<div class="span2">';
 				$book .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_book_landing=' . $b->booknumber
 					. '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
@@ -1402,32 +1197,18 @@ class JBSMLanding
 
 				$book .= '</a>';
 				$book .= '</div>';
-
-				//$book .= '</td>';
 				$i++;
 				$t++;
 
 				if ($i == 3 && $t != $limit && $t != $count)
 				{
-					//$book .= "\n\t" . '</tr><tr>';
 					$i = 0;
 				}
 				elseif ($i == 3 || $t == $count || $t == $limit)
 				{
-					//$book .= "\n\t" . '</tr>';
 					$i = 0;
 				}
 			}
-			if ($i == 1)
-			{
-				//$book .= "\n\t\t" . '<td  class="landing_td"></td>' . "\n\t\t" . '<td class="landing_td"></td>';
-			}
-			if ($i == 2)
-			{
-				//$book .= "\n\t\t" . '<td  class="landing_td"></td>';
-			}
-
-			//$book .= "\n" . '</table>' . "\n";
 
 			if ($showdiv == 1)
 			{

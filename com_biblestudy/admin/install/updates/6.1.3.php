@@ -45,7 +45,6 @@ class Migration613
 		{
 			return false;
 		}
-		
 
 		$query = "CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 				  `id` INT(11) NOT NULL AUTO_INCREMENT,

@@ -202,7 +202,14 @@ abstract class JHtmlJwplayer
 			$render .= "'aspectratio': '16:9',
 			";
 		}
-		if (isset($media->headertext))($header = $media->headertext); else {$header = $params->get('popuptitle','');}
+		if (isset($media->headertext))
+		{
+			$header = $media->headertext;
+		}
+		else
+		{
+			$header = $params->get('popuptitle', '');
+		}
 		$render .= "'width': '" . $media->playerwidth . "',
 						'displaytitle': '" . $header . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
