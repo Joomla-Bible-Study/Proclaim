@@ -4,11 +4,9 @@
 		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-			       class="inputbox" size="1" default="">
+			       class="inputbox" readonly="readonly" size="1" default="0">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
-				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 			</field>
 		</fieldset>
 		<fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
@@ -25,15 +23,12 @@
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
-			<field name="mediacode" type="textarea" label="JBS_CMN_AVR"
-			       description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
-			       filter="raw"/>
 		</fieldset>
 		<fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES" addfieldpath="/administrator/components/com_biblestudy/addons/servers/youtube/fields">
 			<field name="filename"
 			       type="text"
-			       label="JBS_MED_FILENAME"
-			       description="JBS_MED_USE_FILENAME_AS_PATH"
+			       label="JBS_ADDON_YOUTUBE_URL"
+			       description="JBS_ADDON_YOUTUBE_URL_DISC"
 			       class="inputbox"/>
 		</fieldset>
 		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
@@ -60,22 +55,13 @@
 				<option value="btn-danger">JBS_MED_DANGER</option>
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+			<field name="media_icon_type" type="list" class="inputbox" size="15" default="fa fa-youtube" label="JBS_ADDON_LEGACY_ICON_TYPE"
 				   description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
-				<option value="fa fa-play">JBS_MED_PLAY</option>
 				<option value="fa fa-youtube">JBS_MED_YOUTUBE</option>
-				<option value="fa fa-video-camera">JBS_MED_VIDEO</option>
-				<option value="fa fa-television">JBS_MED_BROADCAST</option>
-				<option value="fa fa-file">JBS_MED_FILE</option>
-				<option value="fa fa-vimeo">JBS_MED_VIMEO</option>
 				<option value="1">JBS_MED_CUSTOM</option>
 			</field>
 			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" />
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC" />
-			<field name="mime_type" type="mimetype" extension="com_biblestudy"
-			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-			       class="inputbox" default="">
-			</field>
 		</fieldset>
 		<fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
 			<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
