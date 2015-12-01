@@ -38,7 +38,7 @@ class BiblestudyViewPopup extends JViewLegacy
 	public $date;
 
 	/** @var  string Length */
-	public $lenght;
+	public $length;
 
 	/** @var  string Series Thumbnail */
 	public $series_thumbnail;
@@ -149,7 +149,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		 *  The popup window call the counter function
 		 */
 		$this->getMedia->hitPlay($mediaid);
-		$this->lenght = $JBSMListing->getDuration($this->params, $this->media);
+		$this->length = $JBSMListing->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
